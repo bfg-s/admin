@@ -11,7 +11,7 @@ if (!request()->ajax()) {
         $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
         if ($admin && isset($admin['version'])) {
 
-            \Lar\LteAdmin\LteAdmin::$vesion = $admin['version'];
+            \Lar\LteAdmin\LteAdmin::$vesion = ltrim($admin['version'], 'v');
         }
     }
 }
