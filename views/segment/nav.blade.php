@@ -48,7 +48,7 @@
             @include($menu['nav_bar_view'], $menu['params'])
         @endforeach
         <li>
-            <a class="nav-link" target="_blank" href="{{config('app.url')}}" title="Open homepage in new tab"><i class="fa fa-external-link-square-alt"></i></a>
+            <a class="nav-link" target="_blank" href="{{config('app.url')}}" title="Open homepage in new tab"><i class="fas fa-external-link-square-alt"></i></a>
         </li>
         <li>
             <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm" data-params="LogOut {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get" title="LogOut"><i class="fas fa-sign-out-alt"></i></a>

@@ -1,6 +1,6 @@
 <?php
 
-if (!request()->ajax()) {
+if (!request()->ajax() || request()->is('*dashboard*')) {
 
     $lock_file = base_path('composer.lock');
 
