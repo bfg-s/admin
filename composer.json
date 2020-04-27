@@ -1,0 +1,40 @@
+{
+    "name": "lar/lte-admin",
+    "description": "Laravel Admin Lte",
+    "type": "library",
+    "keywords": ["laravel", "admin", "lte", "lar"],
+    "homepage": "https://bitbucket.org/lar-repo/lte-admin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xsaven",
+            "email": "dev.xsaven@gmail.com"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.2.0",
+        "lar/layout": "2.*",
+        "almasaeed2010/adminlte": "^3.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Lar\\LteAdmin\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lar\\LteAdmin\\ServiceProvider"
+            ],
+            "aliases": {
+                "LteAdmin": "Lar\\LteAdmin\\Facades\\LteAdminFacade",
+                "Navigate": "Lar\\LteAdmin\\Facades\\NavigateFacade"
+            }
+        }
+    }
+}

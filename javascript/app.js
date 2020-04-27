@@ -1,0 +1,1 @@
+require('./lar_resource');

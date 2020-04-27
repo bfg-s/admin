@@ -1,0 +1,81 @@
+@import "layout/main-header";
+
+.lte-sortable-card {
+
+    .pagination {
+
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+.table th.fit {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.input-group-prepend {
+     .input-group-text {
+
+         min-width: 45px;
+         align-items: center;
+         justify-content: center;
+     }
+}
+
+.select2-selection, .select2-search {
+    min-height: 35px;
+}
+
+.select2-selection--single {
+    .select2-selection__rendered {
+        margin-top: -4px !important;
+    }
+    .select2-selection__arrow {
+        margin-top: 3px !important;
+    }
+
+    .select2-selection__choice {
+        margin-top: 9px !important;
+    }
+}
+
+.select2-selection--multiple {
+    .select2-selection__rendered {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+
+.form-info-text {
+    position: absolute;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+@media screen and (max-width: 575px) {
+    .form-info-text {
+        position: relative !important;
+    }
+}
+
+.card-header>.card-tools .btn-group {
+    margin-bottom: -.3rem !important;
+    margin-top: -.3rem !important;
+}
+
+.navbar-nav .navbar-badge {
+    margin-top: -9px !important;
+}
+.select2-container{
+    display:block !important;
+    width: calc(100% - 45px) !important;
+}
+
+.nav-tabs .nav-link {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}

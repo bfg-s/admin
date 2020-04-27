@@ -1,0 +1,55 @@
+<?php
+
+namespace Lar\LteAdmin\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class LteMenu
+ *
+ * @package Lar\LteAdmin\Models
+ */
+class LteMenu extends Model
+{
+    /**
+     * @var string
+     */
+    protected $table = 'lte_menu';
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'parent_id', 'order', 'icon', 'name', 'route', 'type', 'target', 'active'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'parent_id' => 'int',
+        'order' => 'int',
+        'icon' => 'string',
+        'name' => 'string',
+        'route' => 'string',
+        'type' => 'string',
+        'target' => 'string',
+        'active' => 'boolean'
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function parent()
+    {
+        return $this->hasOne(LteMenu::class, 'id', 'patent_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function childs()
+    {
+        return $this->hasMany(LteMenu::class, "parent_id", "id");
+    }
+}
