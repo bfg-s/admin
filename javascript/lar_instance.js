@@ -19,4 +19,5 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/duallist'));
     ljs.regExec(require('./Executors/number'));
     ljs.regExec(require('./Executors/nestable'));
+    ljs.regExec(require('./Executors/md'));
 };

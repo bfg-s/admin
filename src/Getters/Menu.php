@@ -57,11 +57,12 @@ class Menu extends Getter
 
     /**
      * @param  null  $__name_
+     * @param  null  $__default
      * @return string|null
      */
-    public static function data($__name_ = null)
+    public static function data($__name_ = null, $__default = null)
     {
-        $return = null;
+        $return = $__default;
 
         $menu = gets()->lte->menu->now;
 
@@ -71,7 +72,7 @@ class Menu extends Getter
 
             if ($__name_) {
 
-                $return = isset($return[$__name_]) ? $return[$__name_] : null;
+                $return = isset($return[$__name_]) ? $return[$__name_] : $__default;
             }
         }
 

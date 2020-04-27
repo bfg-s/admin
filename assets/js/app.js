@@ -127,55 +127,7 @@ function (_Executor) {
 
   _createClass(AdminLte, [{
     key: "md",
-    value: function md() {
-      if (!this.target.id) {
-        this.target.id = new Date() / 1;
-      }
-
-      return editormd(this.target.id, {
-        width: "100%",
-        height: 540,
-        path: '/lte-admin/plugins/editor.md-master/lib/',
-        markdown: this.target.innerText,
-        //codeFold : true,
-        //syncScrolling : false,
-        saveHTMLToTextarea: true,
-        // 保存 HTML 到 Textarea
-        searchReplace: true,
-        toolbarIcons: function toolbarIcons() {
-          // Or return editormd.toolbarModes[name]; // full, simple, mini
-          // Using "||" set icons align right.
-          return ['undo', 'redo', '|', 'bold', 'del', 'italic', 'quote', '|', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', '|', 'list-ul', 'list-ol', '|', 'hr', 'link', 'reference-link', 'pagebreak', 'image', 'code', 'table', 'datetime', 'html-entities', 'goto-line', 'watch', 'preview', 'fullscreen', 'clear', 'search'];
-        },
-        //watch : false,                // 关闭实时预览
-        //htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
-        //toolbar  : false,             //关闭工具栏
-        //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
-        // emoji : false,
-        //taskList : true,
-        //tocm            : true,         // Using [TOCM]
-        //tex : true,                   // 开启科学公式TeX语言支持，默认关闭
-        //flowChart : true,             // 开启流程图支持，默认关闭
-        //sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
-        //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
-        //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
-        //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
-        //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
-        //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
-        imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL: "./php/upload.php",
-        onload: function onload() {
-          console.log('onload', this); //this.fullscreen();
-          //this.unwatch();
-          //this.watch().fullscreen();
-          //this.setMarkdown("#PHP");
-          //this.width("100%");
-          //this.height(480);
-          //this.resize("100%", 640);
-        }
-      });
-    }
+    value: function md() {}
   }], [{
     key: "__name",
     value: function __name() {
@@ -407,6 +359,87 @@ function (_Executor) {
     key: "__name",
     value: function __name() {
       return "file";
+    }
+  }]);
+
+  return _class;
+}(Executor);
+
+/***/ }),
+
+/***/ "./javascript/Executors/md.js":
+/*!************************************!*\
+  !*** ./javascript/Executors/md.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var merge = __webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js");
+
+module.exports =
+/*#__PURE__*/
+function (_Executor) {
+  _inherits(_class, _Executor);
+
+  function _class() {
+    _classCallCheck(this, _class);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(_class).apply(this, arguments));
+  }
+
+  _createClass(_class, [{
+    key: "simple",
+    value: function simple() {
+      var $options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      if (!this.target.id) {
+        this.target.id = new Date() / 1;
+      }
+
+      var data = this.target.innerText;
+      this.target.innerText = "";
+      return editormd(this.target.id, merge({
+        width: "100%",
+        height: 300,
+        path: '/lte-admin/plugins/',
+        pluginPath: '/lte-admin/plugins/editor.md-master/plugins/',
+        markdown: data,
+        placeholder: "",
+        searchReplace: true,
+        toolbarIcons: function toolbarIcons() {
+          return ['undo', 'redo', '|', 'bold', 'del', 'italic', 'quote', '|', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', '|', 'list-ul', 'list-ol', '|', 'hr', 'link', 'reference-link', 'pagebreak', 'image', 'code', 'table', 'datetime', 'html-entities', '||',
+          /*'goto-line', 'clear',*/
+          'search', 'preview', 'watch'];
+        },
+        watch: false,
+        htmlDecode: "style,script,iframe|on*",
+        imageUpload: true,
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL: ljs.cfg('uploader') + '?_token=' + ljs.token
+      }, $options, this.target.dataset));
+    }
+  }], [{
+    key: "__name",
+    value: function __name() {
+      return "md";
     }
   }]);
 
@@ -1094,6 +1127,7 @@ module.exports = function ($methods) {
   ljs.regExec(__webpack_require__(/*! ./Executors/duallist */ "./javascript/Executors/duallist.js"));
   ljs.regExec(__webpack_require__(/*! ./Executors/number */ "./javascript/Executors/number.js"));
   ljs.regExec(__webpack_require__(/*! ./Executors/nestable */ "./javascript/Executors/nestable.js"));
+  ljs.regExec(__webpack_require__(/*! ./Executors/md */ "./javascript/Executors/md.js"));
 };
 
 /***/ }),

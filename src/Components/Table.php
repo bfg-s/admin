@@ -501,14 +501,14 @@ class Table extends DIV implements onRender
 
                         $key = $model->getOriginal($rk_name);
 
-                        if ($this->edit_control && isset($menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
+                        if ($this->edit_control && $key && isset($menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
 
                             $group->success('fas fa-edit')->setTitle('Edit')->dataClick()->location(
                                 $menu['link.edit']([$menu['model.param'] => $key])
                             );
                         }
 
-                        if ($this->delete_control && isset($menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
+                        if ($this->delete_control && $key && isset($menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
 
                             $group->danger('fas fa-trash-alt')
                                 ->setTitle('Delete')->setDatas([
@@ -520,7 +520,7 @@ class Table extends DIV implements onRender
                                 ]);
                         }
 
-                        if ($this->info_control && isset($menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
+                        if ($this->info_control && $key && isset($menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
 
                             $group->info('fas fa-info-circle')->setTitle('Info')->dataClick()->location(
                                 $menu['link.show']([$menu['model.param'] => $key])

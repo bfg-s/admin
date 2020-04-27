@@ -226,14 +226,14 @@ class Nestable extends DIV
 
                         $key = $item->getOriginal($rk_name);
 
-                        if ($this->edit_control && isset($this->menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
+                        if ($this->edit_control && $key && isset($this->menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
 
                             $group->success('fas fa-edit')->setTitle('Edit')->dataClick()->location(
                                 $this->menu['link.edit']([$this->menu['model.param'] => $key])
                             );
                         }
 
-                        if ($this->delete_control && isset($this->menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
+                        if ($this->delete_control && $key && isset($this->menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
 
                             $group->danger('fas fa-trash-alt')
                                 ->setTitle('Delete')->setDatas([
@@ -245,7 +245,7 @@ class Nestable extends DIV
                                 ]);
                         }
 
-                        if ($this->info_control && isset($this->menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
+                        if ($this->info_control && $key && isset($this->menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
 
                             $group->info('fas fa-info-circle')->setTitle('Info')->dataClick()->location(
                                 $this->menu['link.show']([$this->menu['model.param'] => $key])

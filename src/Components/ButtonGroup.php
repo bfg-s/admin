@@ -195,7 +195,7 @@ class ButtonGroup extends DIV {
 
             $key = $this->model->getOriginal($rk_name);
 
-            if (isset($this->menu['link.edit']) && (method_exists($this->action, 'edit') || method_exists($this->action, 'edit_default'))) {
+            if ($key && isset($this->menu['link.edit']) && (method_exists($this->action, 'edit') || method_exists($this->action, 'edit_default'))) {
 
                 $link = $this->menu['link.edit']($key);
             }
@@ -220,7 +220,7 @@ class ButtonGroup extends DIV {
 
             $key = $this->model->getOriginal($rk_name);
 
-            if (isset($this->menu['link.show']) && (method_exists($this->action, 'show') || method_exists($this->action, 'show_default'))) {
+            if ($key && isset($this->menu['link.show']) && (method_exists($this->action, 'show') || method_exists($this->action, 'show_default'))) {
 
                 $link = $this->menu['link.show']($key);
             }
@@ -245,7 +245,7 @@ class ButtonGroup extends DIV {
 
             $key = $this->model->getOriginal($rk_name);
 
-            if (isset($this->menu['link.destroy']) && (method_exists($this->action, 'destroy') || method_exists($this->action, 'destroy_default'))) {
+            if ($key && isset($this->menu['link.destroy']) && (method_exists($this->action, 'destroy') || method_exists($this->action, 'destroy_default'))) {
 
                 $link = $this->menu['link.destroy']($key);
             }
