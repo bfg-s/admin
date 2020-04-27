@@ -12,7 +12,7 @@ class LteAdmin
     /**
      * @var string
      */
-    protected static $vesion = "2.1.0";
+    static $vesion = "2.0.0";
 
     /**
      * @return \Lar\LteAdmin\Models\LteUser

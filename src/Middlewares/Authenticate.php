@@ -54,6 +54,8 @@ class Authenticate
             include lte_app_path('bootstrap.php');
         }
 
+        include __DIR__ . '/../bootstrap.php';
+
         LConfigs::add('uploader', route('lte.uploader'));
 
         return $next($request);
