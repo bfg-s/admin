@@ -33,9 +33,9 @@ module.exports = class extends Executor {
                 return false;
             }
 
-            let old_text = obj.innerHTML;
+            obj.setAttribute('data-old-text', obj.innerHTML);
             obj.setAttribute('disabled', 'disabled');
-            obj.innerHTML = `<i class="fa fa-spinner fa-spin" title="${$text}"></i> <span>${$text}</span>`;
+            obj.innerHTML = `<i class="fa fa-spinner fa-spin" title="${$text}"></i> <span class="d-none d-sm-inline">${$text}</span>`;
             if (!parent.querySelector('[name="_token"]')) {
                 $('<input />').attr('type', 'hidden')
                     .attr('name', '_token')

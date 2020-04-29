@@ -160,6 +160,13 @@ class LteInstall extends Command
             ]);
         }
 
+        if (!is_file(public_path('lte-asset/js/adminlte.min.js'))) {
+
+            $this->call('vendor:publish', [
+                '--tag' => 'lte-adminlte-assets'
+            ]);
+        }
+
         if (!is_file(config_path('layout.php'))) {
 
             $this->call('vendor:publish', [
@@ -184,6 +191,30 @@ class LteInstall extends Command
             file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
 
             $this->info("File composer.json updated!");
+        }
+
+        $gitignore = file_get_contents(base_path('.gitignore'));
+
+        $add_to_ignore = "";
+
+        if (strpos($gitignore, 'public/lte-asset') === false) {
+            $add_to_ignore .= "public/lte-asset\n";
+            $this->info("Add folder [public/lte-asset] to .gitignore");
+        }
+
+        if (strpos($gitignore, 'public/lte-admin') === false) {
+            $add_to_ignore .= "public/lte-admin\n";
+            $this->info("Add folder [public/lte-admin] to .gitignore");
+        }
+
+        if (strpos($gitignore, 'public/ljs') === false) {
+            $add_to_ignore .= "public/ljs\n";
+            $this->info("Add folder [public/ljs] to .gitignore");
+        }
+
+        if ($add_to_ignore) {
+
+            file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
         }
 
 

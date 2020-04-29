@@ -97,7 +97,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'lte-config');
 
         /**
-         * Register publishers configs
+         * Register publishers assets
          */
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
@@ -106,6 +106,14 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'lte-assets');
 
         /**
+         * Register publishers adminlte assets
+         */
+        $this->publishes([
+            base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
+            base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
+        ], 'lte-adminlte-assets');
+
+        /**s
          * Register publishers migrations
          */
         $this->publishes([

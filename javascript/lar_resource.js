@@ -1,9 +1,5 @@
 const load = () => {
-    //$.fn.select2.defaults.set( "theme", "bootstrap" );
-    $('[title]').tooltip();
-    $(document).on('pjax:start', function(event) {
-        $('[title]').tooltip('dispose');
-    });
+    require('./lte_load');
 };
 
 const methods = require('./lar_methods.js');

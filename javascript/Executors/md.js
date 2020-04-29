@@ -9,7 +9,7 @@ module.exports = class extends Executor {
             this.target.id = new Date() / 1
         }
 
-        let data = this.target.innerText;
+        let data = this.target.innerHTML;
         this.target.innerText = "";
 
         return editormd(this.target.id, merge({

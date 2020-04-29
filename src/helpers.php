@@ -182,3 +182,16 @@ if ( ! function_exists('lte_model') ) {
         return null;
     }
 }
+
+if (!function_exists('remove_dir')) {
+
+    /**
+     * @param $dirPath
+     */
+    function remove_dir($dirPath) {
+
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') { $dirPath .= '/'; }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) { if (is_dir($file)) { remove_dir($file); } else { unlink($file); } } try { rmdir($dirPath); } catch (Exception $e) {}
+    }
+}
