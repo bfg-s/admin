@@ -345,6 +345,11 @@ class BladeBootstrap {
 
             return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'placeholder' => \$title, 'id' => \$id])->addClass('form-control')->text(\$value); ?>";
         });
+
+        \Blade::directive('formmdeditor', function ($attrs = '') {
+
+            return "<?php echo \\{$this->div_link}::create({$attrs})->attr(['data-name' => \$name, 'data-placeholder' => \$title, 'id' => \$id, 'data-load' => 'md::simple'])->addClass('form-control')->text(\$value); ?>";
+        });
     }
 
     /**

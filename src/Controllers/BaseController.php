@@ -72,4 +72,19 @@ abstract class BaseController extends Controller
     {
         return $this->type() === $type;
     }
+
+    /**
+     * @param  null  $name
+     * @param  null  $default
+     * @return \Lar\LteAdmin\Getters\Menu|string|null|mixed
+     */
+    public function data($name = null, $default = null)
+    {
+        if (!$name) {
+
+            return gets()->lte->menu->data;
+        }
+
+        return gets()->lte->menu->data($name, $default);
+    }
 }

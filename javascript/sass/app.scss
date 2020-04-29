@@ -24,10 +24,12 @@
 }
 
 .select2-selection, .select2-search {
-    min-height: 35px;
+    min-height: 38px;
 }
 
 .select2-selection--single {
+    min-height: 38px;
+
     .select2-selection__rendered {
         margin-top: -4px !important;
     }

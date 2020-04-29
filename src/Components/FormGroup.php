@@ -83,17 +83,20 @@ class FormGroup extends DIV
 
         $this->__id = 'input_' . \Str::slug($name, '_');
 
-        $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-2');
+        if ($label) {
 
-        if ($label_obj) {
+            $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-2');
 
-            $label_obj->text("<small class='form-text text-muted form-info-text'>{$info}</small>");
+            if ($label_obj) {
+
+                $label_obj->text("<small class='form-text text-muted form-info-text'>{$info}</small>");
+            }
         }
 
         $inner = is_string($icon) && preg_match('/^(fas\s|fab\s|far\s)fa\-[a-zA-Z0-9\-\_]+/', $icon) ?
                 "<i class='{$icon}'></i>" : $icon;
 
-        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? '' : 'col-sm-10')])->openMode();
+        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? '' : ($label ? 'col-sm-10' : ''))])->openMode();
 
         if ($inner) {
             $div1->div(['class' => 'input-group-prepend'])
@@ -106,7 +109,7 @@ class FormGroup extends DIV
         $this->__path = trim(str_replace(['[',']'], '.', str_replace('[]', '', $name)), '.');
         $this->__value = static::$model ? multi_dot_call(static::$model, $this->__path) : null;
         $this->__name = $name;
-        $this->__title = $label;
+        $this->__title = $label ?? $name;
 
         static::$vertical = false;
         static::$model = null;
