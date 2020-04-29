@@ -16,8 +16,10 @@ use Lar\LteAdmin\Components\Form;
 use Lar\LteAdmin\Components\FormFooter;
 use Lar\LteAdmin\Components\FormGroup;
 use Lar\LteAdmin\Components\FormGroupEnd;
+use Lar\LteAdmin\Components\InfoBox;
 use Lar\LteAdmin\Components\Nestable;
 use Lar\LteAdmin\Components\Select2;
+use Lar\LteAdmin\Components\SmallBox;
 use Lar\LteAdmin\Components\Switcher;use Lar\LteAdmin\Components\Table;
 use Lar\LteAdmin\Components\Tabs;
 use Lar\LteAdmin\Components\Template;
@@ -34,7 +36,7 @@ class BladeBootstrap {
      */
     protected $func = [
         'container', 'row', 'col', 'formgroup', 'card', 'table', 'form', 'buttongroup', 'inputs',
-        'tabs', 'alerts', 'nestable'
+        'tabs', 'alerts', 'nestable', 'smalbox'
     ];
 
     /**
@@ -51,6 +53,93 @@ class BladeBootstrap {
      * @var string
      */
     protected $col_link;
+
+    public function smalbox()
+    {
+        \Blade::directive('infoboxprimary', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-primary'); ?>";
+        });
+        \Blade::directive('infoboxsecondary', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-secondary'); ?>";
+        });
+        \Blade::directive('infoboxsuccess', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-success'); ?>";
+        });
+        \Blade::directive('infoboxdanger', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-danger'); ?>";
+        });
+        \Blade::directive('infoboxwarning', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-warning'); ?>";
+        });
+        \Blade::directive('infoboxinfo', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-info'); ?>";
+        });
+        \Blade::directive('infoboxlight', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-light'); ?>";
+        });
+        \Blade::directive('infoboxdark', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-dark'); ?>";
+        });
+        \Blade::directive('infoboxwhite', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-white'); ?>";
+        });
+        \Blade::directive('infoboxtransparent', function ($attr = '') {
+            $class = InfoBox::class;
+            return "<?php echo \\{$class}::create({$attr})->icon_bg('bg-transparent'); ?>";
+        });
+
+
+
+        \Blade::directive('smboxprimary', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-primary'); ?>";
+        });
+        \Blade::directive('smboxsecondary', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-secondary'); ?>";
+        });
+        \Blade::directive('smboxsuccess', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-success'); ?>";
+        });
+        \Blade::directive('smboxdanger', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-danger'); ?>";
+        });
+        \Blade::directive('smboxwarning', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-warning'); ?>";
+        });
+        \Blade::directive('smboxinfo', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-info'); ?>";
+        });
+        \Blade::directive('smboxlight', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-light'); ?>";
+        });
+        \Blade::directive('smboxdark', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-dark'); ?>";
+        });
+        \Blade::directive('smboxwhite', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-white'); ?>";
+        });
+        \Blade::directive('smboxtransparent', function ($attr = '') {
+            $class = SmallBox::class;
+            return "<?php echo \\{$class}::create({$attr})->addClass('bg-transparent'); ?>";
+        });
+    }
 
     /**
      * Nestable
