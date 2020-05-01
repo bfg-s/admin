@@ -11,12 +11,12 @@
                 <h1>
                     @if(isset($page_info))
                         @if(is_array($page_info))
-                            @if(isset($page_info['icon'])) <i class="{{$page_info['icon']}}"></i> @elseif(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{$page_info['head_title'] ?? ($page_info['title'] ?? 'Blank page')}}
+                            @if(isset($page_info['icon'])) <i class="{{$page_info['icon']}}"></i> @elseif(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info['head_title'] ?? ($page_info['title'] ?? 'Blank page'))}}
                         @else
-                            @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{$page_info}}
+                            @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info)}}
                         @endif
                     @else
-                        @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i> @endif {{$menu['head_title'] ?? ($menu['title'] ?? 'Blank page')}}
+                        @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i> @endif {{__($menu['head_title'] ?? ($menu['title'] ?? 'Blank page'))}}
                     @endif
                 </h1>
             </div>
@@ -25,20 +25,20 @@
                 <ol class="breadcrumb float-sm-right">
                     @if (gets()->lte->menu->now_parents->count() && $first['id'] !== $menu['id'])
                         <li class="breadcrumb-item active">
-                            {{$first['title']}}
+                            {{__($first['title'])}}
                         </li>
                         @foreach(gets()->lte->menu->now_parents->reverse() as $item)
                             <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
-                                {{$item['title']}}
-                                @php($__head_title[] = $item['title'])
+                                {{__($item['title'])}}
+                                @php($__head_title[] = __($item['title']))
                             </li>
                         @endforeach
                     @endif
                     @if (isset($breadcrumb) && is_array($breadcrumb))
                         @foreach($breadcrumb as $item)
                             <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
-                                {{$item}}
-                                @php($__head_title[] = $item)
+                                {{__($item)}}
+                                @php($__head_title[] = __($item))
                             </li>
                         @endforeach
                     @endif

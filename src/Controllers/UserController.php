@@ -16,7 +16,7 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function profile()
+    public function index()
     {
         return view('lte::auth.profile', [
             'page_info' => [
@@ -24,8 +24,8 @@ class UserController extends Controller
                 'title' => \LteAdmin::user()->name,
             ],
             'breadcrumb' => [
-                'Администратор',
-                'Профиль'
+                __('lte::admin.administrator'),
+                __('lte::admin.profile')
             ],
             'user' => \LteAdmin::user()
         ]);
@@ -36,7 +36,7 @@ class UserController extends Controller
      * @param  Respond  $respond
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save(Request $request, Respond $respond)
+    public function update(Request $request, Respond $respond)
     {
         $all = request()->all();
 
@@ -62,7 +62,7 @@ class UserController extends Controller
 
                 if (admin()->save()) {
 
-                    $respond->toast_success('Пароль успешно изменен!');
+                    $respond->toast_success(__('lte::admin.password_changed_success'));
 
                     return back();
                 }
@@ -90,7 +90,7 @@ class UserController extends Controller
 
                 if (ModelSaver::do(admin(), $all)) {
 
-                    $respond->toast_success('Профиль успешно изменен!');
+                    $respond->toast_success(__('lte::admin.profile_success_changed'));
 
                     return back();
                 }

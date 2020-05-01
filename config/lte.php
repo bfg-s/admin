@@ -20,6 +20,25 @@ return [
     ],
 
     /**
+     * Default actions
+     */
+    'action' => [
+        'auth' => [
+            'login_form_action' => '\Lar\LteAdmin\Controllers\AuthController@login',
+            'login_post_action' => '\Lar\LteAdmin\Controllers\AuthController@login_post'
+        ],
+        'profile' => [
+            'index' => '\Lar\LteAdmin\Controllers\UserController@index',
+            'update' => '\Lar\LteAdmin\Controllers\UserController@update',
+            'logout' => '\Lar\LteAdmin\Controllers\UserController@logout'
+        ],
+        'dashboard' => '\Lar\LteAdmin\Controllers\DashboardController@index',
+        'uploader' => '\Lar\LteAdmin\Controllers\UploadController@index',
+        'lte_user' => '\Lar\LteAdmin\Controllers\AdminsController',
+        'lte_role' => '\Lar\LteAdmin\Controllers\RolesController',
+    ],
+
+    /**
      * Package work dirs
      */
     'paths' => [

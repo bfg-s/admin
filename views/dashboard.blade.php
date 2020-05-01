@@ -12,7 +12,7 @@
                 @if(config('lte.dashboard.environment'))
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">{{__('lte::dashboard.environment')}}</h3>
+                            <h3 class="card-title">{{__('lte::admin.environment')}}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">

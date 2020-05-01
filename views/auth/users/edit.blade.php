@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card('Редактировать: :login')
+    @card(__('lte::admin.edit_admin'))
 
         @include('lte::auth.users.form')
 

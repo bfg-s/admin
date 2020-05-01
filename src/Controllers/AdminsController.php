@@ -72,12 +72,12 @@ class AdminsController extends Controller
 
             $admin->roles()->save(LteRole::find(2));
 
-            $respond->toast_success('Администратор успешно создан!');
+            $respond->toast_success(__('lte::admin.successfully_created'));
         }
 
         else {
 
-            $respond->toast_error('Неизвестная ошибка при создании администратора!');
+            $respond->toast_error(__('lte::admin.unknown_error'));
         }
         
         return $this->returnTo();
@@ -109,7 +109,7 @@ class AdminsController extends Controller
 
                 if ($this->model()->save()) {
 
-                    $respond->toast_success('Пароль администратора успешно изменен!');
+                    $respond->toast_success(__('lte::admin.password_changed_success'));
 
                     return $this->returnTo();
                 }
@@ -120,7 +120,7 @@ class AdminsController extends Controller
 
             if (ModelSaver::do($this->model(), $all)) {
 
-                $respond->toast_success('Администратор успешно изменен!');
+                $respond->toast_success(__('lte::admin.saved_successfully'));
 
                 return $this->returnTo();
             }

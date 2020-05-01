@@ -2,13 +2,14 @@
 
 @section('content')
 
-    @card('Список администраторов')
+    @card(__('lte::admin.admin_list'))
 
         @cardbodytable
 
-            @column('Avatar', 'avatar')
-            @column('Login', 'login', true)
-            @column('Name', 'name', true)
+            @column(__('lte::admin.avatar'), 'avatar')
+            @column(__('lte::admin.email_address'), 'email', true)
+            @column(__('lte::admin.login_name'), 'login', true)
+            @column(__('lte::admin.name'), 'name', true)
 
         @endcardbodytable
 

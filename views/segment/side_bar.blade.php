@@ -8,9 +8,9 @@
             <div class="image">
                 <img src="{{asset(lte_user()->avatar)}}" class="img-circle elevation-2" alt="{{lte_user()->name}}">
             </div>
-            <div class="info">
+            <div class="info"  title="{{__('lte::admin.profile')}}">
                 <a class="d-block">{{lte_user()->name}}</a>
-                <small class="d-block" title="You permissions"><span class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>, <span class="badge badge-success">') !!}</span></small>
+                <small class="d-block"><span class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>, <span class="badge badge-success">') !!}</span></small>
             </div>
         </div>
 

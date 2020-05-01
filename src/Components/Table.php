@@ -503,7 +503,7 @@ class Table extends DIV implements onRender
 
                         if ($this->edit_control && $key && isset($menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
 
-                            $group->success('fas fa-edit')->setTitle('Edit')->dataClick()->location(
+                            $group->success('fas fa-edit')->setTitle(__('lte::admin.edit'))->dataClick()->location(
                                 $menu['link.edit']([$menu['model.param'] => $key])
                             );
                         }
@@ -511,10 +511,10 @@ class Table extends DIV implements onRender
                         if ($this->delete_control && $key && isset($menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
 
                             $group->danger('fas fa-trash-alt')
-                                ->setTitle('Delete')->setDatas([
+                                ->setTitle(__('lte::admin.delete'))->setDatas([
                                     'click' => 'alert::confirm',
                                     'params' => [
-                                        "Удалить ".strtoupper($rk_name).":{$key}?",
+                                        __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name).":{$key}?"]),
                                         $menu['link.destroy']([$menu['model.param'] => $key]) . " >> \$jax.del"
                                     ]
                                 ]);
@@ -522,7 +522,7 @@ class Table extends DIV implements onRender
 
                         if ($this->info_control && $key && isset($menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
 
-                            $group->info('fas fa-info-circle')->setTitle('Info')->dataClick()->location(
+                            $group->info('fas fa-info-circle')->setTitle(__('lte::admin.information'))->dataClick()->location(
                                 $menu['link.show']([$menu['model.param'] => $key])
                             );
                         }
@@ -548,8 +548,8 @@ class Table extends DIV implements onRender
             $this->table->getTbody()
                 ->tr()
                 ->td(['colspan' => $this->table->columnCount()])
-                ->div(['alert alert-warning mt-3 text-center text-justify', 'role' => 'alert', 'style' => 'background: rgba(255, 193, 7, 0.1)'])
-                ->text('EMPTY');
+                ->div(['alert alert-warning mt-3 text-center text-justify', 'role' => 'alert', 'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'])
+                ->text(__('lte::admin.empty'));
         }
     }
 }

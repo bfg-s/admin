@@ -1,29 +1,29 @@
 @if(lte_model_type('create'))
     @cardbodyform()
 
-        @formgroup('Avatar', 'avatar', null)
+        @formgroup(__('lte::admin.avatar'), 'avatar', null)
             @formfile()
         @endformgroup
 
-        @formgroup('Login', 'login')
+        @formgroup(__('lte::admin.login_name'), 'login')
             @forminput(['rule' => ['required']])
         @endformgroup
 
-        @formgroup('Email', 'email', 'fas fa-envelope')
+        @formgroup(__('lte::admin.email_address'), 'email', 'fas fa-envelope')
             @formemail(['rule' => ['required']])
         @endformgroup
 
-        @formgroup('Name', 'name')
+        @formgroup(__('lte::admin.name'), 'name')
             @forminput(['rule' => ['required']])
         @endformgroup
 
         <hr>
 
-        @formgroup('New password', 'password')
-            @formpassword(['rule' =>['required', 'confirmation']])
+        @formgroup(__('lte::admin.new_password'), 'password')
+            @formpassword(['rule' => ['required', 'confirmation']])
         @endformgroup
 
-        @formgroup('Repeat new password', 'password_confirmation')
+        @formgroup(__('lte::admin.repeat_new_password'), 'password_confirmation')
             @formpassword(['rule' => ['required', 'confirmation']])
         @endformgroup
 
@@ -36,23 +36,23 @@
 
     @tabs()
 
-        @tab('General', 'fas fa-cogs')
+        @tab(__('lte::admin.common'), 'fas fa-cogs')
 
             @cardbodyform()
 
-                @formgroup('Avatar', 'avatar', null)
+                @formgroup(__('lte::admin.avatar'), 'avatar', null)
                     @formfile()
                 @endformgroup
 
-                @formgroup('Login', 'login')
+                @formgroup(__('lte::admin.login_name'), 'login')
                     @forminput(['disabled' => 'disabled'])
                 @endformgroup
 
-                @formgroup('Email', 'email')
+                @formgroup(__('lte::admin.email_address'), 'email')
                     @forminput(['disabled' => 'disabled'])
                 @endformgroup
 
-                @formgroup('Name', 'name')
+                @formgroup(__('lte::admin.name'), 'name')
                     @forminput()
                 @endformgroup
 
@@ -62,17 +62,17 @@
 
         @endtab
 
-        @tab('Change password', 'fas fa-key')
+        @tab(__('lte::admin.change_password'), 'fas fa-key')
 
             @cardbodyform(new \Lar\LteAdmin\Models\LteUser)
 
                 @hiddens(['ch_password' => 'true'])
 
-                @formgroup('New password', 'password')
+                @formgroup(__('lte::admin.new_password'), 'password')
                     @formpassword(['rule' => ['required']])
                 @endformgroup
 
-                @formgroup('Repeat new password', 'password_confirmation')
+                @formgroup(__('lte::admin.repeat_new_password'), 'password_confirmation')
                     @formpassword(['rule' => ['required', 'confirmation']])
                 @endformgroup
 

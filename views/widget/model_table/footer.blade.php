@@ -1,13 +1,13 @@
 <div class="row">
     <div class="col-sm d-none d-lg-block d-xl-block">
-        <div class="btn-group justify-content-start" role="group" aria-label="Basic example">
+        <div class="btn-group justify-content-start" role="group">
             @foreach($state['per_pages'] as $per)
                 <a href="{{urlWithGet(['per_page' => $per])}}" type="button" class="btn btn-sm btn-{{$per == $per_page ? 'dark' : 'secondary'}}">{{$per}}</a>
             @endforeach
         </div>
     </div>
     <div class="col-sm">
-        <div style="text-align: center">Showing {{$from}} to {{$to}} of {{$paginator->total()}} entries</div>
+        <div style="text-align: center">{{__('lte::admin.showing_to_of_entries', ['show' => $from, 'to' => $to, 'of' => $paginator->total()])}}</div>
     </div>
     <div class="col-sm d-none d-lg-block d-xl-block">
         @if ($paginator->hasPages())

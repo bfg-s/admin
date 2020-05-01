@@ -69,11 +69,14 @@ class FormGroup extends DIV
      * @param  string  $name
      * @param  string|bool  $icon
      * @param  string|null  $info
+     * @param  int  $label_width
      * @param  mixed  ...$params
      */
-    public function __construct($label, string $name, $icon = 'fas fa-pencil-alt', string $info = null, ...$params)
+    public function __construct($label, string $name, $icon = 'fas fa-pencil-alt', string $info = null, int $label_width = 2, ...$params)
     {
         parent::__construct();
+
+        if ($icon === true) {$icon = 'fas fa-pencil-alt';}
 
         //$model = static::$model ?? gets()->lte->menu->model;
 
@@ -85,7 +88,7 @@ class FormGroup extends DIV
 
         if ($label) {
 
-            $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-2');
+            $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-'.$label_width);
 
             if ($label_obj) {
 
@@ -96,7 +99,7 @@ class FormGroup extends DIV
         $inner = is_string($icon) && preg_match('/^(fas\s|fab\s|far\s)fa\-[a-zA-Z0-9\-\_]+/', $icon) ?
                 "<i class='{$icon}'></i>" : $icon;
 
-        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? '' : ($label ? 'col-sm-10' : ''))])->openMode();
+        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? '' : ($label ? 'col-sm-'.(12-$label_width) : ''))])->openMode();
 
         if ($inner) {
             $div1->div(['class' => 'input-group-prepend'])

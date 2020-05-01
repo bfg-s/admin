@@ -36,7 +36,7 @@
             @endphp
             @if($counter)
                 <li class="nav-item">
-                    <a class="nav-link" href="{{$link}}" title="{{$menu['badge']['title'] ?? $menu['title']}}">
+                    <a class="nav-link" href="{{$link}}" title="{{__($menu['badge']['title'] ?? $menu['title'])}}">
                         <i class="{{$menu['icon']}}"></i>
                         <span class="badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}} navbar-badge">{{$counter}}</span>
                     </a>
@@ -48,10 +48,10 @@
             @include($menu['nav_bar_view'], $menu['params'])
         @endforeach
         <li>
-            <a class="nav-link" target="_blank" href="{{config('app.url')}}" title="Open homepage in new tab"><i class="fas fa-external-link-square-alt"></i></a>
+            <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte::admin.open_homepage_in_new_tab')}}"><i class="fas fa-external-link-square-alt"></i></a>
         </li>
         <li>
-            <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm" data-params="LogOut {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get" title="LogOut"><i class="fas fa-sign-out-alt"></i></a>
+            <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm" data-params="{{__('lte::admin.logout')}}, {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get" title="{{__('lte::admin.logout')}}"><i class="fas fa-sign-out-alt"></i></a>
         </li>
         @if(config('layout.lang_mode'))
         <!-- Messages Dropdown Menu -->

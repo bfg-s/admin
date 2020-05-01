@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card('Список')
+    @card(__('lte::admin.list'))
 
         @cardbodytable
 

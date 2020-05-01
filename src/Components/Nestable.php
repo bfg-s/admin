@@ -228,7 +228,7 @@ class Nestable extends DIV
 
                         if ($this->edit_control && $key && isset($this->menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
 
-                            $group->success('fas fa-edit')->setTitle('Edit')->dataClick()->location(
+                            $group->success('fas fa-edit')->setTitle(__('lte::admin.edit'))->dataClick()->location(
                                 $this->menu['link.edit']([$this->menu['model.param'] => $key])
                             );
                         }
@@ -236,10 +236,10 @@ class Nestable extends DIV
                         if ($this->delete_control && $key && isset($this->menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
 
                             $group->danger('fas fa-trash-alt')
-                                ->setTitle('Delete')->setDatas([
+                                ->setTitle(__('lte::admin.delete'))->setDatas([
                                     'click' => 'alert::confirm',
                                     'params' => [
-                                        "Удалить ".strtoupper($rk_name).":{$key}?",
+                                        __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name).":{$key}?"]),
                                         $this->menu['link.destroy']([$this->menu['model.param'] => $key]) . " >> \$jax.del"
                                     ]
                                 ]);
@@ -247,7 +247,7 @@ class Nestable extends DIV
 
                         if ($this->info_control && $key && isset($this->menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
 
-                            $group->info('fas fa-info-circle')->setTitle('Info')->dataClick()->location(
+                            $group->info('fas fa-info-circle')->setTitle(__('lte::admin.information'))->dataClick()->location(
                                 $this->menu['link.show']([$this->menu['model.param'] => $key])
                             );
                         }

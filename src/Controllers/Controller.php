@@ -67,12 +67,12 @@ class Controller extends BaseController
 
         if ($this->requestToModel()) {
 
-            respond()->toast_success('Успешно сохранено!');
+            respond()->toast_success(__('lte::admin.saved_successfully'));
         }
 
         else {
 
-            respond()->toast_error('Неизвестная ошибка при сохранении!');
+            respond()->toast_error(__('lte::admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -87,12 +87,12 @@ class Controller extends BaseController
 
         if ($this->requestToModel()) {
 
-            respond()->toast_success('Успешно создано!');
+            respond()->toast_success(__('lte::admin.successfully_created'));
         }
 
         else {
 
-            respond()->toast_error('Неизвестная ошибка при создании!');
+            respond()->toast_error(__('lte::admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -110,7 +110,7 @@ class Controller extends BaseController
 
             if ($model->delete()) {
 
-                respond()->toast_success('Успешно удалено!');
+                respond()->toast_success(__('lte::admin.successfully_deleted'));
 
                 if ($this->isType('index')) {
 
@@ -125,13 +125,13 @@ class Controller extends BaseController
 
             else {
 
-                respond()->toast_error('Ошибка при удалении!');
+                respond()->toast_error(__('lte::admin.unknown_error'));
             }
         }
 
         else {
 
-            respond()->toast_error('Модель не найдена!');
+            respond()->toast_error(__('lte::admin.model_not_found'));
         }
 
         return respond();

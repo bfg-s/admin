@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card('Добавить администратора')
+    @card(__('lte::admin.add_admin'))
 
         @include('lte::auth.users.form')
 

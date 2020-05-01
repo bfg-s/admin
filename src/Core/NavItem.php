@@ -145,6 +145,16 @@ class NavItem implements Arrayable
     }
 
     /**
+     * @return $this
+     */
+    public function has_rout()
+    {
+        $this->items['ignored'] = true;
+
+        return $this;
+    }
+
+    /**
      * @param  array  $route_params
      * @return $this
      */

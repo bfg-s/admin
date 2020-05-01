@@ -146,7 +146,7 @@ class ButtonGroup extends DIV {
      */
     public function reload(string $link = null, string $title = null)
     {
-        $this->secondary(['fas fa-redo-alt', $title ?? 'Обновить'])->dataClick()->location($link ?? \Request::getRequestUri());
+        $this->secondary(['fas fa-redo-alt', $title ?? __('lte::admin.refresh')])->dataClick()->location($link ?? \Request::getRequestUri());
     }
 
     /**
@@ -158,8 +158,8 @@ class ButtonGroup extends DIV {
      */
     public function nestable()
     {
-        $this->info(['far fa-minus-square', 'Свернуть все'])->setDatas(['click' => 'nestable::collapse']);
-        $this->primary(['far fa-plus-square', 'Развернуть все'])->setDatas(['click' => 'nestable::expand']);
+        $this->info(['far fa-minus-square', __('lte::admin.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
+        $this->primary(['far fa-plus-square', __('lte::admin.expand_all')])->setDatas(['click' => 'nestable::expand']);
 
         return $this;
     }
@@ -178,7 +178,7 @@ class ButtonGroup extends DIV {
     {
         if ($link || isset($this->menu['link'])) {
 
-            $this->primary(['fas fa-list-alt', $title ?? 'Список'])->dataClick()->location($link ?? $this->menu['link']);
+            $this->primary(['fas fa-list-alt', $title ?? __('lte::admin.list')])->dataClick()->location($link ?? $this->menu['link']);
         }
     }
 
@@ -203,7 +203,7 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->success('fas fa-edit')->text(':space', $title ?? 'Редактировать')->dataClick()->location($link);
+            $this->success('fas fa-edit')->text(':space', $title ?? __('lte::admin.edit'))->dataClick()->location($link);
         }
     }
 
@@ -228,7 +228,7 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->info(['fas fa-info-circle', $title ?? 'Информация'])->dataClick()->location($link);
+            $this->info(['fas fa-info-circle', $title ?? __('lte::admin.information')])->dataClick()->location($link);
         }
     }
 
@@ -253,10 +253,10 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->danger(['fas fa-trash-alt', $title ?? 'Удалить'])->setDatas([
+            $this->danger(['fas fa-trash-alt', $title ?? __('lte::admin.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    "Удалить ".strtoupper($rk_name).":{$key}?",
+                    __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name).":{$key}?"]),
                     $link . " >> \$jax.del"
                 ]
             ]);
@@ -272,7 +272,7 @@ class ButtonGroup extends DIV {
     {
         if (!$btn) {
 
-            $btn = ['fas fa-save', 'Submit'];
+            $btn = ['fas fa-save', __('lte::admin.submit')];
         }
 
         $datas = [
@@ -301,7 +301,7 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->success(['fas fa-plus', $title ?? "Добавить"])->dataClick()->location($link);
+            $this->success(['fas fa-plus', $title ?? __('lte::admin.add')])->dataClick()->location($link);
         }
     }
 }

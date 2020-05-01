@@ -20,4 +20,6 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/number'));
     ljs.regExec(require('./Executors/nestable'));
     ljs.regExec(require('./Executors/md'));
+
+    ljs.regExec(require('./Executors/str'));
 };
