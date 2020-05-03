@@ -1,6 +1,10 @@
 @foreach(($items ?? gets()->lte->menu->nested_collect->where('parent_id', 0)) as $menu)
 
-    @if($menu['active'])
+    @php
+        $access = isset($menu['roles']) ? lte_user()->hasRoles($menu['roles']) : true;
+    @endphp
+
+    @if($menu['active'] && $access)
 
         @php
             $childs = gets()->lte->menu->nested_collect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);

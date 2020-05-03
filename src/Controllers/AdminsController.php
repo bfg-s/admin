@@ -29,7 +29,9 @@ class AdminsController extends Controller
      */
     public function create()
     {
-        return view('lte::auth.users.create');
+        return view('lte::auth.users.create', [
+            'roles' => LteRole::all()->pluck('name','id')
+        ]);
     }
 
     /**
@@ -37,7 +39,9 @@ class AdminsController extends Controller
      */
     public function edit()
     {
-        return view('lte::auth.users.edit');
+        return view('lte::auth.users.edit', [
+            'roles' => LteRole::all()->pluck('name','id')
+        ]);
     }
 
     /**
@@ -70,7 +74,7 @@ class AdminsController extends Controller
 
         if ($admin->save()) {
 
-            $admin->roles()->save(LteRole::find(2));
+            $admin->roles()->sync($all['roles']);
 
             $respond->toast_success(__('lte::admin.successfully_created'));
         }
@@ -118,7 +122,9 @@ class AdminsController extends Controller
 
         else {
 
-            if (ModelSaver::do($this->model(), $all)) {
+            if ($this->model()->update($all)) {
+
+                $this->model()->roles()->sync($all['roles']);
 
                 $respond->toast_success(__('lte::admin.saved_successfully'));
 

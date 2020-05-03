@@ -17,6 +17,10 @@
             @forminput(['rule' => ['required']])
         @endformgroup
 
+        @formgroup(__('lte::admin.role'), 'roles[]')
+            @formmiltiselect($roles, ['rule' => ['required']])
+        @endformgroup
+
         <hr>
 
         @formgroup(__('lte::admin.new_password'), 'password')
@@ -54,6 +58,10 @@
 
                 @formgroup(__('lte::admin.name'), 'name')
                     @forminput()
+                @endformgroup
+
+                @formgroup(__('lte::admin.role'), 'roles[]')
+                    @formmiltiselect($roles, ['rule' => ['required']])
                 @endformgroup
 
             @endcardbodyform

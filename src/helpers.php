@@ -183,6 +183,17 @@ if ( ! function_exists('lte_model') ) {
     }
 }
 
+if ( ! function_exists('lte_now') ) {
+
+    /**
+     * @return array|\Lar\LteAdmin\Getters\Menu|array|null
+     */
+    function lte_now()
+    {
+        return gets()->lte->menu->now;
+    }
+}
+
 if (!function_exists('remove_dir')) {
 
     /**

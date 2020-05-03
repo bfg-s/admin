@@ -36,6 +36,7 @@ return [
         'uploader' => '\Lar\LteAdmin\Controllers\UploadController@index',
         'lte_user' => '\Lar\LteAdmin\Controllers\AdminsController',
         'lte_role' => '\Lar\LteAdmin\Controllers\RolesController',
+        'lte_permission' => '\Lar\LteAdmin\Controllers\PermissionController',
     ],
 
     /**

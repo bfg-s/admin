@@ -25,7 +25,7 @@ class LteInstall extends Command
      *
      * @var string
      */
-    protected $description = 'Install admin LTE';
+    protected $description = 'Install or update admin LTE';
 
     /**
      * Execute the console command.
@@ -34,6 +34,11 @@ class LteInstall extends Command
      */
     public function handle()
     {
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-migrations',
+            '--force' => true
+        ]);
+
         if (!\Schema::hasTable('lte_users')) {
 
             $this->call('migrate', array_filter([
@@ -45,6 +50,13 @@ class LteInstall extends Command
             $this->call('db:seed', [
                 '--class' => LteSeeder::class
             ]);
+        }
+
+        if (!\Schema::hasTable('lte_permission')) {
+
+            $this->call('migrate', array_filter([
+                '--force' => true
+            ]));
         }
 
         if (!\Schema::hasTable('users')) {
@@ -103,12 +115,10 @@ class LteInstall extends Command
             $this->info("Directory {$dir} created!");
         }
 
-        if (!is_dir($dir = resource_path("views/admin/resource"))) {
-
-            $this->call('vendor:publish', [
-                '--tag' => 'lte-view'
-            ]);
-        }
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-view',
+            '--force' => true
+        ]);
 
         $nav = lte_app_path('navigator.php');
 
@@ -146,26 +156,15 @@ class LteInstall extends Command
             $this->info("File {$controller} created!");
         }
 
-        if (!is_file(public_path('ljs/js/ljs.js'))) {
+        $this->call('vendor:publish', [
+            '--tag' => 'ljs-assets',
+            '--force' => true
+        ]);
 
-            $this->call('vendor:publish', [
-                '--tag' => 'ljs-assets'
-            ]);
-        }
-
-        if (!is_file(public_path('lte-admin/js/app.js'))) {
-
-            $this->call('vendor:publish', [
-                '--tag' => 'lte-assets'
-            ]);
-        }
-
-        if (!is_file(public_path('lte-asset/js/adminlte.min.js'))) {
-
-            $this->call('vendor:publish', [
-                '--tag' => 'lte-adminlte-assets'
-            ]);
-        }
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-assets',
+            '--force' => true
+        ]);
 
         if (!is_file(config_path('layout.php'))) {
 

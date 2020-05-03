@@ -29,8 +29,8 @@ class Switcher extends INPUT
     {
         parent::__construct();
 
-        $on_text = $props[0] ?? 'ON';
-        $off_text = $props[1] ?? 'OFF';
+        $on_text = $props[0] ?? __('lte::admin.on');
+        $off_text = $props[1] ?? __('lte::admin.off');
 
         $this->attr(['data' => ['load' => 'switch', 'on-text' => $on_text, 'off-text' => $off_text]]);
 

@@ -25,4 +25,13 @@ trait LteUserPermission
     {
         return !!$this->roles->whereIn('slug', $roles)->count();
     }
+
+    /**
+     * @param  string  $role
+     * @return bool
+     */
+    public function hasRole(string $role)
+    {
+        return !!$this->roles->where('slug', $role)->count();
+    }
 }

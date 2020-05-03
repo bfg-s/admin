@@ -9,6 +9,7 @@ use Lar\Layout\Layout;
 use Lar\LteAdmin\Commands\LteInstall;
 use Lar\LteAdmin\Commands\MakeController;
 use Lar\LteAdmin\Core\BladeBootstrap;
+use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
 /**
@@ -164,6 +165,11 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function register()
     {
+        $this->app->singleton(
+            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            Handler::class
+        );
+
         /**
          * Merge config from having by default
          */
@@ -241,13 +247,10 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     private function viewVariables()
     {
-        app('view')->composer('*', function (\Illuminate\View\View $view) {
-
-            $view->with([
-                'lte' => config('lte'),
-                'default_page' => config('lte.paths.view', 'admin').'.page'
-            ]);
-        });
+        app('view')->share([
+            'lte' => config('lte'),
+            'default_page' => config('lte.paths.view', 'admin').'.page'
+        ]);
 
         Collection::macro('nestable_pluck', function (string $value, string $key, $root = 'Root', string $order = "order", string $parent_field = "parent_id", string $input = "&nbsp;&nbsp;&nbsp;") {
 

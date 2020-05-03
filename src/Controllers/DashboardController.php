@@ -78,12 +78,12 @@ class DashboardController extends Controller
             __('lte::admin.timezone') => config('app.timezone'),
             __('lte::admin.language') => config('app.locale'),
             __('lte::admin.languages_involved') => implode(', ', config('layout.languages')),
-            'Env' => config('app.env'),
-            'URL' => config('app.url'),
+            __('lte::admin.env') => config('app.env'),
+            __('lte::admin.url') => config('app.url'),
             __('lte::admin.users') => number_format($user_model::count(), 0, '', ','),
             __('lte::admin.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
 
-            ['Drivers'],
+            [__('lte::admin.drivers')],
             __('lte::admin.cache_driver') => "<span class=\"badge badge-secondary\">".config('cache.default')."</span>",
             __('lte::admin.session_driver') => "<span class=\"badge badge-secondary\">".config('session.driver')."</span>",
             __('lte::admin.queue_driver') => "<span class=\"badge badge-secondary\">".config('queue.default')."</span>",
@@ -99,7 +99,7 @@ class DashboardController extends Controller
     {
         $return = [
             __('lte::admin.composer_version') =>  "<span class=\"badge badge-dark\">v".versionString(Composer::getVersion())."</span>",
-            ['Required']
+            [__('lte::admin.required')]
         ];
 
         $json = file_get_contents(base_path('composer.json'));
@@ -123,16 +123,16 @@ class DashboardController extends Controller
         $pdo = \DB::query("SHOW VARIABLES")->getConnection()->getPdo();
 
         return [
-            'Server version' => "<span class=\"badge badge-dark\">v".versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION))."</span>",
-            'Client version' => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
-            'Server info' => $pdo->getAttribute(PDO::ATTR_SERVER_INFO),
-            'Connection status' => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
-            'Driver name' => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
-            ['Connection info'],
+            __('lte::admin.server_version') => "<span class=\"badge badge-dark\">v".versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION))."</span>",
+            __('lte::admin.client_version') => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
+            __('lte::admin.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
+            __('lte::admin.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
+            __('lte::admin.mysql_driver') => $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME),
+            [__('lte::admin.connection_info')],
             __('lte::admin.db_driver') => config('database.default'),
-            'Database' => env('DB_DATABASE'),
-            'User' => env('DB_USERNAME'),
-            'Password' => str_repeat('*', strlen(env('DB_PASSWORD'))),
+            __('lte::admin.database') => env('DB_DATABASE'),
+            __('lte::admin.user') => env('DB_USERNAME'),
+            __('lte::admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
         ];
     }
 }

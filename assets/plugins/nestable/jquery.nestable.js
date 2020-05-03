@@ -133,7 +133,7 @@
             list.el.on('mousedown', onStartEvent);
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
-
+            list.el.trigger('create');
         },
 
         serialize: function()

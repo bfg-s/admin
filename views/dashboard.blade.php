@@ -108,7 +108,7 @@
                 @if(config('lte.dashboard.database'))
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Database</h3>
+                            <h3 class="card-title">{{__('lte::admin.database')}}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">

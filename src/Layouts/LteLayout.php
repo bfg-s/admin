@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Middlewares\Authenticate;
 
 /**
  * Landing Class
@@ -51,6 +52,33 @@ class LteLayout extends LteBase
             });
 
         } catch (\Exception $exception) {
+            dd($exception);
+        }
+    }
+
+    /**
+     * Add data in to layout content
+     *
+     * @param $data
+     * @return void
+     * @throws \Exception
+     */
+    public function setInContent($data)
+    {
+        try {
+
+            if (Authenticate::$access) {
+
+                $this->container->appEnd($data);
+            }
+
+            else {
+
+                $this->container->view('lte::access_denied');
+            }
+
+        } catch (\Exception $exception) {
+
             dd($exception);
         }
     }

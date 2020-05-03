@@ -162,9 +162,10 @@ class Menu extends Getter
      * @param  bool  $__route_items_
      * @param  int  $__route_parent_id_
      * @param  string  $__route_name_
+     * @param  array|null  $__parent
      * @return array
      */
-    public static function nested($__route_items_ = false, int $__route_parent_id_ = 0, $__route_name_ = 'lte')
+    public static function nested($__route_items_ = false, int $__route_parent_id_ = 0, $__route_name_ = 'lte', array $__parent = null)
     {
         if ($__route_items_ === false) { $__route_items_ = \Navigate::getMaked(); }
 
@@ -174,13 +175,13 @@ class Menu extends Getter
 
             $childs = false;
 
-            if (isset($item['roles'])) {
-
-                if (!admin() || !admin()->hasRoles($item['roles'])) {
-
-                    continue;
-                }
-            }
+//            if (isset($item['roles'])) {
+//
+//                if (!admin() || !admin()->hasRoles($item['roles'])) {
+//
+//                    continue;
+//                }
+//            }
 
             if (isset($item['items'])) {
 
@@ -194,6 +195,11 @@ class Menu extends Getter
                 'id' => $id,
                 'parent_id' => $__route_parent_id_
             ];
+
+            if ($__parent && isset($__parent['roles'])) {
+
+                $item['roles'] = $__parent['roles'];
+            }
 
             if (!isset($item['route'])) {
 
@@ -297,13 +303,15 @@ class Menu extends Getter
                 $item['title'] = false;
             }
 
-            $return[] = array_merge($add, $item);
+            $result = array_merge($add, $item);
+
+            $return[] = $result;
 
             static::$nested_counter++;
 
             if ($childs) {
 
-                $return = array_merge($return, static::nested($childs, $id, $item['route'] ?? 'lte'));
+                $return = array_merge($return, static::nested($childs, $id, $item['route'] ?? 'lte', $result));
             }
         }
 

@@ -81,3 +81,11 @@
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
+
+.select2-container--default .select2-selection--multiple.text-sm .select2-selection__choice, .text-sm .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    margin-top: 0.5rem !important;
+}
+
+.text-sm .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-search.select2-search--inline .select2-search__field, select.form-control-sm~.select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-search.select2-search--inline .select2-search__field {
+    margin-top: 10px !important;
+}

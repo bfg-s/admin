@@ -1,8 +1,13 @@
 module.exports = class extends Executor {
 
+    constructor() {
+        super();
+        this.collapsed = false;
+    }
+
     __invoke () {
 
-        return $(this.target).nestable({
+        let result = $(this.target).nestable({
             maxDepth: this.target.dataset.maxDepth ? this.target.dataset.maxDepth : 15
         }).on('change', (e) => {
             let list = $(e.target);
@@ -14,15 +19,23 @@ module.exports = class extends Executor {
                 e.target.dataset.parent,
             )
         });
+
+        if (this.collapsed) {
+            $(this.target).nestable('collapseAll');
+        }
+
+        return result;
     }
 
     expand () {
 
+        this.collapsed = false;
         return $(this.target.dataset.target ? this.target.dataset.target : '.dd').nestable('expandAll');
     }
 
     collapse () {
 
+        this.collapsed = true;
         return $(this.target.dataset.target ? this.target.dataset.target : '.dd').nestable('collapseAll');
     }
 

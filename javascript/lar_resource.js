@@ -1,5 +1,7 @@
+let tooltip_selector = '[title]:not([class^="select2"])';
+
 const load = () => {
-    require('./lte_load');
+    require('./lte_load')(tooltip_selector);
 };
 
 const methods = require('./lar_methods.js');
@@ -12,7 +14,7 @@ const applyScripts = ($root = $(document)) => {
 document.addEventListener('ljs:nav:complete', (details) => {
 
     applyScripts($(ljs.config('pjax-container')));
-    "timer::onetime".exec("tooltip", () => $('[title]').tooltip());
+    "timer::onetime".exec("tooltip", () => $(tooltip_selector).tooltip());
 });
 
 let ins = require('./lar_instance.js');
