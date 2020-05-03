@@ -24,8 +24,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        //dd(gets()->lte->menu->now_menu_parents);
-
         return view('lte::dashboard', [
             'environment' => $this->environmentInfo(),
             'laravel' => $this->laravelInfo(),

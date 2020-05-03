@@ -42,7 +42,6 @@ class LteLayout extends LteBase
                 $div->div(['content-wrapper'], function (DIV $div) {
 
                     $div->section(['content', 'id' => 'lte-content-container'])
-                        //->view('lte::segment.container_header')
                         ->haveLink($this->container);
                 });
 

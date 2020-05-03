@@ -81,7 +81,5 @@ class Form extends \Lar\Layout\Tags\FORM
         $this->setId($this->getUnique());
 
         $this->attr('data-load', 'valid');
-
-        //$this->getId()
     }
 }

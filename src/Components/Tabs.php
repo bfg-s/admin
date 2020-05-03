@@ -116,7 +116,5 @@ class Tabs extends UL implements onRender
                 'aria-labelledby' => $key
             ]])->addClassIf($tab['active'], 'active show')->text($tab['content']);
         }
-        
-//        dd($this->tabs);
     }
 }

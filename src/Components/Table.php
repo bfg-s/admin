@@ -37,7 +37,7 @@ class Table extends DIV implements onRender
      * @var array
      */
     protected $apply = [
-        //'makeTable'
+
     ];
 
     /**

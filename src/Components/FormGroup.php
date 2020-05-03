@@ -78,8 +78,6 @@ class FormGroup extends DIV
 
         if ($icon === true) {$icon = 'fas fa-pencil-alt';}
 
-        //$model = static::$model ?? gets()->lte->menu->model;
-
         $this->when($params);
 
         $this->__v = static::$vertical;

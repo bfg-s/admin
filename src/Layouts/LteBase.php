@@ -36,7 +36,6 @@ class LteBase extends LayoutComponent
 
         'lte-asset/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css',
         'lte-asset/plugins/bootstrap-slider/css/bootstrap-slider.min.css',
-//        'lte-asset/plugins/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css',
         'lte-asset/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css',
         'lte-asset/plugins/ekko-lightbox/ekko-lightbox.css',
         'lte-asset/plugins/flag-icon-css/css/flag-icon.min.css',

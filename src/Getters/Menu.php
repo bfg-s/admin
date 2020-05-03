@@ -175,14 +175,6 @@ class Menu extends Getter
 
             $childs = false;
 
-//            if (isset($item['roles'])) {
-//
-//                if (!admin() || !admin()->hasRoles($item['roles'])) {
-//
-//                    continue;
-//                }
-//            }
-
             if (isset($item['items'])) {
 
                 $childs = $item['items'];
