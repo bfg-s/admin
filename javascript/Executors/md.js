@@ -1,4 +1,5 @@
 const merge = require('lodash/merge');
+const unescape = require('lodash/unescape');
 
 module.exports = class extends Executor {
 
@@ -9,7 +10,7 @@ module.exports = class extends Executor {
             this.target.id = new Date() / 1
         }
 
-        let data = this.target.innerHTML;
+        let data = unescape(this.target.innerHTML);
         this.target.innerText = "";
 
         return editormd(this.target.id, merge({
