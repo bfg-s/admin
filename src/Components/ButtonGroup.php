@@ -126,6 +126,7 @@ class ButtonGroup extends DIV {
     public function btn($type, $ico, array $when = [])
     {
         return $this->button(['btn btn-xs btn-' . $type])->when(function (BUTTON $button) use ($ico) {
+            $button->setType('button');
             if (is_array($ico)) {
                 $ico = array_values($ico);
                 if (isset($ico[0]) && $ico[0]) { $button->i([$ico[0]]); }

@@ -22,8 +22,6 @@ use Lar\LteAdmin\Components\Select2;
 use Lar\LteAdmin\Components\SmallBox;
 use Lar\LteAdmin\Components\Switcher;use Lar\LteAdmin\Components\Table;
 use Lar\LteAdmin\Components\Tabs;
-use Lar\LteAdmin\Components\Template;
-use Lar\LteAdmin\Components\TemplateArea;
 
 /**
  * Class BladeBootstrap
@@ -150,62 +148,62 @@ class BladeBootstrap {
 
             $class = Nestable::class;
 
-            return "<?php \$__nestable_ = \\{$class}::create({$attrs}); ?>";
+            return "<?php \$__nestable = \\{$class}::create({$attrs}); ?>";
         });
 
         \Blade::directive('endnestable', function () {
-            return '<?php echo $__nestable_; ?>';
+            return '<?php echo $__nestable; ?>';
         });
 
         \Blade::directive('cardbodynestable', function ($attrs = '') {
 
             $class = Nestable::class;
 
-            return "<?php \$__nestable_ = \\{$class}::create({$attrs}); echo \\{$this->div_link}::create()->addClass('card-body')->openMode(); ?>";
+            return "<?php \$__nestable = \\{$class}::create({$attrs}); echo \\{$this->div_link}::create()->addClass('card-body')->openMode(); ?>";
         });
 
         \Blade::directive('endcardbodynestable', function () {
-            return '<?php echo $__nestable_->build(); ?> </div>';
+            return '<?php echo $__nestable->build(); ?> </div>';
         });
 
         \Blade::directive('nestabledesc', function ($attrs = '') {
 
-            return "<?php \$__nestable_->orderDesc({$attrs}); ?>";
+            return "<?php \$__nestable->orderDesc({$attrs}); ?>";
         });
 
         \Blade::directive('nestableorderby', function ($attrs = '') {
 
-            return "<?php \$__nestable_->orderBy({$attrs}); ?>";
+            return "<?php \$__nestable->orderBy({$attrs}); ?>";
         });
 
         \Blade::directive('nestabletitle', function ($attrs = '') {
 
-            return "<?php \$__nestable_->title_field({$attrs}); ?>";
+            return "<?php \$__nestable->title_field({$attrs}); ?>";
         });
 
         \Blade::directive('nestabledepth', function ($attrs = '') {
 
-            return "<?php \$__nestable_->maxDepth({$attrs}); ?>";
+            return "<?php \$__nestable->maxDepth({$attrs}); ?>";
         });
 
         \Blade::directive('nestabledisablecontrols', function () {
 
-            return "<?php \$__nestable_->disableControls(); ?>";
+            return "<?php \$__nestable->disableControls(); ?>";
         });
 
         \Blade::directive('nestabledisableinfo', function () {
 
-            return "<?php \$__nestable_->disableInfo(); ?>";
+            return "<?php \$__nestable->disableInfo(); ?>";
         });
 
         \Blade::directive('nestabledisableedit', function () {
 
-            return "<?php \$__nestable_->disableEdit(); ?>";
+            return "<?php \$__nestable->disableEdit(); ?>";
         });
 
         \Blade::directive('nestabledisabledelete', function () {
 
-            return "<?php \$__nestable_->disableDelete(); ?>";
+            return "<?php \$__nestable->disableDelete(); ?>";
         });
 
         GenerateBladeHelpers::$just[] = 'endnestable';
@@ -295,22 +293,22 @@ class BladeBootstrap {
 
             $class = Tabs::class;
 
-            return "<?php \$__tab_ = new \\{$class}({$attrs}); ?>";
+            return "<?php \$__tab = new \\{$class}({$attrs}); ?>";
         });
 
         \Blade::directive('tab', function ($attrs = '') {
 
-            return "<?php \$__tab_->addTab({$attrs}); ob_start(); ?>";
+            return "<?php \$__tab->addTab({$attrs}); ob_start(); ?>";
         });
 
         \Blade::directive('endtab', function () {
 
-            return "<?php \$__contents_ = ob_get_contents(); \$__tab_->addData(\$__contents_); unset(\$__contents_ ); ob_end_clean(); ?>";
+            return "<?php \$__contents_ = ob_get_contents(); \$__tab->addData(\$__contents_); unset(\$__contents_ ); ob_end_clean(); ?>";
         });
 
         \Blade::directive('endtabs', function () {
 
-            return "<?php echo \$__tab_; unset(\$__tab_); ?>";
+            return "<?php echo \$__tab; unset(\$__tab); ?>";
         });
 
         \Blade::directive('tabsbottom', function ($attrs = '') {
@@ -573,7 +571,7 @@ class BladeBootstrap {
 
             $class = Form::class;
 
-            return "<?php \$__form = \\{$class}::create({$attrs})->openMode(); echo \$__form; \$__form_id_ = \$__form->getId(); \$__form_model_ = \$__form->model; ?>";
+            return "<?php \$__form = \\{$class}::create({$attrs})->openMode(); echo \$__form; \$__form_id = \$__form->getId(); \$__form_model = \$__form->model; ?>";
         });
 
         \Blade::directive('endform', function ($attrs = '') {
@@ -585,7 +583,7 @@ class BladeBootstrap {
 
             $class = Form::class;
 
-            return "<?php echo \\{$this->div_link}::create()->addClass('card-body')->openMode(); \$__form = \\{$class}::create({$attrs})->openMode(); echo \$__form; \$__form_id_ = \$__form->getId(); \$__form_model_ = \$__form->model; ?>";
+            return "<?php echo \\{$this->div_link}::create()->addClass('card-body')->openMode(); \$__form = \\{$class}::create({$attrs})->openMode(); echo \$__form; \$__form_id = \$__form->getId(); \$__form_model = \$__form->model; ?>";
         });
 
         \Blade::directive('endcardbodyform', function ($attrs = '') {
@@ -597,7 +595,7 @@ class BladeBootstrap {
 
             $class = FormFooter::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->setFormId(\$__form_id_ ?? null)->createFooter(); ?>";
+            return "<?php echo \\{$class}::create({$attrs})->setFormId(\$__form_id ?? null)->createFooter(); ?>";
         });
 
         GenerateBladeHelpers::$just[] = 'endform';
@@ -613,11 +611,11 @@ class BladeBootstrap {
 
             $class = Table::class;
 
-            return "<?php \$__table_ = \\{$class}::create({$attrs}); echo \\{$this->div_link}::create()->addClass('card-body p-0')->openMode(); ?>";
+            return "<?php \$__table = \\{$class}::create({$attrs}); echo \\{$this->div_link}::create()->addClass('card-body p-0')->openMode(); ?>";
         });
 
         \Blade::directive('endcardbodytable', function ($attrs = '') {
-            return '<?php echo $__table_; ?> </div>';
+            return '<?php echo $__table; ?> </div>';
         });
 
 
@@ -627,87 +625,87 @@ class BladeBootstrap {
 
             if (empty($attrs)) { $attrs = "gets()->lte->menu->model"; }
 
-            return "<?php \$__table_ = \\{$class}::create({$attrs}); ?>";
+            return "<?php \$__table = \\{$class}::create({$attrs}); ?>";
         });
 
         \Blade::directive('tableperpage', function ($attrs = '') {
 
-            return "<?php \$__table_->perPage({$attrs}); ?>";
+            return "<?php \$__table->perPage({$attrs}); ?>";
         });
 
         \Blade::directive('tableperpages', function ($attrs = '') {
 
-            return "<?php \$__table_->perPages({$attrs}); ?>";
+            return "<?php \$__table->perPages({$attrs}); ?>";
         });
 
         \Blade::directive('tablemodel', function ($attrs = '') {
 
-            return "<?php \$__table_->model({$attrs}); ?>";
+            return "<?php \$__table->model({$attrs}); ?>";
         });
 
         \Blade::directive('tableinstruction', function ($attrs = '') {
 
-            return "<?php \$__table_->instruction({$attrs}); ?>";
+            return "<?php \$__table->instruction({$attrs}); ?>";
         });
 
         \Blade::directive('tabledesc', function ($attrs = '') {
 
-            return "<?php \$__table_->orderDesc({$attrs}); ?>";
+            return "<?php \$__table->orderDesc({$attrs}); ?>";
         });
 
         \Blade::directive('tableorderby', function ($attrs = '') {
 
-            return "<?php \$__table_->orderBy({$attrs}); ?>";
+            return "<?php \$__table->orderBy({$attrs}); ?>";
         });
 
         \Blade::directive('column', function ($attrs = '') {
 
-            return "<?php \$__table_->column({$attrs}); ?>";
+            return "<?php \$__table->column({$attrs}); ?>";
         });
 
         \Blade::directive('columncaretedat', function () {
 
-            return "<?php \$__table_->created_at(); ?>";
+            return "<?php \$__table->created_at(); ?>";
         });
 
         \Blade::directive('columnupdatedat', function () {
 
-            return "<?php \$__table_->updated_at(); ?>";
+            return "<?php \$__table->updated_at(); ?>";
         });
 
         \Blade::directive('columndeletedat', function () {
 
-            return "<?php \$__table_->deleted_at(); ?>";
+            return "<?php \$__table->deleted_at(); ?>";
         });
 
         \Blade::directive('disablecontrols', function () {
 
-            return "<?php \$__table_->disableControls(); ?>";
+            return "<?php \$__table->disableControls(); ?>";
         });
 
         \Blade::directive('disableinfo', function () {
 
-            return "<?php \$__table_->disableInfo(); ?>";
+            return "<?php \$__table->disableInfo(); ?>";
         });
 
         \Blade::directive('disableedit', function () {
 
-            return "<?php \$__table_->disableEdit(); ?>";
+            return "<?php \$__table->disableEdit(); ?>";
         });
 
         \Blade::directive('disabledelete', function () {
 
-            return "<?php \$__table_->disableDelete(); ?>";
+            return "<?php \$__table->disableDelete(); ?>";
         });
 
         \Blade::directive('endtable', function () {
 
-            return "<?php echo \$__table_; ?>";
+            return "<?php echo \$__table; ?>";
         });
 
         \Blade::directive('tablefooter', function () {
 
-            return "<?php echo \$__table_->footer(); ?>";
+            return "<?php echo \$__table->footer(); ?>";
         });
 
         GenerateBladeHelpers::$just[] = 'disabledelete';
@@ -818,11 +816,11 @@ class BladeBootstrap {
             $class = FormGroup::class;
 
             $data = <<<PHP
-\\{$class}::\$model = \$__form_model_ ?? gets()->lte->menu->model; \\{$class}::\$vertical={$vertical}; \$___obj = \\{$class}::create($attrs);
+\\{$class}::\$model = \$__form_model ?? gets()->lte->menu->model; \\{$class}::\$vertical={$vertical}; \$__form_group = \\{$class}::create($attrs);
 if(isset(\$name)) {\$__old_name = \$name;} if(isset(\$title)) {\$__old_title = \$title;} if(isset(\$id)) {\$__old_id = \$id;}
 if(isset(\$value)) {\$__old_value = \$value;} if(isset(\$path)) {\$__old_path = \$path;}
-\$name = \$___obj->__getName(); \$title = \$___obj->__getTitle(); \$id = \$___obj->__getId(); \$path = \$___obj->__getPath(); \$value = old(\$path, \$___obj->__getValue());
-echo \$___obj;
+\$name = \$__form_group->__getName(); \$title = \$__form_group->__getTitle(); \$id = \$__form_group->__getId(); \$path = \$__form_group->__getPath(); \$value = old(\$path, \$__form_group->__getValue());
+echo \$__form_group;
 PHP;
             return "<?php {$data}  ?>";
         };
@@ -849,7 +847,7 @@ PHP;
 if(isset(\$__old_name)) {\$name = \$__old_name;} if(isset(\$__old_title)) {\$title = \$__old_title;} if(isset(\$__old_id)) {\$id = \$__old_id;}
 PHP;
 
-            return "</div><?php echo \\{$class}::create(\$name, get_defined_vars()['errors'] ?? [], \$___obj->__v); {$data} ?></div>";
+            return "</div><?php echo \\{$class}::create(\$name, get_defined_vars()['errors'] ?? [], \$__form_group->__v); {$data} ?></div>";
         });
     }
 
@@ -860,7 +858,7 @@ PHP;
     {
         \Blade::directive('row', function ($attrs = '') {
 
-            return "<?php echo \\{$this->div_link}::create({$attrs})->addClass('row')->openMode(); ?>";
+            return "<?php echo \$__row = \\{$this->div_link}::create({$attrs})->addClass('row')->openMode(); ?>";
         });
 
         \Blade::directive('endrow', function ($attrs = '') {
@@ -876,30 +874,30 @@ PHP;
     {
         \Blade::directive('col', function ($attrs = '') {
 
-            return "<?php echo \\{$this->col_link}::create({$attrs})->colType()->openMode(); ?>";
+            return "<?php echo \$__col = \\{$this->col_link}::create({$attrs})->colType()->openMode(); ?>";
         });
 
         \Blade::directive("colsm", function ($attrs = '') {
 
-            return "<?php echo \\{$this->col_link}::create({$attrs})->colType('sm')->openMode(); ?>";
+            return "<?php echo \$__col = \\{$this->col_link}::create({$attrs})->colType('sm')->openMode(); ?>";
         });
 
         \Blade::directive("colmd", function ($attrs = '') {
 
-            return "<?php echo \\{$this->col_link}::create({$attrs})->colType('md')->openMode(); ?>";
+            return "<?php echo \$__col = \\{$this->col_link}::create({$attrs})->colType('md')->openMode(); ?>";
         });
 
         \Blade::directive("collg", function ($attrs = '') {
 
-            return "<?php echo \\{$this->col_link}::create({$attrs})->colType('lg')->openMode(); ?>";
+            return "<?php echo \$__col = \\{$this->col_link}::create({$attrs})->colType('lg')->openMode(); ?>";
         });
 
         \Blade::directive("colxl", function ($attrs = '') {
 
-            return "<?php echo \\{$this->col_link}::create({$attrs})->colType('xl')->openMode(); ?>";
+            return "<?php echo \$__col = \\{$this->col_link}::create({$attrs})->colType('xl')->openMode(); ?>";
         });
 
-        \Blade::directive('endcol', function ($attrs = '') {
+        \Blade::directive('endcol', function () {
 
             return "</div>";
         });
@@ -912,7 +910,7 @@ PHP;
 
         \Blade::directive('container', function ($attrs = '') {
 
-            return "<?php echo \\{$this->div_link}::create({$attrs})->addClass('container-fluid')->openMode(); ?>";
+            return "<?php echo \$__container = \\{$this->div_link}::create({$attrs})->addClass('container-fluid')->openMode(); ?>";
         });
 
         \Blade::directive('endcontainer', function () {

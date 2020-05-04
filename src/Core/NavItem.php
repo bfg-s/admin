@@ -187,6 +187,17 @@ class NavItem implements Arrayable
         return $this;
     }
 
+    /**
+     * @param  string|array  $action
+     * @return $this
+     */
+    public function delete($action = 'Controller@destroy')
+    {
+        $this->items['delete'] = $action;
+
+        return $this;
+    }
+
 
 
     /**

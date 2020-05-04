@@ -104,6 +104,11 @@ class RoutesAdaptor
 
                 static::make_post($roads, $uri, $menu['post'], $menu['route']);
             }
+
+            if (isset($menu['delete'])) {
+
+                static::make_delete($roads, $uri, $menu['delete'], $menu['route']);
+            }
         }
     }
 
@@ -122,5 +127,22 @@ class RoutesAdaptor
         }
 
         $roads->post($uri, $action)->name($name . '.post');
+    }
+
+    /**
+     * @param  Roads  $roads
+     * @param $uri
+     * @param $action
+     * @param  string  $name
+     */
+    protected static function make_delete(Roads $roads, $uri, $action, string $name)
+    {
+        if (is_array($action) && isset($action['uri'])) {
+
+            $uri = trim($uri, '/') . '/' . trim($action['uri'], '/');
+            unset($action['uri']);
+        }
+
+        $roads->delete($uri, $action)->name($name . '.destroy');
     }
 }
