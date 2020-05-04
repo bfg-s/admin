@@ -62,10 +62,12 @@ class LtePermission extends Model
 
         $result = true;
 
+        $per_path = config('layout.lang_mode') ? '*/' : '';
+
         /** @var LtePermission $close */
         foreach ($closes as $close) {
 
-            $path = trim('*/'.config('lte.route.prefix'), '/').'/'.trim($close->path, '/');
+            $path = trim($per_path.config('lte.route.prefix'), '/').'/'.trim($close->path, '/');
 
             if (($close->method[0] === '*' || array_search(request()->getMethod(), $close->method) !== false) && request()->is($path)) {
 
@@ -81,7 +83,7 @@ class LtePermission extends Model
             /** @var LtePermission $close */
             foreach ($opens as $open) {
 
-                $path = trim('*/'.config('lte.route.prefix'), '/').'/'.trim($open->path, '/');
+                $path = trim($per_path.config('lte.route.prefix'), '/').'/'.trim($open->path, '/');
 
                 if (($open->method[0] === '*' || array_search(request()->getMethod(), $open->method) !== false) && request()->is($path)) {
 
