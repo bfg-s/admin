@@ -30,7 +30,7 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
 
         $group->item('lte::admin.administrators', 'administrators')
             ->resource('lte_user', config('lte.action.lte_user'))
-            ->model(config('lte.auth.providers.lte.model'))
+            ->model(\Lar\LteAdmin\Models\LteUser::class)
             ->icon_users_cog();
 
         $group->item('lte::admin.roles', 'roles')
