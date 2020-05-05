@@ -3,7 +3,7 @@ module.exports = class extends Executor {
     __invoke ($options = {}) {
 
         return $(this.target).bootstrapDualListbox({
-            moveOnSelect: false
+            moveOnSelect: this.target.dataset.moveOnSelect ? this.target.dataset.moveOnSelect : false
         });
     }
 

@@ -333,12 +333,12 @@ class BladeBootstrap {
     {
         \Blade::directive('forminput', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php echo \$__inp = \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id ?? '', 'name' => \$name ?? '', 'placeholder' => \$title ?? ''])->addClass('form-control'); if (isset(\$value)) {\$__inp->setValueIf(\$value !== null, \$value);} ?>";
         });
 
         \Blade::directive('formpassword', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'password', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php echo \$__inp = \\{$this->input_link}::create({$attrs})->attr(['type' => 'password', 'id' => \$id ?? '', 'name' => \$name ?? '', 'placeholder' => \$title ?? ''])->addClass('form-control'); if (isset(\$value)) {\$__inp->setValueIf(\$value !== null, \$value);} ?>";
         });
 
         \Blade::directive('formemail', function ($attrs = '') {

@@ -31,9 +31,9 @@
             center: true
         }, options );
 
-        return this.each(function(e) {
+        return this.each(function(e, obj) {
             var self = $(this);
-            var clone = self.clone(true, true);
+            var clone = self.clone(false, false);
 
             var min = self.attr('min');
             var max = self.attr('max');

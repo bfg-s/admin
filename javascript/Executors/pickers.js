@@ -4,7 +4,9 @@ module.exports = class extends Executor {
 
     color () {
 
-        return $(this.target).colorpicker().on('colorpickerChange', (event) => {
+        return $(this.target).colorpicker({
+            format: this.target.dataset.format ? this.target.dataset.format : 'auto'
+        }).on('colorpickerChange', (event) => {
             $(this.target).parents('.input-group').find('.fa-square').css('color', event.color.toString());
         });
     }
@@ -12,11 +14,11 @@ module.exports = class extends Executor {
     icon () {
 
         return $(this.target).iconpicker({
-            cols: 10,
-            rows: 5,
-            footer: true,
-            header: true,
-            search: true,
+            cols: this.target.dataset.cols ? this.target.dataset.cols : 10,
+            rows: this.target.dataset.rows ? this.target.dataset.rows : 5,
+            footer: this.target.dataset.footer ? this.target.dataset.footer : true,
+            header: this.target.dataset.header ? this.target.dataset.header : true,
+            search: this.target.dataset.search ? this.target.dataset.search : true,
             iconset: 'fontawesome5',
             selectedClass: 'btn-success',
             unselectedClass: '',
@@ -74,6 +76,9 @@ module.exports = class extends Executor {
 
         return $(this.target).daterangepicker({
             timePicker: true,
+            showDropdowns: this.target.dataset.showDropdowns ? this.target.dataset.showDropdowns : false,
+            opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
+            autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
                 format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY HH:mm:ss'
             }
@@ -83,6 +88,9 @@ module.exports = class extends Executor {
     daterange () {
 
         return $(this.target).daterangepicker({
+            showDropdowns: this.target.dataset.showDropdowns ? this.target.dataset.showDropdowns : false,
+            opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
+            autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
                 format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY'
             }
