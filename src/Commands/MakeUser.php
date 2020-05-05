@@ -73,7 +73,10 @@ class MakeUser extends Command
 
         $name = explode("@", $email)[0];
 
-        if (LteUser::create([
+        /** @var LteUser $user_model */
+        $user_model = config('lte.auth.providers.lte.model');
+
+        if ($user_model::create([
             "username" => $name,
             "password" => bcrypt($password),
             "email" => $email,

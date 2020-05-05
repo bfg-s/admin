@@ -49,7 +49,7 @@ if ( ! function_exists('lte_asset') ) {
 if ( ! function_exists('lte_user') ) {
 
     /**
-     * @return \Lar\LteAdmin\Models\LteUser
+     * @return \Lar\LteAdmin\Models\LteUser|\App\Models\Admin
      */
     function lte_user () {
 
@@ -60,7 +60,7 @@ if ( ! function_exists('lte_user') ) {
 if ( ! function_exists('admin') ) {
 
     /**
-     * @return \Lar\LteAdmin\Models\LteUser
+     * @return \Lar\LteAdmin\Models\LteUser|\App\Models\Admin
      */
     function admin () {
 

@@ -4,7 +4,6 @@ namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Http\Request;
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Core\ModelSaver;
 use Lar\LteAdmin\Models\LteFileStorage;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
@@ -63,8 +62,9 @@ class AdminsController extends Controller
             return back()->withErrors($validator);
         }
 
-
-        $admin = new LteUser();
+        /** @var LteUser $user_model */
+        $user_model = config('lte.auth.providers.lte.model');
+        $admin = new $user_model();
 
         $admin->login = $all['login'];
         $admin->password = bcrypt($all['password']);

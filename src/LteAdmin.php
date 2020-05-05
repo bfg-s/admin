@@ -15,7 +15,7 @@ class LteAdmin
     static $vesion = "2.0.0";
 
     /**
-     * @return \Lar\LteAdmin\Models\LteUser
+     * @return \Lar\LteAdmin\Models\LteUser|\App\Models\Admin
      */
     public function user()
     {

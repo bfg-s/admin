@@ -20,10 +20,13 @@ class LteSeeder extends Seeder
     {
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        // create a user.
-        LteUser::truncate();
+        /** @var LteUser $user_model */
+        $user_model = config('lte.auth.providers.lte.model');
 
-        LteUser::create([
+        // create a user.
+        $user_model::truncate();
+
+        $user_model::create([
             'login' => 'root',
             'password' => bcrypt('root'),
             'name'     => 'Root',
@@ -46,7 +49,7 @@ class LteSeeder extends Seeder
             'slug' => 'moderator',
         ]);
 
-        LteUser::first()->roles()->save(LteRole::first());
+        $user_model::first()->roles()->save(LteRole::first());
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

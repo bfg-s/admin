@@ -28,6 +28,6 @@ class LteRole extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(LteUser::class, "lte_role_user", "lte_role_id", "lte_user_id");
+        return $this->belongsToMany(config('lte.auth.providers.lte.model'), "lte_role_user", "lte_role_id", "lte_user_id");
     }
 }
