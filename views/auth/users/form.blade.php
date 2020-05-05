@@ -72,7 +72,7 @@
 
         @tab(__('lte::admin.change_password'), 'fas fa-key')
 
-            @cardbodyform(new config('lte.auth.providers.lte.model'))
+            @cardbodyform(new \Lar\LteAdmin\Models\LteUser())
 
                 @hiddens(['ch_password' => 'true'])
 
@@ -86,7 +86,7 @@
 
             @endcardbodyform
 
-            @formfooter()
+            @formfooter(false)
 
         @endtab
 

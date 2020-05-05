@@ -23,13 +23,28 @@ class FormFooter extends DIV
     ];
 
     /**
+     * @var bool
+     */
+    private $nav_redirect = true;
+
+    /**
      * Col constructor.
-     * @param  string|null  $form_id
+     * @param  bool  $nav_redirect
      * @param  mixed  ...$params
      */
-    public function __construct(...$params)
+    public function __construct($nav_redirect = true, ...$params)
     {
         parent::__construct();
+
+        if (is_bool($nav_redirect)) {
+
+            $this->nav_redirect = $nav_redirect;
+        }
+
+        else {
+
+            $this->when($nav_redirect);
+        }
 
         $this->when($params);
     }
@@ -78,7 +93,7 @@ class FormFooter extends DIV
 
         $row = $this->div(['row']);
 
-        if ($type) {
+        if ($type && $this->nav_redirect) {
 
             $row->div(['col'])->div(['mb-0 clearfix'])->when(function (DIV $div) use ($type) {
 

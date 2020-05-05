@@ -20,7 +20,14 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view('lte::auth.users.list');
+        $roles = function (LteUser $user) {
+
+            return '<span class="badge badge-success">' . $user->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
+        };
+
+        return view('lte::auth.users.list', [
+            'roles' => $roles
+        ]);
     }
 
     /**

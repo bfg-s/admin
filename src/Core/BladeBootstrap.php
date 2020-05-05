@@ -52,6 +52,14 @@ class BladeBootstrap {
      */
     protected $col_link;
 
+    /**
+     * @var string
+     */
+    protected $inp_default_datas = "";
+
+    /**
+     * Small box
+     */
     public function smalbox()
     {
         \Blade::directive('infoboxprimary', function ($attr = '') {
@@ -331,111 +339,113 @@ class BladeBootstrap {
      */
     protected function inputs()
     {
+        $this->inp_default_datas = "\$id = isset(\$id) ? \$id : null; \$name = isset(\$name) ? \$name : null; \$title = isset(\$title) ? \$title : null; \$value = isset(\$value) ? \$value : null;";
+
         \Blade::directive('forminput', function ($attrs = '') {
 
-            return "<?php echo \$__inp = \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id ?? '', 'name' => \$name ?? '', 'placeholder' => \$title ?? ''])->addClass('form-control'); if (isset(\$value)) {\$__inp->setValueIf(\$value !== null, \$value);} ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formpassword', function ($attrs = '') {
 
-            return "<?php echo \$__inp = \\{$this->input_link}::create({$attrs})->attr(['type' => 'password', 'id' => \$id ?? '', 'name' => \$name ?? '', 'placeholder' => \$title ?? ''])->addClass('form-control'); if (isset(\$value)) {\$__inp->setValueIf(\$value !== null, \$value);} ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'password', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formemail', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'email', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'email', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formnumber', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'number', 'id' => \$id, 'name' => \$name, 'value' => \$value ?? 0, 'placeholder' => \$title, 'data-load' => 'number'])->addClass('form-control'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'number', 'id' => \$id, 'name' => \$name, 'value' => \$value ?? 0, 'placeholder' => \$title, 'data-load' => 'number'])->addClass('form-control'); ?>";
         });
 
         \Blade::directive('formfile', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create($attrs)->attr(['type' => 'file', 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'file'])->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create($attrs)->attr(['type' => 'file', 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'file'])->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formswitcher', function ($attrs = '') {
 
             $class = Switcher::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['id' => \$id, 'name' => \$name])->setCheckedIf(\$value, 'checked'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['id' => \$id, 'name' => \$name])->setCheckedIf(\$value, 'checked'); ?>";
         });
 
         \Blade::directive('formdaterange', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::daterange'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::daterange'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formdatetimerange', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::datetimerange'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::datetimerange'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formdatetime', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::datetime', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::datetime', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formdate', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::date', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::date', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formtime', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::time', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::time', 'data-toggle' => 'datetimepicker', 'data-target' => '#' . \$id])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?>";
         });
 
         \Blade::directive('formicon', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?><span class='input-group-append'><button class='btn btn-primary' data-icon='<?php echo \$value ?>' data-load='picker::icon'></button></span>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?><span class='input-group-append'><button class='btn btn-primary' data-icon='<?php echo \$value ?>' data-load='picker::icon'></button></span>";
         });
 
         \Blade::directive('formcolor', function ($attrs = '') {
 
-            return "<?php echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::color'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?><span class='input-group-append'><span class='input-group-text'><i class='fas fa-square' style='color: <?php echo \$value ?>;'></i></span></span>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->input_link}::create({$attrs})->attr(['type' => 'text', 'id' => \$id, 'name' => \$name, 'placeholder' => \$title, 'data-load' => 'picker::color'])->addClass('form-control')->setValueIf(\$value !== null, \$value); ?><span class='input-group-append'><span class='input-group-text'><i class='fas fa-square' style='color: <?php echo \$value ?>;'></i></span></span>";
         });
 
         \Blade::directive('formdualselect', function ($attrs = '') {
 
             $class = Select2::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'duallist', 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control duallistbox'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'duallist', 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control duallistbox'); ?>";
         });
 
         \Blade::directive('formselect', function ($attrs = '') {
 
             $class = Select2::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
         });
 
         \Blade::directive('formmiltiselect', function ($attrs = '') {
 
             $class = Select2::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2', 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2', 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
         });
 
         \Blade::directive('formckeditor', function ($attrs = '') {
 
             $class = TEXTAREA::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'placeholder' => \$title, 'id' => \$id, 'data-load' => 'ckeditor'])->text(\$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'placeholder' => \$title, 'id' => \$id, 'data-load' => 'ckeditor'])->text(\$value); ?>";
         });
 
         \Blade::directive('formtextarea', function ($attrs = '') {
 
             $class = TEXTAREA::class;
 
-            return "<?php echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'placeholder' => \$title, 'id' => \$id])->addClass('form-control')->text(\$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'placeholder' => \$title, 'id' => \$id])->addClass('form-control')->text(\$value); ?>";
         });
 
         \Blade::directive('formmdeditor', function ($attrs = '') {
 
-            return "<?php echo \\{$this->div_link}::create({$attrs})->attr(['data-name' => \$name, 'data-placeholder' => \$title, 'id' => \$id, 'data-load' => 'md::simple'])->addClass('form-control')->text(\$value); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$this->div_link}::create({$attrs})->attr(['data-name' => \$name, 'data-placeholder' => \$title, 'id' => \$id, 'data-load' => 'md::simple'])->addClass('form-control')->text(\$value); ?>";
         });
     }
 
