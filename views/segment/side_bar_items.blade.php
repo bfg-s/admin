@@ -2,12 +2,14 @@
 
     @php
         $access = isset($menu['roles']) ? lte_user()->hasRoles($menu['roles']) : true;
+        $childs = gets()->lte->menu->nested_collect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);
+        $on = $childs->count() ? !!$childs->where('active', true)->count() : true;
+        //if(isset($menu['title']) && $menu['title'] === 'Layout') {dd($menu, $childs->where('active', true));}
     @endphp
 
-    @if($menu['active'] && $access)
+    @if($menu['active'] && $access && $on)
 
         @php
-            $childs = gets()->lte->menu->nested_collect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);
             $selected = $menu['selected'] || $childs->where('selected', true)->count();
         @endphp
 
@@ -68,7 +70,7 @@
 
             @if($childs->count())
                 <ul class="nav nav-treeview">
-                        @include('lte::segment.side_bar_items', ['items' => $childs, 'nes' => true])
+                    @include('lte::segment.side_bar_items', ['items' => $childs, 'nes' => true])
                 </ul>
             @endif
         </li>

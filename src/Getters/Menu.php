@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Getters;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Developer\Getter;
+use Lar\LteAdmin\Models\LtePermission;
 
 /**
  * Class Menu
@@ -295,15 +296,26 @@ class Menu extends Getter
                 $item['title'] = false;
             }
 
+            if (isset($item['link']) && $item['link'] && isset($item['active']) && $item['active']) {
+
+                $item['active'] = LtePermission::checkUrl($item['link']);
+            }
+
             $result = array_merge($add, $item);
 
             $return[] = $result;
+
+            $last = array_key_last($return);
 
             static::$nested_counter++;
 
             if ($childs) {
 
-                $return = array_merge($return, static::nested($childs, $id, $item['route'] ?? 'lte', $result));
+                $chl = static::nested($childs, $id, $item['route'] ?? 'lte', $result);
+
+                $return[$last]['active'] = !!collect($chl)->where('active', true)->count();
+
+                $return = array_merge($return, $chl);
             }
         }
 

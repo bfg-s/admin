@@ -68,7 +68,14 @@ class Authenticate
 
             if ($request->ajax() && !$request->pjax()) {
 
-                return response()->json(["0:toast::error" => [__('lte::admin.access_denied'), __('lte::admin.error')]]);
+                $respond = ["0:toast::error" => [__('lte::admin.access_denied'), __('lte::admin.error')]];
+
+                if (request()->has("_exec")) {
+
+                    $respond["1:doc::reload"] = null;
+                }
+
+                return response()->json($respond);
             }
 
             else if (!$request->isMethod('get')) {
