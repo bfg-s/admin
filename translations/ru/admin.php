@@ -31,7 +31,7 @@ return [
     'php_modules'                   => 'PHP модули',
     'timezone'                      => 'Часовой пояс',
     'language'                      => 'Язык',
-    'refresh'                       => 'Оновити',
+    'refresh'                       => 'Обновить',
     'collapse_all'                  => 'Свернуть все',
     'expand_all'                    => 'Развернуть все',
     'list'                          => 'Список',
