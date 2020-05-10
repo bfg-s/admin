@@ -14,6 +14,11 @@ use Lar\LteAdmin\Models\LtePermission;
 class Menu extends Getter
 {
     /**
+     * @var string
+     */
+    public static $name = "lte.menu";
+
+    /**
      * @var int
      */
     protected static $nested_counter = 0;

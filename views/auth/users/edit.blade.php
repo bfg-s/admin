@@ -2,7 +2,20 @@
 
 @section('content')
 
-    @card(__('lte::admin.edit_admin'))
+    @card()
+        @cardhead(__('lte::admin.edit_admin'))
+            @cardheadtools()
+                @buttongroup()
+                    @bgroupreload()
+                    @bgrouprlist()
+                    @bgrouprinfo()
+                    @if(lte_model()->id !== 1)
+                        @bgrouprdestroy()
+                    @endif
+                    @bgroupradd()
+                @endbuttongroup
+            @endcardheadtools
+        @endcardhead
 
         @include('lte::auth.users.form')
 

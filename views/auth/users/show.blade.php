@@ -2,7 +2,20 @@
 
 @section('content')
 
-    @card(__('lte::admin.id_information'))
+    @card()
+        @cardhead(__('lte::admin.id_information'))
+            @cardheadtools()
+                @buttongroup()
+                    @bgroupreload()
+                    @bgrouprlist()
+                    @bgrouprinfo()
+                    @if(lte_model()->id !== 1)
+                        @bgrouprdestroy()
+                    @endif
+                    @bgroupradd()
+                @endbuttongroup
+            @endcardheadtools
+        @endcardhead
 
         @cardbody(['p-0'])
 

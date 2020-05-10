@@ -49,6 +49,7 @@ module.exports = class extends Executor {
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
+                //console.log(element);
                 let label = $('<div></div>').addClass('col-sm-2'),
                     errWrap = $('<div></div>').addClass('col-sm-10')
                         .append(error.addClass('invalid-feedback')),

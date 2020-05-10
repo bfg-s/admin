@@ -144,10 +144,14 @@ class ButtonGroup extends DIV {
      * Reload button
      * @param  string|null  $link
      * @param  string|null  $title
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
     public function reload(string $link = null, string $title = null)
     {
-        $this->secondary(['fas fa-redo-alt', $title ?? __('lte::admin.refresh')])->dataClick()->location($link ?? \Request::getRequestUri());
+        $return = $this->secondary(['fas fa-redo-alt', $title ?? __('lte::admin.refresh')]);
+        $return->dataClick()->location($link ?? \Request::getRequestUri());
+        $return->setTitleIf($title === '', __('lte::admin.refresh'));
+        return $return;
     }
 
     /**
@@ -172,31 +176,37 @@ class ButtonGroup extends DIV {
 
     /**
      * Resource list button
-     * @param  string  $link
+     * @param  string|null  $link
      * @param  string|null  $title
+     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
      */
     public function resourceList(string $link = null, string $title = null)
     {
         if ($link || isset($this->menu['link'])) {
 
-            $this->primary(['fas fa-list-alt', $title ?? __('lte::admin.list')])->dataClick()->location($link ?? $this->menu['link']);
+            $return = $this->primary(['fas fa-list-alt', $title ?? __('lte::admin.list')]);
+            $return->dataClick()->location($link ?? $this->menu['link']);
+            $return->setTitleIf($title === '', __('lte::admin.list'));
+            return $return;
         }
+
+        return $this;
     }
 
     /**
      * Resource edit button
-     * @param  string  $link
+     * @param  string|null  $link
      * @param  string|null  $title
+     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
      */
     public function resourceEdit(string $link = null, string $title = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
-            $rk_name = $this->model->getRouteKeyName();
-
-            $key = $this->model->getOriginal($rk_name);
-
-            if ($key && isset($this->menu['link.edit']) && (method_exists($this->action, 'edit') || method_exists($this->action, 'edit_default'))) {
+            if (
+                $key = $this->model->getRouteKey() &&
+                isset($this->menu['link.edit'])
+            ) {
 
                 $link = $this->menu['link.edit']($key);
             }
@@ -204,24 +214,29 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->success('fas fa-edit')->text(':space', $title ?? __('lte::admin.edit'))->dataClick()->location($link);
+            $return = $this->success(['fas fa-edit', $title ?? __('lte::admin.edit')]);
+            $return->dataClick()->location($link);
+            $return->setTitleIf($title === '', __('lte::admin.edit'));
+            return $return;
         }
+
+        return $this;
     }
 
     /**
      * Resource info button
-     * @param  string  $link
+     * @param  string|null  $link
      * @param  string|null  $title
+     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
      */
     public function resourceInfo(string $link = null, string $title = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
-            $rk_name = $this->model->getRouteKeyName();
-
-            $key = $this->model->getOriginal($rk_name);
-
-            if ($key && isset($this->menu['link.show']) && (method_exists($this->action, 'show') || method_exists($this->action, 'show_default'))) {
+            if (
+                $key = $this->model->getRouteKey() &&
+                isset($this->menu['link.show'])
+            ) {
 
                 $link = $this->menu['link.show']($key);
             }
@@ -229,24 +244,31 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->info(['fas fa-info-circle', $title ?? __('lte::admin.information')])->dataClick()->location($link);
+            $return = $this->info(['fas fa-info-circle', $title ?? __('lte::admin.information')]);
+            $return->dataClick()->location($link);
+            $return->setTitleIf($title === '', __('lte::admin.information'));
+            return $return;
         }
+
+        return $this;
     }
 
     /**
      * Resource add button
-     * @param  string  $link
+     * @param  string|null  $link
      * @param  string|null  $title
+     * @param  string|null  $rk_name
+     * @param  null  $key
+     * @return \Lar\Layout\Abstracts\Component|ButtonGroup|BUTTON
      */
-    public function resourceDestroy(string $link = null, string $title = null)
+    public function resourceDestroy(string $link = null, string $title = null, string $rk_name = null, $key = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
-            $rk_name = $this->model->getRouteKeyName();
-
-            $key = $this->model->getOriginal($rk_name);
-
-            if ($key && isset($this->menu['link.destroy']) && (method_exists($this->action, 'destroy') || method_exists($this->action, 'destroy_default'))) {
+            if (
+                $key = $this->model->getRouteKey() &&
+                isset($this->menu['link.destroy'])
+            ) {
 
                 $link = $this->menu['link.destroy']($key);
             }
@@ -254,20 +276,22 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $this->danger(['fas fa-trash-alt', $title ?? __('lte::admin.delete')])->setDatas([
+            return $this->danger(['fas fa-trash-alt', $title ?? __('lte::admin.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name).":{$key}?"]),
+                    __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
                     $link . " >> \$jax.del"
                 ]
-            ]);
+            ])->setTitleIf($title === '', __('lte::admin.delete'));
         }
+
+        return $this;
     }
 
     /**
      * @param  array  $btn
      * @param  string|null  $form
-     * @return \Lar\Layout\Abstracts\Component
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
     public function submit($btn = null, string $form = null)
     {
@@ -295,14 +319,18 @@ class ButtonGroup extends DIV {
      */
     public function resourceAdd(string $link = null, string $title = null)
     {
-        if (!$link && isset($this->menu['link.create']) && (method_exists($this->action, 'create') || method_exists($this->action, 'create_default'))) {
+        if (!$link && isset($this->menu['link.create'])) {
 
             $link = $this->menu['link.create'];
         }
 
         if ($link) {
-
-            $this->success(['fas fa-plus', $title ?? __('lte::admin.add')])->dataClick()->location($link);
+            $return = $this->success(['fas fa-plus', $title ?? __('lte::admin.add')]);
+            $return->setTitleIf($title === '', __('lte::admin.add'));
+            $return->dataClick()->location($link);
+            return $return;
         }
+
+        return $this;
     }
 }

@@ -1,4 +1,23 @@
 
+$.validator.addMethod( "any-checked", ( value, element, param ) => {
+
+    if (param === true) {
+
+        return !!$(element).find(':checked').length;
+    }
+
+    return $(element).find(':checked').length === param;
+
+}, (param) => {
+
+    if (param === true) {
+
+        return 'You must select at least one item.';
+    }
+
+    return `You must select at least ${param} items.`;
+});
+
 $.validator.addMethod( "confirmation", ( value, element, params ) => {
 
     let name = element.name,

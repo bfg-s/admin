@@ -12,6 +12,8 @@
             @column(__('lte::admin.login_name'), 'login', true)
             @column(__('lte::admin.name'), 'name', true)
 
+            @disabledelete(function(\Lar\LteAdmin\Models\LteUser $user){ return $user->id !== 1; })
+
         @endcardbodytable
 
         @tablefooter

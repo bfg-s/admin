@@ -3,6 +3,8 @@
 namespace Lar\LteAdmin\Core;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Lar\LteAdmin\Models\LteFileStorage;
 
@@ -29,11 +31,16 @@ class ModelSaver
     /**
      * ModelSaver constructor.
      *
-     * @param Model $model
+     * @param Model|string $model
      * @param array $data
      */
     public function __construct($model, array $data)
     {
+        if (is_string($model)) {
+
+            $model = new $model;
+        }
+
         $this->model = $model;
 
         $this->data = $data;
@@ -50,9 +57,26 @@ class ModelSaver
     }
 
     /**
+     * @param $model
+     * @param  array  $data
+     * @return \Illuminate\Support\Collection
+     */
+    public static function doMany($model, array $data)
+    {
+        $results = collect();
+
+        foreach ($data as $datum) {
+
+            $results->push((new static($model, $datum))->save());
+        }
+
+        return $results;
+    }
+
+    /**
      * Save method
      *
-     * @return bool|void
+     * @return bool|void|mixed
      */
     public function save()
     {
@@ -88,7 +112,40 @@ class ModelSaver
 
                 if (is_array($param) && method_exists($this->model, $key)) {
 
-                    (new static($this->model->{$key} ?? $this->model->{$key}(), $param))->save();
+                    $builder = $this->model->{$key}();
+
+                    if ($builder instanceof BelongsToMany) {
+
+                        $builder->sync($param);
+                    }
+
+                    else if ($builder instanceof HasMany) {
+                        if (isset($param[0]) && is_array($param[0])) {
+                            $param = collect($param);
+                            $params_with_id = $param->where('id');
+                            $ids = $params_with_id->pluck('id')->toArray();
+                            $has = $builder->whereIn('id', $ids)->get();
+                            foreach ($params_with_id as $with_id_key => $with_id) {
+                                if ($model = $has->where('id', $with_id['id'])->first()) {
+                                    (new static($model, $with_id))->save();
+                                } else {
+                                    unset($ids[$with_id_key]);
+                                }
+                            }
+                            foreach ($param->whereNotIn('id', $ids) as $item) {
+                                (new static($this->model->{$key}(), $item))->save();
+                            }
+                        }
+                        else {
+
+                            (new static($this->model->{$key}(), $param))->save();
+                        }
+                    }
+
+                    else {
+
+                        (new static($this->model->{$key} ?? $builder, $param))->save();
+                    }
                 }
             }
         }
@@ -107,7 +164,40 @@ class ModelSaver
 
                 if (is_array($param) && method_exists($this->model, $key)) {
 
-                    (new static($this->model->{$key} ?? $this->model->{$key}(), $param))->save();
+                    $builder = $this->model->{$key}();
+
+                    if ($builder instanceof BelongsToMany) {
+
+                        $builder->sync($param);
+                    }
+
+                    else if ($builder instanceof HasMany) {
+                        if (isset($param[0]) && is_array($param[0])) {
+                            $param = collect($param);
+                            $params_with_id = $param->where('id');
+                            $ids = $params_with_id->pluck('id')->toArray();
+                            $has = $builder->whereIn('id', $ids)->get();
+                            foreach ($params_with_id as $with_id_key => $with_id) {
+                                if ($model = $has->where('id', $with_id['id'])->first()) {
+                                    (new static($model, $with_id))->save();
+                                } else {
+                                    unset($ids[$with_id_key]);
+                                }
+                            }
+                            foreach ($param->whereNotIn('id', $ids) as $item) {
+                                (new static($this->model->{$key}(), $item))->save();
+                            }
+                        }
+                        else {
+
+                            (new static($this->model->{$key}(), $param))->save();
+                        }
+                    }
+
+                    else {
+
+                        (new static($this->model->{$key} ?? $builder, $param))->save();
+                    }
                 }
             }
 

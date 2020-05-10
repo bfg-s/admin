@@ -30,4 +30,12 @@ class LteRole extends Model
     {
         return $this->belongsToMany(config('lte.auth.providers.lte.model'), "lte_role_user", "lte_role_id", "lte_user_id");
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function functions()
+    {
+        return $this->belongsToMany(LteFunction::class, "lte_role_function", "lte_role_id", "lte_function_id");
+    }
 }

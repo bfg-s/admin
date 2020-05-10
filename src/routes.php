@@ -33,15 +33,24 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
             ->model(\Lar\LteAdmin\Models\LteUser::class)
             ->icon_users_cog();
 
-        $group->item('lte::admin.roles', 'roles')
-            ->resource('lte_role', config('lte.action.lte_role'))
-            ->model(\Lar\LteAdmin\Models\LteRole::class)
-            ->icon_user_secret();
+        $group->group('lte::admin.access', 'access', function (\Lar\LteAdmin\Core\NavGroup $group) {
 
-        $group->item('lte::admin.permission', 'permission')
-            ->resource('lte_permission', config('lte.action.lte_permission'))
-            ->model(\Lar\LteAdmin\Models\LtePermission::class)
-            ->icon_ban();
+            $group->item('lte::admin.roles', 'roles')
+                ->resource('lte_role', config('lte.action.lte_role'))
+                ->model(\Lar\LteAdmin\Models\LteRole::class)
+                ->icon_user_secret();
+
+            $group->item('lte::admin.permission', 'permission')
+                ->resource('lte_permission', config('lte.action.lte_permission'))
+                ->model(\Lar\LteAdmin\Models\LtePermission::class)
+                ->icon_ban();
+
+            $group->item('lte::admin.functions', 'functions')
+                ->resource('lte_functions', config('lte.action.lte_functions'))
+                ->model(\Lar\LteAdmin\Models\LteFunction::class)
+                ->icon_scroll();
+
+        })->icon_universal_access();
 
     })->icon_cogs()->role('root');
 

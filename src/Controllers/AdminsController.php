@@ -51,6 +51,14 @@ class AdminsController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show()
+    {
+        return view('lte::auth.users.show');
+    }
+
+    /**
      * @param  Request  $request
      * @param  Respond  $respond
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

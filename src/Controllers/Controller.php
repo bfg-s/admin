@@ -137,8 +137,16 @@ class Controller extends BaseController
         return respond();
     }
 
-    protected function returnTo()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
+     */
+    public function returnTo()
     {
+        if (request()->ajax() && !request()->pjax()) {
+
+            return respond()->reload();
+        }
+
         $_after = request()->get('_after', 'index');
 
         if ($_after === 'index' && $menu = gets()->lte->menu->now) {

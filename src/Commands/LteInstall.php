@@ -39,31 +39,22 @@ class LteInstall extends Command
             '--force' => true
         ]);
 
+        $make_seeds = false;
+
         if (!\Schema::hasTable('lte_users')) {
 
-            $this->call('migrate', array_filter([
-                '--path' => __DIR__ . '/../../migrations',
-                '--realpath' => true,
-                '--force' => true,
-            ]));
+            $make_seeds = true;
+        }
+
+        $this->call('migrate', array_filter([
+            '--force' => true
+        ]));
+
+        if ($make_seeds) {
 
             $this->call('db:seed', [
                 '--class' => LteSeeder::class
             ]);
-        }
-
-        if (!\Schema::hasTable('lte_permission')) {
-
-            $this->call('migrate', array_filter([
-                '--force' => true
-            ]));
-        }
-
-        if (!\Schema::hasTable('users')) {
-
-            $this->call('migrate', array_filter([
-                '--force' => true
-            ]));
         }
 
         if (!is_dir($dir = lte_app_path())) {

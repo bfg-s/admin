@@ -58,24 +58,29 @@ class Table extends DIV implements onRender
     /**
      * Shoe default controls
      *
-     * @var bool
+     * @var \Closure
      */
-    protected $controls = true;
+    protected $controls;
+
+    /**
+     * @var \Closure
+     */
+    protected $info_control;
+
+    /**
+     * @var \Closure
+     */
+    protected $delete_control;
+
+    /**
+     * @var \Closure
+     */
+    protected $edit_control;
 
     /**
      * @var bool
      */
-    protected $info_control = true;
-
-    /**
-     * @var bool
-     */
-    protected $delete_control = true;
-
-    /**
-     * @var bool
-     */
-    protected $edit_control = true;
+    protected $default_fields = true;
 
     /**
      * @var string
@@ -95,6 +100,11 @@ class Table extends DIV implements onRender
      */
     public function __construct($model = null, array $instructions = null, ...$params)
     {
+        $this->controls =
+        $this->info_control =
+        $this->delete_control =
+        $this->edit_control = function () { return true; };
+
         if (is_array($model)) {
 
             $instructions = $model;
@@ -399,11 +409,12 @@ class Table extends DIV implements onRender
     }
 
     /**
+     * @param  \Closure|null  $test
      * @return $this
      */
-    public function disableControls()
+    public function disableControls(\Closure $test = null)
     {
-        $this->controls = false;
+        $this->controls = $test ? $test : function () { return false; };
 
         return $this;
     }
@@ -411,9 +422,9 @@ class Table extends DIV implements onRender
     /**
      * @return $this
      */
-    public function disableInfo()
+    public function disableInfo(\Closure $test = null)
     {
-        $this->info_control = false;
+        $this->info_control = $test ? $test : function () { return false; };
 
         return $this;
     }
@@ -421,9 +432,9 @@ class Table extends DIV implements onRender
     /**
      * @return $this
      */
-    public function disableEdit()
+    public function disableEdit(\Closure $test = null)
     {
-        $this->edit_control = false;
+        $this->edit_control = $test ? $test : function () { return false; };
 
         return $this;
     }
@@ -431,9 +442,19 @@ class Table extends DIV implements onRender
     /**
      * @return $this
      */
-    public function disableDelete()
+    public function disableDelete(\Closure $test = null)
     {
-        $this->delete_control = false;
+        $this->delete_control = $test ? $test : function () { return false; };
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableDefaults()
+    {
+        $this->default_fields = false;
 
         return $this;
     }
@@ -445,45 +466,35 @@ class Table extends DIV implements onRender
      */
     public function onRender()
     {
-        if ($this->controls) {
+        if ($this->default_fields) {
 
             $this->column(function (TH $th) {
-
                 $th->addClass('fit');
 
                 return __('lte::admin.id');
-
             }, 'id', true, true);
 
 
             $this->column(function (TH $th) {
-
                 $th->addClass('fit');
 
                 return view('lte::widget.model_table.checkbox', [
                     'id' => false,
                     'table_id' => $this->table->getId()
                 ])->render();
-
             }, function (Model $model) {
-
                 return view('lte::widget.model_table.checkbox', [
                     'id' => $model->id,
                     'table_id' => $this->table->getId()
                 ])->render();
-
             }, null, true);
 
             $this->column(function (TH $th) {
-
                 $th->addClass('fit');
 
                 return '';
-
             }, function (TD $td, Model $model) {
-
                 $td->appEnd(ButtonGroup::create(function (ButtonGroup $group) use ($model, $td) {
-
                     $menu = gets()->lte->menu->now;
 
                     $this->callEvent('controls_prepend', [
@@ -493,38 +504,19 @@ class Table extends DIV implements onRender
                         TD::class => $td
                     ]);
 
-                    if ($menu) {
+                    if (($this->controls)($model) && $menu) {
+                        $key = $model->getRouteKey();
 
-                        $action = \Str::before(\Route::currentRouteAction(), '@');
-
-                        $rk_name = $model->getRouteKeyName();
-
-                        $key = $model->getOriginal($rk_name);
-
-                        if ($this->edit_control && $key && isset($menu['link.edit']) && (method_exists($action, 'edit') || method_exists($action, 'edit_default'))) {
-
-                            $group->success('fas fa-edit')->setTitle(__('lte::admin.edit'))->dataClick()->location(
-                                $menu['link.edit']([$menu['model.param'] => $key])
-                            );
+                        if (($this->edit_control)($model)) {
+                            $group->resourceEdit($menu['link.edit']($key), '');
                         }
 
-                        if ($this->delete_control && $key && isset($menu['link.destroy']) && (method_exists($action, 'destroy') || method_exists($action, 'destroy_default'))) {
-
-                            $group->danger('fas fa-trash-alt')
-                                ->setTitle(__('lte::admin.delete'))->setDatas([
-                                    'click' => 'alert::confirm',
-                                    'params' => [
-                                        __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name).":{$key}?"]),
-                                        $menu['link.destroy']([$menu['model.param'] => $key]) . " >> \$jax.del"
-                                    ]
-                                ]);
+                        if (($this->delete_control)($model)) {
+                            $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
                         }
 
-                        if ($this->info_control && $key && isset($menu['link.show']) && (method_exists($action, 'show') || method_exists($action, 'show_default'))) {
-
-                            $group->info('fas fa-info-circle')->setTitle(__('lte::admin.information'))->dataClick()->location(
-                                $menu['link.show']([$menu['model.param'] => $key])
-                            );
+                        if (($this->info_control)($model)) {
+                            $group->resourceInfo($menu['link.show']($key), '');
                         }
                     }
 

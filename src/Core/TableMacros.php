@@ -19,18 +19,30 @@ class TableMacros
      * @param $model
      * @return \Lar\Layout\Abstracts\Component
      */
-    public function input_switcher($field, $value, $props, $model)
+    public function input_switcher($field, $value, $props, Model $model)
     {
         if ($model instanceof Model) {
 
+            $now = lte_now();
+
+            if (isset($now['link.update'])) {
+
+                return Switcher::create($props, ['name' => $field, 'data' => [
+                    'size' => 'mini',
+                    'mouseup-put' => $now['link.update']($model->getRouteKey()),
+                    'mouseup-params' => json_encode([$field => ($value ? 0 : 1)]),
+                ]])->setCheckedIf($value, 'checked');
+            }
+
             return Switcher::create($props, ['name' => $field, 'data' => [
-                'size' => 'mini', 'mouseup-jax' => 'lte_admin.custom_save', 'mouseup-props' => [
+                'size' => 'mini',
+                'mouseup-jax' => 'lte_admin.custom_save', 'mouseup-props' => [
                     get_class($model),
                     $model->id,
                     $field,
                     '>>$:is(:checked)'
-                ]]
-            ])->setCheckedIf($value, 'checked');
+                ]
+            ]])->setCheckedIf($value, 'checked');
         }
 
         return $value;

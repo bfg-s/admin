@@ -37,6 +37,7 @@ return [
         'lte_user' => '\Lar\LteAdmin\Controllers\AdminsController',
         'lte_role' => '\Lar\LteAdmin\Controllers\RolesController',
         'lte_permission' => '\Lar\LteAdmin\Controllers\PermissionController',
+        'lte_functions' => '\Lar\LteAdmin\Controllers\FunctionsController',
     ],
 
     /**
@@ -85,12 +86,6 @@ return [
             'image' => 'images',
             'file'  => 'files',
         ],
-    ],
-
-    'gets' => [
-        'lte' => [
-            'menu' => \Lar\LteAdmin\Getters\Menu::class
-        ]
     ],
 
     /**

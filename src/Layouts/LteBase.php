@@ -82,11 +82,11 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/popper/umd/popper-utils.min.js',
         'lte-asset/plugins/sparklines/sparkline.js',
         'lte-asset/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
-        'lte-asset/plugins/jquery-validation/jquery.validate.min.js',
-        'lte-asset/plugins/jquery-validation/localization/messages_ru.min.js',
         'lte-asset/plugins/daterangepicker/moment.min.js',
         'lte-asset/plugins/daterangepicker/daterangepicker.js',
 
+        'lte-admin/plugins/jquery-validation/jquery.validate.min.js',
+        'lte-admin/plugins/jquery-validation/localization/messages_ru.min.js',
         'lte-admin/plugins/bootstrap-fileinput/js/plugins/piexif.min.js',
         'lte-admin/plugins/bootstrap-fileinput/js/plugins/sortable.min.js',
         'lte-admin/plugins/ckeditor5-build-classic/ckeditor.js',

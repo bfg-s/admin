@@ -16,6 +16,8 @@ use Lar\LteAdmin\Components\Form;
 use Lar\LteAdmin\Components\FormFooter;
 use Lar\LteAdmin\Components\FormGroup;
 use Lar\LteAdmin\Components\FormGroupEnd;
+use Lar\LteAdmin\Components\HorizontalCheckBox;
+use Lar\LteAdmin\Components\HorizontalRadio;
 use Lar\LteAdmin\Components\InfoBox;
 use Lar\LteAdmin\Components\Nestable;
 use Lar\LteAdmin\Components\Select2;
@@ -447,6 +449,20 @@ class BladeBootstrap {
 
             return "<?php {$this->inp_default_datas} echo \\{$this->div_link}::create({$attrs})->attr(['data-name' => \$name, 'data-placeholder' => \$title, 'id' => \$id, 'data-load' => 'md::simple'])->addClass('form-control')->text(\$value); ?>";
         });
+
+        \Blade::directive('formcheckbox', function ($attrs = '') {
+
+            $class = HorizontalCheckBox::class;
+
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->name(\$name)->id(\$id)->value(\$value); ?>";
+        });
+
+        \Blade::directive('formradio', function ($attrs = '') {
+
+            $class = HorizontalRadio::class;
+
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->name(\$name)->id(\$id)->value(\$value); ?>";
+        });
     }
 
     /**
@@ -688,24 +704,29 @@ class BladeBootstrap {
             return "<?php \$__table->deleted_at(); ?>";
         });
 
-        \Blade::directive('disablecontrols', function () {
+        \Blade::directive('disablecontrols', function ($func = '') {
 
-            return "<?php \$__table->disableControls(); ?>";
+            return "<?php \$__table->disableControls({$func}); ?>";
         });
 
-        \Blade::directive('disableinfo', function () {
+        \Blade::directive('disableinfo', function ($func = '') {
 
-            return "<?php \$__table->disableInfo(); ?>";
+            return "<?php \$__table->disableInfo({$func}); ?>";
         });
 
-        \Blade::directive('disableedit', function () {
+        \Blade::directive('disableedit', function ($func = '') {
 
-            return "<?php \$__table->disableEdit(); ?>";
+            return "<?php \$__table->disableEdit({$func}); ?>";
         });
 
-        \Blade::directive('disabledelete', function () {
+        \Blade::directive('disabledelete', function ($func = '') {
 
-            return "<?php \$__table->disableDelete(); ?>";
+            return "<?php \$__table->disableDelete({$func}); ?>";
+        });
+
+        \Blade::directive('disabledefaults', function () {
+
+            return "<?php \$__table->disableDefaults(); ?>";
         });
 
         \Blade::directive('endtable', function () {
@@ -718,10 +739,7 @@ class BladeBootstrap {
             return "<?php echo \$__table->footer(); ?>";
         });
 
-        GenerateBladeHelpers::$just[] = 'disabledelete';
-        GenerateBladeHelpers::$just[] = 'disableedit';
-        GenerateBladeHelpers::$just[] = 'disableinfo';
-        GenerateBladeHelpers::$just[] = 'disablecontrols';
+        GenerateBladeHelpers::$just[] = 'disabledefaults';
         GenerateBladeHelpers::$just[] = 'endtable';
         GenerateBladeHelpers::$just[] = 'tablefooter';
         GenerateBladeHelpers::$just[] = 'endcardbodytable';

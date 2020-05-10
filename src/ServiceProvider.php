@@ -4,11 +4,13 @@ namespace Lar\LteAdmin;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Executor;
 use Lar\Layout\Layout;
 use Lar\LteAdmin\Commands\LteInstall;
 use Lar\LteAdmin\Commands\MakeController;
 use Lar\LteAdmin\Core\BladeBootstrap;
+use Lar\LteAdmin\Core\FunctionsHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
@@ -155,6 +157,12 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Make lte view variables
          */
         $this->viewVariables();
+
+        /**
+         * Register getters
+         */
+        \Get::register(\Lar\LteAdmin\Getters\Menu::class);
+        \Get::register(\Lar\LteAdmin\Getters\Role::class);
     }
 
     /**
@@ -165,10 +173,18 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function register()
     {
+        /**
+         * Override errors
+         */
         $this->app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             Handler::class
         );
+
+        /**
+         * Helper registration
+         */
+        DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
 
         /**
          * Merge config from having by default
@@ -237,7 +253,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     private function loadAuthAndDiscConfig()
     {
-        config(\Arr::dot(config('lte.gets', []), 'gets.'));
         config(\Arr::dot(config('lte.auth', []), 'auth.'));
         config(\Arr::dot(config('lte.disks', []), 'filesystems.disks.'));
     }

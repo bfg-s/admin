@@ -53,7 +53,7 @@ if ( ! function_exists('lte_user') ) {
      */
     function lte_user () {
 
-        return LteAdmin::user();
+        return LteAdmin::user() ?? new \Lar\LteAdmin\Models\LteUser();
     }
 }
 
@@ -64,7 +64,18 @@ if ( ! function_exists('admin') ) {
      */
     function admin () {
 
-        return LteAdmin::user();
+        return LteAdmin::user() ?? new \Lar\LteAdmin\Models\LteUser();
+    }
+}
+
+if ( ! function_exists('lte_func') ) {
+
+    /**
+     * @return \Lar\LteAdmin\Core\CheckUserFunction
+     */
+    function lte_func () {
+
+        return lte_user()->func();
     }
 }
 

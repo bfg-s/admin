@@ -21,6 +21,11 @@ module.exports = class extends Executor {
             $(set_to).val(result);
         }
 
+        else {
+
+            $(this.target).val(result);
+        }
+
         return result;
     }
 
