@@ -61,11 +61,12 @@ class Controller extends BaseController
     /**
      * Update the specified resource in storage.
      *
+     * @param  array|null  $data
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update_default() {
+    public function update_default(array $data = null) {
 
-        if ($this->requestToModel()) {
+        if ($this->requestToModel($data)) {
 
             respond()->toast_success(__('lte::admin.saved_successfully'));
         }
@@ -81,11 +82,12 @@ class Controller extends BaseController
     /**
      * Store a newly created resource in storage.
      *
+     * @param  array|null  $data
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store_default() {
+    public function store_default(array $data = null) {
 
-        if ($this->requestToModel()) {
+        if ($this->requestToModel($data)) {
 
             respond()->toast_success(__('lte::admin.successfully_created'));
         }
