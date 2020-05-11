@@ -385,7 +385,7 @@ class Table extends DIV implements onRender
      */
     public function created_at()
     {
-        return $this->column(__('lte::admin.created_at'), 'true_data:created_at', true);
+        return $this->column(__('lte::admin.created_at'), 'true_data:created_at', 'created_at');
     }
 
     /**
@@ -395,7 +395,7 @@ class Table extends DIV implements onRender
      */
     public function updated_at()
     {
-        return $this->column(__('lte::admin.updated_at'), 'true_data:updated_at', true);
+        return $this->column(__('lte::admin.updated_at'), 'true_data:updated_at', 'updated_at');
     }
 
     /**
@@ -405,7 +405,7 @@ class Table extends DIV implements onRender
      */
     public function deleted_at()
     {
-        return $this->column(__('lte::admin.deleted_at'), 'true_data:deleted_at', true);
+        return $this->column(__('lte::admin.deleted_at'), 'true_data:deleted_at', 'deleted_at');
     }
 
     /**
