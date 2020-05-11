@@ -171,8 +171,8 @@ class Controller extends BaseController
         $method_default = "{$method}_default";
 
         if (method_exists($this, $method_default)) {
-
-            return $this->{$method_default}(...$parameters);
+            
+            return $this->{$method_default}();
         }
 
         parent::__call($method, $parameters);
