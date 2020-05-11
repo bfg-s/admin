@@ -83,6 +83,30 @@ class TableMacros
      * @param $value
      * @return string
      */
+    public function append($props, $value)
+    {
+        $append = implode(" ", $props);
+
+        return $value.$append;
+    }
+
+    /**
+     * @param $props
+     * @param $value
+     * @return string
+     */
+    public function prepend($props, $value)
+    {
+        $prepend = implode(" ", $props);
+
+        return $prepend.$value;
+    }
+
+    /**
+     * @param $props
+     * @param $value
+     * @return string
+     */
     public function str_limit($props, $value)
     {
         $limit = $props[0] ?? 20;
