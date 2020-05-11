@@ -68,6 +68,21 @@ class TableMacros
      * @param $value
      * @return string
      */
+    public function money($props, $value)
+    {
+        $dec = $props[0] ?? 2;
+        $dec_point = $props[1] ?? '.';
+        $sep = $props[2] ?? ',';
+        $end = $props[3] ?? ' ';
+
+        return number_format($value, $dec, $dec_point, $sep) . $end;
+    }
+
+    /**
+     * @param $props
+     * @param $value
+     * @return string
+     */
     public function str_limit($props, $value)
     {
         $limit = $props[0] ?? 20;
