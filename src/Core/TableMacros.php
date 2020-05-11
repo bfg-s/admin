@@ -103,6 +103,24 @@ class TableMacros
     }
 
     /**
+     * @param $value
+     * @return string
+     */
+    public function copied($value)
+    {
+        return "<a href='javascript:void(0)' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a> " . $value;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function copied_right($value)
+    {
+        return $value . " <a href='javascript:void(0)' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a>";
+    }
+
+    /**
      * @param $props
      * @param $value
      * @return string
