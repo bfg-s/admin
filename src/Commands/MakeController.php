@@ -87,7 +87,7 @@ class MakeController extends Command
                 ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
 
             $class->method('show')->line()
-                ->line("return view('{$ap}.{$view_folder_name}.view');")
+                ->line("return view('{$ap}.{$view_folder_name}.show');")
                 ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
 
         }
