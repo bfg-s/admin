@@ -533,7 +533,7 @@ class Table extends DIV implements onRender
         $count = 0;
 
         if (is_array($this->model)) $count = count($this->model);
-        else $count = $this->model->count();
+        else if ($this->model) $count = $this->model->count();
 
         if (!$count) {
 

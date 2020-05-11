@@ -96,7 +96,7 @@ class Tabs extends UL implements onRender
                     'role' => 'tab',
                     'aria-controls' => $tab['id'],
                     'aria-selected' => $tab['active'] ? 'true' : 'false'
-                ])->attr($tab['attrs'])
+                ])
                 ->addClassIf($tab['active'], 'active')
                 ->setHref("#{$tab['id']}");
 
@@ -114,7 +114,7 @@ class Tabs extends UL implements onRender
                 'id' => $tab['id'],
                 'role' => 'tabpanel',
                 'aria-labelledby' => $key
-            ]])->addClassIf($tab['active'], 'active show')->text($tab['content']);
+            ]])->attr($tab['attrs'])->addClassIf($tab['active'], 'active show')->text($tab['content']);
         }
     }
 }
