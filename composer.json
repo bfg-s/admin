@@ -1,7 +1,7 @@
 {
     "name": "lar/lte-admin",
     "description": "Laravel Admin Lte",
-    "type": "library",
+    "type": "lar-library",
     "keywords": ["laravel", "admin", "lte", "lar"],
     "homepage": "https://bitbucket.org/lar-repo/lte-admin",
     "license": "MIT",
