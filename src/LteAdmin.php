@@ -12,7 +12,7 @@ class LteAdmin
     /**
      * @var string
      */
-    static $vesion = "2.0.0";
+    static $vesion = "2.4.0";
 
     /**
      * @var ExtendProvider[]
