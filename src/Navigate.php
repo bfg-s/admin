@@ -5,13 +5,14 @@ namespace Lar\LteAdmin;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\LteAdmin\Core\NavGroup;
 use Lar\LteAdmin\Core\NavItem;
+use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\Roads\Roads;
 
 /**
  * Class Navigate
  * @package Lar\LteAdmin
  */
-class Navigate
+class Navigate implements NavigateInterface
 {
     /**
      * @var array

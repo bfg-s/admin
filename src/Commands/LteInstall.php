@@ -6,6 +6,7 @@ use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\Models\LteSeeder;
 use Lar\LteAdmin\Models\LteUser;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class LteUpdateAssets
@@ -19,7 +20,7 @@ class LteInstall extends Command
      *
      * @var string
      */
-    protected $signature = 'lte:install';
+    protected $name = 'lte:install';
 
     /**
      * The console command description.
@@ -35,6 +36,15 @@ class LteInstall extends Command
      */
     public function handle()
     {
+        if ($extension = $this->option('extension')) {
+
+            if ($ext = \LteAdmin::extension($extension)) {
+                $this->info("Run Install [{$extension}]...");
+                $ext->install($this);
+                return ;
+            }
+        }
+
         $this->call('vendor:publish', [
             '--tag' => 'lte-migrations',
             '--force' => true
@@ -114,7 +124,7 @@ class LteInstall extends Command
 
         $this->call('vendor:publish', [
             '--tag' => 'lte-view',
-            '--force' => true
+            '--force' => $this->option('force')
         ]);
 
         $nav = lte_app_path('navigator.php');
@@ -155,12 +165,12 @@ class LteInstall extends Command
 
         $this->call('vendor:publish', [
             '--tag' => 'ljs-assets',
-            '--force' => true
+            '--force' => $this->option('force')
         ]);
 
         $this->call('vendor:publish', [
             '--tag' => 'lte-assets',
-            '--force' => true
+            '--force' => $this->option('force')
         ]);
 
         if (!is_file(config_path('layout.php'))) {
@@ -215,5 +225,18 @@ class LteInstall extends Command
 
 
         $this->info("Lar Admin LTE Installed");
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Publish the assets even if already exists'],
+            ['extension', 'e', InputOption::VALUE_OPTIONAL, 'Run install extension'],
+        ];
     }
 }
