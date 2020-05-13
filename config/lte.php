@@ -13,6 +13,7 @@ return [
      * Global rout configurations
      */
     'route' => [
+        'domain' => '',
         'namespace' => 'App\LteAdmin\Controllers',
         'prefix' => 'lte',
         'name' => 'lte.',

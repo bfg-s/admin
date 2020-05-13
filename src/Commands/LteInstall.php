@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Commands;
 use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\Models\LteSeeder;
+use Lar\LteAdmin\Models\LteUser;
 
 /**
  * Class LteUpdateAssets
@@ -42,6 +43,11 @@ class LteInstall extends Command
         $make_seeds = false;
 
         if (!\Schema::hasTable('lte_users')) {
+
+            $make_seeds = true;
+        }
+
+        else if (!LteUser::count()) {
 
             $make_seeds = true;
         }

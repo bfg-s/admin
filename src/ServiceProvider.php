@@ -56,7 +56,11 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         if (is_file(lte_app_path('routes.php'))) {
 
-            \Road::web()->middleware(['lte-auth'])->lang(config('layout.lang_mode', true))->gets('lte')
+            \Road::domain(config('lte.route.domain', ''))
+                ->web()
+                ->middleware(['lte-auth'])
+                ->lang(config('layout.lang_mode', true))
+                ->gets('lte')
                 ->layout(config('lte.route.layout'))
                 ->namespace(config('lte.route.namespace'))
                 ->prefix(config('lte.route.prefix'))
@@ -69,7 +73,11 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         if (is_file(base_path('routes/admin.php'))) {
 
-            \Road::web()->middleware(['lte-auth'])->lang(config('layout.lang_mode', true))->gets('lte')
+            \Road::domain(config('lte.route.domain', ''))
+                ->web()
+                ->middleware(['lte-auth'])
+                ->lang(config('layout.lang_mode', true))
+                ->gets('lte')
                 ->layout(config('lte.route.layout'))
                 ->namespace(config('lte.route.namespace'))
                 ->prefix(config('lte.route.prefix'))
@@ -80,7 +88,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Lte Admin basic routes
          */
-        \Road::web()->lang(config('layout.lang_mode', true))->gets('lte')->middleware(['lte-auth'])
+        \Road::domain(config('lte.route.domain', ''))
+            ->web()
+            ->lang(config('layout.lang_mode', true))
+            ->gets('lte')
+            ->middleware(['lte-auth'])
             ->prefix(config('lte.route.prefix'))
             ->name(config('lte.route.name'))
             ->group(__DIR__ . '/routes.php');
