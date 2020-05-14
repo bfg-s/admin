@@ -11,6 +11,7 @@ use Lar\Roads\Roads;
 /**
  * Class Navigate
  * @package Lar\LteAdmin
+ * @mixin \Lar\LteAdmin\Core\NavigatorExtensions
  */
 class Navigate implements NavigateInterface
 {
@@ -127,5 +128,28 @@ class Navigate implements NavigateInterface
     public function instance()
     {
         return $this;
+    }
+
+    /**
+     * Include  all extensions
+     */
+    public function all_extensions()
+    {
+        foreach (\LteAdmin::extensions() as $extension) {
+
+            $extension->navigator($this);
+        }
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     */
+    public function __call($name, $arguments)
+    {
+        if ($ext = \LteAdmin::extension($name)) {
+
+            $ext->navigator($this);
+        }
     }
 }

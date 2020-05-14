@@ -10,6 +10,7 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 /**
  * Class NavGroup
  * @package Lar\LteAdmin\Core
+ * @mixin NavigatorExtensions
  */
 class NavGroup implements Arrayable, NavigateInterface
 {
@@ -97,5 +98,28 @@ class NavGroup implements Arrayable, NavigateInterface
         }
 
         return $this->items;
+    }
+
+    /**
+     * Include  all extensions
+     */
+    public function all_extensions()
+    {
+        foreach (\LteAdmin::extensions() as $extension) {
+
+            $extension->navigator($this);
+        }
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     */
+    public function __call($name, $arguments)
+    {
+        if ($ext = \LteAdmin::extension($name)) {
+
+            $ext->navigator($this);
+        }
     }
 }

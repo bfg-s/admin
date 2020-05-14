@@ -10,7 +10,8 @@ use Lar\Layout\Layout;
 use Lar\LteAdmin\Commands\LteInstall;
 use Lar\LteAdmin\Commands\MakeController;
 use Lar\LteAdmin\Core\BladeBootstrap;
-use Lar\LteAdmin\Core\FunctionsHelperGenerator;
+use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
+use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
@@ -128,7 +129,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
         ], 'lte-adminlte-assets');
 
-        /**s
+        /**
          * Register publishers migrations
          */
         $this->publishes([
@@ -197,6 +198,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Helper registration
          */
         DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
+        DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
 
         /**
          * Merge config from having by default

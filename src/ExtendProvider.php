@@ -15,9 +15,15 @@ use Illuminate\Console\Command;
 abstract class ExtendProvider extends ServiceProviderIlluminate
 {
     /**
+     * Extension ID name
      * @var string
      */
     static $name;
+
+    /**
+     * @var string
+     */
+    static $description = "";
 
     /**
      * @var array
@@ -85,5 +91,11 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * @return void
      */
     abstract public function install(Command $command): void;
+
+    /**
+     * Uninstall process
+     * @param  Command  $command
+     */
+    abstract public function uninstall(Command $command): void;
 }
 

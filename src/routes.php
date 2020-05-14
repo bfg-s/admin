@@ -52,7 +52,7 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
 
         })->icon_universal_access();
 
-    })->icon_cogs()->role('root');
+    })->icon_cogs();
 
     $roads->namespace(config('lte.route.namespace'))->group(function (Roads $roads) {
 

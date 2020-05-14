@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace Lar\LteAdmin\Core\Generators;
 
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
@@ -12,7 +12,7 @@ use Lar\LteAdmin\Models\LteFunction;
  * Class FunctionsHelperGenerator
  * @package Lar\LteAdmin\Core
  */
-class FunctionsHelperGenerator implements DumpExecute {
+class ExtensionNavigatorHelperGenerator implements DumpExecute {
 
     /**
      * @param  Command  $command
@@ -22,9 +22,7 @@ class FunctionsHelperGenerator implements DumpExecute {
     {
         $namespace = namespace_entity("Lar\LteAdmin\Core");
 
-        $namespace->wrap('php');
-
-        $namespace->class("FunctionsDoc", function (ClassEntity $class) {
+        $namespace->class("NavigatorExtensions", function (ClassEntity $class) {
 
             $class->doc(function (DocumentorEntity $doc) {
 
@@ -32,7 +30,7 @@ class FunctionsHelperGenerator implements DumpExecute {
             });
         });
 
-        file_put_contents(base_path('_ide_helper_lte_func.php'), $namespace->render());
+        return $namespace->render();
     }
 
     /**
@@ -43,9 +41,9 @@ class FunctionsHelperGenerator implements DumpExecute {
      */
     protected function generateDefaultMethods(DocumentorEntity $doc)
     {
-        foreach (LteFunction::all() as $func) {
+        foreach (\LteAdmin::extensions() as $name => $provider) {
 
-            $doc->tagPropertyRead('bool', $func->slug, "Check if the user has access to the function ({$func->description})");
+            $doc->tagMethod('void', $name, "Make extension routes ($name})");
         }
     }
 }
