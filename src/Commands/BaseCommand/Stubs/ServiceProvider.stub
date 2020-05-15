@@ -1,0 +1,73 @@
+<?php
+
+namespace {NAMESPACE};
+
+use Illuminate\Console\Command;
+use Lar\LteAdmin\ExtendProvider;
+use Lar\LteAdmin\Interfaces\NavigateInterface;
+use {NAMESPACE}\Extension\Install;
+use {NAMESPACE}\Extension\Navigator;
+use {NAMESPACE}\Extension\Uninstall;
+
+/**
+ * Class ServiceProvider
+ * @package {NAMESPACE}
+ */
+class ServiceProvider extends ExtendProvider
+{
+    /**
+     * @var string
+     */
+    public static $name = "{NAME}";
+
+    /**
+     * @var string
+     */
+    public static $description = "{DESCRIPTION}";
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function boot()
+    {
+        parent::boot();
+    }
+
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        parent::register();
+    }
+
+    /**
+     * @param  NavigateInterface  $navigate
+     */
+    public function navigator(NavigateInterface $navigate): void
+    {
+        Navigator::handle($navigate, $this);
+    }
+
+    /**
+     * @param  Command  $command
+     */
+    public function install(Command $command): void
+    {
+        Install::handle($command, $this);
+    }
+
+    /**
+     * @param  Command  $command
+     */
+    public function uninstall(Command $command): void
+    {
+        Uninstall::handle($command, $this);
+    }
+}
+

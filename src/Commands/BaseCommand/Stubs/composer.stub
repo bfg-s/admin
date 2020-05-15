@@ -1,0 +1,33 @@
+{
+    "name": "{NAME}",
+    "description": "{DESCRIPTION}",
+    "type": "lar-lte-admin-extension",
+    "keywords": ["laravel", "lar", "lte", "admin", "extension", "{EXTENSION}"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "{FOLDER}"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.3.0",
+        "lar/lte-admin": "^{LTE_VERSION}"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "{COMPOSER_NAMESPACE}\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "{COMPOSER_NAMESPACE}\\ServiceProvider"
+            ]
+        }
+    }
+}

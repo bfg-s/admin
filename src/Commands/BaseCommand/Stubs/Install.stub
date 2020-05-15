@@ -1,0 +1,22 @@
+<?php
+
+namespace {NAMESPACE}\Extension;
+
+use Illuminate\Console\Command;
+use {NAMESPACE}\ServiceProvider;
+
+/**
+ * Class Install
+ * @package {NAMESPACE}\Extension
+ */
+class Install {
+
+    /**
+     * @param  Command  $command
+     * @param  ServiceProvider  $provider
+     */
+    public static function handle(Command $command, ServiceProvider $provider)
+    {
+
+    }
+}

@@ -1,0 +1,22 @@
+<?php
+
+namespace {NAMESPACE}\Extension;
+
+use {NAMESPACE}\ServiceProvider;
+use Lar\LteAdmin\Interfaces\NavigateInterface;
+
+/**
+ * Class Navigator
+ * @package {NAMESPACE}\Extension
+ */
+class Navigator {
+
+    /**
+     * @param  NavigateInterface  $navigate
+     * @param  ServiceProvider  $provider
+     */
+    public static function handle(NavigateInterface $navigate, ServiceProvider $provider)
+    {
+
+    }
+}

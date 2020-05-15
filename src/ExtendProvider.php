@@ -64,7 +64,7 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
         if (!static::$name) { $this->getNameAndDescription(); }
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        //\LteAdmin::registerExtension($this);
+        \LteAdmin::registerExtension($this);
     }
 
     /**
