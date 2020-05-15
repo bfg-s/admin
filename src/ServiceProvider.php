@@ -7,8 +7,10 @@ use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Executor;
 use Lar\Layout\Layout;
+use Lar\LteAdmin\Commands\LteExtension;
 use Lar\LteAdmin\Commands\LteInstall;
 use Lar\LteAdmin\Commands\MakeController;
+use Lar\LteAdmin\Commands\MakeUser;
 use Lar\LteAdmin\Core\BladeBootstrap;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
@@ -27,7 +29,9 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected $commands = [
         LteInstall::class,
-        MakeController::class
+        MakeController::class,
+        MakeUser::class,
+        LteExtension::class
     ];
 
     /**

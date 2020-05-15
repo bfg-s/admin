@@ -17,7 +17,17 @@ class LteAdmin
     /**
      * @var ExtendProvider[]
      */
-    static $extensions = [];
+    static $installed_extensions = [];
+
+    /**
+     * @var ExtendProvider[]
+     */
+    static $not_installed_extensions = [];
+
+    /**
+     * @var bool[]
+     */
+    static $extensions;
 
     /**
      * @return \Lar\LteAdmin\Models\LteUser|\Illuminate\Contracts\Auth\Authenticatable|\App\Models\Admin
@@ -51,13 +61,28 @@ class LteAdmin
     {
         if (!$provider::$name) {
 
-            throw new \Exception("The extension name is not installed, set the extension name for the class (".get_class($provider).").");
+            return false;
         }
 
-        if (!isset(LteAdmin::$extensions[$provider::$name])) {
+        if (!LteAdmin::$extensions) {
 
-            LteAdmin::$extensions[$provider::$name] = $provider;
+            LteAdmin::$extensions = include storage_path('lte_extensions.php');
         }
+
+        if (isset(LteAdmin::$extensions[$provider::$name])) {
+
+            if (!isset(LteAdmin::$installed_extensions[$provider::$name])) {
+
+                LteAdmin::$installed_extensions[$provider::$name] = $provider;
+            }
+        }
+
+        else if (!isset(LteAdmin::$not_installed_extensions[$provider::$name])) {
+
+            LteAdmin::$not_installed_extensions[$provider::$name] = $provider;
+        }
+
+        return true;
     }
 
     /**
@@ -66,9 +91,9 @@ class LteAdmin
      */
     public function extension(string $name)
     {
-        if (isset(LteAdmin::$extensions[$name])) {
+        if (isset(LteAdmin::$installed_extensions[$name])) {
 
-            return LteAdmin::$extensions[$name];
+            return LteAdmin::$installed_extensions[$name];
         }
 
         return false;
@@ -79,6 +104,6 @@ class LteAdmin
      */
     public function extensions()
     {
-        return LteAdmin::$extensions;
+        return LteAdmin::$installed_extensions;
     }
 }

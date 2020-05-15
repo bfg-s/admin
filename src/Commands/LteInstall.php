@@ -36,14 +36,14 @@ class LteInstall extends Command
      */
     public function handle()
     {
-        if ($extension = $this->option('extension')) {
-
-            if ($ext = \LteAdmin::extension($extension)) {
-                $this->info("Run Install [{$extension}]...");
-                $ext->install($this);
-                return ;
-            }
-        }
+//        if ($extension = $this->option('extension')) {
+//
+//            if ($ext = \LteAdmin::extension($extension)) {
+//                $this->info("Run Install [{$extension}]...");
+//                $ext->install($this);
+//                return ;
+//            }
+//        }
 
         $this->call('vendor:publish', [
             '--tag' => 'lte-migrations',
@@ -151,6 +151,18 @@ class LteInstall extends Command
             $this->info("File {$bootstrap} created!");
         }
 
+        $extensions = storage_path('lte_extensions.php');
+
+        if (!is_file($extensions)) {
+
+            file_put_contents(
+                $extensions,
+                "<?php\n\nreturn [\n\t\n];"
+            );
+
+            $this->info("File {$extensions} created!");
+        }
+
         $controller = lte_app_path('Controllers/Controller.php');
 
         if (!is_file($controller)) {
@@ -223,12 +235,12 @@ class LteInstall extends Command
             file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
         }
 
-        foreach (\LteAdmin::extensions() as $extension) {
-            $this->info("Run Install [{$extension::$name}]...");
-            $ext->install($this);
-            $this->info("Done Install [{$extension::$name}]!");
-            return ;
-        }
+//        foreach (\LteAdmin::extensions() as $extension) {
+//            $this->info("Run Install [{$extension::$name}]...");
+//            $ext->install($this);
+//            $this->info("Done Install [{$extension::$name}]!");
+//            return ;
+//        }
 
         $this->info("Lar Admin LTE Installed");
     }

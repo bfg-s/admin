@@ -107,7 +107,10 @@ class NavGroup implements Arrayable, NavigateInterface
     {
         foreach (\LteAdmin::extensions() as $extension) {
 
-            $extension->navigator($this);
+            if ($extension->included()) {
+
+                $extension->navigator($this);
+            }
         }
     }
 
@@ -119,7 +122,10 @@ class NavGroup implements Arrayable, NavigateInterface
     {
         if ($ext = \LteAdmin::extension($name)) {
 
-            $ext->navigator($this);
+            if ($ext->included()) {
+
+                $ext->navigator($this);
+            }
         }
     }
 }

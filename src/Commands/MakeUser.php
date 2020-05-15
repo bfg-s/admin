@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
+use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
 
 /**
@@ -17,7 +18,7 @@ class MakeUser extends Command
      *
      * @var string
      */
-    protected $signature = 'lte:make-user';
+    protected $signature = 'lte:make-user {email?: Email of user} {name?: Login of user}';
 
     /**
      * The console command description.
@@ -43,7 +44,12 @@ class MakeUser extends Command
      */
     public function handle()
     {
-        $email = null;
+        /** @var LteUser $user_model */
+        $user_model = config('lte.auth.providers.lte.model');
+
+        $email = $this->argument('email');
+
+        $name = $this->argument('name');
 
         $password = null;
 
@@ -52,6 +58,31 @@ class MakeUser extends Command
         if (!$email) {
 
             $email = $this->ask("Enter a admin E-Mail");
+
+            if ($user_model::where('email', $email)->first()) {
+
+                $this->error("Admin with email [$email] is isset!");
+
+                return $this->call('lte:make-user', array_filter([
+                    'email' => $email,
+                    'name' => $name ? $name : false
+                ]));
+            }
+        }
+
+        if (!$name) {
+
+            $name = $this->ask("Enter a admin Login", explode("@", $email)[0]);
+
+            if ($user_model::where('username', $name)->first()) {
+
+                $this->error("Admin with name [$name] is isset!");
+
+                return $this->call('lte:make-user', [
+                    'email' => $email,
+                    'name' => $name
+                ]);
+            }
         }
 
         if (!$password) {
@@ -68,20 +99,21 @@ class MakeUser extends Command
 
             $this->error("Admin passwords not match!");
 
-            return ;
+            return $this->call('lte:make-user', [
+                'email' => $email,
+                'name' => $name
+            ]);
         }
 
-        $name = explode("@", $email)[0];
-
-        /** @var LteUser $user_model */
-        $user_model = config('lte.auth.providers.lte.model');
-
-        if ($user_model::create([
+        if ($user = $user_model::create([
             "username" => $name,
             "password" => bcrypt($password),
             "email" => $email,
             "name" => $name
         ])) {
+            $roles = LteRole::all();
+            $role = $this->choice("Select role for new lte user", $roles->pluck('name', 'id')->toArray(), $roles->first()->id);
+            $user->roles()->sync([$role]);
 
             $this->info("User success created.");
         }
