@@ -6,6 +6,9 @@ use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\LteAdmin;
 use Lar\Layout\CfgFile;
+use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\Filesystem as Flysystem;
+use League\Flysystem\MountManager;
 
 /**
  * Class BaseLteExtension
@@ -26,8 +29,35 @@ class BaseLteExtension extends Command
      */
     protected function edit_extension($name)
     {
+        if (!isset(LteAdmin::$installed_extensions[$name]) && !isset(LteAdmin::$not_installed_extensions[$name])) {
+
+            $this->error("Extension [$name] for edit not found!");
+            return null;
+        }
+
+        $from = base_path("vendor/{$name}");
+        $to = lte_app_path("Extensions/{$name}");
+
+        $manager = new MountManager([
+            'from' => new Flysystem(new LocalAdapter($from)),
+            'to' => new Flysystem(new LocalAdapter($to)),
+        ]);
+
+        foreach ($manager->listContents('from://', true) as $file) {
+            if ($file['type'] === 'file') {
+                $manager->put('to://'.$file['path'], $manager->read('from://'.$file['path']));
+            }
+        }
+
+        $this->call_composer("remove {$name}");
+
+        $this->add_repo_to_composer(str_replace(base_path().'/', '', $to) . '/');
+
+        $this->call_composer("require {$name}");
+
         return $this->choiceDone();
     }
+
     /**
      * @param $name
      * @return null
@@ -80,36 +110,9 @@ class BaseLteExtension extends Command
             }
         }
 
-        $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
-        $repo_path = str_replace(base_path().'/', '', $base_dir) . '/';
-        $updated = false;
+        $this->add_repo_to_composer(str_replace(base_path().'/', '', $base_dir) . '/');
 
-        if (!isset($base_composer['repositories'])) {
-            $base_composer['repositories'] = [];
-        }
-
-        if (!collect($base_composer['repositories'])->where('url', $repo_path)->first()) {
-            $base_composer['repositories'][] = ['type' => 'path', 'url' => $repo_path];
-            $updated = true;
-        }
-
-//        if (!isset($base_composer['require'][$name])) {
-//            $base_composer['require'][$name] = "*";
-//            $updated = true;
-//        }
-
-        if ($updated) {
-            file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
-        }
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-
-            $this->comment("> Use \"composer update\" for finish creation!");
-
-        } else {
-
-            exec('cd ' . base_path() . " && composer require {$name} dev-master");
-        }
+        $this->call_composer("require {$name}");
 
         $this->info("Extension [{$name}] created!");
 
@@ -278,14 +281,7 @@ class BaseLteExtension extends Command
 
         if (count($versions) === 1) { $v = " " . $versions[0]; }
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-
-            $this->comment("> Use \"composer require {$name}{$v}\" for downloading!");
-
-        } else {
-
-            exec("cd " . base_path() . " && composer require {$name}{$v}");
-        }
+        $this->call_composer("require {$name}{$v}");
 
         $this->info("Extension [{$name}] downloaded!");
 

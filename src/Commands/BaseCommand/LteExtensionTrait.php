@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Commands\BaseCommand;
 
+use Composer\Json\JsonFormatter;
 use Lar\LteAdmin\LteAdmin;
 
 /**
@@ -13,17 +14,52 @@ trait LteExtensionTrait {
     static $desc;
 
     /**
+     * @param  string  $path
+     * @return bool
+     */
+    protected function add_repo_to_composer(string $path)
+    {
+        $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
+
+        if (!isset($base_composer['repositories'])) {
+            $base_composer['repositories'] = [];
+        }
+
+        if (!collect($base_composer['repositories'])->where('url', $path)->first()) {
+            $base_composer['repositories'][] = ['type' => 'path', 'url' => $path];
+            file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
+            $this->info("> Add PATH [{$path}] to repository!");
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  string  $command
+     * @return null
+     */
+    protected function call_composer(string $command)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+
+            $this->comment("> Use \"composer {$command}\" for finish!");
+
+        } else {
+
+            exec('cd ' . base_path() . " && composer {$command}");
+        }
+
+        return null;
+    }
+
+    /**
      * @param $name
      * @return bool
      */
     protected function any_exists_extension($name)
     {
         if (isset(LteAdmin::$installed_extensions[$name]) || isset(LteAdmin::$not_installed_extensions[$name])) {
-
-            return true;
-        }
-
-        if (is_dir(lte_app_path("Extensions/{$name}"))) {
 
             return true;
         }
@@ -39,9 +75,24 @@ trait LteExtensionTrait {
     {
         $name_parts = explode("/", $name);
 
-        $name_parts = array_diff([null,'','lte','lte-admin'], $name_parts);
+        $name_parts = array_diff($name_parts, [null,'','lte']);
 
-        return count($name_parts) !== 2;
+        if (count($name_parts) !== 2) {
+
+            return false;
+        }
+
+        if (is_dir(lte_app_path("Extensions/{$name}"))) {
+
+            return false;
+        }
+
+        if (is_dir(base_path("vendor/{$name}"))) {
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

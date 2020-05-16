@@ -51,7 +51,7 @@ class LteSeeder extends Seeder
 
         $user_model::first()->roles()->save(LteRole::first());
         
-        LtePermission::create(['path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 2]);
+        LtePermission::create(['path' => 'admin/access*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 2]);
         LtePermission::create(['path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 3]);
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
