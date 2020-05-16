@@ -55,6 +55,8 @@ class BaseLteExtension extends Command
 
         $this->call_composer("require {$name}");
 
+        $this->info("Extension [{$name}] moved to [{$to}]");
+
         return $this->choiceDone();
     }
 
