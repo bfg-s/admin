@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card(__('lte::admin.permissions'))
+    @card(__('lte.permissions'))
 
         @include('lte::permission.form')
 

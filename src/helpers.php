@@ -1,5 +1,32 @@
 <?php
 
+if (!function_exists('lte_controller_can')) {
+
+    /**
+     * @param  string  $method
+     * @return string
+     */
+    function lte_controller_can (string $method) {
+        list($class) = explode('@', \Route::currentRouteAction());
+        if (isset($class::$permission_functions)) {
+            $action_permissions = $class::$permission_functions;
+            if (isset($action_permissions[$method])) {
+                $glob_func = $action_permissions[$method];
+                if (is_array($glob_func)) {
+                    foreach ($glob_func as $item) {
+                        if (lte_user()->func()->has($item)) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return lte_user()->func()->has($glob_func);
+                }
+            }
+        }
+        return false;
+    }
+}
+
 if (!function_exists('lte_app_path')) {
 
     /**
@@ -202,18 +229,5 @@ if ( ! function_exists('lte_now') ) {
     function lte_now()
     {
         return gets()->lte->menu->now;
-    }
-}
-
-if (!function_exists('remove_dir')) {
-
-    /**
-     * @param $dirPath
-     */
-    function remove_dir($dirPath) {
-
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') { $dirPath .= '/'; }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) { if (is_dir($file)) { remove_dir($file); } else { unlink($file); } } try { rmdir($dirPath); } catch (Exception $e) {}
     }
 }

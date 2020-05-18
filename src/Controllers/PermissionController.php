@@ -39,7 +39,7 @@ class PermissionController extends Controller
 
         $state = function (LtePermission $permission) {
 
-            return "<span class=\"badge badge-".($permission->state === 'open' ? 'success' : 'danger')."\">".($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>')." ".__("lte::admin.{$permission->state}")."</span>";
+            return "<span class=\"badge badge-".($permission->state === 'open' ? 'success' : 'danger')."\">".($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>')." ".__("lte.{$permission->state}")."</span>";
         };
 
         return view('lte::permission.list', [

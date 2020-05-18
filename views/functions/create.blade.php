@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card(__('lte::admin.new_function'))
+    @card(__('lte.new_function'))
 
         @include('lte::functions.form')
 

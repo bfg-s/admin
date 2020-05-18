@@ -33,6 +33,20 @@ class LteSeeder extends Seeder
             'email'    => 'root@root.com'
         ]);
 
+        $user_model::create([
+            'login' => 'admin',
+            'password' => bcrypt('admin'),
+            'name'     => 'Admin',
+            'email'    => 'admin@admin.com'
+        ]);
+
+        $user_model::create([
+            'login' => 'moderator',
+            'password' => bcrypt('moderator'),
+            'name'     => 'Moderator',
+            'email'    => 'moderator@moderator.com'
+        ]);
+
         // create a role.
         LteRole::truncate();
 
@@ -49,9 +63,10 @@ class LteSeeder extends Seeder
             'slug' => 'moderator',
         ]);
 
-        $user_model::first()->roles()->save(LteRole::first());
-        
-        LtePermission::create(['path' => 'admin/access*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 2]);
+        $user_model::find(1)->roles()->save(LteRole::find(1));
+        $user_model::find(2)->roles()->save(LteRole::find(2));
+        $user_model::find(3)->roles()->save(LteRole::find(3));
+
         LtePermission::create(['path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 3]);
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');

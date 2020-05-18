@@ -43,7 +43,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
     {
         foreach (\LteAdmin::extensions() as $name => $provider) {
 
-            $doc->tagMethod('void', $name, "Make extension routes ($name})");
+            $doc->tagMethod('void', $provider::$slug, "Make extension routes ($name})");
         }
     }
 }

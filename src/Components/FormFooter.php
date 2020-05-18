@@ -72,7 +72,7 @@ class FormFooter extends DIV
 
         if ($type === 'edit' || isset($menu['post'])) {
 
-            $group->success(['fas fa-save', __('lte::admin.save')])->setDatas([
+            $group->success(['fas fa-save', __('lte.save')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id
             ]);
@@ -80,7 +80,7 @@ class FormFooter extends DIV
 
         else if ($type === 'create') {
 
-            $group->success(['fas fa-plus', __('lte::admin.add')])->setDatas([
+            $group->success(['fas fa-plus', __('lte.add')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id
             ]);
@@ -102,14 +102,14 @@ class FormFooter extends DIV
                 $div->div(['icheck-primary float-left mr-2'])
                     ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_index', 'value' => 'index'])
                     ->setDatas(['state' => ''])->setCheckedIf($_after === 'index', 'checked')
-                    ->label(['for' => '_after_select_index'])->text(__('lte::admin.to_the_list'));
+                    ->label(['for' => '_after_select_index'])->text(__('lte.to_the_list'));
 
                 if ($type === 'create') {
 
                     $div->div(['icheck-primary float-left mr-2'])
                         ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
                         ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-                        ->label(['for' => '_after_select_stay'])->text(__('lte::admin.add_more'));
+                        ->label(['for' => '_after_select_stay'])->text(__('lte.add_more'));
                 }
 
                 if ($type === 'edit') {
@@ -117,7 +117,7 @@ class FormFooter extends DIV
                     $div->div(['icheck-primary float-left mr-2'])
                         ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
                         ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-                        ->label(['for' => '_after_select_stay'])->text(__('lte::admin.edit_further'));
+                        ->label(['for' => '_after_select_stay'])->text(__('lte.edit_further'));
                 }
             });
         }

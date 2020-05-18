@@ -19,6 +19,17 @@ trait NavCommon
 
         return $this;
     }
+
+    /**
+     * @param  string  $func
+     * @return $this
+     */
+    public function func(string $func)
+    {
+        $this->items['func'] = $func;
+
+        return $this;
+    }
     
     /**
      * @param array $data

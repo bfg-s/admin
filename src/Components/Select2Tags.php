@@ -8,17 +8,19 @@ use Lar\Layout\Tags\SELECT;
  * Class Select2
  * @package Lar\LteAdmin\Components
  */
-class Select2 extends SELECT
+class Select2Tags extends SELECT
 {
-    /**
-     * @var array
-     */
-    private $options;
-
     /**
      * @var mixed|null
      */
     private $value;
+
+    /**
+     * @var string[]
+     */
+    protected $props = [
+        'multiple' => 'multiple'
+    ];
 
     /**
      * Col constructor.
@@ -26,15 +28,13 @@ class Select2 extends SELECT
      * @param  mixed  $value
      * @param  mixed  ...$params
      */
-    public function __construct($options = [], ...$params)
+    public function __construct(...$params)
     {
         parent::__construct();
 
         $this->when($params);
 
-        $this->setDatas(['load' => 'select2']);
-
-        $this->options = $options;
+        $this->setDatas(['load' => 'select2', 'tags' => 'true']);
     }
 
     /**
@@ -56,7 +56,13 @@ class Select2 extends SELECT
      */
     public function makeOptions()
     {
-        $this->options($this->options, $this->value ?? $this->getValue());
+        if (is_array($this->value)) {
+            foreach ($this->value as $item) {
+                $this->option($item)
+                    ->setValue((string)$item)
+                    ->setSelected();
+            }
+        }
 
         return $this;
     }

@@ -2,15 +2,15 @@
 
 @section('content')
 
-    @card(__('lte::admin.list_of_roles'))
+    @card(__('lte.list_of_roles'))
 
         @cardbodytable
 
-            @column(__('lte::admin.path'), 'badge:path,success', true)
-            @column(__('lte::admin.methods'), $methods, true)
-            @column(__('lte::admin.state'), $state, true)
-            @column(__('lte::admin.role'), 'role.name', true)
-            @column(__('lte::admin.active'), 'input_switcher:active', true)
+            @column(__('lte.path'), 'badge:path,success', true)
+            @column(__('lte.methods'), $methods, true)
+            @column(__('lte.state'), $state, true)
+            @column(__('lte.role'), 'role.name', true)
+            @column(__('lte.active'), 'input_switcher:active', true)
 
         @endcardbodytable
 

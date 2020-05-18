@@ -19,7 +19,7 @@ class TableMacros
      * @param $model
      * @return \Lar\Layout\Abstracts\Component
      */
-    public function input_switcher($field, $value, $props, Model $model)
+    public function input_switcher($field, $value, Model $model, $props = [])
     {
         if ($model instanceof Model) {
 
@@ -49,11 +49,26 @@ class TableMacros
     }
 
     /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function password_stars($value, $props = [])
+    {
+        $star = $props[0] ?? '•';
+        $id = uniqid('password_');
+        $id_showed = "showed_{$id}";
+        $stars = str_repeat($star, strlen($value));
+        return "<span id='{$id}'><i data-click='0> $::hide 1> $::show' data-params='#{$id} && #{$id_showed}' class='fas fa-eye' style='cursor:pointer'></i> {$stars}</span>".
+                "<span id='{$id_showed}' style='display:none'><i data-click='0> $::hide 1> $::show' data-params='#{$id_showed} && #{$id}' class='fas fa-eye-slash' style='cursor:pointer'></i> {$value}</span>";
+    }
+
+    /**
      * @param $props
      * @param $value
      * @return string
      */
-    public function number_format($props, $value)
+    public function number_format($value, $props = [])
     {
         $dec = $props[0] ?? 0;
         $dec_point = $props[1] ?? '.';
@@ -68,7 +83,7 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function money($props, $value)
+    public function money($value, $props = [])
     {
         $dec = $props[0] ?? 2;
         $dec_point = $props[1] ?? '.';
@@ -83,7 +98,7 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function append($props, $value)
+    public function append($value, $props = [])
     {
         $append = implode(" ", $props);
 
@@ -95,7 +110,7 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function prepend($props, $value)
+    public function prepend($value, $props = [])
     {
         $prepend = implode(" ", $props);
 
@@ -108,7 +123,7 @@ class TableMacros
      */
     public function copied($value)
     {
-        return "<a href='javascript:void(0)' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a> " . $value;
+        return "<a href='javascript:void(0)' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a> " . $value;
     }
 
     /**
@@ -117,7 +132,17 @@ class TableMacros
      */
     public function copied_right($value)
     {
-        return $value . " <a href='javascript:void(0)' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a>";
+        return $value . " <a href='javascript:void(0)' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='{$value}'><i class='fas fa-copy'></i></a>";
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function __lang($value, $props = [])
+    {
+        return __($value, $props);
     }
 
     /**
@@ -125,7 +150,7 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function str_limit($props, $value)
+    public function str_limit($value, $props = [])
     {
         $limit = $props[0] ?? 20;
         $str = \Str::limit($value, $limit);
@@ -142,15 +167,42 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function avatar($props, $value)
+    public function avatar($value, $props = [])
     {
         $size = $props[0] ?? 30;
 
         if ($value) {
-            return "<img src=\"/{$value}\" style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;\" />";
+            return "<img src=\"/{$value}\" data-click='fancy::img' data-params='/{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
         } else {
             return "<span class=\"badge badge-dark\">none</span>";
         }
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function uploaded_file($value, $props = [])
+    {
+        if ($value) {
+            if (is_image(public_path($value))) {
+                return $this->avatar($value, $props);
+            } else {
+                return "<span class=\"badge badge-info\" title='{$value}'>".basename($value)."</span>";
+            }
+        } else {
+            return "<span class=\"badge badge-dark\">none</span>";
+        }
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function badge_number($value)
+    {
+        return $this->badge($value, [$value <= 0 ? 'danger' : 'success']);
     }
 
     /**
@@ -158,7 +210,7 @@ class TableMacros
      * @param $value
      * @return string
      */
-    public function badge($props, $value)
+    public function badge($value, $props = [])
     {
         $type = $props[0] ?? 'info';
         return "<span class=\"badge badge-{$type}\">{$value}</span>";
@@ -169,7 +221,7 @@ class TableMacros
      * @param $props
      * @return string
      */
-    public function pill($value, $props)
+    public function pill($value, $props = [])
     {
         $type = $props[0] ?? 'info';
         return "<span class=\"badge badge-pill badge-{$type}\">{$value}</span>";
@@ -181,7 +233,54 @@ class TableMacros
      */
     public function yes_no($value)
     {
-        return $value ? "<span class=\"badge badge-success\">Yes</span>" : "<span class=\"badge badge-danger\">No</span>";
+        return $value ? "<span class=\"badge badge-success\">".__('lte.yes')."</span>" :
+            "<span class=\"badge badge-danger\">".__('lte.no')."</span>";
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function on_off($value)
+    {
+        return $value ? "<span class=\"badge badge-success\">".__('lte.on')."</span>" :
+            "<span class=\"badge badge-danger\">".__('lte.off')."</span>";
+    }
+
+    /**
+     * @param $value
+     * @param  int[]  $props
+     * @return string
+     */
+    public function fa_icon($value, $props = [])
+    {
+        $size = $props[0] ?? 22;
+        return "<i class='{$value}' title='{$value}' style='font-size: {$size}px'></i>";
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function badge_tags($value, $props = [])
+    {
+        $c = collect($value);
+        $limit = $props[0] ?? 5;
+        return '<span class="badge badge-info">' .
+            $c->take($limit)->implode('</span> <span class="badge badge-info">') .
+            '</span>' . ($c->count() > $limit ? ' ... <span class="badge badge-warning" title="'.$c->skip($limit)->implode(', ').'">'.($c->count()-$limit).'x</span>' : '');
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function color_cube($value, $props = [])
+    {
+        $size = $props[0] ?? 22;
+        return "<i class=\"fas fa-square\" title='{$value}' style=\"color: {$value}; font-size: {$size}px\"></i>";
     }
 
     /**

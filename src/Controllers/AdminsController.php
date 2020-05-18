@@ -91,12 +91,12 @@ class AdminsController extends Controller
 
             $admin->roles()->sync($all['roles']);
 
-            $respond->toast_success(__('lte::admin.successfully_created'));
+            $respond->toast_success(__('lte.successfully_created'));
         }
 
         else {
 
-            $respond->toast_error(__('lte::admin.unknown_error'));
+            $respond->toast_error(__('lte.unknown_error'));
         }
         
         return $this->returnTo();
@@ -128,7 +128,7 @@ class AdminsController extends Controller
 
                 if ($this->model()->save()) {
 
-                    $respond->toast_success(__('lte::admin.password_changed_success'));
+                    $respond->toast_success(__('lte.password_changed_success'));
 
                     return $this->returnTo();
                 }
@@ -141,7 +141,7 @@ class AdminsController extends Controller
 
                 $this->model()->roles()->sync($all['roles']);
 
-                $respond->toast_success(__('lte::admin.saved_successfully'));
+                $respond->toast_success(__('lte.saved_successfully'));
 
                 return $this->returnTo();
             }

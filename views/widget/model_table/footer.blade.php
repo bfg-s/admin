@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="col-sm">
-        <div style="text-align: center">{{__('lte::admin.showing_to_of_entries', ['show' => $from, 'to' => $to, 'of' => $paginator->total()])}}</div>
+        <div style="text-align: center">{{__('lte.showing_to_of_entries', ['show' => $from, 'to' => $to, 'of' => $paginator->total()])}}</div>
     </div>
     <div class="col-sm d-none d-lg-block d-xl-block">
         @if ($paginator->hasPages())

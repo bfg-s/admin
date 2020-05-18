@@ -106,12 +106,12 @@ class LteAdmin extends JaxExecutor
 
                 if ($find->save()) {
 
-                    $this->toast_success(__('lte::admin.saved'))->reload();
+                    $this->toast_success(__('lte.saved'))->reload();
                 }
 
                 else {
 
-                    $this->toast_error(__('lte::admin.unknown_error'));
+                    $this->toast_error(__('lte.unknown_error'));
                 }
             }
         }

@@ -1,5 +1,7 @@
 <?php
 
+\Lar\Layout\Tags\TABLE::addMacroClass(\Lar\LteAdmin\Core\TableMacros::class);
+
 if (!request()->ajax() || request()->is('*dashboard*')) {
 
     $lock_file = base_path('composer.lock');

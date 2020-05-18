@@ -2,20 +2,19 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Illuminate\Console\Command;
-use {NAMESPACE}\ServiceProvider;
+use Lar\LteAdmin\Core\UnInstallExtensionProvider;
+use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Navigator
  * @package {NAMESPACE}\Extension
  */
-class Uninstall {
+class Uninstall extends UnInstallExtensionProvider implements ActionWorkExtensionInterface {
 
     /**
-     * @param  Command  $command
-     * @param  ServiceProvider  $provider
+     * @return void
      */
-    public static function handle(Command $command, ServiceProvider $provider)
+    public function handle(): void
     {
 
     }

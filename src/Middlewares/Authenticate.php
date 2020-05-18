@@ -53,8 +53,6 @@ class Authenticate
             return redirect()->route('lte.login');
         }
 
-        TABLE::addMacroClass(TableMacros::class);
-
         if (is_file(lte_app_path('bootstrap.php'))) {
 
             include lte_app_path('bootstrap.php');
@@ -68,7 +66,7 @@ class Authenticate
 
             if ($request->ajax() && !$request->pjax()) {
 
-                $respond = ["0:toast::error" => [__('lte::admin.access_denied'), __('lte::admin.error')]];
+                $respond = ["0:toast::error" => [__('lte.access_denied'), __('lte.error')]];
 
                 if (request()->has("_exec")) {
 
@@ -80,7 +78,7 @@ class Authenticate
 
             else if (!$request->isMethod('get')) {
 
-                session()->flash("respond", respond()->toast_error([__('lte::admin.access_denied'), __('lte::admin.error')])->toJson());
+                session()->flash("respond", respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
 
                 return back();
             }
@@ -96,6 +94,45 @@ class Authenticate
      */
     protected function access()
     {
+        list($class, $method) = explode('@', \Route::currentRouteAction());
+
+        if (isset($class::$permission_functions)) {
+            $action_permissions = $class::$permission_functions;
+            if (isset($action_permissions['*'])) {
+                $glob_func = $action_permissions['*'];
+                if (is_array($glob_func)) {
+                    $any_has = false;
+                    foreach ($glob_func as $item) {
+                        $any_has = $any_has ? $any_has : lte_user()->func()->has($item);
+                    }
+                    if (!$any_has) {
+                        return false;
+                    }
+                } else {
+                    if (!lte_user()->func()->has($glob_func)) {
+                        return false;
+                    }
+                }
+            }
+            if (isset($action_permissions[$method])) {
+                $func = $action_permissions[$method];
+
+                if (is_array($func)) {
+                    $any_has = false;
+                    foreach ($func as $item) {
+                        $any_has = $any_has ? $any_has : lte_user()->func()->has($item);
+                    }
+                    if (!$any_has) {
+                        return false;
+                    }
+                } else {
+                    if (!lte_user()->func()->has($func)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         $now = lte_now();
 
         if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {

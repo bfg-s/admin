@@ -24,8 +24,8 @@ class UserController extends Controller
                 'title' => \LteAdmin::user()->name,
             ],
             'breadcrumb' => [
-                __('lte::admin.administrator'),
-                __('lte::admin.profile')
+                __('lte.administrator'),
+                __('lte.profile')
             ],
             'user' => \LteAdmin::user()
         ]);
@@ -62,7 +62,7 @@ class UserController extends Controller
 
                 if (admin()->save()) {
 
-                    $respond->toast_success(__('lte::admin.password_changed_success'));
+                    $respond->toast_success(__('lte.password_changed_success'));
 
                     return back();
                 }
@@ -90,7 +90,7 @@ class UserController extends Controller
 
                 if (ModelSaver::do(admin(), $all)) {
 
-                    $respond->toast_success(__('lte::admin.profile_success_changed'));
+                    $respond->toast_success(__('lte.profile_success_changed'));
 
                     return back();
                 }

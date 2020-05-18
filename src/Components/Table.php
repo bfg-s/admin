@@ -120,7 +120,27 @@ class Table extends DIV implements onRender
 
         parent::__construct();
 
+        $this->save_table_requests();
+
         $this->when($params);
+    }
+
+    /**
+     * Save last table request for returns
+     */
+    protected function save_table_requests()
+    {
+        $all = request()->query();
+        unset($all['_pjax']);
+        session(['temp_lte_table_data' => $all]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
+     */
+    public static function getLastRequest()
+    {
+        return session()->pull('temp_lte_table_data', []);
     }
 
     /**
@@ -385,7 +405,7 @@ class Table extends DIV implements onRender
      */
     public function created_at()
     {
-        return $this->column(__('lte::admin.created_at'), 'true_data:created_at', 'created_at');
+        return $this->column(__('lte.created_at'), 'true_data:created_at', 'created_at');
     }
 
     /**
@@ -395,7 +415,7 @@ class Table extends DIV implements onRender
      */
     public function updated_at()
     {
-        return $this->column(__('lte::admin.updated_at'), 'true_data:updated_at', 'updated_at');
+        return $this->column(__('lte.updated_at'), 'true_data:updated_at', 'updated_at');
     }
 
     /**
@@ -405,7 +425,7 @@ class Table extends DIV implements onRender
      */
     public function deleted_at()
     {
-        return $this->column(__('lte::admin.deleted_at'), 'true_data:deleted_at', 'deleted_at');
+        return $this->column(__('lte.deleted_at'), 'true_data:deleted_at', 'deleted_at');
     }
 
     /**
@@ -471,7 +491,7 @@ class Table extends DIV implements onRender
             $this->column(function (TH $th) {
                 $th->addClass('fit');
 
-                return __('lte::admin.id');
+                return __('lte.id');
             }, 'id', true, true);
 
 
@@ -541,7 +561,7 @@ class Table extends DIV implements onRender
                 ->tr()
                 ->td(['colspan' => $this->table->columnCount()])
                 ->div(['alert alert-warning mt-3 text-center text-justify', 'role' => 'alert', 'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'])
-                ->text(__('lte::admin.empty'));
+                ->text(__('lte.empty'));
         }
     }
 }

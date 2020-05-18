@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card(__('lte::admin.id_edit'))
+    @card(__('lte.id_edit'))
 
         @include('admin.resource.form')
 

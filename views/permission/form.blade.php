@@ -1,22 +1,22 @@
 @cardbodyform()
 
-    @formgroup(__('lte::admin.path'), 'path')
+    @formgroup(__('lte.path'), 'path')
         @forminput(['rule' => ['required']])
     @endformgroup
 
-    @formgroup(__('lte::admin.methods'), 'method[]')
+    @formgroup(__('lte.methods'), 'method[]')
         @formmiltiselect(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function($i) {return [$i => $i];})->toArray(), ['rule' => ['required']])
     @endformgroup
 
-    @formgroup(__('lte::admin.state'), 'state')
-        @formselect(['close' => __('lte::admin.close'), 'open' => __('lte::admin.open')], ['rule' => ['required']])
+    @formgroup(__('lte.state'), 'state')
+        @formselect(['close' => __('lte.close'), 'open' => __('lte.open')], ['rule' => ['required']])
     @endformgroup
 
-    @formgroup(__('lte::admin.role'), 'lte_role_id')
+    @formgroup(__('lte.role'), 'lte_role_id')
         @formselect(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), ['rule' => ['required']])
     @endformgroup
 
-    @formgroup(__('lte::admin.active'), 'active', null)
+    @formgroup(__('lte.active'), 'active', null)
         @formswitcher()
     @endformgroup
 

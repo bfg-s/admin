@@ -1,18 +1,18 @@
 @cardbodyform()
 
-    @formgroup(__('lte::admin.slug'), 'slug')
+    @formgroup(__('lte.slug'), 'slug')
         @forminput(['rule' => ['required'], 'data' => ['change' => 'str::slug']])
     @endformgroup
 
-    @formgroup(__('lte::admin.roles'), 'roles', null)
+    @formgroup(__('lte.roles'), 'roles', null)
         @formcheckbox($roles, ['rule' => ['any-checked']])
     @endformgroup
 
-    @formgroup(__('lte::admin.description'), 'description', null)
+    @formgroup(__('lte.description'), 'description', null)
         @formtextarea()
     @endformgroup
 
-    @formgroup(__('lte::admin.active'), 'active', null)
+    @formgroup(__('lte.active'), 'active', null)
         @formswitcher()
     @endformgroup
 

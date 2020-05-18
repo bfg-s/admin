@@ -91,7 +91,7 @@ class BaseLteExtension extends Command
         ] as $dir) {
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, 1);
-                $this->info("Created dir [{$dir}]!");
+                $this->info("Created dir [".str_replace(base_path(), '', realpath($dir))."]!");
             }
         }
 
@@ -105,10 +105,11 @@ class BaseLteExtension extends Command
             $base_dir.'/src/Extension/Install.php' => $this->get_stub('Install'),
             $base_dir.'/src/Extension/Uninstall.php' => $this->get_stub('Uninstall'),
             $base_dir.'/src/Extension/Navigator.php' => $this->get_stub('Navigator'),
+            $base_dir.'/src/Extension/Permissions.php' => $this->get_stub('Permissions'),
         ] as $file => $file_data) {
             if (!is_file($file)) {
                 file_put_contents($file, $file_data);
-                $this->info("Created file [{$file}]!");
+                $this->info("Created file [".str_replace(base_path(), '', realpath($file))."]!");
             }
         }
 
@@ -321,13 +322,12 @@ class BaseLteExtension extends Command
      */
     protected function choiceReinstall($name) {
 
-        $this->info("Run reinstall [$name]...");
         if (isset(LteAdmin::$installed_extensions[$name])) {
-            $this->info("Use uninstall...");
+            $this->info("Run reinstall [$name]...");
+            LteAdmin::$installed_extensions[$name]->permission($this, 'down');
             LteAdmin::$installed_extensions[$name]->uninstall($this);
-            $this->info("Uninstalled!");
-            $this->info("Use install...");
             LteAdmin::$installed_extensions[$name]->install($this);
+            LteAdmin::$installed_extensions[$name]->permission($this, 'up');
             $this->info("Extension [$name] reinstalled!");
             return null;
         }
@@ -342,6 +342,7 @@ class BaseLteExtension extends Command
 
         $this->info("Run uninstall [$name]...");
         if (isset(LteAdmin::$installed_extensions[$name])) {
+            LteAdmin::$installed_extensions[$name]->permission($this, 'down');
             LteAdmin::$installed_extensions[$name]->uninstall($this);
             CfgFile::open(storage_path('lte_extensions.php'))->remove($name);
             $this->info("Extension [$name] uninstalled!");
@@ -359,6 +360,7 @@ class BaseLteExtension extends Command
         $this->info("Run install [$name]...");
         if (isset(LteAdmin::$not_installed_extensions[$name])) {
             LteAdmin::$not_installed_extensions[$name]->install($this);
+            LteAdmin::$not_installed_extensions[$name]->permission($this, 'up');
             CfgFile::open(storage_path('lte_extensions.php'))->write($name, true);
             $this->info("Extension [$name] installed!");
             return null;
@@ -369,10 +371,10 @@ class BaseLteExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceDone($name = null)
     {
-        $this->info('By!');
         return null;
     }
 
@@ -391,7 +393,7 @@ class BaseLteExtension extends Command
 
                 $all->push([
                     'name' => $name,
-                    'status' => isset(LteAdmin::$extensions[$name]) ? (LteAdmin::$extensions[$name] ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>No</comment>',
+                    'status' => isset(LteAdmin::$extensions[$name]) ? (LteAdmin::$extensions[$name] ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
                     'downloaded' => isset(LteAdmin::$installed_extensions[$name]) || isset(LteAdmin::$not_installed_extensions[$name]) ? '<info>Yes</info>' : '<comment>No</comment>',
                     'installed' => isset(LteAdmin::$installed_extensions[$name]) ? '<info>Yes</info>' : '<comment>No</comment>'
                 ]);
@@ -429,19 +431,7 @@ class BaseLteExtension extends Command
      */
     protected function installed_list()
     {
-        $all = collect();
-
-        foreach (
-            array_merge(LteAdmin::$installed_extensions, LteAdmin::$not_installed_extensions) as
-            $name => $extension
-        ) {
-            $all->push([
-                'name' => $name,
-                'desc' => $extension::$description,
-                'status' => isset(LteAdmin::$extensions[$name]) ? (LteAdmin::$extensions[$name] ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>No</comment>',
-                'installed' => isset(LteAdmin::$extensions[$name]) ? '<info>Yes</info>' : '<comment>No</comment>'
-            ]);
-        }
+        $all = $this->all_extensions();
 
         if (!$all->count()) {
 
@@ -451,7 +441,7 @@ class BaseLteExtension extends Command
 
         $this->line('');
         $this->info("Downloaded LteAdmin list extensions:");
-        $this->table(['Name', 'Description', 'Status', 'Installed'], $all->sortBy('name')->toArray());
+        $this->table(['ID', 'Name', 'Description', 'Status', 'Installed'], $all->toArray());
         return null;
     }
 
@@ -465,5 +455,24 @@ class BaseLteExtension extends Command
         $list = json_decode($list, 1);
 
         return $list['packageNames'];
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected function all_extensions()
+    {
+        return collect(array_merge(LteAdmin::$installed_extensions, LteAdmin::$not_installed_extensions))
+            ->values()
+            ->map(function ($extension, $key) {
+                $name = $extension::$name;
+                return [
+                    'id' => $key+1,
+                    'name' => $name,
+                    'desc' => $extension::$description,
+                    'status' => isset(LteAdmin::$extensions[$name]) ? (LteAdmin::$extensions[$name] ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
+                    'installed' => isset(LteAdmin::$extensions[$name]) ? '<info>Yes</info>' : '<comment>No</comment>'
+                ];
+            })->sortBy('name');
     }
 }

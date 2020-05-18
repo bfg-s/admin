@@ -76,6 +76,6 @@
         </li>
 
     @elseif(isset($menu['main_header']) && $menu['main_header'])
-        <li class="nav-header">{{$menu['main_header']}}</li>
+        <li class="nav-header">@lang($menu['main_header'])</li>
     @endif
 @endforeach

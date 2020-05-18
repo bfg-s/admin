@@ -53,12 +53,12 @@ class DashboardController extends Controller
         }
 
         return [
-            __('lte::admin.php_version') =>  "<span class=\"badge badge-dark\">v".versionString(PHP_VERSION)."</span>",
-            __('lte::admin.php_modules') => implode(', ', $mods),
-            __('lte::admin.cgi') => php_sapi_name(),
-            __('lte::admin.os') => php_uname(),
-            __('lte::admin.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
-            __('lte::admin.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
+            __('lte.php_version') =>  "<span class=\"badge badge-dark\">v".versionString(PHP_VERSION)."</span>",
+            __('lte.php_modules') => implode(', ', $mods),
+            __('lte.cgi') => php_sapi_name(),
+            __('lte.os') => php_uname(),
+            __('lte.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
+            __('lte.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
         ];
     }
 
@@ -71,22 +71,22 @@ class DashboardController extends Controller
         $lte_user_model = config('lte.auth.providers.lte.model');
 
         return [
-            __('lte::admin.laravel_version') =>  "<span class=\"badge badge-dark\">v".versionString(\App::version())."</span>",
-            __('lte::admin.lte_version') =>   "<span class=\"badge badge-dark\">v".versionString(\LteAdmin::version())."</span>",
-            __('lte::admin.timezone') => config('app.timezone'),
-            __('lte::admin.language') => config('app.locale'),
-            __('lte::admin.languages_involved') => implode(', ', config('layout.languages')),
-            __('lte::admin.env') => config('app.env'),
-            __('lte::admin.url') => config('app.url'),
-            __('lte::admin.users') => number_format($user_model::count(), 0, '', ','),
-            __('lte::admin.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
+            __('lte.laravel_version') =>  "<span class=\"badge badge-dark\">v".versionString(\App::version())."</span>",
+            __('lte.lte_version') =>   "<span class=\"badge badge-dark\">v".versionString(\LteAdmin::version())."</span>",
+            __('lte.timezone') => config('app.timezone'),
+            __('lte.language') => config('app.locale'),
+            __('lte.languages_involved') => implode(', ', config('layout.languages')),
+            __('lte.env') => config('app.env'),
+            __('lte.url') => config('app.url'),
+            __('lte.users') => number_format($user_model::count(), 0, '', ','),
+            __('lte.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
 
-            [__('lte::admin.drivers')],
-            __('lte::admin.cache_driver') => "<span class=\"badge badge-secondary\">".config('cache.default')."</span>",
-            __('lte::admin.session_driver') => "<span class=\"badge badge-secondary\">".config('session.driver')."</span>",
-            __('lte::admin.queue_driver') => "<span class=\"badge badge-secondary\">".config('queue.default')."</span>",
-            __('lte::admin.mail_driver') => "<span class=\"badge badge-secondary\">".config('mail.driver')."</span>",
-            __('lte::admin.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
+            [__('lte.drivers')],
+            __('lte.cache_driver') => "<span class=\"badge badge-secondary\">".config('cache.default')."</span>",
+            __('lte.session_driver') => "<span class=\"badge badge-secondary\">".config('session.driver')."</span>",
+            __('lte.queue_driver') => "<span class=\"badge badge-secondary\">".config('queue.default')."</span>",
+            __('lte.mail_driver') => "<span class=\"badge badge-secondary\">".config('mail.driver')."</span>",
+            __('lte.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
         ];
     }
 
@@ -96,8 +96,8 @@ class DashboardController extends Controller
     protected function composerInfo()
     {
         $return = [
-            __('lte::admin.composer_version') =>  "<span class=\"badge badge-dark\">v".versionString(Composer::getVersion())."</span>",
-            [__('lte::admin.required')]
+            __('lte.composer_version') =>  "<span class=\"badge badge-dark\">v".versionString(Composer::getVersion())."</span>",
+            [__('lte.required')]
         ];
 
         $json = file_get_contents(base_path('composer.json'));
@@ -121,16 +121,16 @@ class DashboardController extends Controller
         $pdo = \DB::query("SHOW VARIABLES")->getConnection()->getPdo();
 
         return [
-            __('lte::admin.server_version') => "<span class=\"badge badge-dark\">v".versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION))."</span>",
-            __('lte::admin.client_version') => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
-            __('lte::admin.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
-            __('lte::admin.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
-            __('lte::admin.mysql_driver') => $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME),
-            [__('lte::admin.connection_info')],
-            __('lte::admin.db_driver') => config('database.default'),
-            __('lte::admin.database') => env('DB_DATABASE'),
-            __('lte::admin.user') => env('DB_USERNAME'),
-            __('lte::admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
+            __('lte.server_version') => "<span class=\"badge badge-dark\">v".versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION))."</span>",
+            __('lte.client_version') => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
+            __('lte.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
+            __('lte.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
+            __('lte.mysql_driver') => $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME),
+            [__('lte.connection_info')],
+            __('lte.db_driver') => config('database.default'),
+            __('lte.database') => env('DB_DATABASE'),
+            __('lte.user') => env('DB_USERNAME'),
+            __('lte.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
         ];
     }
 }

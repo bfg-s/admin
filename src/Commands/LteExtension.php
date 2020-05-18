@@ -45,7 +45,14 @@ class LteExtension extends BaseLteExtension
      */
     public function handle()
     {
-        if ($name = $this->argument('name')) {
+        $name = $this->argument('name');
+
+        if (is_numeric($name) && $find = $this->all_extensions()->where('id', $name)->first()) {
+
+            $name = $find['name'];
+        }
+
+        if ($name) {
 
             if ($this->option('edit')) {
 
@@ -110,6 +117,8 @@ class LteExtension extends BaseLteExtension
             ['install', 'i', InputOption::VALUE_NONE, 'Install any selected or all extensions'],
             ['uninstall', 'u', InputOption::VALUE_NONE, 'UnInstall any selected or all extensions'],
             ['reinstall', 'r', InputOption::VALUE_NONE, 'ReInstall any selected or all extension'],
+
+            ['yes', 'y', InputOption::VALUE_NONE, 'Enter yes on all'],
 
             ['make', 'm', InputOption::VALUE_NONE, 'Create extension by selected name'],
             ['edit', 'e', InputOption::VALUE_NONE, 'Edit extension by selected name']

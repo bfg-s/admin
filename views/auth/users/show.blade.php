@@ -3,7 +3,7 @@
 @section('content')
 
     @card()
-        @cardhead(__('lte::admin.id_information'))
+        @cardhead(__('lte.id_information'))
             @cardheadtools()
                 @buttongroup()
                     @bgroupreload()

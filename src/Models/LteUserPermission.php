@@ -34,4 +34,36 @@ trait LteUserPermission
     {
         return !!$this->roles->where('slug', $role)->count();
     }
+
+    /**
+     * @return bool
+     */
+    public function isRoot()
+    {
+        return $this->hasRole('root');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRootAdmin()
+    {
+        return $this->hasRoles(['root','admin']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModerator()
+    {
+        return $this->hasRole('moderator');
+    }
 }

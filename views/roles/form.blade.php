@@ -1,10 +1,10 @@
 @cardbodyform()
 
-    @formgroup(__('lte::admin.title'), 'name')
+    @formgroup(__('lte.title'), 'name')
         @forminput(['rule' => ['required'], 'data' => ['keyup' => 'str::slug', 'keyup-params' => '#input_slug']])
     @endformgroup
 
-    @formgroup(__('lte::admin.slug'), 'slug')
+    @formgroup(__('lte.slug'), 'slug')
         @forminput(['rule' => ['required']])
     @endformgroup
 

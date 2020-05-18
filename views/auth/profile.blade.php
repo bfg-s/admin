@@ -39,7 +39,7 @@
         <div class="col-md-9">
             @card()
 
-                @cardhead(__('lte::admin.admin_data'))
+                @cardhead(__('lte.admin_data'))
                     @cardheadtools()
                         @buttongroup()
                             @bgroupreload()
@@ -49,23 +49,23 @@
 
                 @tabs()
 
-                    @tab(__('lte::admin.common'), 'fas fa-cogs')
+                    @tab(__('lte.common'), 'fas fa-cogs')
 
                         @cardbodyform($user)
 
-                            @formgroup(__('lte::admin.avatar'), 'avatar', null, null, 3)
+                            @formgroup(__('lte.avatar'), 'avatar', null, null, 3)
                                 @formfile()
                             @endformgroup
 
-                            @formgroup(__('lte::admin.login_name'), 'login', true, null, 3)
+                            @formgroup(__('lte.login_name'), 'login', true, null, 3)
                                 @forminput(['rule' => ['required']])
                             @endformgroup
 
-                            @formgroup(__('lte::admin.email_address'), 'email', true, null, 3)
+                            @formgroup(__('lte.email_address'), 'email', true, null, 3)
                                 @forminput(['rule' => ['required']])
                             @endformgroup
 
-                            @formgroup(__('lte::admin.name'), 'name', true, null, 3)
+                            @formgroup(__('lte.name'), 'name', true, null, 3)
                                 @forminput(['rule' => ['required']])
                             @endformgroup
 
@@ -75,17 +75,17 @@
 
                     @endtab
 
-                    @tab(__('lte::admin.change_password'), 'fas fa-key')
+                    @tab(__('lte.change_password'), 'fas fa-key')
 
                         @cardbodyform()
 
                             @hiddens(['ch_password' => 'true'])
 
-                            @formgroup(__('lte::admin.new_password'), 'password', true, null, 3)
+                            @formgroup(__('lte.new_password'), 'password', true, null, 3)
                                 @formpassword(['rule' => ['required']])
                             @endformgroup
 
-                            @formgroup(__('lte::admin.repeat_new_password'), 'password_confirmation', true, null, 3)
+                            @formgroup(__('lte.repeat_new_password'), 'password_confirmation', true, null, 3)
                                 @formpassword(['rule' => ['required', 'confirmation']])
                             @endformgroup
 

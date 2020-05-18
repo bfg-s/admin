@@ -131,31 +131,15 @@ class Navigate implements NavigateInterface
     }
 
     /**
-     * Include  all extensions
-     */
-    public function all_extensions()
-    {
-        foreach (\LteAdmin::extensions() as $extension) {
-
-            if ($extension->included()) {
-
-                $extension->navigator($this);
-            }
-        }
-    }
-
-    /**
      * @param $name
      * @param $arguments
      */
     public function __call($name, $arguments)
     {
-        if ($ext = \LteAdmin::extension($name)) {
+        if (isset(LteAdmin::$nav_extensions[$name])) {
 
-            if ($ext->included()) {
-
-                $ext->navigator($this);
-            }
+            LteAdmin::$nav_extensions[$name]->navigator($this);
+            unset(LteAdmin::$nav_extensions[$name]);
         }
     }
 }

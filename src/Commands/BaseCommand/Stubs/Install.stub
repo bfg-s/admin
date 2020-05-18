@@ -2,20 +2,19 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Illuminate\Console\Command;
-use {NAMESPACE}\ServiceProvider;
+use Lar\LteAdmin\Core\InstallExtensionProvider;
+use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Install
  * @package {NAMESPACE}\Extension
  */
-class Install {
+class Install extends InstallExtensionProvider implements ActionWorkExtensionInterface {
 
     /**
-     * @param  Command  $command
-     * @param  ServiceProvider  $provider
+     * @return void
      */
-    public static function handle(Command $command, ServiceProvider $provider)
+    public function handle(): void
     {
 
     }

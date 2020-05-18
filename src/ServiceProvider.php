@@ -117,6 +117,13 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'lte-config');
 
         /**
+         * Register publishers lang
+         */
+        $this->publishes([
+            __DIR__.'/../translations' => resource_path('lang')
+        ], 'lte-lang');
+
+        /**
          * Register publishers assets
          */
         $this->publishes([
@@ -151,11 +158,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Load AdminLte views
          */
         $this->loadViewsFrom(__DIR__.'/../views', 'lte');
-
-        /**
-         * Load AdminLte Translations
-         */
-        $this->loadTranslationsFrom(__DIR__.'/../translations', 'lte');
 
         /**
          * Register blade bootstrap directives

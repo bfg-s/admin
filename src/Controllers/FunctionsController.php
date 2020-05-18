@@ -22,8 +22,6 @@ class FunctionsController extends Controller
      */
     public function index()
     {
-        //dump(lte_func()->dcfdsfs2);
-
         $roles = function (LteFunction $function) {
 
             return '<span class="badge badge-success">' . $function->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
@@ -67,13 +65,7 @@ class FunctionsController extends Controller
             return $back;
         }
 
-        $result = $this->store_default();
-
-        \Artisan::call('lar:dump', [
-            '--class' => FunctionsHelperGenerator::class
-        ]);
-
-        return $result;
+        return $this->store_default();
     }
 
     /**
@@ -92,28 +84,6 @@ class FunctionsController extends Controller
             return $back;
         }
 
-        $result = $this->update_default();
-
-        if ($request->pjax()) {
-
-            \Artisan::call('lar:dump');
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return Respond
-     * @throws \Exception
-     */
-    public function destroy()
-    {
-        $result = $this->destroy_default();
-
-        \Artisan::call('lar:dump', [
-            '--class' => FunctionsHelperGenerator::class
-        ]);
-
-        return $result;
+        return $this->update_default();
     }
 }

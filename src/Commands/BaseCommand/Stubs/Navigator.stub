@@ -2,20 +2,19 @@
 
 namespace {NAMESPACE}\Extension;
 
-use {NAMESPACE}\ServiceProvider;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
+use Lar\LteAdmin\Core\NavigatorExtensionProvider;
+use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Navigator
  * @package {NAMESPACE}\Extension
  */
-class Navigator {
+class Navigator extends NavigatorExtensionProvider implements ActionWorkExtensionInterface {
 
     /**
-     * @param  NavigateInterface  $navigate
-     * @param  ServiceProvider  $provider
+     * @return void
      */
-    public static function handle(NavigateInterface $navigate, ServiceProvider $provider)
+    public function handle(): void
     {
 
     }

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 use Lar\Roads\Roads;
 
@@ -24,6 +25,18 @@ class RoutesAdaptor
         if (is_file($navigator)) {
 
             include $navigator;
+        }
+
+        $extensions = LteAdmin::$nav_extensions;
+
+        if (count($extensions)) {
+
+            //\Navigate::menu_header('lte.modules');
+
+            foreach ($extensions as $extension) {
+
+                $extension->navigator(\Navigate::instance());
+            }
         }
 
         foreach (\Navigate::get() as $menu) {

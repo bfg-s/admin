@@ -125,10 +125,11 @@ trait LteExtensionTrait {
 
         $data = str_replace([
             '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{LTE_VERSION}',
-            '{COMPOSER_NAMESPACE}', '{NAMESPACE}'
+            '{COMPOSER_NAMESPACE}', '{NAMESPACE}', '{SLUG}'
         ], [
             $name, static::$desc, $folder, $extension, \LteAdmin::version(),
-            str_replace('\\', '\\\\', $namespace), $namespace
+            str_replace('\\', '\\\\', $namespace), $namespace,
+            \Str::slug(str_replace("/", "_", $name), '_')
         ], $data);
 
         return $data;

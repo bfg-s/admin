@@ -148,9 +148,9 @@ class ButtonGroup extends DIV {
      */
     public function reload(string $link = null, string $title = null)
     {
-        $return = $this->secondary(['fas fa-redo-alt', $title ?? __('lte::admin.refresh')]);
+        $return = $this->secondary(['fas fa-redo-alt', $title ?? __('lte.refresh')]);
         $return->dataClick()->location($link ?? \Request::getRequestUri());
-        $return->setTitleIf($title === '', __('lte::admin.refresh'));
+        $return->setTitleIf($title === '', __('lte.refresh'));
         return $return;
     }
 
@@ -163,8 +163,8 @@ class ButtonGroup extends DIV {
      */
     public function nestable()
     {
-        $this->info(['far fa-minus-square', __('lte::admin.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
-        $this->primary(['far fa-plus-square', __('lte::admin.expand_all')])->setDatas(['click' => 'nestable::expand']);
+        $this->info(['far fa-minus-square', __('lte.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
+        $this->primary(['far fa-plus-square', __('lte.expand_all')])->setDatas(['click' => 'nestable::expand']);
 
         return $this;
     }
@@ -184,9 +184,9 @@ class ButtonGroup extends DIV {
     {
         if ($link || isset($this->menu['link'])) {
 
-            $return = $this->primary(['fas fa-list-alt', $title ?? __('lte::admin.list')]);
+            $return = $this->primary(['fas fa-list-alt', $title ?? __('lte.list')]);
             $return->dataClick()->location($link ?? $this->menu['link']);
-            $return->setTitleIf($title === '', __('lte::admin.list'));
+            $return->setTitleIf($title === '', __('lte.list'));
             return $return;
         }
 
@@ -214,9 +214,9 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $return = $this->success(['fas fa-edit', $title ?? __('lte::admin.edit')]);
+            $return = $this->success(['fas fa-edit', $title ?? __('lte.edit')]);
             $return->dataClick()->location($link);
-            $return->setTitleIf($title === '', __('lte::admin.edit'));
+            $return->setTitleIf($title === '', __('lte.edit'));
             return $return;
         }
 
@@ -244,9 +244,9 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            $return = $this->info(['fas fa-info-circle', $title ?? __('lte::admin.information')]);
+            $return = $this->info(['fas fa-info-circle', $title ?? __('lte.information')]);
             $return->dataClick()->location($link);
-            $return->setTitleIf($title === '', __('lte::admin.information'));
+            $return->setTitleIf($title === '', __('lte.information'));
             return $return;
         }
 
@@ -276,13 +276,13 @@ class ButtonGroup extends DIV {
 
         if ($link) {
 
-            return $this->danger(['fas fa-trash-alt', $title ?? __('lte::admin.delete')])->setDatas([
+            return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte::admin.delete_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    __('lte.delete_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
                     $link . " >> \$jax.del"
                 ]
-            ])->setTitleIf($title === '', __('lte::admin.delete'));
+            ])->setTitleIf($title === '', __('lte.delete'));
         }
 
         return $this;
@@ -297,7 +297,7 @@ class ButtonGroup extends DIV {
     {
         if (!$btn) {
 
-            $btn = ['fas fa-save', __('lte::admin.submit')];
+            $btn = ['fas fa-save', __('lte.submit')];
         }
 
         $datas = [
@@ -325,8 +325,8 @@ class ButtonGroup extends DIV {
         }
 
         if ($link) {
-            $return = $this->success(['fas fa-plus', $title ?? __('lte::admin.add')]);
-            $return->setTitleIf($title === '', __('lte::admin.add'));
+            $return = $this->success(['fas fa-plus', $title ?? __('lte.add')]);
+            $return->setTitleIf($title === '', __('lte.add'));
             $return->dataClick()->location($link);
             return $return;
         }

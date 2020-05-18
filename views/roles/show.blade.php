@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card(__('lte::admin.id_information'))
+    @card(__('lte.id_information'))
 
         @cardbody(['p-0'])
 

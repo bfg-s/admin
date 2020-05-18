@@ -2,12 +2,12 @@
 
 @section('content')
 
-    @card(__('lte::admin.list_of_roles'))
+    @card(__('lte.list_of_roles'))
 
         @cardbodytable
 
-            @column(__('lte::admin.title'), 'name', true)
-            @column(__('lte::admin.slug'), 'badge:slug,success', true)
+            @column(__('lte.title'), 'name', true)
+            @column(__('lte.slug'), 'badge:slug,success', true)
 
         @endcardbodytable
 

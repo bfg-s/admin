@@ -2,15 +2,20 @@
 
 @section('content')
 
-    @card(__('lte::admin.list_of_functions'))
-
+    @card(__('lte.list_of_functions'))
         @cardbodytable
-
-            @column(__('lte::admin.role'), $roles)
-            @column(__('lte::admin.slug'), 'slug', true)
-            @column(__('lte::admin.description'), 'str_limit:description,50', true)
-            @column(__('lte::admin.active'), 'input_switcher:active', true)
-
+            @if(!lte_user()->isRoot())
+                @tableinstruction(['active' => 1])
+            @endif
+            @column(__('lte.role'), $roles)
+            @column(__('lte.slug'), 'copied:slug', true)
+            @column(__('lte.description'), 'str_limit(50):__lang:description', true)
+            @if(!lte_user()->isRoot())
+                @disabledelete()
+            @else
+                @column(__('lte.active'), 'input_switcher:active', 'active')
+            @endif
+            @disableinfo()
         @endcardbodytable
 
         @tablefooter

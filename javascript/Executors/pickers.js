@@ -7,7 +7,7 @@ module.exports = class extends Executor {
         return $(this.target).colorpicker({
             format: this.target.dataset.format ? this.target.dataset.format : 'auto'
         }).on('colorpickerChange', (event) => {
-            $(this.target).parents('.input-group').find('.fa-square').css('color', event.color.toString());
+            $(event.target).parents('.input-group').find('.fa-square').css('color', event.color.toString());
         });
     }
 
@@ -26,7 +26,8 @@ module.exports = class extends Executor {
             arrowNextIconClass: 'fas fa-angle-right',
         }).on('change', (e) => {
 
-            $(this.target).parents('.input-group').find('input').val(e.icon)
+            //console.log(e.icon, e.target);
+            $(e.target).parents('.input-group').find('input').val(e.icon)
         });
     }
 

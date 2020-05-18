@@ -21,6 +21,7 @@ use Lar\LteAdmin\Components\HorizontalRadio;
 use Lar\LteAdmin\Components\InfoBox;
 use Lar\LteAdmin\Components\Nestable;
 use Lar\LteAdmin\Components\Select2;
+use Lar\LteAdmin\Components\Select2Tags;
 use Lar\LteAdmin\Components\SmallBox;
 use Lar\LteAdmin\Components\Switcher;use Lar\LteAdmin\Components\Table;
 use Lar\LteAdmin\Components\Tabs;
@@ -421,14 +422,21 @@ class BladeBootstrap {
 
             $class = Select2::class;
 
-            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
         });
 
         \Blade::directive('formmiltiselect', function ($attrs = '') {
 
             $class = Select2::class;
 
-            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'data-load' => 'select2', 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title, 'multiple' => 'multiple'])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
+        });
+
+        \Blade::directive('formtags', function ($attrs = '') {
+
+            $class = Select2Tags::class;
+
+            return "<?php {$this->inp_default_datas} echo \\{$class}::create({$attrs})->attr(['name' => \$name, 'data-placeholder' => \$title])->setValues(\$value)->makeOptions()->addClass('form-control'); ?>";
         });
 
         \Blade::directive('formckeditor', function ($attrs = '') {

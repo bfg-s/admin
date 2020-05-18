@@ -17,6 +17,11 @@ class LteAdmin
     /**
      * @var ExtendProvider[]
      */
+    static $nav_extensions = [];
+
+    /**
+     * @var ExtendProvider[]
+     */
     static $installed_extensions = [];
 
     /**
@@ -74,6 +79,11 @@ class LteAdmin
             if (!isset(LteAdmin::$installed_extensions[$provider::$name])) {
 
                 LteAdmin::$installed_extensions[$provider::$name] = $provider;
+
+                if ($provider->included()) {
+
+                    LteAdmin::$nav_extensions[$provider::$slug] = $provider;
+                }
             }
         }
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
 use Lar\Layout\Respond;
+use Lar\LteAdmin\Components\Table;
 use Lar\LteAdmin\Core\ModelSaver;
 
 /**
@@ -17,6 +18,13 @@ use Lar\LteAdmin\Core\ModelSaver;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * Permission functions for methods
+     *
+     * @var array
+     */
+    static $permission_functions = [];
 
     /**
      * Display a listing of the resource.
@@ -68,12 +76,12 @@ class Controller extends BaseController
 
         if ($this->requestToModel($data)) {
 
-            respond()->toast_success(__('lte::admin.saved_successfully'));
+            respond()->toast_success(__('lte.saved_successfully'));
         }
 
         else {
 
-            respond()->toast_error(__('lte::admin.unknown_error'));
+            respond()->toast_error(__('lte.unknown_error'));
         }
 
         return $this->returnTo();
@@ -89,12 +97,12 @@ class Controller extends BaseController
 
         if ($this->requestToModel($data)) {
 
-            respond()->toast_success(__('lte::admin.successfully_created'));
+            respond()->toast_success(__('lte.successfully_created'));
         }
 
         else {
 
-            respond()->toast_error(__('lte::admin.unknown_error'));
+            respond()->toast_error(__('lte.unknown_error'));
         }
 
         return $this->returnTo();
@@ -112,7 +120,7 @@ class Controller extends BaseController
 
             if ($model->delete()) {
 
-                respond()->toast_success(__('lte::admin.successfully_deleted'));
+                respond()->toast_success(__('lte.successfully_deleted'));
 
                 if ($this->isType('index')) {
 
@@ -127,13 +135,13 @@ class Controller extends BaseController
 
             else {
 
-                respond()->toast_error(__('lte::admin.unknown_error'));
+                respond()->toast_error(__('lte.unknown_error'));
             }
         }
 
         else {
 
-            respond()->toast_error(__('lte::admin.model_not_found'));
+            respond()->toast_error(__('lte.model_not_found'));
         }
 
         return respond();
@@ -153,7 +161,9 @@ class Controller extends BaseController
 
         if ($_after === 'index' && $menu = gets()->lte->menu->now) {
 
-            return \redirect($menu['link'])->with('_after', $_after);
+            $last = Table::getLastRequest();
+
+            return \redirect($menu['link'] . (count($last) ? '?'.http_build_query($last) : ''))->with('_after', $_after);
         }
 
         return back()->with('_after', $_after);

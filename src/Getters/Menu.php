@@ -306,6 +306,11 @@ class Menu extends Getter
                 $item['active'] = LtePermission::checkUrl($item['link']);
             }
 
+            if (isset($item['func']) && $item['func'] && $item['active']) {
+
+                $item['active'] = lte_user()->func()->has($item['func']);
+            }
+
             $result = array_merge($add, $item);
 
             $return[] = $result;

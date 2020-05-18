@@ -2,7 +2,19 @@
 
 @section('content')
 
-    @card(__('lte::admin.edit_function'))
+    @card()
+        @cardhead(__('lte.edit_function'))
+            @cardheadtools()
+                @buttongroup()
+                    @bgroupreload()
+                    @bgrouprlist()
+                    @if(lte_user()->isRoot())
+                        @bgrouprdestroy()
+                    @endif
+                    @bgroupradd()
+                @endbuttongroup
+            @endcardheadtools
+        @endcardhead
 
         @include('lte::functions.form')
 

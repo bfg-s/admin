@@ -21,6 +21,13 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     static $name;
 
     /**
+     * Extension call slug
+     * @var string
+     */
+    static $slug;
+
+    /**
+     * Extension description
      * @var string
      */
     static $description = "";
@@ -62,6 +69,7 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     public function register()
     {
         if (!static::$name) { $this->getNameAndDescription(); }
+        $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
         \LteAdmin::registerExtension($this);
@@ -90,8 +98,20 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
+     * Generate extension slug
+     */
+    protected function generateSlug() {
+
+        if (!static::$slug) {
+
+            static::$slug = static::$name;
+        }
+
+        static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$slug);
+    }
+
+    /**
      * Get name and description from composer.json
-     * @param  null  $dir
      */
     protected function getNameAndDescription()
     {
@@ -134,5 +154,12 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * @param  Command  $command
      */
     abstract public function uninstall(Command $command): void;
+
+    /**
+     * Permission process
+     * @param  Command  $command
+     * @param  string  $type
+     */
+    abstract public function permission(Command $command, string $type): void;
 }
 

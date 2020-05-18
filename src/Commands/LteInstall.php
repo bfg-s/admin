@@ -36,15 +36,6 @@ class LteInstall extends Command
      */
     public function handle()
     {
-//        if ($extension = $this->option('extension')) {
-//
-//            if ($ext = \LteAdmin::extension($extension)) {
-//                $this->info("Run Install [{$extension}]...");
-//                $ext->install($this);
-//                return ;
-//            }
-//        }
-
         $this->call('vendor:publish', [
             '--tag' => 'lte-migrations',
             '--force' => true
@@ -133,7 +124,7 @@ class LteInstall extends Command
 
             file_put_contents(
                 $nav,
-                "<?php\n\nuse Lar\Roads\Roads;\nuse Lar\LteAdmin\Navigate;\nuse Lar\LteAdmin\Core\NavGroup;\n\nNavigate::do(function (Navigate \$navigate, Roads \$roads) {\n\t\$navigate->all_extensions();\n});"
+                "<?php\n\nuse Lar\Roads\Roads;\nuse Lar\LteAdmin\Navigate;\nuse Lar\LteAdmin\Core\NavGroup;\n\nNavigate::do(function (Navigate \$navigate, Roads \$roads) {\n\t\n});"
             );
 
             $this->info("File {$nav} created!");
@@ -182,6 +173,11 @@ class LteInstall extends Command
 
         $this->call('vendor:publish', [
             '--tag' => 'lte-assets',
+            '--force' => $this->option('force')
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-lang',
             '--force' => $this->option('force')
         ]);
 
@@ -235,12 +231,10 @@ class LteInstall extends Command
             file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
         }
 
-//        foreach (\LteAdmin::extensions() as $extension) {
-//            $this->info("Run Install [{$extension::$name}]...");
-//            $ext->install($this);
-//            $this->info("Done Install [{$extension::$name}]!");
-//            return ;
-//        }
+        if ($make_seeds) {
+
+            $this->call('lte:extension', ['--reinstall' => true, '--yes' => true]);
+        }
 
         $this->info("Lar Admin LTE Installed");
     }

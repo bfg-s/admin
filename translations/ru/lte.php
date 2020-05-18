@@ -121,4 +121,7 @@ return [
     'list_of_functions'             => 'Список функций',
     'new_function'                  => 'Новая функция',
     'edit_function'                 => 'Редактировать функцию: :slug',
+    'yes'                           => 'Да',
+    'no'                            => 'Нет',
+    'modules'                       => 'Модули',
 ];

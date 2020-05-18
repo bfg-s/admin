@@ -121,4 +121,7 @@ return [
     'list_of_functions'             => 'List of functions',
     'new_function'                  => 'New function',
     'edit_function'                 => 'Edit function: :slug',
+    'yes'                           => 'Yes',
+    'no'                            => 'No',
+    'modules'                       => 'Modules',
 ];

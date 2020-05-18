@@ -8,6 +8,7 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Navigator;
 use {NAMESPACE}\Extension\Uninstall;
+use {NAMESPACE}\Extension\Permissions;
 
 /**
  * Class ServiceProvider
@@ -16,11 +17,19 @@ use {NAMESPACE}\Extension\Uninstall;
 class ServiceProvider extends ExtendProvider
 {
     /**
+     * Extension ID name
      * @var string
      */
     public static $name = "{NAME}";
 
     /**
+     * Extension call slug
+     * @var string
+     */
+    static $slug = "{SLUG}";
+
+    /**
+     * Extension description
      * @var string
      */
     public static $description = "{DESCRIPTION}";
@@ -51,7 +60,7 @@ class ServiceProvider extends ExtendProvider
      */
     public function navigator(NavigateInterface $navigate): void
     {
-        Navigator::handle($navigate, $this);
+        (new Navigator($navigate, $this))->handle();
     }
 
     /**
@@ -59,7 +68,7 @@ class ServiceProvider extends ExtendProvider
      */
     public function install(Command $command): void
     {
-        Install::handle($command, $this);
+        (new Permissions($command, $this))->up();
     }
 
     /**
@@ -67,7 +76,21 @@ class ServiceProvider extends ExtendProvider
      */
     public function uninstall(Command $command): void
     {
-        Uninstall::handle($command, $this);
+        (new Uninstall($command, $this))->handle();
+    }
+
+    /**
+     * @param  Command  $command
+     * @param  string  $type
+     * @throws \Exception
+     */
+    public function permission(Command $command, string $type): void
+    {
+        if ($type === 'up') {
+            (new Permissions($command, $this))->up();
+        } else if ($type === 'down') {
+            (new Permissions($command, $this))->down();
+        }
     }
 }
 

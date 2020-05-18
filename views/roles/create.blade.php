@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @card(__('lte::admin.add_role'))
+    @card(__('lte.add_role'))
 
         @include('lte::roles.form')
 

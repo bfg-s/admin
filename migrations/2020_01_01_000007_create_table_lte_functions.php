@@ -17,7 +17,7 @@ class CreateTableLteFunctions extends Migration
 
             $table->bigIncrements('id');
 
-            $table->string('slug')->default('*');
+            $table->string('slug')->unique();
 
             $table->text('description')->nullable();
 
@@ -31,8 +31,6 @@ class CreateTableLteFunctions extends Migration
             $table->unsignedBigInteger('lte_role_id');
 
             $table->unsignedBigInteger('lte_function_id');
-
-            $table->timestamps();
 
             $table->foreign('lte_role_id')->references('id')->on('lte_roles')->onDelete('cascade');
 

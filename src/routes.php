@@ -22,30 +22,30 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
     $roads->post('uploader', config('lte.action.uploader'))->name('uploader');
 
-    Navigate::item('lte::admin.dashboard', 'dashboard')
+    Navigate::item('lte.dashboard', 'dashboard')
         ->action(config('lte.action.dashboard'))
         ->icon_tachometer_alt();
 
-    Navigate::group('lte::admin.administration', 'admin', function (\Lar\LteAdmin\Core\NavGroup $group) {
+    Navigate::group('lte.administration', 'admin', function (\Lar\LteAdmin\Core\NavGroup $group) {
 
-        $group->item('lte::admin.administrators', 'administrators')
+        $group->item('lte.administrators', 'administrators')
             ->resource('lte_user', config('lte.action.lte_user'))
             ->model(\Lar\LteAdmin\Models\LteUser::class)
             ->icon_users_cog();
 
-        $group->group('lte::admin.access', 'access', function (\Lar\LteAdmin\Core\NavGroup $group) {
+        $group->group('lte.access', 'access', function (\Lar\LteAdmin\Core\NavGroup $group) {
 
-            $group->item('lte::admin.roles', 'roles')
+            $group->item('lte.roles', 'roles')
                 ->resource('lte_role', config('lte.action.lte_role'))
                 ->model(\Lar\LteAdmin\Models\LteRole::class)
                 ->icon_user_secret();
 
-            $group->item('lte::admin.permission', 'permission')
+            $group->item('lte.permission', 'permission')
                 ->resource('lte_permission', config('lte.action.lte_permission'))
                 ->model(\Lar\LteAdmin\Models\LtePermission::class)
                 ->icon_ban();
 
-            $group->item('lte::admin.functions', 'functions')
+            $group->item('lte.functions', 'functions')
                 ->resource('lte_functions', config('lte.action.lte_functions'))
                 ->model(\Lar\LteAdmin\Models\LteFunction::class)
                 ->icon_scroll();

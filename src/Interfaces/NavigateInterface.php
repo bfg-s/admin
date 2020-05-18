@@ -20,7 +20,7 @@ interface NavigateInterface {
      * @param  string|null  $title
      * @param  string|null  $route
      * @param  null  $action
-     * @return \Lar\LteAdmin\Core\NavGroup
+     * @return \Lar\LteAdmin\Core\NavItem
      */
     public function item(string $title = null, string $route = null, $action = null);
 }
