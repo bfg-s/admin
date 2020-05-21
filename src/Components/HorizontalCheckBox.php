@@ -122,7 +122,7 @@ class HorizontalCheckBox extends DIV implements onRender
             $i = 0;
             foreach ($this->values as $value => $title) {
 
-                $id = $this->id ? $this->id . '-' . $i : 'checkbox-' . $i;
+                $id = $this->id ? 'checkbox-' . $this->id . '-' . $i : 'checkbox-' . $i;
 
                 $checked = false;
 

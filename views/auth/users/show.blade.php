@@ -8,7 +8,6 @@
                 @buttongroup()
                     @bgroupreload()
                     @bgrouprlist()
-                    @bgrouprinfo()
                     @if(lte_model()->id !== 1)
                         @bgrouprdestroy()
                     @endif

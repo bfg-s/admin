@@ -283,6 +283,7 @@ class BaseLteExtension extends Command
         $v = "";
 
         if (count($versions) === 1) { $v = " " . $versions[0]; }
+        else { $v = " " . $versions[1]; }
 
         $this->call_composer("require {$name}{$v}");
 

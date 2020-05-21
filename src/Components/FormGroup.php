@@ -44,6 +44,16 @@ class FormGroup extends DIV
     private $__id = '';
 
     /**
+     * @var string|null
+     */
+    private $__info;
+
+    /**
+     * @var int
+     */
+    private $__label_width;
+
+    /**
      * @var boolean
      */
     public $__v = false;
@@ -81,6 +91,7 @@ class FormGroup extends DIV
         $this->when($params);
 
         $this->__v = static::$vertical;
+        $this->__v = $label ? $this->__v : true;
 
         $this->__id = 'input_' . \Str::slug($name, '_');
 
@@ -88,16 +99,16 @@ class FormGroup extends DIV
 
             $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-'.$label_width);
 
-            if ($label_obj) {
-
-                $label_obj->text("<small class='form-text text-muted form-info-text'>{$info}</small>");
-            }
+//            if ($label_obj) {
+//
+//                $label_obj->text("<small class='form-text text-muted form-info-text'>{$info}</small>");
+//            }
         }
 
         $inner = is_string($icon) && preg_match('/^(fas\s|fab\s|far\s)fa\-[a-zA-Z0-9\-\_]+/', $icon) ?
                 "<i class='{$icon}'></i>" : $icon;
 
-        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? '' : ($label ? 'col-sm-'.(12-$label_width) : ''))])->openMode();
+        $div1 = $this->div(['class' => ($inner ? 'input-group ':'').($this->__v ? 'w-100' : ($label ? 'col-sm-'.(12-$label_width) : ''))])->openMode();
 
         if ($inner) {
             $div1->div(['class' => 'input-group-prepend'])
@@ -111,6 +122,14 @@ class FormGroup extends DIV
         $this->__value = static::$model ? multi_dot_call(static::$model, $this->__path) : null;
         $this->__name = $name;
         $this->__title = $label ?? $name;
+        $this->__info = $info;
+        $this->__label_width = $label_width;
+
+        if ($this->__v) {
+            $this->setDatas(['vertical' => 'true']);
+        }
+
+        $this->setDatas(['label-width' => $label_width]);
 
         static::$vertical = false;
         static::$model = null;
@@ -154,5 +173,21 @@ class FormGroup extends DIV
     public function __getPath()
     {
         return $this->__path;
+    }
+
+    /**
+     * @return string
+     */
+    public function __getInfo()
+    {
+        return $this->__info;
+    }
+
+    /**
+     * @return string
+     */
+    public function __labelWidth()
+    {
+        return $this->__label_width;
     }
 }

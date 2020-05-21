@@ -32,8 +32,6 @@ class Select2 extends SELECT
 
         $this->when($params);
 
-        $this->setDatas(['load' => 'select2']);
-
         $this->options = $options;
     }
 
@@ -46,6 +44,11 @@ class Select2 extends SELECT
         if (!$this->hasAttribute('value')) {
 
             $this->value = $value;
+        }
+
+        else {
+            $this->value = $this->getValue();
+            $this->removeAttribute('value');
         }
 
         return $this;

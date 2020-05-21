@@ -23,18 +23,24 @@ class Select2Tags extends SELECT
     ];
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * Col constructor.
      * @param  array  $options
      * @param  mixed  $value
      * @param  mixed  ...$params
      */
-    public function __construct(...$params)
+    public function __construct($options, ...$params)
     {
         parent::__construct();
 
         $this->when($params);
 
-        $this->setDatas(['load' => 'select2', 'tags' => 'true']);
+        $this->setDatas(['tags' => 'true']);
+        $this->options = $options;
     }
 
     /**
@@ -48,6 +54,11 @@ class Select2Tags extends SELECT
             $this->value = $value;
         }
 
+        else {
+            $this->value = $this->getValue();
+            $this->removeAttribute('value');
+        }
+
         return $this;
     }
 
@@ -58,10 +69,19 @@ class Select2Tags extends SELECT
     {
         if (is_array($this->value)) {
             foreach ($this->value as $item) {
+                $key = array_search($item,$this->options);
+                if ($key !== false) {
+                    unset($this->options[$key]);
+                }
                 $this->option($item)
                     ->setValue((string)$item)
                     ->setSelected();
             }
+        }
+
+        foreach ($this->options as $option) {
+            $this->option($option)
+                ->setValue((string)$option);
         }
 
         return $this;

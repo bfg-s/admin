@@ -50,18 +50,27 @@ module.exports = class extends Executor {
             errorElement: 'span',
             errorPlacement: function (error, element) {
                 //console.log(element);
-                let label = $('<div></div>').addClass('col-sm-2'),
-                    errWrap = $('<div></div>').addClass('col-sm-10')
-                        .append(error.addClass('invalid-feedback')),
-                    area = element.closest('.form-group');
-                area.append(label);
+                let area = element.closest('.form-group'),
+                    lw = area[0] && area[0].dataset.labelWidth !== undefined ? area[0].dataset.labelWidth : 2,
+                    label = $('<div></div>').addClass(`col-sm-${lw}`),
+                    errWrap = $('<div></div>').addClass(area[0] && !area[0].dataset.vertical ? `col-sm-${12-lw}` : 'error-wrap')
+                        .append(error.addClass('invalid-feedback')).prepend('<small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small> ');
+                if (area[0] && !area[0].dataset.vertical) {
+                    area.append(label);
+                }
                 area.append(errWrap);
             },
             highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
+                let area = element.closest('.form-group'),
+                    icon = $(area).find('.err-valid-icon');
+                icon.show();
             },
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
+                let area = element.closest('.form-group'),
+                    icon = $(area).find('.err-valid-icon');
+                icon.hide();
             }
         })
     }

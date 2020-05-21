@@ -93,7 +93,7 @@ class FormFooter extends DIV
 
         $row = $this->div(['row']);
 
-        if ($type && $this->nav_redirect) {
+        if (($type === 'create' || $type === 'edit') && $this->nav_redirect) {
 
             $row->div(['col'])->div(['mb-0 clearfix'])->when(function (DIV $div) use ($type) {
 

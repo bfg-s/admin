@@ -112,7 +112,7 @@ class HorizontalRadio extends DIV implements onRender
             $i = 0;
             foreach ($this->values as $value => $title) {
 
-                $id = $this->id ? $this->id . '-' . $i : 'radio-' . $i;
+                $id = $this->id ? 'radio-' . $this->id . '-' . $i : 'radio-' . $i;
 
                 $this->div(['icheck-primary float-left mr-3'])
                     ->input(['type' => 'radio', 'id' => $id, 'name' => $this->name, 'value' => $value])

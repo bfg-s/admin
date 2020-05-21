@@ -107,6 +107,8 @@ class Menu extends Getter
 
                     $roue_param = \Route::current()->parameter($menu['model.param']);
 
+                    //dd($menu['model.param']);
+
                     if ($roue_param) {
 
                         if ($find = $return->where($return->getRouteKeyName(), $roue_param)->first()) {
@@ -231,7 +233,7 @@ class Menu extends Getter
 
             $item['current.type'] = null;
 
-            if (isset($item['model'])) {
+            if (isset($item['model']) && !isset($item['model.param'])) {
 
                 $item['model.param'] = \Str::singular(\Str::snake(class_basename($item['model'])));
             }

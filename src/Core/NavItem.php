@@ -131,6 +131,18 @@ class NavItem implements Arrayable
     {
         $this->items['resource'] = ['name' => $name, 'action' => $resource, 'options' => $options];
 
+        if (!isset($this->items['route']) || !$this->items['route']) {
+
+            $this->items['route'] = $name;
+        }
+
+        if (!isset($this->items['model.param'])) {
+
+            $this->items['model.param'] = \Str::singular(
+                \Str::contains($name, '/') ? last(explode('/', $name)) : $name
+            );
+        }
+
         return $this;
     }
 

@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Components;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Tags\INPUT;
 
 /**
  * Class Form
@@ -14,6 +15,11 @@ class Form extends \Lar\Layout\Tags\FORM
      * @var Model
      */
     public $model;
+
+    /**
+     * @var string
+     */
+    public static $last_id;
 
     /**
      * Col constructor.
@@ -40,8 +46,8 @@ class Form extends \Lar\Layout\Tags\FORM
 
         if (isset($menu['model.param'])) {
 
-            $this->input(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
-                ->setDatas(['stated' => '_after']);
+            $this->appEnd(INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
+                ->setDatas(['stated' => '_after']));
         }
 
         if (!$action && $type && $model && $menu) {
@@ -78,7 +84,9 @@ class Form extends \Lar\Layout\Tags\FORM
 
         $this->setEnctype('multipart/form-data');
 
-        $this->setId($this->getUnique());
+        static::$last_id = $this->getUnique();
+
+        $this->setId(static::$last_id);
 
         $this->attr('data-load', 'valid');
     }

@@ -26,6 +26,36 @@ class Card extends DIV
     ];
 
     /**
+     * @var array|\Lar\LteAdmin\Getters\Menu|null
+     */
+    protected $now;
+
+    /**
+     * @var DIV
+     */
+    protected $head_obj;
+
+    /**
+     * @var \Lar\Layout\Tags\H3
+     */
+    protected $title_obj;
+
+    /**
+     * @var bool
+     */
+    protected $auto_tools = true;
+
+    /**
+     * @var ButtonGroup
+     */
+    protected $group;
+
+    /**
+     * @var DIV
+     */
+    protected $tools;
+
+    /**
      * Col constructor.
      * @param  string  $title
      * @param  string|null  $icon
@@ -48,20 +78,20 @@ class Card extends DIV
             $icon = null;
         }
 
-        $now = gets()->lte->menu->now;
+        $this->now = gets()->lte->menu->now;
 
-        $type = $this->typed($type, $now);
+        $type = $this->typed($type);
 
         $this->addClass("card-{$type}");
 
-        if ($title) {
+        if ($title !== null) {
 
-            $head_obj = $this->div(['card-header']);
-            $title_obj = $head_obj->h3(['card-title']);
+            $this->head_obj = $this->div(['card-header']);
+            $this->title_obj = $this->head_obj->h3(['card-title']);
 
             if ($icon) {
 
-                $title_obj->text("<i class=\"{$icon} mr-1\"></i>");
+                $this->title_obj->text("<i class=\"{$icon} mr-1\"></i>");
             }
 
             $model = gets()->lte->menu->model;
@@ -78,73 +108,84 @@ class Card extends DIV
                 }
             }
 
-            $title_obj->text($title);
+            $this->title_obj->text($title);
 
-            if ($now) {
-
-                $this->tools($head_obj, $now);
+            if ($this->now && $this->auto_tools) {
+                $this->makeToolsArea()
+                    ->makeDefaultTools();
             }
         }
 
         $this->when($params);
     }
 
-    protected function typed($type, $menu)
+    /**
+     * @return $this
+     */
+    protected function makeToolsArea()
     {
-        if ($menu && $menu['current.type']) {
+        $this->group = new ButtonGroup();
 
-            if ($menu['current.type'] === 'create') return 'success';
-            else if ($menu['current.type'] === 'edit') return 'success';
-            else if ($menu['current.type'] === 'show') return 'info';
+        $this->tools = $this->head_obj->div(['card-tools']);
+
+        $this->tools->appEnd($this->group);
+
+        return $this;
+    }
+
+    /**
+     * @param $type
+     * @return string
+     */
+    protected function typed($type)
+    {
+        if ($this->now && $this->now['current.type']) {
+
+            if ($this->now['current.type'] === 'create') return 'success';
+            else if ($this->now['current.type'] === 'edit') return 'success';
+            else if ($this->now['current.type'] === 'show') return 'info';
         }
 
         return $type;
     }
 
     /**
-     * @param  DIV  $obj
-     * @param  array  $menu
+     * Default tools
      */
-    protected function tools(DIV $obj, $menu)
+    protected function makeDefaultTools()
     {
-        if ($menu['current.type']) {
+        if ($this->now['current.type']) {
 
-            $type = $menu['current.type'];
+            $type = $this->now['current.type'];
 
-            $tools = $obj->div(['card-tools']);
-
-            $group = new ButtonGroup();
-
-            $group->reload();
+            $this->group->reload();
 
             if ($type === 'create') {
 
-                $group->resourceList();
+                $this->group->resourceList();
             }
 
             else if ($type === 'edit' || $type === 'show') {
 
-                $group->resourceList();
+                $this->group->resourceList();
 
                 if ($type === 'show') {
 
-                    $group->resourceEdit();
+                    $this->group->resourceEdit();
                 }
 
                 if ($type === 'edit') {
 
-                    $group->resourceInfo();
+                    $this->group->resourceInfo();
                 }
 
-                $group->resourceDestroy();
+                $this->group->resourceDestroy();
             }
 
             if ($type !== 'create') {
 
-                $group->resourceAdd();
+                $this->group->resourceAdd();
             }
-
-            $tools->appEnd($group);
         }
     }
 }

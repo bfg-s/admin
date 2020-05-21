@@ -13,7 +13,9 @@ use Lar\LteAdmin\Commands\MakeController;
 use Lar\LteAdmin\Commands\MakeUser;
 use Lar\LteAdmin\Core\BladeBootstrap;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
+use Lar\LteAdmin\Core\Generators\FieldGroupHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
+use Lar\LteAdmin\Core\TagableComponent;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
@@ -205,6 +207,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
         DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
+        DumpAutoload::addToExecute(FieldGroupHelperGenerator::class);
 
         /**
          * Merge config from having by default
@@ -242,6 +245,11 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register lte jax executors
          */
         $this->registerJax();
+
+        /**
+         * Register tagable components
+         */
+        TagableComponent::create();
     }
 
     /**

@@ -1,6 +1,8 @@
 
 $.validator.addMethod( "any-checked", ( value, element, param ) => {
 
+    // console.log(element);
+
     if (param === true) {
 
         return !!$(element).find(':checked').length;
