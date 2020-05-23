@@ -15,6 +15,8 @@ use Lar\LteAdmin\Core\BladeBootstrap;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FieldGroupHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
+use Lar\LteAdmin\Core\Generators\TableMacrosesHelperGenerator;
+use Lar\LteAdmin\Core\Generators\TableOriginalMacrosesHelperGenerator;
 use Lar\LteAdmin\Core\TagableComponent;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
@@ -208,6 +210,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
         DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
         DumpAutoload::addToExecute(FieldGroupHelperGenerator::class);
+        DumpAutoload::addToExecute(TableMacrosesHelperGenerator::class);
+        DumpAutoload::addToExecute(TableOriginalMacrosesHelperGenerator::class);
 
         /**
          * Merge config from having by default

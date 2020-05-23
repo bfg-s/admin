@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Lar\Developer\Core\Traits\Stateable;
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\TD;
 use Lar\Layout\Tags\TH;
@@ -76,6 +77,11 @@ class Table extends DIV implements onRender
      * @var \Closure
      */
     protected $edit_control;
+
+    /**
+     * @var bool
+     */
+    protected $default_id = true;
 
     /**
      * @var bool
@@ -296,7 +302,9 @@ class Table extends DIV implements onRender
      */
     public function makeTable()
     {
-        $this->table = $this->table(['table', 'table-sm']);
+        $this->table = \Lar\Layout\Tags\TABLE::create(['table', 'table-sm']);
+
+        $this->appEnd($this->table);
 
         $this->table->rowsOnPage($this->requestState('per_page'));
 
@@ -316,7 +324,7 @@ class Table extends DIV implements onRender
      * @param null $sort_field
      * @return \Closure|mixed
      */
-    public function sorterOnColumn($title, string $field, $sort_field = null)
+    protected function sorterOnColumn($title, string $field, $sort_field = null)
     {
         if ($sort_field) {
 
@@ -480,6 +488,17 @@ class Table extends DIV implements onRender
     }
 
     /**
+     * @param  bool  $bool
+     * @return $this
+     */
+    public function disableDefaultsId(bool $bool = true)
+    {
+        $this->default_id = !$bool;
+
+        return $this;
+    }
+
+    /**
      * Function execute on render component
      *
      * @return mixed
@@ -488,11 +507,14 @@ class Table extends DIV implements onRender
     {
         if ($this->default_fields) {
 
-            $this->column(function (TH $th) {
-                $th->addClass('fit');
+            if ($this->default_id) {
 
-                return __('lte.id');
-            }, 'id', true, true);
+                $this->column(function (TH $th) {
+                    $th->addClass('fit');
+
+                    return __('lte.id');
+                }, 'id', true, true);
+            }
 
 
             $this->column(function (TH $th) {

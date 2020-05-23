@@ -29,6 +29,11 @@ class Card extends CardComponent implements onRender {
     protected $form;
 
     /**
+     * @var Table
+     */
+    protected $table;
+
+    /**
      * Card constructor.
      * @param  mixed  ...$params
      */
@@ -69,6 +74,22 @@ class Card extends CardComponent implements onRender {
     public function body(...$params)
     {
         return $this->div(['card-body'], ...$params);
+    }
+
+    /**
+     * @param  null  $model
+     * @param  \Closure|null  $after
+     * @return Table
+     */
+    public function bodyTable($model = null, \Closure $after = null)
+    {
+        $this->table = $this->body(['p-0'])->table($model, $after);
+
+        $this->table->table_rendered(function (\Lar\LteAdmin\Components\Table $table) {
+            $this->bottom_content->add($table->footer());
+        });
+
+        return $this->table;
     }
 
     /**

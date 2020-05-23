@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\Row;
+use Lar\LteAdmin\Segments\Tagable\Table;
 
 /**
  * Class TagableComponent
@@ -26,6 +27,7 @@ class TagableComponent extends Component {
         'form' => Form::class,
         'form_footer' => FormFooter::class,
         'field' => Field::class,
+        'table' => Table::class,
     ];
 
     /**

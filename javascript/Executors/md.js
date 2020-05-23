@@ -19,6 +19,7 @@ module.exports = class extends Executor {
             path: '/lte-admin/plugins/',
             pluginPath: '/lte-admin/plugins/editor.md-master/plugins/',
             markdown: data,
+            autoFocus: false,
             placeholder: "",
             searchReplace: true,
             toolbarIcons: function () {
