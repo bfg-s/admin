@@ -119,6 +119,7 @@ class LteBase extends LayoutComponent
      */
     public function __construct()
     {
+        $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));
 
         parent::__construct();
     }
