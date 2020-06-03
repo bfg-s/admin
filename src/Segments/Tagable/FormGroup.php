@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\FontAwesome;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormGroupRulesTrait;
 
 /**
@@ -13,7 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormGroupRulesTrait;
  */
 abstract class FormGroup extends DIV {
 
-    use FormGroupRulesTrait;
+    use FormGroupRulesTrait, FontAwesome;
 
     /**
      * @var bool

@@ -101,7 +101,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/editor.md-master/languages/en.js',
 
         'ljs' => [
-            'jq', 'alert', 'vue', 'nav', 'mask', 'select2', 'fancy'
+            'echo', 'jq', 'alert', 'vue', 'nav', 'mask', 'select2', 'fancy'
         ],
 
         'lte-admin/js/app.js',
