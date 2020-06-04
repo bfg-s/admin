@@ -123,6 +123,21 @@ class Navigate implements NavigateInterface
     }
 
     /**
+     * Register a channel authenticator.
+     *
+     * @param  string  $channel
+     * @param  callable|string  $callback
+     * @param  array  $options
+     * @return $this
+     */
+    public function channel($channel, $callback, $options = [])
+    {
+        \Broadcast::channel($channel, $callback, $options);
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function instance()

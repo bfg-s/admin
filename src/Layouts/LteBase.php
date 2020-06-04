@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\LayoutComponent;
+use Lar\LteAdmin\LteAdmin;
 
 /**
  * Landing Class
@@ -101,7 +102,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/editor.md-master/languages/en.js',
 
         'ljs' => [
-            'echo', 'jq', 'alert', 'vue', 'nav', 'mask', 'select2', 'fancy'
+            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy'
         ],
 
         'lte-admin/js/app.js',
@@ -119,6 +120,19 @@ class LteBase extends LayoutComponent
      */
     public function __construct()
     {
+        if (LteAdmin::$echo) {
+            $this->body_scripts['ljs'][] = 'echo';
+        }
+
+        $this->body_scripts['ljs'][] = 'vue';
+
+        foreach (\LteAdmin::extensions() as $extension) {
+
+            $this->body_scripts = array_merge($this->body_scripts, $extension->cfg()->getScripts());
+
+            $this->head_styles = array_merge($this->head_styles, $extension->cfg()->getStyles());
+        }
+
         $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));
 
         parent::__construct();

@@ -35,6 +35,11 @@ class LteAdmin
     static $extensions;
 
     /**
+     * @var bool
+     */
+    static $echo = false;
+
+    /**
      * @return \Lar\LteAdmin\Models\LteUser|\Illuminate\Contracts\Auth\Authenticatable|\App\Models\Admin
      */
     public function user()
@@ -83,6 +88,7 @@ class LteAdmin
                 if ($provider->included()) {
 
                     LteAdmin::$nav_extensions[$provider::$slug] = $provider;
+                    $provider->config();
                 }
             }
         }

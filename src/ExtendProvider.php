@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin;
 
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Lar\LteAdmin\Core\ConfigExtensionProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Core\NavGroup;
 use Illuminate\Console\Command;
@@ -31,6 +32,11 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * @var string
      */
     static $description = "";
+
+    /**
+     * @var ConfigExtensionProvider
+     */
+    static $config;
 
     /**
      * @var array
@@ -81,6 +87,14 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     public function included()
     {
         return isset(LteAdmin::$extensions[static::$name]) && LteAdmin::$extensions[static::$name];
+    }
+
+    /**
+     * @return ConfigExtensionProvider
+     */
+    public function cfg()
+    {
+        return static::$config;
     }
 
     /**
@@ -152,6 +166,7 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     /**
      * Uninstall process
      * @param  Command  $command
+     * @return void
      */
     abstract public function uninstall(Command $command): void;
 
@@ -159,7 +174,14 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * Permission process
      * @param  Command  $command
      * @param  string  $type
+     * @return void
      */
     abstract public function permission(Command $command, string $type): void;
+
+    /**
+     * Extension configs
+     * @return void
+     */
+    abstract public function config(): void;
 }
 

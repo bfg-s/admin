@@ -102,6 +102,7 @@ class BaseLteExtension extends Command
             $base_dir.'/README.md' => $this->get_stub('README'),
             $base_dir.'/src/helpers.php' => $this->get_stub('helpers'),
             $base_dir.'/src/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
+            $base_dir.'/src/Extension/Config.php' => $this->get_stub('Config'),
             $base_dir.'/src/Extension/Install.php' => $this->get_stub('Install'),
             $base_dir.'/src/Extension/Uninstall.php' => $this->get_stub('Uninstall'),
             $base_dir.'/src/Extension/Navigator.php' => $this->get_stub('Navigator'),

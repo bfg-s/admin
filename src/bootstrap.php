@@ -17,3 +17,7 @@ if (!request()->ajax() || request()->is('*dashboard*')) {
         }
     }
 }
+
+foreach (\LteAdmin::extensions() as $extension) {
+    $extension->cfg()->boot();
+}

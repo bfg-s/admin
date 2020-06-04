@@ -5,6 +5,7 @@ namespace {NAMESPACE};
 use Illuminate\Console\Command;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
+use {NAMESPACE}\Extension\Config;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Navigator;
 use {NAMESPACE}\Extension\Uninstall;
@@ -56,7 +57,9 @@ class ServiceProvider extends ExtendProvider
     }
 
     /**
-     * @param  NavigateInterface  $navigate
+     * Extension navigator element
+     * @param  Navigate|NavGroup|NavigateInterface  $navigate
+     * @return void
      */
     public function navigator(NavigateInterface $navigate): void
     {
@@ -64,15 +67,19 @@ class ServiceProvider extends ExtendProvider
     }
 
     /**
+     * Install process
      * @param  Command  $command
+     * @return void
      */
     public function install(Command $command): void
     {
-        (new Permissions($command, $this))->up();
+        (new Install($command, $this))->handle();
     }
 
     /**
+     * Uninstall process
      * @param  Command  $command
+     * @return void
      */
     public function uninstall(Command $command): void
     {
@@ -80,9 +87,10 @@ class ServiceProvider extends ExtendProvider
     }
 
     /**
+     * Permission process
      * @param  Command  $command
      * @param  string  $type
-     * @throws \Exception
+     * @return void
      */
     public function permission(Command $command, string $type): void
     {
@@ -91,6 +99,15 @@ class ServiceProvider extends ExtendProvider
         } else if ($type === 'down') {
             (new Permissions($command, $this))->down();
         }
+    }
+
+    /**
+     * Extension configs
+     * @return void
+     */
+    public function config(): void
+    {
+        static::$config = new Config($this);
     }
 }
 

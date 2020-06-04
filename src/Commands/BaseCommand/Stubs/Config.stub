@@ -1,0 +1,14 @@
+<?php
+
+namespace {NAMESPACE}\Extension;
+
+use Lar\LteAdmin\Core\ConfigExtensionProvider;
+
+/**
+ * Class Config
+ * @package {NAMESPACE}\Extension
+ */
+class Config extends ConfigExtensionProvider {
+
+
+}
