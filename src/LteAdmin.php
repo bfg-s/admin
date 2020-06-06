@@ -40,6 +40,16 @@ class LteAdmin
     static $echo = false;
 
     /**
+     * @var array
+     */
+    protected $content_segments = [
+        'app_end_wrapper' => [],
+        'prep_end_wrapper' => [],
+        'app_end_content' => [],
+        'prep_end_content' => [],
+    ];
+
+    /**
      * @return \Lar\LteAdmin\Models\LteUser|\Illuminate\Contracts\Auth\Authenticatable|\App\Models\Admin
      */
     public function user()
@@ -61,6 +71,62 @@ class LteAdmin
     public function version()
     {
         return LteAdmin::$vesion;
+    }
+
+    /**
+     * @param  string  $segment
+     * @param  string  $component
+     * @param  array  $params
+     * @return $this
+     */
+    public function toSegment(string $segment, string $component, array $params = [])
+    {
+        if (isset($this->content_segments[$segment])) {
+
+            $this->content_segments[$segment][] = ['component' => $component, 'params' => $params];
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $component
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function toWrapper(string $component, array $params = [], bool $prepend = false)
+    {
+        $segment = $prepend ? "prep_end_wrapper" : "app_end_wrapper";
+
+        return $this->toSegment($segment, $component, $params);
+    }
+
+    /**
+     * @param  string  $component
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function toContent(string $component, array $params = [], bool $prepend = false)
+    {
+        $segment = $prepend ? "prep_end_content" : "app_end_content";
+
+        return $this->toSegment($segment, $component, $params);
+    }
+
+    /**
+     * @param  string  $segment
+     * @return array
+     */
+    public function getSegments(string $segment)
+    {
+        if (isset($this->content_segments[$segment])) {
+
+            return $this->content_segments[$segment];
+        }
+
+        return [];
     }
 
     /**

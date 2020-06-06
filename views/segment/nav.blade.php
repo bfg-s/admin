@@ -44,8 +44,12 @@
             @endif
         @endforeach
 
-        @foreach(gets()->lte->menu->nested_collect->where('nav_bar_view') as $menu)
-            @include($menu['nav_bar_view'], $menu['params'])
+        @foreach(gets()->lte->menu->nested_collect->where('nav_bar_view')->where('prepend', false) as $menu)
+            @if(View::exists($menu['nav_bar_view']))
+                @include($menu['nav_bar_view'], $menu['params'])
+            @else
+                {!! new $menu['nav_bar_view'](...$menu['params']); !!}
+            @endif
         @endforeach
         <li>
             <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i class="fas fa-external-link-square-alt"></i></a>
@@ -68,6 +72,14 @@
                 </div>
             </li>
         @endif
+
+        @foreach(gets()->lte->menu->nested_collect->where('nav_bar_view')->where('prepend', true) as $menu)
+            @if(View::exists($menu['nav_bar_view']))
+                @include($menu['nav_bar_view'], $menu['params'])
+            @else
+                {!! new $menu['nav_bar_view'](...$menu['params']); !!}
+            @endif
+        @endforeach
 
         {{--
         <!-- Notifications Dropdown Menu -->

@@ -107,7 +107,7 @@ class ServiceProvider extends ExtendProvider
      */
     public function config(): void
     {
-        static::$config = new Config($this);
+        $this->config = new Config($this);
     }
 }
 

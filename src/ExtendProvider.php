@@ -36,7 +36,7 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     /**
      * @var ConfigExtensionProvider
      */
-    static $config;
+    protected $config;
 
     /**
      * @var array
@@ -94,7 +94,7 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      */
     public function cfg()
     {
-        return static::$config;
+        return $this->config;
     }
 
     /**
