@@ -2,12 +2,15 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
+use Lar\LteAdmin\Segments\Tagable\Traits\DateControlTrait;
+
 /**
  * Class DateRange
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class DateTimeRange extends DateRange
 {
+    use DateControlTrait;
 
     /**
      * @var string[]

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Components\Table;
-use Lar\LteAdmin\Core\ModelSaver;
 
 /**
  * Class Controller

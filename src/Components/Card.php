@@ -86,6 +86,8 @@ class Card extends DIV
 
         if ($title !== null) {
 
+            $title = __($title);
+
             $this->head_obj = $this->div(['card-header']);
             $this->title_obj = $this->head_obj->h3(['card-title']);
 

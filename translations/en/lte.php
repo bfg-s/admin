@@ -23,6 +23,7 @@ return [
     'server'                        => 'Server',
     'root'                          => 'Document root',
     'db_driver'                     => 'DB Connection',
+    'broadcast_driver'              => 'Broadcast driver',
     'cache_driver'                  => 'Cache driver',
     'session_driver'                => 'Session driver',
     'queue_driver'                  => 'Queue driver',
@@ -124,4 +125,5 @@ return [
     'yes'                           => 'Yes',
     'no'                            => 'No',
     'modules'                       => 'Modules',
+    'confirmation'                  => 'confirmation',
 ];

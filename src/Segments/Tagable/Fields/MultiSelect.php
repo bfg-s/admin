@@ -8,7 +8,6 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
  */
 class MultiSelect extends Select
 {
-
     /**
      * @var array[]
      */

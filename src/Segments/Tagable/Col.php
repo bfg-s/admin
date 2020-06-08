@@ -13,7 +13,7 @@ class Col extends DIV {
     /**
      * @var string
      */
-    protected $class = 'col';
+    protected $class = 'col-md';
 
     /**
      * Col constructor.

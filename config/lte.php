@@ -1,14 +1,6 @@
 <?php
 
 return [
-
-    'dashboard' => [
-        'environment' => true,
-        'composer' => true,
-        'laravel' => true,
-        'database' => true
-    ],
-
     /**
      * Global rout configurations
      */

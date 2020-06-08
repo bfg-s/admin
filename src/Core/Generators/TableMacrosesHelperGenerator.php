@@ -45,7 +45,7 @@ class TableMacrosesHelperGenerator implements DumpExecute {
     {
         foreach (TABLE::$column_macros as $func => $data) {
 
-            $doc->tagMethod("\\".\Lar\LteAdmin\Segments\Tagable\Table::class, $func."(...\$params)", "Table macros {$func}");
+            $doc->tagMethod("\\".\Lar\LteAdmin\Segments\Tagable\ModelTable::class, $func."(...\$params)", "Table macros {$func}");
         }
     }
 }

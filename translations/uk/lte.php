@@ -23,6 +23,7 @@ return [
     'server'                        => 'Сервер',
     'root'                          => 'Корінь документа',
     'db_driver'                     => 'DB З\'єднання',
+    'broadcast_driver'              => 'Драйвер Broadcast',
     'cache_driver'                  => 'Драйвер Cache',
     'session_driver'                => 'Драйвер Session',
     'queue_driver'                  => 'Драйвер Queue',
@@ -124,4 +125,5 @@ return [
     'yes'                           => 'Так',
     'no'                            => 'Ні',
     'modules'                       => 'Модулі',
+    'confirmation'                  => 'підтвердження',
 ];

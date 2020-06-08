@@ -2,259 +2,122 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
+use Lar\Layout\Tags\TABLE as TableParent;
 
 /**
- * Class Table
+ * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin \Lar\LteAdmin\Core\TableOriginMacrosDoc
- * @mixin \Lar\LteAdmin\Core\TableMacrosDoc
  */
-class Table extends DIV {
-
-    /**
-     * @var bool
-     */
-    protected $only_content = true;
-
-    /**
-     * @var array|Model|mixed|null
-     */
-    protected $model;
-
-    /**
-     * @var \Lar\LteAdmin\Components\Table
-     */
-    protected $table;
-
-    /**
-     * @var \Closure[]
-     */
-    protected $table_rendered = [];
+class Table extends TableParent{
+    
+    use TypesTrait;
 
     /**
      * @var array
      */
-    protected $columns = [];
+    protected $array_build = [];
 
     /**
-     * @var string
+     * @var string[]
      */
-    protected $last_column;
+    protected $props = [
+        'table', 'table-sm', 'table-hover'
+    ];
+
+    /**
+     * @var bool
+     */
+    protected $auto_tbody = false;
+
+    /**
+     * @var bool
+     */
+    protected $first_th = true;
 
     /**
      * Table constructor.
-     * @param  null|Model|array|\Closure  $model
-     * @param  \Closure|null  $after
+     * @param array|mixed $rows
+     * @param  mixed  ...$params
+     * @throws \Exception
      */
-    public function __construct($model = null, \Closure $after = null)
+    public function __construct($rows, ...$params)
     {
+        $this->type = null;
+
         parent::__construct();
 
-        if ($model instanceof \Closure) {
-
-            $this->model = gets()->lte->menu->model;
-
-            $this->table = new \Lar\LteAdmin\Components\Table($this->model);
-
-            $model($this);
-
+        if (!is_array($rows)) {
+            $params[] = $rows;
         } else {
-
-            if (!$model) {
-
-                $model = gets()->lte->menu->model;
-            }
-
-            if (is_string($model) && class_exists($model)) {
-
-                $model = new $model;
-            }
-
-            $this->model = $model;
-
-            $this->table = new \Lar\LteAdmin\Components\Table($this->model);
+            $this->array_build = $rows;
         }
 
-        if ($after) {
+        $this->when($params);
 
-            $after($this);
+        $this->toExecute("ifArray");
+    }
+
+    /**
+     * Create table from array
+     */
+    protected function ifArray()
+    {
+        if (isset($this->array_build['headers']) && $this->array_build['rows']) {
+            $this->build_header_table($this->array_build['headers'], $this->array_build['rows']);
+        } else {
+            $this->build_easy_table($this->array_build);
+        }
+    }
+
+    /**
+     * @param  array  $headers
+     * @param  array  $rows
+     */
+    protected function build_header_table(array $headers, array $rows) {
+
+        $head = $this->thead()->addClassIf($this->type, "thead-{$this->type}")->tr();
+
+        foreach ($headers as $header) {
+
+            $head->th(['scope' => 'col'], $header);
         }
 
-        $this->toExecute('buildTable');
+        $this->build_easy_table($rows, true);
     }
 
     /**
-     * @param \Closure|array $instructions
-     * @return $this
+     * @param  array  $rows
+     * @param  bool  $has_header
      */
-    public function model($instructions)
-    {
-        $this->table->model($instructions);
+    protected function build_easy_table(array $rows, bool $has_header = false) {
 
-        return $this;
-    }
-
-    /**
-     * @param  int  $per_page
-     * @return $this
-     */
-    public function per_page(int $per_page)
-    {
-        $this->table->perPage($per_page);
-
-        return $this;
-    }
-
-    /**
-     * @param array|string $per_pages
-     * @return $this
-     */
-    public function display_by($per_pages)
-    {
-        $this->table->perPages($per_pages);
-
-        return $this;
-    }
-
-    /**
-     * @param  string|null  $field
-     * @return $this
-     */
-    public function order_desc(string $field = null)
-    {
-        $this->table->orderDesc($field);
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $title
-     * @param string|\Closure $field
-     * @return $this
-     */
-    public function column(string $title, $field)
-    {
-        $this->last_column = uniqid('column');
-
-        $this->columns[$this->last_column] = [
-            'title' => $title,
-            'field' => $field,
-            'macros' => [],
-            'sort' => null,
-            'prepend' => false
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param  string|null  $field
-     * @return $this
-     */
-    public function sort(string $field = null)
-    {
-        if ($this->last_column) {
-
-            $col = $this->columns[$this->last_column];
-
-            if (!$field && is_string($col['field'])) {
-
-                $this->columns[$this->last_column]['sort'] = $col['field'];
-
-            } else if ($field) {
-
-                $this->columns[$this->last_column]['sort'] = $field;
-            }
+        if (!$has_header && $this->type) {
+            $this->addClass("table-{$this->type}");
         }
 
-        return $this;
-    }
+        $body = $this->tbody(['']);
 
-    /**
-     * @param  \Closure  $closure
-     * @return $this
-     */
-    public function table_rendered(\Closure $closure)
-    {
-        $this->table_rendered[] = $closure;
-
-        return $this;
-    }
-
-    /**
-     * Build table
-     */
-    protected function buildTable()
-    {
-        $this->table->merge_rendered($this->table_rendered);
-
-        $this->table->disableDefaultsId();
-
-        foreach ($this->columns as $column) {
-
-            $column = $this->build_wrapper($column);
-
-            $this->table->column($column['title'], $column['field'], $column['sort'], $column['prepend']);
-        }
-
-        $this->appEnd($this->table);
-    }
-
-    /**
-     * @param  array  $column
-     * @return array
-     */
-    protected function build_wrapper(array $column)
-    {
-        if (is_string($column['field'])) {
-            foreach ($column['macros'] as $key => $macro) {
-                if (!$key) {
-                    $column['field'] = $macro[0].":".$column['field'].(count($macro[1]) ? ",".implode(',', $macro[1]):'');
-                } else {
-                    $column['field'] = $macro[0].(count($macro[1]) ? "(".implode(',', $macro[1]).")":'').":".$column['field'];
+        $row_i = 0;
+        foreach ($rows as $key => $row) {
+            $tr = $body->tr();
+            if (is_array($row)) {
+                foreach (array_values($row) as $ki => $col) {
+                    if (!$ki && $this->first_th) {
+                        $tr->th(['scope' => 'row'])->when($col);
+                    } else {
+                        $tr->td()->when($col);
+                    }
                 }
+            } else {
+                if ($this->first_th) {
+                    $tr->th(['scope' => 'row'], $key);
+                } else {
+                    $tr->td($key);
+                }
+                $tr->td()->when($row);
             }
+            $row_i++;
         }
-
-        return $column;
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return $this|bool|Table|\Lar\Tagable\Tag|string
-     * @throws \Exception
-     */
-    public function __call($name, $arguments)
-    {
-        $macros = \Lar\Layout\Tags\TABLE::$column_macros;
-
-        if (isset($macros[$name]) && $this->last_column) {
-
-            $this->columns[$this->last_column]['macros'][] = [$name, $arguments];
-
-            return $this;
-        }
-
-        return parent::__call($name, $arguments); // TODO: Change the autogenerated stub
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return Table|mixed
-     * @throws \Exception
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        if (preg_match('/^macro_(.*)/', $name, $m)) {
-
-            return \Lar\Layout\Tags\TABLE::callMacro($m[1], ...$arguments);
-        }
-
-        return parent::__callStatic($name, $arguments); // TODO: Change the autogenerated stub
     }
 }

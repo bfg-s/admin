@@ -97,12 +97,7 @@ class FormGroup extends DIV
 
         if ($label) {
 
-            $label_obj = $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-'.$label_width);
-
-//            if ($label_obj) {
-//
-//                $label_obj->text("<small class='form-text text-muted form-info-text'>{$info}</small>");
-//            }
+            $this->label(['for' => $this->__id, 'class' => 'col-form-label'], $label)->addClassIf(!$this->__v, 'col-sm-'.$label_width);
         }
 
         $inner = is_string($icon) && preg_match('/^(fas\s|fab\s|far\s)fa\-[a-zA-Z0-9\-\_]+/', $icon) ?

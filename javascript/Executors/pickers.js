@@ -35,7 +35,7 @@ module.exports = class extends Executor {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
-            format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY',
+            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD',
             icons: {
                 time: "far fa-clock",
                 date: "far fa-calendar-alt",
@@ -63,7 +63,7 @@ module.exports = class extends Executor {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
-            format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY HH:mm:ss',
+            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD HH:mm:ss',
             icons: {
                 time: "far fa-clock",
                 date: "far fa-calendar-alt",
@@ -81,7 +81,7 @@ module.exports = class extends Executor {
             opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
             autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
-                format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY HH:mm:ss'
+                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD HH:mm:ss'
             }
         });
     }
@@ -93,7 +93,7 @@ module.exports = class extends Executor {
             opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
             autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
-                format: this.target.dataset.format ? this.target.dataset.format : 'DD.MM.YYYY'
+                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD'
             }
         });
     }

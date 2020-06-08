@@ -3,6 +3,11 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Composer\Composer;
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\H4;
+use Lar\LteAdmin\Segments\Container;
+use Lar\LteAdmin\Segments\Tagable\Row;
 use PDO;
 
 /**
@@ -20,16 +25,41 @@ class DashboardController extends Controller
     ];
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Container
      */
     public function index()
     {
-        return view('lte::dashboard', [
-            'environment' => $this->environmentInfo(),
-            'laravel' => $this->laravelInfo(),
-            'composer' => $this->composerInfo(),
-            'database' => $this->databaseInfo()
-        ]);
+        return Container::create(function (DIV $div, Container $container) {
+
+            $container->title('Test')
+                ->icon_cogs()
+                ->breadcrumb('Test', 'Test2');
+
+            $prepend = config('lte.paths.view') . '.dashboard';
+
+            if (\View::exists($prepend)) {
+
+                $div->view($prepend);
+            }
+
+            $div->row(function (Row $row) {
+                $row->col(6)->mb4()
+                    ->card('lte.environment')->h100()
+                    ->foolBody()->table($this->environmentInfo());
+
+                $row->col(6)->mb4()
+                    ->card('Laravel')->h100()
+                    ->foolBody()->table($this->laravelInfo());
+
+                $row->col(6)->mb4()
+                    ->card('Composer')->h100()
+                    ->foolBody()->table($this->composerInfo());
+
+                $row->col(6)->mb4()
+                    ->card('lte.database')->h100()
+                    ->foolBody()->table($this->databaseInfo());
+            });
+        });
     }
 
     /**
@@ -59,6 +89,7 @@ class DashboardController extends Controller
             __('lte.os') => php_uname(),
             __('lte.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
             __('lte.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
+            'System Load Average' => sys_getloadavg()[0]
         ];
     }
 
@@ -80,12 +111,16 @@ class DashboardController extends Controller
             __('lte.url') => config('app.url'),
             __('lte.users') => number_format($user_model::count(), 0, '', ','),
             __('lte.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
-
-            [__('lte.drivers')],
+            '' => function (Component $component) {
+                $component->_addClass(['table-secondary']);
+                $component->_find('th')->h6(['m-0'], __('lte.drivers'));
+            },
+            __('lte.broadcast_driver') => "<span class=\"badge badge-secondary\">".config('broadcasting.default')."</span>",
             __('lte.cache_driver') => "<span class=\"badge badge-secondary\">".config('cache.default')."</span>",
             __('lte.session_driver') => "<span class=\"badge badge-secondary\">".config('session.driver')."</span>",
             __('lte.queue_driver') => "<span class=\"badge badge-secondary\">".config('queue.default')."</span>",
             __('lte.mail_driver') => "<span class=\"badge badge-secondary\">".config('mail.driver')."</span>",
+            __('lte.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
             __('lte.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
         ];
     }
@@ -97,7 +132,10 @@ class DashboardController extends Controller
     {
         $return = [
             __('lte.composer_version') =>  "<span class=\"badge badge-dark\">v".versionString(Composer::getVersion())."</span>",
-            [__('lte.required')]
+            '' => function (Component $component) {
+                $component->_addClass(['table-secondary']);
+                $component->_find('th')->h6(['m-0'], __('lte.required'));
+            },
         ];
 
         $json = file_get_contents(base_path('composer.json'));
@@ -126,7 +164,10 @@ class DashboardController extends Controller
             __('lte.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
             __('lte.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
             __('lte.mysql_driver') => $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME),
-            [__('lte.connection_info')],
+            '' => function (Component $component) {
+                $component->_addClass(['table-secondary']);
+                $component->_find('th')->h6(['m-0'], __('lte.connection_info'));
+            },
             __('lte.db_driver') => config('database.default'),
             __('lte.database') => env('DB_DATABASE'),
             __('lte.user') => env('DB_USERNAME'),

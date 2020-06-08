@@ -25,18 +25,24 @@ class Password extends Input
      */
     public function confirmed(string $label = null)
     {
-        //$this->rules[] = "confirmation";
-
         $this->isEqualTo("#input_{$this->name}_confirmation");
 
         if (!$label && $this->title) {
 
-            $label = $this->title . " confirmation";
+            $label = $this->title . " " . __('lte.confirmation');
         }
 
         $this->parent_field->password($this->name . '_confirmation', $label, ...$this->params)
             ->icon($this->icon)->mergeDataList($this->data)->isEqualTo("#input_{$this->name}");
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function create_value()
+    {
+        return $this->value;
     }
 }

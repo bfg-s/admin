@@ -21,21 +21,12 @@ class Color extends Input
     ];
 
     /**
-     * @param  string  $name
-     * @param  string  $title
-     * @param  string  $id
-     * @param  null  $value
-     * @param  bool  $has_bug
-     * @param  null  $path
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed|string
+     * @return string
      */
-    public function field(string $name, string $title, string $id = '', $value = null, bool $has_bug = false, $path = null)
+    protected function app_end_field()
     {
-        $input = parent::field($name, $title, $id, $value, $has_bug, $path);
-
-        return  $input.
-            "<span class='input-group-append'>
-                <span class='input-group-text'><i class='fas fa-square' style='color: {$input->getAttribute('value')}'></i></span>
+        return "<span class='input-group-append'>
+                <span class='input-group-text'><i class='fas fa-square' style='color: {$this->value}'></i></span>
             </span>";
     }
 }

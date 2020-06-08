@@ -1,23 +1,22 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace Lar\LteAdmin\Segments\Tagable\Cores;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Lar\Developer\Core\Traits\Stateable;
-use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\TD;
 use Lar\Layout\Tags\TH;
-use Lar\LteAdmin\Components\ButtonGroup;
+use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 use Lar\Tagable\Events\onRender;
 
 /**
  * Class Table
  * @package Lar\LteAdmin\Components
  */
-class Table extends DIV implements onRender
+class CoreModelTable extends DIV implements onRender
 {
     use Stateable;
 

@@ -3,20 +3,40 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\ButtonGroup;
-use Lar\LteAdmin\Components\Card as CardComponent;
+use Lar\LteAdmin\Core\Traits\FontAwesome;
+use Lar\LteAdmin\Segments\Tagable\Cores\CoreModelTable;
+use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
 
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class Card extends CardComponent implements onRender {
+class Card extends DIV implements onRender {
+
+    use TypesTrait, FontAwesome;
 
     /**
-     * @var bool
+     * @var array
      */
-    public $opened_mode = false;
+    protected $props = [
+        'card', 'card-outline'
+    ];
+
+    /**
+     * @var array|\Lar\LteAdmin\Getters\Menu|null
+     */
+    protected $now;
+
+    /**
+     * @var DIV
+     */
+    protected $head_obj;
+
+    /**
+     * @var \Lar\Layout\Tags\H3
+     */
+    protected $title_obj;
 
     /**
      * @var bool
@@ -24,47 +44,66 @@ class Card extends CardComponent implements onRender {
     protected $auto_tools = false;
 
     /**
+     * @var ButtonGroup
+     */
+    protected $group;
+
+    /**
+     * @var DIV
+     */
+    protected $tools;
+
+    /**
      * @var Form
      */
     protected $form;
 
     /**
-     * @var Table
+     * @var ModelTable
      */
     protected $table;
 
     /**
+     * @var string
+     */
+    protected $icon;
+
+    /**
+     * @var string|array
+     */
+    protected $title;
+
+    /**
      * Card constructor.
+     * @param $title
      * @param  mixed  ...$params
      */
-    public function __construct(...$params)
+    public function __construct($title = null, ...$params)
     {
-        $closures = [];
+        $this->type = "primary";
 
-        foreach ($params as $key => $param) {
+        parent::__construct();
 
-            if ($param instanceof \Closure) {
+        if ($title instanceof \Closure) {
 
-                $closures[] = $param;
+            $params[] = $title;
 
-                unset($params[$key]);
-            }
+        } else if ($title) {
+
+            $this->title = $title;
+
+            $this->head_obj = $this->div(['card-header']);
+
+            $this->title_obj = $this->head_obj->h3(['card-title']);
+
+            $this->tools = $this->head_obj->div(['card-tools']);
         }
 
-        $params = array_values($params);
+        $this->when($params);
 
-        if (!isset($params[0]) || !$params[0]) $params[0] = '';
-
-        parent::__construct(...$params);
+        $this->now = gets()->lte->menu->now;
 
         $this->group = new ButtonGroup();
-
-        $this->tools = $this->head_obj->div(['card-tools']);
-
-        foreach ($closures as $closure) {
-
-            $closure($this);
-        }
     }
 
     /**
@@ -77,15 +116,24 @@ class Card extends CardComponent implements onRender {
     }
 
     /**
+     * @param  mixed  ...$params
+     * @return DIV
+     */
+    public function foolBody(...$params)
+    {
+        return $this->div(['card-body p-0'], ...$params);
+    }
+
+    /**
      * @param  null  $model
      * @param  \Closure|null  $after
-     * @return Table
+     * @return ModelTable
      */
-    public function bodyTable($model = null, \Closure $after = null)
+    public function bodyModelTable($model = null, \Closure $after = null)
     {
-        $this->table = $this->body(['p-0'])->table($model, $after);
+        $this->table = $this->body(['p-0'])->model_table($model, $after);
 
-        $this->table->table_rendered(function (\Lar\LteAdmin\Components\Table $table) {
+        $this->table->table_rendered(function (CoreModelTable $table) {
             $this->bottom_content->add($table->footer());
         });
 
@@ -118,7 +166,7 @@ class Card extends CardComponent implements onRender {
      */
     public function footerForm(...$params)
     {
-        $this->form_footer(...$params);
+        $this->div(['card-footer'])->appEnd(FormFooter::create(...$params));
 
         return $this;
     }
@@ -128,14 +176,46 @@ class Card extends CardComponent implements onRender {
      */
     public function defaultTools()
     {
-        $this->makeDefaultTools();
+        if ($this->now['current.type']) {
+
+            $type = $this->now['current.type'];
+
+            $this->group->reload();
+
+            if ($type === 'create') {
+
+                $this->group->resourceList();
+            }
+
+            else if ($type === 'edit' || $type === 'show') {
+
+                $this->group->resourceList();
+
+                if ($type === 'show') {
+
+                    $this->group->resourceEdit();
+                }
+
+                if ($type === 'edit') {
+
+                    $this->group->resourceInfo();
+                }
+
+                $this->group->resourceDestroy();
+            }
+
+            if ($type !== 'create') {
+
+                $this->group->resourceAdd();
+            }
+        }
 
         return $this;
     }
 
     /**
      * @param  mixed  ...$params
-     * @return \Lar\LteAdmin\Components\ButtonGroup
+     * @return ButtonGroup
      */
     public function tools(...$params)
     {
@@ -144,7 +224,7 @@ class Card extends CardComponent implements onRender {
 
     /**
      * @param  mixed  ...$params
-     * @return \Lar\LteAdmin\Components\ButtonGroup
+     * @return ButtonGroup
      */
     public function group(...$params)
     {
@@ -160,6 +240,45 @@ class Card extends CardComponent implements onRender {
      */
     public function onRender()
     {
-        $this->tools->appEnd($this->group);
+        $this->addClass("card-{$this->type}");
+
+        $model = gets()->lte->menu->model;
+
+        if ($this->title_obj) {
+
+            if ($this->icon) {
+
+                $this->title_obj->text("<i class=\"{$this->icon} mr-1\"></i>");
+            }
+
+            if ($model && is_array($this->title)) {
+
+                foreach ($this->title as $key => $attr) {
+
+                    if (is_string($attr)) {
+
+                        $this->title[$key] = multi_dot_call($model, $attr) ?? $attr;
+                    }
+                }
+            }
+
+            $this->title_obj->text(is_array($this->title) ? implode(" ", array_map('__', $this->title)) : __($this->title));
+        }
+
+        if ($this->tools) {
+
+            $this->tools->appEnd($this->group);
+        }
+    }
+
+    /**
+     * @param  string  $icon
+     * @return $this
+     */
+    public function icon(string $icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
     }
 }

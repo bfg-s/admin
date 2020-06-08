@@ -20,22 +20,17 @@ class Number extends Input
     protected $icon = null;
 
     /**
+     * @var int
+     */
+    protected $value = 0;
+
+    /**
      * @var string[]
      */
     protected $data = [
         'load' => 'number',
         'center' => 'false'
     ];
-
-    /**
-     * @param  \Lar\Layout\Tags\INPUT  $input
-     * @param  null  $value
-     */
-    protected function makeValue(\Lar\Layout\Tags\INPUT $input, $value = null)
-    {
-
-        $input->setValue($value ?? 0);
-    }
 
     /**
      * @param  int  $min

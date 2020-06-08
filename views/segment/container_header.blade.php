@@ -11,7 +11,7 @@
                 <h1>
                     @if(isset($page_info))
                         @if(is_array($page_info))
-                            @if(isset($page_info['icon'])) <i class="{{$page_info['icon']}}"></i> @elseif(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info['head_title'] ?? ($page_info['title'] ?? 'Blank page'))}}
+                            @if(isset($page_info['icon'])) <i class="{{$page_info['icon']}}"></i> @elseif(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info['head_title'] ?? ($page_info['title'] ?? ($menu['head_title'] ?? ($menu['title'] ?? 'Blank page'))))}}
                         @else
                             @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info)}}
                         @endif
@@ -23,24 +23,34 @@
             @php($first = gets()->lte->menu->nested_collect->first())
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (gets()->lte->menu->now_parents->count() && $first['id'] !== $menu['id'])
-                        <li class="breadcrumb-item active">
-                            {{__($first['title'])}}
-                        </li>
-                        @foreach(gets()->lte->menu->now_parents->reverse() as $item)
-                            <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
-                                {{__($item['title'])}}
-                                @php($__head_title[] = __($item['title']))
-                            </li>
-                        @endforeach
-                    @endif
-                    @if (isset($breadcrumb) && is_array($breadcrumb))
+                    @if (isset($breadcrumb) && is_array($breadcrumb) && count($breadcrumb))
                         @foreach($breadcrumb as $item)
-                            <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
-                                {{__($item)}}
-                                @php($__head_title[] = __($item))
-                            </li>
+                            @if (is_array($item))
+                                @foreach($item as $i)
+                                    <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
+                                        {{__($i)}}
+                                        @php($__head_title[] = __($i))
+                                    </li>
+                                @endforeach
+                            @else
+                                <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
+                                    {{__($item)}}
+                                    @php($__head_title[] = __($item))
+                                </li>
+                            @endif
                         @endforeach
+                    @else
+                        @if (gets()->lte->menu->now_parents->count() && $first['id'] !== $menu['id'])
+                            <li class="breadcrumb-item active">
+                                {{__($first['title'])}}
+                            </li>
+                            @foreach(gets()->lte->menu->now_parents->reverse() as $item)
+                                <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
+                                    {{__($item['title'])}}
+                                    @php($__head_title[] = __($item['title']))
+                                </li>
+                            @endforeach
+                        @endif
                     @endif
                 </ol>
             </div>

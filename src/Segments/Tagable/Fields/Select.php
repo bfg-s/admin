@@ -2,7 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-use Lar\Layout\Abstracts\Component;
+use Lar\LteAdmin\Segments\Tagable\Cores\CoreSelect2;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
@@ -34,24 +34,18 @@ class Select extends FormGroup
     ];
 
     /**
-     * @param  string  $name
-     * @param  string  $title
-     * @param  string  $id
-     * @param  null  $value
-     * @param  bool  $has_bug
-     * @param  null  $path
      * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
      */
-    public function field(string $name, string $title, string $id = '', $value = null, bool $has_bug = false, $path = null)
+    public function field()
     {
-        return \Lar\LteAdmin\Components\Select2::create($this->options, [
-            'name' => $name,
-            'data-placeholder' => $title
-        ], ...$this->params)->when(function (\Lar\LteAdmin\Components\Select2 $input) use ($value) {
-            $input->setValues($value ?? $this->value);
-        })->makeOptions()
+        return CoreSelect2::create($this->options, [
+            'name' => $this->name,
+            'data-placeholder' => $this->title
+        ], ...$this->params)
+            ->setValues($this->value)
+            ->makeOptions()
             ->setDatas($this->data)
-            ->addClassIf($has_bug, 'is-invalid')
+            ->addClassIf($this->has_bug, 'is-invalid')
             ->addClass($this->class);
     }
 

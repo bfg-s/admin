@@ -37,6 +37,19 @@ module.exports = class extends Executor {
                     }
                 });
 
+                if (validator.errorList.length) {
+                    ljs.onetime(() => {
+                        let tab = $(validator.errorList[0].element).closest('.tab-pane');
+                        if (tab[0] && tab[0].hasAttribute('aria-labelledby')) {
+                            let label_id = `#${tab.attr('aria-labelledby')}`;
+                            let label = $(label_id);
+                            if (label[0] && !label.hasClass('text-danger')) {
+                                label.addClass('text-danger').append(' <small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small>')
+                            }
+                        }
+                    });
+                }
+
                 if (scroll_to < 0) {
 
                     return;
@@ -59,18 +72,47 @@ module.exports = class extends Executor {
                     area.append(label);
                 }
                 area.append(errWrap);
+
+                // let tab = element.closest('.tab-pane');
+                // if (tab[0] && tab[0].hasAttribute('aria-labelledby')) {
+                //     let label_id = `#${tab.attr('aria-labelledby')}`;
+                //     let label = $(label_id);
+                //     if (label[0] && !label.hasClass('text-danger')) {
+                //         label.addClass('text-danger').append(' <small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small>')
+                //     }
+                // }
             },
             highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
                 let area = element.closest('.form-group'),
                     icon = $(area).find('.err-valid-icon');
                 icon.show();
+
+                let tab = $(element).closest('.tab-pane');
+                if (tab[0] && tab[0].hasAttribute('aria-labelledby')) {
+                    let label_id = `#${tab.attr('aria-labelledby')}`;
+                    let label = $(label_id);
+                    if (label[0] && !label.hasClass('text-danger')) {
+                        label.addClass('text-danger').append(' <small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small>')
+                    }
+                }
             },
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
                 let area = element.closest('.form-group'),
                     icon = $(area).find('.err-valid-icon');
                 icon.hide();
+
+                let tab = $(element).closest('.tab-pane');
+
+                if (tab[0] && tab[0].hasAttribute('aria-labelledby')) {
+                    let label_id = `#${tab.attr('aria-labelledby')}`;
+                    let label = $(label_id);
+                    if (label[0] && label.hasClass('text-danger')) {
+                        label.removeClass('text-danger')
+                        label.find('.err-valid-icon').remove();
+                    }
+                }
             }
         })
     }

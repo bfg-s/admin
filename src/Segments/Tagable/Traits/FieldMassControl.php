@@ -17,6 +17,11 @@ trait FieldMassControl {
     protected $vertical = false;
 
     /**
+     * @var bool
+     */
+    protected $reversed = false;
+
+    /**
      * @var int|null
      */
     protected $label_width;
@@ -27,6 +32,16 @@ trait FieldMassControl {
     public function vertical()
     {
         $this->vertical = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function reversed()
+    {
+        $this->reversed = true;
 
         return $this;
     }
@@ -60,6 +75,11 @@ trait FieldMassControl {
                 if ($this->vertical) {
 
                     $class->vertical();
+                }
+
+                if ($this->reversed) {
+
+                    $class->reversed();
                 }
 
                 if ($this->label_width !== null) {

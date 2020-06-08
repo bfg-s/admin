@@ -23,7 +23,8 @@ use Lar\LteAdmin\Components\Nestable;
 use Lar\LteAdmin\Components\Select2;
 use Lar\LteAdmin\Components\Select2Tags;
 use Lar\LteAdmin\Components\SmallBox;
-use Lar\LteAdmin\Components\Switcher;use Lar\LteAdmin\Components\Table;
+use Lar\LteAdmin\Components\Switcher;
+use Lar\LteAdmin\Components\Table;
 use Lar\LteAdmin\Components\Tabs;
 
 /**

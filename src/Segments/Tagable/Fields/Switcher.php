@@ -29,18 +29,17 @@ class Switcher extends Input
     ];
 
     /**
-     * Switcher constructor.
-     * @param  Component  $parent
-     * @param  string  $title
-     * @param  string  $name
-     * @param  mixed  ...$params
+     * On build
      */
-    public function __construct(Component $parent, string $title, string $name, ...$params)
+    protected function on_build()
     {
-        parent::__construct($parent, $title, $name, $params);
+        if (!isset($this->data['on-text'])) {
+            $this->data['on-text'] = __('lte.on');
+        }
 
-        $this->data['on-text'] = __('lte.on');
-        $this->data['off-text'] = __('lte.off');
+        if (!isset($this->data['off-text'])) {
+            $this->data['off-text'] = __('lte.off');
+        }
     }
 
     /**

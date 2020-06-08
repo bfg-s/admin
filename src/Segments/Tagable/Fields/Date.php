@@ -3,12 +3,16 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 
+use Lar\LteAdmin\Segments\Tagable\Traits\DateControlTrait;
+
 /**
  * Class Email
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Date extends Input
 {
+    use DateControlTrait;
+
     /**
      * @var string
      */
@@ -23,18 +27,10 @@ class Date extends Input
     ];
 
     /**
-     * @param  string  $name
-     * @param  string  $title
-     * @param  string  $id
-     * @param  null  $value
-     * @param  bool  $has_bug
-     * @param  null  $path
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * On build
      */
-    public function field(string $name, string $title, string $id = '', $value = null, bool $has_bug = false, $path = null)
+    protected function on_build()
     {
-        $this->data['target'] = "#{$id}";
-
-        return parent::field($name, $title, $id, $value, $has_bug, $path);
+        $this->data['target'] = "#{$this->field_id}";
     }
 }
