@@ -107,21 +107,36 @@ class Card extends DIV implements onRender {
     }
 
     /**
+     * @param  \Closure  $closure
      * @param  mixed  ...$params
      * @return DIV
      */
-    public function body(...$params)
+    public function body(\Closure $closure = null, ...$params)
     {
-        return $this->div(['card-body'], ...$params);
+        $body = $this->div(['card-body'], ...$params);
+
+        if ($closure) {
+            
+            $closure($body, $this);
+        }
+        return $body;
     }
 
     /**
+     * @param  null  $closure
      * @param  mixed  ...$params
      * @return DIV
      */
-    public function foolBody(...$params)
+    public function foolBody(\Closure $closure = null, ...$params)
     {
-        return $this->div(['card-body p-0'], ...$params);
+        $body = $this->div(['card-body p-0'], ...$params);
+
+        if ($closure) {
+
+            $closure($body, $this);
+        }
+
+        return $body;
     }
 
     /**

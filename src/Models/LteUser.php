@@ -26,7 +26,7 @@ class LteUser extends Model implements AuthenticatableContract
      * @var array
      */
     protected $fillable = [
-        "login", "email", "name", "avatar"
+        "login", "email", "name", "avatar", "password"
     ];
 
     /**

@@ -20,6 +20,13 @@ class Password extends Input
     protected $icon = "fas fa-key";
 
     /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'new-password']
+    ];
+
+    /**
      * @param  string|null  $label
      * @return $this
      */

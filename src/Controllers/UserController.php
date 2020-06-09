@@ -41,59 +41,42 @@ class UserController extends Controller
             $div->row(function (Row $row) {
 
                 $row->col(3)
-                    ->card('Portfolio')
+                    ->card('lte.information')
                     ->primary()
                     ->body()
-                    ->view('lte::profile.user_window', ['user' => $this->user]);
+                    ->view('lte::profile.user_portfolio', ['user' => $this->user]);
 
                 $row->col(9)
-                    ->card('Edit')
+                    ->card('lte.edit')
                     ->success()
                     ->body(function (DIV $div) {
 
-                        $div->tabs(function (Tabs $tabs) {
+                        $div->form($this->user, function (Form $form) {
 
-                            $tabs->tab('lte.common', 'fas fa-cogs')->form($this->user, function (Form $form) {
+                            $form->vertical();
 
-                                $form->vertical();
+                            $form->file('avatar', 'lte.avatar')
+                                ->exts('jpg', 'jpeg', 'png');
 
-                                $form->file('avatar', 'lte.avatar')
-                                    ->exts('jpg', 'jpeg', 'png');
+                            $form->input('login', 'lte.login_name')
+                                ->isRequired();
 
-                                $form->input('login', 'lte.login_name')
-                                    ->isRequired();
+                            $form->email('email', 'lte.email_address')
+                                ->isRequired();
 
-                                $form->email('email', 'lte.email_address')
-                                    ->isRequired();
+                            $form->input('name', 'lte.name')
+                                ->isRequired();
 
-                                $form->input('name', 'lte.name')
-                                    ->isRequired();
-                            })->form_footer();
+                            $form->br()->h5('Password')->hr();
 
-                            $tabs->tab('lte.change_password', 'fas fa-key')->form($this->user, function (Form $form) {
+                            $form->password('password', 'lte.new_password')
+                                ->confirmed();
 
-                                $form->vertical();
+                        })->form_footer();
 
-                                $form->password('password', 'lte.new_password')
-                                    ->confirmed();
-                            })->form_footer();
-                        });
-
-                    })->p0();
+                    });
             });
         });
-
-        return view('lte::auth.profile', [
-            'page_info' => [
-                'icon' => 'fas fa-user',
-                'title' => \LteAdmin::user()->name,
-            ],
-            'breadcrumb' => [
-                __('lte.administrator'),
-                __('lte.profile')
-            ],
-            'user' => \LteAdmin::user()
-        ]);
     }
 
     /**
@@ -103,64 +86,36 @@ class UserController extends Controller
      */
     public function update(Request $request, Respond $respond)
     {
-        $all = request()->all();
+        $all = $request->all();
 
-        if ($request->has('ch_password')) {
-
-            $validator = \Validator::make($all, [
-                'password' => 'required|confirmed|min:4'
-            ]);
-
-            if ($validator->fails()) {
-
-                foreach ($validator->errors()->all() as $item) {
-
-                    $respond->toast_error($item);
-                }
-
-                return back()->withErrors($validator);
-            }
-
-            else {
-
-                admin()->password = bcrypt($all['password']);
-
-                if (admin()->save()) {
-
-                    $respond->toast_success(__('lte.password_changed_success'));
-
-                    return back();
-                }
-            }
+        if ($back = back_validate($all, [
+            'password' => 'confirmed',
+            'login' => 'required|min:4' . (isset($all['login']) && admin()->email != $all['login'] ? '|unique:' . LteUser::class . ',login' : ''),
+            'email' => 'required|email' . (isset($all['email']) && admin()->email != $all['email'] ? '|unique:' . LteUser::class . ',email' : ''),
+            'name' => 'required|min:4'
+        ])) {
+            return $back;
         }
 
-        else {
+        if ($all['password']) {
 
-            $validator = \Validator::make($all, [
-                'login' => 'required|min:4',
-                'email' => 'required|email'
-            ]);
+            $all['password'] = bcrypt($all['password']);
 
-            if ($validator->fails()) {
+        } else {
 
-                foreach ($validator->errors()->all() as $item) {
-
-                    $respond->toast_error($item);
-                }
-
-                return back()->withErrors($validator);
-            }
-
-            else {
-
-                if (ModelSaver::do(admin(), $all)) {
-
-                    $respond->toast_success(__('lte.profile_success_changed'));
-
-                    return back();
-                }
-            }
+            unset($all['password']);
         }
+
+        if (ModelSaver::do(admin(), $all)) {
+
+            $respond->toast_success(__('lte.profile_success_changed'));
+
+        } else {
+
+            $respond->toast_error(__('lte.unknown_error'));
+        }
+
+        return back();
     }
 
     /**
