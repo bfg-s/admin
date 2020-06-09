@@ -89,3 +89,15 @@
 .text-sm .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-search.select2-search--inline .select2-search__field, select.form-control-sm~.select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-search.select2-search--inline .select2-search__field {
     margin-top: 10px !important;
 }
+
+.nav-sidebar .nav-link p {
+    display: inline-block;
+    margin: 0;
+
+    -webkit-animation-name: none !important;
+    animation-name: none !important;
+    -webkit-animation-duration: 0s !important;
+    animation-duration: 0s !important;
+    -webkit-animation-fill-mode: none !important;
+    animation-fill-mode: none !important;
+}
