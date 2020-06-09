@@ -5,7 +5,6 @@ namespace Lar\LteAdmin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
-use Lar\Layout\Executor;
 use Lar\Layout\Layout;
 use Lar\LteAdmin\Commands\LteExtension;
 use Lar\LteAdmin\Commands\LteInstall;
@@ -261,7 +260,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerJax()
     {
-        Executor::addExecutor(\Lar\LteAdmin\Jax\LteAdmin::class);
+        \Lar\LteAdmin\Jax\LteAdmin::register();
     }
 
     /**

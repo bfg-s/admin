@@ -3,9 +3,7 @@
 namespace Lar\LteAdmin\Jax;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Lar\Layout\JaxExecutor;
-use Lar\Layout\Respond;
+use Lar\LJS\JaxExecutor;
 
 /**
  * Class LteAdmin
