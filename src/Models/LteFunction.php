@@ -20,7 +20,7 @@ class LteFunction extends Model
      * @var string[]
      */
     protected $fillable = [
-        "slug", "description", "active"
+        "slug", "class", "description", "active"
     ];
 
     /**
