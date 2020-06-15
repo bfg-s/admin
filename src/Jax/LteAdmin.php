@@ -96,7 +96,7 @@ class LteAdmin extends JaxExecutor
     public function custom_save(string $model = null, int $id = null, string $field_name = null, bool $val = false)
     {
         /** @var Model $find */
-        if ($model && $id && $field_name && $find = $model::find($id)) {
+        if ($model && class_exists($model) && $id && $field_name && $find = $model::find($id)) {
 
             if ($find) {
 
@@ -104,7 +104,7 @@ class LteAdmin extends JaxExecutor
 
                 if ($find->save()) {
 
-                    $this->toast_success(__('lte.saved'))->reload();
+                    $this->toast_success(__('lte.saved_successfully'));
                 }
 
                 else {

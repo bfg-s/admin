@@ -43,10 +43,23 @@ class Switcher extends Input
     }
 
     /**
+     * @return int|mixed
+     */
+    protected function create_value()
+    {
+        if (parent::create_value()) {
+
+            $this->params[] = ['checked' => 'true'];
+        }
+
+        return 1;
+    }
+
+    /**
      * @param  string  $size
      * @return $this
      */
-    public function size(string $size)
+    public function switchSize(string $size)
     {
         $this->data['size'] = $size;
 

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Switcher;
@@ -23,16 +24,16 @@ class TableMacros
     {
         if ($model instanceof Model) {
 
-            $now = lte_now();
-
-            if (isset($now['link.update'])) {
-
-                return Switcher::create($props, ['name' => $field, 'data' => [
-                    'size' => 'mini',
-                    'mouseup-put' => $now['link.update']($model->getRouteKey()),
-                    'mouseup-params' => json_encode([$field => ($value ? 0 : 1)]),
-                ]])->setCheckedIf($value, 'checked');
-            }
+//            $now = lte_now();
+//
+//            if (isset($now['link.update'])) {
+//
+//                return Switcher::create($props, ['name' => $field, 'data' => [
+//                    'size' => 'mini',
+//                    'mouseup-put' => $now['link.update']($model->getRouteKey()),
+//                    'mouseup-params' => json_encode([$field => ($value ? 0 : 1)]),
+//                ]])->setCheckedIf($value, 'checked');
+//            }
 
             return Switcher::create($props, ['name' => $field, 'data' => [
                 'size' => 'mini',
@@ -285,6 +286,23 @@ class TableMacros
 
     /**
      * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function carbon_format($value, $props = [])
+    {
+        $format = $props[0] ?? 'Y-m-d H:i:s';
+
+        if ($value instanceof Carbon) {
+
+            return $value->format($format);
+        }
+
+        return Carbon::create($value)->format($format);
+    }
+
+    /**
+     * @param $value
      * @return \Lar\Layout\Abstracts\Component|mixed|null
      */
     public function true_data($value)
@@ -309,6 +327,11 @@ class TableMacros
         else if (is_array($value)) {
 
             return $return->addClass('badge-info')->text('Array('.count($value).')');
+        }
+
+        else if ($value instanceof Carbon) {
+
+            return $value->format('Y-m-d H:i:s');
         }
 
         else {

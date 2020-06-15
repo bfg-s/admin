@@ -31,13 +31,6 @@ class LtePermission extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $attributes = [
-        'active' => 1
-    ];
-
-    /**
      * @var Collection
      */
     static $now;

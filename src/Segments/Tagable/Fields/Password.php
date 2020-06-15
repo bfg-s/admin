@@ -30,9 +30,9 @@ class Password extends Input
      * @param  string|null  $label
      * @return $this
      */
-    public function confirmed(string $label = null)
+    public function confirm(string $label = null)
     {
-        $this->isEqualTo("#input_{$this->name}_confirmation");
+        $this->_front_rule_equal_to("#input_{$this->name}_confirmation")->confirmed()->crypt();
 
         if (!$label && $this->title) {
 
@@ -40,7 +40,7 @@ class Password extends Input
         }
 
         $this->parent_field->password($this->name . '_confirmation', $label, ...$this->params)
-            ->icon($this->icon)->mergeDataList($this->data)->isEqualTo("#input_{$this->name}");
+            ->icon($this->icon)->mergeDataList($this->data)->_front_rule_equal_to("#input_{$this->name}");
 
         return $this;
     }

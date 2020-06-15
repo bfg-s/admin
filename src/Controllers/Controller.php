@@ -2,9 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Components\Table;
@@ -16,14 +13,27 @@ use Lar\LteAdmin\Components\Table;
  */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
     /**
      * Permission functions for methods
      *
      * @var array
      */
     static $permission_functions = [];
+
+    /**
+     * @var array
+     */
+    public static $rules = [];
+
+    /**
+     * @var array
+     */
+    public static $rule_messages = [];
+
+    /**
+     * @var array
+     */
+    public static $crypt_fields = [];
 
     /**
      * Display a listing of the resource.
@@ -42,6 +52,11 @@ class Controller extends BaseController
      */
     public function create_default() {
 
+        if (method_exists($this, 'matrix')) {
+
+            return $this->matrix();
+        }
+
         return view(config('lte.paths.view', 'admin') . '.resource.create');
     }
 
@@ -51,6 +66,11 @@ class Controller extends BaseController
      * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
      */
     public function edit_default() {
+
+        if (method_exists($this, 'matrix')) {
+
+            return $this->matrix();
+        }
 
         return view(config('lte.paths.view', 'admin') . '.resource.edit');
     }
@@ -73,7 +93,19 @@ class Controller extends BaseController
      */
     public function update_default(array $data = null) {
 
-        if ($this->requestToModel($data)) {
+        if (method_exists($this, 'matrix')) {
+
+            $this->matrix();
+        }
+
+        $save = $data ?? request()->all();
+
+        if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
+
+            return $back;
+        }
+
+        if ($this->requestToModel($save)) {
 
             respond()->toast_success(__('lte.saved_successfully'));
         }
@@ -94,7 +126,19 @@ class Controller extends BaseController
      */
     public function store_default(array $data = null) {
 
-        if ($this->requestToModel($data)) {
+        if (method_exists($this, 'matrix')) {
+
+            $this->matrix();
+        }
+
+        $save = $data ?? request()->all();
+
+        if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
+
+            return $back;
+        }
+
+        if ($this->requestToModel($save)) {
 
             respond()->toast_success(__('lte.successfully_created'));
         }

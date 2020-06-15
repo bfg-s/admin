@@ -39,6 +39,10 @@ class Container implements SegmentContainerInterface {
      * @var array
      */
     protected $breadcrumb = [];
+    /**
+     * @var \Closure
+     */
+    private $warp;
 
     /**
      * Container constructor.
@@ -49,6 +53,7 @@ class Container implements SegmentContainerInterface {
         $this->layout = 'lte::page';
         $this->component = DIV::create()->only_content();
         $warp($this->component, $this);
+        $this->warp = $warp;
     }
 
     /**

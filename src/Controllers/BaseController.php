@@ -19,7 +19,19 @@ abstract class BaseController extends Controller
      */
     public function requestToModel(array $data = null)
     {
-        return $this->model() ? ModelSaver::do($this->model(), $data ?? request()->all()) : false;
+        $save = $data ?? request()->all();
+
+        foreach (static::$crypt_fields as $crypt_field) {
+            if (array_key_exists($crypt_field, $save)) {
+                if ($save[$crypt_field]) {
+                    $save[$crypt_field] = bcrypt($save[$crypt_field]);
+                } else {
+                    unset($save[$crypt_field]);
+                }
+            }
+        }
+
+        return $this->model() ? ModelSaver::do($this->model(), $save) : false;
     }
 
     /**

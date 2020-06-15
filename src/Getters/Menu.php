@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Getters;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Lar\Developer\Getter;
 use Lar\LteAdmin\Models\LtePermission;
 
@@ -97,25 +98,34 @@ class Menu extends Getter
         if ($menu && isset($menu['model'])) {
 
             $return = $menu['model'];
+        }
 
-            if (is_string($return) && class_exists($return)) {
+        else if (\Route::current() && $action = \Route::currentRouteAction()) {
 
-                /** @var Model $return */
-                $return = new $return;
+            $class = Str::parseCallback($action)[0];
 
-                if ($return instanceof Model) {
+            if (property_exists($class, 'model')) {
+                $return = $class::$model;
+            } else {
+                $return = (new $class)->model();
+            }
+        }
 
-                    $roue_param = \Route::current()->parameter($menu['model.param']);
+        if (is_string($return) && class_exists($return)) {
 
-                    //dd($menu['model.param']);
+            /** @var Model $return */
+            $return = new $return;
+        }
 
-                    if ($roue_param) {
+        if ($return && $return instanceof Model && isset($menu['model.param'])) {
 
-                        if ($find = $return->where($return->getRouteKeyName(), $roue_param)->first()) {
+            $roue_param = \Route::current()->parameter($menu['model.param']);
 
-                            $return = $find;
-                        }
-                    }
+            if ($roue_param) {
+
+                if ($find = $return->where($return->getRouteKeyName(), $roue_param)->first()) {
+
+                    $return = $find;
                 }
             }
         }

@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\ModelSaver;
@@ -30,11 +31,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $this->user = \LteAdmin::user();
-
         return Container::create(function (DIV $div, Container $container) {
 
-            $container->title(\LteAdmin::user()->name)
+            $container->title($this->model()->name)
                 ->icon_user()
                 ->breadcrumb('lte.administrator', 'lte.profile');
 
@@ -44,78 +43,52 @@ class UserController extends Controller
                     ->card('lte.information')
                     ->primary()
                     ->body()
-                    ->view('lte::profile.user_portfolio', ['user' => $this->user]);
+                    ->view('lte::profile.user_portfolio', ['user' => $this->model()]);
 
                 $row->col(9)
                     ->card('lte.edit')
                     ->success()
-                    ->body(function (DIV $div) {
-
-                        $div->form($this->user, function (Form $form) {
-
-                            $form->vertical();
-
-                            $form->file('avatar', 'lte.avatar')
-                                ->exts('jpg', 'jpeg', 'png');
-
-                            $form->input('login', 'lte.login_name')
-                                ->isRequired();
-
-                            $form->email('email', 'lte.email_address')
-                                ->isRequired();
-
-                            $form->input('name', 'lte.name')
-                                ->isRequired();
-
-                            $form->br()->h5('Password')->hr();
-
-                            $form->password('password', 'lte.new_password')
-                                ->confirmed();
-
-                        })->form_footer();
-
-                    });
+                    ->body($this->matrix())
+                    ->form_footer();
             });
         });
     }
 
     /**
-     * @param  Request  $request
-     * @param  Respond  $respond
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|Form
      */
-    public function update(Request $request, Respond $respond)
+    public function matrix()
     {
-        $all = $request->all();
+        return Form::create(function (Form $form) {
 
-        if ($back = back_validate($all, [
-            'password' => 'confirmed',
-            'login' => 'required|min:4' . (isset($all['login']) && admin()->email != $all['login'] ? '|unique:' . LteUser::class . ',login' : ''),
-            'email' => 'required|email' . (isset($all['email']) && admin()->email != $all['email'] ? '|unique:' . LteUser::class . ',email' : ''),
-            'name' => 'required|min:4'
-        ])) {
-            return $back;
-        }
+            $form->vertical();
 
-        if ($all['password']) {
+            $form->image('avatar', 'lte.avatar');
 
-            $all['password'] = bcrypt($all['password']);
+            $form->input('login', 'lte.login_name')
+                ->required()
+                ->unique(LteUser::class, 'login', $this->model()->id);
 
-        } else {
+            $form->email('email', 'lte.email_address')
+                ->required()
+                ->unique(LteUser::class, 'email', $this->model()->id);
 
-            unset($all['password']);
-        }
+            $form->input('name', 'lte.name')
+                ->required();
 
-        if (ModelSaver::do(admin(), $all)) {
+            $form->br()->h5(__('lte.password'))->hr();
 
-            $respond->toast_success(__('lte.profile_success_changed'));
+            $form->password('password', 'lte.new_password')
+                ->confirm();
+        });
+    }
 
-        } else {
-
-            $respond->toast_error(__('lte.unknown_error'));
-        }
-
-        return back();
+    /**
+     * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|LteUser|string|null
+     */
+    public function model()
+    {
+        return admin();
     }
 
     /**

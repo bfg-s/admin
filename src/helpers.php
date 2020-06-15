@@ -7,7 +7,7 @@ if (!function_exists('lte_controller_can')) {
      * @return string
      */
     function lte_controller_can (string $method) {
-        list($class) = explode('@', \Route::currentRouteAction());
+        $class = \Str::parseCallback(\Route::currentRouteAction())[0];
         if (isset($class::$permission_functions)) {
             $action_permissions = $class::$permission_functions;
             if (isset($action_permissions[$method])) {

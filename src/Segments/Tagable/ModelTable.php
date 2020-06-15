@@ -131,21 +131,29 @@ class ModelTable extends DIV {
     }
 
     /**
-     * @param  string  $title
+     * @param  string|\Closure  $title
      * @param string|\Closure $field
      * @return $this
      */
-    public function column(string $title, $field)
+    public function column($title, $field = null)
     {
         $this->last_column = uniqid('column');
 
-        $this->columns[$this->last_column] = [
-            'title' => $title,
-            'field' => $field,
-            'macros' => [],
-            'sort' => null,
-            'prepend' => false
-        ];
+        if ($title instanceof \Closure) {
+            $field = $title;
+            $title = '';
+        }
+
+        if ($field) {
+
+            $this->columns[$this->last_column] = [
+                'title' => __($title),
+                'field' => $field,
+                'macros' => [],
+                'sort' => null,
+                'prepend' => false
+            ];
+        }
 
         return $this;
     }
@@ -184,6 +192,125 @@ class ModelTable extends DIV {
         return $this;
     }
 
+
+    /**
+     * @param  \Closure|null  $test
+     * @return $this
+     */
+    public function controls(\Closure $test = null)
+    {
+        $this->table->disableControls($test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure|null  $test
+     * @return $this
+     */
+    public function controlInfo(\Closure $test = null)
+    {
+        $this->table->disableInfo($test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure|null  $test
+     * @return $this
+     */
+    public function controlEdit(\Closure $test = null)
+    {
+        $this->table->disableEdit($test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure|null  $test
+     * @return $this
+     */
+    public function controlDelete(\Closure $test = null)
+    {
+        $this->table->disableDelete($test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function controlPrepend(\Closure $closure)
+    {
+        $this->table->controlPrepend($closure);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function controlAppend(\Closure $closure)
+    {
+        $this->table->controlAppend($closure);
+
+        return $this;
+    }
+
+    /**
+     * Disable default id column
+     * @return $this
+     */
+    public function disableId()
+    {
+        $this->table->disableDefaultsId();
+
+        return $this;
+    }
+
+    /**
+     * Disable all default columns
+     * @return $this
+     */
+    public function disableDefaultColumns()
+    {
+        $this->table->disableDefaults();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function created_at()
+    {
+        $this->column('lte.created_at', 'created_at')->true_data()->sort();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updated_at()
+    {
+        $this->column('lte.updated_at', 'updated_at')->true_data()->sort();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function deleted_at()
+    {
+        $this->column('lte.deleted_at', 'deleted_at')->true_data()->sort();
+
+        return $this;
+    }
+
     /**
      * Build table
      */
@@ -191,11 +318,26 @@ class ModelTable extends DIV {
     {
         $this->table->merge_rendered($this->table_rendered);
 
-        $this->table->disableDefaultsId();
-
         foreach ($this->columns as $column) {
 
             $column = $this->build_wrapper($column);
+
+//            $this->table->column($column['title'], function (Model $model) use ($column) {
+//                $field = $column['field'];
+//                $macros = $column['macros'];
+//                if (is_string($field)) {
+//                    $field = multi_dot_call($model, $field);
+//                } else if (is_array($field) || $field instanceof \Closure) {
+//                    $field = custom_closure_call($field, [
+//                        is_object($model) ? get_class($model) : 'model' => $model,
+//                        ModelTable::class => $this
+//                    ]);
+//                }
+//                foreach ($macros as $macro) {
+//                    $field = \Lar\Layout\Tags\TABLE::callMacro($macro[0], $field, $macro[1]);
+//                }
+//                return $field;
+//            }, $column['sort'], $column['prepend']);
 
             $this->table->column($column['title'], $column['field'], $column['sort'], $column['prepend']);
         }

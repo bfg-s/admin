@@ -30,7 +30,6 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
 
         $group->item('lte.administrators', 'administrators')
             ->resource('lte_user', config('lte.action.lte_user'))
-            ->model(\Lar\LteAdmin\Models\LteUser::class)
             ->icon_users_cog();
 
         $group->group('lte.access', 'access', function (\Lar\LteAdmin\Core\NavGroup $group) {
@@ -42,7 +41,6 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
 
             $group->item('lte.permission', 'permission')
                 ->resource('lte_permission', config('lte.action.lte_permission'))
-                ->model(\Lar\LteAdmin\Models\LtePermission::class)
                 ->icon_ban();
 
             $group->item('lte.functions', 'functions')

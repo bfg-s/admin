@@ -94,7 +94,7 @@ class Authenticate
      */
     protected function access()
     {
-        list($class, $method) = explode('@', \Route::currentRouteAction());
+        list($class, $method) = \Str::parseCallback(\Route::currentRouteAction(), 'index');
 
         if (isset($class::$permission_functions)) {
             $action_permissions = $class::$permission_functions;

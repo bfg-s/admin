@@ -74,6 +74,11 @@ class Card extends DIV implements onRender {
     protected $title;
 
     /**
+     * @var bool
+     */
+    protected $default_tools = false;
+
+    /**
      * Card constructor.
      * @param $title
      * @param  mixed  ...$params
@@ -172,43 +177,12 @@ class Card extends DIV implements onRender {
     }
 
     /**
+     * @param  \Closure|null  $test
      * @return $this
      */
-    public function defaultTools()
+    public function defaultTools(\Closure $test = null)
     {
-        if ($this->now['current.type']) {
-
-            $type = $this->now['current.type'];
-
-            $this->group->reload();
-
-            if ($type === 'create') {
-
-                $this->group->resourceList();
-            }
-
-            else if ($type === 'edit' || $type === 'show') {
-
-                $this->group->resourceList();
-
-                if ($type === 'show') {
-
-                    $this->group->resourceEdit();
-                }
-
-                if ($type === 'edit') {
-
-                    $this->group->resourceInfo();
-                }
-
-                $this->group->resourceDestroy();
-            }
-
-            if ($type !== 'create') {
-
-                $this->group->resourceAdd();
-            }
-        }
+        $this->default_tools = $test ? $test : function () { return true; };
 
         return $this;
     }
@@ -240,6 +214,8 @@ class Card extends DIV implements onRender {
      */
     public function onRender()
     {
+        $this->make_default_tools();
+        
         $this->addClass("card-{$this->type}");
 
         $model = gets()->lte->menu->model;
@@ -251,18 +227,9 @@ class Card extends DIV implements onRender {
                 $this->title_obj->text("<i class=\"{$this->icon} mr-1\"></i>");
             }
 
-            if ($model && is_array($this->title)) {
-
-                foreach ($this->title as $key => $attr) {
-
-                    if (is_string($attr)) {
-
-                        $this->title[$key] = multi_dot_call($model, $attr) ?? $attr;
-                    }
-                }
-            }
-
-            $this->title_obj->text(is_array($this->title) ? implode(" ", array_map('__', $this->title)) : __($this->title));
+            $this->title_obj->text(preg_replace_callback('/\:([a-zA-Z0-9\_\-\.]+)/', function ($m) use ($model) {
+                return multi_dot_call($model, $m[1]);
+            }, __($this->title)));
         }
 
         if ($this->tools) {
@@ -280,5 +247,62 @@ class Card extends DIV implements onRender {
         $this->icon = $icon;
 
         return $this;
+    }
+
+    protected function make_default_tools()
+    {
+        if ($this->default_tools !== false) {
+
+            /** @var \Closure $test */
+            $test = $this->default_tools;
+
+            if ($test('reload')) {
+                $this->group->reload();
+            }
+
+            if ($this->now['current.type']) {
+
+                $type = $this->now['current.type'];
+
+                if ($type === 'create') {
+
+                    if ($test('list')) {
+                        $this->group->resourceList();
+                    }
+                }
+
+                else if ($type === 'edit' || $type === 'show') {
+
+                    if ($test('list')) {
+                        $this->group->resourceList();
+                    }
+
+                    if ($type === 'show') {
+
+                        if ($test('edit')) {
+                            $this->group->resourceEdit();
+                        }
+                    }
+
+                    if ($type === 'edit') {
+
+                        if ($test('info')) {
+                            $this->group->resourceInfo();
+                        }
+                    }
+
+                    if ($test('delete')) {
+                        $this->group->resourceDestroy();
+                    }
+                }
+
+                if ($type !== 'create') {
+
+                    if ($test('add')) {
+                        $this->group->resourceAdd();
+                    }
+                }
+            }
+        }
     }
 }

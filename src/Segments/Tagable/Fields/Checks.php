@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreCheckBox;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
@@ -35,12 +36,21 @@ class Checks extends FormGroup
     }
 
     /**
-     * @param  array  $options
+     * @param  array|Arrayable  $options
+     * @param  bool  $first_default
      * @return $this
      */
-    public function options(array $options)
+    public function options($options, bool $first_default = false)
     {
+        if ($options instanceof Arrayable) {
+            $options = $options->toArray();
+        }
+
         $this->options = $options;
+
+        if ($first_default) {
+            $this->default(array_key_first($this->options));
+        }
 
         return $this;
     }
@@ -48,7 +58,7 @@ class Checks extends FormGroup
     /**
      * @return $this|Checks|FormGroup
      */
-    public function isRequired()
+    public function _front_rule_required()
     {
         $this->rules[] = 'any-checked';
 

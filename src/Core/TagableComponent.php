@@ -11,6 +11,7 @@ use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\SmallBox;
@@ -34,6 +35,7 @@ class TagableComponent extends Component {
         'form_footer' => FormFooter::class,
         'field' => Field::class,
         'model_table' => ModelTable::class,
+        'model_info_table' => ModelInfoTable::class,
         'table' => Table::class,
         'button_group' => ButtonGroup::class,
         'alert' => Alert::class,

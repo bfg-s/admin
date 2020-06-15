@@ -458,6 +458,7 @@ class CoreModelTable extends DIV implements onRender
     }
 
     /**
+     * @param  \Closure|null  $test
      * @return $this
      */
     public function disableEdit(\Closure $test = null)
@@ -468,6 +469,7 @@ class CoreModelTable extends DIV implements onRender
     }
 
     /**
+     * @param  \Closure|null  $test
      * @return $this
      */
     public function disableDelete(\Closure $test = null)

@@ -32,7 +32,11 @@ class File extends Input
      */
     public function exts(...$exts)
     {
-        $this->data['exts'] = implode("|", $exts);
+        if (!isset($this->data['exts'])) {
+            $this->data['exts'] = implode("|", $exts);
+        } else {
+            $this->data['exts'] .= implode("|", $exts);
+        }
 
         return $this;
     }

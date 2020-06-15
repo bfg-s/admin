@@ -14,6 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\DualSelect;
 use Lar\LteAdmin\Segments\Tagable\Fields\Email;
 use Lar\LteAdmin\Segments\Tagable\Fields\File;
 use Lar\LteAdmin\Segments\Tagable\Fields\Icon;
+use Lar\LteAdmin\Segments\Tagable\Fields\Image;
 use Lar\LteAdmin\Segments\Tagable\Fields\Input;
 use Lar\LteAdmin\Segments\Tagable\Fields\MDEditor;
 use Lar\LteAdmin\Segments\Tagable\Fields\MultiSelect;
@@ -45,6 +46,7 @@ class Field extends DIV {
         'email' => Email::class,
         'number' => Number::class,
         'file' => File::class,
+        'image' => Image::class,
         'switcher' => Switcher::class,
         'date_range' => DateRange::class,
         'date_time_range' => DateTimeRange::class,

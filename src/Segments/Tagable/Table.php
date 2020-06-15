@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Layout\Tags\TABLE as TableParent;
 
@@ -36,8 +37,18 @@ class Table extends TableParent{
     protected $first_th = true;
 
     /**
+     * @var \Closure
+     */
+    protected $map;
+
+    /**
+     * @var \Closure
+     */
+    protected $mapWithKeys;
+
+    /**
      * Table constructor.
-     * @param array|mixed $rows
+     * @param array|Arrayable $rows
      * @param  mixed  ...$params
      * @throws \Exception
      */
@@ -46,6 +57,10 @@ class Table extends TableParent{
         $this->type = null;
 
         parent::__construct();
+
+        if ($rows instanceof Arrayable) {
+            $rows = $rows->toArray();
+        }
 
         if (!is_array($rows)) {
             $params[] = $rows;
@@ -56,6 +71,29 @@ class Table extends TableParent{
         $this->when($params);
 
         $this->toExecute("ifArray");
+    }
+
+    /**
+     * @param  string  $row
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function map(\Closure $closure)
+    {
+        $this->map = $closure;
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function mapWithKeys(\Closure $closure)
+    {
+        $this->mapWithKeys = $closure;
+
+        return $this;
     }
 
     /**
@@ -92,6 +130,16 @@ class Table extends TableParent{
      */
     protected function build_easy_table(array $rows, bool $has_header = false) {
 
+        if ($this->map) {
+
+            $rows = collect($rows)->map($this->map)->toArray();
+        }
+
+        if  ($this->mapWithKeys) {
+
+            $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
+        }
+
         if (!$has_header && $this->type) {
             $this->addClass("table-{$this->type}");
         }
@@ -99,9 +147,10 @@ class Table extends TableParent{
         $body = $this->tbody(['']);
 
         $row_i = 0;
+        $simple = false;
         foreach ($rows as $key => $row) {
             $tr = $body->tr();
-            if (is_array($row)) {
+            if (is_array($row) && !$simple) {
                 foreach (array_values($row) as $ki => $col) {
                     if (!$ki && $this->first_th) {
                         $tr->th(['scope' => 'row'])->when($col);
@@ -110,6 +159,7 @@ class Table extends TableParent{
                     }
                 }
             } else {
+                $simple = true;
                 if ($this->first_th) {
                     $tr->th(['scope' => 'row'], $key);
                 } else {

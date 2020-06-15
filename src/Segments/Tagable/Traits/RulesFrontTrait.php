@@ -8,7 +8,7 @@ use Lar\LteAdmin\Segments\Tagable\FormGroup;
  * Trait FormGroupRulesTrait
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait FormGroupRulesTrait {
+trait RulesFrontTrait {
 
     /**
      * Validation rules
@@ -20,7 +20,7 @@ trait FormGroupRulesTrait {
      * поле обязательное для заполнения
      * @return $this|FormGroup
      */
-    public function isRequired()
+    protected function _front_rule_required()
     {
         $this->rules[] = 'required';
 
@@ -31,7 +31,7 @@ trait FormGroupRulesTrait {
      * проверяет корректность e-mail адреса
      * @return $this|FormGroup
      */
-    public function isEmail()
+    protected function _front_rule_email()
     {
         $this->rules[] = 'email';
 
@@ -42,7 +42,7 @@ trait FormGroupRulesTrait {
      * проверяет корректность url адреса
      * @return $this|FormGroup
      */
-    public function isUrl()
+    protected function _front_rule_url()
     {
         $this->rules[] = 'url';
 
@@ -50,10 +50,10 @@ trait FormGroupRulesTrait {
     }
 
     /**
-     * проверяет корректность url адреса
+     * проверяет корректность даты
      * @return $this|FormGroup
      */
-    public function isDate()
+    protected function _front_rule_date()
     {
         $this->rules[] = 'date';
 
@@ -64,7 +64,7 @@ trait FormGroupRulesTrait {
      * проверка на число
      * @return $this|FormGroup
      */
-    public function isNumber()
+    protected function _front_rule_number()
     {
         $this->rules[] = 'number';
 
@@ -75,7 +75,7 @@ trait FormGroupRulesTrait {
      * только цифры
      * @return $this|FormGroup
      */
-    public function isDigits()
+    protected function _front_rule_digits()
     {
         $this->rules[] = 'digits';
 
@@ -87,7 +87,7 @@ trait FormGroupRulesTrait {
      * @param  string  $field
      * @return $this|FormGroup
      */
-    public function isEqualTo(string $field)
+    protected function _front_rule_equal_to(string $field)
     {
         $this->rules['equalTo'] = $field;
 
@@ -99,7 +99,7 @@ trait FormGroupRulesTrait {
      * @param  int  $max
      * @return $this|FormGroup
      */
-    public function isMaxLength(int $max)
+    protected function _front_rule_max_length(int $max)
     {
         $this->rules['maxlength'] = $max;
 
@@ -111,7 +111,7 @@ trait FormGroupRulesTrait {
      * @param  int  $min
      * @return $this|FormGroup
      */
-    public function isMinLength(int $min)
+    protected function _front_rule_min_length(int $min)
     {
         $this->rules['minlength'] = $min;
 
@@ -124,7 +124,7 @@ trait FormGroupRulesTrait {
      * @param  int  $max
      * @return $this|FormGroup
      */
-    public function isRangeLength(int $min, int $max)
+    protected function _front_rule_range_length(int $min, int $max)
     {
         $this->rules['rangelength'] = "[{$min},{$max}]";
 
@@ -137,7 +137,7 @@ trait FormGroupRulesTrait {
      * @param  int  $max
      * @return $this|FormGroup
      */
-    public function isRange(int $min, int $max)
+    protected function _front_rule_range(int $min, int $max)
     {
         $this->rules['range'] = "[{$min},{$max}]";
 
@@ -149,7 +149,7 @@ trait FormGroupRulesTrait {
      * @param  int  $max
      * @return $this|FormGroup
      */
-    public function isMax(int $max)
+    protected function _front_rule_max(int $max)
     {
         $this->rules['max'] = $max;
 
@@ -161,7 +161,7 @@ trait FormGroupRulesTrait {
      * @param  int  $min
      * @return $this|FormGroup
      */
-    public function isMin(int $min)
+    protected function _front_rule_min(int $min)
     {
         $this->rules['min'] = $min;
 

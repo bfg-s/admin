@@ -8,7 +8,8 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\LteAdmin\Core\Traits\FontAwesome;
-use Lar\LteAdmin\Segments\Tagable\Traits\FormGroupRulesTrait;
+use Lar\LteAdmin\Segments\Tagable\Traits\RulesBackTrait;
+use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
 
 /**
  * Class Col
@@ -16,7 +17,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormGroupRulesTrait;
  */
 abstract class FormGroup extends DIV {
 
-    use FormGroupRulesTrait, FontAwesome;
+    use RulesFrontTrait, RulesBackTrait, FontAwesome;
 
     /**
      * @var bool
@@ -99,6 +100,21 @@ abstract class FormGroup extends DIV {
     protected $errors;
 
     /**
+     * @var bool
+     */
+    protected $admin_controller = false;
+
+    /**
+     * @var string
+     */
+    protected $controller;
+
+    /**
+     * @var string
+     */
+    protected $method;
+
+    /**
      * FormGroup constructor.
      * @param  Component  $parent
      * @param  string  $title
@@ -117,9 +133,128 @@ abstract class FormGroup extends DIV {
         $this->path = trim(str_replace(['[',']'], '.', str_replace('[]', '', $name)), '.');
         $this->errors = request()->session()->get('errors') ?: new ViewErrorBag;
         $this->has_bug = $this->errors->getBag('default')->has($name);
-
+        if (\Route::current()) {
+            list($this->controller, $this->method) = \Str::parseCallback(\Route::currentRouteAction());
+            $this->admin_controller = property_exists($this->controller, 'permission_functions');
+        }
         $this->toExecute('makeWrapper');
+        $this->after_construct();
     }
+
+    /**
+     * After construct event
+     */
+    protected function after_construct(){}
+
+    /**
+     * @return $this
+     */
+    public function vertical()
+    {
+        $this->vertical = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function reversed()
+    {
+        $this->reversed = true;
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $icon
+     * @return $this
+     */
+    public function icon(string $icon)
+    {
+        if ($this->icon !== null) {
+
+            $this->icon = $icon;
+        }
+
+        return $this;
+    }
+
+    public function crypt()
+    {
+        if ($this->admin_controller) {
+            $this->controller::$crypt_fields[] = $this->name;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  int  $width
+     * @return $this
+     */
+    public function label_width(int $width)
+    {
+        $this->label_width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @param  array  $datas
+     * @return $this
+     */
+    public function mergeDataList(array $datas)
+    {
+        $this->data = array_merge($this->data, $datas);
+
+        return $this;
+    }
+
+    /**
+     * @param  array  $rules
+     * @return $this
+     */
+    public function mergeRuleList(array $rules)
+    {
+        $this->rules = array_merge($this->rules, $rules);
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function default($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param  Model  $model
+     * @return $this
+     */
+    public function setModel(Model $model = null)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $info
+     * @return $this
+     */
+    public function info(string $info)
+    {
+        $this->info = $info;
+
+        return $this;
+    }
+    
 
     /**
      * @return void
@@ -179,7 +314,7 @@ abstract class FormGroup extends DIV {
      */
     protected function create_value () {
 
-        return $this->model ? (multi_dot_call($this->model, $this->path) ?? $this->value): $this->value;
+        return old($this->path, ($this->model ? (multi_dot_call($this->model, $this->path) ?? $this->value): $this->value));
     }
 
     /**
@@ -261,106 +396,6 @@ abstract class FormGroup extends DIV {
                     ->small(['fas fa-exclamation-triangle'])->_text(":space", $mess);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function vertical()
-    {
-        $this->vertical = true;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function reversed()
-    {
-        $this->reversed = true;
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $icon
-     * @return $this
-     */
-    public function icon(string $icon)
-    {
-        if ($this->icon !== null) {
-
-            $this->icon = $icon;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  int  $width
-     * @return $this
-     */
-    public function label_width(int $width)
-    {
-        $this->label_width = $width;
-
-        return $this;
-    }
-
-    /**
-     * @param  array  $datas
-     * @return $this
-     */
-    public function mergeDataList(array $datas)
-    {
-        $this->data = array_merge($this->data, $datas);
-
-        return $this;
-    }
-
-    /**
-     * @param  array  $rules
-     * @return $this
-     */
-    public function mergeRuleList(array $rules)
-    {
-        $this->rules = array_merge($this->rules, $rules);
-
-        return $this;
-    }
-
-    /**
-     * @param $value
-     * @return $this
-     */
-    public function default($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param  Model  $model
-     * @return $this
-     */
-    public function setModel(Model $model = null)
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $info
-     * @return $this
-     */
-    public function info(string $info)
-    {
-        $this->info = $info;
 
         return $this;
     }

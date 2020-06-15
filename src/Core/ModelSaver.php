@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
+use Lar\Developer\Core\Traits\Eventable;
 use Lar\LteAdmin\Models\LteFileStorage;
 
 /**
@@ -14,6 +15,8 @@ use Lar\LteAdmin\Models\LteFileStorage;
  */
 class ModelSaver
 {
+    use Eventable;
+
     /**
      * Save model
      *

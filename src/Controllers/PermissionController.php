@@ -3,6 +3,12 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Lar\LteAdmin\Models\LtePermission;
+use Lar\LteAdmin\Segments\Info;
+use Lar\LteAdmin\Segments\Matrix;
+use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class HomeController
@@ -11,6 +17,11 @@ use Lar\LteAdmin\Models\LtePermission;
  */
 class PermissionController extends Controller
 {
+    /**
+     * @var string
+     */
+    static $model = \Lar\LteAdmin\Models\LtePermission::class;
+
     /**
      * @var string[]
      */
@@ -26,41 +37,78 @@ class PermissionController extends Controller
     ];
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Sheet
      */
     public function index()
     {
-        $methods = function (LtePermission $permission) {
-
-            return collect($permission->method)->map(function ($i) {
-                return "<span class=\"badge badge-{$this->method_colors[$i]}\">{$i}</span>";
-            })->implode(' ');
-        };
-
-        $state = function (LtePermission $permission) {
-
-            return "<span class=\"badge badge-".($permission->state === 'open' ? 'success' : 'danger')."\">".($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>')." ".__("lte.{$permission->state}")."</span>";
-        };
-
-        return view('lte::permission.list', [
-            'methods' => $methods,
-            'state' => $state
-        ]);
+        return Sheet::create(function (ModelTable $table) {
+            $table->column('lte.path', 'path')->badge('success');
+            $table->column('lte.methods', [$this, 'show_methods'])->sort('method');
+            $table->column('lte.state', [$this, 'show_state'])->sort('state');
+            $table->column('lte.role', 'role.name')->sort('role_id');
+            $table->column('lte.active', 'active')->sort('active')->input_switcher();
+        });
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Matrix
      */
-    public function create()
+    public function matrix()
     {
-        return view('lte::permission.create');
+        return Matrix::create(function (Form $form) {
+            $form->input('path', 'lte.path')
+                ->required();
+
+            $form->multi_select('method[]', 'lte.methods')
+                ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function($i) {return [$i => $i];})->toArray())
+                ->required();
+
+            $form->radios('state', 'lte.state')
+                ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
+                ->required();
+
+            $form->radios('lte_role_id', 'lte.role')
+                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), true)
+                ->required();
+
+            $form->switcher('active', 'lte.active')->switchSize('mini')
+                ->default(1);
+        });
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Info
      */
-    public function edit()
+    public function show()
     {
-        return view('lte::permission.edit');
+        return Info::create(function (ModelInfoTable $table) {
+            $table->id();
+            $table->row('lte.path', 'path')->badge('success');
+            $table->row('lte.methods', [$this, 'show_methods']);
+            $table->row('lte.state', [$this, 'show_state']);
+            $table->row('lte.role', 'role.name');
+            $table->row('lte.active', 'active')->yes_no();
+            $table->updated_at()->created_at();
+        });
+    }
+
+    /**
+     * @param  LtePermission  $permission
+     * @return string
+     */
+    public function show_methods(LtePermission $permission)
+    {
+        return collect($permission->method)->map(function ($i) {
+            return "<span class=\"badge badge-{$this->method_colors[$i]}\">{$i}</span>";
+        })->implode(' ');
+    }
+
+    /**
+     * @param  LtePermission  $permission
+     * @return string
+     */
+    public function show_state(LtePermission $permission)
+    {
+        return "<span class=\"badge badge-".($permission->state === 'open' ? 'success' : 'danger')."\">".($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>')." ".__("lte.{$permission->state}")."</span>";
     }
 }
