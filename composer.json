@@ -14,7 +14,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.2.0",
-        "lar/layout": "2.*",
+        "lar/layout": "^2.2.3",
         "almasaeed2010/adminlte": "^3.0"
     },
     "require-dev": {},
