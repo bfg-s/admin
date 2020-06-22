@@ -58,6 +58,11 @@ class Card extends DIV implements onRender {
     protected $form;
 
     /**
+     * @var DIV
+     */
+    protected $body;
+
+    /**
      * @var ModelTable
      */
     protected $table;
@@ -118,7 +123,16 @@ class Card extends DIV implements onRender {
      */
     public function body(...$params)
     {
-        return $this->div(['card-body'], ...$params);
+        return $this->div(['card-body'], ...$params)
+            ->haveLink($this->body);
+    }
+
+    /**
+     * @return DIV
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 
     /**
@@ -137,7 +151,8 @@ class Card extends DIV implements onRender {
      */
     public function bodyModelTable($model = null, \Closure $after = null)
     {
-        $this->table = $this->body(['p-0', 'table-responsive'])->model_table($model, $after);
+        $this->table = $this->body(['p-0', 'table-responsive'])
+            ->model_table($model, $after);
 
         $this->table->rendered(function (ModelTable $table) {
             $this->bottom_content->add($table->footer());
