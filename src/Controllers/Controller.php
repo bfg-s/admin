@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Illuminate\Http\Response;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
@@ -47,7 +46,7 @@ class Controller extends BaseController
      */
     public function index_default() {
 
-        return Sheet::create('lte.admin_list', function (ModelTable $table) {
+        return Sheet::create(function (ModelTable $table) {
             $table->id();
             $table->at();
         });

@@ -3,9 +3,13 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Controllers\Controller;
+use Lar\LteAdmin\Segments\Info;
+use Lar\LteAdmin\Segments\Matrix;
+use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -39,6 +43,14 @@ class MakeController extends Command
     {
         $name = $this->argument('name');
 
+        if ($this->option('model')) {
+            $name_for_model = preg_replace('/(.*)Controller$/', '$1', $name);
+        }
+
+        if (!preg_match('/Controller$/', $name)) {
+            $name .= "Controller";
+        }
+
         $ex = explode("/", $name);
 
         $add_dir = "";
@@ -57,38 +69,47 @@ class MakeController extends Command
         }
 
         $dir = lte_app_path('Controllers' . $add_dir);
-
-        $view_folder_name = 'resource';
-
-        if ($this->option('template')) {
-
-            $view_folder_name = \Str::plural(strtolower(\Str::snake(str_replace('Controller', '', $name))));
-        }
         
         $class = class_entity($name)
             ->wrap('php')
             ->extend('Controller')
             ->namespace($namespace);
 
-        $ap = config('lte.paths.view', 'admin');
-
         if ($this->option('resource')) {
 
+            $class->use(Info::class)
+                ->use(Sheet::class)
+                ->use(Matrix::class)
+                ->use(Form::class)
+                ->use(ModelTable::class)
+                ->use(ModelInfoTable::class);
+
+            if ($this->option('model')) {
+
+                $model_namespace = "App\\Models\\" . str_replace("/", "\\", $name_for_model);
+
+                $class->prop("static:model", entity($model_namespace."::class"));
+            }
+
             $class->method('index')->line()
-                ->line("return view('{$ap}.{$view_folder_name}.list');")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
+                ->line("return Sheet::create(function (ModelTable \$table) {")
+                ->tab("\$table->id();")
+                ->tab("\$table->at();")
+                ->line("});")
+                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Sheet::class); });
 
-            $class->method('create')->line()
-                ->line("return view('{$ap}.{$view_folder_name}.create');")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
-
-            $class->method('edit')->line()
-                ->line("return view('{$ap}.{$view_folder_name}.edit');")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
+            $class->method('matrix')->line()
+                ->line("return new Matrix(function (Form \$form) {")
+                ->tab("\$form->autoMake();")
+                ->line("});")
+                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Matrix::class); });
 
             $class->method('show')->line()
-                ->line("return view('{$ap}.{$view_folder_name}.show');")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn('\Illuminate\Contracts\View\Factory|\Illuminate\View\View'); });
+                ->line("return Info::create(function (ModelInfoTable \$table) {")
+                ->tab("\$table->id();")
+                ->tab("\$table->at();")
+                ->line("});")
+                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Info::class); });
 
         }
 
@@ -104,10 +125,23 @@ class MakeController extends Command
 
         $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
 
-//        if ($this->option('template')) {
-//
-//
-//        }
+        if ($this->option('model') && !class_exists($model_namespace)) {
+
+            $this->call("make:model", [
+                'name' => "Models/" . $name_for_model,
+                '--migration' => true,
+                '--factory' => true,
+                '--seed' => true
+            ]);
+
+            $this->call("make:getter", [
+                'name' => $name_for_model
+            ]);
+
+            $this->call("make:jax", [
+                'name' => $name_for_model
+            ]);
+        }
     }
 
     /**
@@ -132,7 +166,7 @@ class MakeController extends Command
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller class.'],
-            ['template', 't', InputOption::VALUE_NONE, 'Generate a views for controller.'],
+            ['model', 'm', InputOption::VALUE_NONE, 'Inject or create model and migrations.'],
         ];
     }
 }
