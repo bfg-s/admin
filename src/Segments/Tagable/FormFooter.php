@@ -3,12 +3,13 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\Tagable\Events\onRender;
 
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class FormFooter extends DIV {
+class FormFooter extends DIV implements onRender {
 
     /**
      * @var string
@@ -54,6 +55,8 @@ class FormFooter extends DIV {
         }
 
         $this->createFooter();
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -132,5 +135,14 @@ class FormFooter extends DIV {
 
 
         return $this;
+    }
+
+    /**
+     * @return mixed|void
+     * @throws \ReflectionException
+     */
+    public function onRender()
+    {
+        $this->callRenderEvents();
     }
 }

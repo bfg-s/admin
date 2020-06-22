@@ -43,7 +43,7 @@ class UserController extends Controller
                     ->card('lte.information')
                     ->primary()
                     ->body()
-                    ->view('lte::profile.user_portfolio', ['user' => $this->model()]);
+                    ->view('lte::auth.user_portfolio', ['user' => $this->model()]);
 
                 $row->col(9)
                     ->card('lte.edit')

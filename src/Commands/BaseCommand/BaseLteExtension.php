@@ -471,7 +471,7 @@ class BaseLteExtension extends Command
                 return [
                     'id' => $key+1,
                     'name' => $name,
-                    'desc' => $extension::$description,
+                    'desc' => lang_in_text($extension::$description),
                     'status' => isset(LteAdmin::$extensions[$name]) ? (LteAdmin::$extensions[$name] ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
                     'installed' => isset(LteAdmin::$extensions[$name]) ? '<info>Yes</info>' : '<comment>No</comment>'
                 ];

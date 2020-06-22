@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Getters;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Lar\Developer\Getter;
+use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LtePermission;
 
 /**
@@ -57,6 +58,12 @@ class Menu extends Getter
         if ($menu && isset($menu['current.type'])) {
 
             $return = $menu['current.type'];
+
+            if ($return === 'store') {
+                $return = 'create';
+            } else if ($return === 'update') {
+                $return = 'edit';
+            }
         }
 
         return $return;
@@ -321,6 +328,15 @@ class Menu extends Getter
             if (isset($item['func']) && $item['func'] && $item['active']) {
 
                 $item['active'] = lte_user()->func()->has($item['func']);
+            }
+
+            if (isset($item['extension']) && $item['extension'] && $item['active']) {
+                /** @var ExtendProvider $extension */
+                $extension = $item['extension'];
+                if ($extension::$roles && $extension::$roles->count()) {
+                    $roles = $extension::$roles->pluck('slug')->toArray();
+                    $item['active'] = lte_user()->hasRoles($roles);
+                }
             }
 
             $result = array_merge($add, $item);

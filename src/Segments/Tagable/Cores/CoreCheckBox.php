@@ -8,8 +8,8 @@ use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class HorizontalCheckBox
- * @package Lar\LteAdmin\Components
+ * Class CoreCheckBox
+ * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreCheckBox extends DIV implements onRender
 {

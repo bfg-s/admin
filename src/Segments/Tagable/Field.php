@@ -27,13 +27,14 @@ use Lar\LteAdmin\Segments\Tagable\Fields\Switcher;
 use Lar\LteAdmin\Segments\Tagable\Fields\Textarea;
 use Lar\LteAdmin\Segments\Tagable\Fields\Time;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
+use Lar\Tagable\Events\onRender;
 
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin \Lar\LteAdmin\Core\FormGroupComponents
  */
-class Field extends DIV {
+class Field extends DIV implements onRender {
 
     use FieldMassControl;
 
@@ -80,6 +81,8 @@ class Field extends DIV {
         parent::__construct();
 
         $this->when($params);
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -99,6 +102,22 @@ class Field extends DIV {
     }
 
     /**
+     * @param $name
+     * @param $arguments
+     * @return bool|Field|FormGroup|mixed
+     * @throws \Exception
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        if ($call = static::static_call_group($name, $arguments)) {
+
+            return $call;
+        }
+
+        return parent::__callStatic($name, $arguments);
+    }
+
+    /**
      * @param  string  $name
      * @param  string  $class
      */
@@ -113,5 +132,23 @@ class Field extends DIV {
     public static function mergeFormComponents(array $array)
     {
         static::$form_components = array_merge(static::$form_components, $array);
+    }
+
+    /**
+     * @param  string  $name
+     * @return bool
+     */
+    public static function has(string $name)
+    {
+        return isset(static::$form_components[$name]);
+    }
+
+    /**
+     * @return mixed|void
+     * @throws \ReflectionException
+     */
+    public function onRender()
+    {
+        $this->callRenderEvents();
     }
 }

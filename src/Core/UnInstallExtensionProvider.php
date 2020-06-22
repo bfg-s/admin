@@ -33,6 +33,13 @@ class UnInstallExtensionProvider {
     }
 
     /**
+     * @return void
+     */
+    public function handle(): void {
+
+    }
+
+    /**
      * @param  string|array  $where
      * @param  string|bool  $in
      * @return int
@@ -122,7 +129,7 @@ class UnInstallExtensionProvider {
                 $migration = new $class;
 
                 if ($migration instanceof Migration) {
-                    if (method_exists($migration, 'ignore') && $migration->ignore()) {
+                    if (method_exists($migration, 'ignore') && ($migration->ignore() && !$this->command->option('force'))) {
                         $this->command->line("<comment>Ignored-migration:</comment> {$migration_name}");
                         continue;
                     }

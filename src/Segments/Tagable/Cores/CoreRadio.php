@@ -7,8 +7,8 @@ use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class HorizontalCheckBox
- * @package Lar\LteAdmin\Components
+ * Class CoreRadio
+ * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreRadio extends DIV implements onRender
 {

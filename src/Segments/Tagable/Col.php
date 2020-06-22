@@ -3,12 +3,13 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\Tagable\Events\onRender;
 
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class Col extends DIV {
+class Col extends DIV implements onRender {
 
     /**
      * @var string
@@ -36,5 +37,16 @@ class Col extends DIV {
         $this->when($params);
 
         $this->addClass($this->class);
+
+        $this->callConstructEvents();
+    }
+
+    /**
+     * @return mixed|void
+     * @throws \ReflectionException
+     */
+    public function onRender()
+    {
+        $this->callRenderEvents();
     }
 }

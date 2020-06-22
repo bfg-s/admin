@@ -61,6 +61,8 @@ class SmallBox extends DIV {
         $this->params = $params;
 
         $this->toExecute('_build');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -102,6 +104,8 @@ class SmallBox extends DIV {
      */
     protected function _build()
     {
+        $this->callRenderEvents();
+
         $this->span(['info-box-icon elevation-1'])
             ->addClass("bg-{$this->type}")
             ->i([$this->icon]);

@@ -115,6 +115,11 @@ abstract class FormGroup extends DIV {
     protected $method;
 
     /**
+     * @var bool
+     */
+    protected $only_input = false;
+
+    /**
      * FormGroup constructor.
      * @param  Component  $parent
      * @param  string  $title
@@ -138,7 +143,9 @@ abstract class FormGroup extends DIV {
             $this->admin_controller = property_exists($this->controller, 'permission_functions');
         }
         $this->toExecute('makeWrapper');
+        if (!$title) { $this->vertical(); }
         $this->after_construct();
+        $this->callConstructEvents();
     }
 
     /**
@@ -162,6 +169,16 @@ abstract class FormGroup extends DIV {
     public function reversed()
     {
         $this->reversed = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function only_input()
+    {
+        $this->only_input = true;
 
         return $this;
     }
@@ -266,7 +283,22 @@ abstract class FormGroup extends DIV {
      */
     protected function makeWrapper()
     {
+        $this->callRenderEvents();
+
         $this->on_build();
+
+        if ($this->only_input) {
+
+            $this->value = $this->create_value();
+
+            $this->appEnd(
+                $this->field()
+            )->appEnd(
+                $this->app_end_field()
+            );
+
+            return ;
+        }
 
         $fg = $this->div(['form-group row']);
 

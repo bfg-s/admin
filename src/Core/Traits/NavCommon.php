@@ -3,6 +3,10 @@
 namespace Lar\LteAdmin\Core\Traits;
 
 
+use Lar\LteAdmin\ExtendProvider;
+use Lar\LteAdmin\LteAdmin;
+use Lar\LteAdmin\Navigate;
+
 /**
  * Trait NavCommon
  * @package Lar\LteAdmin\Core\Traits
@@ -10,7 +14,21 @@ namespace Lar\LteAdmin\Core\Traits;
 trait NavCommon
 {
     /**
-     * @param $roles
+     * @param  ExtendProvider|null  $provider
+     * @return $this
+     */
+    public function extension(ExtendProvider $provider = null)
+    {
+        if ($provider) {
+
+            $this->items['extension'] = $provider;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|array $roles
      * @return $this
      */
     public function role($roles)
@@ -247,5 +265,27 @@ trait NavCommon
     public function badge_warning($data = null, array $instructions =  null)
     {
         return $this->badge($data, 'warning', $instructions);
+    }
+
+    /**
+     * @param $name
+     * @param $to
+     */
+    protected function includeAfterGroup($name)
+    {
+        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
+
+            foreach (LteAdmin::$nav_extensions[$name] as $item) {
+
+                Navigate::$extension = $item;
+
+                $item->navigator($this);
+
+                Navigate::$extension = null;
+            }
+
+
+            unset(LteAdmin::$nav_extensions[$name]);
+        }
     }
 }

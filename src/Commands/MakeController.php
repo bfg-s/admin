@@ -104,25 +104,10 @@ class MakeController extends Command
 
         $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
 
-        if ($this->option('template')) {
-
-            $dfv = base_path('vendor/lar/lte-admin/views/default/resource');
-            $vf = 'views/' . config('lte.paths.view', 'admin') . "/" . $view_folder_name;
-            $view_folder = resource_path($vf);
-            if (!is_dir($view_folder)) { mkdir($view_folder, 0777, true); }
-            $view_files = [];
-            $view_files['create.blade.php'] = str_replace("@include('admin.resource.form')","@include('{$ap}.{$view_folder_name}.form')",file_get_contents($dfv . '/create.blade.php'));
-            $view_files['edit.blade.php'] = str_replace("@include('admin.resource.form')","@include('{$ap}.{$view_folder_name}.form')",file_get_contents($dfv . '/edit.blade.php'));
-            $view_files['form.blade.php'] = file_get_contents($dfv . '/form.blade.php');
-            $view_files['list.blade.php'] = file_get_contents($dfv . '/list.blade.php');
-            $view_files['show.blade.php'] = file_get_contents($dfv . '/show.blade.php');
-
-            foreach ($view_files as $view_file => $view_data) {
-
-                file_put_contents($view_folder . "/{$view_file}", $view_data);
-                $this->info('View [' . $vf . '/' . $view_file . '] created!');
-            }
-        }
+//        if ($this->option('template')) {
+//
+//
+//        }
     }
 
     /**

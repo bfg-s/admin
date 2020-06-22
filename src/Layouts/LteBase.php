@@ -54,6 +54,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/bootstrap-iconpicker-1.10.0/dist/css/bootstrap-iconpicker.min.css',
         'lte-admin/plugins/nestable/jquery.nestable.css',
         'lte-admin/plugins/editor.md-master/css/editormd.min.css',
+        'lte-admin/plugins/bootstrap4-editable/css/bootstrap-editable.css',
 
 
         'lte-admin/css/app.css',
@@ -102,6 +103,8 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/editor.md-master/editormd.min.js',
         'lte-admin/plugins/editor.md-master/languages/en.js',
 
+        'lte-admin/plugins/bootstrap4-editable/js/bootstrap-editable.min.js',
+
         'ljs' => [
             'jq', 'alert', 'nav', 'mask', 'select2', 'fancy'
         ],
@@ -129,9 +132,9 @@ class LteBase extends LayoutComponent
 
         foreach (\LteAdmin::extensions() as $extension) {
 
-            $this->body_scripts = array_merge($this->body_scripts, $extension->cfg()->getScripts());
+            $this->body_scripts = array_merge($this->body_scripts, $extension->config()->getScripts());
 
-            $this->head_styles = array_merge($this->head_styles, $extension->cfg()->getStyles());
+            $this->head_styles = array_merge($this->head_styles, $extension->config()->getStyles());
         }
 
         $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));

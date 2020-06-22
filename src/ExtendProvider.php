@@ -2,18 +2,24 @@
 
 namespace Lar\LteAdmin;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use Lar\LteAdmin\Core\InstallExtensionProvider;
+use Lar\LteAdmin\Core\NavigatorExtensionProvider;
+use Lar\LteAdmin\Core\PermissionsExtensionProvider;
+use Lar\LteAdmin\Core\UnInstallExtensionProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Core\NavGroup;
 use Illuminate\Console\Command;
+use Lar\LteAdmin\Models\LteFunction;
 
 /**
  * Class ServiceProvider
  *
  * @package Lar\Layout
  */
-abstract class ExtendProvider extends ServiceProviderIlluminate
+class ExtendProvider extends ServiceProviderIlluminate
 {
     /**
      * Extension ID name
@@ -34,9 +40,16 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     static $description = "";
 
     /**
-     * @var ConfigExtensionProvider
+     * Role list access on extension
+     * @var Collection|LteFunction[]|null
      */
-    protected $config;
+    static $roles;
+
+    /**
+     * After route to set
+     * @var null|string
+     */
+    static $after;
 
     /**
      * @var array
@@ -55,6 +68,31 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     ];
 
     /**
+     * @var string
+     */
+    protected $navigator = NavigatorExtensionProvider::class;
+
+    /**
+     * @var string
+     */
+    protected $install = InstallExtensionProvider::class;
+
+    /**
+     * @var string
+     */
+    protected $uninstall = UnInstallExtensionProvider::class;
+
+    /**
+     * @var string
+     */
+    protected $permissions = PermissionsExtensionProvider::class;
+
+    /**
+     * @var ConfigExtensionProvider|string
+     */
+    protected $config = ConfigExtensionProvider::class;
+
+    /**
      * Bootstrap services.
      *
      * @return void
@@ -62,7 +100,18 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      */
     public function boot()
     {
+        /** @var LteFunction $func */
+        $func = gets()
+            ->lte
+            ->functions
+            ->list
+            ->where('class', static::class)
+            ->where('slug', 'access')
+            ->first();
 
+        if ($func) {
+            static::$roles = $func->roles;
+        }
     }
 
     /**
@@ -87,14 +136,6 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
     public function included()
     {
         return isset(LteAdmin::$extensions[static::$name]) && LteAdmin::$extensions[static::$name];
-    }
-
-    /**
-     * @return ConfigExtensionProvider
-     */
-    public function cfg()
-    {
-        return $this->config;
     }
 
     /**
@@ -154,21 +195,39 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * @param  Navigate|NavGroup|NavigateInterface  $navigate
      * @return void
      */
-    abstract public function navigator(NavigateInterface $navigate): void;
+    public function navigator(NavigateInterface $navigate): void {
+
+        if ($this->navigator) {
+
+            (new $this->navigator($navigate, $this))->handle();
+        }
+    }
 
     /**
      * Install process
      * @param  Command  $command
      * @return void
      */
-    abstract public function install(Command $command): void;
+    public function install(Command $command): void {
+
+        if ($this->install) {
+
+            (new $this->install($command, $this))->handle();
+        }
+    }
 
     /**
      * Uninstall process
      * @param  Command  $command
      * @return void
      */
-    abstract public function uninstall(Command $command): void;
+    public function uninstall(Command $command): void {
+
+        if ($this->uninstall) {
+
+            (new $this->uninstall($command, $this))->handle();
+        }
+    }
 
     /**
      * Permission process
@@ -176,12 +235,29 @@ abstract class ExtendProvider extends ServiceProviderIlluminate
      * @param  string  $type
      * @return void
      */
-    abstract public function permission(Command $command, string $type): void;
+    public function permission(Command $command, string $type): void {
+
+        if ($this->permissions) {
+            if ($type === 'up') {
+                (new $this->permissions($command, $this))->up();
+            } else if ($type === 'down') {
+                (new $this->permissions($command, $this))->down();
+            }
+        }
+    }
 
     /**
      * Extension configs
-     * @return void
+     * @return ConfigExtensionProvider
      */
-    abstract public function config(): void;
+    public function config() {
+
+        if ($this->config && is_string($this->config)) {
+
+            $this->config = new $this->config($this);
+        }
+
+        return $this->config;
+    }
 }
 

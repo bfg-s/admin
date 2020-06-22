@@ -31,4 +31,11 @@ class NavigatorExtensionProvider {
         $this->navigate = $navigate;
         $this->provider = $provider;
     }
+
+    /**
+     * @return void
+     */
+    public function handle(): void {
+
+    }
 }

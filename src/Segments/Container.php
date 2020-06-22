@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments;
 
+use Lar\Developer\Core\Traits\Eventable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\FontAwesome;
@@ -13,7 +14,7 @@ use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
  */
 class Container implements SegmentContainerInterface {
 
-    use FontAwesome;
+    use FontAwesome, Eventable;
 
     /**
      * @var string
@@ -50,8 +51,9 @@ class Container implements SegmentContainerInterface {
      */
     public function __construct(\Closure $warp)
     {
-        $this->layout = 'lte::page';
-        $this->component = DIV::create()->only_content();
+        $this->layout = 'lte::layout';
+        $this->component = DIV::create();
+        $this->callConstructEvents([DIV::class => $this->component]);
         $warp($this->component, $this);
         $this->warp = $warp;
     }
@@ -108,7 +110,9 @@ class Container implements SegmentContainerInterface {
      */
     public function render()
     {
-        return view('lte::wrapper.container', [
+        $this->callRenderEvents([DIV::class => $this->component]);
+
+        return view('lte::container', [
             'layout' => $this->layout,
             'yield' => $this->content_yield,
             'component' => $this->component,

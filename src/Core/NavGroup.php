@@ -7,6 +7,7 @@ use Lar\LteAdmin\Core\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\LteAdmin;
+use Lar\LteAdmin\Navigate;
 
 /**
  * Class NavGroup
@@ -20,7 +21,7 @@ class NavGroup implements Arrayable, NavigateInterface
     /**
      * @var array
      */
-    protected $items = [];
+    public $items = [];
 
     /**
      * NavItem constructor.
@@ -30,7 +31,9 @@ class NavGroup implements Arrayable, NavigateInterface
     public function __construct(string $title = null, string $route = null)
     {
         $this->title($title)
-            ->route($route);
+            ->route($route)
+            ->extension(Navigate::$extension);
+
     }
 
     /**
@@ -59,6 +62,11 @@ class NavGroup implements Arrayable, NavigateInterface
 
         $this->items['items'][] = $item;
 
+        if (isset($item->items['route'])) {
+
+            $this->includeAfterGroup($item->items['route']);
+        }
+
         return $item;
     }
 
@@ -78,6 +86,11 @@ class NavGroup implements Arrayable, NavigateInterface
         $item = new NavGroup($title, $route);
 
         $this->items['items'][] = $item;
+
+        if (isset($item->items['route'])) {
+
+            $this->includeAfterGroup($item->items['route']);
+        }
 
         if ($cb) {
             $cb($item);
@@ -109,7 +122,12 @@ class NavGroup implements Arrayable, NavigateInterface
     {
         if (isset(LteAdmin::$nav_extensions[$name])) {
 
+            Navigate::$extension = LteAdmin::$nav_extensions[$name];
+
             LteAdmin::$nav_extensions[$name]->navigator($this);
+
+            Navigate::$extension = null;
+
             unset(LteAdmin::$nav_extensions[$name]);
         }
     }

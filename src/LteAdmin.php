@@ -153,8 +153,11 @@ class LteAdmin
 
                 if ($provider->included()) {
 
-                    LteAdmin::$nav_extensions[$provider::$slug] = $provider;
-                    $provider->config();
+                    if (!$provider::$after) {
+                        LteAdmin::$nav_extensions[$provider::$slug] = $provider;
+                    } else {
+                        LteAdmin::$nav_extensions[$provider::$after][] = $provider;
+                    }
                 }
             }
         }
@@ -187,5 +190,35 @@ class LteAdmin
     public function extensions()
     {
         return LteAdmin::$installed_extensions;
+    }
+
+    /**
+     * @param  string  $name
+     * @return ExtendProvider|null
+     */
+    public function getExtension(string $name)
+    {
+        if (isset(LteAdmin::$installed_extensions[$name])) {
+            return LteAdmin::$installed_extensions[$name];
+        } else if (LteAdmin::$not_installed_extensions[$name]) {
+            return LteAdmin::$not_installed_extensions[$name];
+        }
+        return null;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function extensionProviders()
+    {
+        return array_flip(
+            array_map(
+                'get_class',
+                array_merge(
+                    LteAdmin::$installed_extensions,
+                    LteAdmin::$not_installed_extensions
+                )
+            )
+        );
     }
 }

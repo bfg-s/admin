@@ -9,12 +9,11 @@ module.exports = class extends Executor {
         let flip = separator === '-' ? '_' : '-';
         str = str.replace(flip, separator);
 
-        str = str.toLowerCase()
+        let result = str.toLowerCase()
+            .replace(new RegExp('\\s', 'g'), separator)
+            .replace(new RegExp('\\s\\s', 'g'), separator)
+            .replace(new RegExp('['+separator+separator+']+', 'g'), separator)
             .replace(new RegExp('[^a-z0-9' + separator + '\\s]', 'g'), '');
-
-        str = str.replace(new RegExp('[' + separator + '\\s]+', 'g'), separator);
-
-        let result = str.replace(new RegExp('^[' + separator + '\\s]+|[' + separator + '\\s]+$', 'g'),'');
 
         if (set_to) {
 

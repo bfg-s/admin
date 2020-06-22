@@ -4,7 +4,12 @@ namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Http\Response;
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Components\Table;
+use Lar\LteAdmin\Segments\Info;
+use Lar\LteAdmin\Segments\Matrix;
+use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class Controller
@@ -38,17 +43,20 @@ class Controller extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
+     * @return Sheet
      */
     public function index_default() {
 
-        return view(config('lte.paths.view', 'admin') . '.resource.list');
+        return Sheet::create('lte.admin_list', function (ModelTable $table) {
+            $table->id();
+            $table->at();
+        });
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
+     * @return Matrix
      */
     public function create_default() {
 
@@ -57,13 +65,15 @@ class Controller extends BaseController
             return $this->matrix();
         }
 
-        return view(config('lte.paths.view', 'admin') . '.resource.create');
+        return new Matrix(function (Form $form) {
+            $form->autoMake();
+        });
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
+     * @return Matrix
      */
     public function edit_default() {
 
@@ -72,17 +82,22 @@ class Controller extends BaseController
             return $this->matrix();
         }
 
-        return view(config('lte.paths.view', 'admin') . '.resource.edit');
+        return new Matrix(function (Form $form) {
+            $form->autoMake();
+        });
     }
 
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
+     * @return Info
      */
     public function show_default() {
 
-        return view(config('lte.paths.view', 'admin') . '.resource.show');
+        return Info::create(function (ModelInfoTable $table) {
+            $table->id();
+            $table->at();
+        });
     }
 
     /**
@@ -93,9 +108,10 @@ class Controller extends BaseController
      */
     public function update_default(array $data = null) {
 
-        if (method_exists($this, 'matrix')) {
-
-            $this->matrix();
+        if (method_exists($this, 'edit')) {
+            custom_closure_call([$this, 'edit']);
+        } else {
+            custom_closure_call([$this, 'edit_default']);
         }
 
         $save = $data ?? request()->all();
@@ -126,9 +142,10 @@ class Controller extends BaseController
      */
     public function store_default(array $data = null) {
 
-        if (method_exists($this, 'matrix')) {
-
-            $this->matrix();
+        if (method_exists($this, 'create')) {
+            custom_closure_call([$this, 'create']);
+        } else {
+            custom_closure_call([$this, 'create_default']);
         }
 
         $save = $data ?? request()->all();
@@ -204,7 +221,7 @@ class Controller extends BaseController
 
         if ($_after === 'index' && $menu = gets()->lte->menu->now) {
 
-            $last = Table::getLastRequest();
+            $last = session()->pull('temp_lte_table_data', []);
 
             return \redirect($menu['link'] . (count($last) ? '?'.http_build_query($last) : ''))->with('_after', $_after);
         }

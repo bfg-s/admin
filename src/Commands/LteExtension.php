@@ -117,6 +117,7 @@ class LteExtension extends BaseLteExtension
             ['install', 'i', InputOption::VALUE_NONE, 'Install any selected or all extensions'],
             ['uninstall', 'u', InputOption::VALUE_NONE, 'UnInstall any selected or all extensions'],
             ['reinstall', 'r', InputOption::VALUE_NONE, 'ReInstall any selected or all extension'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Force action'],
 
             ['yes', 'y', InputOption::VALUE_NONE, 'Enter yes on all'],
 

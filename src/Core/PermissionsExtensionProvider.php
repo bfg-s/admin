@@ -11,7 +11,7 @@ use Lar\LteAdmin\Models\LteRole;
  * Class InstallExtensionProvider
  * @package Lar\LteAdmin\Core
  */
-abstract class PermissionsExtensionProvider {
+class PermissionsExtensionProvider {
 
     /**
      * @var Command
@@ -45,8 +45,8 @@ abstract class PermissionsExtensionProvider {
                 if (count($roles)) { $this->command->info('Created ' . count($roles) . ' roles.'); }
             }
         }
-        ModelSaver::doMany(LteFunction::class, $functions = $this->functions());
-        if (count($functions)) { $this->command->info('Created ' . count($functions) . ' permission functions.'); }
+        $pushed = ModelSaver::doMany(LteFunction::class, array_merge([$this->makeFunction('access')], $this->functions()));
+        if ($pushed->count()) { $this->command->info('Created ' . $pushed->count() . ' permission functions.'); }
     }
 
     /**
@@ -68,10 +68,11 @@ abstract class PermissionsExtensionProvider {
             }
         }
 
-        $functions = $this->functions();
         $functions_count = 0;
-        foreach ($functions as $function) {
-            if (LteFunction::where('slug', $function['slug'])->delete()) {$functions_count++;}
+        foreach (array_merge([$this->makeFunction('access')], $this->functions()) as $function) {
+            if (is_array($function) && count($function) && LteFunction::where('slug', $function['slug'])->delete()) {
+                $functions_count++;
+            }
         }
         if ($functions_count) { $this->command->info('Deleted ' . $functions_count . ' permission functions.'); }
     }
@@ -82,12 +83,13 @@ abstract class PermissionsExtensionProvider {
      * @param  string|null  $description
      * @return array
      */
-    public function makeFunction(array $roles, string $slug = null, string $description = null): array
+    public function makeFunction(string $slug, array $roles = ['*'], string $description = null): array
     {
         return [
-            'slug' => $slug ? $this->provider::$slug . "_{$slug}" : $this->provider::$slug,
-            'description' => $description ? $description : $this->provider::$description . ($slug ? " [{$slug}]":""),
-            'roles' => collect($roles)->map(function ($item) {
+            'slug' => $slug,
+            'class' => get_class($this->provider),
+            'description' => $this->provider::$description . ($description ? " [$description]" : (\Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]":" [{$slug}]")),
+            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
                 return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
             })->filter()->values()->toArray()
         ];
@@ -96,5 +98,8 @@ abstract class PermissionsExtensionProvider {
     /**
      * @return array
      */
-    abstract public function functions(): array;
+    public function functions(): array {
+
+        return [];
+    }
 }

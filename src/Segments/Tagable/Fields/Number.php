@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 /**
  * Class Email
  * @package Lar\LteAdmin\Segments\Tagable\Fields
@@ -33,25 +32,32 @@ class Number extends Input
     ];
 
     /**
-     * @param  int  $min
+     * The field under validation must have a minimum value. Strings, numerics,
+     * arrays, and files are evaluated in the same fashion as the size rule.
+     *
+     * @param  int  $value
+     * @param  string|null  $message
      * @return $this
      */
-    public function min(int $min)
+    public function min(int $value, string $message = null)
     {
-        $this->params[]['min'] = $min;
-
-        return $this;
+        $this->params[]['min'] = $value;
+        return  $this->_rule(__FUNCTION__, [$value], $message);
     }
 
     /**
-     * @param  int  $max
+     * The field under validation must be less than or equal to a maximum value.
+     * Strings, numerics, arrays, and files are evaluated in the same fashion as
+     * the size rule.
+     *
+     * @param  int  $value
+     * @param  string|null  $message
      * @return $this
      */
-    public function max(int $max)
+    public function max(int $value, string $message = null)
     {
-        $this->params[]['max'] = $max;
-
-        return $this;
+        $this->params[]['max'] = $value;
+        return  $this->_rule(__FUNCTION__, [$value], $message);
     }
 
     /**

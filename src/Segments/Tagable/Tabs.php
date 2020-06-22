@@ -4,12 +4,13 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
+use Lar\Tagable\Events\onRender;
 
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class Tabs extends DIV {
+class Tabs extends DIV implements onRender {
 
     /**
      * @var bool
@@ -40,6 +41,8 @@ class Tabs extends DIV {
         parent::__construct();
 
         $this->when($params);
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -109,5 +112,14 @@ class Tabs extends DIV {
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed|void
+     * @throws \ReflectionException
+     */
+    public function onRender()
+    {
+        $this->callRenderEvents();
     }
 }

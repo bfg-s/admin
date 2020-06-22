@@ -42,11 +42,13 @@ class PermissionController extends Controller
     public function index()
     {
         return Sheet::create(function (ModelTable $table) {
+            $table->id();
             $table->column('lte.path', 'path')->badge('success');
             $table->column('lte.methods', [$this, 'show_methods'])->sort('method');
             $table->column('lte.state', [$this, 'show_state'])->sort('state');
             $table->column('lte.role', 'role.name')->sort('role_id');
-            $table->column('lte.active', 'active')->sort('active')->input_switcher();
+            $table->active_switcher();
+            $table->at();
         });
     }
 
@@ -88,7 +90,7 @@ class PermissionController extends Controller
             $table->row('lte.state', [$this, 'show_state']);
             $table->row('lte.role', 'role.name');
             $table->row('lte.active', 'active')->yes_no();
-            $table->updated_at()->created_at();
+            $table->at();
         });
     }
 

@@ -39,6 +39,13 @@ class InstallExtensionProvider {
     }
 
     /**
+     * @return void
+     */
+    public function handle(): void {
+
+    }
+
+    /**
      * @param  string  $path
      * @param  bool  $publish
      * @return bool

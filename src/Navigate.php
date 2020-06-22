@@ -26,6 +26,11 @@ class Navigate implements NavigateInterface
     public static $roads;
 
     /**
+     * @var ExtendProvider
+     */
+    public static $extension;
+
+    /**
      * @param  \Closure  ...$closures
      * @return $this
      */
@@ -80,6 +85,11 @@ class Navigate implements NavigateInterface
 
         Navigate::$items[] = $item;
 
+        if (isset($item->items['route'])) {
+
+            $this->includeAfterGroup($item->items['route']);
+        }
+
         if ($cb) {
             $cb($item, static::$roads);
         }
@@ -98,6 +108,11 @@ class Navigate implements NavigateInterface
         $item = new NavItem($title, $route, $action);
 
         Navigate::$items[] = $item;
+
+        if (isset($item->items['route'])) {
+
+            $this->includeAfterGroup($item->items['route']);
+        }
 
         return $item;
     }
@@ -154,7 +169,38 @@ class Navigate implements NavigateInterface
     {
         if (isset(LteAdmin::$nav_extensions[$name])) {
 
+            Navigate::$extension = LteAdmin::$nav_extensions[$name];
+
             LteAdmin::$nav_extensions[$name]->navigator($this);
+
+            Navigate::$extension = null;
+
+            unset(LteAdmin::$nav_extensions[$name]);
+        }
+    }
+
+    /**
+     * @param $name
+     * @param $to
+     */
+    protected function includeAfterGroup($name)
+    {
+        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
+
+
+            foreach (LteAdmin::$nav_extensions[$name] as $item) {
+
+                if (!is_array($item)) {
+
+                    Navigate::$extension = $item;
+
+                    $item->navigator($this);
+
+                    Navigate::$extension = null;
+                }
+            }
+
+
             unset(LteAdmin::$nav_extensions[$name]);
         }
     }

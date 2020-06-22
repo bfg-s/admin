@@ -10,7 +10,7 @@
             <form action="{{route('lte.login.post')}}" method="post" target>
                 @csrf
                 <div class="input-group mb-3">
-                    <input type="text" name="login" class="form-control" placeholder="{{__('lte.email')}}" />
+                    <input type="text" name="login" autofocus class="form-control" placeholder="{{__('lte.email')}}" />
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>

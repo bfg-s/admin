@@ -10,7 +10,9 @@ class TableList extends Executor {
 
             if (o.name !== obj.name && o.checked !== obj.checked) {
 
-                o.checked = obj.checked;
+                if (!o.disabled) {
+                    o.checked = obj.checked;
+                }
 
                 $(o).trigger('change');
 

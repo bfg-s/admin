@@ -10,10 +10,10 @@ use Lar\LteAdmin\Commands\LteExtension;
 use Lar\LteAdmin\Commands\LteInstall;
 use Lar\LteAdmin\Commands\MakeController;
 use Lar\LteAdmin\Commands\MakeUser;
-use Lar\LteAdmin\Core\BladeBootstrap;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FieldGroupHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
+use Lar\LteAdmin\Core\Generators\LteGeneratorBoot;
 use Lar\LteAdmin\Core\Generators\TableMacrosesHelperGenerator;
 use Lar\LteAdmin\Core\Generators\TableOriginalMacrosesHelperGenerator;
 use Lar\LteAdmin\Core\TagableComponent;
@@ -109,13 +109,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register publishers configs
          */
         $this->publishes([
-            __DIR__.'/../views/default' => resource_path('views/admin')
-        ], 'lte-view');
-
-        /**
-         * Register publishers configs
-         */
-        $this->publishes([
             __DIR__.'/../config/lte.php' => config_path('lte.php')
         ], 'lte-config');
 
@@ -162,11 +155,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->loadViewsFrom(__DIR__.'/../views', 'lte');
 
-        /**
-         * Register blade bootstrap directives
-         */
-        BladeBootstrap::run();
-
         if ($this->app->runningInConsole()) {
 
             /**
@@ -185,6 +173,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         \Get::register(\Lar\LteAdmin\Getters\Menu::class);
         \Get::register(\Lar\LteAdmin\Getters\Role::class);
+        \Get::register(\Lar\LteAdmin\Getters\Functions::class);
     }
 
     /**
@@ -206,6 +195,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Helper registration
          */
+        DumpAutoload::addToExecute(LteGeneratorBoot::class);
         DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
         DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
         DumpAutoload::addToExecute(FieldGroupHelperGenerator::class);
@@ -297,32 +287,6 @@ class ServiceProvider extends ServiceProviderIlluminate
             'lte' => config('lte'),
             'default_page' => config('lte.paths.view', 'admin').'.page'
         ]);
-
-        Collection::macro('nestable_pluck', function (string $value, string $key, $root = 'Root', string $order = "order", string $parent_field = "parent_id", string $input = "&nbsp;&nbsp;&nbsp;") {
-
-            $nestable_count = function ($parent_id) use ($parent_field, &$nestable_count) {
-
-                $int = 1;
-                $parent = $this->where('id', $parent_id)->first();
-                if ($parent->{$parent_field}) { $int += $nestable_count($parent->{$parent_field}); }
-                return $int;
-            };
-
-            /** @var Collection $return */
-            $return = $this->sortBy($order)->mapWithKeys(function ($item) use ($value, $key, $parent_field, $input, $nestable_count){
-
-                $inp_cnt = 0;
-                if ($item->{$parent_field}) { $inp_cnt += $nestable_count($item->{$parent_field}); }
-                return [$item->{$key} => str_repeat($input, $inp_cnt) . $item->{$value}];
-            });
-
-            if ($root) {
-
-                $return->prepend($root, 0);
-            }
-
-            return $return;
-        });
     }
 }
 

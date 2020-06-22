@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -61,16 +62,24 @@ class ModelSaver
 
     /**
      * @param $model
-     * @param  array  $data
+     * @param  array|Arrayable  $data
      * @return \Illuminate\Support\Collection
      */
-    public static function doMany($model, array $data)
+    public static function doMany($model, $data)
     {
         $results = collect();
 
         foreach ($data as $datum) {
 
-            $results->push((new static($model, $datum))->save());
+            if ($datum instanceof Arrayable) {
+
+                $datum = $datum->toArray();
+            }
+
+            if (is_array($datum) && count($datum)) {
+
+                $results->push((new static($model, $datum))->save());
+            }
         }
 
         return $results;

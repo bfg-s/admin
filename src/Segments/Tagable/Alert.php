@@ -61,6 +61,8 @@ class Alert extends DIV {
         $this->params = $params;
 
         $this->toExecute('_build');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -86,7 +88,7 @@ class Alert extends DIV {
     }
 
     /**
-     * @param  array  $body
+     * @param  string|array|\Closure  $body
      * @return $this
      */
     public function body($body)
@@ -101,6 +103,8 @@ class Alert extends DIV {
      */
     protected function _build()
     {
+        $this->callRenderEvents();
+
         if ($this->title) {
 
             $h4 = $this->h4(['alert-heading']);

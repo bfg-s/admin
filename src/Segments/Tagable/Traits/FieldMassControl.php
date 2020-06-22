@@ -95,4 +95,14 @@ trait FieldMassControl {
 
         return false;
     }
+
+    /**
+     * @param $name
+     * @param  array  $arguments
+     * @return bool|FormGroup|mixed
+     */
+    public static function static_call_group($name, array $arguments)
+    {
+        return (new static())->call_group($name, $arguments);
+    }
 }

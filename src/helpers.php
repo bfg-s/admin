@@ -1,5 +1,48 @@
 <?php
 
+if (!function_exists('lte_related_methods')) {
+
+    /**
+     * @param  string  $method
+     * @return string[]
+     */
+    function lte_related_methods (string $method) {
+        if ($method == 'store') { $methods = [$method, 'create', 'access']; }
+        else if ($method == 'update') { $methods = [$method, 'edit', 'access']; }
+        else if ($method == 'create') { $methods = [$method, 'store', 'access']; }
+        else if ($method == 'edit') { $methods = [$method, 'update', 'access']; }
+        else if ($method == 'destroy') { $methods = [$method, 'delete', 'access']; }
+        else if ($method == 'delete') { $methods = [$method, 'destroy', 'access']; }
+        else { $methods = [$method, 'access']; }
+
+        return $methods;
+    }
+}
+
+if (!function_exists('lte_class_can')) {
+
+    /**
+     * @param string|array $class
+     * @param  string  $method
+     * @return bool
+     */
+    function lte_class_can ($class, string $method) {
+
+        $func = $func = gets()->lte->functions->list
+            ->whereIn('class', (array)$class)
+            ->whereIn('slug', lte_related_methods($method));
+
+        /** @var \Lar\LteAdmin\Models\LteFunction $item */
+        foreach ($func as $item) {
+            if (!lte_user()->hasRoles($item->roles->pluck('slug')->toArray())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
 if (!function_exists('lte_controller_can')) {
 
     /**
@@ -7,23 +50,15 @@ if (!function_exists('lte_controller_can')) {
      * @return string
      */
     function lte_controller_can (string $method) {
-        $class = \Str::parseCallback(\Route::currentRouteAction())[0];
-        if (isset($class::$permission_functions)) {
-            $action_permissions = $class::$permission_functions;
-            if (isset($action_permissions[$method])) {
-                $glob_func = $action_permissions[$method];
-                if (is_array($glob_func)) {
-                    foreach ($glob_func as $item) {
-                        if (lte_user()->func()->has($item)) {
-                            return true;
-                        }
-                    }
-                } else {
-                    return lte_user()->func()->has($glob_func);
-                }
-            }
+
+        list($class) = \Str::parseCallback(\Route::currentRouteAction());
+
+        if (!$class) {
+
+            return true;
         }
-        return false;
+
+        return lte_class_can($class, $method);
     }
 }
 

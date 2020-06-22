@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
+use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 
 /**
  * Class Col
@@ -13,7 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
  */
 class Form extends \Lar\Layout\Tags\FORM {
 
-    use FieldMassControl;
+    use FieldMassControl, FormAutoMakeTrait;
 
     /**
      * @var Model
@@ -61,6 +62,8 @@ class Form extends \Lar\Layout\Tags\FORM {
         $this->when($params);
 
         $this->toExecute('buildForm');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -90,6 +93,8 @@ class Form extends \Lar\Layout\Tags\FORM {
      */
     protected function buildForm()
     {
+        $this->callRenderEvents();
+
         $this->setMethod($this->method);
 
         $menu = gets()->lte->menu->now;
@@ -154,5 +159,21 @@ class Form extends \Lar\Layout\Tags\FORM {
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     * @return bool|Field|FormGroup|mixed
+     * @throws \Exception
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        if ($call = static::static_call_group($name, $arguments)) {
+
+            return $call;
+        }
+
+        return parent::__callStatic($name, $arguments);
     }
 }

@@ -5,12 +5,13 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
+use Lar\Tagable\Events\onRender;
 
 /**
  * Class ButtonGroup
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class ButtonGroup extends DIV {
+class ButtonGroup extends DIV implements onRender {
 
     /**
      * @var array|null
@@ -35,7 +36,7 @@ class ButtonGroup extends DIV {
     {
         parent::__construct();
 
-        $this->addClass('btn-group btn-group-sm');
+        $this->addClass('btn-group btn-group-sm ml-1');
 
         $this->when($params);
         
@@ -44,6 +45,8 @@ class ButtonGroup extends DIV {
         $this->model = gets()->lte->menu->model;
 
         $this->action = \Str::before(\Route::currentRouteAction(), '@');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -331,5 +334,14 @@ class ButtonGroup extends DIV {
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed|void
+     * @throws \ReflectionException
+     */
+    public function onRender()
+    {
+        $this->callRenderEvents();
     }
 }

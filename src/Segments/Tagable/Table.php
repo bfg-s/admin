@@ -10,7 +10,7 @@ use Lar\Layout\Tags\TABLE as TableParent;
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class Table extends TableParent{
+class Table extends TableParent {
     
     use TypesTrait;
 
@@ -71,6 +71,8 @@ class Table extends TableParent{
         $this->when($params);
 
         $this->toExecute("ifArray");
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -101,6 +103,8 @@ class Table extends TableParent{
      */
     protected function ifArray()
     {
+        $this->callRenderEvents();
+
         if (isset($this->array_build['headers']) && $this->array_build['rows']) {
             $this->build_header_table($this->array_build['headers'], $this->array_build['rows']);
         } else {

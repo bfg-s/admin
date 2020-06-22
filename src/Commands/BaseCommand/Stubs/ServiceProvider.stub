@@ -2,9 +2,8 @@
 
 namespace {NAMESPACE};
 
-use Illuminate\Console\Command;
 use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
+use Lar\LteAdmin\Core\ConfigExtensionProvider;
 use {NAMESPACE}\Extension\Config;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Navigator;
@@ -36,78 +35,28 @@ class ServiceProvider extends ExtendProvider
     public static $description = "{DESCRIPTION}";
 
     /**
-     * Bootstrap services.
-     *
-     * @return void
-     * @throws \Exception
+     * @var string
      */
-    public function boot()
-    {
-        parent::boot();
-    }
+    protected $navigator = Navigator::class;
 
     /**
-     * Register services.
-     *
-     * @return void
+     * @var string
      */
-    public function register()
-    {
-        parent::register();
-    }
+    protected $install = Install::class;
 
     /**
-     * Extension navigator element
-     * @param  Navigate|NavGroup|NavigateInterface  $navigate
-     * @return void
+     * @var string
      */
-    public function navigator(NavigateInterface $navigate): void
-    {
-        (new Navigator($navigate, $this))->handle();
-    }
+    protected $uninstall = Uninstall::class;
 
     /**
-     * Install process
-     * @param  Command  $command
-     * @return void
+     * @var string
      */
-    public function install(Command $command): void
-    {
-        (new Install($command, $this))->handle();
-    }
+    protected $permissions = Permissions::class;
 
     /**
-     * Uninstall process
-     * @param  Command  $command
-     * @return void
+     * @var ConfigExtensionProvider|string
      */
-    public function uninstall(Command $command): void
-    {
-        (new Uninstall($command, $this))->handle();
-    }
-
-    /**
-     * Permission process
-     * @param  Command  $command
-     * @param  string  $type
-     * @return void
-     */
-    public function permission(Command $command, string $type): void
-    {
-        if ($type === 'up') {
-            (new Permissions($command, $this))->up();
-        } else if ($type === 'down') {
-            (new Permissions($command, $this))->down();
-        }
-    }
-
-    /**
-     * Extension configs
-     * @return void
-     */
-    public function config(): void
-    {
-        $this->config = new Config($this);
-    }
+    protected $config = Config::class;
 }
 

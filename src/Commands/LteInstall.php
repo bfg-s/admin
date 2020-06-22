@@ -106,18 +106,6 @@ class LteInstall extends Command
             $this->info("Directory {$dir} created!");
         }
 
-        if (!is_dir($dir = resource_path("views/admin"))) {
-
-            mkdir($dir, 0777, true);
-
-            $this->info("Directory {$dir} created!");
-        }
-
-        $this->call('vendor:publish', [
-            '--tag' => 'lte-view',
-            '--force' => $this->option('force')
-        ]);
-
         $nav = lte_app_path('navigator.php');
 
         if (!is_file($nav)) {
@@ -136,7 +124,7 @@ class LteInstall extends Command
 
             file_put_contents(
                 $bootstrap,
-                "<?php\n\nuse \Lar\Layout\Respond;\nuse Lar\Layout\Tags\TABLE;\n\n"
+                "<?php\n\nuse \Lar\Layout\Respond;\n\n"
             );
 
             $this->info("File {$bootstrap} created!");
@@ -233,7 +221,7 @@ class LteInstall extends Command
 
         if ($make_seeds) {
 
-            $this->call('lte:extension', ['--reinstall' => true, '--yes' => true]);
+            $this->call('lte:extension', ['--reinstall' => true, '--yes' => true, '--force' => true]);
         }
 
         $this->info("Lar Admin LTE Installed");

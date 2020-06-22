@@ -22,6 +22,11 @@ class Switcher extends Input
     protected $icon = null;
 
     /**
+     * @var bool
+     */
+    protected $form_control = false;
+
+    /**
      * @var string[]
      */
     protected $data = [

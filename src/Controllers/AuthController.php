@@ -35,11 +35,15 @@ class AuthController
             'password' => 'required|min:4|max:191',
         ]);
 
+        $login = false;
+
         if (\Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password], $request->remember=='on' ? true : false)) {
 
             $request->session()->regenerate();
 
             \respond()->toast_success("User success auth by Login");
+
+            $login = true;
         }
 
         else if (\Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password], $request->remember=='on' ? true : false)) {
@@ -47,11 +51,18 @@ class AuthController
             $request->session()->regenerate();
 
             \respond()->toast_success("User success auth by E-Mail");
+
+            $login = true;
         }
 
         else {
 
             \respond()->toast_error("User not found!");
+        }
+
+        if ($login && session()->has('return_authenticated_url')) {
+
+            return redirect(session()->pull('return_authenticated_url'));
         }
 
         return redirect($request->headers->get('referer'));

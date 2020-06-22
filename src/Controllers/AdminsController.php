@@ -32,22 +32,24 @@ class AdminsController extends Controller
     public function index()
     {
         return Sheet::create('lte.admin_list', function (ModelTable $table) {
-            $table->column('lte.avatar', 'avatar');
+            $table->id();
+            $table->column('lte.avatar', 'avatar')->avatar();
             $table->column('lte.role', [$this, 'show_role']);
             $table->column('lte.email_address', 'email')->sort();
             $table->column('lte.login_name', 'login')->sort();
             $table->column('lte.name', 'name')->sort();
-            $table->created_at()->updated_at();
+            $table->at();
             $table->controlDelete(function (LteUser $user) { return $user->id !== 1; });
+            $table->disableChecks();
         });
     }
 
     /**
      * @return Matrix
      */
-    protected function matrix()
+    public function matrix()
     {
-        return new Matrix(function (Form $form, Card $card) {
+        return new Matrix($this->isType('create') ? 'lte.add_admin' : 'lte.edit_admin', function (Form $form, Card $card) {
 
             $card->defaultTools(function ($type) {
                 return $type === 'delete' && $this->model()->id == 1 ? false : true;
@@ -89,7 +91,7 @@ class AdminsController extends Controller
             $table->row('lte.email_address', 'email');
             $table->row('lte.login_name', 'login');
             $table->row('lte.name', 'name');
-            $table->created_at()->updated_at();
+            $table->at();
         });
     }
 

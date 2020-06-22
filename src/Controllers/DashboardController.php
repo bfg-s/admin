@@ -45,19 +45,19 @@ class DashboardController extends Controller
             $div->row(function (Row $row) {
                 $row->col(6)->mb4()
                     ->card('lte.environment')->h100()
-                    ->foolBody()->table($this->environmentInfo());
+                    ->foolBody(['table-responsive'])->table($this->environmentInfo());
 
                 $row->col(6)->mb4()
                     ->card('Laravel')->h100()
-                    ->foolBody()->table($this->laravelInfo());
+                    ->foolBody(['table-responsive'])->table($this->laravelInfo());
 
                 $row->col(6)->mb4()
                     ->card('Composer')->h100()
-                    ->foolBody()->table($this->composerInfo());
+                    ->foolBody(['table-responsive'])->table($this->composerInfo());
 
                 $row->col(6)->mb4()
                     ->card('lte.database')->h100()
-                    ->foolBody()->table($this->databaseInfo());
+                    ->foolBody(['table-responsive'])->table($this->databaseInfo());
             });
         });
     }

@@ -13,14 +13,21 @@ class Matrix extends Container {
 
     /**
      * Matrix constructor.
-     * @param  \Closure|string  $title
+     * @param  \Closure|string|array  $title
      * @param  \Closure|null  $warp
      */
     public function __construct($title, \Closure $warp = null)
     {
         if ($title instanceof \Closure) {
             $warp = $title;
-            $title = lte_model_type('create') ? 'lte.add' : 'lte.id_edit';
+            $title = ['lte.add', 'lte.id_edit'];
+        }
+
+        if (is_array($title)) {
+
+            $title = lte_model_type('create') ?
+                (isset($title[0]) ? $title[0] : 'lte.add') :
+                (isset($title[1]) ? $title[1] : 'lte.id_edit');
         }
 
         parent::__construct(function (DIV $div) use ($title, $warp) {

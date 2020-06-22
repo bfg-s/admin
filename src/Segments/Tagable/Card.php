@@ -4,7 +4,6 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\FontAwesome;
-use Lar\LteAdmin\Segments\Tagable\Cores\CoreModelTable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
 
@@ -109,6 +108,8 @@ class Card extends DIV implements onRender {
         $this->now = gets()->lte->menu->now;
 
         $this->group = new ButtonGroup();
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -136,9 +137,9 @@ class Card extends DIV implements onRender {
      */
     public function bodyModelTable($model = null, \Closure $after = null)
     {
-        $this->table = $this->body(['p-0'])->model_table($model, $after);
+        $this->table = $this->body(['p-0', 'table-responsive'])->model_table($model, $after);
 
-        $this->table->table_rendered(function (CoreModelTable $table) {
+        $this->table->rendered(function (ModelTable $table) {
             $this->bottom_content->add($table->footer());
         });
 
@@ -188,10 +189,20 @@ class Card extends DIV implements onRender {
     }
 
     /**
+     * @return $this
+     */
+    public function nestedTools()
+    {
+        $this->group()->nestable();
+
+        return $this;
+    }
+
+    /**
      * @param  mixed  ...$params
      * @return ButtonGroup
      */
-    public function tools(...$params)
+    public function tools()
     {
         return $this->group;
     }
@@ -214,6 +225,8 @@ class Card extends DIV implements onRender {
      */
     public function onRender()
     {
+        $this->callRenderEvents();
+
         $this->make_default_tools();
         
         $this->addClass("card-{$this->type}");

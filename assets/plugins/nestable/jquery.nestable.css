@@ -80,11 +80,11 @@
 
 .dd3-handle { position: absolute; margin: 0; left: 0; top: 0; cursor: move; width: 41px; text-indent: 100%; white-space: nowrap; overflow: hidden;
     border: 1px solid #aaa;
-    background: #333a40;
+    /*background: #6c757d;*/
 }
 /*.dd3-handle:before { font-family: "Font Awesome 5 Free"; font-weight: 900; content: '\f0b2'; display: block; position: absolute; left: 0; top: 10px; width: 100%; text-align: center; text-indent: 0; color: #ffffff; font-size: 20px; }*/
-.dd3-handle i {display: block; position: absolute; left: -9px; top: 10px;color: #ffffff; font-size: 20px; }
-.dd3-handle:hover { background: #333a40; }
+.dd3-handle i {display: block; position: absolute; left: -9px; top: 10px;color: #000; font-size: 20px; }
+/*.dd3-handle:hover { background: #6c757d; }*/
 
 .dd3-content .btn {
     margin-top: -4px;

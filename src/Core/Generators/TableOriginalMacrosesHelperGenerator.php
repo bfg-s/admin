@@ -5,9 +5,8 @@ namespace Lar\LteAdmin\Core\Generators;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\ClassEntity;
-use Lar\EntityCarrier\Core\Entities\ClassMethodEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\Layout\Tags\TABLE;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class FunctionsHelperGenerator
@@ -29,41 +28,9 @@ class TableOriginalMacrosesHelperGenerator implements DumpExecute {
 
                 $this->generateDefaultMethods($doc);
             });
-
-            //$this->generateDefaultMethods2($class);
         });
 
         return $namespace->render();
-    }
-
-    protected function generateDefaultMethods2(ClassEntity $class)
-    {
-        foreach (TABLE::$column_macros as $func => $data) {
-
-            $params = null;
-
-            if (is_array($data)) {
-
-                $ref = new \ReflectionClass($data[0]);
-                $params = $ref->getMethod($data[1])->getParameters();
-
-            } else if ($data instanceof \Closure) {
-
-                $ref = new \ReflectionFunction($data);
-                $params = $ref->getParameters();
-            }
-
-            if ($params) {
-
-                $class->method($func, function (ClassMethodEntity $methodEntity) use ($params) {
-                    $methodEntity->modifier('public static');
-                    foreach (explode(',', refl_params_entity($params)) as $item) {
-                        $methodEntity->customParam(trim($item));
-                    }
-                    $methodEntity->returnThis();
-                });
-            }
-        }
     }
 
     /**
@@ -74,7 +41,7 @@ class TableOriginalMacrosesHelperGenerator implements DumpExecute {
      */
     protected function generateDefaultMethods(DocumentorEntity $doc)
     {
-        foreach (TABLE::$column_macros as $func => $data) {
+        foreach (ModelTable::getExtensionList() as $func => $data) {
 
             $params = null;
 

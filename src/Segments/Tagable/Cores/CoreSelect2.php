@@ -5,8 +5,8 @@ namespace Lar\LteAdmin\Segments\Tagable\Cores;
 use Lar\Layout\Tags\SELECT;
 
 /**
- * Class Select2
- * @package Lar\LteAdmin\Components
+ * Class CoreSelect2
+ * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreSelect2 extends SELECT
 {

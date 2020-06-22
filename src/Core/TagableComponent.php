@@ -13,6 +13,7 @@ use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\Nested;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\SmallBox;
 use Lar\LteAdmin\Segments\Tagable\Table;
@@ -42,6 +43,7 @@ class TagableComponent extends Component {
         'small_box' => SmallBox::class,
         'info_box' => InfoBox::class,
         'tabs' => Tabs::class,
+        'nested' => Nested::class,
     ];
 
     /**

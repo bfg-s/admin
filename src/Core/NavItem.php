@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Core;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\LteAdmin\Core\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
+use Lar\LteAdmin\Navigate;
 
 /**
  * Class NavGroup
@@ -17,7 +18,7 @@ class NavItem implements Arrayable
     /**
      * @var array 
      */
-    protected $items = [];
+    public $items = [];
 
     /**
      * NavItem constructor.
@@ -29,7 +30,8 @@ class NavItem implements Arrayable
     {
         $this->route($route)
             ->title($title)
-            ->action($action);
+            ->action($action)
+            ->extension(Navigate::$extension);
     }
 
     /**

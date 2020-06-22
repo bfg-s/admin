@@ -114,4 +114,23 @@ class LteAdmin extends JaxExecutor
             }
         }
     }
+
+    /**
+     * @param  string  $class
+     * @param  array  $ids
+     */
+    public function mass_delete(string $class, array $ids)
+    {
+        /** @var Model $class */
+        if (class_exists($class) && method_exists($class, 'delete')) {
+            if ($class::whereIn('id', $ids)->delete()) {
+                $this->toast_success(__('lte.successfully_deleted'))->reload();
+            } else {
+                $this->toast_error(__('lte.unknown_error'));
+            }
+
+        } else {
+            $this->toast_error(__('lte.unknown_error'));
+        }
+    }
 }

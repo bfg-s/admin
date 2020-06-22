@@ -4,6 +4,8 @@
  */
 module.exports = ($methods) => {
 
+    $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
+
     require('./Extensions/validator_rules');
 
     ljs.progress.configure({ parent: ljs.config('pjax-container') });
@@ -20,6 +22,8 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/number'));
     ljs.regExec(require('./Executors/nestable'));
     ljs.regExec(require('./Executors/md'));
+    ljs.regExec(require('./Executors/editable'));
 
     ljs.regExec(require('./Executors/str'));
+    ljs.regExec(require('./Executors/table_action'));
 };

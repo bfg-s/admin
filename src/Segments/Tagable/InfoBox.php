@@ -66,6 +66,8 @@ class InfoBox extends DIV {
         $this->params = $params;
 
         $this->toExecute('_build');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -120,6 +122,8 @@ class InfoBox extends DIV {
      */
     protected function _build()
     {
+        $this->callRenderEvents();
+
         $this->addClass("bg-{$this->type}");
 
         $inner = $this->div(['inner']);

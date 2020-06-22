@@ -4,6 +4,9 @@ namespace Lar\LteAdmin\Controllers;
 
 use Lar\LteAdmin\Core\ModelSaver;
 use Illuminate\Routing\Controller;
+use Lar\LteAdmin\ExtendProvider;
+use Lar\LteAdmin\Models\LteFunction;
+use Lar\LteAdmin\Models\LteRole;
 
 /**
  * Trait ControllerMethods
@@ -11,6 +14,11 @@ use Illuminate\Routing\Controller;
  */
 abstract class BaseController extends Controller
 {
+    /**
+     * @var ExtendProvider|null
+     */
+    static $extension_affiliation;
+
     /**
      * Save request to model
      *
@@ -98,5 +106,77 @@ abstract class BaseController extends Controller
         }
 
         return gets()->lte->menu->data($name, $default);
+    }
+
+    /**
+     * @param  string  $method
+     * @return bool
+     */
+    public function can(string $method)
+    {
+        return lte_class_can(static::class, $method);
+    }
+
+    /**
+     * @return ExtendProvider|null
+     */
+    public static function extension_affiliation()
+    {
+        if (static::$extension_affiliation) {
+
+            return static::$extension_affiliation;
+        }
+
+        $provider = "ServiceProvider";
+
+        $providers = \LteAdmin::extensionProviders();
+
+        $iteration = 1;
+
+        while (!empty($piece = body_namespace_element(static::class, $iteration))) {
+
+            if (isset($providers["{$piece}\\{$provider}"])) {
+
+                static::$extension_affiliation = \LteAdmin::getExtension($providers["{$piece}\\{$provider}"]);
+
+                break;
+            }
+
+            $iteration++;
+        }
+
+        return static::$extension_affiliation;
+    }
+
+    /**
+     * @param  string  $method
+     * @param  array|string[]  $roles
+     * @param  string|null  $description
+     * @return array
+     */
+    public static function generatePermission(string $method, array $roles = ['*'], string $description = null)
+    {
+        $provider = static::extension_affiliation();
+
+        $p_desc = "";
+
+        if ($provider && $provider::$description) {
+
+            $p_desc = $provider::$description;
+        }
+
+        if (!$p_desc) {
+
+            $p_desc = static::class;
+        }
+
+        return [
+            'slug' => $method,
+            'class' => static::class,
+            'description' => $p_desc . ($description ? " [$description]" : (\Lang::has("lte.about_method.{$method}") ? " [@lte.about_method.{$method}]":" [{$method}]")),
+            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
+                return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
+            })->filter()->values()->toArray()
+        ];
     }
 }

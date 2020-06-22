@@ -59,6 +59,8 @@ class ModelInfoTable extends DIV {
         $this->when($params);
 
         $this->toExecute('buildTable');
+
+        $this->callConstructEvents();
     }
 
     /**
@@ -116,10 +118,32 @@ class ModelInfoTable extends DIV {
     }
 
     /**
+     * @return $this
+     */
+    public function at()
+    {
+        $this->updated_at()->created_at();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function active_switcher()
+    {
+        $this->row('lte.active', 'active')->yes_no();
+
+        return $this;
+    }
+
+    /**
      * Build table
      */
     protected function buildTable()
     {
+        $this->callRenderEvents();
+
         $data = [];
 
         if ($this->model) {
@@ -136,7 +160,14 @@ class ModelInfoTable extends DIV {
                     ]);
                 }
                 foreach ($macros as $macro) {
-                    $field = \Lar\Layout\Tags\TABLE::callMacro($macro[0], $field, $macro[1]);
+                    $field = ModelTable::callExtension($macro[0], [
+                        'model' => $this->model,
+                        'value' => $field,
+                        'field' => $row['field'],
+                        'title' => $row['label'],
+                        'props' => $macro[1],
+                        (is_object($this->model) ? get_class($this->model) : gettype($this->model)) => $this->model,
+                    ]);
                 }
                 $label = __($label);
                 $data[] = [$label, $field];
@@ -154,9 +185,7 @@ class ModelInfoTable extends DIV {
      */
     public function __call($name, $arguments)
     {
-        $macros = \Lar\Layout\Tags\TABLE::$column_macros;
-
-        if (isset($macros[$name]) && $this->last) {
+        if (ModelTable::hasExtension($name) && $this->last) {
 
             $this->rows[$this->last]['macros'][] = [$name, $arguments];
 

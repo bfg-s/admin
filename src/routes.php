@@ -46,7 +46,7 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
             $group->item('lte.functions', 'functions')
                 ->resource('lte_functions', config('lte.action.lte_functions'))
                 ->model(\Lar\LteAdmin\Models\LteFunction::class)
-                ->icon_scroll();
+                ->icon_dungeon()->role('root');
 
         })->icon_universal_access();
 

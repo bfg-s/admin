@@ -3,12 +3,16 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Http\Request;
-use Lar\Layout\Respond;
-use Lar\LteAdmin\Core\FunctionsHelperGenerator;
+use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
-
-use function foo\func;
+use Lar\LteAdmin\Segments\Info;
+use Lar\LteAdmin\Segments\Matrix;
+use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\Table2;
 
 /**
  * Class HomeController
@@ -18,72 +22,61 @@ use function foo\func;
 class FunctionsController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @var array
+     */
+    static $roles = ['root'];
+
+    /**
+     * @return Sheet
      */
     public function index()
     {
-        $roles = function (LteFunction $function) {
-
-            return '<span class="badge badge-success">' . $function->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
-        };
-
-        return view('lte::functions.list', [
-            'roles' => $roles
-        ]);
+        return Sheet::create(function (ModelTable $table) {
+            $table->id();
+            $table->column('lte.role', [$this, 'show_roles']);
+            $table->column('lte.slug', 'slug')->sort()->input_editable()->copied();
+            $table->column('lte.description', 'description')->to_lang()->has_lang()->str_limit(50)->textarea_editable()->sort();
+            $table->active_switcher();
+            $table->at();
+        });
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Matrix
      */
-    public function create()
+    public function matrix()
     {
-        return view('lte::functions.create', [
-            'roles' => LteRole::all()->pluck('name', 'id')
-        ]);
+        return Matrix::create(function (Form $form) {
+            $form->input('slug', 'lte.slug')->required()
+                ->unique(LteFunction::class, 'slug', $this->model()->id)->slugable();
+            $form->checks('roles', 'lte.roles')->required()
+                ->options(LteRole::all()->pluck('name', 'id'));
+            $form->textarea('description', 'lte.description');
+            $form->switcher('active', 'lte.active')->boolean();
+        });
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Info
      */
-    public function edit()
+    public function show()
     {
-        return view('lte::functions.edit', [
-            'roles' => LteRole::all()->pluck('name', 'id')
-        ]);
+        return Info::create(function (ModelInfoTable $table) {
+            $table->id();
+            $table->row('lte.role', [$this, 'show_roles']);
+            $table->row('lte.slug', 'slug')->copied();
+            $table->row('lte.description', 'description')->to_lang()->has_lang()->str_limit(50);
+            $table->row('lte.active', 'active')->input_switcher();
+            $table->at();
+        });
     }
 
     /**
-     * @param  Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param  LteFunction  $function
+     * @return string
      */
-    public function store(Request $request)
+    public function show_roles(LteFunction $function)
     {
-        if ($back = back_validate($request->all(), [
-            'slug' => 'unique:' . LteFunction::class
-        ])) {
-
-            return $back;
-        }
-
-        return $this->store_default();
-    }
-
-    /**
-     * @param  Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function update(Request $request)
-    {
-        if (
-            $request->get('slug') !== $this->model()->slug &&
-            $back = back_validate($request->all(), [
-                'slug' => 'unique:' . LteFunction::class
-            ])
-        ) {
-
-            return $back;
-        }
-
-        return $this->update_default();
+        return '<span class="badge badge-success">' . $function->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
     }
 }

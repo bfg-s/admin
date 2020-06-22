@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\ClassEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\Layout\Tags\TABLE;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class FunctionsHelperGenerator
@@ -20,8 +20,6 @@ class TableMacrosesHelperGenerator implements DumpExecute {
      */
     public function handle(Command $command)
     {
-        \Lar\Layout\Tags\TABLE::addMacroClass(\Lar\LteAdmin\Core\TableMacros::class);
-
         $namespace = namespace_entity("Lar\LteAdmin\Core");
 
         $namespace->class("TableMacrosDoc", function (ClassEntity $class) {
@@ -43,9 +41,9 @@ class TableMacrosesHelperGenerator implements DumpExecute {
      */
     protected function generateDefaultMethods(DocumentorEntity $doc)
     {
-        foreach (TABLE::$column_macros as $func => $data) {
+        foreach (ModelTable::getExtensionList() as $func => $data) {
 
-            $doc->tagMethod("\\".\Lar\LteAdmin\Segments\Tagable\ModelTable::class, $func."(...\$params)", "Table macros {$func}");
+            $doc->tagMethod("self|static|\\".\Lar\LteAdmin\Segments\Tagable\ModelTable::class, $func."(...\$params)", "Table macros {$func}");
         }
     }
 }

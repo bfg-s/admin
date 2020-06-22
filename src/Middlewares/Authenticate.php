@@ -3,12 +3,13 @@
 namespace Lar\LteAdmin\Middlewares;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Lar\Layout\Core\LConfigs;
 use Lar\Layout\Respond;
-use Lar\Layout\Tags\TABLE;
-use Lar\LteAdmin\Core\TableMacros;
+use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LtePermission;
 
 /**
@@ -50,15 +51,10 @@ class Authenticate
 
             session()->flash("respond", Respond::glob()->toJson());
 
-            return redirect()->route('lte.login');
+            $this->unauthenticated($request);
         }
 
-        if (is_file(lte_app_path('bootstrap.php'))) {
-
-            include lte_app_path('bootstrap.php');
-        }
-
-        include __DIR__ . '/../bootstrap.php';
+        LteBoot::run();
 
         LConfigs::add('uploader', route('lte.uploader'));
 
@@ -94,46 +90,24 @@ class Authenticate
      */
     protected function access()
     {
+        $now = lte_now();
+
         list($class, $method) = \Str::parseCallback(\Route::currentRouteAction(), 'index');
+        $classes = [trim($class, "\\")];
 
-        if (isset($class::$permission_functions)) {
-            $action_permissions = $class::$permission_functions;
-            if (isset($action_permissions['*'])) {
-                $glob_func = $action_permissions['*'];
-                if (is_array($glob_func)) {
-                    $any_has = false;
-                    foreach ($glob_func as $item) {
-                        $any_has = $any_has ? $any_has : lte_user()->func()->has($item);
-                    }
-                    if (!$any_has) {
-                        return false;
-                    }
-                } else {
-                    if (!lte_user()->func()->has($glob_func)) {
-                        return false;
-                    }
-                }
-            }
-            if (isset($action_permissions[$method])) {
-                $func = $action_permissions[$method];
-
-                if (is_array($func)) {
-                    $any_has = false;
-                    foreach ($func as $item) {
-                        $any_has = $any_has ? $any_has : lte_user()->func()->has($item);
-                    }
-                    if (!$any_has) {
-                        return false;
-                    }
-                } else {
-                    if (!lte_user()->func()->has($func)) {
-                        return false;
-                    }
-                }
-            }
+        if ($now && isset($now['extension']) && $now['extension']) {
+            $classes[] = get_class($now['extension']);
         }
 
-        $now = lte_now();
+        if (!lte_class_can($classes, $method)) {
+
+            return false;
+        }
+
+        if (method_exists($class, 'roles') && is_array($class::$roles) && !lte_user()->hasRoles($class::$roles)) {
+
+            return false;
+        }
 
         if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {
 
@@ -171,5 +145,21 @@ class Authenticate
         }
 
         return false;
+    }
+
+    /**
+     * @param  Request  $request
+     * @throws AuthenticationException
+     */
+    protected function unauthenticated(Request $request)
+    {
+        $all = $request->all();
+        if ($request->has('_pjax')) { unset($all['_pjax']); }
+        $url = url()->current() . (count($all) ? "?" . http_build_query($all) : "");
+        session(['return_authenticated_url' => $url]);
+
+        throw new AuthenticationException(
+            'Unauthenticated.', ['lte'], route('lte.login')
+        );
     }
 }

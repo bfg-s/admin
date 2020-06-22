@@ -14,7 +14,7 @@ const applyScripts = ($root = $(document)) => {
 document.addEventListener('ljs:nav:complete', (details) => {
 
     applyScripts($(ljs.config('pjax-container')));
-    "timer::onetime".exec("tooltip", () => $(tooltip_selector).tooltip());
+    "timer::onetime".exec("tooltip", () => $(tooltip_selector).tooltip({placement: 'auto'}));
 });
 
 let ins = require('./lar_instance.js');

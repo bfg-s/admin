@@ -36,9 +36,9 @@ class LteLayout extends LteBase
 
             $this->body->div(['wrapper'], function (DIV $div) {
 
-                $div->view('lte::segment.nav');
+                $div->view('lte::layout.nav');
 
-                $div->view('lte::segment.side_bar');
+                $div->view('lte::layout.side_bar');
 
                 $div->div(['content-wrapper'], function (DIV $div) {
 
@@ -52,9 +52,9 @@ class LteLayout extends LteBase
                     $this->toComponent($div, 'app_end_wrapper');
                 });
 
-                $div->view('lte::segment.footer');
+                $div->view('lte::layout.footer');
 
-                $div->view('lte::segment.control_sidebar');
+                $div->view('lte::layout.control_sidebar');
             });
 
         } catch (\Exception $exception) {
