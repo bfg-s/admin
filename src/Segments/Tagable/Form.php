@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
@@ -20,6 +21,11 @@ class Form extends \Lar\Layout\Tags\FORM {
      * @var Model
      */
     protected $model;
+
+    /**
+     * @var Model|null
+     */
+    protected static $current_model;
 
     /**
      * @var string
@@ -56,6 +62,8 @@ class Form extends \Lar\Layout\Tags\FORM {
 
             $this->model = gets()->lte->menu->model;
         }
+
+        static::$current_model = $this->model;
 
         parent::__construct();
 
@@ -170,6 +178,16 @@ class Form extends \Lar\Layout\Tags\FORM {
     public static function __callStatic($name, $arguments)
     {
         if ($call = static::static_call_group($name, $arguments)) {
+
+            if (static::$current_model) {
+
+                $call->setModel(static::$current_model);
+            }
+
+            if (Component::$last_component) {
+
+                Component::$last_component->appEnd($call);
+            }
 
             return $call;
         }

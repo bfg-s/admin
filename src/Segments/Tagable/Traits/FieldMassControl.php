@@ -103,6 +103,6 @@ trait FieldMassControl {
      */
     public static function static_call_group($name, array $arguments)
     {
-        return (new static())->call_group($name, $arguments);
+        return (new Field())->{$name}(...$arguments);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
@@ -13,6 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\Tabs;
 
 /**
  * Class HomeController
