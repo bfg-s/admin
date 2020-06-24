@@ -31,9 +31,9 @@ class DashboardController extends Controller
     {
         return Container::create(function (DIV $div, Container $container) {
 
-            $container->title('Test')
-                ->icon_cogs()
-                ->breadcrumb('Test', 'Test2');
+//            $container->title('Test')
+//                ->icon_cogs()
+//                ->breadcrumb('Test', 'Test2');
 
             $prepend = config('lte.paths.view') . '.dashboard';
 
