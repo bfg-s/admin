@@ -44,7 +44,10 @@ class LteBoot
 
         foreach (\LteAdmin::extensions() as $extension) {
 
-            $extension->config()->boot();
+            if ($extension->included()) {
+
+                $extension->config()->boot();
+            }
         }
     }
 }

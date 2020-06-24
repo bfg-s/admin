@@ -106,7 +106,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/bootstrap4-editable/js/bootstrap-editable.min.js',
 
         'ljs' => [
-            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy'
+            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy', 'model'
         ],
 
         'lte-admin/js/app.js',

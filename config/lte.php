@@ -12,6 +12,8 @@ return [
         'layout' => 'lte_layout'
     ],
 
+    'default_menu' => true,
+
     /**
      * Default actions
      */

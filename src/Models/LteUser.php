@@ -36,6 +36,8 @@ class LteUser extends Model implements AuthenticatableContract
         "password", "remember_token"
     ];
 
+    protected $casts = [];
+
     /**
      * @var string[][]
      */
