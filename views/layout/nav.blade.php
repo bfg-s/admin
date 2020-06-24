@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm" @watch>
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item d-block d-sm-none">
@@ -34,7 +34,7 @@
 {{--    </form>--}}
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto" @watch>
+    <ul class="navbar-nav ml-auto">
         @foreach(gets()->lte->menu->nested_collect->where('badge')->where('link') as $menu)
             @php
                 $counter = isset($menu['badge']['instructions']) && $menu['badge']['instructions'] ?
