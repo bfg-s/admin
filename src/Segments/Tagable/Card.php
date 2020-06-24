@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Core\Traits\FontAwesome;
+use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
 

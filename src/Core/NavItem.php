@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Core;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Lar\LteAdmin\Core\Traits\FontAwesome;
+use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
 use Lar\LteAdmin\Navigate;
 

@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments;
 use Lar\Developer\Core\Traits\Eventable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Core\Traits\FontAwesome;
+use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
 
 /**

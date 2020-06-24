@@ -7,7 +7,7 @@ use Illuminate\Support\ViewErrorBag;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
-use Lar\LteAdmin\Core\Traits\FontAwesome;
+use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Segments\Tagable\Traits\RulesBackTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
 
