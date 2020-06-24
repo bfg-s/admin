@@ -100,6 +100,31 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
+     * @param  string  $view
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function nav_bar_view(string $view, array $params = [], bool $prepend = false)
+    {
+        Navigate::$items[] = collect(['nav_bar_view' => $view, 'params' => $params, 'prepend' => $prepend]);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $view
+     * @param  array  $params
+     * @return $this
+     */
+    public function left_nav_bar_view(string $view, array $params = [])
+    {
+        Navigate::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function toArray()

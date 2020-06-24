@@ -23,4 +23,19 @@ interface NavigateInterface {
      * @return \Lar\LteAdmin\Core\NavItem
      */
     public function item(string $title = null, string $route = null, $action = null);
+
+    /**
+     * @param  string  $view
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return \Lar\LteAdmin\Core\NavGroup|\Lar\LteAdmin\Navigate
+     */
+    public function nav_bar_view(string $view, array $params = [], bool $prepend = false);
+
+    /**
+     * @param  string  $view
+     * @param  array  $params
+     * @return \Lar\LteAdmin\Core\NavGroup|\Lar\LteAdmin\Navigate
+     */
+    public function left_nav_bar_view(string $view, array $params = []);
 }

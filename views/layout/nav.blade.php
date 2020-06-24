@@ -11,6 +11,14 @@
 {{--        <li class="nav-item d-none d-sm-inline-block">--}}
 {{--            <a href="#" class="nav-link">Contact</a>--}}
 {{--        </li>--}}
+
+        @foreach(gets()->lte->menu->nested_collect->where('left_nav_bar_view') as $menu)
+            @if(View::exists($menu['left_nav_bar_view']))
+                @include($menu['left_nav_bar_view'], $menu['params'])
+            @else
+                {!! new $menu['left_nav_bar_view'](...$menu['params']); !!}
+            @endif
+        @endforeach
     </ul>
 
     <!-- SEARCH FORM -->

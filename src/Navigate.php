@@ -69,6 +69,18 @@ class Navigate implements NavigateInterface
     }
 
     /**
+     * @param  string  $view
+     * @param  array  $params
+     * @return $this
+     */
+    public function left_nav_bar_view(string $view, array $params = [])
+    {
+        Navigate::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
+
+        return $this;
+    }
+
+    /**
      * @param  string|null  $title
      * @param  string|null|\Closure  $route
      * @param  \Closure|null  $cb
