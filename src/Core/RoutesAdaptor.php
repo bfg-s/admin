@@ -35,11 +35,25 @@ class RoutesAdaptor
 
             foreach ($extensions as $extension) {
 
-                Navigate::$extension = $extension;
+                if (is_array($extension)) {
 
-                $extension->navigator(\Navigate::instance());
+                    foreach ($extension as $item) {
 
-                Navigate::$extension = null;
+                        Navigate::$extension = $item;
+
+                        $item->navigator(\Navigate::instance());
+
+                        Navigate::$extension = null;
+                    }
+
+                }
+                else {
+                    Navigate::$extension = $extension;
+
+                    $extension->navigator(\Navigate::instance());
+
+                    Navigate::$extension = null;
+                }
             }
         }
 
