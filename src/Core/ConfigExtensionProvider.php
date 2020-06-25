@@ -3,6 +3,8 @@
 namespace Lar\LteAdmin\Core;
 
 use Lar\LteAdmin\ExtendProvider;
+use Lar\LteAdmin\Segments\Tagable\Field;
+use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class InstallExtensionProvider
@@ -40,6 +42,41 @@ class ConfigExtensionProvider {
     public function boot()
     {
 
+    }
+
+    /**
+     * @param  string  $name
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function tableExtension(string $name, \Closure $closure)
+    {
+        ModelTable::addExtension($name, $closure);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $class
+     * @return $this
+     */
+    public function tableExtensionClass(string $class)
+    {
+        ModelTable::addExtensionClass($class);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  string  $class
+     * @return $this
+     */
+    public function formField(string $name, string $class)
+    {
+        Field::registerFormComponent($name, $class);
+
+        return $this;
     }
 
     /**

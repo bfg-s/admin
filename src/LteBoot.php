@@ -30,11 +30,6 @@ class LteBoot
      */
     public static function run()
     {
-        if (is_file(lte_app_path('bootstrap.php'))) {
-
-            include lte_app_path('bootstrap.php');
-        }
-
         include __DIR__ . '/bootstrap.php';
 
         foreach (static::$table_classes as $item) {

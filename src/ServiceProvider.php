@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
@@ -45,6 +44,11 @@ class ServiceProvider extends ServiceProviderIlluminate
     protected $routeMiddleware = [
         'lte-auth' => Authenticate::class
     ];
+
+    /**
+     * @var ApplicationServiceProvider
+     */
+    protected $app_provider;
 
     /**
      * Bootstrap services.
@@ -184,6 +188,13 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function register()
     {
+        /**
+         * App register provider
+         */
+        if (class_exists('App\Providers\LteServiceProvider')) {
+            $this->app->register('App\Providers\LteServiceProvider');
+        }
+
         /**
          * Override errors
          */

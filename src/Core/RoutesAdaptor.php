@@ -20,18 +20,9 @@ class RoutesAdaptor
     {
         Navigate::$roads = $roads;
 
-        $navigator = lte_app_path('navigator.php');
-
-        if (is_file($navigator)) {
-
-            include $navigator;
-        }
-
         $extensions = LteAdmin::$nav_extensions;
 
         if (count($extensions)) {
-
-            //\Navigate::menu_header('lte.modules');
 
             foreach ($extensions as $extension) {
 
@@ -48,6 +39,7 @@ class RoutesAdaptor
 
                 }
                 else {
+
                     Navigate::$extension = $extension;
 
                     $extension->navigator(\Navigate::instance());

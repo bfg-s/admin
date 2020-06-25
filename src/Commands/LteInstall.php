@@ -4,6 +4,10 @@ namespace Lar\LteAdmin\Commands;
 
 use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
+use Lar\LteAdmin\ApplicationServiceProvider;
+use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use Lar\LteAdmin\Core\NavigatorExtensionProvider;
+use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 use Lar\LteAdmin\Models\LteSeeder;
 use Lar\LteAdmin\Models\LteUser;
 use Symfony\Component\Console\Input\InputOption;
@@ -106,29 +110,7 @@ class LteInstall extends Command
             $this->info("Directory {$dir} created!");
         }
 
-        $nav = lte_app_path('navigator.php');
-
-        if (!is_file($nav)) {
-
-            file_put_contents(
-                $nav,
-                "<?php\n\nuse Lar\Roads\Roads;\nuse Lar\LteAdmin\Navigate;\nuse Lar\LteAdmin\Core\NavGroup;\n\nNavigate::do(function (Navigate \$navigate, Roads \$roads) {\n\t\n});"
-            );
-
-            $this->info("File {$nav} created!");
-        }
-
-        $bootstrap = lte_app_path('bootstrap.php');
-
-        if (!is_file($bootstrap)) {
-
-            file_put_contents(
-                $bootstrap,
-                "<?php\n\nuse \Lar\Layout\Respond;\n\n"
-            );
-
-            $this->info("File {$bootstrap} created!");
-        }
+        $this->makeApp();
 
         $extensions = storage_path('lte_extensions.php');
 
@@ -225,6 +207,68 @@ class LteInstall extends Command
         }
 
         $this->info("Lar Admin LTE Installed");
+    }
+
+    /**
+     * Make app classes
+     */
+    protected function makeApp()
+    {
+        $nav = lte_app_path('Navigator.php');
+
+        if (!is_file($nav)) {
+
+            $class = class_entity('Navigator');
+            $class->wrap('php');
+            $class->extend(NavigatorExtensionProvider::class);
+            $class->implement(ActionWorkExtensionInterface::class);
+
+            $class->method('handle')->returnType('void')->line();
+
+            file_put_contents(
+                $nav,
+                $class->render()
+            );
+
+            $this->info("Navigator {$nav} created!");
+        }
+
+        $config = lte_app_path('Config.php');
+
+        if (!is_file($config)) {
+
+            $class = class_entity('Config');
+            $class->wrap('php');
+            $class->extend(ConfigExtensionProvider::class);
+
+            file_put_contents(
+                $config,
+                $class->render()
+            );
+
+            $this->info("Config {$config} created!");
+        }
+
+        $provider = app_path('Providers/LteServiceProvider.php');
+
+        if (!is_file($provider)) {
+
+            $class = class_entity('LteServiceProvider');
+            $class->wrap('php');
+            $class->use('App\LteAdmin\Config');
+            $class->use('App\LteAdmin\Navigator');
+            $class->extend(ApplicationServiceProvider::class);
+
+            $class->prop('protected:navigator', entity('Navigator::class'));
+            $class->prop('protected:config', entity('Config::class'));
+
+            file_put_contents(
+                $provider,
+                $class->render()
+            );
+
+            $this->info("Provider {$provider} created!");
+        }
     }
 
     /**

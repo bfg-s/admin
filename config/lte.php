@@ -12,8 +12,6 @@ return [
         'layout' => 'lte_layout'
     ],
 
-    'default_menu' => true,
-
     /**
      * Default actions
      */
@@ -29,10 +27,6 @@ return [
         ],
         'dashboard' => '\Lar\LteAdmin\Controllers\DashboardController@index',
         'uploader' => '\Lar\LteAdmin\Controllers\UploadController@index',
-        'lte_user' => '\Lar\LteAdmin\Controllers\AdminsController',
-        'lte_role' => '\Lar\LteAdmin\Controllers\RolesController',
-        'lte_permission' => '\Lar\LteAdmin\Controllers\PermissionController',
-        'lte_functions' => '\Lar\LteAdmin\Controllers\FunctionsController',
     ],
 
     /**

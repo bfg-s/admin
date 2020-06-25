@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Core;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
+use Lar\LteAdmin\Core\Traits\NavDefaultTools;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
@@ -16,7 +17,7 @@ use Lar\LteAdmin\Navigate;
  */
 class NavGroup implements Arrayable, NavigateInterface
 {
-    use FontAwesome, NavCommon;
+    use FontAwesome, NavCommon, NavDefaultTools;
     
     /**
      * @var array

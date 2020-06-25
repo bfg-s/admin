@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
@@ -16,6 +17,11 @@ use Lar\LteAdmin\Segments\Tagable\ModelTable;
  */
 class RolesController extends Controller
 {
+    /**
+     * @var string
+     */
+    static $model = LteRole::class;
+
     /**
      * @return Sheet
      */

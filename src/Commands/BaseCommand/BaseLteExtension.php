@@ -465,6 +465,7 @@ class BaseLteExtension extends Command
     protected function all_extensions()
     {
         return collect(array_merge(LteAdmin::$installed_extensions, LteAdmin::$not_installed_extensions))
+            ->filter(function ($extension) { return $extension::$slug !== 'application'; })
             ->values()
             ->map(function ($extension, $key) {
                 $name = $extension::$name;

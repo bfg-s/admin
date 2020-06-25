@@ -2,8 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Illuminate\Http\Request;
-use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
@@ -12,7 +10,6 @@ use Lar\LteAdmin\Segments\Sheet;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\Table2;
 
 /**
  * Class HomeController
@@ -21,6 +18,11 @@ use Lar\LteAdmin\Segments\Tagable\Table2;
  */
 class FunctionsController extends Controller
 {
+    /**
+     * @var string
+     */
+    static $model = LteFunction::class;
+
     /**
      * @var array
      */

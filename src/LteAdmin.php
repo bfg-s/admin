@@ -12,7 +12,7 @@ class LteAdmin
     /**
      * @var string
      */
-    static $vesion = "2.4.0";
+    static $vesion = "3.0.0";
 
     /**
      * @var ExtendProvider[]
@@ -145,7 +145,7 @@ class LteAdmin
             LteAdmin::$extensions = include storage_path('lte_extensions.php');
         }
 
-        if (isset(LteAdmin::$extensions[$provider::$name])) {
+        if (isset(LteAdmin::$extensions[$provider::$name]) || $provider::$slug === 'application') {
 
             if (!isset(LteAdmin::$installed_extensions[$provider::$name])) {
 

@@ -6,7 +6,9 @@ use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\ClassEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Core\NavGroup;
 use Lar\LteAdmin\Models\LteFunction;
+use Lar\LteAdmin\Navigate;
 
 /**
  * Class FunctionsHelperGenerator
@@ -30,7 +32,37 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
             });
         });
 
+        $namespace->class("NavigatorMethods", function (ClassEntity $class) {
+
+            $class->doc(function (DocumentorEntity $doc) {
+
+                $this->generateAllMethods($doc);
+            });
+        });
+
         return $namespace->render();
+    }
+
+    /**
+     * Generate all methods
+     *
+     * @param  DocumentorEntity  $doc
+     */
+    protected function generateAllMethods(DocumentorEntity $doc)
+    {
+        $methods = [];
+
+        $nav = new \ReflectionClass(Navigate::class);
+
+        foreach ($nav->getMethods() as $method) {
+            $methods[$method->getName()] = $method;
+        }
+        foreach ($methods as $method) {
+
+            $ret = pars_return_from_doc($method->getDocComment());
+
+            $doc->tagMethod('self|static|' . ($ret ? $ret : '\\'.Navigate::class), $method->getName(), pars_description_from_doc($method->getDocComment()));
+        }
     }
 
     /**

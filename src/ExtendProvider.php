@@ -102,12 +102,15 @@ class ExtendProvider extends ServiceProviderIlluminate
     {
         /** @var LteFunction $func */
         $func = gets()
-            ->lte
-            ->functions
-            ->list
-            ->where('class', static::class)
-            ->where('slug', 'access')
-            ->first();
+            ->lte;
+
+        if ($func) {
+
+            $func = $func->functions->list
+                ->where('class', static::class)
+                ->where('slug', 'access')
+                ->first();
+        }
 
         if ($func) {
             static::$roles = $func->roles;
@@ -159,7 +162,7 @@ class ExtendProvider extends ServiceProviderIlluminate
 
         if (!static::$slug) {
 
-            static::$slug = static::$name;
+            static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$name);
         }
 
         static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$slug);
