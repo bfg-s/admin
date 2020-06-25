@@ -20,6 +20,11 @@ abstract class BaseController extends Controller
     static $extension_affiliation;
 
     /**
+     * @var bool
+     */
+    static $no_getter_model = false;
+
+    /**
      * Save request to model
      *
      * @param  array|null  $data
@@ -59,7 +64,7 @@ abstract class BaseController extends Controller
      */
     public function model()
     {
-        return gets()->lte->menu->model;
+        return !static::$no_getter_model ? gets()->lte->menu->model : null;
     }
 
     /**
