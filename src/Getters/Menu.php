@@ -26,6 +26,11 @@ class Menu extends Getter
     protected static $nested_counter = 0;
 
     /**
+     * @var null|bool
+     */
+    protected static $unnested_model = null;
+
+    /**
      * @return \Illuminate\Support\Collection
      */
     public static function all()
@@ -100,6 +105,11 @@ class Menu extends Getter
     {
         $return = null;
 
+        if (static::$unnested_model === false) {
+
+            return $return;
+        }
+
         $menu = gets()->lte->menu->now;
 
         if ($menu && isset($menu['model'])) {
@@ -115,6 +125,9 @@ class Menu extends Getter
                 $return = $class::$model;
             } else {
                 $return = (new $class)->model();
+                if (!$return) {
+                    static::$unnested_model = false;
+                }
             }
         }
 
