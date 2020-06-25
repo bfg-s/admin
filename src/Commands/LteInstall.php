@@ -219,6 +219,7 @@ class LteInstall extends Command
         if (!is_file($nav)) {
 
             $class = class_entity('Navigator');
+            $class->namespace('App\LteAdmin');
             $class->wrap('php');
             $class->extend(NavigatorExtensionProvider::class);
             $class->implement(ActionWorkExtensionInterface::class);
@@ -238,6 +239,7 @@ class LteInstall extends Command
         if (!is_file($config)) {
 
             $class = class_entity('Config');
+            $class->namespace('App\LteAdmin');
             $class->wrap('php');
             $class->extend(ConfigExtensionProvider::class);
 
@@ -254,6 +256,7 @@ class LteInstall extends Command
         if (!is_file($provider)) {
 
             $class = class_entity('LteServiceProvider');
+            $class->namespace('App\Providers');
             $class->wrap('php');
             $class->use('App\LteAdmin\Config');
             $class->use('App\LteAdmin\Navigator');
