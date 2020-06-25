@@ -61,7 +61,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
 
             $ret = pars_return_from_doc($method->getDocComment());
 
-            $doc->tagMethod('self|static|' . ($ret ? $ret : '\\'.Navigate::class), $method->getName(), pars_description_from_doc($method->getDocComment()));
+            $doc->tagMethod('self|static|' . ($ret ? $ret : '\\'.Navigate::class), $method->getName() . "(".refl_params_entity($method->getParameters()).")", pars_description_from_doc($method->getDocComment()));
         }
     }
 
