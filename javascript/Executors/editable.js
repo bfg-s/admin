@@ -5,9 +5,7 @@ module.exports = class extends Executor {
         return $(this.currentTarget).editable({
             highlight: false,
             params: (params) => {
-                if (params.name) { params[params.name] = params.value; }
-                params.__only_has = true;
-                return params;
+                return {[params.name]: params.value, __only_has: true};
             },
             display: function () {
                 //$(this).html('<i class="fas fa-pencil-alt"></i>')
