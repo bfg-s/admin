@@ -69,7 +69,7 @@ class Decorations {
     public function copied($value, $props = [], Model $model = null)
     {
         if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
-            $value = $props[0]($model);
+            $value_for_copy = $props[0]($model);
         }
 
         if (!$value) {
@@ -77,7 +77,7 @@ class Decorations {
             return $this->true_data($value);
         }
 
-        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value)."'><i class='fas fa-copy'></i></a> " . $value;
+        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a> " . $value;
     }
 
     /**
@@ -89,7 +89,7 @@ class Decorations {
     public function copied_right($value, $props = [], Model $model = null)
     {
         if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
-            $value = $props[0]($model);
+            $value_for_copy = $props[0]($model);
         }
 
         if (!$value) {
@@ -97,7 +97,7 @@ class Decorations {
             return $this->true_data($value);
         }
 
-        return $value . " <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value)."'><i class='fas fa-copy'></i></a>";
+        return $value . " <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a>";
     }
 
     /**
