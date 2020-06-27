@@ -62,10 +62,16 @@ class Decorations {
 
     /**
      * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function copied($value)
+    public function copied($value, $props = [], Model $model = null)
     {
+        if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
+            $value = $props[0]($model);
+        }
+
         if (!$value) {
 
             return $this->true_data($value);
@@ -76,10 +82,16 @@ class Decorations {
 
     /**
      * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function copied_right($value)
+    public function copied_right($value, $props = [], Model $model = null)
     {
+        if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
+            $value = $props[0]($model);
+        }
+
         if (!$value) {
 
             return $this->true_data($value);
