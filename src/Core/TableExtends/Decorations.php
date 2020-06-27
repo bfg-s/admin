@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Decorations
@@ -97,13 +98,15 @@ class Decorations {
     }
 
     /**
-     * @param $props
      * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function badge($value, $props = [])
+    public function badge($value, $props = [], Model $model = null)
     {
         $type = $props[0] ?? 'info';
+        if ($type instanceof \Closure) { $type = $type($model); }
         return "<span class=\"badge badge-{$type}\">{$value}</span>";
     }
 
