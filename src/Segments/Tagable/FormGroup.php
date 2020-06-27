@@ -251,6 +251,17 @@ abstract class FormGroup extends DIV {
     }
 
     /**
+     * @param  mixed  ...$values
+     * @return $this
+     */
+    public function value(...$values)
+    {
+        $this->value = implode(' ', $values);
+
+        return $this;
+    }
+
+    /**
      * @param  Model  $model
      * @return $this
      */
@@ -428,6 +439,17 @@ abstract class FormGroup extends DIV {
                     ->small(['fas fa-exclamation-triangle'])->_text(":space", $mess);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $var
+     * @return $this
+     */
+    public function stated(string $var)
+    {
+        $this->data['stated'] = $var;
 
         return $this;
     }
