@@ -110,6 +110,11 @@ class Formatter {
             return $value->format($format);
         }
 
+        else if (is_numeric($value)) {
+
+            return Carbon::createFromTimestamp($value)->format($format);
+        }
+
         return Carbon::create($value)->format($format);
     }
 }
