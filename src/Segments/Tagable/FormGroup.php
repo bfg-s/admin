@@ -447,9 +447,21 @@ abstract class FormGroup extends DIV {
      * @param  string  $var
      * @return $this
      */
-    public function stated(string $var)
+    public function stated(string $var = null)
     {
-        $this->data['stated'] = $var;
+        $this->data['stated'] = $var ? $var : '';
+        $this->data['state'] = $var ? $var : '';
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $var
+     * @return $this
+     */
+    public function state(string $var = null)
+    {
+        $this->data['state'] = $var ? $var : '';
 
         return $this;
     }
