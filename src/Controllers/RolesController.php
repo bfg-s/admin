@@ -33,9 +33,8 @@ class RolesController extends Controller
 
             $card->search(function (SearchForm $form) {
                 $form->id();
-                $form->input('path', 'lte.path', '=%');
-                $form->select('lte_role_id', 'lte.role')
-                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'));
+                $form->input('name', 'lte.title', '=%');
+                $form->input('slug', 'lte.slug', '=%');
                 $form->at();
             });
 
