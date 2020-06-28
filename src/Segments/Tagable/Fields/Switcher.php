@@ -2,11 +2,8 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
-use Lar\Layout\Abstracts\Component;
-
 /**
- * Class Email
+ * Class Switcher
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Switcher extends Input

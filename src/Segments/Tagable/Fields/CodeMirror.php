@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Input
+ * Class CodeMirror
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class CodeMirror extends FormGroup

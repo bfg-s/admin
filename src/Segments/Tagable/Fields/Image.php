@@ -2,9 +2,8 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 /**
- * Class Email
+ * Class Image
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Image extends File

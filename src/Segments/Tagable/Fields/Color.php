@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Icon
+ * Class Color
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Color extends Input

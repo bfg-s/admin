@@ -7,7 +7,7 @@ use Lar\LteAdmin\Segments\Tagable\Cores\CoreSelect2;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Select2
+ * Class Select
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Select extends FormGroup

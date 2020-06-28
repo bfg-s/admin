@@ -83,6 +83,16 @@ class Card extends DIV implements onRender {
     protected $default_tools = false;
 
     /**
+     * @var SearchForm
+     */
+    protected $search_form;
+
+    /**
+     * @var bool
+     */
+    protected $has_search_form = false;
+
+    /**
      * Card constructor.
      * @param $title
      * @param  mixed  ...$params
@@ -115,6 +125,19 @@ class Card extends DIV implements onRender {
         $this->group = new ButtonGroup();
 
         $this->callConstructEvents();
+    }
+
+    /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function search(\Closure $closure)
+    {
+        $this->has_search_form = true;
+
+        $closure($this->search_form);
+
+        return $this;
     }
 
     /**
@@ -151,8 +174,14 @@ class Card extends DIV implements onRender {
      */
     public function bodyModelTable($model = null, \Closure $after = null)
     {
+        $this->search_form = new SearchForm();
+
+        $this->body($this->search_form)->setId("table_search_form")->setStyle("display: none");
+
         $this->table = $this->body(['p-0', 'table-responsive'])
             ->model_table($model, $after);
+        
+        $this->table->model($this->search_form);
 
         $this->table->rendered(function (ModelTable $table) {
             $this->bottom_content->add($table->footer());
@@ -283,6 +312,22 @@ class Card extends DIV implements onRender {
 
             /** @var \Closure $test */
             $test = $this->default_tools;
+
+            if ($this->has_search_form && $this->now['current.type'] && $this->now['current.type'] === 'index') {
+
+                if ($test('search')) {
+                    $this->group(function (ButtonGroup $group) {
+
+                        $group->primary(['fas fa-search', __('lte.search')])
+                            ->on_click('lte::switch_search');
+
+                        if (request()->has('q')) {
+                            $group->danger(['fas fa-window-close', __('lte.cancel')])
+                                ->on_click('doc::location', urlWithGet([], ['q']));
+                        }
+                    });
+                }
+            }
 
             if ($test('reload')) {
                 $this->group->reload();

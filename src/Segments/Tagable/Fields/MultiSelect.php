@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Select2
+ * Class MultiSelect
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class MultiSelect extends Select

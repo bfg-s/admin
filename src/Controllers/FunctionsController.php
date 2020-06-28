@@ -7,9 +7,11 @@ use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -33,7 +35,15 @@ class FunctionsController extends Controller
      */
     public function index()
     {
-        return Sheet::create(function (ModelTable $table) {
+        return Sheet::create(function (ModelTable $table, Card $card) {
+
+            $card->search(function (SearchForm $form) {
+
+                $form->id();
+                $form->input('slug', 'lte.slug', '=%');
+                $form->at();
+            });
+
             $table->id();
             $table->column('lte.role', [$this, 'show_roles']);
             $table->column('lte.slug', 'slug')->sort()->input_editable()->copied();

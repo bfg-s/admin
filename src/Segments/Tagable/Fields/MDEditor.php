@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Input
+ * Class MDEditor
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class MDEditor extends FormGroup

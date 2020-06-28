@@ -20,6 +20,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\Input;
 use Lar\LteAdmin\Segments\Tagable\Fields\MDEditor;
 use Lar\LteAdmin\Segments\Tagable\Fields\MultiSelect;
 use Lar\LteAdmin\Segments\Tagable\Fields\Number;
+use Lar\LteAdmin\Segments\Tagable\Fields\Numeric;
 use Lar\LteAdmin\Segments\Tagable\Fields\Password;
 use Lar\LteAdmin\Segments\Tagable\Fields\Radios;
 use Lar\LteAdmin\Segments\Tagable\Fields\Select;
@@ -47,6 +48,7 @@ class Field extends DIV implements onRender {
         'password' => Password::class,
         'email' => Email::class,
         'number' => Number::class,
+        'numeric' => Numeric::class,
         'file' => File::class,
         'image' => Image::class,
         'switcher' => Switcher::class,

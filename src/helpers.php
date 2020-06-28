@@ -197,16 +197,21 @@ if ( ! function_exists('makeUrlWithParams') ) {
 if ( ! function_exists('urlWithGet') ) {
 
     /**
-     * @param array $params
+     * @param  array  $params
+     * @param  array  $unset
      * @return string
      */
-    function urlWithGet(array $params = [])
+    function urlWithGet(array $params = [], array $unset = [])
     {
         $url = explode('?', url()->current())[0];
 
         $params = array_merge(request()->query(), $params);
 
         unset($params['_pjax']);
+
+        foreach ($unset as $item) {
+            if (isset($params[$item])) { unset($params[$item]); }
+        }
 
         return $url . (count($params) ? '?' . http_build_query($params) : '');
     }

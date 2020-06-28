@@ -6,9 +6,11 @@ use Lar\LteAdmin\Models\LtePermission;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -41,7 +43,14 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return Sheet::create(function (ModelTable $table) {
+        return Sheet::create(function (ModelTable $table, Card $card) {
+            $card->search(function (SearchForm $form) {
+                $form->id();
+                $form->input('path', 'lte.path', '=%');
+                $form->select('lte_role_id', 'lte.role')
+                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'));
+                $form->at();
+            });
             $table->id();
             $table->column('lte.path', 'path')->badge('success');
             $table->column('lte.methods', [$this, 'show_methods'])->sort('method');

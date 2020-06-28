@@ -7,7 +7,7 @@ use Lar\LteAdmin\Segments\Tagable\Cores\CoreCheckBox;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Input
+ * Class Checks
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Checks extends FormGroup

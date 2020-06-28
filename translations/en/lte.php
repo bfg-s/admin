@@ -137,4 +137,7 @@ return [
         'show'                      => 'Viewing',
     ],
     'delete_selected_rows'          => 'Delete :num lines?',
+    'to_find'                       => 'To find',
+    'search'                        => 'Search',
+    'cancel'                        => 'Cancel',
 ];

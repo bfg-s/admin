@@ -2,11 +2,10 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 use Lar\LteAdmin\Segments\Tagable\Traits\DateControlTrait;
 
 /**
- * Class Email
+ * Class Date
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Date extends Input

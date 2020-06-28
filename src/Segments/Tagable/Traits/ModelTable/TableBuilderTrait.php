@@ -10,6 +10,7 @@ use Illuminate\Pagination\UrlWindow;
 use Lar\Layout\Tags\TD;
 use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Trait TableBuilderTrait
@@ -141,10 +142,14 @@ trait TableBuilderTrait {
 
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
 
-            if ($this->model_control instanceof \Closure) {
-                ($this->model_control)($this->model);
-            } else if (is_array($this->model_control)) {
-                $this->model = eloquent_instruction($this->model, $this->model_control);
+            foreach ($this->model_control as $item) {
+                if ($item instanceof SearchForm) {
+                    $this->model = $item->makeModel($this->model);
+                } else if ($item instanceof \Closure) {
+                    ($item)($this->model);
+                } else if (is_array($item)) {
+                    $this->model = eloquent_instruction($this->model, $item);
+                }
             }
 
             return $this->paginate = $this->model->orderBy($this->order_field, $this->order_type)->paginate($this->per_page, ['*'], $this->model_name . "_page");

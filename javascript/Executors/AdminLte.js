@@ -2,9 +2,8 @@
 
 class AdminLte extends Executor {
 
-    md () {
-
-
+    switch_search() {
+        $( "#table_search_form" ).toggle( "fast" );
     }
 
     static __name () {

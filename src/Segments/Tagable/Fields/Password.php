@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 /**
  * Class Password
  * @package Lar\LteAdmin\Segments\Tagable\Fields

@@ -14,6 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
 
 /**
@@ -33,7 +34,17 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return Sheet::create('lte.admin_list', function (ModelTable $table) {
+        return Sheet::create('lte.admin_list', function (ModelTable $table, Card $card) {
+
+            $card->search(function (SearchForm $form) {
+
+                $form->id();
+                $form->email('email', 'lte.email_address');
+                $form->input('login', 'lte.login_name', '=%');
+                $form->input('name', 'lte.name', '=%');
+                $form->at();
+            });
+
             $table->id();
             $table->column('lte.avatar', 'avatar')->avatar();
             $table->column('lte.role', [$this, 'show_role']);

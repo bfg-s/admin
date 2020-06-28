@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Email
+ * Class Number
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Number extends Input

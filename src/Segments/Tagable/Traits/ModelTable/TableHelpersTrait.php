@@ -24,7 +24,7 @@ trait TableHelpersTrait {
      */
     public function model($instruction)
     {
-        $this->model_control = $instruction;
+        $this->model_control[] = $instruction;
 
         return $this;
     }

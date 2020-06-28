@@ -6,9 +6,11 @@ use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
  * Class HomeController
@@ -27,7 +29,16 @@ class RolesController extends Controller
      */
     public function index()
     {
-        return Sheet::create('lte.list_of_roles', function (ModelTable $table) {
+        return Sheet::create('lte.list_of_roles', function (ModelTable $table, Card $card) {
+
+            $card->search(function (SearchForm $form) {
+                $form->id();
+                $form->input('path', 'lte.path', '=%');
+                $form->select('lte_role_id', 'lte.role')
+                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'));
+                $form->at();
+            });
+
             $table->id();
             $table->column('lte.title', 'name')->sort();
             $table->column('lte.slug', 'slug')->sort()->badge('success');

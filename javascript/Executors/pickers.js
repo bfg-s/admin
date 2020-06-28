@@ -35,7 +35,7 @@ module.exports = class extends Executor {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
-            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD',
+            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY-MM-DD',
             icons: {
                 time: "far fa-clock",
                 date: "far fa-calendar-alt",
@@ -63,7 +63,7 @@ module.exports = class extends Executor {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
-            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD HH:mm:ss',
+            format: this.target.dataset.format ? this.target.dataset.format : 'YYYY-MM-DD HH:mm:ss',
             icons: {
                 time: "far fa-clock",
                 date: "far fa-calendar-alt",
@@ -76,25 +76,39 @@ module.exports = class extends Executor {
     datetimerange () {
 
         return $(this.target).daterangepicker({
+            autoUpdateInput: false,
             timePicker: true,
             showDropdowns: this.target.dataset.showDropdowns ? this.target.dataset.showDropdowns : false,
             opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
             autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
-                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD HH:mm:ss'
+                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY-MM-DD HH:mm:ss'
             }
+        }).on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(
+                picker.startDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD HH:mm:ss')
+                + ' - ' +
+                picker.endDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD HH:mm:ss')
+            );
         });
     }
 
     daterange () {
 
         return $(this.target).daterangepicker({
+            autoUpdateInput: false,
             showDropdowns: this.target.dataset.showDropdowns ? this.target.dataset.showDropdowns : false,
             opens: this.target.dataset.opens ? this.target.dataset.opens : 'right',
             autoApply: this.target.dataset.autoApply ? this.target.dataset.autoApply : false,
             locale: {
-                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY.MM.DD'
+                format: this.target.dataset.format ? this.target.dataset.format : 'YYYY-MM-DD'
             }
+        }).on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(
+                picker.startDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD')
+                + ' - ' +
+                picker.endDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD')
+            );
         });
     }
 

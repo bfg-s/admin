@@ -50,7 +50,7 @@ class ModelTable extends Component {
     /**
      * @var \Closure|array|null
      */
-    protected $model_control;
+    protected $model_control = [];
 
     /**
      * @var string

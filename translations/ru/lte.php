@@ -137,4 +137,7 @@ return [
         'show'                      => 'Просмотр',
     ],
     'delete_selected_rows'          => 'Удалить :num строк?',
+    'to_find'                       => 'Найти',
+    'search'                        => 'Искать',
+    'cancel'                        => 'Отмена',
 ];

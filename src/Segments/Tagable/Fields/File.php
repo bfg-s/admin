@@ -2,9 +2,8 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 /**
- * Class Email
+ * Class File
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class File extends Input

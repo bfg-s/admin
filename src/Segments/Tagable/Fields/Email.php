@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-
 /**
  * Class Email
  * @package Lar\LteAdmin\Segments\Tagable\Fields

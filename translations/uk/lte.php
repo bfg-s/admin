@@ -137,4 +137,7 @@ return [
         'show'                      => 'Перегляд',
     ],
     'delete_selected_rows'          => 'Видалити :num рядків?',
+    'to_find'                       => 'Знайти',
+    'search'                        => 'Шукати',
+    'cancel'                        => 'Скасувати',
 ];

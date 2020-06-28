@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Input
+ * Class Textarea
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Textarea extends FormGroup

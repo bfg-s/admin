@@ -7,9 +7,11 @@ use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -80,7 +82,9 @@ class MakeController extends Command
             $class->use(Info::class)
                 ->use(Sheet::class)
                 ->use(Matrix::class)
+                ->use(Card::class)
                 ->use(Form::class)
+                ->use(SearchForm::class)
                 ->use(ModelTable::class)
                 ->use(ModelInfoTable::class);
 
@@ -92,7 +96,11 @@ class MakeController extends Command
             }
 
             $class->method('index')->line()
-                ->line("return Sheet::create(function (ModelTable \$table) {")
+                ->line("return Sheet::create(function (ModelTable \$table, Card \$card) {")
+                ->tab("\$card->search(function (SearchForm \$form) {")
+                ->tab()->tab("\$form->id();")
+                ->tab()->tab("\$form->at();")
+                ->tab("});")
                 ->tab("\$table->id();")
                 ->tab("\$table->at();")
                 ->line("});")
