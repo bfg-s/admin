@@ -55,6 +55,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/nestable/jquery.nestable.css',
         'lte-admin/plugins/editor.md-master/css/editormd.min.css',
         'lte-admin/plugins/bootstrap4-editable/css/bootstrap-editable.css',
+        'lte-admin/plugins/codemirror/lib/codemirror.css',
 
 
         'lte-admin/css/app.css',
@@ -104,6 +105,17 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/editor.md-master/languages/en.js',
 
         'lte-admin/plugins/bootstrap4-editable/js/bootstrap-editable.min.js',
+        'lte-admin/plugins/codemirror/lib/codemirror.js',
+        'lte-admin/plugins/codemirror/addon/selection/selection-pointer.js',
+        'lte-admin/plugins/codemirror/addon/edit/matchbrackets.js',
+        'lte-admin/plugins/codemirror/addon/comment/continuecomment.js',
+        'lte-admin/plugins/codemirror/addon/comment/comment.js',
+        'lte-admin/plugins/codemirror/mode/xml/xml.js',
+        'lte-admin/plugins/codemirror/mode/javascript/javascript.js',
+        'lte-admin/plugins/codemirror/mode/css/css.js',
+        'lte-admin/plugins/codemirror/mode/vbscript/vbscript.js',
+        'lte-admin/plugins/codemirror/mode/htmlmixed/htmlmixed.js',
+        'lte-admin/plugins/codemirror/mode/markdown/markdown.js',
 
         'ljs' => [
             'jq', 'alert', 'nav', 'mask', 'select2', 'fancy', 'model'

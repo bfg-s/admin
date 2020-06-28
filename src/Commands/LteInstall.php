@@ -224,7 +224,7 @@ class LteInstall extends Command
             $class->extend(NavigatorExtensionProvider::class);
             $class->implement(ActionWorkExtensionInterface::class);
 
-            $class->method('handle')->returnType('void')->line();
+            $class->method('handle')->returnType('void')->line("\$this->makeDefaults();");
 
             file_put_contents(
                 $nav,

@@ -70,7 +70,11 @@ class PermissionsExtensionProvider {
 
         $functions_count = 0;
         foreach (array_merge([$this->makeFunction('access')], $this->functions()) as $function) {
-            if (is_array($function) && count($function) && LteFunction::where('slug', $function['slug'])->delete()) {
+            $del = isset($function['class']) ?
+                LteFunction::where('slug', $function['slug'])->where('class', $function['class'])->delete() :
+                LteFunction::where('slug', $function['slug'])->delete();
+
+            if (is_array($function) && count($function) && $del) {
                 $functions_count++;
             }
         }

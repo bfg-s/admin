@@ -41,7 +41,7 @@ class AdminsController extends Controller
             $table->column('lte.login_name', 'login')->sort();
             $table->column('lte.name', 'name')->sort();
             $table->at();
-            $table->controlDelete(function (LteUser $user) { return $user->id !== 1; });
+            $table->controlDelete(function (LteUser $user) { return $user->id !== 1 && admin()->id !== $user->id; });
             $table->disableChecks();
         });
     }
@@ -54,7 +54,7 @@ class AdminsController extends Controller
         return new Matrix($this->isType('create') ? 'lte.add_admin' : 'lte.edit_admin', function (Form $form, Card $card) {
 
             $card->defaultTools(function ($type) {
-                return $type === 'delete' && $this->model()->id == 1 ? false : true;
+                return $type === 'delete' && $this->model()->id == 1 && admin()->id == $this->model()->id ? false : true;
             });
 
             $form->image('avatar', 'lte.avatar')->nullable();

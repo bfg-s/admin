@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Fields\Checks;
 use Lar\LteAdmin\Segments\Tagable\Fields\CKEditor;
+use Lar\LteAdmin\Segments\Tagable\Fields\CodeMirror;
 use Lar\LteAdmin\Segments\Tagable\Fields\Color;
 use Lar\LteAdmin\Segments\Tagable\Fields\Date;
 use Lar\LteAdmin\Segments\Tagable\Fields\DateRange;
@@ -65,6 +66,7 @@ class Field extends DIV implements onRender {
         'mdeditor' => MDEditor::class,
         'checks' => Checks::class,
         'radios' => Radios::class,
+        'codemirror' => CodeMirror::class
     ];
 
     /**

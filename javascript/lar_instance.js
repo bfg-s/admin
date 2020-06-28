@@ -23,6 +23,7 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/nestable'));
     ljs.regExec(require('./Executors/md'));
     ljs.regExec(require('./Executors/editable'));
+    ljs.regExec(require('./Executors/codemirror'));
 
     ljs.regExec(require('./Executors/str'));
     ljs.regExec(require('./Executors/table_action'));
