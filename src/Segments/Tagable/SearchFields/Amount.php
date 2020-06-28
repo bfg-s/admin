@@ -3,10 +3,10 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Numeric
+ * Class Amount
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
-class Numeric extends \Lar\LteAdmin\Segments\Tagable\Fields\Numeric
+class Amount extends \Lar\LteAdmin\Segments\Tagable\Fields\Amount
 {
 
 }

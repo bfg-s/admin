@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\LteAdmin\Core\FormSearchComponents;
+use Lar\LteAdmin\Segments\Tagable\SearchFields\Amount;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Checks;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Color;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Date;
@@ -40,6 +41,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
         'email' => Email::class,
         'number' => Number::class,
         'numeric' => Numeric::class,
+        'amount' => Amount::class,
         'switcher' => Switcher::class,
         'date_range' => DateRange::class,
         'date_time_range' => DateTimeRange::class,

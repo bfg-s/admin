@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Fields\Amount;
 use Lar\LteAdmin\Segments\Tagable\Fields\Checks;
 use Lar\LteAdmin\Segments\Tagable\Fields\CKEditor;
 use Lar\LteAdmin\Segments\Tagable\Fields\CodeMirror;
@@ -49,6 +50,7 @@ class Field extends DIV implements onRender {
         'email' => Email::class,
         'number' => Number::class,
         'numeric' => Numeric::class,
+        'amount' => Amount::class,
         'file' => File::class,
         'image' => Image::class,
         'switcher' => Switcher::class,
