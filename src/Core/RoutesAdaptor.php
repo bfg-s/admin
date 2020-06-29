@@ -71,6 +71,12 @@ class RoutesAdaptor
                 foreach ($menu['items'] as $item) {
 
                     static::make_route($item, $roads);
+
+                    if (isset($menu['router']) && is_array($menu['router'])) {
+                        foreach ($menu['router'] as $r) {
+                            if ($r instanceof \Closure) { $r($roads); }
+                        }
+                    }
                 }
             });
         }
@@ -86,6 +92,12 @@ class RoutesAdaptor
 
                 $r = $roads->resource($name, $action, $menu['resource']['options'])
                     ->middleware($menu['middleware'] ?? []);
+            }
+
+            if (isset($menu['router']) && is_array($menu['router'])) {
+                foreach ($menu['router'] as $r) {
+                    if ($r instanceof \Closure) { $r($roads); }
+                }
             }
 
             if (isset($menu['where']) && $r) {
@@ -117,6 +129,12 @@ class RoutesAdaptor
 
                 $r = $roads->{$method}($uri, $action)->name($menu['route'])
                     ->middleware($menu['middleware'] ?? []);
+            }
+
+            if (isset($menu['router']) && is_array($menu['router'])) {
+                foreach ($menu['router'] as $r) {
+                    if ($r instanceof \Closure) { $r($roads); }
+                }
             }
 
             if (isset($menu['where']) && $r) {

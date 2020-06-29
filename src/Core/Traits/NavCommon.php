@@ -14,6 +14,17 @@ use Lar\LteAdmin\Navigate;
 trait NavCommon
 {
     /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function router(\Closure $closure)
+    {
+        $this->items['router'][] = $closure;
+
+        return $this;
+    }
+
+    /**
      * @param  ExtendProvider|null  $provider
      * @return $this
      */
