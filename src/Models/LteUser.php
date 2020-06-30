@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Models;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Notifications\Notifiable;
 use Lar\LteAdmin\Core\CheckUserFunction;
 
 /**
@@ -15,7 +15,7 @@ use Lar\LteAdmin\Core\CheckUserFunction;
  */
 class LteUser extends Model implements AuthenticatableContract
 {
-    use Authenticatable, LteUserPermission;
+    use Authenticatable, LteUserPermission, Notifiable;
 
     /**
      * @var string
