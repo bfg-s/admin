@@ -144,9 +144,9 @@ class LteBase extends LayoutComponent
 
         foreach (\LteAdmin::extensions() as $extension) {
 
-            $this->body_scripts = array_merge($this->body_scripts, $extension->config()->getScripts());
+            $this->body_scripts = array_merge_recursive($this->body_scripts, $extension->config()->getScripts());
 
-            $this->head_styles = array_merge($this->head_styles, $extension->config()->getStyles());
+            $this->head_styles = array_merge_recursive($this->head_styles, $extension->config()->getStyles());
         }
 
         $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));
