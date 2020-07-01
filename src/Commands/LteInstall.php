@@ -47,6 +47,10 @@ class LteInstall extends Command
 
         $make_seeds = false;
 
+        $this->call('migrate', array_filter([
+            '--force' => true
+        ]));
+
         if (!\Schema::hasTable('lte_users')) {
 
             $make_seeds = true;
@@ -56,10 +60,6 @@ class LteInstall extends Command
 
             $make_seeds = true;
         }
-
-        $this->call('migrate', array_filter([
-            '--force' => true
-        ]));
 
         if ($make_seeds) {
 
