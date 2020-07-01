@@ -45,11 +45,15 @@ class LteInstall extends Command
             '--force' => true
         ]);
 
-        $make_seeds = false;
-
         $this->call('migrate', array_filter([
             '--force' => true
         ]));
+
+        if ($this->option('migrate')) {
+            return ;
+        }
+
+        $make_seeds = false;
 
         if (!\Schema::hasTable('lte_users')) {
 
