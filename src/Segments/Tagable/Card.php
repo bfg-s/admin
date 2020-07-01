@@ -307,6 +307,9 @@ class Card extends DIV implements onRender {
         return $this;
     }
 
+    /**
+     * Make default tools
+     */
     protected function make_default_tools()
     {
         if ($this->default_tools !== false) {

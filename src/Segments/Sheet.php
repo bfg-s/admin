@@ -23,6 +23,10 @@ class Sheet extends Container {
             $title = 'lte.list';
         }
 
+        if (request()->has('show_deleted')) {
+            $title = 'lte.deleted';
+        }
+
         parent::__construct(function (DIV $div) use ($title, $warp) {
             $card = null;
             $div->card($title)->haveLink($card)
