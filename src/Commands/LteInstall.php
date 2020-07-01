@@ -283,6 +283,7 @@ class LteInstall extends Command
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Publish the assets even if already exists'],
+            ['migrate', 'm', InputOption::VALUE_NONE, 'Publish and run only migrations'],
             ['extension', 'e', InputOption::VALUE_OPTIONAL, 'Run install extension'],
         ];
     }
