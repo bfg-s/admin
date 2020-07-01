@@ -68,6 +68,16 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * Get model primary
+     *
+     * @return \Lar\LteAdmin\Getters\Menu|object|string|null
+     */
+    public function model_primary()
+    {
+        return gets()->lte->menu->model_primary;
+    }
+
+    /**
      * Get now menu
      *
      * @return array|\Lar\LteAdmin\Getters\Menu|null

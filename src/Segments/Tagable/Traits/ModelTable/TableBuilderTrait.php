@@ -140,6 +140,10 @@ trait TableBuilderTrait {
     {
         if (is_array($this->model)) { $this->model = collect($this->model); }
 
+        if (request()->has('show_deleted')) {
+            $this->model = $this->model->onlyTrashed();
+        }
+
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
 
             foreach ($this->model_control as $item) {

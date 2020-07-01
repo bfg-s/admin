@@ -140,4 +140,10 @@ return [
     'to_find'                       => 'Найти',
     'search'                        => 'Искать',
     'cancel'                        => 'Отмена',
+    'deleted'                       => 'Удаленные',
+    'restore'                       => 'Восстановить',
+    'restore_subject'               => 'Восстановить :subject',
+    'delete_forever'                => 'Удалить навсегда',
+    'delete_forever_subject'        => 'Удалить навсегда :subject',
+    'successfully_restored'         => 'Успешно восстановлено!',
 ];

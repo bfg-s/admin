@@ -175,21 +175,36 @@ class Controller extends BaseController
      */
     public function destroy_default() {
 
-        if ($model = $this->existsModel()) {
+        $model = $this->existsModel();
 
-            if ($model->delete()) {
+        $force = request()->has('force') && request()->get('force');
+
+        $restore = request()->has('restore') && request()->get('restore');
+
+        if ($force || $restore) {
+
+            $model = $this->model()->onlyTrashed()->find($this->model_primary());
+        }
+
+        if ($model) {
+
+            if ($restore && $model->restore()) {
+
+                respond()->toast_success(__('lte.successfully_restored'));
+
+                respond()->reload();
+            }
+            else if ($force && $model->forceDelete()) {
 
                 respond()->toast_success(__('lte.successfully_deleted'));
 
-                if ($this->isType('index')) {
+                respond()->reload();
+            }
+            else if ($model->delete()) {
 
-                    respond()->reload();
-                }
+                respond()->toast_success(__('lte.successfully_deleted'));
 
-                else {
-
-                    respond()->location(gets()->lte->menu->now['link']);
-                }
+                respond()->reload();
             }
 
             else {

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
@@ -327,13 +328,26 @@ class Card extends DIV implements onRender {
                         }
                     });
                 }
+
+                /** @var Model $model */
+                $model = gets()->lte->menu->model;
+
+                if ($model && property_exists($model, 'forceDeleting')) {
+
+                    if (!request()->has('show_deleted')) {
+                        $this->group()->dark('fas fa-trash')
+                            ->on_click('doc::location', urlWithGet(['show_deleted' => 1]));
+                    } else {
+                        $this->group()->resourceList(urlWithGet([], ['show_deleted']));
+                    }
+                }
             }
 
             if ($test('reload')) {
                 $this->group->reload();
             }
 
-            if ($this->now['current.type']) {
+            if ($this->now['current.type'] && !request()->has('show_deleted')) {
 
                 $type = $this->now['current.type'];
 

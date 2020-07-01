@@ -140,4 +140,10 @@ return [
     'to_find'                       => 'To find',
     'search'                        => 'Search',
     'cancel'                        => 'Cancel',
+    'deleted'                       => 'Deleted',
+    'restore'                       => 'Restore',
+    'restore_subject'               => 'Restore :subject',
+    'delete_forever'                => 'Delete forever',
+    'delete_forever_subject'        => 'Delete forever :subject',
+    'successfully_restored'         => 'Successfully restored!',
 ];

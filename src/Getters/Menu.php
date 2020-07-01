@@ -94,6 +94,21 @@ class Menu extends Getter
     }
 
     /**
+     * @return object|string|null
+     */
+    public static function model_primary()
+    {
+        $menu = gets()->lte->menu->now;
+
+        if (\Route::current() && isset($menu['model.param'])) {
+
+            return \Route::current()->parameter($menu['model.param']);
+        }
+
+        return null;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Model|string|null
      */
     public static function model()

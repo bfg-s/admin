@@ -84,6 +84,16 @@ class ButtonGroup extends DIV implements onRender {
      * @param  array  $when
      * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
+    public function dark($ico, array $when = [])
+    {
+        return $this->btn('dark', $ico, $when);
+    }
+
+    /**
+     * @param $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
     public function success($ico, array $when = [])
     {
         return $this->btn('success', $ico, $when);
@@ -285,6 +295,76 @@ class ButtonGroup extends DIV implements onRender {
                     $link . " >> \$jax.del"
                 ]
             ])->setTitleIf($title === '', __('lte.delete'));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Resource add button
+     * @param  string|null  $link
+     * @param  string|null  $title
+     * @param  string|null  $rk_name
+     * @param  null  $key
+     * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
+     */
+    public function resourceForceDestroy(string $link = null, string $title = null, string $rk_name = null, $key = null)
+    {
+        if (!$link && $this->model && $this->model->exists) {
+
+            if (
+                $key = $this->model->getRouteKey() &&
+                isset($this->menu['link.destroy'])
+            ) {
+
+                $link = $this->menu['link.destroy']($key);
+            }
+        }
+
+        if ($link) {
+
+            return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete_forever')])->setDatas([
+                'click' => 'alert::confirm',
+                'params' => [
+                    __('lte.delete_forever_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    $link . "?force=1 >> \$jax.del"
+                ]
+            ])->setTitleIf($title === '', __('lte.delete_forever'));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Resource add button
+     * @param  string|null  $link
+     * @param  string|null  $title
+     * @param  string|null  $rk_name
+     * @param  null  $key
+     * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
+     */
+    public function resourceRestore(string $link = null, string $title = null, string $rk_name = null, $key = null)
+    {
+        if (!$link && $this->model && $this->model->exists) {
+
+            if (
+                $key = $this->model->getRouteKey() &&
+                isset($this->menu['link.destroy'])
+            ) {
+
+                $link = $this->menu['link.destroy']($key);
+            }
+        }
+
+        if ($link) {
+
+            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('lte.restore')])->setDatas([
+                'click' => 'alert::confirm',
+                'params' => [
+                    __('lte.restore_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    $link . "?restore=1 >> \$jax.del"
+                ]
+            ])->setTitleIf($title === '', __('lte.restore'));
         }
 
         return $this;

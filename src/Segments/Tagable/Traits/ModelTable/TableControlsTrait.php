@@ -35,6 +35,16 @@ trait TableControlsTrait {
     /**
      * @var \Closure|null
      */
+    protected $control_force_delete = null;
+
+    /**
+     * @var \Closure|null
+     */
+    protected $control_restore = null;
+
+    /**
+     * @var \Closure|null
+     */
     protected $control_selectable = null;
 
     /**
@@ -82,6 +92,28 @@ trait TableControlsTrait {
     public function controlDelete($test = null)
     {
         $this->set_test_var('control_delete', $test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure|mixed  $test
+     * @return $this
+     */
+    public function controlForceDelete($test = null)
+    {
+        $this->set_test_var('control_force_delete', $test);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Closure|mixed  $test
+     * @return $this
+     */
+    public function controlRestore($test = null)
+    {
+        $this->set_test_var('control_restore', $test);
 
         return $this;
     }
@@ -144,16 +176,27 @@ trait TableControlsTrait {
 
                         $key = $model->getRouteKey();
 
-                        if ($this->get_test_var('control_edit', [$model])) {
-                            $group->resourceEdit($menu['link.edit']($key), '');
-                        }
+                        if (!request()->has('show_deleted')) {
+                            if ($this->get_test_var('control_edit', [$model])) {
+                                $group->resourceEdit($menu['link.edit']($key), '');
+                            }
 
-                        if ($this->get_test_var('control_delete', [$model])) {
-                            $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
-                        }
+                            if ($this->get_test_var('control_delete', [$model])) {
+                                $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            }
 
-                        if ($this->get_test_var('control_info', [$model])) {
-                            $group->resourceInfo($menu['link.show']($key), '');
+                            if ($this->get_test_var('control_info', [$model])) {
+                                $group->resourceInfo($menu['link.show']($key), '');
+                            }
+                        } else {
+
+                            if ($this->get_test_var('control_restore', [$model])) {
+                                $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            }
+
+                            if ($this->get_test_var('control_force_delete', [$model])) {
+                                $group->resourceForceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            }
                         }
                     }
                 });
