@@ -36,9 +36,18 @@ trait TableBuilderTrait {
 
         $header = $this->thead()->tr();
 
+        $header_count = 0;
+
         foreach ($this->columns as $key => $column) {
 
+            if (request()->has('show_deleted') && !$column['trash']) {
+
+                continue;
+            }
+
             $this->makeHeadTH($header, $column, $key);
+
+            $header_count++;
         }
 
         $body = $this->tbody();
@@ -56,7 +65,7 @@ trait TableBuilderTrait {
         if (!$count) {
 
             $body->tr()
-                ->td(['colspan' => count($this->columns)])
+                ->td(['colspan' => $header_count])
                 ->div(['alert alert-warning mt-3 text-center text-justify', 'role' => 'alert', 'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'])
                 ->text(__('lte.empty'));
         }
@@ -72,6 +81,12 @@ trait TableBuilderTrait {
         foreach ($this->columns as $column) {
 
             $value = $column['field'];
+
+            if (request()->has('show_deleted') && !$column['trash']) {
+
+                continue;
+            }
+
             $td = $tr->td();
 
             if (is_string($value)) {

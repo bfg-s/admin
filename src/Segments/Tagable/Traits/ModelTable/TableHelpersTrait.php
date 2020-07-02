@@ -88,6 +88,7 @@ trait TableHelpersTrait {
             'field' => $field,
             'label' => is_string($label) ? __($label) : $label,
             'sort' => false,
+            'trash' => true,
             'macros' => []
         ];
 
@@ -107,6 +108,19 @@ trait TableHelpersTrait {
     public function to_prepend()
     {
         $this->prepend = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function not_trash()
+    {
+        if (isset($this->columns[$this->last])) {
+
+            $this->columns[$this->last]['trash'] = false;
+        }
 
         return $this;
     }
