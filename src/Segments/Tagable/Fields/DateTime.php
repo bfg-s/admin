@@ -26,6 +26,13 @@ class DateTime extends Input
     ];
 
     /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'off']
+    ];
+
+    /**
      * On build
      */
     protected function on_build()

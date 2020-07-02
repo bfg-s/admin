@@ -23,4 +23,11 @@ class DateRange extends Input
     protected $data = [
         'load' => 'picker::daterange'
     ];
+
+    /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'off']
+    ];
 }

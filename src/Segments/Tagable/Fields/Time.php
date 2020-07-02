@@ -26,6 +26,13 @@ class Time extends Input
     ];
 
     /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'off']
+    ];
+
+    /**
      * On build field
      */
     protected function on_build()

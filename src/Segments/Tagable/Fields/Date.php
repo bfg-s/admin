@@ -32,4 +32,11 @@ class Date extends Input
     {
         $this->data['target'] = "#{$this->field_id}";
     }
+
+    /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'off']
+    ];
 }
