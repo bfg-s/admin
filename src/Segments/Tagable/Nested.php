@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreNestable;
 use Lar\Tagable\Events\onRender;
 
@@ -12,6 +13,8 @@ use Lar\Tagable\Events\onRender;
  * @package Lar\LteAdmin\Segments\Tagable
  */
 class Nested extends DIV implements onRender {
+
+    use Macroable;
 
     /**
      * @var bool

@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Macroable;
 
 /**
  * Class Col
@@ -11,6 +12,8 @@ use Lar\Layout\Tags\DIV;
  * @mixin \Lar\LteAdmin\Core\TableMacrosDoc
  */
 class ModelInfoTable extends DIV {
+
+    use Macroable;
 
     /**
      * @var bool

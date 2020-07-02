@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableExtensionTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableControlsTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableBuilderTrait;
@@ -23,7 +24,8 @@ class ModelTable extends Component {
     use TableHelpersTrait,
         TableExtensionTrait,
         TableBuilderTrait,
-        TableControlsTrait;
+        TableControlsTrait,
+        Macroable;
 
     /**
      * @var string

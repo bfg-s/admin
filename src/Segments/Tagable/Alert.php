@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
@@ -12,7 +13,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
  */
 class Alert extends DIV {
 
-    use FontAwesome, TypesTrait;
+    use FontAwesome, TypesTrait, Macroable;
 
     /**
      * @var string[]

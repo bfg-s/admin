@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Layout\Tags\TABLE as TableParent;
 
@@ -12,7 +13,7 @@ use Lar\Layout\Tags\TABLE as TableParent;
  */
 class Table extends TableParent {
     
-    use TypesTrait;
+    use TypesTrait, Macroable;
 
     /**
      * @var array

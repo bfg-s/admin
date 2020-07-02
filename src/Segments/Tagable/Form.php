@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 
@@ -15,7 +16,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
  */
 class Form extends \Lar\Layout\Tags\FORM {
 
-    use FieldMassControl, FormAutoMakeTrait;
+    use FieldMassControl, FormAutoMakeTrait, Macroable;
 
     /**
      * @var Model

@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
 /**
@@ -11,6 +12,8 @@ use Lar\Tagable\Events\onRender;
  */
 class FormFooter extends DIV implements onRender {
 
+    use Macroable;
+    
     /**
      * @var string
      */

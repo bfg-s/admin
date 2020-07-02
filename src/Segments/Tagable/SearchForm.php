@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\LteAdmin\Core\FormSearchComponents;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Amount;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Checks;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Color;
@@ -31,7 +32,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\SearchFormHelpersTrait;
  */
 class SearchForm extends \Lar\Layout\Tags\FORM {
 
-    use SearchFormConditionRulesTrait, SearchFormHelpersTrait;
+    use SearchFormConditionRulesTrait, SearchFormHelpersTrait, Macroable;
 
     /**
      * @var array

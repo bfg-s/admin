@@ -54,5 +54,17 @@ class SearchFormHelperGenerator implements DumpExecute {
 
             $doc->tagMethod('\\'.$provider, $name."(string \$name, string \$label, \$condition = '{$condition}')", "Make search field ($name})");
         }
+
+        foreach (SearchForm::get_macro_names() as $macro_name) {
+
+            $ref = SearchForm::get_macro_reflex($macro_name);
+
+            $doc->tagMethod(
+
+                "\\".SearchForm::class,
+                $macro_name . "(".refl_params_entity($ref->getParameters()).")",
+                "SearchForm Macro $macro_name"
+            );
+        }
     }
 }

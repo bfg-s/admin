@@ -45,5 +45,17 @@ class TableMacrosesHelperGenerator implements DumpExecute {
 
             $doc->tagMethod("self|static|\\".\Lar\LteAdmin\Segments\Tagable\ModelTable::class, $func."(...\$params)", "Table macros {$func}");
         }
+
+        foreach (ModelTable::get_macro_names() as $macro_name) {
+
+            $ref = ModelTable::get_macro_reflex($macro_name);
+
+            $doc->tagMethod(
+
+                "\\".ModelTable::class,
+                $macro_name . "(".refl_params_entity($ref->getParameters()).")",
+                "ModelTable Macro $macro_name"
+            );
+        }
     }
 }
