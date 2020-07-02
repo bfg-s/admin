@@ -32,4 +32,24 @@ trait Macroable
     {
         return array_keys(static::$macros);
     }
+
+    /**
+     * @param $method
+     * @param $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return parent::__call($method, $parameters);
+    }
+
+    /**
+     * @param $method
+     * @param $parameters
+     * @return mixed
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        return parent::__callStatic($method, $parameters);
+    }
 }
