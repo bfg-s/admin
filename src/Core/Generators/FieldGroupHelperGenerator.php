@@ -47,5 +47,29 @@ class FieldGroupHelperGenerator implements DumpExecute {
 
             $doc->tagMethod('\\'.$provider, $name."(string \$name, string \$label = null, ...\$params)", "Make field for form ($name})");
         }
+
+        foreach (Field::get_macro_names() as $macro_name) {
+
+            $ref = Field::get_macro_reflex($macro_name);
+
+            $doc->tagMethod(
+
+                "\\".Field::class,
+                $macro_name . "(".refl_params_entity($ref->getParameters()).")",
+                "Field Macro $macro_name"
+            );
+        }
+
+        foreach (Form::get_macro_names() as $macro_name) {
+
+            $ref = Form::get_macro_reflex($macro_name);
+
+            $doc->tagMethod(
+
+                "\\".Form::class,
+                $macro_name . "(".refl_params_entity($ref->getParameters()).")",
+                "Form Macro $macro_name"
+            );
+        }
     }
 }
