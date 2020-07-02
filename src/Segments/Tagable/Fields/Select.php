@@ -61,7 +61,7 @@ class Select extends FormGroup
                 $this->load_format,
                 $this->value,
                 $this->nullable ? $this->title : null,
-                $this->name . '_'
+                $this->path . '_'
             );
 
             $r_name = $selector->getName();
