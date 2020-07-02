@@ -76,9 +76,9 @@ class Switcher extends Input
      */
     public function labels(string $on = null, string $off = null, string $label = null)
     {
-        if ($on) $this->data['on'] = $on;
-        if ($off) $this->data['off'] = $off;
-        if ($label) $this->data['label'] = $label;
+        if ($on) $this->data['on-text'] = $on;
+        if ($off) $this->data['off-text'] = $off;
+        if ($label) $this->data['label-text'] = $label;
 
         return $this;
     }
