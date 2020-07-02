@@ -327,7 +327,7 @@ class Card extends DIV implements onRender {
 
                         if (request()->has('q')) {
                             $group->danger(['fas fa-window-close', __('lte.cancel')])
-                                ->on_click('doc::location', urlWithGet([], ['q']));
+                                ->on_click('doc::location', urlWithGet([], ['q', 'page']));
                         }
                     });
                 }
