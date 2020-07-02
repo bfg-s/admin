@@ -9,6 +9,7 @@ use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
  * Class FormGroupHelperGenerator
@@ -54,7 +55,7 @@ class FieldGroupHelperGenerator implements DumpExecute {
 
             $doc->tagMethod(
 
-                "\\".Field::class,
+                "\\".FormGroup::class,
                 $macro_name . "(".refl_params_entity($ref->getParameters()).")",
                 "Field Macro $macro_name"
             );
@@ -66,7 +67,7 @@ class FieldGroupHelperGenerator implements DumpExecute {
 
             $doc->tagMethod(
 
-                "\\".Form::class,
+                "\\".FormGroup::class,
                 $macro_name . "(".refl_params_entity($ref->getParameters()).")",
                 "Form Macro $macro_name"
             );
