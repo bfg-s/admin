@@ -2,7 +2,7 @@
     <div class="col-sm d-none d-lg-block d-xl-block">
         <div class="btn-group justify-content-start" role="group">
             @foreach($per_pages as $per)
-                <a href="{{urlWithGet([$per_name => $per])}}" class="btn btn-sm btn-{{$per == $per_page ? 'dark' : 'secondary'}}">{{$per}}</a>
+                <a href="{{urlWithGet([$per_name => $per], [$page_name])}}" class="btn btn-sm btn-{{$per == $per_page ? 'dark' : 'secondary'}}">{{$per}}</a>
             @endforeach
         </div>
     </div>
