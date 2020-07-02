@@ -8,5 +8,8 @@ namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
  */
 class MultiSelect extends \Lar\LteAdmin\Segments\Tagable\Fields\MultiSelect
 {
-
+    /**
+     * @var string
+     */
+    static $condition = "in";
 }

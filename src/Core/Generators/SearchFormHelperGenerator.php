@@ -46,7 +46,13 @@ class SearchFormHelperGenerator implements DumpExecute {
     {
         foreach (SearchForm::$field_components as $name => $provider) {
 
-            $doc->tagMethod('\\'.$provider, $name."(string \$name, string \$label, \$condition = '=')", "Make search field ($name})");
+            if (property_exists($provider, 'condition')) {
+                $condition = $provider::$condition;
+            } else {
+                $condition = '=%';
+            }
+
+            $doc->tagMethod('\\'.$provider, $name."(string \$name, string \$label, \$condition = '{$condition}')", "Make search field ($name})");
         }
     }
 }

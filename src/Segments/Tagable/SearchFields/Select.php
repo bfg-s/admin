@@ -8,5 +8,8 @@ namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
  */
 class Select extends \Lar\LteAdmin\Segments\Tagable\Fields\Select
 {
-
+    /**
+     * @var string
+     */
+    static $condition = "=";
 }

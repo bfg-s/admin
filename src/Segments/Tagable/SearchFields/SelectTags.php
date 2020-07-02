@@ -8,5 +8,8 @@ namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
  */
 class SelectTags extends \Lar\LteAdmin\Segments\Tagable\Fields\SelectTags
 {
-
+    /**
+     * @var string
+     */
+    static $condition = "in";
 }

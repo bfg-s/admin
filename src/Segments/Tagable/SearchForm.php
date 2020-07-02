@@ -161,7 +161,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
                 if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
                     $condition = $class::$condition;
                 } else {
-                    $condition = '=';
+                    $condition = '=%';
                 }
             }
 

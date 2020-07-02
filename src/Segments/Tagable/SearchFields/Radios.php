@@ -8,5 +8,8 @@ namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
  */
 class Radios extends \Lar\LteAdmin\Segments\Tagable\Fields\Radios
 {
-
+    /**
+     * @var string
+     */
+    static $condition = "=";
 }

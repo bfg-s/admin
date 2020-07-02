@@ -8,5 +8,8 @@ namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
  */
 class Switcher extends \Lar\LteAdmin\Segments\Tagable\Fields\Switcher
 {
-
+    /**
+     * @var string
+     */
+    static $condition = "=";
 }
