@@ -165,6 +165,11 @@ trait TableControlsTrait {
                 }, null, true);
             }
 
+            if (request()->has('show_deleted')) {
+
+                $this->deleted_at();
+            }
+
             $this->column(function (SPAN $span) {
                 $span->_addClass('fit');
             }, function (Model $model) {
