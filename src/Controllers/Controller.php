@@ -188,29 +188,40 @@ class Controller extends BaseController
 
         if ($model) {
 
-            if ($restore && $model->restore()) {
+            try {
 
-                respond()->toast_success(__('lte.successfully_restored'));
+                if ($restore && $model->restore()) {
 
-                respond()->reload();
+                    respond()->toast_success(__('lte.successfully_restored'));
+
+                    respond()->reload();
+                }
+                else if ($force && $model->forceDelete()) {
+
+                    respond()->toast_success(__('lte.successfully_deleted'));
+
+                    respond()->reload();
+                }
+                else if ($model->delete()) {
+
+                    respond()->toast_success(__('lte.successfully_deleted'));
+
+                    respond()->reload();
+                }
+
+                else {
+
+                    respond()->toast_error(__('lte.unknown_error'));
+                }
+            } catch (\Exception $exception) {
+
+                if (!\App::isLocal()) {
+                    respond()->toast_error(__('lte.unknown_error'));
+                } else {
+                    respond()->toast_error($exception->getMessage());
+                }
             }
-            else if ($force && $model->forceDelete()) {
 
-                respond()->toast_success(__('lte.successfully_deleted'));
-
-                respond()->reload();
-            }
-            else if ($model->delete()) {
-
-                respond()->toast_success(__('lte.successfully_deleted'));
-
-                respond()->reload();
-            }
-
-            else {
-
-                respond()->toast_error(__('lte.unknown_error'));
-            }
         }
 
         else {
