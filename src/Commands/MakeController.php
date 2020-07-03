@@ -108,7 +108,9 @@ class MakeController extends Command
 
             $class->method('matrix')->line()
                 ->line("return new Matrix(function (Form \$form) {")
+                ->tab("\$form->info_id();")
                 ->tab("\$form->autoMake();")
+                ->tab("\$form->info_at();")
                 ->line("});")
                 ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Matrix::class); });
 
