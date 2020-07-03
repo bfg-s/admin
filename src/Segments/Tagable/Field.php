@@ -18,6 +18,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\Email;
 use Lar\LteAdmin\Segments\Tagable\Fields\File;
 use Lar\LteAdmin\Segments\Tagable\Fields\Icon;
 use Lar\LteAdmin\Segments\Tagable\Fields\Image;
+use Lar\LteAdmin\Segments\Tagable\Fields\Info;
 use Lar\LteAdmin\Segments\Tagable\Fields\Input;
 use Lar\LteAdmin\Segments\Tagable\Fields\MDEditor;
 use Lar\LteAdmin\Segments\Tagable\Fields\MultiSelect;
@@ -71,7 +72,8 @@ class Field extends DIV implements onRender {
         'mdeditor' => MDEditor::class,
         'checks' => Checks::class,
         'radios' => Radios::class,
-        'codemirror' => CodeMirror::class
+        'codemirror' => CodeMirror::class,
+        'info' => Info::class
     ];
 
     /**

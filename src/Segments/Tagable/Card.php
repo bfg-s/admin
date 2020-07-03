@@ -40,11 +40,6 @@ class Card extends DIV implements onRender {
     protected $title_obj;
 
     /**
-     * @var bool
-     */
-    protected $auto_tools = false;
-
-    /**
      * @var ButtonGroup
      */
     protected $group;

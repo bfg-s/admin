@@ -14,7 +14,9 @@ use Lar\Tagable\Events\onRender;
  */
 class ButtonGroup extends DIV implements onRender {
 
-    use Macroable;
+    use Macroable {
+        Macroable::__call as macro_call;
+    }
 
     /**
      * @var array|null
