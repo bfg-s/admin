@@ -80,4 +80,14 @@ class Input extends FormGroup
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function disabled()
+    {
+        $this->params[] = ['disabled' => 'true'];
+
+        return $this;
+    }
 }
