@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Layouts;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Middlewares\Authenticate;
+use Lar\LteAdmin\Segments\AccessDenied;
 
 /**
  * Landing Class
@@ -82,7 +83,7 @@ class LteLayout extends LteBase
 
             else {
 
-                $this->container->view('lte::access_denied');
+                $this->container->appEnd(AccessDenied::create());
             }
 
         } catch (\Exception $exception) {

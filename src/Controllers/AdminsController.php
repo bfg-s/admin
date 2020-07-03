@@ -6,6 +6,7 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
+use Lar\LteAdmin\Segments\AccessDenied;
 use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
