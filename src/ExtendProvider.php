@@ -106,10 +106,14 @@ class ExtendProvider extends ServiceProviderIlluminate
 
         if ($func) {
 
-            $func = $func->functions->list
-                ->where('class', static::class)
-                ->where('slug', 'access')
-                ->first();
+            $func = $func->functions->list;
+
+            if ($func) {
+
+                $func = $func->where('class', static::class)
+                    ->where('slug', 'access')
+                    ->first();
+            }
         }
 
         if ($func) {
