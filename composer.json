@@ -29,10 +29,7 @@
     "autoload-dev": {
         "psr-4": {
             "Lar\\LteAdmin\\Tests\\": "tests/"
-        },
-        "classmap": [
-            "tests/TestCase.php"
-        ]
+        }
     },
     "extra": {
         "laravel": {
