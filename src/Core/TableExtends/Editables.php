@@ -29,6 +29,7 @@ class Editables {
 
                 return Field::switcher($field)
                     ->only_input()
+                    ->labels(...$props)
                     ->switchSize('mini')
                     ->default($value)->on_mouseup_put(
                         $now['link.update']($model->getRouteKey()),
@@ -38,6 +39,7 @@ class Editables {
 
             return Field::switcher($field)
                 ->only_input()
+                ->labels(...$props)
                 ->switchSize('mini')
                 ->default($value)->on_mouseup_jax('lte_admin.custom_save', [
                     get_class($model),

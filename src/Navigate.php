@@ -139,7 +139,11 @@ class Navigate implements NavigateInterface
     {
         foreach (Navigate::$items as $key => $item) {
             /** @var Arrayable $item */
-            Navigate::$items[$key] = $item->toArray();
+            if (!is_array($item)) {
+                Navigate::$items[$key] = $item->toArray();
+            } else {
+                Navigate::$items[$key] = $item;
+            }
         }
 
         return Navigate::$items;

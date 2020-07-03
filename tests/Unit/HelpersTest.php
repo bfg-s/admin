@@ -2,7 +2,7 @@
 
 namespace Lar\LteAdmin\Tests\Unit;
 
-use Lar\LteAdmin\Tests\TestCase;
+use Tests\TestCase;
 
 /**
  * Class HelpersTest
@@ -15,8 +15,14 @@ class HelpersTest extends TestCase
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testRelatedMethods()
     {
-        $this->assertTrue(false);
+        $this->assertTrue(lte_related_methods('store') === ['store', 'create', 'access']);
+        $this->assertTrue(lte_related_methods('update') === ['update', 'edit', 'access']);
+        $this->assertTrue(lte_related_methods('create') === ['create', 'store', 'access']);
+        $this->assertTrue(lte_related_methods('edit') === ['edit', 'update', 'access']);
+        $this->assertTrue(lte_related_methods('destroy') === ['destroy', 'delete', 'access']);
+        $this->assertTrue(lte_related_methods('delete') === ['delete', 'destroy', 'access']);
+        $this->assertTrue(lte_related_methods('test') === ['test', 'access']);
     }
 }
