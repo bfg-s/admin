@@ -33,7 +33,7 @@ class MDEditor extends FormGroup
             'data-placeholder' => $this->title,
             'm-0'
         ], ...$this->params)
-            ->text($this->value)
+            ->text(e($this->value))
             ->setRules($this->rules)
             ->setDatas($this->data)
             ->addClassIf($this->has_bug, 'is-invalid');

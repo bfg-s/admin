@@ -30,7 +30,7 @@ class CodeMirror extends FormGroup
             'name' => $this->name,
             'placeholder' => $this->title
         ], ...$this->params)
-            ->text($this->value)
+            ->text(e($this->value))
             ->setRules($this->rules)
             ->setDatas($this->data)
             ->on_load("codemirror::{$this->mode}");
