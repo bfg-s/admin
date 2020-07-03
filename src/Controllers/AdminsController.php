@@ -68,6 +68,8 @@ class AdminsController extends Controller
                 return $type === 'delete' && $this->model()->id == 1 && admin()->id == $this->model()->id ? false : true;
             });
 
+            $form->info_id();
+
             $form->image('avatar', 'lte.avatar')->nullable();
 
             $form->input('login', 'lte.login_name')
@@ -81,6 +83,8 @@ class AdminsController extends Controller
 
             $form->multi_select('roles[]', 'lte.role')->icon_user_secret()
                 ->options(LteRole::all()->pluck('name','id'));
+
+            $form->info_at();
 
             $form->br()->h5(__('lte.password'))->hr();
 

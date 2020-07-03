@@ -6,6 +6,7 @@ use Lar\LteAdmin\Core\TableExtends\Decorations;
 use Lar\LteAdmin\Core\TableExtends\Display;
 use Lar\LteAdmin\Core\TableExtends\Editables;
 use Lar\LteAdmin\Core\TableExtends\Formatter;
+use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
@@ -44,5 +45,24 @@ class LteBoot
                 $extension->config()->boot();
             }
         }
+
+        static::formMacros();
+    }
+
+    /**
+     * Make helper form
+     */
+    protected static function formMacros()
+    {
+        Form::macro('info_at', function ($condition = null) {
+            if ($condition === null) $condition = gets()->lte->menu->type === 'edit';
+            if ($condition) $this->hr();
+            $this->if($condition)->info('updated_at', 'lte.updated_at');
+            $this->if($condition)->info('created_at', 'lte.created_at');
+        });
+        Form::macro('info_id', function ($condition = null) {
+            if ($condition === null) $condition = gets()->lte->menu->type === 'edit';
+            $this->if($condition)->info('id', 'lte.id');
+        });
     }
 }

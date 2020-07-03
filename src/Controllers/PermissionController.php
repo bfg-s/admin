@@ -67,6 +67,9 @@ class PermissionController extends Controller
     public function matrix()
     {
         return Matrix::create(function (Form $form) {
+
+            $form->info_id();
+
             $form->input('path', 'lte.path')
                 ->required();
 
@@ -84,6 +87,8 @@ class PermissionController extends Controller
 
             $form->switcher('active', 'lte.active')->switchSize('mini')
                 ->default(1);
+
+            $form->info_at();
         });
     }
 

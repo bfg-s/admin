@@ -59,12 +59,14 @@ class FunctionsController extends Controller
     public function matrix()
     {
         return Matrix::create(function (Form $form) {
+            $form->info_id();
             $form->input('slug', 'lte.slug')->required()
                 ->unique(LteFunction::class, 'slug', $this->model()->id)->slugable();
             $form->checks('roles', 'lte.roles')->required()
                 ->options(LteRole::all()->pluck('name', 'id'));
             $form->textarea('description', 'lte.description');
             $form->switcher('active', 'lte.active')->boolean();
+            $form->info_at();
         });
     }
 

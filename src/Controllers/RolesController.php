@@ -52,8 +52,10 @@ class RolesController extends Controller
     {
         return Matrix::create(['lte.add_role', 'lte.edit_role'], function (Form $form) {
 
+            $form->info_id();
             $form->input('name', 'lte.title')->required()->duplication_how_slug('#input_slug');
             $form->input('slug', 'lte.slug')->required()->slugable();
+            $form->info_at();
         });
     }
 
