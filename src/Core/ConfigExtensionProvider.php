@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
@@ -28,6 +29,11 @@ class ConfigExtensionProvider {
     protected $styles = [];
 
     /**
+     * @var array
+     */
+    protected $mixins = [];
+
+    /**
      * ConfigExtensionProvider constructor.
      * @param  ExtendProvider  $provider
      */
@@ -41,7 +47,21 @@ class ConfigExtensionProvider {
      */
     public function boot()
     {
+        /** @var Macroable $class */
+        foreach ($this->mixins as $class => $mixin) {
 
+            if (is_array($mixin)) {
+
+                foreach ($mixin as $item) {
+
+                    $class::mixin($item);
+                }
+
+            } else {
+
+                $class::mixin($mixin);
+            }
+        }
     }
 
     /**
