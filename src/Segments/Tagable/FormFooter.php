@@ -9,6 +9,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin FormFooterMacroList
  */
 class FormFooter extends DIV implements onRender {
 

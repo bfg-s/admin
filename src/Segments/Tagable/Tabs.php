@@ -10,6 +10,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin TabsMacroList
  */
 class Tabs extends DIV implements onRender {
 

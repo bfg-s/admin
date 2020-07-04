@@ -15,6 +15,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin FormGroupMacroList
  */
 abstract class FormGroup extends DIV {
 

@@ -12,7 +12,10 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin \Lar\LteAdmin\Core\FormGroupComponents
+ * @macro_return Lar\LteAdmin\Segments\Tagable\FormGroup
+ * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
+ * @mixin FormMethods
+ * @mixin FormMacroList
  */
 class Form extends \Lar\Layout\Tags\FORM {
 

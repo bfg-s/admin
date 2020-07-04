@@ -9,7 +9,9 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin \Lar\LteAdmin\Core\TableMacrosDoc
+ * @methods Lar\LteAdmin\Segments\Tagable\ModelTable::$extensions (...$params)
+ * @mixin ModelInfoTableMacroList
+ * @mixin ModelInfoTableMethods
  */
 class ModelInfoTable extends DIV {
 

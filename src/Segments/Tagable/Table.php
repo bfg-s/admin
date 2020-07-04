@@ -10,6 +10,7 @@ use Lar\Layout\Tags\TABLE as TableParent;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin TableMacroList
  */
 class Table extends TableParent {
     

@@ -11,6 +11,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class ButtonGroup
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin ButtonGroupMacroList
  */
 class ButtonGroup extends DIV implements onRender {
 

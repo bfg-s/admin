@@ -11,7 +11,7 @@ trait TableExtensionTrait {
     /**
      * @var array
      */
-    protected static $extensions = [];
+    static $extensions = [];
 
     /**
      * Add extension class

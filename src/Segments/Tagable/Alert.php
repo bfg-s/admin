@@ -8,8 +8,9 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class Col
+ * Class Alert
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin AlertMacroList
  */
 class Alert extends DIV {
 

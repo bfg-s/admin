@@ -11,6 +11,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin NestedMacroList
  */
 class Nested extends DIV implements onRender {
 

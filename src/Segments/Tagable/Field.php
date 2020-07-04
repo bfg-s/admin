@@ -37,7 +37,10 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin \Lar\LteAdmin\Core\FormGroupComponents
+ * @macro_return Lar\LteAdmin\Segments\Tagable\FormGroup
+ * @methods static::$form_components (string $name, string $label = null, ...$params)
+ * @mixin FieldMethods
+ * @mixin FieldMacroList
  */
 class Field extends DIV implements onRender {
 

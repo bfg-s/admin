@@ -9,6 +9,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin RowMacroList
  */
 class Row extends DIV implements onRender {
 

@@ -17,7 +17,9 @@ use Illuminate\Support\Collection;
 /**
  * Class ModelTable
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin \Lar\LteAdmin\Core\TableMacrosDoc
+ * @methods static::$extensions (...$params)
+ * @mixin ModelTableMacroList
+ * @mixin ModelTableMethods
  */
 class ModelTable extends Component {
 

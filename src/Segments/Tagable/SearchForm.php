@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
-use Lar\LteAdmin\Core\FormSearchComponents;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Amount;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Checks;
@@ -28,7 +27,9 @@ use Lar\LteAdmin\Segments\Tagable\Traits\SearchFormHelpersTrait;
 /**
  * Class SearchForm
  * @package Lar\LteAdmin\Segments\Tagable
- * @mixin FormSearchComponents
+ * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
+ * @mixin SearchFormMacroList
+ * @mixin SearchFormMethods
  */
 class SearchForm extends \Lar\Layout\Tags\FORM {
 

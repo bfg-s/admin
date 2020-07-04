@@ -12,6 +12,7 @@ use Lar\Tagable\Events\onRender;
 /**
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin CardMacroList
  */
 class Card extends DIV implements onRender {
 

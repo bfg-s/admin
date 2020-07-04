@@ -2,11 +2,8 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Segments\AccessDenied;
 use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
@@ -16,7 +13,6 @@ use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
-use Lar\LteAdmin\Segments\Tagable\Tabs;
 
 /**
  * Class HomeController
@@ -28,7 +24,7 @@ class AdminsController extends Controller
     /**
      * @var string
      */
-    static $model = \Lar\LteAdmin\Models\LteUser::class;
+    static $model = LteUser::class;
 
     /**
      * @return Sheet

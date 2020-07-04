@@ -13,6 +13,7 @@ use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FieldGroupHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\LteGeneratorBoot;
+use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
 use Lar\LteAdmin\Core\Generators\SearchFormHelperGenerator;
 use Lar\LteAdmin\Core\Generators\TableMacrosesHelperGenerator;
 use Lar\LteAdmin\Core\Generators\TableOriginalMacrosesHelperGenerator;
@@ -210,10 +211,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         DumpAutoload::addToExecute(LteGeneratorBoot::class);
         DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
         DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
-        DumpAutoload::addToExecute(FieldGroupHelperGenerator::class);
-        DumpAutoload::addToExecute(TableMacrosesHelperGenerator::class);
-        DumpAutoload::addToExecute(TableOriginalMacrosesHelperGenerator::class);
-        DumpAutoload::addToExecute(SearchFormHelperGenerator::class);
+        DumpAutoload::addToExecute(MacroableHelperGenerator::class);
 
         /**
          * Merge config from having by default

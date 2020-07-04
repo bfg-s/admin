@@ -10,6 +10,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 /**
  * Class SmallBox
  * @package Lar\LteAdmin\Segments\Tagable
+ * @mixin SmallBoxMacroList
  */
 class SmallBox extends DIV {
 
