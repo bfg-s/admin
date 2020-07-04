@@ -34,7 +34,8 @@ class Rating extends Input
         'animate' => 'true',
         'step' => '1',
         'show-clear' => 'false',
-        'show-caption' => 'false'
+        'show-caption' => 'false',
+        'size' => 'xs'
     ];
 
     /**
