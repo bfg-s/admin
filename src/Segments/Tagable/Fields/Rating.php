@@ -33,7 +33,8 @@ class Rating extends Input
     protected $data = [
         'animate' => 'true',
         'step' => '1',
-        'show-clear' => 'false'
+        'show-clear' => 'false',
+        'show-caption' => 'false'
     ];
 
     /**
@@ -160,5 +161,15 @@ class Rating extends Input
         $this->data['stars'] = $stars;
 
         return parent::disabled();
+    }
+
+    /**
+     * @return $this
+     */
+    public function showCaption()
+    {
+        $this->data['show-caption'] = 'true';
+
+        return $this;
     }
 }
