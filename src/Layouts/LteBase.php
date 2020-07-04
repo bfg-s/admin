@@ -56,6 +56,8 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/editor.md-master/css/editormd.min.css',
         'lte-admin/plugins/bootstrap4-editable/css/bootstrap-editable.css',
         'lte-admin/plugins/codemirror/lib/codemirror.css',
+        'lte-admin/plugins/star-rating/star-rating.min.css',
+        'lte-admin/plugins/star-rating/krajee-fas/theme.min.css',
 
 
         'lte-admin/css/app.css',
@@ -116,6 +118,9 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/codemirror/mode/vbscript/vbscript.js',
         'lte-admin/plugins/codemirror/mode/htmlmixed/htmlmixed.js',
         'lte-admin/plugins/codemirror/mode/markdown/markdown.js',
+        'lte-admin/plugins/star-rating/star-rating.min.js',
+        'lte-admin/plugins/star-rating/locales/ru.js',
+        'lte-admin/plugins/star-rating/krajee-fas/theme.min.js',
 
         'ljs' => [
             'jq', 'alert', 'nav', 'mask', 'select2', 'fancy', 'model'

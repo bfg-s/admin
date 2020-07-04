@@ -109,6 +109,11 @@ trait FieldMassControl {
                 $this->appEnd($class);
             }
 
+            else {
+
+                $class->unregister();
+            }
+
             $this->set = true;
 
             return $class;

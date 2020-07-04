@@ -26,6 +26,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\Number;
 use Lar\LteAdmin\Segments\Tagable\Fields\Numeric;
 use Lar\LteAdmin\Segments\Tagable\Fields\Password;
 use Lar\LteAdmin\Segments\Tagable\Fields\Radios;
+use Lar\LteAdmin\Segments\Tagable\Fields\Rating;
 use Lar\LteAdmin\Segments\Tagable\Fields\Select;
 use Lar\LteAdmin\Segments\Tagable\Fields\SelectTags;
 use Lar\LteAdmin\Segments\Tagable\Fields\Switcher;
@@ -76,7 +77,8 @@ class Field extends DIV implements onRender {
         'checks' => Checks::class,
         'radios' => Radios::class,
         'codemirror' => CodeMirror::class,
-        'info' => Info::class
+        'info' => Info::class,
+        'rating' => Rating::class,
     ];
 
     /**

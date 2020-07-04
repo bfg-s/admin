@@ -26,9 +26,9 @@
 * **Number-Input** https://github.com/wpic/bootstrap-number-input
 * **DatetimePicker** http://eonasdan.github.io/bootstrap-datetimepicker/
 * **Nestable** https://dbushell.com/Nestable/
+* **Star rating** https://plugins.krajee.com/star-rating
 
 ### To future by priority
 * https://github.com/vitalets/x-editable
-* https://plugins.krajee.com/star-rating
 * || 1 - http://dynamicdrive.com/dynamicindex16/autosaveform.htm 
 * || 1 - https://www.jqueryscript.net/form/save-form-local-storage.html
