@@ -4,12 +4,26 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Lar\LteAdmin\Segments\Tagable\Field;
 
 /**
  * Class Decorations
  * @package Lar\LteAdmin\Core\TableExtends
  */
 class Decorations {
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return Field|\Lar\LteAdmin\Segments\Tagable\FieldMethods|\Lar\LteAdmin\Segments\Tagable\Fields\Rating
+     */
+    public function rating($value, $props = [])
+    {
+        return Field::rating('rating')
+            ->only_input()
+            ->value($value
+            ->sizeXs();
+    }
 
     /**
      * @param $value
