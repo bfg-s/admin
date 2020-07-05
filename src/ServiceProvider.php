@@ -8,6 +8,7 @@ use Lar\Layout\Layout;
 use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
+use Lar\LteAdmin\Commands\LteMixinCommand;
 use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
@@ -33,7 +34,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteControllerCommand::class,
         LteUserCommand::class,
         LteExtensionCommand::class,
-        LtePipeCommand::class
+        LtePipeCommand::class,
+        LteMixinCommand::class
     ];
 
     /**

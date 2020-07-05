@@ -72,7 +72,7 @@ class LteInstallCommand extends Command
             ]);
         }
 
-        $base_dirs = ['/', '/Controllers', '/Pipes', '/Extensions'];
+        $base_dirs = ['/', '/Controllers', '/Extensions'];
 
         foreach ($base_dirs as $base_dir) {
 
