@@ -117,4 +117,21 @@ class Formatter {
 
         return Carbon::create($value)->format($format);
     }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function carbon_time($value, $props = [])
+    {
+        $format = $props[0] ?? 'H:i:s';
+        $time = explode(":", $value);
+
+        return now()
+            ->setHour($time[0] ?? 0)
+            ->setMinute($time[1] ?? 0)
+            ->setSecond($time[2] ?? 0)
+            ->format($format);
+    }
 }
