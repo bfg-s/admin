@@ -68,7 +68,7 @@ class Form extends \Lar\Layout\Tags\FORM {
             $this->model = gets()->lte->menu->model;
         }
 
-        $this->model = static::fire_pipes($model, get_class($this->model));
+        $this->model = static::fire_pipes($this->model, get_class($this->model));
 
         static::$current_model = $this->model;
 

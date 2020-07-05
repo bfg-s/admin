@@ -60,7 +60,7 @@ class ModelInfoTable extends DIV {
             $this->model = gets()->lte->menu->model;
         }
 
-        $this->model = static::fire_pipes($model, get_class($this->model));
+        $this->model = static::fire_pipes($this->model, get_class($this->model));
 
         parent::__construct();
 
