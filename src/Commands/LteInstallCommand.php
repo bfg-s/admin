@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @package Lar\LteAdmin\Commands
  */
-class LteInstall extends Command
+class LteInstallCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -72,46 +72,27 @@ class LteInstall extends Command
             ]);
         }
 
-        if (!is_dir($dir = lte_app_path())) {
+        $base_dirs = ['/', '/Controllers', '/Pipes', '/Extensions'];
 
-            mkdir($dir, 0777, true);
+        foreach ($base_dirs as $base_dir) {
 
-            $this->info("Directory {$dir} created!");
+            if (!is_dir($dir = lte_app_path($base_dir))) {
+
+                mkdir($dir, 0777, true);
+
+                $this->info("Directory {$dir} created!");
+            }
         }
 
-        if (!is_dir($dir = lte_app_path('Controllers'))) {
+        $public_dirs = ['/uploads/images', 'uploads/files'];
 
-            mkdir($dir, 0777, true);
+        foreach ($public_dirs as $public_dir) {
 
-            $this->info("Directory {$dir} created!");
-        }
+            if (!is_dir($dir = public_path($public_dir))) {
+                mkdir($dir, 0777, true);
 
-        if (!is_dir($dir = lte_app_path('Extensions'))) {
-
-            mkdir($dir, 0777, true);
-
-            $this->info("Directory {$dir} created!");
-        }
-
-        if (!is_dir($dir = public_path('uploads'))) {
-
-            mkdir($dir, 0777, true);
-
-            $this->info("Directory {$dir} created!");
-        }
-
-        if (!is_dir($dir = public_path('uploads/images'))) {
-
-            mkdir($dir, 0777, true);
-
-            $this->info("Directory {$dir} created!");
-        }
-
-        if (!is_dir($dir = public_path('uploads/files'))) {
-
-            mkdir($dir, 0777, true);
-
-            $this->info("Directory {$dir} created!");
+                $this->info("Directory {$dir} created!");
+            }
         }
 
         $this->makeApp();
@@ -246,6 +227,10 @@ class LteInstall extends Command
             $class->namespace('App\LteAdmin');
             $class->wrap('php');
             $class->extend(ConfigExtensionProvider::class);
+            $class->method('boot')
+                ->line('parent::boot();')
+                ->line()
+                ->line('//');
 
             file_put_contents(
                 $config,

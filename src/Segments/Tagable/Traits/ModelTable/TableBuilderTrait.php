@@ -161,6 +161,8 @@ trait TableBuilderTrait {
 
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
 
+            $this->model = static::fire_pipes($this->model, $this->model_class);
+
             foreach ($this->model_control as $item) {
                 if ($item instanceof SearchForm) {
                     $this->model = $item->makeModel($this->model);

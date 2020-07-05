@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 
@@ -19,7 +20,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
  */
 class Form extends \Lar\Layout\Tags\FORM {
 
-    use FieldMassControl, FormAutoMakeTrait, Macroable;
+    use FieldMassControl, FormAutoMakeTrait, Macroable, Piplineble;
 
     /**
      * @var Model
@@ -66,6 +67,8 @@ class Form extends \Lar\Layout\Tags\FORM {
 
             $this->model = gets()->lte->menu->model;
         }
+
+        $this->model = static::fire_pipes($model, get_class($this->model));
 
         static::$current_model = $this->model;
 

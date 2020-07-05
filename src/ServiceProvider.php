@@ -5,18 +5,15 @@ namespace Lar\LteAdmin;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
-use Lar\LteAdmin\Commands\LteExtension;
-use Lar\LteAdmin\Commands\LteInstall;
-use Lar\LteAdmin\Commands\MakeController;
-use Lar\LteAdmin\Commands\MakeUser;
+use Lar\LteAdmin\Commands\LteControllerCommand;
+use Lar\LteAdmin\Commands\LteExtensionCommand;
+use Lar\LteAdmin\Commands\LteInstallCommand;
+use Lar\LteAdmin\Commands\LtePipeCommand;
+use Lar\LteAdmin\Commands\LteUserCommand;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
-use Lar\LteAdmin\Core\Generators\FieldGroupHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\LteGeneratorBoot;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
-use Lar\LteAdmin\Core\Generators\SearchFormHelperGenerator;
-use Lar\LteAdmin\Core\Generators\TableMacrosesHelperGenerator;
-use Lar\LteAdmin\Core\Generators\TableOriginalMacrosesHelperGenerator;
 use Lar\LteAdmin\Core\TagableComponent;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
@@ -32,10 +29,11 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $commands = [
-        LteInstall::class,
-        MakeController::class,
-        MakeUser::class,
-        LteExtension::class
+        LteInstallCommand::class,
+        LteControllerCommand::class,
+        LteUserCommand::class,
+        LteExtensionCommand::class,
+        LtePipeCommand::class
     ];
 
     /**

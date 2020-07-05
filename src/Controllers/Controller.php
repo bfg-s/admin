@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Lar\Layout\Respond;
+use Lar\LteAdmin\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
@@ -17,6 +18,8 @@ use Lar\LteAdmin\Segments\Tagable\ModelTable;
  */
 class Controller extends BaseController
 {
+    use Piplineble;
+
     /**
      * Permission functions for methods
      *
@@ -120,6 +123,8 @@ class Controller extends BaseController
             return $back;
         }
 
+        $save = static::fire_pipes($save, 'save');
+        
         if ($this->requestToModel($save)) {
 
             respond()->toast_success(__('lte.saved_successfully'));
@@ -154,6 +159,8 @@ class Controller extends BaseController
             return $back;
         }
 
+        $save = static::fire_pipes($save, 'save');
+
         if ($this->requestToModel($save)) {
 
             respond()->toast_success(__('lte.successfully_created'));
@@ -185,6 +192,8 @@ class Controller extends BaseController
 
             $model = $this->model()->onlyTrashed()->find($this->model_primary());
         }
+
+        $model = static::fire_pipes($model, 'delete');
 
         if ($model) {
 

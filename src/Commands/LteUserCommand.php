@@ -4,21 +4,21 @@ namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Models\LteUser;
+use Lar\LteAdmin\Models\LteUser as User;
 
 /**
  * Class MakeUser
  *
  * @package Lar\Admin\Commands
  */
-class MakeUser extends Command
+class LteUserCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'lte:make-user {email?: Email of user} {name?: Login of user}';
+    protected $signature = 'lte:user {email?: Email of user} {name?: Login of user}';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class MakeUser extends Command
      */
     public function handle()
     {
-        /** @var LteUser $user_model */
+        /** @var User $user_model */
         $user_model = config('lte.auth.providers.lte.model');
 
         $email = $this->argument('email');

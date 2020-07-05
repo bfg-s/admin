@@ -91,16 +91,7 @@ class CoreNestable extends DIV
         $this->delete_control =
         $this->edit_control = function () { return true; };
 
-        if (is_array($model)) {
 
-            $instructions = $model;
-            $model = null;
-        }
-
-        if (!$model) {
-
-            $model = gets()->lte->menu->model;
-        }
 
         $this->model = eloquent_instruction($model, $instructions);
 

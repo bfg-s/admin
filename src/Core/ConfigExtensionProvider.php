@@ -2,7 +2,9 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Core\Traits\Piplineble;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
@@ -34,6 +36,33 @@ class ConfigExtensionProvider {
     protected $mixins = [];
 
     /**
+     * @var array
+     */
+    protected $save_pipes = [];
+
+    /**
+     * @var array
+     */
+    protected $delete_pipes = [];
+
+    /**
+     * @var array
+     */
+    protected $pipe_map = [];
+
+    /**
+     * The event listener mappings for the lte application.
+     * @var array
+     */
+    protected $listen = [];
+
+    /**
+     * The subscriber classes to register.
+     * @var array
+     */
+    protected $subscribe = [];
+
+    /**
      * ConfigExtensionProvider constructor.
      * @param  ExtendProvider  $provider
      */
@@ -61,6 +90,35 @@ class ConfigExtensionProvider {
 
                 $class::mixin($mixin);
             }
+        }
+
+        /** @var Controller $controller */
+        foreach ($this->save_pipes as $controller => $controller_pipe) {
+
+            $controller::pipes($controller_pipe, 'save');
+        }
+
+        /** @var Controller $controller */
+        foreach ($this->delete_pipes as $controller => $controller_pipe) {
+
+            $controller::pipes($controller_pipe, 'delete');
+        }
+
+        /** @var Piplineble $class */
+        foreach ($this->pipe_map as $class => $types) {
+            foreach ($types as $type => $pipe) {
+                $class::pipes($pipe, $type);
+            }
+        }
+
+        foreach ($this->listen as $event => $listeners) {
+            foreach (array_unique($listeners) as $listener) {
+                \Event::listen($event, $listener);
+            }
+        }
+
+        foreach ($this->subscribe as $subscriber) {
+            \Event::subscribe($subscriber);
         }
     }
 

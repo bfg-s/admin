@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreNestable;
 use Lar\Tagable\Events\onRender;
 
@@ -15,7 +16,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Nested extends DIV implements onRender {
 
-    use Macroable;
+    use Macroable, Piplineble;
 
     /**
      * @var bool
@@ -49,6 +50,19 @@ class Nested extends DIV implements onRender {
             $params[] = $instructions;
             $instructions = [];
         }
+
+        if (is_array($model)) {
+
+            $instructions = $model;
+            $model = null;
+        }
+
+        if (!$model) {
+
+            $model = gets()->lte->menu->model;
+        }
+
+        $model = static::fire_pipes($model, get_class($model));
 
         $this->nested = new CoreNestable($model, $instructions);
 

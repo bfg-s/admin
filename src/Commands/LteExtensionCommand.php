@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @package Lar\Admin\Commands
  */
-class LteExtension extends BaseLteExtension
+class LteExtensionCommand extends BaseLteExtension
 {
     /**
      * The name and signature of the console command.

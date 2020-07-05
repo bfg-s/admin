@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @package Lar\LteAdmin\Commands
  */
-class MakeController extends Command
+class LteControllerCommand extends Command
 {
     /**
      * The name and signature of the console command.

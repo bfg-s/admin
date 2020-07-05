@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Core\Traits\Piplineble;
 
 /**
  * Class Col
@@ -15,7 +16,7 @@ use Lar\LteAdmin\Core\Traits\Macroable;
  */
 class ModelInfoTable extends DIV {
 
-    use Macroable;
+    use Macroable, Piplineble;
 
     /**
      * @var bool
@@ -58,6 +59,8 @@ class ModelInfoTable extends DIV {
 
             $this->model = gets()->lte->menu->model;
         }
+
+        $this->model = static::fire_pipes($model, get_class($this->model));
 
         parent::__construct();
 

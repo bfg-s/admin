@@ -53,7 +53,7 @@ trait NavDefaultTools
     public function lteAdministrators(string $action = null)
     {
         return $this->item('lte.administrators', 'administrators')
-            ->resource('lte_user', $action ?? '\Lar\LteAdmin\Controllers\AdminsController')
+            ->resource('lte_user', $action ?? '\Lar\LteAdmin\Controllers\AdministratorsController')
             ->icon_users_cog();
     }
 

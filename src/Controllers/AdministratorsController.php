@@ -15,11 +15,10 @@ use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
- * Class HomeController
- *
+ * Class AdministratorsController
  * @package Lar\LteAdmin\Controllers
  */
-class AdminsController extends Controller
+class AdministratorsController extends Controller
 {
     /**
      * @var string
