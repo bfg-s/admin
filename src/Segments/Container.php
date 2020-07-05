@@ -60,6 +60,18 @@ class Container implements SegmentContainerInterface {
     }
 
     /**
+     * Make next component in div
+     * @param  \Closure  $warp
+     * @return $this
+     */
+    public function next(\Closure $warp)
+    {
+        $warp($this->component, $this);
+
+        return $this;
+    }
+
+    /**
      * @param  mixed|string[]  ...$breadcrumbs
      * @return $this
      */
