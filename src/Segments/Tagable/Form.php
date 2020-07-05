@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Core\Traits\Piplineble;
+use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 

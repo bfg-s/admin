@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Core\Traits\Piplineble;
+use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
