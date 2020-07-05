@@ -21,7 +21,8 @@ class Decorations {
     {
         return Field::rating('rating')
             ->only_input()
-            ->value($value
+            ->readonly()
+            ->value($value)
             ->sizeXs();
     }
 
