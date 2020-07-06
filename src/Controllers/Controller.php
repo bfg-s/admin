@@ -124,8 +124,12 @@ class Controller extends BaseController
         }
 
         $save = static::fire_pipes($save, 'save');
+
+        $updated = $this->requestToModel($save);
         
-        if ($this->requestToModel($save)) {
+        if ($updated) {
+
+            static::fire_pipes($updated, 'updated');
 
             respond()->toast_success(__('lte.saved_successfully'));
         }
@@ -161,7 +165,11 @@ class Controller extends BaseController
 
         $save = static::fire_pipes($save, 'save');
 
-        if ($this->requestToModel($save)) {
+        $stored = $this->requestToModel($save);
+
+        if ($stored) {
+
+            static::fire_pipes($stored, 'stored');
 
             respond()->toast_success(__('lte.successfully_created'));
         }
