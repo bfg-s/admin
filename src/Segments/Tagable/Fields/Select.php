@@ -66,7 +66,7 @@ class Select extends FormGroup
                 $this->load_format,
                 $this->value,
                 $this->nullable ? $this->title : null,
-                $this->path . '_',
+                $this->field_id . '_',
                 $this->load_where
             );
 
