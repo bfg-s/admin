@@ -122,6 +122,11 @@ abstract class FormGroup extends DIV {
     protected $only_input = false;
 
     /**
+     * @var \Closure
+     */
+    protected $value_to;
+
+    /**
      * FormGroup constructor.
      * @param  Component  $parent
      * @param  string  $title
@@ -339,6 +344,11 @@ abstract class FormGroup extends DIV {
 
         $this->value = $this->create_value();
 
+        if ($this->value_to) {
+
+            $this->value = ($this->value_to)($this->value);
+        }
+
         $input_group->appEnd(
             $this->field()
         )->appEnd(
@@ -352,6 +362,17 @@ abstract class FormGroup extends DIV {
 
         $this->make_info_message($fg)
             ->make_error_massages($fg);
+    }
+
+    /**
+     * @param  \Closure  $closure
+     * @return $this
+     */
+    public function value_to(\Closure $closure)
+    {
+        $this->value_to = $closure;
+
+        return $this;
     }
 
     /**
