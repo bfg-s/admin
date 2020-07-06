@@ -94,7 +94,11 @@ class Select extends FormGroup
             $options = $options->toArray();
         }
 
-        $this->options = $options;
+        if ($this->options) {
+            $this->options = array_merge($this->options, $options);
+        } else {
+            $this->options = $options;
+        }
 
         if ($first_default) {
             $this->default(array_key_first($this->options));
@@ -123,6 +127,12 @@ class Select extends FormGroup
     public function nullable(string $message = null)
     {
         $this->nullable = true;
+
+        if ($this->options) {
+            $this->options = array_merge(['' => 'none'], $this->options);
+        } else {
+            $this->options = ['' => 'none'];
+        }
 
         return parent::nullable($message);
     }
