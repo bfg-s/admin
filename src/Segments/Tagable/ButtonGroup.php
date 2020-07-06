@@ -219,8 +219,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && $this->model && $this->model->exists) {
 
+            $key = $this->model->getRouteKey();
+
             if (
-                $key = $this->model->getRouteKey() &&
+                $key &&
                 isset($this->menu['link.edit'])
             ) {
 
@@ -249,8 +251,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && $this->model && $this->model->exists) {
 
+            $key = $this->model->getRouteKey();
+
             if (
-                $key = $this->model->getRouteKey() &&
+                $key &&
                 isset($this->menu['link.show'])
             ) {
 
@@ -281,8 +285,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && $this->model && $this->model->exists) {
 
+            $key = $this->model->getRouteKey();
+
             if (
-                $key = $this->model->getRouteKey() &&
+                $key &&
                 isset($this->menu['link.destroy'])
             ) {
 
@@ -316,8 +322,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && $this->model && $this->model->exists) {
 
+            $key = $this->model->getRouteKey();
+
             if (
-                $key = $this->model->getRouteKey() &&
+                $key &&
                 isset($this->menu['link.destroy'])
             ) {
 
@@ -351,8 +359,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && $this->model && $this->model->exists) {
 
+            $key = $this->model->getRouteKey();
+
             if (
-                $key = $this->model->getRouteKey() &&
+                $key &&
                 isset($this->menu['link.destroy'])
             ) {
 
