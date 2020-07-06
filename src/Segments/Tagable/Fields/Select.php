@@ -68,7 +68,9 @@ class Select extends FormGroup
 
             if (request()->has($r_name)) { exit($selector->toJson(JSON_UNESCAPED_UNICODE)); }
 
-            $this->on_load('select2::ajax', $r_name)
+            $this->data['select-name'] = $r_name;
+
+            $this->on_load('select2::ajax')
                 ->options($selector->getValueData(), true);
         }
 
