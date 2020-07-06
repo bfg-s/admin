@@ -46,6 +46,11 @@ class Select extends FormGroup
     protected $load_format;
 
     /**
+     * @var \Closure
+     */
+    protected $load_where;
+
+    /**
      * @var bool
      */
     protected $nullable = false;
@@ -61,7 +66,8 @@ class Select extends FormGroup
                 $this->load_format,
                 $this->value,
                 $this->nullable ? $this->title : null,
-                $this->path . '_'
+                $this->path . '_',
+                $this->load_where
             );
 
             $r_name = $selector->getName();
@@ -82,7 +88,8 @@ class Select extends FormGroup
 
         return CoreSelect2::create($this->options, [
             'name' => $this->name,
-            'data-placeholder' => $this->title
+            'data-placeholder' => $this->title,
+            'id' => $this->field_id
         ], ...$this->params)
             ->setValues($this->value)
             ->makeOptions()
@@ -118,12 +125,19 @@ class Select extends FormGroup
     /**
      * @param $subject
      * @param  string  $format
+     * @param  \Closure|null  $where
      * @return $this
      */
-    public function load($subject, string $format = null)
+    public function load($subject, string $format = null, \Closure $where = null)
     {
         $this->load_subject = $subject;
         $this->load_format = $format;
+        $this->load_where = $where;
+
+        if ($where) {
+
+            $this->data['with-where'] = 'true';
+        }
 
         return $this;
     }
