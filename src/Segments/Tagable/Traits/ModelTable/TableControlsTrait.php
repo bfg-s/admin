@@ -146,7 +146,7 @@ trait TableControlsTrait {
     {
         if ($this->get_test_var('controls')) {
 
-            if ($this->checks) {
+            if ($this->checks && !request()->has('show_deleted')) {
                 $this->to_prepend()->column(function (SPAN $span) {
                     $span->_addClass('fit');
                     $span->view('lte::segment.model_table_checkbox', [
