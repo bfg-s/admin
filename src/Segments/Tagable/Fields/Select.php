@@ -134,6 +134,8 @@ class Select extends FormGroup
             $this->options = ['' => 'none'];
         }
 
+        $this->data['allow-clear'] = 'true';
+
         return parent::nullable($message);
     }
 }
