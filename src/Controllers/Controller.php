@@ -198,7 +198,7 @@ class Controller extends BaseController
 
         if ($force || $restore) {
 
-            $model = $this->model()->onlyTrashed()->find($this->model_primary());
+            $model = $this->model()->onlyTrashed()->where($this->model()->getRouteKeyName(), $this->model_primary());
         }
 
         $model = static::fire_pipes($model, 'delete');
