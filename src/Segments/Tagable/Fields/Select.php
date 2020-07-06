@@ -70,8 +70,14 @@ class Select extends FormGroup
 
             $this->data['select-name'] = $r_name;
 
-            $this->on_load('select2::ajax')
-                ->options($selector->getValueData(), true);
+            $this->on_load('select2::ajax');
+
+            $vals = $selector->getValueData();
+
+            if ($vals) {
+
+                $this->options($vals, true);
+            }
         }
 
         return CoreSelect2::create($this->options, [
