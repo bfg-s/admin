@@ -277,21 +277,21 @@ a.editable-click.editable-disabled:hover {
   top: -6px;
   left: 7px;
 }
-.datepicker > div {
-  display: none;
-}
-.datepicker.days div.datepicker-days {
-  display: block;
-}
-.datepicker.months div.datepicker-months {
-  display: block;
-}
-.datepicker.years div.datepicker-years {
-  display: block;
-}
-.datepicker table {
-  margin: 0;
-}
+/*.datepicker > div {*/
+/*  display: none;*/
+/*}*/
+/*.datepicker.days div.datepicker-days {*/
+/*  display: block;*/
+/*}*/
+/*.datepicker.months div.datepicker-months {*/
+/*  display: block;*/
+/*}*/
+/*.datepicker.years div.datepicker-years {*/
+/*  display: block;*/
+/*}*/
+/*.datepicker table {*/
+/*  margin: 0;*/
+/*}*/
 .datepicker td,
 .datepicker th {
   text-align: center;
