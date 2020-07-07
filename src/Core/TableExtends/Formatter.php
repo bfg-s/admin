@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Formatter
@@ -28,25 +29,35 @@ class Formatter {
     }
 
     /**
-     * @param $props
      * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function to_append($value, $props = [])
+    public function to_append($value, $props = [], Model $model = null)
     {
-        $append = implode(" ", $props);
+        if (isset($props[0]) && $props[0] instanceof \Closure) {
+            $append = $props[0]($model);
+        } else {
+            $append = implode(" ", $props);
+        }
 
         return $value.$append;
     }
 
     /**
-     * @param $props
      * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend($value, $props = [])
+    public function to_prepend($value, $props = [], Model $model = null)
     {
-        $prepend = implode(" ", $props);
+        if (isset($props[0]) && $props[0] instanceof \Closure) {
+            $prepend = $props[0]($model);
+        } else {
+            $prepend = implode(" ", $props);
+        }
 
         return $prepend.$value;
     }
