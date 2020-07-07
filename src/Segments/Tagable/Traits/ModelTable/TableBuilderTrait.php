@@ -145,6 +145,10 @@ trait TableBuilderTrait {
                 else {
                     $th->span()->when([$column['label']]);
                 }
+                if ($column['info']) {
+
+                    $th->text(':space')->i(['title' => __($column['info'])])->icon_info_circle();
+                }
             });
     }
 

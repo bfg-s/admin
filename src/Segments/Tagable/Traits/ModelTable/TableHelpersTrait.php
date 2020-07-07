@@ -89,6 +89,7 @@ trait TableHelpersTrait {
             'label' => is_string($label) ? __($label) : $label,
             'sort' => false,
             'trash' => true,
+            'info' => false,
             'macros' => []
         ];
 
@@ -120,6 +121,20 @@ trait TableHelpersTrait {
         if (isset($this->columns[$this->last])) {
 
             $this->columns[$this->last]['trash'] = false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $info
+     * @return $this
+     */
+    public function info(string $info)
+    {
+        if (isset($this->columns[$this->last])) {
+
+            $this->columns[$this->last]['info'] = $info;
         }
 
         return $this;

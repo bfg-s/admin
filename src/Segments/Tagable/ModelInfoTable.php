@@ -4,8 +4,11 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\SPAN;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Developer\Core\Traits\Piplineble;
+
+use function GraphQL\Validator\DocumentValidator;
 
 /**
  * Class Col
@@ -80,7 +83,21 @@ class ModelInfoTable extends DIV {
     {
         $this->last = uniqid('row');
 
-        $this->rows[$this->last] = ['field' => $field, 'label' => $label, 'macros' => []];
+        $this->rows[$this->last] = ['field' => $field, 'label' => $label, 'info' => false, 'macros' => []];
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $info
+     * @return $this
+     */
+    public function info(string $info)
+    {
+        if ($this->last && isset($this->rows[$this->last])) {
+
+            $this->rows[$this->last]['info'] = $info;
+        }
 
         return $this;
     }
@@ -178,6 +195,9 @@ class ModelInfoTable extends DIV {
                     ]);
                 }
                 $label = __($label);
+                if ($row['info']) {
+                    $label .= SPAN::create(':space')->i(['title' => __($row['info'])])->icon_info_circle()->_render();
+                }
                 $data[] = [$label, $field];
             }
         }

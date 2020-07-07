@@ -174,7 +174,8 @@ class Card extends DIV implements onRender {
     {
         $this->search_form = new SearchForm();
 
-        $this->body($this->search_form)->setId("table_search_form")->setStyle("display: none");
+        $this->div(['#table_search_form', 'collapse'])
+            ->div(['card-body'], $this->search_form);
 
         $this->table = $this->body(['p-0', 'table-responsive'])
             ->model_table($model, $after);
@@ -320,7 +321,14 @@ class Card extends DIV implements onRender {
                     $this->group(function (ButtonGroup $group) {
 
                         $group->primary(['fas fa-search', __('lte.search')])
-                            ->on_click('lte::switch_search');
+                            ->setDatas([
+                                'toggle' => 'collapse',
+                                'target' => '#table_search_form'
+                            ])->attr([
+                                'aria-expanded' => 'true',
+                                'aria-controls' =>  'table_search_form'
+                            ]);
+                            //->on_click('lte::switch_search');
 
                         if (request()->has('q')) {
                             $group->danger(['fas fa-window-close', __('lte.cancel')])
