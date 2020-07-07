@@ -118,12 +118,12 @@ class Controller extends BaseController
 
         $save = $data ?? request()->all();
 
+        $save = static::fire_pipes($save, 'save');
+
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
 
             return $back;
         }
-
-        $save = static::fire_pipes($save, 'save');
 
         $updated = $this->requestToModel($save);
         
@@ -158,12 +158,12 @@ class Controller extends BaseController
 
         $save = $data ?? request()->all();
 
+        $save = static::fire_pipes($save, 'save');
+
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
 
             return $back;
         }
-
-        $save = static::fire_pipes($save, 'save');
 
         $stored = $this->requestToModel($save);
 
