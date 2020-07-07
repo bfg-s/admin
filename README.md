@@ -27,8 +27,8 @@
 * **DatetimePicker** http://eonasdan.github.io/bootstrap-datetimepicker/
 * **Nestable** https://dbushell.com/Nestable/
 * **Star rating** https://plugins.krajee.com/star-rating
+* **XEditable** https://github.com/vitalets/x-editable
 
 ### To future by priority
-* https://github.com/vitalets/x-editable
 * || 1 - http://dynamicdrive.com/dynamicindex16/autosaveform.htm 
 * || 1 - https://www.jqueryscript.net/form/save-form-local-storage.html

@@ -146,4 +146,5 @@ return [
     'delete_forever'                => 'Удалить навсегда',
     'delete_forever_subject'        => 'Удалить навсегда :subject',
     'successfully_restored'         => 'Успешно восстановлено!',
+    'back'                          => 'Назад',
 ];
