@@ -101,3 +101,11 @@
     -webkit-animation-fill-mode: none !important;
     animation-fill-mode: none !important;
 }
+
+.card-body:not(.p-0) form .nav-tabs {
+    margin: 0 -21px 0 -21px !important;
+}
+
+.card-body:not(.p-0) form .tab-content {
+    margin: 0 -16px 0 -16px !important;
+}

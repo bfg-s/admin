@@ -171,7 +171,8 @@ trait TableBuilderTrait {
                 if ($item instanceof SearchForm) {
                     $this->model = $item->makeModel($this->model);
                 } else if ($item instanceof \Closure) {
-                    ($item)($this->model);
+                    $r = ($item)($this->model);
+                    if ($r) $this->model = $r;
                 } else if (is_array($item)) {
                     $this->model = eloquent_instruction($this->model, $item);
                 }

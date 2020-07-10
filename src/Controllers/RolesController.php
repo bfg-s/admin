@@ -29,14 +29,11 @@ class RolesController extends Controller
      */
     public function index()
     {
-        return Sheet::create('lte.list_of_roles', function (ModelTable $table, Card $card) {
+        return Sheet::create('lte.list_of_roles', function (ModelTable $table) {
 
-            $card->search(function (SearchForm $form) {
-                $form->id();
-                $form->input('name', 'lte.title', '=%');
-                $form->input('slug', 'lte.slug', '=%');
-                $form->at();
-            });
+            $table->search->input('name', 'lte.title', '=%');
+            $table->search->input('slug', 'lte.slug', '=%');
+            $table->search->at();
 
             $table->id();
             $table->column('lte.title', 'name')->sort();

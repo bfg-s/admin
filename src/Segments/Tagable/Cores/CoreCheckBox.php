@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Cores;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection;
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\INPUT;
 use Lar\Tagable\Events\onRender;
 
 /**
@@ -136,10 +137,12 @@ class CoreCheckBox extends DIV implements onRender
                     $checked = true;
                 }
 
-                $this->div(['icheck-primary float-left mr-3'])
-                    ->input(['type' => 'checkbox', 'id' => $id, 'name' => $this->name . "[]", 'value' => $value])
-                    ->setCheckedIf($checked, 'true')
-                    ->label(['for' => $id], $title);
+                $this->div(
+                    ['icheck-primary float-left mr-3'],
+                    INPUT::create(['type' => 'checkbox', 'id' => $id, 'name' => $this->name . "[]", 'value' => $value])
+                        ->setCheckedIf($checked, 'true')
+                        ->label(['for' => $id], $title)
+                );
 
                 $i++;
             }

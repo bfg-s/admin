@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class Container
@@ -30,8 +31,12 @@ class Sheet extends Container {
         parent::__construct(function (DIV $div) use ($title, $warp) {
             $card = null;
             $div->card($title)->haveLink($card)
-                ->defaultTools()
-                ->bodyModelTable(function (ModelTable $table) use ($warp, $card) {
+                ->defaultTools()->bodyModelTable(function (ModelTable $table) use ($warp, $card) {
+
+                    $card->search(function (SearchForm $form) {
+                        $form->id();
+                    });
+                    
                     if ($warp) {
                         $warp($table, $card, $this);
                     }

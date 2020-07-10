@@ -110,7 +110,9 @@ class Select extends FormGroup
         }
 
         if ($this->options) {
-            $this->options = array_merge($this->options, $options);
+            foreach ($options as $k=>$option) {
+                $this->options[$k] = $option;
+            }
         } else {
             $this->options = $options;
         }
@@ -151,7 +153,11 @@ class Select extends FormGroup
         $this->nullable = true;
 
         if ($this->options) {
-            $this->options = array_merge(['' => 'none'], $this->options);
+            $opts = ['' => 'none'];
+            foreach ($this->options as $k=>$option) {
+                $opts[$k] = $option;
+            }
+            $this->options = $opts;
         } else {
             $this->options = ['' => 'none'];
         }

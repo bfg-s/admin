@@ -56,7 +56,7 @@ class Card extends DIV implements onRender {
     protected $form;
 
     /**
-     * @var DIV
+     * @var CardBody
      */
     protected $body;
 
@@ -126,30 +126,34 @@ class Card extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure  $closure
+     * @param  \Closure|null $closure
      * @return $this
      */
-    public function search(\Closure $closure)
+    public function search(\Closure $closure = null)
     {
         $this->has_search_form = true;
 
-        $closure($this->search_form);
+        if ($closure) {
+
+            $closure($this->search_form);
+        }
 
         return $this;
     }
 
     /**
      * @param  mixed  ...$params
-     * @return DIV
+     * @return CardBody
      */
     public function body(...$params)
     {
-        return $this->div(['card-body'], ...$params)
-            ->haveLink($this->body);
+        $body = CardBody::create(...$params)->haveLink($this->body);
+        $this->appEnd($body);
+        return $body;
     }
 
     /**
-     * @return DIV
+     * @return CardBody
      */
     public function getBody()
     {
@@ -158,11 +162,11 @@ class Card extends DIV implements onRender {
 
     /**
      * @param  mixed  ...$params
-     * @return DIV
+     * @return CardBody
      */
     public function foolBody(...$params)
     {
-        return $this->div(['card-body p-0'], ...$params);
+        return $this->body(['p-0'], ...$params);
     }
 
     /**
@@ -178,9 +182,9 @@ class Card extends DIV implements onRender {
             ->div(['card-body'], $this->search_form);
 
         $this->table = $this->body(['p-0', 'table-responsive'])
-            ->model_table($model, $after);
-        
-        $this->table->model($this->search_form);
+            ->model_table($model, function (ModelTable $table) {
+                $table->model($this->search_form);
+            }, $after);
 
         $this->table->rendered(function (ModelTable $table) {
             $this->bottom_content->add($table->footer());
@@ -351,9 +355,9 @@ class Card extends DIV implements onRender {
                 }
             }
 
-            if ($test('reload')) {
-                $this->group->reload();
-            }
+//            if ($test('reload')) {
+//                $this->group->reload();
+//            }
 
             if ($this->now['current.type'] && !request()->has('show_deleted')) {
 

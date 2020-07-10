@@ -38,7 +38,13 @@ class Password extends Input
             $label = $this->title . " " . __('lte.confirmation');
         }
 
-        $this->parent_field->password($this->name . '_confirmation', $label, ...$this->params)
+        $p = $this->parent_field;
+
+        if (!$p) {
+            $p = $this->_();
+        }
+
+        $p->password($this->name . '_confirmation', $label, ...$this->params)
             ->icon($this->icon)->mergeDataList($this->data)->_front_rule_equal_to("#input_{$this->name}");
 
         return $this;

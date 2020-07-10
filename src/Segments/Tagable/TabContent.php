@@ -9,13 +9,13 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class TabContent
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
- * @mixin RowMacroList
- * @mixin RowMethods
+ * @mixin TabContentMacroList
+ * @mixin TabContentMethods
  */
-class Row extends DIV implements onRender {
+class TabContent extends DIV implements onRender {
 
     use FieldMassControl, Macroable, BuildHelperTrait;
 
@@ -23,7 +23,8 @@ class Row extends DIV implements onRender {
      * @var string[]
      */
     protected $props = [
-        'row'
+        'tab-pane p-3',
+        'role' => 'tabpanel',
     ];
 
     /**

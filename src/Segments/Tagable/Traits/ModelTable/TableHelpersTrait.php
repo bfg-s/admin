@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Trait TableHelpersTrait
@@ -14,16 +15,16 @@ use Lar\Layout\Tags\DIV;
 trait TableHelpersTrait {
 
     /**
-     * @var bool
-     */
-    protected $prepend = false;
-
-    /**
-     * @param $instruction
+     * @param SearchForm|\Closure|array $instruction
      * @return $this
      */
     public function model($instruction)
     {
+        if ($instruction instanceof SearchForm) {
+
+            $this->search = $instruction;
+        }
+
         $this->model_control[] = $instruction;
 
         return $this;

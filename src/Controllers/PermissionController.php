@@ -43,14 +43,13 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return Sheet::create(function (ModelTable $table, Card $card) {
-            $card->search(function (SearchForm $form) {
-                $form->id();
-                $form->input('path', 'lte.path', '=%');
-                $form->select('lte_role_id', 'lte.role')
-                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'));
-                $form->at();
-            });
+        return Sheet::create(function (ModelTable $table) {
+
+            $table->search->input('path', 'lte.path');
+            $table->search->select('lte_role_id', 'lte.role')
+                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'))->nullable();
+            $table->search->at();
+
             $table->id();
             $table->column('lte.path', 'path')->badge('success');
             $table->column('lte.methods', [$this, 'show_methods'])->sort('method');

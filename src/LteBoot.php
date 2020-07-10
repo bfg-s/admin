@@ -2,10 +2,13 @@
 
 namespace Lar\LteAdmin;
 
+use Lar\Layout\Abstracts\Component;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
 use Lar\LteAdmin\Core\TableExtends\Display;
 use Lar\LteAdmin\Core\TableExtends\Editables;
 use Lar\LteAdmin\Core\TableExtends\Formatter;
+use Lar\LteAdmin\Core\TagableComponent;
+use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
@@ -31,6 +34,11 @@ class LteBoot
      */
     public static function run()
     {
+        /**
+         * Register tagable components
+         */
+        TagableComponent::create();
+
         include __DIR__ . '/bootstrap.php';
 
         foreach (static::$table_classes as $item) {
@@ -47,6 +55,8 @@ class LteBoot
         }
 
         static::formMacros();
+
+        //Component::injectCollection(Field::$form_components);
     }
 
     /**

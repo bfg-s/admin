@@ -33,7 +33,9 @@ use Lar\LteAdmin\Segments\Tagable\Traits\SearchFormHelpersTrait;
  */
 class SearchForm extends \Lar\Layout\Tags\FORM {
 
-    use SearchFormConditionRulesTrait, SearchFormHelpersTrait, Macroable;
+    use SearchFormConditionRulesTrait,
+        SearchFormHelpersTrait,
+        Macroable;
 
     /**
      * @var array
@@ -150,9 +152,11 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
             $label = $arguments[1] ?? null;
             $condition = $arguments[2] ?? null;
 
-            $class = new $class($this, "q[{$field_name}]", $label);
+            $class = new $class("q[{$field_name}]", $label);
 
             if ($class instanceof FormGroup) {
+
+                $class->set_parent($this);
 
                 $class->vertical();
 

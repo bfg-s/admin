@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Cores;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\INPUT;
 use Lar\Tagable\Events\onRender;
 
 /**
@@ -113,10 +114,12 @@ class CoreRadio extends DIV implements onRender
 
                 $id = $this->id ? 'radio-' . $this->id . '-' . $i : 'radio-' . $i;
 
-                $this->div(['icheck-primary float-left mr-3'])
-                    ->input(['type' => 'radio', 'id' => $id, 'name' => $this->name, 'value' => $value])
-                    ->setCheckedIf($this->value == $value, 'true')
-                    ->label(['for' => $id], $title);
+                $this->div(
+                    ['icheck-primary float-left mr-3'],
+                    INPUT::create(['type' => 'radio', 'id' => $id, 'name' => $this->name, 'value' => $value])
+                        ->setCheckedIf($this->value == $value, 'true')
+                        ->label(['for' => $id], $title)
+                );
 
                 $i++;
             }

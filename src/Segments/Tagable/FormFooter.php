@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
@@ -111,25 +112,31 @@ class FormFooter extends DIV implements onRender {
 
                 $_after = session('_after', 'index');
 
-                $div->div(['icheck-primary float-left mr-2'])
-                    ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_index', 'value' => 'index'])
-                    ->setDatas(['state' => ''])->setCheckedIf($_after === 'index', 'checked')
-                    ->label(['for' => '_after_select_index'])->text(__('lte.to_the_list'));
+                $div->div(
+                    ['icheck-primary float-left mr-2'],
+                    INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_index', 'value' => 'index'])
+                        ->setDatas(['state' => ''])->setCheckedIf($_after === 'index', 'checked')
+                        ->label(['for' => '_after_select_index'])->text(__('lte.to_the_list'))
+                );
 
                 if ($type === 'create') {
 
-                    $div->div(['icheck-primary float-left mr-2'])
-                        ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
-                        ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-                        ->label(['for' => '_after_select_stay'])->text(__('lte.add_more'));
+                    $div->div(
+                        ['icheck-primary float-left mr-2'],
+                        INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
+                            ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
+                            ->label(['for' => '_after_select_stay'])->text(__('lte.add_more'))
+                    );
                 }
 
                 if ($type === 'edit') {
 
-                    $div->div(['icheck-primary float-left mr-2'])
-                        ->input(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
-                        ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-                        ->label(['for' => '_after_select_stay'])->text(__('lte.edit_further'));
+                    $div->div(
+                        ['icheck-primary float-left mr-2'],
+                        INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
+                            ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
+                            ->label(['for' => '_after_select_stay'])->text(__('lte.edit_further'))
+                    );
                 }
             });
         }

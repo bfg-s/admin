@@ -84,9 +84,11 @@ trait FieldMassControl {
 
             $class = Field::$form_components[$name];
 
-            $class = new $class($this, ...$arguments);
+            $class = new $class(...$arguments);
 
             if ($class instanceof FormGroup) {
+
+                $class->set_parent($this);
 
                 if ($this->vertical) {
 

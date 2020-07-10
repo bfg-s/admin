@@ -133,14 +133,13 @@ abstract class FormGroup extends DIV {
      * @param  string  $name
      * @param  mixed  ...$params
      */
-    public function __construct(Component $parent, string $name, string $title = null, ...$params)
+    public function __construct(string $name, string $title = null, ...$params)
     {
         parent::__construct();
 
         $this->title = $title ? __($title) : $title;
         $this->name = $name;
         $this->params = array_merge($this->params, $params);
-        $this->parent_field = $parent;
         $this->field_id = 'input_' . \Str::slug($this->name, '_');
         $this->path = trim(str_replace(['[',']'], '.', str_replace('[]', '', $name)), '.');
         $this->errors = request()->session()->get('errors') ?: new ViewErrorBag;
@@ -151,8 +150,20 @@ abstract class FormGroup extends DIV {
         }
         $this->toExecute('makeWrapper');
         if (!$title) { $this->vertical(); }
+        $this->model = Form::$current_model;
         $this->after_construct();
         $this->callConstructEvents();
+    }
+
+    /**
+     * @param  Component  $parent
+     * @return $this
+     */
+    public function set_parent(Component $parent)
+    {
+        $this->parent_field = $parent;
+
+        return $this;
     }
 
     /**

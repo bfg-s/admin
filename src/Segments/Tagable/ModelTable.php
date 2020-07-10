@@ -99,6 +99,16 @@ class ModelTable extends Component {
     protected $last;
 
     /**
+     * @var bool
+     */
+    protected $prepend = false;
+
+    /**
+     * @var SearchForm
+     */
+    public $search;
+
+    /**
      * Table2 constructor.
      * @param  \Closure|Model|Builder|Relation|Collection|array|null  $model
      * @param  mixed  ...$params

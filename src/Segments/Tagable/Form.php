@@ -7,6 +7,7 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Developer\Core\Traits\Piplineble;
+use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 
@@ -20,17 +21,21 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
  */
 class Form extends \Lar\Layout\Tags\FORM {
 
-    use FieldMassControl, FormAutoMakeTrait, Macroable, Piplineble;
+    use FieldMassControl,
+        FormAutoMakeTrait,
+        Macroable,
+        Piplineble,
+        BuildHelperTrait;
+
+    /**
+     * @var Model|null
+     */
+    static $current_model;
 
     /**
      * @var Model
      */
     protected $model;
-
-    /**
-     * @var Model|null
-     */
-    protected static $current_model;
 
     /**
      * @var string
@@ -156,6 +161,8 @@ class Form extends \Lar\Layout\Tags\FORM {
         $this->setId(static::$last_id);
 
         $this->attr('data-load', 'valid');
+
+        static::$current_model = null;
     }
 
     /**

@@ -80,15 +80,15 @@ class Tabs extends DIV implements onRender {
 
         $a->text(__($title));
 
-        $content = $this->tab_contents
-            ->div([
-                'tab-pane p-3',
-                'id' => $id,
-                'role' => 'tabpanel',
-                'aria-labelledby' => $id . "-label"
-            ])->when($this->tab_content_props)
+        $content = TabContent::create([
+            'id' => $id,
+            'aria-labelledby' => $id . "-label"
+        ])->when($this->tab_content_props)
             ->when($attrs)
             ->addClassIf($active, 'active show');
+
+        $content = $this->tab_contents
+            ->appEnd($content);
 
         return $content;
     }

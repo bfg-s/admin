@@ -21,6 +21,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function accepted_if($condition, string $message = null)
+    {
+        return  $condition ? $this->accepted($message) : $this;
+    }
 
     /**
      * The field under validation must have a valid A or AAAA record
@@ -34,6 +38,10 @@ trait RulesBackTrait {
     public function active_url(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function active_url_if($condition, string $message = null)
+    {
+        return  $condition ? $this->active_url($message) : $this;
     }
 
     /**
@@ -51,6 +59,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$date], $message);
     }
+    public function after_if($condition, string $date, string $message = null)
+    {
+        return  $condition ? $this->after($date, $message) : $this;
+    }
 
     /**
      * The field under validation must be a value after or equal to the
@@ -64,6 +76,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$date], $message);
     }
+    public function after_or_equal_if($condition, string $date, string $message = null)
+    {
+        return  $condition ? $this->after_or_equal($date, $message) : $this;
+    }
 
     /**
      * The field under validation must be entirely alphabetic characters.
@@ -74,6 +90,10 @@ trait RulesBackTrait {
     public function alpha(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function alpha_if($condition, string $message = null)
+    {
+        return  $condition ? $this->alpha($message) : $this;
     }
 
     /**
@@ -87,6 +107,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function alpha_dash_if($condition, string $message = null)
+    {
+        return  $condition ? $this->alpha_dash($message) : $this;
+    }
 
     /**
      * The field under validation must be entirely alpha-numeric characters.
@@ -97,6 +121,10 @@ trait RulesBackTrait {
     public function alpha_num(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function alpha_num_if($condition, string $message = null)
+    {
+        return  $condition ? $this->alpha_num($message) : $this;
     }
 
     /**
@@ -109,6 +137,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function array_if($condition, string $message = null)
+    {
+        return  $condition ? $this->array($message) : $this;
+    }
 
     /**
      * Stop running validation rules after the first validation failure.
@@ -118,6 +150,10 @@ trait RulesBackTrait {
     public function bail()
     {
         return  $this->rule(__FUNCTION__);
+    }
+    public function bail_if($condition)
+    {
+        return  $condition ? $this->bail() : $this;
     }
 
     /**
@@ -134,6 +170,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$date], $message);
     }
+    public function before_if($condition, string $date, string $message = null)
+    {
+        return  $condition ? $this->before($date, $message) : $this;
+    }
 
     /**
      * The field under validation must be a value preceding or equal to the given
@@ -148,6 +188,10 @@ trait RulesBackTrait {
     public function before_or_equal(string $date, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$date], $message);
+    }
+    public function before_or_equal_if($condition, string $date, string $message = null)
+    {
+        return  $condition ? $this->before_or_equal($date, $message) : $this;
     }
 
     /**
@@ -164,6 +208,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$min,$max], $message);
     }
+    public function between_if($condition, $min, $max, string $message = null)
+    {
+        return  $condition ? $this->between($min, $max, $message) : $this;
+    }
 
     /**
      * The field under validation must be able to be cast as a boolean.
@@ -175,6 +223,10 @@ trait RulesBackTrait {
     public function boolean(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function boolean_if($condition, string $message = null)
+    {
+        return  $condition ? $this->boolean($message) : $this;
     }
 
     /**
@@ -189,6 +241,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function confirmed_if($condition, string $message = null)
+    {
+        return  $condition ? $this->confirmed($message) : $this;
+    }
 
     /**
      * The field under validation must be a valid, non-relative date according
@@ -200,6 +256,10 @@ trait RulesBackTrait {
     public function date(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function date_if($condition, string $message = null)
+    {
+        return  $condition ? $this->date($message) : $this;
     }
 
     /**
@@ -213,6 +273,10 @@ trait RulesBackTrait {
     public function date_equals(string $date, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$date], $message);
+    }
+    public function date_equals_if($condition, string $date, string $message = null)
+    {
+        return  $condition ? $this->date_equals($date, $message) : $this;
     }
 
     /**
@@ -228,6 +292,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$format], $message);
     }
+    public function date_format_if($condition, string $format, string $message = null)
+    {
+        return  $condition ? $this->date_format($format, $message) : $this;
+    }
 
     /**
      * The field under validation must have a different value than field.
@@ -239,6 +307,10 @@ trait RulesBackTrait {
     public function different(string $field, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
+    }
+    public function different_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->different($field, $message) : $this;
     }
 
     /**
@@ -253,6 +325,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
+    public function digits_if($condition, string $value, string $message = null)
+    {
+        return  $condition ? $this->digits($value, $message) : $this;
+    }
 
     /**
      * The field under validation must be numeric and must have a length
@@ -266,6 +342,10 @@ trait RulesBackTrait {
     public function digits_between($min, $max, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$min, $max], $message);
+    }
+    public function digits_between_if($condition, $min, $max, string $message = null)
+    {
+        return  $condition ? $this->digits_between($min, $max, $message) : $this;
     }
 
     /**
@@ -286,6 +366,10 @@ trait RulesBackTrait {
     {
         return  $this->_n_rule(__FUNCTION__, $params, $message);
     }
+    public function dimensions_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->dimensions($params, $message) : $this;
+    }
 
     /**
      * When working with arrays, the field under validation must not have
@@ -297,6 +381,10 @@ trait RulesBackTrait {
     public function distinct(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function distinct_if($condition, string $message = null)
+    {
+        return  $condition ? $this->distinct($message) : $this;
     }
 
     /**
@@ -310,6 +398,10 @@ trait RulesBackTrait {
         $this->_front_rule_email();
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function email_if($condition, string $message = null)
+    {
+        return  $condition ? $this->email($message) : $this;
+    }
 
     /**
      * The field under validation must end with one of the given values.
@@ -321,6 +413,10 @@ trait RulesBackTrait {
     public function ends_with(array $values, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $values, $message);
+    }
+    public function ends_with_if($condition, array $values, string $message = null)
+    {
+        return  $condition ? $this->ends_with($values, $message) : $this;
     }
 
     /**
@@ -335,6 +431,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$table, $column], $message);
     }
+    public function exists_if($condition, string $table, string $column = null, string $message = null)
+    {
+        return  $condition ? $this->exists($table, $column, $message) : $this;
+    }
 
     /**
      * The field under validation must be a successfully uploaded file.
@@ -346,6 +446,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function file_if($condition, string $message = null)
+    {
+        return  $condition ? $this->file($message) : $this;
+    }
 
     /**
      * The field under validation must not be empty when it is present.
@@ -356,6 +460,10 @@ trait RulesBackTrait {
     public function filled(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function filled_if($condition, string $message = null)
+    {
+        return  $condition ? $this->filled($message) : $this;
     }
 
     /**
@@ -370,6 +478,10 @@ trait RulesBackTrait {
     public function gt(string $field, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
+    }
+    public function gt_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->gt($field, $message) : $this;
     }
 
     /**
@@ -386,6 +498,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
     }
+    public function gte_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->gte($field, $message) : $this;
+    }
 
     /**
      * The file under validation must be an image
@@ -397,6 +513,10 @@ trait RulesBackTrait {
     public function image(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function image_if($condition, string $message = null)
+    {
+        return  $condition ? $this->image($message) : $this;
     }
 
     /**
@@ -411,6 +531,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
     }
+    public function in_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->in($params, $message) : $this;
+    }
 
     /**
      * The field under validation must exist in anotherfield's values.
@@ -423,6 +547,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
     }
+    public function in_array_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->in_array($field, $message) : $this;
+    }
 
     /**
      * The field under validation must be an IP address.
@@ -433,6 +561,10 @@ trait RulesBackTrait {
     public function ip(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function ip_if($condition, string $message = null)
+    {
+        return  $condition ? $this->ip($message) : $this;
     }
 
     /**
@@ -445,6 +577,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function ipv4_if($condition, string $message = null)
+    {
+        return  $condition ? $this->ipv4($message) : $this;
+    }
 
     /**
      * The field under validation must be an IPv6 address.
@@ -456,6 +592,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function ipv6_if($condition, string $message = null)
+    {
+        return  $condition ? $this->ipv6($message) : $this;
+    }
 
     /**
      * The field under validation must be a valid JSON string.
@@ -466,6 +606,10 @@ trait RulesBackTrait {
     public function json(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function json_if($condition, string $message = null)
+    {
+        return  $condition ? $this->json($message) : $this;
     }
 
     /**
@@ -481,6 +625,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
     }
+    public function lt_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->lt($field, $message) : $this;
+    }
 
     /**
      * The field under validation must be less than or equal to the given field.
@@ -494,6 +642,10 @@ trait RulesBackTrait {
     public function lte(string $field, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
+    }
+    public function lte_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->lte($field, $message) : $this;
     }
 
     /**
@@ -509,6 +661,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
+    public function max_if($condition, int $value, string $message = null)
+    {
+        return  $condition ? $this->max($value, $message) : $this;
+    }
 
     /**
      * The file under validation must match one of the given MIME types
@@ -520,6 +676,10 @@ trait RulesBackTrait {
     public function mimetypes(array $mimetypes, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $mimetypes, $message);
+    }
+    public function mimetypes_if($condition, array $mimetypes, string $message = null)
+    {
+        return  $condition ? $this->mimetypes($mimetypes, $message) : $this;
     }
 
     /**
@@ -542,6 +702,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $mimes, $message);
     }
+    public function mimes_if($condition, array $mimes, string $message = null)
+    {
+        return  $condition ? $this->mimes($mimes, $message) : $this;
+    }
 
     /**
      * The field under validation must have a minimum value. Strings, numerics,
@@ -555,6 +719,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
+    public function min_if($condition, int $value, string $message = null)
+    {
+        return  $condition ? $this->min($value, $message) : $this;
+    }
 
     /**
      * The field under validation must be an integer.
@@ -565,6 +733,10 @@ trait RulesBackTrait {
     public function integer(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function integer_if($condition, string $message = null)
+    {
+        return  $condition ? $this->integer($message) : $this;
     }
 
     /**
@@ -577,6 +749,10 @@ trait RulesBackTrait {
     public function not_in(array $values, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $values, $message);
+    }
+    public function not_in_if($condition, array $values, string $message = null)
+    {
+        return  $condition ? $this->not_in($values, $message) : $this;
     }
 
     /**
@@ -598,6 +774,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$pattern], $message);
     }
+    public function not_regex_if($condition, string $pattern, string $message = null)
+    {
+        return  $condition ? $this->not_regex($pattern, $message) : $this;
+    }
 
     /**
      * The field under validation may be null. This is particularly useful when validating
@@ -610,6 +790,10 @@ trait RulesBackTrait {
     {
         return  $this->rule(__FUNCTION__, $message);
     }
+    public function nullable_if($condition, string $message = null)
+    {
+        return  $condition ? $this->nullable($message) : $this;
+    }
 
     /**
      * The field under validation must be numeric.
@@ -621,6 +805,10 @@ trait RulesBackTrait {
     {
         $this->_front_rule_number();
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function numeric_if($condition, string $message = null)
+    {
+        return  $condition ? $this->numeric($message) : $this;
     }
 
     /**
@@ -635,6 +823,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$guard], $message);
     }
+    public function password_if($condition, string $guard, string $message = null)
+    {
+        return  $condition ? $this->password($guard, $message) : $this;
+    }
 
     /**
      * The field under validation must be present in the input data but can be empty.
@@ -645,6 +837,10 @@ trait RulesBackTrait {
     public function present(string $message = null)
     {
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function present_if($condition, string $message = null)
+    {
+        return  $condition ? $this->present($message) : $this;
     }
 
     /**
@@ -666,6 +862,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$pattern], $message);
     }
+    public function regex_if($condition, string $pattern, string $message = null)
+    {
+        return  $condition ? $this->regex($pattern, $message) : $this;
+    }
 
     /**
      * The field under validation must be present in the input data and not empty.
@@ -678,6 +878,10 @@ trait RulesBackTrait {
     {
         $this->_front_rule_required();
         return  $this->rule(__FUNCTION__, $message);
+    }
+    public function required_condition($condition, string $message = null)
+    {
+        return  $condition ? $this->required($message) : $this;
     }
 
     /**
@@ -692,6 +896,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
     }
+    public function required_if_condition($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_if($params, $message) : $this;
+    }
 
     /**
      * The field under validation must be present and not empty unless the anotherfield
@@ -704,6 +912,10 @@ trait RulesBackTrait {
     public function required_unless(array $params, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
+    }
+    public function required_unless_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_unless($params, $message) : $this;
     }
 
     /**
@@ -718,6 +930,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
     }
+    public function required_with_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_with($params, $message) : $this;
+    }
 
     /**
      * The field under validation must be present and not empty only if all of the other
@@ -730,6 +946,10 @@ trait RulesBackTrait {
     public function required_with_all(array $params, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
+    }
+    public function required_with_all_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_with_all($params, $message) : $this;
     }
 
     /**
@@ -744,6 +964,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
     }
+    public function required_without_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_without($params, $message) : $this;
+    }
 
     /**
      * The field under validation must be present and not empty only when all of the other
@@ -757,6 +981,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
     }
+    public function required_without_all_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->required_without_all($params, $message) : $this;
+    }
 
     /**
      * The given field must match the field under validation.
@@ -768,6 +996,10 @@ trait RulesBackTrait {
     public function same(string $field, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, [$field], $message);
+    }
+    public function same_if($condition, string $field, string $message = null)
+    {
+        return  $condition ? $this->same($field, $message) : $this;
     }
 
     /**
@@ -785,6 +1017,10 @@ trait RulesBackTrait {
     {
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
+    public function size_if($condition, int $value, string $message = null)
+    {
+        return  $condition ? $this->size($value, $message) : $this;
+    }
 
     /**
      * The field under validation must start with one of the given values.
@@ -796,6 +1032,10 @@ trait RulesBackTrait {
     public function starts_with(array $params, string $message = null)
     {
         return  $this->_rule(__FUNCTION__, $params, $message);
+    }
+    public function starts_with_if($condition, array $params, string $message = null)
+    {
+        return  $condition ? $this->starts_with($params, $message) : $this;
     }
 
     /**
@@ -809,6 +1049,10 @@ trait RulesBackTrait {
     {
         return $this->rule(__FUNCTION__, $message);
     }
+    public function string_if($condition, string $message = null)
+    {
+        return  $condition ? $this->string($message) : $this;
+    }
 
     /**
      * The field under validation must be a valid timezone identifier according
@@ -820,6 +1064,10 @@ trait RulesBackTrait {
     public function timezone(string $message = null)
     {
         return $this->rule(__FUNCTION__, $message);
+    }
+    public function timezone_if($condition, string $message = null)
+    {
+        return  $condition ? $this->timezone($message) : $this;
     }
 
     /**
@@ -836,6 +1084,10 @@ trait RulesBackTrait {
     {
         return $this->_rule(__FUNCTION__, [$table,$column,$except,$idColumn], $message);
     }
+    public function unique_if($condition, string $table, string $column = null, $except = null, $idColumn = null, string $message = null)
+    {
+        return  $condition ? $this->unique($table, $column, $except, $idColumn, $message) : $this;
+    }
 
     /**
      * The field under validation must be a valid URL.
@@ -848,6 +1100,10 @@ trait RulesBackTrait {
         $this->_front_rule_url();
         return $this->rule(__FUNCTION__, $message);
     }
+    public function url_if($condition, string $message = null)
+    {
+        return  $condition ? $this->url($message) : $this;
+    }
 
     /**
      * The field under validation must be a valid RFC 4122 (version 1, 3, 4, or 5)
@@ -859,6 +1115,10 @@ trait RulesBackTrait {
     public function uuid(string $message = null)
     {
         return $this->rule(__FUNCTION__, $message);
+    }
+    public function uuid_if($condition, string $message = null)
+    {
+        return  $condition ? $this->uuid($message) : $this;
     }
 
     /**

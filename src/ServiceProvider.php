@@ -13,9 +13,7 @@ use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
-use Lar\LteAdmin\Core\Generators\LteGeneratorBoot;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
-use Lar\LteAdmin\Core\TagableComponent;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
@@ -167,6 +165,18 @@ class ServiceProvider extends ServiceProviderIlluminate
              * Register lte admin getter for console
              */
             \Get::create('lte');
+
+            /**
+             * Run lte boots
+             */
+            LteBoot::run();
+
+            /**
+             * Helper registration
+             */
+            DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
+            DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
+            DumpAutoload::addToExecute(MacroableHelperGenerator::class);
         }
 
         /**
@@ -194,6 +204,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * App register provider
          */
         if (class_exists('App\Providers\LteServiceProvider')) {
+
             $this->app->register('App\Providers\LteServiceProvider');
         }
 
@@ -204,14 +215,6 @@ class ServiceProvider extends ServiceProviderIlluminate
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             Handler::class
         );
-
-        /**
-         * Helper registration
-         */
-        DumpAutoload::addToExecute(LteGeneratorBoot::class);
-        DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
-        DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
-        DumpAutoload::addToExecute(MacroableHelperGenerator::class);
 
         /**
          * Merge config from having by default
@@ -249,11 +252,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register lte jax executors
          */
         $this->registerJax();
-
-        /**
-         * Register tagable components
-         */
-        TagableComponent::create();
     }
 
     /**

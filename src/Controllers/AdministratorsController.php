@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Container;
@@ -13,6 +14,8 @@ use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
+use Lar\LteAdmin\Segments\Tagable\TabContent;
+use Lar\LteAdmin\Segments\Tagable\Tabs;
 
 /**
  * Class AdministratorsController
@@ -30,16 +33,12 @@ class AdministratorsController extends Controller
      */
     public function index()
     {
-        return Sheet::create('lte.admin_list', function (ModelTable $table, Card $card) {
+        return Sheet::create('lte.admin_list', function (ModelTable $table) {
 
-            $card->search(function (SearchForm $form) {
-
-                $form->id();
-                $form->email('email', 'lte.email_address');
-                $form->input('login', 'lte.login_name', '=%');
-                $form->input('name', 'lte.name', '=%');
-                $form->at();
-            });
+            $table->search->email('email', 'lte.email_address');
+            $table->search->input('login', 'lte.login_name', '=%');
+            $table->search->input('name', 'lte.name', '=%');
+            $table->search->at();
 
             $table->id();
             $table->column('lte.avatar', 'avatar')->avatar();
@@ -58,7 +57,7 @@ class AdministratorsController extends Controller
      */
     public function matrix()
     {
-        return new Matrix($this->isType('create') ? 'lte.add_admin' : 'lte.edit_admin', function (Form $form, Card $card) {
+        return new Matrix(['lte.add_admin', 'lte.edit_admin'], function (Form $form, Card $card) {
 
             $card->defaultTools(function ($type) {
                 return $type === 'delete' && $this->model()->id == 1 && admin()->id == $this->model()->id ? false : true;
@@ -66,26 +65,30 @@ class AdministratorsController extends Controller
 
             $form->info_id();
 
-            $form->image('avatar', 'lte.avatar')->nullable();
+            $form->tab('lte.common', 'fas fa-cogs', function (TabContent $tab)  {
 
-            $form->input('login', 'lte.login_name')
-                ->required()
-                ->unique(LteUser::class, 'login', $this->model()->id);
+                $tab->image('avatar', 'lte.avatar')->nullable();
 
-            $form->input('name', 'lte.name')->required();
+                $tab->input('login', 'lte.login_name')
+                    ->required()
+                    ->unique(LteUser::class, 'login', $this->model()->id);
 
-            $form->email('email', 'lte.email_address')
-                ->required()->unique(LteUser::class, 'email', $this->model()->id);
+                $tab->input('name', 'lte.name')->required();
 
-            $form->multi_select('roles[]', 'lte.role')->icon_user_secret()
-                ->options(LteRole::all()->pluck('name','id'));
+                $tab->email('email', 'lte.email_address')
+                    ->required()->unique(LteUser::class, 'email', $this->model()->id);
+
+                $tab->multi_select('roles[]', 'lte.role')->icon_user_secret()
+                    ->options(LteRole::all()->pluck('name','id'));
+            });
+
+            $form->tab('lte.password', 'fas fa-key', function (TabContent $tab)  {
+
+                $tab->password('password', 'lte.new_password')
+                    ->confirm()->required_condition($this->isType('create'));
+            });
 
             $form->info_at();
-
-            $form->br()->h5(__('lte.password'))->hr();
-
-            $form->password('password', 'lte.new_password')
-                ->confirm();
         });
     }
 

@@ -35,14 +35,10 @@ class FunctionsController extends Controller
      */
     public function index()
     {
-        return Sheet::create(function (ModelTable $table, Card $card) {
+        return Sheet::create(function (ModelTable $table) {
 
-            $card->search(function (SearchForm $form) {
-
-                $form->id();
-                $form->input('slug', 'lte.slug', '=%');
-                $form->at();
-            });
+            $table->search->input('slug', 'lte.slug');
+            $table->search->at();
 
             $table->id();
             $table->column('lte.role', [$this, 'show_roles']);

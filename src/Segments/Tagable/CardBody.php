@@ -12,10 +12,10 @@ use Lar\Tagable\Events\onRender;
  * Class Col
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
- * @mixin RowMacroList
- * @mixin RowMethods
+ * @mixin CardBodyMacroList
+ * @mixin CardBodyMethods
  */
-class Row extends DIV implements onRender {
+class CardBody extends DIV implements onRender {
 
     use FieldMassControl, Macroable, BuildHelperTrait;
 
@@ -23,7 +23,7 @@ class Row extends DIV implements onRender {
      * @var string[]
      */
     protected $props = [
-        'row'
+        'card-body'
     ];
 
     /**
