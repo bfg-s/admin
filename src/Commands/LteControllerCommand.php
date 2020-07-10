@@ -96,11 +96,10 @@ class LteControllerCommand extends Command
             }
 
             $class->method('index')->line()
-                ->line("return Sheet::create(function (ModelTable \$table, Card \$card) {")
-                ->tab("\$card->search(function (SearchForm \$form) {")
-                ->tab("    \$form->id();")
-                ->tab("    \$form->at();")
-                ->tab("});")
+                ->line("return Sheet::create(function (ModelTable \$table) {")
+                ->line()
+                ->tab("\$table->search->at();")
+                ->line()
                 ->tab("\$table->id();")
                 ->tab("\$table->at();")
                 ->line("});")
