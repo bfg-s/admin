@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Tags\A;
 
 /**
  * Class Formatter
@@ -48,6 +49,27 @@ class Formatter {
     /**
      * @param $value
      * @param  array  $props
+     * @return string
+     */
+    public function to_append_link($value, $props = [])
+    {
+        $icon = $props[0] ?? 'fas fa-link';
+        $link = $props[1] ?? 'javascript:void(0)';
+        $title = $props[2] ?? false;
+
+        $link = A::create()->setHref($link)
+            ->i([$icon])->_();
+
+        if ($title) {
+            $link->attr(['title' => $title]);
+        }
+
+        return $value . ' ' . $link;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
      * @param  Model|null  $model
      * @return string
      */
@@ -60,6 +82,27 @@ class Formatter {
         }
 
         return $prepend.$value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function to_prepend_link($value, $props = [])
+    {
+        $icon = $props[0] ?? 'fas fa-link';
+        $link = $props[1] ?? 'javascript:void(0)';
+        $title = $props[2] ?? false;
+
+        $link = A::create()->setHref($link)
+            ->i([$icon])->_();
+
+        if ($title) {
+            $link->attr(['title' => $title]);
+        }
+
+        return  $link . ' ' . $value;
     }
 
     /**
