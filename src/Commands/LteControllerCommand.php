@@ -98,6 +98,7 @@ class LteControllerCommand extends Command
             $class->method('index')->line()
                 ->line("return Sheet::create(function (ModelTable \$table) {")
                 ->line()
+                ->tab("\$table->search->id();")
                 ->tab("\$table->search->at();")
                 ->line()
                 ->tab("\$table->id();")
