@@ -82,11 +82,11 @@ class LteControllerCommand extends Command
             $class->use(Info::class)
                 ->use(Sheet::class)
                 ->use(Matrix::class)
-                ->use(Card::class)
                 ->use(Form::class)
-                ->use(SearchForm::class)
                 ->use(ModelTable::class)
                 ->use(ModelInfoTable::class);
+
+            $class->prop('static:model');
 
             if ($this->option('model')) {
 

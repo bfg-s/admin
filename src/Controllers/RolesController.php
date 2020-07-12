@@ -31,6 +31,7 @@ class RolesController extends Controller
     {
         return Sheet::create('lte.list_of_roles', function (ModelTable $table) {
 
+            $table->search->id();
             $table->search->input('name', 'lte.title', '=%');
             $table->search->input('slug', 'lte.slug', '=%');
             $table->search->at();

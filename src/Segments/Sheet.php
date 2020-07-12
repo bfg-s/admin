@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
@@ -29,6 +30,7 @@ class Sheet extends Container {
         }
 
         parent::__construct(function (DIV $div) use ($title, $warp) {
+            /** @var Card $card */
             $card = null;
             $div->card($title)->haveLink($card)
                 ->defaultTools()->bodyModelTable(function (ModelTable $table) use ($warp, $card) {

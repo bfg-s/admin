@@ -137,6 +137,14 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     }
 
     /**
+     * @return int
+     */
+    public function fieldsCount()
+    {
+        return count($this->fields);
+    }
+
+    /**
      * @param $name
      * @param $arguments
      * @return bool|Form|\Lar\Tagable\Tag|mixed|string

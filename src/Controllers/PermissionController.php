@@ -45,6 +45,7 @@ class PermissionController extends Controller
     {
         return Sheet::create(function (ModelTable $table) {
 
+            $table->search->id();
             $table->search->input('path', 'lte.path');
             $table->search->select('lte_role_id', 'lte.role')
                 ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'))->nullable();

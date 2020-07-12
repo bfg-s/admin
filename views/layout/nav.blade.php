@@ -7,11 +7,11 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::back" title="@lang('lte.back')"><i class="fas fa-arrow-left"></i></a>
+            <a class="nav-link" data-click="doc::back" title="@lang('lte.back')" href="javascript:void(0)"><i class="fas fa-arrow-left"></i></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')"><i class="fas fa-redo-alt"></i></a>
+            <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i class="fas fa-redo-alt"></i></a>
         </li>
 {{--        <li class="nav-item d-none d-sm-inline-block">--}}
 {{--            <a href="../../index3.html" class="nav-link">Home</a>--}}
@@ -30,16 +30,16 @@
     </ul>
 
     <!-- SEARCH FORM -->
-{{--    <form class="form-inline ml-3 d-none d-lg-block d-xl-block" data-submit="toast::error & doc::preventDefault" data-param="Not working yet! && Error" target>--}}
-{{--        <div class="input-group input-group-sm">--}}
-{{--            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">--}}
-{{--            <div class="input-group-append">--}}
-{{--                <button class="btn btn-navbar" type="submit">--}}
-{{--                    <i class="fas fa-search"></i>--}}
-{{--                </button>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </form>--}}
+    <form class="form-inline ml-3 d-none d-lg-block d-xl-block" data-submit="toast::error & doc::preventDefault" data-param="Not working yet! && Error" target>
+        <div class="input-group input-group-sm">
+            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

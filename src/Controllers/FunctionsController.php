@@ -37,6 +37,7 @@ class FunctionsController extends Controller
     {
         return Sheet::create(function (ModelTable $table) {
 
+            $table->search->id();
             $table->search->input('slug', 'lte.slug');
             $table->search->at();
 

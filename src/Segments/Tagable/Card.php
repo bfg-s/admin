@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\Macroable;
@@ -88,7 +89,7 @@ class Card extends DIV implements onRender {
     /**
      * @var bool
      */
-    protected $has_search_form = false;
+    protected $has_search_form = true;
 
     /**
      * Card constructor.
@@ -129,17 +130,17 @@ class Card extends DIV implements onRender {
      * @param  \Closure|null $closure
      * @return $this
      */
-    public function search(\Closure $closure = null)
-    {
-        $this->has_search_form = true;
-
-        if ($closure) {
-
-            $closure($this->search_form);
-        }
-
-        return $this;
-    }
+//    public function search(\Closure $closure = null)
+//    {
+//        $this->has_search_form = true;
+//
+//        if ($closure) {
+//
+//            $closure($this->search_form);
+//        }
+//
+//        return $this;
+//    }
 
     /**
      * @param  mixed  ...$params
@@ -331,10 +332,13 @@ class Card extends DIV implements onRender {
                             ])->attr([
                                 'aria-expanded' => 'true',
                                 'aria-controls' =>  'table_search_form'
-                            ]);
-                            //->on_click('lte::switch_search');
+                            ])->whenRender(function (BUTTON $button) {
+                                if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                                    $button->attr(['d-none']);
+                                }
+                            });
 
-                        if (request()->has('q')) {
+                        if ($this->search_form && request()->has('q')) {
                             $group->danger(['fas fa-window-close', __('lte.cancel')])
                                 ->on_click('doc::location', urlWithGet([], ['q', 'page']));
                         }

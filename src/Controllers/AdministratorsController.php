@@ -35,6 +35,7 @@ class AdministratorsController extends Controller
     {
         return Sheet::create('lte.admin_list', function (ModelTable $table) {
 
+            $table->search->id();
             $table->search->email('email', 'lte.email_address');
             $table->search->input('login', 'lte.login_name', '=%');
             $table->search->input('name', 'lte.name', '=%');
