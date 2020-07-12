@@ -16,7 +16,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function equally($model, $key, $value)
+    protected function equally($model, $value, $key)
     {
         return $model->where($key, '=', $value);
     }
@@ -27,7 +27,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function not_equal($model, $key, $value)
+    protected function not_equal($model, $value, $key)
     {
         return $model->where($key, '!=', $value);
     }
@@ -38,7 +38,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function more_or_equal($model, $key, $value)
+    protected function more_or_equal($model, $value, $key)
     {
         return $model->where($key, '>=', $value);
     }
@@ -49,7 +49,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function less_or_equal($model, $key, $value)
+    protected function less_or_equal($model, $value, $key)
     {
         return $model->where($key, '<=', $value);
     }
@@ -60,7 +60,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function more($model, $key, $value)
+    protected function more($model, $value, $key)
     {
         return $model->where($key, '>', $value);
     }
@@ -71,7 +71,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function less($model, $key, $value)
+    protected function less($model, $value, $key)
     {
         return $model->where($key, '<', $value);
     }
@@ -82,7 +82,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function like_right($model, $key, $value)
+    protected function like_right($model, $value, $key)
     {
         return $model->where($key, 'like', "%" . $value);
     }
@@ -93,7 +93,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function like_left($model, $key, $value)
+    protected function like_left($model, $value, $key)
     {
         return $model->where($key, 'like', $value . "%");
     }
@@ -104,7 +104,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function like_any($model, $key, $value)
+    protected function like_any($model, $value, $key)
     {
         return $model->where($key, 'like', "%" . $value . "%");
     }
@@ -115,7 +115,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function nullable($model, $key, $value)
+    protected function nullable($model, $value, $key)
     {
         if ($value) {
 
@@ -131,7 +131,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function not_nullable($model, $key, $value)
+    protected function not_nullable($model, $value, $key)
     {
         if ($value) {
 
@@ -147,7 +147,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function where_in($model, $key, $value)
+    protected function where_in($model, $value, $key)
     {
         return $model->whereIn($key, $value);
     }
@@ -158,7 +158,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function where_not_in($model, $key, $value)
+    protected function where_not_in($model, $value, $key)
     {
         return $model->whereNotIn($key, $value);
     }
@@ -169,7 +169,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function where_between($model, $key, $value)
+    protected function where_between($model, $value, $key)
     {
         return $model->whereBetween($key, $value);
     }
@@ -180,7 +180,7 @@ trait SearchFormConditionRulesTrait {
      * @param $value
      * @return Model
      */
-    protected function where_not_between($model, $key, $value)
+    protected function where_not_between($model, $value, $key)
     {
         return $model->whereNotBetween($key, $value);
     }
@@ -197,13 +197,26 @@ trait SearchFormConditionRulesTrait {
                 if ($val) {
                     foreach ($this->fields as $field) {
                         if ($field['field_name'] === $key) {
-                            $model = $this->{$field['method']}(
-                                $model,
-                                $key,
-                                method_exists($field['class'], 'transformValue') ?
-                                    $field['class']::transformValue($val) :
-                                    $val
-                            );
+
+                            $val = method_exists($field['class'], 'transformValue') ?
+                                $field['class']::transformValue($val) :
+                                $val;
+
+                            if ($field['method'] instanceof \Closure) {
+
+                                $result = ($field['method'])(
+                                    $model, $val, $key
+                                );
+
+                                if ($result) { $model = $result; }
+                            }
+
+                            else {
+
+                                $model = $this->{$field['method']}(
+                                    $model, $val, $key
+                                );
+                            }
                         }
                     }
                 }

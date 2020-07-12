@@ -171,11 +171,28 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
                 $class->value(request("q.{$field_name}"));
             }
 
-            if (!isset($this->conditions[$condition])) {
+            $method = null;
+
+            if ($condition instanceof \Closure) {
+
+                $method = $condition;
+            }
+
+            else if (is_string($condition) && isset($this->conditions[$condition])) {
+
+                $method = $this->conditions[$condition];
+
+            } else {
+
                 if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
                     $condition = $class::$condition;
                 } else {
                     $condition = '=%';
+                }
+
+                if (is_string($condition) && isset($this->conditions[$condition])) {
+
+                    $method = $this->conditions[$condition];
                 }
             }
 
@@ -183,7 +200,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
                 'field' => $name,
                 'condition' => $condition,
                 'field_name' => $field_name,
-                'method' => $this->conditions[$condition],
+                'method' => $method,
                 'class' => $class
             ];
 
