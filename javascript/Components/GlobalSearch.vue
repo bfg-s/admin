@@ -46,7 +46,8 @@
                 items: {},
                 links: [],
                 timer: null,
-                i: null
+                i: null,
+                rc: 1
             };
         },
         watch: {
@@ -118,6 +119,7 @@
             run_search () {
 
                 this.items = [];
+                this.rc = 1;
 
                 if (this.q.length) {
 
@@ -132,12 +134,16 @@
                                         total:  r.total
                                     });
                                 }
-                                let set_p = (1/this.links.length)*(ind+1);
+                                let set_p = (1/this.links.length)*this.rc;
                                 ljs.progress.set(set_p);
+                                console.log(set_p);
+                                this.rc++;
                             })
                             .catch(() => {
-                                let set_p = (1/this.links.length)*(ind+1);
+                                let set_p = (1/this.links.length)*this.rc;
                                 ljs.progress.set(set_p);
+                                console.log(set_p);
+                                this.rc++;
                             });
                     });
                 }
