@@ -80,6 +80,7 @@
         },
         methods: {
             key_up_nav (e) {
+                e.preventDefault();
                 let last = this.items.length-1;
                 if (e.keyCode === 38) {
                     if (last > 0) {
@@ -91,7 +92,6 @@
                 if (e.keyCode === 40) {
                     if (this.i === null && this.items[0]) {this.i = 0;}
                     else if (this.items[this.i+1]) {this.i++;}
-                    //else if (last > 0) {this.i=0;}
                     else {this.i=null;}
                 }
             },
@@ -121,11 +121,10 @@
 
                 if (this.q.length) {
 
-                    this.links.forEach((link) => {
+                    this.links.forEach((link, ind) => {
 
                         $jax.get(link.href, {q: this.q})
                             .then((r) => {
-                                //console.log(r);
                                 if (r.total) {
                                     this.items.push({
                                         inner: link.inner,
@@ -133,6 +132,12 @@
                                         total:  r.total
                                     });
                                 }
+                                let set_p = (1/this.links.length)*(ind+1);
+                                ljs.progress.set(set_p);
+                            })
+                            .catch(() => {
+                                let set_p = (1/this.links.length)*(ind+1);
+                                ljs.progress.set(set_p);
                             });
                     });
                 }
