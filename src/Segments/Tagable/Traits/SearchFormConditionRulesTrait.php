@@ -193,29 +193,45 @@ trait SearchFormConditionRulesTrait {
     {
         if (request()->has('q')) {
             $r = request('q');
-            foreach ($r as $key => $val) {
-                if ($val) {
-                    foreach ($this->fields as $field) {
-                        if ($field['field_name'] === $key) {
+            if (is_string($r)) {
 
-                            $val = method_exists($field['class'], 'transformValue') ?
-                                $field['class']::transformValue($val) :
-                                $val;
+                collect($this->fields)
+                    ->pluck('field_name')
+                    ->map(function ($field, $k) use (&$model, $r) {
 
-                            if ($field['method'] instanceof \Closure) {
+                        if ($k) {
+                            $model = $model->orWhere($field, 'like', "%{$r}%");
+                        } else {
+                            $model = $model->where($field, 'like', "%{$r}%");
+                        }
+                    });
 
-                                $result = ($field['method'])(
-                                    $model, $val, $key
-                                );
+            } else if (is_array($r)) {
 
-                                if ($result) { $model = $result; }
-                            }
+                foreach ($r as $key => $val) {
+                    if ($val) {
+                        foreach ($this->fields as $field) {
+                            if ($field['field_name'] === $key) {
 
-                            else {
+                                $val = method_exists($field['class'], 'transformValue') ?
+                                    $field['class']::transformValue($val) :
+                                    $val;
 
-                                $model = $this->{$field['method']}(
-                                    $model, $val, $key
-                                );
+                                if ($field['method'] instanceof \Closure) {
+
+                                    $result = ($field['method'])(
+                                        $model, $val, $key
+                                    );
+
+                                    if ($result) { $model = $result; }
+                                }
+
+                                else {
+
+                                    $model = $this->{$field['method']}(
+                                        $model, $val, $key
+                                    );
+                                }
                             }
                         }
                     }

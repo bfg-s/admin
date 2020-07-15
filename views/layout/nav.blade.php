@@ -30,16 +30,7 @@
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3 d-none d-lg-block d-xl-block" data-submit="toast::error & doc::preventDefault" data-param="Not working yet! && Error" target>
-        <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+    {!! \Lar\LteAdmin\Components\Vue\GlobalSearch::create() !!}
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

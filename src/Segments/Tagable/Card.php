@@ -340,7 +340,13 @@ class Card extends DIV implements onRender {
 
                         if ($this->search_form && request()->has('q')) {
                             $group->danger(['fas fa-window-close', __('lte.cancel')])
-                                ->on_click('doc::location', urlWithGet([], ['q', 'page']));
+                                ->attr('id', 'cancel_search_params')
+                                ->on_click('doc::location', urlWithGet([], ['q', 'page']))
+                                ->whenRender(function (BUTTON $button) {
+                                    if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                                        $button->attr(['d-none']);
+                                    }
+                                });
                         }
                     });
                 }

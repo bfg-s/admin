@@ -50,6 +50,11 @@ trait TableBuilderTrait {
             $header_count++;
         }
 
+        if (request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
+
+            die($this->paginate->toJson());
+        }
+
         $body = $this->tbody();
 
         foreach ($this->paginate ?? $this->model as $item) {

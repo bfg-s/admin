@@ -2,6 +2,7 @@ let tooltip_selector = '[title]:not([class^="select2"])';
 
 const load = () => {
     require('./lte_load')(tooltip_selector);
+    ljs.vue.component('global_search', require('./Components/GlobalSearch').default);
 };
 
 const methods = require('./lar_methods.js');

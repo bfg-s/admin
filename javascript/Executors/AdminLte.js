@@ -2,8 +2,9 @@
 
 class AdminLte extends Executor {
 
-    switch_search() {
-        $( "#table_search_form" ).toggle( "fast" );
+    make_search () {
+
+        
     }
 
     static __name () {
