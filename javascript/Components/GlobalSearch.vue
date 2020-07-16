@@ -47,7 +47,8 @@
                 links: [],
                 timer: null,
                 i: null,
-                rc: 1
+                rc: 1,
+                created_with_q: false
             };
         },
         watch: {
@@ -77,7 +78,10 @@
                 });
 
             let q = ljs.help.query_get('q');
-            this.q = q ? q : '';
+            if (q) {
+                this.q = q;
+                this.created_with_q = true;
+            }
         },
         methods: {
             key_up_nav (e) {
@@ -135,14 +139,22 @@
                                     });
                                 }
                                 let set_p = (1/this.links.length)*this.rc;
-                                ljs.progress.set(set_p);
-                                console.log(set_p);
+                                if (!this.created_with_q) {
+                                    ljs.progress.set(set_p);
+                                }
+                                if (this.created_with_q && set_p >= 1) {
+                                    this.created_with_q = false;
+                                }
                                 this.rc++;
                             })
                             .catch(() => {
                                 let set_p = (1/this.links.length)*this.rc;
-                                ljs.progress.set(set_p);
-                                console.log(set_p);
+                                if (!this.created_with_q) {
+                                    ljs.progress.set(set_p);
+                                }
+                                if (this.created_with_q && set_p >= 1) {
+                                    this.created_with_q = false;
+                                }
                                 this.rc++;
                             });
                     });
