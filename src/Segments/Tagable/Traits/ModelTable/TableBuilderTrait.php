@@ -138,11 +138,12 @@ trait TableBuilderTrait {
         $this->columns[$key]['header'] = $tr->th(['scope' => 'col'])
             ->when(function (TH $th) use ($column) {
                 if (is_string($column['sort'])) {
+                    $select = request()->get($this->model_name . '_type', $this->order_type);
                     $now = request()->get($this->model_name, $this->order_field) == $column['sort'];
-                    $type = $now ? ($this->order_type === 'desc' ? 'up-alt' : 'down') : 'down';
+                    $type = $now ? ($select === 'desc' ? 'up-alt' : 'down') : 'down';
                     $th->a()->setHref(urlWithGet([
                         $this->model_name => $column['sort'],
-                        $this->model_name . "_type" => $now ? ($this->order_type === 'desc' ? 'asc' : 'desc') : 'asc'
+                        $this->model_name . "_type" => $now ? ($select === 'desc' ? 'asc' : 'desc') : 'asc'
                     ]))->i(["fas fa-sort-amount-{$type} d-none d-sm-inline"], ':space')
                         ->_span($column['label'])
                         ->addClassIf(!$now, 'text-body');
@@ -168,6 +169,8 @@ trait TableBuilderTrait {
             $this->model = $this->model->onlyTrashed();
         }
 
+        $select_type = request()->get($this->model_name . '_type', $this->order_type);
+
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
 
             $this->model = static::fire_pipes($this->model, $this->model_class);
@@ -183,14 +186,14 @@ trait TableBuilderTrait {
                 }
             }
 
-            return $this->paginate = $this->model->orderBy($this->order_field, $this->order_type)->paginate($this->per_page, ['*'], $this->model_name . "_page");
+            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate($this->per_page, ['*'], $this->model_name . "_page");
         }
 
         else if ($this->model instanceof \Illuminate\Support\Collection) {
 
             if (request()->has($this->model_name)) {
                 $model = $this->model
-                    ->{strtolower($this->order_type) == "asc" ? "sortBy" : "sortByDesc"}($this->order_field);
+                    ->{strtolower($select_type) == "asc" ? "sortBy" : "sortByDesc"}($this->order_field);
             } else {
                 $model = $this->model;
             }
