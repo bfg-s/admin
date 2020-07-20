@@ -170,6 +170,7 @@ trait TableBuilderTrait {
         }
 
         $select_type = request()->get($this->model_name . '_type', $this->order_type);
+        $this->order_field = request()->get($this->model_name, $this->order_field);
 
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
 
