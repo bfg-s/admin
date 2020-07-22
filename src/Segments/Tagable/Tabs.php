@@ -87,7 +87,7 @@ class Tabs extends DIV implements onRender {
             ->when($attrs)
             ->addClassIf($active, 'active show');
 
-        $content = $this->tab_contents
+        $this->tab_contents
             ->appEnd($content);
 
         return $content;
