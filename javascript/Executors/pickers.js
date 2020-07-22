@@ -90,6 +90,7 @@ module.exports = class extends Executor {
                 + ' - ' +
                 picker.endDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD HH:mm:ss')
             );
+            $(this).trigger('change');
         });
     }
 
@@ -109,6 +110,7 @@ module.exports = class extends Executor {
                 + ' - ' +
                 picker.endDate.format(this.dataset.format ? this.dataset.format : 'YYYY-MM-DD')
             );
+            $(this).trigger('change');
         });
     }
 
