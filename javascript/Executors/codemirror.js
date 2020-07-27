@@ -4,7 +4,7 @@ module.exports = class extends Executor {
 
     html ($options = {}) {
 
-        return CodeMirror.fromTextArea(this.currentTarget, merge({
+        return window.cm = CodeMirror.fromTextArea(this.currentTarget, merge({
             mode: {
                 name: "htmlmixed",
                 scriptTypes: [
@@ -20,7 +20,9 @@ module.exports = class extends Executor {
             extraKeys: {
                 "Ctrl-Q": "toggleComment"
             }
-        }, $options));
+        }, $options)).on('change', (cm) => {
+            $(cm.getTextArea()).val(cm.getValue());
+        });
     }
 
     js () {
