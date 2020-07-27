@@ -90,6 +90,7 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
         'lte-asset/plugins/daterangepicker/moment.min.js',
         'lte-asset/plugins/daterangepicker/daterangepicker.js',
+        'lte-asset/plugins/sweetalert2/sweetalert2.min.js',
 
         'lte-admin/plugins/jquery-validation/jquery.validate.min.js',
         'lte-admin/plugins/jquery-validation/localization/messages_ru.min.js',

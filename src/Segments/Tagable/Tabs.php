@@ -50,6 +50,21 @@ class Tabs extends DIV implements onRender {
     }
 
     /**
+     * Create tab from classes
+     * @param  array  $list
+     * @return $this
+     */
+    public function tabList(array $list)
+    {
+        foreach ($list as $item) {
+
+            $this->tab($item);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  string  $title
      * @param  string|mixed  $icon
      * @param  array  $attrs
@@ -60,6 +75,28 @@ class Tabs extends DIV implements onRender {
         if($icon && !is_string($icon)) {
             $attrs[] = $icon;
             $icon = null;
+        }
+
+        if (class_exists($title)) {
+
+            $content = new $title();
+            
+            if ($content instanceof TabContent) {
+
+                if ($content->getTitle()) {
+                    $title = $content->getTitle();
+                }
+                if ($content->getIcon()) {
+                    $icon = $content->getIcon();
+                }
+            } else {
+                if (isset($content->title) && $content->title) {
+                    $title = $content->title;
+                }
+                if (isset($content->icon) && $content->icon) {
+                    $icon = $content->icon;
+                }
+            }
         }
 
         $this->makeNav();
@@ -80,7 +117,7 @@ class Tabs extends DIV implements onRender {
 
         $a->text(__($title));
 
-        $content = TabContent::create([
+        $content = (isset($content) ? $content : TabContent::create())->attr([
             'id' => $id,
             'aria-labelledby' => $id . "-label"
         ])->when($this->tab_content_props)

@@ -322,7 +322,7 @@ class Card extends DIV implements onRender {
 
             if ($this->has_search_form && $this->now['current.type'] && $this->now['current.type'] === 'index') {
 
-                if ($test('search')) {
+                if ($test('search') && lte_controller_can('search')) {
                     $this->group(function (ButtonGroup $group) {
 
                         $group->primary(['fas fa-search', __('lte.search')])
@@ -365,49 +365,45 @@ class Card extends DIV implements onRender {
                 }
             }
 
-//            if ($test('reload')) {
-//                $this->group->reload();
-//            }
-
             if ($this->now['current.type'] && !request()->has('show_deleted')) {
 
                 $type = $this->now['current.type'];
 
                 if ($type === 'create') {
 
-                    if ($test('list')) {
+                    if ($test('list') && lte_controller_can('index')) {
                         $this->group->resourceList();
                     }
                 }
 
                 else if ($type === 'edit' || $type === 'show') {
 
-                    if ($test('list')) {
+                    if ($test('list') && lte_controller_can('index')) {
                         $this->group->resourceList();
                     }
 
                     if ($type === 'show') {
 
-                        if ($test('edit')) {
+                        if ($test('edit') && lte_controller_can('edit')) {
                             $this->group->resourceEdit();
                         }
                     }
 
                     if ($type === 'edit') {
 
-                        if ($test('info')) {
+                        if ($test('info') && lte_controller_can('show')) {
                             $this->group->resourceInfo();
                         }
                     }
 
-                    if ($test('delete')) {
+                    if ($test('delete') && lte_controller_can('destroy')) {
                         $this->group->resourceDestroy();
                     }
                 }
 
                 if ($type !== 'create') {
 
-                    if ($test('add')) {
+                    if ($test('add') && lte_controller_can('create')) {
                         $this->group->resourceAdd();
                     }
                 }

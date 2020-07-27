@@ -182,24 +182,24 @@ trait TableControlsTrait {
                         $key = $model->getRouteKey();
 
                         if (!request()->has('show_deleted')) {
-                            if ($this->get_test_var('control_edit', [$model])) {
+                            if ($this->get_test_var('control_edit', [$model]) && lte_controller_can('edit')) {
                                 $group->resourceEdit($menu['link.edit']($key), '');
                             }
 
-                            if ($this->get_test_var('control_delete', [$model])) {
+                            if ($this->get_test_var('control_delete', [$model]) && lte_controller_can('destroy')) {
                                 $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
                             }
 
-                            if ($this->get_test_var('control_info', [$model])) {
+                            if ($this->get_test_var('control_info', [$model]) && lte_controller_can('show')) {
                                 $group->resourceInfo($menu['link.show']($key), '');
                             }
                         } else {
 
-                            if ($this->get_test_var('control_restore', [$model])) {
+                            if ($this->get_test_var('control_restore', [$model]) && lte_controller_can('restore')) {
                                 $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
                             }
 
-                            if ($this->get_test_var('control_force_delete', [$model])) {
+                            if ($this->get_test_var('control_force_delete', [$model]) && lte_controller_can('force_destroy')) {
                                 $group->resourceForceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
                             }
                         }

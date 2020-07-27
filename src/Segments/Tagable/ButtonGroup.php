@@ -417,7 +417,7 @@ class ButtonGroup extends DIV implements onRender {
     {
         if (!$link && isset($this->menu['link.create'])) {
 
-            $link = $this->menu['link.create'];
+            $link = $this->menu['link.create']();
         }
 
         if ($link) {

@@ -6,10 +6,8 @@ use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
-use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
@@ -30,6 +28,8 @@ class RolesController extends Controller
     public function index()
     {
         return Sheet::create('lte.list_of_roles', function (ModelTable $table) {
+
+            //dd(admin()->can('viewAny', static::$model));
 
             $table->search->id();
             $table->search->input('name', 'lte.title', '=%');

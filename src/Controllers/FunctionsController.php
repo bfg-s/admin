@@ -35,7 +35,7 @@ class FunctionsController extends Controller
      */
     public function index()
     {
-        return Sheet::create(function (ModelTable $table) {
+        return Sheet::create(function (ModelTable $table, Card $card) {
 
             $table->search->id();
             $table->search->input('slug', 'lte.slug');
@@ -58,7 +58,7 @@ class FunctionsController extends Controller
         return Matrix::create(function (Form $form) {
             $form->info_id();
             $form->input('slug', 'lte.slug')->required()
-                ->unique(LteFunction::class, 'slug', $this->model()->id)->slugable();
+                ->slugable();
             $form->checks('roles', 'lte.roles')->required()
                 ->options(LteRole::all()->pluck('name', 'id'));
             $form->textarea('description', 'lte.description');

@@ -6,6 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Lar\LteAdmin\Core\CheckUserFunction;
 
@@ -16,7 +17,11 @@ use Lar\LteAdmin\Core\CheckUserFunction;
  */
 class LteUser extends Model implements AuthenticatableContract
 {
-    use Authenticatable, LteUserPermission, Notifiable, SoftDeletes;
+    use Authenticatable,
+        Authorizable,
+        LteUserPermission,
+        Notifiable,
+        SoftDeletes;
 
     /**
      * @var string

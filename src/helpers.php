@@ -44,21 +44,23 @@ if (!function_exists('lte_class_can')) {
 }
 
 if (!function_exists('lte_controller_can')) {
-
     /**
-     * @param  string  $method
+     * @param  string|null  $check_method
+     * @param  string|null  $check_class
      * @return string
      */
-    function lte_controller_can (string $method) {
+    function lte_controller_can (string $check_method = null, string $check_class = null) {
 
-        list($class) = \Str::parseCallback(\Route::currentRouteAction());
+        list($class, $method) = \Str::parseCallback(\Route::currentRouteAction());
 
-        if (!$class) {
+        if ($check_method) { $method = $check_method; }
+        if ($check_class) { $class = $check_class; }
+        if (!$class) { return true; }
 
-            return true;
-        }
+        $class = trim($class, '\\');
+        $ability = "{$class}@{$method}";
 
-        return lte_class_can($class, $method);
+        return Gate::has($ability) ? Gate::forUser(admin())->allows($ability) : true;
     }
 }
 

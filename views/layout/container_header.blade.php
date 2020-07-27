@@ -59,3 +59,7 @@
 </section>
 
 @php(LJS::respond()->title(implode(' | ', $__head_title)))
+
+@if (admin()->isRoot())
+    {!! \Lar\LteAdmin\Components\RootTools::create() !!}
+@endif

@@ -145,9 +145,44 @@ class Formatter {
      * @param  array  $props
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
+    public function to_string($value, $props = [])
+    {
+        if (is_object($value)) {
+
+            return  get_class($value);
+        }
+
+        else if (is_array($value)) {
+
+            return json_encode($value);
+        }
+
+        return (string)$value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
     public function has_lang($value, $props = [])
     {
         return lang_in_text($value);
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function trim($value, $props = [])
+    {
+        if (isset($props[0])) {
+
+            return trim($value, $props[0]);
+        }
+
+        return trim($value);
     }
 
     /**

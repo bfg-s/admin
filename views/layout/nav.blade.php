@@ -13,6 +13,11 @@
         <li class="nav-item">
             <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i class="fas fa-redo-alt"></i></a>
         </li>
+        @if(admin()->isRoot())
+            <li class="nav-item">
+                <a class="nav-link" title="Root tools" data-toggle="collapse" href="#root-tools" role="button" aria-expanded="false" aria-controls="root-tools"><i class="fas fa-chess"></i></a>
+            </li>
+        @endif
 {{--        <li class="nav-item d-none d-sm-inline-block">--}}
 {{--            <a href="../../index3.html" class="nav-link">Home</a>--}}
 {{--        </li>--}}

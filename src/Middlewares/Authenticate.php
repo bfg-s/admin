@@ -99,7 +99,7 @@ class Authenticate
             $classes[] = get_class($now['extension']);
         }
 
-        if (!lte_class_can($classes, $method)) {
+        if (!lte_controller_can()) {
 
             return false;
         }

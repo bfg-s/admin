@@ -141,7 +141,7 @@ class Form extends \Lar\Layout\Tags\FORM {
             }
             else if ($type === 'create' && isset($menu['link.store'])) {
 
-                $this->action = $menu['link.store'];
+                $this->action = $menu['link.store']();
             }
         }
 

@@ -200,6 +200,118 @@ class Menu extends Getter
     }
 
     /**
+     * @param array $params
+     * @return bool|string
+     */
+    public static function current_index_link(array $params = [])
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.index'])) {
+
+            return $menu['link.index']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|int|array $params
+     * @return bool|string
+     */
+    public static function current_show_link($params)
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.show'])) {
+
+            return $menu['link.show']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|int|array $params
+     * @return bool|string
+     */
+    public static function current_update_link($params)
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.update'])) {
+
+            return $menu['link.update']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|int|array $params
+     * @return bool|string
+     */
+    public static function current_destroy_link($params)
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.destroy'])) {
+
+            return $menu['link.destroy']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|int|array $params
+     * @return bool|string
+     */
+    public static function current_edit_link($params)
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.edit'])) {
+
+            return $menu['link.edit']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $params
+     * @return bool|string
+     */
+    public static function current_store_link(array $params = [])
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.store'])) {
+
+            return $menu['link.store']($params);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $params
+     * @return bool|string
+     */
+    public static function current_create_link(array $params = [])
+    {
+        $menu = gets()->lte->menu->now;
+
+        if  (isset($menu['link.create'])) {
+
+            return $menu['link.create']($params);
+        }
+
+        return false;
+    }
+
+    /**
      * @param  bool  $__route_items_
      * @param  int  $__route_parent_id_
      * @param  string  $__route_name_
@@ -298,8 +410,15 @@ class Menu extends Getter
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
                     return route($item['route'] . '.edit', array_merge(($item['route_params'] ?? []), $params));
                 };
-                $item['link.store'] = route($item['route'] . '.store', $item['route_params'] ?? []);
-                $item['link.create'] = route($item['route'] . '.create', $item['route_params'] ?? []);
+                $item['link.index'] = function (array $params = []) use ($item) {
+                    return route($item['route'] . '.index', array_merge(($item['route_params'] ?? []), $params));
+                };
+                $item['link.store'] = function (array $params = []) use ($item) {
+                    return route($item['route'] . '.store', array_merge(($item['route_params'] ?? []), $params));
+                };
+                $item['link.create'] = function (array $params = []) use ($item) {
+                    return route($item['route'] . '.create', array_merge(($item['route_params'] ?? []), $params));
+                };
             }
 
             if (!isset($item['selected'])) {

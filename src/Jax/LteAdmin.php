@@ -4,6 +4,8 @@ namespace Lar\LteAdmin\Jax;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\LJS\JaxExecutor;
+use Lar\LteAdmin\Models\LteFunction;
+use Lar\LteAdmin\Resources\LteFunctionResource;
 
 /**
  * Class LteAdmin
@@ -132,5 +134,47 @@ class LteAdmin extends JaxExecutor
         } else {
             $this->toast_error(__('lte.unknown_error'));
         }
+    }
+
+    public function update_functions(array $funcs, string $class)
+    {
+        foreach ($funcs as $func) {
+
+            if (isset($func['id'])) {
+                /** @var LteFunction $f */
+                $f = LteFunction::find($func['id']);
+                $f->update([
+                        'description' => $func['description'],
+                        'slug' => $func['slug']
+                    ]);
+            }
+
+            else {
+                /** @var LteFunction $f */
+                $f = LteFunction::create([
+                    'description' => $func['description'],
+                    'slug' => $func['slug'],
+                    'class' => trim($class, '\\')
+                ]);
+            }
+            $f->roles()->sync(collect($func['roles'])->pluck('id')->toArray());
+        }
+
+        return LteFunctionResource::collection(
+            LteFunction::with('roles')->where('class', trim($class, '\\'))->get()
+        )->toArray(request());
+    }
+
+    public function drop_function(int $id, $class)
+    {
+        $func = LteFunction::find($id);
+
+        if ($func) {
+            $func->delete();
+        }
+
+        return LteFunctionResource::collection(
+            LteFunction::with('roles')->where('class', trim($class, '\\'))->get()
+        )->toArray(request());
     }
 }

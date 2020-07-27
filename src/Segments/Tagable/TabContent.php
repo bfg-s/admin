@@ -28,6 +28,16 @@ class TabContent extends DIV implements onRender {
     ];
 
     /**
+     * @var string|null
+     */
+    protected $title = null;
+
+    /**
+     * @var string
+     */
+    protected $icon = null;
+
+    /**
      * Row constructor.
      * @param  mixed  ...$params
      */
@@ -63,5 +73,21 @@ class TabContent extends DIV implements onRender {
     public function onRender()
     {
         $this->callRenderEvents();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }

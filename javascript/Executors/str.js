@@ -1,19 +1,23 @@
 module.exports = class extends Executor {
 
-    slug (set_to = null, separator = '_') {
-
-        let str = this.translit();
+    to_slug (str, separator = '_'   ) {
 
         if(typeof separator == 'undefined') separator = '-';
 
         let flip = separator === '-' ? '_' : '-';
         str = str.replace(flip, separator);
 
-        let result = str.toLowerCase()
+        return str.toLowerCase()
             .replace(new RegExp('\\s', 'g'), separator)
             .replace(new RegExp('\\s\\s', 'g'), separator)
             .replace(new RegExp('['+separator+separator+']+', 'g'), separator)
             .replace(new RegExp('[^a-z0-9' + separator + '\\s]', 'g'), '');
+    }
+
+    slug (set_to = null, separator = '_') {
+
+        let str = this.translit();
+        let result = this.to_slug(str);
 
         if (set_to) {
 
@@ -28,9 +32,7 @@ module.exports = class extends Executor {
         return result;
     }
 
-    translit (set_to = null) {
-
-        let str = this.target.value;
+    to_translit (str) {
 
         let ru = {
             'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
@@ -51,7 +53,13 @@ module.exports = class extends Executor {
             );
         }
 
-        let result = n_str.join('');
+        return n_str.join('');
+    }
+
+    translit (set_to = null) {
+
+        let str = this.target.value;
+        let result = this.to_translit(str);
 
         if (set_to) {
 

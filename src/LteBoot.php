@@ -8,6 +8,8 @@ use Lar\LteAdmin\Core\TableExtends\Display;
 use Lar\LteAdmin\Core\TableExtends\Editables;
 use Lar\LteAdmin\Core\TableExtends\Formatter;
 use Lar\LteAdmin\Core\TagableComponent;
+use Lar\LteAdmin\Models\LteFunction;
+use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
@@ -55,8 +57,33 @@ class LteBoot
         }
 
         static::formMacros();
+        static::makeGates();
 
         //Component::injectCollection(Field::$form_components);
+    }
+
+    /**
+     * Make gates for controller
+     */
+    protected static function makeGates()
+    {
+        if (!\Route::current()) {
+
+            return ;
+        }
+
+        $route_action = trim(\Route::currentRouteAction(), '\\');
+
+        $action = \Str::parseCallback($route_action);
+
+        /** @var LteFunction $item */
+        foreach (LteFunction::with('roles')->where('class', $action[0])->get() as $item) {
+
+            \Gate::define("{$action[0]}@{$item->slug}", function (LteUser $user) use ($item) {
+                return $user->hasRoles($item->roles->pluck('slug')->toArray());
+            });
+        }
+
     }
 
     /**
@@ -70,6 +97,7 @@ class LteBoot
             $this->if($condition)->info('updated_at', 'lte.updated_at');
             $this->if($condition)->info('created_at', 'lte.created_at');
         });
+        
         Form::macro('info_id', function ($condition = null) {
             if ($condition === null) $condition = gets()->lte->menu->type === 'edit';
             $this->if($condition)->info('id', 'lte.id');

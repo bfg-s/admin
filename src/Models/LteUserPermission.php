@@ -23,7 +23,15 @@ trait LteUserPermission
      */
     public function hasRoles(array $roles)
     {
-        return !!$this->roles->whereIn('slug', $roles)->count();
+        foreach ($roles as $role) {
+
+            if ($this->hasRole($role)) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

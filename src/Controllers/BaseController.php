@@ -2,10 +2,12 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Lar\LteAdmin\Core\ModelSaver;
 use Illuminate\Routing\Controller;
 use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
@@ -14,6 +16,8 @@ use Lar\LteAdmin\Models\LteRole;
  */
 abstract class BaseController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @var ExtendProvider|null
      */
@@ -130,6 +134,24 @@ abstract class BaseController extends Controller
     public function can(string $method)
     {
         return lte_class_can(static::class, $method);
+    }
+
+    /**
+     * Get the map of resource methods to ability names.
+     *
+     * @return array
+     */
+    protected function resourceMap()
+    {
+        return [
+            'index' => 'Index',
+            'show' => 'Show',
+            'create' => 'Create',
+            'store' => 'Store',
+            'edit' => 'Edit',
+            'update' => 'Update',
+            'destroy' => 'Destroy',
+        ];
     }
 
     /**
