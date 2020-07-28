@@ -62,14 +62,7 @@ class Controller extends BaseController
      */
     public function create_default() {
 
-        if (method_exists($this, 'matrix')) {
-
-            return $this->matrix();
-        }
-
-        return new Matrix(function (Form $form) {
-            $form->autoMake();
-        });
+        return $this->matrix();
     }
 
     /**
@@ -79,14 +72,7 @@ class Controller extends BaseController
      */
     public function edit_default() {
 
-        if (method_exists($this, 'matrix')) {
-
-            return $this->matrix();
-        }
-
-        return new Matrix(function (Form $form) {
-            $form->autoMake();
-        });
+        return $this->matrix();
     }
 
     /**
@@ -111,9 +97,9 @@ class Controller extends BaseController
     public function update_default(array $data = null) {
 
         if (method_exists($this, 'edit')) {
-            custom_closure_call([$this, 'edit']);
+            ccc([$this, 'edit']);
         } else {
-            custom_closure_call([$this, 'edit_default']);
+            ccc([$this, 'edit_default']);
         }
 
         $save = $data ?? request()->all();
@@ -151,9 +137,9 @@ class Controller extends BaseController
     public function store_default(array $data = null) {
 
         if (method_exists($this, 'create')) {
-            custom_closure_call([$this, 'create']);
+            ccc([$this, 'create']);
         } else {
-            custom_closure_call([$this, 'create_default']);
+            ccc([$this, 'create_default']);
         }
 
         $save = $data ?? request()->all();
@@ -280,6 +266,20 @@ class Controller extends BaseController
      */
     public function __call($method, $parameters)
     {
+        $segment = ucfirst(\Str::camel($method));
+
+        $segment_class = preg_replace("/Controller$/", "", static::class) . "\\{$segment}Controller";
+
+        if (class_exists($segment_class)) {
+
+            $sclass = new $segment_class;
+
+            if ($sclass instanceof $this && method_exists($sclass, $method)) {
+
+                return ccc([$sclass, $method], $parameters);
+            }
+        }
+        
         $method_default = "{$method}_default";
 
         if (method_exists($this, $method_default)) {
