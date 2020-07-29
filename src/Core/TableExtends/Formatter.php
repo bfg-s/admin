@@ -127,6 +127,8 @@ class Formatter {
      */
     public function money($value, $props = [])
     {
+        if (!$value) $value = 0;
+
         return number_format($value, 2, '.', ',') . ' ' . ($props[0] ?? '$');
     }
 
