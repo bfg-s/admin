@@ -57,6 +57,16 @@ class LteFileStorage extends Model
     }
 
     /**
+     * @return $this
+     */
+    public function returnModel()
+    {
+        $this->return_model = true;
+
+        return $this;
+    }
+
+    /**
      * Get all active menu
      *
      * @param $query
