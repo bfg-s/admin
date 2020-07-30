@@ -157,6 +157,8 @@ class LteBase extends LayoutComponent
 
         $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));
 
+        $this->js()->state('admin', \LteAdmin::user());
+
         parent::__construct();
     }
 }
