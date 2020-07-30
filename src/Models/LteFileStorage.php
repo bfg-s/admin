@@ -25,6 +25,11 @@ class LteFileStorage extends Model
     protected $fillable = ['original_name', 'file_name', 'mime_type', 'size', 'form', 'field', 'driver', 'driver_path', 'active'];
 
     /**
+     * @var bool
+     */
+    protected $return_model = false;
+
+    /**
      * @var string|null
      */
     public $result;
@@ -127,11 +132,10 @@ class LteFileStorage extends Model
                 mkdir($root, 0777, true);
             }
 
-            $result = $path . '/' . $result;
-
-            $this->create([
+            /** @var LteFileStorage $result */
+            $result = $this->create([
                 "original_name" => $file->getClientOriginalName(),
-                "file_name" => $result,
+                "file_name" => $path . '/' . $result,
                 "mime_type" => $file->getMimeType(),
                 "size" => $file->getSize(),
                 "form" => $form,
@@ -140,12 +144,22 @@ class LteFileStorage extends Model
                 "driver_path" => $storage_path
             ]);
 
-            $this->result = $result;
+            if ($this->return_model) {
 
-            return $result;
+                return $result;
+            }
+
+            $this->result = $result->file_name;
+
+            return $result->file_name;
         }
 
         else {
+
+            if ($this->return_model) {
+
+                return $test;
+            }
 
             $this->result = $test->file_name;
 
