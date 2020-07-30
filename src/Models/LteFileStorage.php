@@ -63,6 +63,25 @@ class LteFileStorage extends Model
     }
 
     /**
+     * @param  UploadedFile  $file
+     * @param  string|null  $storage
+     * @return bool
+     */
+    public function hasFile(UploadedFile $file, string $storage = null)
+    {
+        if (!$storage) {
+
+            $storage = config('lte.upload.disk');
+        }
+
+        return $this->where("original_name", $file->getClientOriginalName())
+            ->where("mime_type", $file->getMimeType())
+            ->where("size", $file->getSize())
+            ->where("driver", $storage)
+            ->exists();
+    }
+
+    /**
      * @param UploadedFile|null $file
      * @param string $storage
      * @param string $storage_path
@@ -89,7 +108,7 @@ class LteFileStorage extends Model
                 config('lte.upload.directory.file');
         }
 
-        $test = $this->where("original_name", $file->getClientOriginalName())
+        $test =  $this->where("original_name", $file->getClientOriginalName())
             ->where("mime_type", $file->getMimeType())
             ->where("size", $file->getSize())
             ->where("driver", $storage)
