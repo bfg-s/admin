@@ -209,7 +209,7 @@ trait SearchFormConditionRulesTrait {
             } else if (is_array($r)) {
 
                 foreach ($r as $key => $val) {
-                    if ($val) {
+                    if ($val != null) {
                         foreach ($this->fields as $field) {
                             if ($field['field_name'] === $key) {
 

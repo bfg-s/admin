@@ -36,7 +36,7 @@ class Decorations {
         $star = $props[0] ?? '•';
         $id = uniqid('password_');
         $id_showed = "showed_{$id}";
-        $stars = str_repeat($star, strlen($value));
+        $stars = str_repeat($star, strlen(strip_tags($value)));
         return "<span id='{$id}'><i data-click='0> $::hide 1> $::show' data-params='#{$id} && #{$id_showed}' class='fas fa-eye' style='cursor:pointer'></i> {$stars}</span>".
             "<span id='{$id_showed}' style='display:none'><i data-click='0> $::hide 1> $::show' data-params='#{$id_showed} && #{$id}' class='fas fa-eye-slash' style='cursor:pointer'></i> {$value}</span>";
     }
