@@ -12,4 +12,12 @@ class Select extends \Lar\LteAdmin\Segments\Tagable\Fields\Select
      * @var string
      */
     static $condition = "=";
+
+    /**
+     * After construct event
+     */
+    protected function after_construct()
+    {
+        $this->nullable();
+    }
 }

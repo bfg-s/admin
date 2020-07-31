@@ -225,4 +225,28 @@ class Formatter {
             ->setSecond($time[2] ?? 0)
             ->format($format);
     }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return mixed|string
+     */
+    public function explode($value, $props = [])
+    {
+        $delimiter = $props[0] ?? null;
+
+        if ($delimiter) {
+
+            $key = $props[1] ?? 0;
+
+            $exploded = explode($delimiter, $value);
+
+            if (isset($exploded[$key])) {
+
+                $value = $exploded[$key];
+            }
+        }
+
+        return $value;
+    }
 }
