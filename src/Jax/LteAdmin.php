@@ -19,11 +19,6 @@ class LteAdmin extends JaxExecutor
     static protected $i = 0;
 
     /**
-     * @var string
-     */
-    public static $name = "lte_admin";
-
-    /**
      * Public method access
      * 
      * @return bool
@@ -136,6 +131,11 @@ class LteAdmin extends JaxExecutor
         }
     }
 
+    /**
+     * @param  array  $funcs
+     * @param  string  $class
+     * @return array
+     */
     public function update_functions(array $funcs, string $class)
     {
         foreach ($funcs as $func) {
@@ -165,6 +165,12 @@ class LteAdmin extends JaxExecutor
         )->toArray(request());
     }
 
+    /**
+     * @param  int  $id
+     * @param $class
+     * @return array
+     * @throws \Exception
+     */
     public function drop_function(int $id, $class)
     {
         $func = LteFunction::find($id);
