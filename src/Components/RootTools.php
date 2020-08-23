@@ -6,6 +6,8 @@ namespace Lar\LteAdmin\Components;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\RootTools\GatesTool;
 use Lar\LteAdmin\Components\RootTools\GeneralInformationTool;
+use Lar\LteAdmin\Components\RootTools\ScaffoldTool;
+use Lar\LteAdmin\Components\RootTools\TerminalTool;
 
 /**
  * Class RootTools
@@ -18,7 +20,9 @@ class RootTools extends DIV
      */
     static $tabs = [
         GeneralInformationTool::class,
-        GatesTool::class
+        GatesTool::class,
+        ScaffoldTool::class,
+        TerminalTool::class
     ];
 
     /**

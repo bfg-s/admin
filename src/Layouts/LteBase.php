@@ -123,8 +123,10 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/star-rating/locales/ru.js',
         'lte-admin/plugins/star-rating/krajee-fas/theme.min.js',
 
+        'lte-admin/plugins/ptty.jquery.js',
+
         'ljs' => [
-            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy', 'model'
+            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy'
         ],
 
         'lte-admin/js/app.js',
@@ -160,5 +162,8 @@ class LteBase extends LayoutComponent
         $this->js()->state('admin', \LteAdmin::user());
 
         parent::__construct();
+
+        $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => asset('lte-admin/img/favicon.png')]);
+        $this->head->link(['rel' => 'apple-touch-icon', 'href' => asset('lte-admin/img/favicon.png')]);
     }
 }

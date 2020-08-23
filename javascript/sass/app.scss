@@ -74,7 +74,7 @@
 }
 .select2-container{
     display:block !important;
-    width: calc(100% - 45px) !important;
+    //width: calc(100% - 45px) !important;
 }
 
 .nav-tabs .nav-link {
@@ -112,4 +112,10 @@
 
 .search_result {
     position: absolute;
+}
+
+.cmd_out pre {
+    color: #ddd;
+    padding: 0 !important;
+    margin: 0 !important;
 }

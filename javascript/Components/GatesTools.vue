@@ -9,12 +9,11 @@
                         type="button"
                         class="btn btn-primary btn-sm"
                         v-if="!hasSlug(m)"
-                        :title="default_methods_titles[m]"
                 >{{m}}</button>
             </div>
-            <input v-model="add_data" @keyup.enter="add" type="text" class="form-control fix-rounded-right" required>
+            <input v-model="add_data" @keyup.enter="add()" type="text" class="form-control fix-rounded-right" required>
             <div class="input-group-append">
-                <button @click="add" type="button" class=" btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
+                <button @click="add()" type="button" class=" btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
             </div>
         </div>
 
@@ -147,13 +146,16 @@
                 if (this.timer) { clearTimeout(this.timer); }
                 this.timer = setTimeout(() => {
                     this.timer = null;
-                    jax.lte_admin.update_functions(this.gates, this.action[0]).then((data) => {
+                    jax.lte_root_preferences.update_functions(this.gates, this.action[0]).then((data) => {
                         this.setGates(data);
                     });
                 }, 500);
             },
             add (data = null) {
-                let slugs = (data ? data : this.add_data).split(',');
+                let slugs = (data ? data : this.add_data);
+                if (slugs) slugs = slugs.split(',');
+                else slugs = [];
+
                 slugs.map((slug) => {
                     if (!this.hasSlug(slug)) {
                         let s = "str::to_slug".exec("str::to_translit".exec(slug.trim()));
@@ -171,15 +173,24 @@
             },
             drop (index) {
                 if (this.gates[index]) {
-                    "alert::confirm".exec(`Delete [${this.gates[index].slug}]?`).then((data) => {
-                        if (data.value) {
-                            if (this.gates[index].id) {
-                                jax.lte_admin.drop_function(this.gates[index].id, this.action[0]).then((data) => {
-                                    this.setGates(data);
-                                });
+                    if (this.default_methods.indexOf(this.gates[index].slug) === -1) {
+
+                        "alert::confirm".exec(`Delete [${this.gates[index].slug}]?`).then((data) => {
+                            if (data.value) {
+                                if (this.gates[index].id) {
+                                    jax.lte_root_preferences.drop_function(this.gates[index].id, this.action[0]).then((data) => {
+                                        this.setGates(data);
+                                    });
+                                }
                             }
+                        })
+                    } else {
+                        if (this.gates[index].id) {
+                            jax.lte_root_preferences.drop_function(this.gates[index].id, this.action[0]).then((data) => {
+                                this.setGates(data);
+                            });
                         }
-                    })
+                    }
                 }
             },
             hasRoleIn (index, role) {

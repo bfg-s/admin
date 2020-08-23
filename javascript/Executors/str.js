@@ -1,6 +1,6 @@
 module.exports = class extends Executor {
 
-    to_slug (str, separator = '_'   ) {
+    to_slug (str, separator = '_') {
 
         if(typeof separator == 'undefined') separator = '-';
 
@@ -12,6 +12,10 @@ module.exports = class extends Executor {
             .replace(new RegExp('\\s\\s', 'g'), separator)
             .replace(new RegExp('['+separator+separator+']+', 'g'), separator)
             .replace(new RegExp('[^a-z0-9' + separator + '\\s]', 'g'), '');
+    }
+
+    to_st (str, separator = '_') {
+        return this.to_translit(this.to_slug(str, separator));
     }
 
     slug (set_to = null, separator = '_') {

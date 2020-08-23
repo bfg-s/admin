@@ -138,6 +138,27 @@ trait TableControlsTrait {
 
         return $this;
     }
+    
+    protected $action = [];
+
+    /**
+     * @param $jax
+     * @param $title
+     * @param  null  $icon
+     * @param  null  $confirm
+     * @return $this
+     */
+    public function action($jax, $title, $icon = null, $confirm = null)
+    {
+        $this->action[] = [
+            'jax' => $jax,
+            'title' => $title,
+            'icon' => $icon,
+            'confirm' => $confirm
+        ];
+
+        return $this;
+    }
 
     /**
      * Create default controls
@@ -152,7 +173,9 @@ trait TableControlsTrait {
                     $span->view('lte::segment.model_table_checkbox', [
                         'id' => false,
                         'table_id' => $this->model_name,
-                        'object' => $this->model_class
+                        'object' => $this->model_class,
+                        'actions' => $this->action,
+                        'columns' => collect($this->columns)->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })->pluck('field')->toArray()
                     ])->render();
                 }, function (Model $model) {
 

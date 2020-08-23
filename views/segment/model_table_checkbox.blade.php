@@ -14,10 +14,25 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 {{--            <button class="dropdown-item" type="button">Action</button>--}}
 {{--            <button class="dropdown-item" type="button">Another action</button>--}}
+            @foreach($actions as $action)
+                <button class="dropdown-item"
+                        data-click="table_action"
+                        data-table="{{$table_id}}"
+                        data-object="{{$object}}"
+                        data-columns="{{json_encode($columns, JSON_UNESCAPED_UNICODE)}}"
+                        @if(isset($action['confirm']) && $action['confirm']) data-confirm="@lang($action['confirm'])" @endif
+                        data-jax="{{$action['jax']}}"
+                        type="button"
+                >
+                    @if(isset($action['icon']) && $action['icon']) <i class="{{$action['icon']}}"></i> @endif
+                    @if(isset($action['title']) && $action['title']) @lang($action['title']) @endif
+                </button>
+            @endforeach
             <button class="dropdown-item"
                     data-click="table_action"
                     data-table="{{$table_id}}"
                     data-object="{{$object}}"
+                    data-columns="{{json_encode($columns, JSON_UNESCAPED_UNICODE)}}"
                     data-confirm="@lang('lte.delete_selected_rows')"
                     data-jax="lte_admin.mass_delete"
                     type="button"

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
@@ -38,6 +39,21 @@ class ServiceProvider extends ServiceProviderIlluminate
     ];
 
     /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        \Lar\LteAdmin\Events\Scaffold::class => [
+            \Lar\LteAdmin\Listeners\Scaffold\CreateMigration::class,
+            \Lar\LteAdmin\Listeners\Scaffold\CreateModel::class,
+            \Lar\LteAdmin\Listeners\Scaffold\CreateController::class,
+            \Lar\LteAdmin\Listeners\Scaffold\CreateControllerPermissions::class,
+            \Lar\LteAdmin\Listeners\Scaffold\RunMigrate::class,
+        ]
+    ];
+
+    /**
      * The application's route middleware.
      *
      * @var array
@@ -63,6 +79,15 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register component group
          */
         //Tag::$groups['lte'] = LteGroup::class;
+
+        /**
+         * Register AdminLte Events
+         */
+        foreach ($this->listen as $event => $listeners) {
+            foreach (array_unique($listeners) as $listener) {
+                Event::listen($event, $listener);
+            }
+        }
 
         /**
          * Register app routes

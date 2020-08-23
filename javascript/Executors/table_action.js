@@ -13,7 +13,13 @@ module.exports = class extends Executor {
         if (ids.length && this.jax) {
 
             let call_jax = () => {
-                get(window.jax, this.jax)(this.object, ids);
+                jax.path(this.jax, this.object, ids, this.columns)
+                    .then(() => {
+                        $(`.select_${this.table}:checked`).each((i, obj) => {
+                            obj.checked = false;
+                        });
+                        $(`[name="select_${this.table}"]`)[0].checked = false;
+                    });
             };
 
             if (this.confirm) {
@@ -41,6 +47,10 @@ module.exports = class extends Executor {
 
     get jax () {
         return this.target.dataset.jax;
+    }
+
+    get columns () {
+        return JSON.parse(this.target.dataset.columns);
     }
 
     static __name () {
