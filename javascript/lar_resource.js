@@ -8,6 +8,7 @@ const load = () => {
     ljs.vue.component('gate_tools', require('./Components/GatesTools').default);
     ljs.vue.component('scaffold_tools', require('./Components/ScaffoldTools').default);
     ljs.vue.component('terminal_tools', require('./Components/TerminalTools').default);
+    ljs.vue.component('live_reloader', require('./Components/LiveReloader').default);
     ljs.vue.component('v-select', require('./Components/Common/Select2').default);
     ljs.vue.component('v-info', require('./Components/Common/Informer').default);
     ljs.vue.component('v-loading', VueElementLoading)

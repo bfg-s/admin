@@ -36,6 +36,7 @@
 
     <!-- SEARCH FORM -->
     {!! \Lar\LteAdmin\Components\Vue\GlobalSearch::create() !!}
+    {!! \Lar\LteAdmin\Components\Vue\LiveReloader::create() !!}
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
