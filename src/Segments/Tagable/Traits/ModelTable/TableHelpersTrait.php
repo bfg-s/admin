@@ -223,6 +223,12 @@ trait TableHelpersTrait {
     }
 
     /**
+     * Has models on process
+     * @var array
+     */
+    static protected $models = [];
+
+    /**
      * @param $model
      * @return string|false
      */
@@ -237,7 +243,15 @@ trait TableHelpersTrait {
         else if (is_string($this->model)) { $class = $this->model; }
         else if (is_array($this->model)) { $class = substr(md5(json_encode($this->model)), 0, 10); }
         $this->model_class = $class;
-        return $class ? strtolower(class_basename($class)) : $this->getUnique();
+        $prep = "";
+        if (isset(static::$models[$this->model_class])) {
+            if (static::$models[$this->model_class] > 1) {
+                $prep .= static::$models[$this->model_class];
+            }
+        } else {
+            static::$models[$this->model_class] = 1;
+        }
+        return $class ? strtolower(class_basename($class)) . $prep : $this->getUnique();
     }
 
     /**
