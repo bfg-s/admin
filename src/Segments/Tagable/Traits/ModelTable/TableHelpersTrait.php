@@ -70,6 +70,17 @@ trait TableHelpersTrait {
     }
 
     /**
+     * Alias of column
+     * @param  string|\Closure|array|null  $label
+     * @param  string|\Closure|array|null  $field
+     * @return $this
+     */
+    public function col($label, $field = null)
+    {
+        return $this->column($label, $field);
+    }
+
+    /**
      * @param  string|\Closure|array|null  $label
      * @param  string|\Closure|array|null  $field
      * @return $this
