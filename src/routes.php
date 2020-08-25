@@ -22,8 +22,10 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
     $roads->post('uploader', config('lte.action.uploader'))->name('uploader');
 
+    $app_dashboard = config('lte.route.namespace') . "\\DashboardController";
+
     Navigate::item('lte.dashboard', 'dashboard')
-        ->action(config('lte.action.dashboard'))
+        ->action(class_exists($app_dashboard) ? $app_dashboard . "@index" : config('lte.action.dashboard'))
         ->icon_tachometer_alt();
 
     $roads->namespace(config('lte.route.namespace'))->group(function (Roads $roads) {

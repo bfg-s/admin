@@ -130,9 +130,4 @@ class LteAdmin extends JaxExecutor
             $this->toast_error(__('lte.unknown_error'));
         }
     }
-
-//    public function mass_action(string $class = null, array $ids = [], array $cols = [])
-//    {
-//        dd($class, $ids, $cols);
-//    }
 }
