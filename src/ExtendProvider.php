@@ -68,6 +68,14 @@ class ExtendProvider extends ServiceProviderIlluminate
     ];
 
     /**
+     * Simple bind in app service provider
+     * @var array
+     */
+    protected $bind = [
+
+    ];
+
+    /**
      * @var string
      */
     protected $navigator = NavigatorExtensionProvider::class;
@@ -118,6 +126,11 @@ class ExtendProvider extends ServiceProviderIlluminate
 
         if ($func) {
             static::$roles = $func->roles;
+        }
+
+        foreach ($this->bind as $key => $item) {
+            if (is_numeric($key)) $key = $item;
+            $this->app->bind($key, $item);
         }
     }
 
