@@ -34,13 +34,12 @@ class Sheet extends Container {
             $card = null;
             $div->card($title)->haveLink($card)
                 ->defaultTools()->bodyModelTable(function (ModelTable $table) use ($warp, $card) {
-
-                    $card->search(function (SearchForm $form) {
-                        $form->id();
-                    });
-                    
                     if ($warp) {
-                        $warp($table, $card, $this);
+                        ccc($warp, [
+                            ModelTable::class => $table,
+                            Card::class => $card,
+                            static::class => $this
+                        ]);
                     }
                 });
         });

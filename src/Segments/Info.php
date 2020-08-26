@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
@@ -30,7 +31,11 @@ class Info extends Container {
                 ->defaultTools()
                 ->foolBody()->model_info_table(function (ModelInfoTable $table) use ($warp, $card) {
                     if ($warp) {
-                        $warp($table, $card, $this);
+                        ccc($warp, [
+                            ModelInfoTable::class => $table,
+                            Card::class => $card,
+                            static::class => $this
+                        ]);
                     }
                 });
         });

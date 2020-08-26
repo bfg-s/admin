@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Nested;
 
 /**
@@ -31,7 +32,11 @@ class NestedSheet extends Container {
                 ->body()
                 ->nested(function (Nested $nested) use ($warp, $card) {
                     if ($warp) {
-                        $warp($nested, $card, $this);
+                        ccc($warp, [
+                            Nested::class => $nested,
+                            Card::class => $card,
+                            static::class => $this
+                        ]);
                     }
                 });
         });

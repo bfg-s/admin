@@ -13,6 +13,7 @@ use Lar\LteAdmin\Commands\LteInstallCommand;
 use Lar\LteAdmin\Commands\LteMixinCommand;
 use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
+use Lar\LteAdmin\Controllers\Generators\DashboardGenerator;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
@@ -36,6 +37,14 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteExtensionCommand::class,
         LtePipeCommand::class,
         LteMixinCommand::class
+    ];
+
+    /**
+     * Simple bind in app service provider
+     * @var array
+     */
+    protected $bind = [
+        DashboardGenerator::class
     ];
 
     /**
@@ -75,11 +84,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function boot()
     {
-        /**
-         * Register component group
-         */
-        //Tag::$groups['lte'] = LteGroup::class;
-
         /**
          * Register AdminLte Events
          */
@@ -216,6 +220,14 @@ class ServiceProvider extends ServiceProviderIlluminate
         \Get::register(\Lar\LteAdmin\Getters\Menu::class);
         \Get::register(\Lar\LteAdmin\Getters\Role::class);
         \Get::register(\Lar\LteAdmin\Getters\Functions::class);
+
+        /**
+         * Simple bind in service container
+         */
+        foreach ($this->bind as $key => $item) {
+            if (is_numeric($key)) $key = $item;
+            $this->app->bind($key, $item);
+        }
     }
 
     /**
@@ -285,7 +297,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerJax()
     {
-        //\Lar\LteAdmin\Jax\LteAdmin::register();
         JaxExecutor::addNamespace(__DIR__ . '/Jax', 'Lar\\LteAdmin\\Jax');
     }
 
@@ -296,7 +307,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerRouteMiddleware()
     {
-        // register route middleware.
         foreach ($this->routeMiddleware as $key => $middleware) {
 
             app('router')->aliasMiddleware($key, $middleware);

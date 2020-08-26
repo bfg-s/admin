@@ -127,22 +127,6 @@ class Card extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null $closure
-     * @return $this
-     */
-//    public function search(\Closure $closure = null)
-//    {
-//        $this->has_search_form = true;
-//
-//        if ($closure) {
-//
-//            $closure($this->search_form);
-//        }
-//
-//        return $this;
-//    }
-
-    /**
      * @param  mixed  ...$params
      * @return CardBody
      */

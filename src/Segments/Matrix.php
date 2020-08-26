@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 
 /**
@@ -36,7 +37,11 @@ class Matrix extends Container {
                 ->defaultTools()
                 ->bodyForm(function (Form $form) use ($warp, $card) {
                     if ($warp) {
-                        $warp($form, $card, $this);
+                        ccc($warp, [
+                            Form::class => $form,
+                            Card::class => $card,
+                            static::class => $this
+                        ]);
                     }
                 })->footerForm();
         });
