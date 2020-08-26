@@ -1,4 +1,15 @@
-### Assets sources
+## Change log
+
+##### 3.5.10
+1. Advanced generators
+
+##### 3.5.9
+1. Add new logic, Generators;
+1. Change dashboard controller with generators;
+1. Containers wrapper with EmbeddedCall;
+1. Simple bind to service provider;
+
+### Required Assets
 * **AdminLte v3** https://adminlte.io/themes/v3/
 * **Bootstrap v4.3.1** https://getbootstrap.com/
 * **Bootstrap Iconpicker v1.10.0** http://victor-valencia.github.io/bootstrap-iconpicker/
@@ -28,7 +39,3 @@
 * **Nestable** https://dbushell.com/Nestable/
 * **Star rating** https://plugins.krajee.com/star-rating
 * **XEditable** https://github.com/vitalets/x-editable
-
-### To future by priority
-* || 1 - http://dynamicdrive.com/dynamicindex16/autosaveform.htm 
-* || 1 - https://www.jqueryscript.net/form/save-form-local-storage.html

@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Controllers\Generators\DashboardGenerator;
 use Lar\LteAdmin\Segments\Container;
 
@@ -13,15 +12,14 @@ use Lar\LteAdmin\Segments\Container;
  */
 class DashboardController extends Controller
 {
-
     /**
      * @return Container
      */
     public function index()
     {
-        return Container::create(function (DIV $div, DashboardGenerator $generator) {
+        return Container::create(function (DashboardGenerator $generator) {
 
-            $generator->aboutServer($div);
+            $generator->aboutServer();
         });
     }
 }

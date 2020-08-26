@@ -44,7 +44,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $bind = [
-        DashboardGenerator::class
+        //DashboardGenerator::class
     ];
 
     /**

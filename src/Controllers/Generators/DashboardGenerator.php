@@ -3,7 +3,9 @@
 namespace Lar\LteAdmin\Controllers\Generators;
 
 use Composer\Composer;
+use Lar\Developer\Generator;
 use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use PDO;
 
@@ -11,7 +13,7 @@ use PDO;
  * Class DashboardGenerator
  * @package Lar\LteAdmin\Controllers\Generators
  */
-class DashboardGenerator
+class DashboardGenerator extends Generator
 {
     /**
      * @var array
@@ -21,12 +23,26 @@ class DashboardGenerator
     ];
 
     /**
-     * @param  Component  $component
+     * @var DIV
+     */
+    protected $div;
+
+    /**
+     * Area default variables
+     */
+    protected function created(): void
+    {
+        $this->div = $this->area(DIV::class);
+    }
+
+    /**
      * @return $this
      */
-    public function aboutServer(Component $component)
+    public function aboutServer()
     {
-        $component->row(function (Row $row) {
+        //dd($this->area_of_visibility);
+
+        $this->div->row(function (Row $row) {
             $row->col(6)->mb4()
                 ->card('lte.environment')->h100()
                 ->foolBody(['table-responsive'])->table($this->environmentInfo());
