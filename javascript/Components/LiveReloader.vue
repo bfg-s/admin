@@ -6,7 +6,7 @@
             </button>
         </li>
         <li :class="{'nav-item': true, dropdown: true}" style="margin-left: -10px;">
-            <button style="padding-left: 0" type="button" class="btn btn-link nav-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+            <button style="padding-left: 0; padding-bottom: 0" type="button" class="btn btn-link nav-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                 {{interval}} sec
             </button>
             <div :class="{'dropdown-menu': true}">
