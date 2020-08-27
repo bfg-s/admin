@@ -1,5 +1,8 @@
 ## Change log
 
+##### 3.5.12
+1. (Fix with namespace) Menu root accessor permission control;
+
 ##### 3.5.11
 1. Fix header nav height;
 1. Menu root accessor permission control;
