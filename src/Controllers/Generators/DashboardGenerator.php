@@ -13,8 +13,13 @@ use PDO;
  * Class DashboardGenerator
  * @package Lar\LteAdmin\Controllers\Generators
  */
-class DashboardGenerator extends Generator
+class DashboardGenerator implements Generator
 {
+    /**
+     * @var DIV
+     */
+    public $div = DIV::class;
+
     /**
      * @var array
      */
@@ -23,25 +28,10 @@ class DashboardGenerator extends Generator
     ];
 
     /**
-     * @var DIV
-     */
-    protected $div;
-
-    /**
-     * Area default variables
-     */
-    protected function created(): void
-    {
-        $this->div = $this->area(DIV::class);
-    }
-
-    /**
      * @return $this
      */
     public function aboutServer()
     {
-        //dd($this->area_of_visibility);
-
         $this->div->row(function (Row $row) {
             $row->col(6)->mb4()
                 ->card('lte.environment')->h100()

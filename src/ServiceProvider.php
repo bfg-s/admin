@@ -9,11 +9,11 @@ use Lar\Layout\Layout;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
+use Lar\LteAdmin\Commands\LteGeneratorCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
 use Lar\LteAdmin\Commands\LteMixinCommand;
 use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
-use Lar\LteAdmin\Controllers\Generators\DashboardGenerator;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
@@ -36,7 +36,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteUserCommand::class,
         LteExtensionCommand::class,
         LtePipeCommand::class,
-        LteMixinCommand::class
+        LteMixinCommand::class,
+        LteGeneratorCommand::class
     ];
 
     /**
@@ -44,7 +45,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $bind = [
-        //DashboardGenerator::class
+
     ];
 
     /**

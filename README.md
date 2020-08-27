@@ -1,7 +1,8 @@
 ## Change log
 
 ##### 3.5.10
-1. Advanced generators
+1. Advanced generators;
+1. Commands for create generators;
 
 ##### 3.5.9
 1. Add new logic, Generators;
