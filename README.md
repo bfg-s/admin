@@ -1,7 +1,8 @@
 ## Change log
 
 ##### 3.5.11
-1. 
+1. Fix header nav height;
+1. Menu root accessor permission control;
 
 ##### 3.5.10
 1. Advanced generators;
