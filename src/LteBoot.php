@@ -67,23 +67,13 @@ class LteBoot
      */
     protected static function makeGates()
     {
-        if (!\Route::current()) {
-
-            return ;
-        }
-
-        $route_action = trim(\Route::currentRouteAction(), '\\');
-
-        $action = \Str::parseCallback($route_action);
-
         /** @var LteFunction $item */
-        foreach (LteFunction::with('roles')->where('class', $action[0])->get() as $item) {
+        foreach (LteFunction::with('roles')->where('active', 1)->get() as $item) {
 
-            \Gate::define("{$action[0]}@{$item->slug}", function (LteUser $user) use ($item) {
+            \Gate::define("{$item->class}@{$item->slug}", function (LteUser $user) use ($item) {
                 return $user->hasRoles($item->roles->pluck('slug')->toArray());
             });
         }
-
     }
 
     /**
