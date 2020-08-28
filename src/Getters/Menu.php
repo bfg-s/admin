@@ -460,15 +460,9 @@ class Menu extends Getter
                 $item['active'] = LtePermission::checkUrl($item['link']);
             }
 
-            $ns = \Route::current() ? \Route::current()->getAction('namespace') . '\\' : '';
+            if (isset($item['active']) && $item['active'] && isset($item['controller']))  {
 
-            if (isset($item['active']) && $item['active'] && isset($item['action']) &&  $item['action'])  {
-                $action = Str::parseCallback($item['action'], 'index');
-                $item['active'] = lte_controller_can($action[1], trim($ns.$action[0], '\\'));
-            }
-
-            if (isset($item['active']) && $item['active'] && isset($item['resource']['action']) && $item['resource']['action'])  {
-                $item['active'] = lte_controller_can('index', trim($ns.$item['resource']['action'], '\\'));
+                $item['active'] = lte_controller_can('index', $item['controller']);
             }
 
             if (isset($item['extension']) && $item['extension'] && $item['active']) {

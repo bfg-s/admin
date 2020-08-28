@@ -1,5 +1,8 @@
 ## Change log
 
+##### 3.5.13
+1. Fix routes with namespace;
+
 ##### 3.5.12
 1. (Fix with namespace) Menu root accessor permission control;
 

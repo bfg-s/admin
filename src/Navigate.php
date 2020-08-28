@@ -21,7 +21,7 @@ class Navigate implements NavigateInterface
     /**
      * @var array
      */
-    protected static $items = [];
+    public static $items = [];
 
     /**
      * @var Roads
