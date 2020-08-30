@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
+use Lar\Layout\Middleware\LayoutMiddleware;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
@@ -19,6 +20,7 @@ use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
+use Lar\LteAdmin\Middlewares\DebugMiddleware;
 
 /**
  * Class ServiceProvider
@@ -229,6 +231,15 @@ class ServiceProvider extends ServiceProviderIlluminate
             if (is_numeric($key)) $key = $item;
             $this->app->bind($key, $item);
         }
+
+        /**
+         * Disable by default debug bar for everyone except root.
+         */
+        LayoutMiddleware::onLoad(function () {
+            if (!admin()->isRoot()) {
+                app('debugbar')->disable();
+            }
+        });
     }
 
     /**

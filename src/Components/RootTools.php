@@ -22,7 +22,7 @@ class RootTools extends DIV
         GeneralInformationTool::class,
         GatesTool::class,
         ScaffoldTool::class,
-        TerminalTool::class
+        //TerminalTool::class
     ];
 
     /**
