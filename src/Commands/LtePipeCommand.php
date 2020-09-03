@@ -147,7 +147,7 @@ class LtePipeCommand extends Command
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::OPTIONAL, 'Name of pipe'],
+            ['name', InputArgument::REQUIRED, 'Name of pipe'],
         ];
     }
 

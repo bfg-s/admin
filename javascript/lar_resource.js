@@ -11,7 +11,8 @@ const load = () => {
     ljs.vue.component('live_reloader', require('./Components/LiveReloader').default);
     ljs.vue.component('v-select', require('./Components/Common/Select2').default);
     ljs.vue.component('v-info', require('./Components/Common/Informer').default);
-    ljs.vue.component('v-loading', VueElementLoading)
+    ljs.vue.component('v-loading', VueElementLoading);
+    ljs.vue.component('v-modal-collection', require('./Components/ModalCollection').default);
 };
 
 const methods = require('./lar_methods.js');

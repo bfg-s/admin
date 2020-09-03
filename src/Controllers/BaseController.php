@@ -155,6 +155,16 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * @param  string  $method
+     * @param  array  $params
+     * @return ModalController
+     */
+    public function new_modal(string $method, array $params = [])
+    {
+        return (new ModalController($params))->setHandle(static::class . "::" . $method);
+    }
+
+    /**
      * @return ExtendProvider|null
      */
     public static function extension_affiliation()

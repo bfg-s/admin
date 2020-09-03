@@ -3,30 +3,32 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\LteAdmin\Core\LtePipe;
+use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Controllers\ModalController;
+use Lar\LteAdmin\Segments\Modal;
+use Lar\LteAdmin\Segments\Tagable\ModalBody;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MakeUser
- *
- * @package Lar\Admin\Commands
+ * Class LteModalCommand
+ * @package Lar\LteAdmin\Commands
  */
-class LteMixinCommand extends Command
+class LteModalCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'lte:mixin';
+    protected $name = 'lte:modal';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make lte mixin';
+    protected $description = 'Make lte modal';
 
     /**
      * Create a new command instance.
@@ -56,10 +58,19 @@ class LteMixinCommand extends Command
 
         $class = class_entity($name)->wrap('php');
         $class->namespace($namespace);
+        $class->use(Modal::class);
+        $class->use(ModalBody::class);
+        $class->extend(ModalController::class);
+        $class->method("create")
+            ->param('body', null, ModalBody::class)
+            ->param('modal', null, Modal::class)
+            ->line()
+            ->line("\$modal->title('{$name}');")
+            ->line("\$body->text('{$namespace}\\{$name}');");
 
         file_put_contents($path . "/" . $name . ".php", $class);
 
-        $this->info("Mixin [$namespace\\$name] generated!");
+        $this->info("Modal [$namespace\\$name] generated!");
     }
 
     /**
@@ -69,8 +80,8 @@ class LteMixinCommand extends Command
     {
         $return = ucfirst(\Str::camel(\Arr::last($this->segments())));
 
-        if (!preg_match('/Mixin$/', $return)) {
-            $return .= "Mixin";
+        if (!preg_match('/Modal$/', $return)) {
+            $return .= "Modal";
         }
 
         return $return;
@@ -97,7 +108,7 @@ class LteMixinCommand extends Command
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : "App\\LteAdmin\\Mixins" . $this->path("\\");
+        ) : "App\\LteAdmin\\Modals" . $this->path("\\");
     }
 
     /**
@@ -129,7 +140,7 @@ class LteMixinCommand extends Command
 
             return "/". trim(base_path($this->option('dir') . '/' . trim($this->path(), '/')), '/');
         }
-        return "/". trim(lte_app_path('Mixins/' . trim($this->path(), '/')), '/');
+        return "/". trim(lte_app_path('Modals/' . trim($this->path(), '/')), '/');
     }
 
     /**
@@ -140,7 +151,7 @@ class LteMixinCommand extends Command
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Name of pipe'],
+            ['name', InputArgument::REQUIRED, 'Name of modal'],
         ];
     }
 

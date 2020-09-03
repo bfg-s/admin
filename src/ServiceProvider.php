@@ -13,6 +13,7 @@ use Lar\LteAdmin\Commands\LteExtensionCommand;
 use Lar\LteAdmin\Commands\LteGeneratorCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
 use Lar\LteAdmin\Commands\LteMixinCommand;
+use Lar\LteAdmin\Commands\LteModalCommand;
 use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
@@ -39,7 +40,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteExtensionCommand::class,
         LtePipeCommand::class,
         LteMixinCommand::class,
-        LteGeneratorCommand::class
+        LteGeneratorCommand::class,
+        LteModalCommand::class
     ];
 
     /**
@@ -236,7 +238,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Disable by default debug bar for everyone except root.
          */
         LayoutMiddleware::onLoad(function () {
-            if (!admin()->isRoot()) {
+            if (!admin()->isRoot() && !\App::isLocal()) {
                 app('debugbar')->disable();
             }
         });

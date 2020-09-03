@@ -3,7 +3,10 @@
 namespace Lar\LteAdmin\Jax;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Lar\LJS\JaxExecutor;
+use Lar\LteAdmin\Controllers\ModalController;
+use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Resources\LteFunctionResource;
 
@@ -129,5 +132,41 @@ class LteAdmin extends JaxExecutor
         } else {
             $this->toast_error(__('lte.unknown_error'));
         }
+    }
+
+    /**
+     * @param  string  $handle
+     * @param  array  $params
+     */
+    public function load_modal(string $handle, array $params = [])
+    {
+        LteBoot::run();
+
+        if (strpos($handle, '@') !== false) {
+            $handle = Str::parseCallback($handle, 'index');
+            if (!class_exists($handle[0])) {
+                if (class_exists("App\\LteAdmin\\Modals\\{$handle[0]}")) {
+                    $handle[0] = "App\\LteAdmin\\Modals\\{$handle[0]}";
+                } else {
+                    abort(404);
+                }
+            }
+            return ccc($handle, $params);
+        }
+
+        else if (strpos($handle, '::') !== false) {
+
+            $handle = explode('::', $handle);
+            if (!class_exists($handle[0])) {
+                if (class_exists("App\\LteAdmin\\{$handle[0]}")) {
+                    $handle[0] = "App\\LteAdmin\\{$handle[0]}";
+                } else {
+                    abort(404);
+                }
+            }
+            return (new ModalController())->setCreate($handle)->index();
+        }
+
+        abort(404);
     }
 }
