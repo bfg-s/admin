@@ -1,5 +1,11 @@
 ## Change log
 
+##### 3.6.0
+1. Add supported of modals
+
+##### 3.5.15
+1. Add supported of DebugBar
+
 ##### 3.5.14
 1. (Fix with namespace) Menu root accessor permission control;
 
