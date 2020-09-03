@@ -2,6 +2,7 @@
 
 ##### 3.6.0
 1. Add supported of modals
+1. Artisan command for modal creating "artisan lte:modal [name]"
 
 ##### 3.5.15
 1. Add supported of DebugBar
