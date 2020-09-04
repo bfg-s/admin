@@ -1,5 +1,8 @@
 ## Change log
 
+##### 3.6.1
+1. Table extend "password_stars" fix nullable value
+
 ##### 3.6.0
 1. Add supported of modals
 1. Artisan command for modal creating "artisan lte:modal [name]"

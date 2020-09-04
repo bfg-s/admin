@@ -33,6 +33,7 @@ class Decorations {
      */
     public function password_stars($value, $props = [])
     {
+        if (!$value) { return $this->true_data($value); }
         $star = $props[0] ?? '•';
         $id = uniqid('password_');
         $id_showed = "showed_{$id}";
