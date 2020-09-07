@@ -13,7 +13,7 @@ use PDO;
  * Class DashboardGenerator
  * @package Lar\LteAdmin\Controllers\Generators
  */
-class DashboardGenerator implements Generator
+class DashboardGenerator extends Generator
 {
     /**
      * @var DIV
