@@ -3,12 +3,10 @@
 namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
- * Class Container
- * @package App\LteAdmin\Segments
+ * Class AccessDenied
+ * @package Lar\LteAdmin\Segments
  */
 class AccessDenied extends Container {
 

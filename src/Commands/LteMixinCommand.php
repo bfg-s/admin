@@ -97,7 +97,7 @@ class LteMixinCommand extends Command
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : "App\\LteAdmin\\Mixins" . $this->path("\\");
+        ) : lte_app_namespace('Mixins') . $this->path("\\");
     }
 
     /**

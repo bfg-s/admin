@@ -11,7 +11,7 @@ use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
 
 /**
  * Class Container
- * @package App\LteAdmin\Segments
+ * @package Lar\LteAdmin\Segments
  */
 class Container implements SegmentContainerInterface {
 

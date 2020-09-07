@@ -4,12 +4,11 @@ namespace Lar\LteAdmin\Segments;
 
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Card;
-use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
- * Class Container
- * @package App\LteAdmin\Segments
+ * Class Info
+ * @package Lar\LteAdmin\Segments
  */
 class Info extends Container {
 

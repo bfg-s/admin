@@ -104,7 +104,7 @@ class LtePipeCommand extends Command
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : "App\\LteAdmin\\Pipes" . $this->path("\\");
+        ) : lte_app_namespace('Pipes') . $this->path("\\");
     }
 
     /**

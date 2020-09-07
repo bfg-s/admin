@@ -22,13 +22,13 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
     $roads->post('uploader', config('lte.action.uploader'))->name('uploader');
 
-    $app_dashboard = "\\" . trim(config('lte.route.namespace'), "\\") . "\\DashboardController";
+    $app_dashboard = lte_app_namespace('Controllers\\DashboardController');
 
     Navigate::item('lte.dashboard', 'dashboard')
         ->action(class_exists($app_dashboard) ? $app_dashboard . "@index" : config('lte.action.dashboard'))
         ->icon_tachometer_alt();
 
-    $roads->namespace(config('lte.route.namespace'))->group(function (Roads $roads) {
+    $roads->namespace(lte_app_namespace('Controllers'))->group(function (Roads $roads) {
 
         \Lar\LteAdmin\Core\RoutesAdaptor::create_by_menu($roads);
     });

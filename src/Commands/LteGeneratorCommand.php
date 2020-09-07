@@ -95,7 +95,7 @@ class LteGeneratorCommand extends Command
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : "App\\LteAdmin\\Generators" . $this->path("\\");
+        ) : lte_app_namespace('Generators') . $this->path("\\");
     }
 
     /**
@@ -127,7 +127,7 @@ class LteGeneratorCommand extends Command
 
             return "/". trim(base_path($this->option('dir') . '/' . trim($this->path(), '/')), '/');
         }
-        return "/". trim(app_path('LteAdmin/Generators/' . trim($this->path(), '/')), '/');
+        return "/". trim(lte_app_path('Generators/' . trim($this->path(), '/')), '/');
     }
 
     /**

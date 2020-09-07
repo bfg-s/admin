@@ -9,14 +9,14 @@ use Lar\LteAdmin\Events\Scaffold;
  * Class LteScaffolding
  * @package Lar\LteAdmin\Jax
  */
-class LteScaffolding extends JaxExecutor
+class LteScaffolding extends LteAdminExecutor
 {
     /**
      * @return bool
      */
     public function access()
     {
-        return !\LteAdmin::guest() && \LteAdmin::user()->isRoot();
+        return parent::access() && \LteAdmin::user()->isRoot();
     }
 
     /**

@@ -5,11 +5,10 @@ namespace Lar\LteAdmin\Segments;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
- * Class Container
- * @package App\LteAdmin\Segments
+ * Class Sheet
+ * @package Lar\LteAdmin\Segments
  */
 class Sheet extends Container {
 

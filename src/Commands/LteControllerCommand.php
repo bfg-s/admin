@@ -57,7 +57,7 @@ class LteControllerCommand extends Command
 
         $add_dir = "";
 
-        $namespace = config('lte.route.namespace');
+        $namespace = lte_app_namespace('Controllers');
 
         if (count($ex) > 1) {
 

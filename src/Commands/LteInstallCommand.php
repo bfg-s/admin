@@ -115,7 +115,7 @@ class LteInstallCommand extends Command
 
             file_put_contents(
                 $controller,
-                "<?php\n\nnamespace App\LteAdmin\Controllers;\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\n/**\n * Controller Class\n *\n * @package App\LteAdmin\Controllers\n */\nclass Controller extends LteController\n{\n\t\n}"
+                "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\n/**\n * Controller Class\n *\n * @package ".lte_app_namespace('Controllers')."\n */\nclass Controller extends LteController\n{\n\t\n}"
             );
 
             $this->info("File {$controller} created!");
@@ -204,7 +204,7 @@ class LteInstallCommand extends Command
         if (!is_file($nav)) {
 
             $class = class_entity('Navigator');
-            $class->namespace('App\LteAdmin');
+            $class->namespace(lte_app_namespace());
             $class->wrap('php');
             $class->extend(NavigatorExtensionProvider::class);
             $class->implement(ActionWorkExtensionInterface::class);
@@ -224,7 +224,7 @@ class LteInstallCommand extends Command
         if (!is_file($config)) {
 
             $class = class_entity('Config');
-            $class->namespace('App\LteAdmin');
+            $class->namespace(lte_app_namespace());
             $class->wrap('php');
             $class->extend(ConfigExtensionProvider::class);
             $class->method('boot')
@@ -247,8 +247,8 @@ class LteInstallCommand extends Command
             $class = class_entity('LteServiceProvider');
             $class->namespace('App\Providers');
             $class->wrap('php');
-            $class->use('App\LteAdmin\Config');
-            $class->use('App\LteAdmin\Navigator');
+            $class->use(lte_app_namespace('Config'));
+            $class->use(lte_app_namespace('Navigator'));
             $class->extend(ApplicationServiceProvider::class);
 
             $class->prop('protected:navigator', entity('Navigator::class'));

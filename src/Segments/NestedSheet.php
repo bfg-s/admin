@@ -7,8 +7,8 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Nested;
 
 /**
- * Class Container
- * @package App\LteAdmin\Segments
+ * Class NestedSheet
+ * @package Lar\LteAdmin\Segments
  */
 class NestedSheet extends Container {
 

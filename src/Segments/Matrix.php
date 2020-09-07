@@ -7,8 +7,8 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 
 /**
- * Class Container
- * @package App\LteAdmin\Segments
+ * Class Matrix
+ * @package Lar\LteAdmin\Segments
  */
 class Matrix extends Container {
 

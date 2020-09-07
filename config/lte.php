@@ -1,12 +1,25 @@
 <?php
 
 return [
+
+    /**
+     * Admin application namespace
+     */
+    'app_namespace' => "App\\LteAdmin",
+
+    /**
+     * Package work dirs
+     */
+    'paths' => [
+        'app' => app_path('LteAdmin'),
+        'view' => 'admin'
+    ],
+
     /**
      * Global rout configurations
      */
     'route' => [
         'domain' => '',
-        'namespace' => 'App\LteAdmin\Controllers',
         'prefix' => 'lte',
         'name' => 'lte.',
         'layout' => 'lte_layout'
@@ -27,14 +40,6 @@ return [
         ],
         'dashboard' => '\Lar\LteAdmin\Controllers\DashboardController@index',
         'uploader' => '\Lar\LteAdmin\Controllers\UploadController@index',
-    ],
-
-    /**
-     * Package work dirs
-     */
-    'paths' => [
-        'app' => app_path('LteAdmin'),
-        'view' => 'admin'
     ],
 
     /**

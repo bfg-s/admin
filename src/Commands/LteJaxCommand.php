@@ -3,32 +3,31 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Controllers\ModalController;
-use Lar\LteAdmin\Segments\Modal;
-use Lar\LteAdmin\Segments\Tagable\ModalBody;
+use Lar\LteAdmin\Core\LtePipe;
+use Lar\LteAdmin\Jax\LteAdminExecutor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class LteModalCommand
- * @package Lar\LteAdmin\Commands
+ * Class MakeUser
+ *
+ * @package Lar\Admin\Commands
  */
-class LteModalCommand extends Command
+class LteJaxCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'lte:modal';
+    protected $name = 'lte:jax';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make lte modal';
+    protected $description = 'Make lte jax';
 
     /**
      * Create a new command instance.
@@ -57,20 +56,11 @@ class LteModalCommand extends Command
         }
 
         $class = class_entity($name)->wrap('php');
-        $class->namespace($namespace);
-        $class->use(Modal::class);
-        $class->use(ModalBody::class);
-        $class->extend(ModalController::class);
-        $class->method("create")
-            ->param('body', null, ModalBody::class)
-            ->param('modal', null, Modal::class)
-            ->line()
-            ->line("\$modal->title('{$name}');")
-            ->line("\$body->text('{$namespace}\\{$name}');");
+        $class->namespace($namespace)->extend(LteAdminExecutor::class);
 
         file_put_contents($path . "/" . $name . ".php", $class);
 
-        $this->info("Modal [$namespace\\$name] generated!");
+        $this->info("Jax [$namespace\\$name] generated!");
     }
 
     /**
@@ -78,13 +68,7 @@ class LteModalCommand extends Command
      */
     protected function name()
     {
-        $return = ucfirst(\Str::camel(\Arr::last($this->segments())));
-
-        if (!preg_match('/Modal$/', $return)) {
-            $return .= "Modal";
-        }
-
-        return $return;
+        return ucfirst(\Str::camel(\Arr::last($this->segments())));
     }
 
     /**
@@ -100,15 +84,13 @@ class LteModalCommand extends Command
      */
     protected function namespace()
     {
-
-
         return $this->option('dir') ? implode("\\",
             array_map("ucfirst",
                 array_map("Str::camel",
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : lte_app_namespace('Modals') . $this->path("\\");
+        ) : lte_app_namespace('Jax') . $this->path("\\");
     }
 
     /**
@@ -140,7 +122,7 @@ class LteModalCommand extends Command
 
             return "/". trim(base_path($this->option('dir') . '/' . trim($this->path(), '/')), '/');
         }
-        return "/". trim(lte_app_path('Modals/' . trim($this->path(), '/')), '/');
+        return "/". trim(lte_app_path('Jax/' . trim($this->path(), '/')), '/');
     }
 
     /**
@@ -151,7 +133,7 @@ class LteModalCommand extends Command
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'Name of modal'],
+            ['name', InputArgument::REQUIRED, 'Name of jax'],
         ];
     }
 

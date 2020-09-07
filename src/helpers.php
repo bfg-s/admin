@@ -1,5 +1,30 @@
 <?php
 
+if (!function_exists('lte_relative_path')) {
+
+    /**
+     * @param  string  $path
+     * @return string
+     */
+    function lte_relative_path (string $path = "") {
+
+        return trim("/" . trim(str_replace(base_path(), '', config('lte.paths.app')), "/")
+            . "/" . trim($path, "/"), "/");
+    }
+}
+if (!function_exists('lte_app_namespace')) {
+
+    /**
+     * @param  string  $path
+     * @return string
+     */
+    function lte_app_namespace (string $path = "") {
+
+        return trim("\\" . trim(config('lte.app_namespace'), "\\")
+            . "\\" . trim($path, "\\"), "\\");
+    }
+}
+
 if (!function_exists('lte_related_methods')) {
 
     /**
@@ -72,7 +97,7 @@ if (!function_exists('lte_app_path')) {
      */
     function lte_app_path (string $path = '') {
 
-        return config('lte.paths.app') . '/' . trim($path, '/');
+        return trim(trim(config('lte.paths.app'), '/') . '/' . trim($path, '/'), '/');
     }
 }
 

@@ -14,22 +14,12 @@ use Lar\LteAdmin\Resources\LteFunctionResource;
  * Class LteAdmin
  * @package App\Http\JaxExecutors
  */
-class LteAdmin extends JaxExecutor
+class LteAdmin extends LteAdminExecutor
 {
     /**
      * @var int
      */
     static protected $i = 0;
-
-    /**
-     * Public method access
-     * 
-     * @return bool
-     */
-    public function access() {
-        
-        return !\LteAdmin::guest();
-    }
 
     /**
      * @param  string  $model
@@ -145,8 +135,8 @@ class LteAdmin extends JaxExecutor
         if (strpos($handle, '@') !== false) {
             $handle = Str::parseCallback($handle, 'index');
             if (!class_exists($handle[0])) {
-                if (class_exists("App\\LteAdmin\\Modals\\{$handle[0]}")) {
-                    $handle[0] = "App\\LteAdmin\\Modals\\{$handle[0]}";
+                if (class_exists(lte_app_namespace("Modals\\{$handle[0]}"))) {
+                    $handle[0] = lte_app_namespace("Modals\\{$handle[0]}");
                 } else {
                     abort(404);
                 }
@@ -158,8 +148,8 @@ class LteAdmin extends JaxExecutor
 
             $handle = explode('::', $handle);
             if (!class_exists($handle[0])) {
-                if (class_exists("App\\LteAdmin\\{$handle[0]}")) {
-                    $handle[0] = "App\\LteAdmin\\{$handle[0]}";
+                if (class_exists(lte_app_namespace($handle[0]))) {
+                    $handle[0] = lte_app_namespace($handle[0]);
                 } else {
                     abort(404);
                 }

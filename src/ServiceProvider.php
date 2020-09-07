@@ -12,6 +12,7 @@ use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
 use Lar\LteAdmin\Commands\LteGeneratorCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
+use Lar\LteAdmin\Commands\LteJaxCommand;
 use Lar\LteAdmin\Commands\LteMixinCommand;
 use Lar\LteAdmin\Commands\LteModalCommand;
 use Lar\LteAdmin\Commands\LtePipeCommand;
@@ -21,7 +22,6 @@ use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
-use Lar\LteAdmin\Middlewares\DebugMiddleware;
 
 /**
  * Class ServiceProvider
@@ -41,7 +41,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LtePipeCommand::class,
         LteMixinCommand::class,
         LteGeneratorCommand::class,
-        LteModalCommand::class
+        LteModalCommand::class,
+        LteJaxCommand::class
     ];
 
     /**
@@ -109,7 +110,7 @@ class ServiceProvider extends ServiceProviderIlluminate
                 ->lang(config('layout.lang_mode', true))
                 ->gets('lte')
                 ->layout(config('lte.route.layout'))
-                ->namespace(config('lte.route.namespace'))
+                ->namespace(lte_app_namespace('Controllers'))
                 ->prefix(config('lte.route.prefix'))
                 ->name(config('lte.route.name'))
                 ->group(lte_app_path('routes.php'));
@@ -126,7 +127,7 @@ class ServiceProvider extends ServiceProviderIlluminate
                 ->lang(config('layout.lang_mode', true))
                 ->gets('lte')
                 ->layout(config('lte.route.layout'))
-                ->namespace(config('lte.route.namespace'))
+                ->namespace(lte_app_namespace('Controllers'))
                 ->prefix(config('lte.route.prefix'))
                 ->name(config('lte.route.name'))
                 ->group(base_path('routes/admin.php'));
@@ -258,6 +259,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         if (class_exists('App\Providers\LteServiceProvider')) {
 
             $this->app->register('App\Providers\LteServiceProvider');
+            \LJS::jaxNamespace(lte_relative_path(), lte_app_namespace('Jax'));
         }
 
         /**
