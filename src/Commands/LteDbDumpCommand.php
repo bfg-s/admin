@@ -141,4 +141,12 @@ class LteDbDumpCommand extends Command
             );
         }
     }
+
+    /**
+     * @param  string  $model
+     */
+    public static function addModel(string $model)
+    {
+        static::$models[] = $model;
+    }
 }
