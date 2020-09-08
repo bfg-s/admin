@@ -22,7 +22,7 @@ Road::layout(config('lte.route.layout'))->group(function (Roads $roads) {
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
     $roads->post('uploader', config('lte.action.uploader'))->name('uploader');
 
-    $app_dashboard = lte_app_namespace('Controllers\\DashboardController');
+    $app_dashboard = "\\" . lte_app_namespace('Controllers\\DashboardController');
 
     Navigate::item('lte.dashboard', 'dashboard')
         ->action(class_exists($app_dashboard) ? $app_dashboard . "@index" : config('lte.action.dashboard'))

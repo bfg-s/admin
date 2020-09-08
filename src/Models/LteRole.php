@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
  * Class LteRole
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LteRole extends Model
 {
+    use DumpedModel;
+
     /**
      * @var string
      */

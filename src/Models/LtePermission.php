@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
  * Class LtePermission
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class LtePermission extends Model
 {
+    use DumpedModel;
+    
     /**
      * @var string
      */

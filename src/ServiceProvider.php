@@ -9,6 +9,7 @@ use Lar\Layout\Layout;
 use Lar\Layout\Middleware\LayoutMiddleware;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
+use Lar\LteAdmin\Commands\LteDbDumpCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
 use Lar\LteAdmin\Commands\LteGeneratorCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
@@ -42,7 +43,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteMixinCommand::class,
         LteGeneratorCommand::class,
         LteModalCommand::class,
-        LteJaxCommand::class
+        LteJaxCommand::class,
+        LteDbDumpCommand::class
     ];
 
     /**

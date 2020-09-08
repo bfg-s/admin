@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Lar\LteAdmin\Core\CheckUserFunction;
+use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
  * Class LteUser
@@ -21,7 +22,8 @@ class LteUser extends Model implements AuthenticatableContract
         Authorizable,
         LteUserPermission,
         Notifiable,
-        SoftDeletes;
+        SoftDeletes,
+        DumpedModel;
 
     /**
      * @var string
@@ -100,5 +102,17 @@ class LteUser extends Model implements AuthenticatableContract
         }
 
         return static::$check_user_func_instances[$this->id];
+    }
+
+    /**
+     * @return array
+     */
+    public function toDump()
+    {
+        $user_array = $this->toArray();
+
+        $user_array['roles'] = $this->roles->pluck('id')->toArray();
+
+        return $user_array;
     }
 }
