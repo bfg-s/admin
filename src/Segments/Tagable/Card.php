@@ -304,36 +304,36 @@ class Card extends DIV implements onRender {
             /** @var \Closure $test */
             $test = $this->default_tools;
 
-            if ($this->has_search_form && $this->now['current.type'] && $this->now['current.type'] === 'index') {
+            if ($test('search') && lte_controller_can('search')) {
+                $this->group(function (ButtonGroup $group) {
 
-                if ($test('search') && lte_controller_can('search')) {
-                    $this->group(function (ButtonGroup $group) {
+                    $group->primary(['fas fa-search', __('lte.search')])
+                        ->setDatas([
+                            'toggle' => 'collapse',
+                            'target' => '#table_search_form'
+                        ])->attr([
+                            'aria-expanded' => 'true',
+                            'aria-controls' =>  'table_search_form'
+                        ])->whenRender(function (BUTTON $button) {
+                            if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                                $button->attr(['d-none']);
+                            }
+                        });
 
-                        $group->primary(['fas fa-search', __('lte.search')])
-                            ->setDatas([
-                                'toggle' => 'collapse',
-                                'target' => '#table_search_form'
-                            ])->attr([
-                                'aria-expanded' => 'true',
-                                'aria-controls' =>  'table_search_form'
-                            ])->whenRender(function (BUTTON $button) {
+                    if ($this->search_form && request()->has('q')) {
+                        $group->danger(['fas fa-window-close', __('lte.cancel')])
+                            ->attr('id', 'cancel_search_params')
+                            ->on_click('doc::location', urlWithGet([], ['q', 'page']))
+                            ->whenRender(function (BUTTON $button) {
                                 if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                     $button->attr(['d-none']);
                                 }
                             });
+                    }
+                });
+            }
 
-                        if ($this->search_form && request()->has('q')) {
-                            $group->danger(['fas fa-window-close', __('lte.cancel')])
-                                ->attr('id', 'cancel_search_params')
-                                ->on_click('doc::location', urlWithGet([], ['q', 'page']))
-                                ->whenRender(function (BUTTON $button) {
-                                    if (!$this->search_form || !$this->search_form->fieldsCount()) {
-                                        $button->attr(['d-none']);
-                                    }
-                                });
-                        }
-                    });
-                }
+            if ($this->has_search_form && $this->now['current.type'] && $this->now['current.type'] === 'index') {
 
                 /** @var Model $model */
                 $model = gets()->lte->menu->model;

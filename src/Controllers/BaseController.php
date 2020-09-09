@@ -115,7 +115,7 @@ abstract class BaseController extends Controller
     /**
      * @param  null  $name
      * @param  null  $default
-     * @return \Lar\LteAdmin\Getters\Menu|string|null|mixed
+     * @return array|mixed
      */
     public function data($name = null, $default = null)
     {
