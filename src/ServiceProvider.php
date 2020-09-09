@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
 use Lar\Layout\Middleware\LayoutMiddleware;
+use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteDbDumpCommand;
@@ -245,6 +246,21 @@ class ServiceProvider extends ServiceProviderIlluminate
                 app('debugbar')->disable();
             }
         });
+
+        /**
+         * Run lte with jax on admin page
+         */
+        JaxController::on_start(function () {
+            $ref = request()->server->get('HTTP_REFERER');
+            if ($ref && \Str::is(url(config('lte.route.prefix')  . "*"), $ref)) {
+                LteBoot::run();
+            }
+        });
+
+        /**
+         * Register Jax namespace
+         */
+        \LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
     }
 
     /**
@@ -261,7 +277,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         if (class_exists('App\Providers\LteServiceProvider')) {
 
             $this->app->register('App\Providers\LteServiceProvider');
-            \LJS::jaxNamespace(lte_relative_path(), lte_app_namespace('Jax'));
         }
 
         /**
