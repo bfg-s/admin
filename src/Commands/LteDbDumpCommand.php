@@ -28,11 +28,11 @@ class LteDbDumpCommand extends Command
      * @var array
      */
     protected static $models = [
+        LteRole::class,
+        LtePermission::class,
         LteUser::class,
         LteFileStorage::class,
         LteFunction::class,
-        LtePermission::class,
-        LteRole::class
     ];
 
     /**
@@ -81,7 +81,7 @@ class LteDbDumpCommand extends Command
         $class->wrap('php');
         $class->use(Seeder::class);
         $class->use(ModelSaver::class);
-        $class->extend(Seeder::class);
+        $class->extend("Seeder");
 
         /** @var Model $model */
         foreach (static::$models as $key => $model) {
@@ -105,7 +105,7 @@ class LteDbDumpCommand extends Command
 
         foreach (static::$models as $model) {
             $model_name = class_basename(get_class($model));
-            $method->line("ModelSaver::do($model_name::class, \$this->".$model->getTable().");");
+            $method->line("ModelSaver::doMany($model_name::class, \$this->".$model->getTable().");");
         }
 
         $render = $class->render();
