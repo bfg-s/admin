@@ -140,16 +140,28 @@ class Menu extends Getter
             $return = new $return;
         }
 
-        if ($return && $return instanceof Model && isset($menu['model.param'])) {
+        $pm = null;
 
-            $roue_param = \Route::current()->parameter($menu['model.param']);
+        if (isset($menu['model.param'])) {
 
-            if ($roue_param) {
+            $pm = $menu['model.param'];
 
-                if ($find = $return->where($return->getRouteKeyName(), $roue_param)->first()) {
+        } else {
 
-                    $return = $find;
-                }
+            $pm = \Str::singular(\Str::snake(class_basename($return)));
+        }
+
+        if (
+            $pm &&
+            $return &&
+            $return instanceof Model &&
+            !$return->exists &&
+            \Route::current()->hasParameter($pm)
+        ) {
+
+            if ($find = $return->where($return->getRouteKeyName(), \Route::current()->parameter($pm))->first()) {
+
+                $return = $find;
             }
         }
 
