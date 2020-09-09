@@ -89,7 +89,6 @@ class Select extends FormGroup
         return CoreSelect2::create($this->options, [
             'name' => $this->name,
             'data-placeholder' => $this->title,
-            'data-width' => '100%',
             'id' => $this->field_id
         ], ...$this->params)
             ->setValues($this->value)
