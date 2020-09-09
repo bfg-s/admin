@@ -218,11 +218,11 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
-     * @return string
+     * @return array[]
      */
-    public function render()
+    public function toArray()
     {
-        return json_encode([
+        return [
             'modal:put' => [
                 $this->handle ? $this->handle : "{$this->class}@{$this->method}",
                 $this->params,
@@ -233,7 +233,15 @@ class ModalController extends HTMLCustomCommand
                     'size' => $this->size
                 ]
             ]
-        ]);
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        return json_encode($this->toArray());
     }
 
     /**
