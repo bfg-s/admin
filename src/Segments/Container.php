@@ -55,7 +55,7 @@ class Container implements SegmentContainerInterface {
         $this->layout = 'lte::layout';
         $this->component = DIV::create();
         $this->callConstructEvents([DIV::class => $this->component]);
-        ccc($warp, [
+        embedded_call($warp, [
             DIV::class => $this->component,
             static::class => $this
         ]);
@@ -69,7 +69,10 @@ class Container implements SegmentContainerInterface {
      */
     public function next(\Closure $warp)
     {
-        $warp($this->component, $this);
+        embedded_call($warp, [
+            DIV::class => $this->component,
+            static::class => $this
+        ]);
 
         return $this;
     }

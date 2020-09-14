@@ -60,7 +60,7 @@ trait TableExtensionTrait {
     {
         if (static::hasExtension($name)) {
 
-            return custom_closure_call(static::$extensions[$name], $arguments);
+            return embedded_call(static::$extensions[$name], $arguments);
         }
 
         return null;

@@ -133,7 +133,7 @@ abstract class BaseController extends Controller
      */
     public function can(string $method)
     {
-        return lte_class_can(static::class, $method);
+        return lte_controller_can(static::class, $method);
     }
 
     /**

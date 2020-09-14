@@ -32,7 +32,7 @@ class NestedSheet extends Container {
                 ->body()
                 ->nested(function (Nested $nested) use ($warp, $card) {
                     if ($warp) {
-                        ccc($warp, [
+                        embedded_call($warp, [
                             Nested::class => $nested,
                             Card::class => $card,
                             static::class => $this

@@ -61,7 +61,7 @@ class Modal extends DIV implements onRender {
 
         if ($content) {
 
-            ccc($content, [
+            embedded_call($content, [
                 ModalBody::class => $this->body,
                 static::class => $this
             ]);

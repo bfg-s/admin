@@ -44,31 +44,8 @@ if (!function_exists('lte_related_methods')) {
     }
 }
 
-if (!function_exists('lte_class_can')) {
-
-    /**
-     * @param string|array $class
-     * @param  string  $method
-     * @return bool
-     */
-    function lte_class_can ($class, string $method) {
-
-        $func = $func = gets()->lte->functions->list
-            ->whereIn('class', (array)$class)
-            ->whereIn('slug', lte_related_methods($method));
-
-        /** @var \Lar\LteAdmin\Models\LteFunction $item */
-        foreach ($func as $item) {
-            if (!lte_user()->hasRoles($item->roles->pluck('slug')->toArray())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
 if (!function_exists('lte_controller_can')) {
+
     /**
      * @param  string|null  $check_method
      * @param  string|null  $check_class

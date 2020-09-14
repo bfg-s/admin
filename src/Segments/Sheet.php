@@ -34,7 +34,7 @@ class Sheet extends Container {
             $div->card($title)->haveLink($card)
                 ->defaultTools()->bodyModelTable(function (ModelTable $table) use ($warp, $card) {
                     if ($warp) {
-                        ccc($warp, [
+                        embedded_call($warp, [
                             ModelTable::class => $table,
                             Card::class => $card,
                             static::class => $this

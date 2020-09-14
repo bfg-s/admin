@@ -97,7 +97,7 @@ trait TableBuilderTrait {
             if (is_string($value)) {
                 $value = multi_dot_call($item, $value);
             } else if (is_array($value) || $value instanceof \Closure) {
-                $value = custom_closure_call($value, [
+                $value = embedded_call($value, [
                     'model' => $item,
                     'value' => $value,
                     'field' => $column['field'],

@@ -97,9 +97,9 @@ class Controller extends BaseController
     public function update_default(array $data = null) {
 
         if (method_exists($this, 'edit')) {
-            ccc([$this, 'edit']);
+            embedded_call([$this, 'edit']);
         } else {
-            ccc([$this, 'edit_default']);
+            embedded_call([$this, 'edit_default']);
         }
 
         $save = $data ?? request()->all();
@@ -137,9 +137,9 @@ class Controller extends BaseController
     public function store_default(array $data = null) {
 
         if (method_exists($this, 'create')) {
-            ccc([$this, 'create']);
+            embedded_call([$this, 'create']);
         } else {
-            ccc([$this, 'create_default']);
+            embedded_call([$this, 'create_default']);
         }
 
         $save = $data ?? request()->all();
@@ -276,7 +276,7 @@ class Controller extends BaseController
 
             if ($sclass instanceof $this && method_exists($sclass, $method)) {
 
-                return ccc([$sclass, $method], $parameters);
+                return embedded_call([$sclass, $method], $parameters);
             }
         }
         

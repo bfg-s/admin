@@ -141,7 +141,7 @@ class LteAdmin extends LteAdminExecutor
                     abort(404);
                 }
             }
-            return ccc($handle, $params);
+            return embedded_call($handle, $params);
         }
 
         else if (strpos($handle, '::') !== false) {

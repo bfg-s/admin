@@ -181,7 +181,7 @@ class ModelInfoTable extends DIV {
                 if (is_string($field)) {
                     $field = multi_dot_call($this->model, $field);
                 } else if (is_array($field) || $field instanceof \Closure) {
-                    $field = custom_closure_call($field, [
+                    $field = embedded_call($field, [
                         is_object($this->model) ? get_class($this->model) : 'model' => $this->model,
                         ModelInfoTable::class => $this
                     ]);

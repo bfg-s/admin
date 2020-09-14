@@ -30,7 +30,7 @@ class Info extends Container {
                 ->defaultTools()
                 ->foolBody()->model_info_table(function (ModelInfoTable $table) use ($warp, $card) {
                     if ($warp) {
-                        ccc($warp, [
+                        embedded_call($warp, [
                             ModelInfoTable::class => $table,
                             Card::class => $card,
                             static::class => $this
