@@ -8,7 +8,7 @@ if (!function_exists('lte_relative_path')) {
      */
     function lte_relative_path (string $path = "") {
 
-        return trim("/" . trim(str_replace(base_path(), '', config('lte.paths.app')), "/")
+        return "/" . trim("/" . trim(str_replace(base_path(), '', config('lte.paths.app')), "/")
             . "/" . trim($path, "/"), "/");
     }
 }
@@ -74,7 +74,7 @@ if (!function_exists('lte_app_path')) {
      */
     function lte_app_path (string $path = '') {
 
-        return trim(trim(config('lte.paths.app'), '/') . '/' . trim($path, '/'), '/');
+        return "/" . trim(trim(config('lte.paths.app'), '/') . '/' . trim($path, '/'), '/');
     }
 }
 
