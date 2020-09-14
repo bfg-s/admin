@@ -55,7 +55,7 @@ class LteGeneratorCommand extends Command
 
         $class = class_entity($name)->wrap('php');
         $class->namespace($namespace);
-        $class->implement(Generator::class);
+        $class->extend(Generator::class);
 
         file_put_contents($path . "/" . $name . ".php", $class);
 
