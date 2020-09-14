@@ -41,6 +41,7 @@ class Formatter {
             $append = $props[0]($model);
         } else {
             $append = implode(" ", $props);
+            $append = $model ? tag_replace($append, $model) : $append;
         }
 
         return $value.$append;
@@ -49,13 +50,14 @@ class Formatter {
     /**
      * @param $value
      * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function to_append_link($value, $props = [])
+    public function to_append_link($value, $props = [], Model $model = null)
     {
-        $icon = $props[0] ?? 'fas fa-link';
-        $link = $props[1] ?? 'javascript:void(0)';
-        $title = $props[2] ?? false;
+        $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
+        $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -79,6 +81,7 @@ class Formatter {
             $prepend = $props[0]($model);
         } else {
             $prepend = implode(" ", $props);
+            $prepend = $model ? tag_replace($prepend, $model) : $prepend;
         }
 
         return $prepend.$value;
@@ -87,13 +90,14 @@ class Formatter {
     /**
      * @param $value
      * @param  array  $props
+     * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend_link($value, $props = [])
+    public function to_prepend_link($value, $props = [], Model $model = null)
     {
-        $icon = $props[0] ?? 'fas fa-link';
-        $link = $props[1] ?? 'javascript:void(0)';
-        $title = $props[2] ?? false;
+        $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
+        $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -135,11 +139,12 @@ class Formatter {
     /**
      * @param $value
      * @param  array  $props
+     * @param  Model|null  $model
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function to_lang($value, $props = [])
+    public function to_lang($value, $props = [], Model $model = null)
     {
-        return __($value, $props);
+        return $model ? tag_replace(__($value, $props), $model) : __($value, $props);
     }
 
     /**
