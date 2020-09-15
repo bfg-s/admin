@@ -55,6 +55,11 @@ class Formatter {
      */
     public function to_append_link($value, $props = [], Model $model = null)
     {
+        if (!$value) {
+
+            return '<span class="badge badge-dark">NULL</span>';
+        }
+
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
@@ -95,6 +100,11 @@ class Formatter {
      */
     public function to_prepend_link($value, $props = [], Model $model = null)
     {
+        if (!$value) {
+
+            return '<span class="badge badge-dark">NULL</span>';
+        }
+
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
