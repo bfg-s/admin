@@ -27,13 +27,7 @@ class LteDbDumpCommand extends Command
     /**
      * @var array
      */
-    protected static $models = [
-        LteRole::class,
-        LtePermission::class,
-        LteUser::class,
-        LteFileStorage::class,
-        LteFunction::class,
-    ];
+    protected static $models = [];
 
     /**
      * The name and signature of the console command.
@@ -57,6 +51,14 @@ class LteDbDumpCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
+        static::$models = array_merge([
+            LteRole::class,
+            LtePermission::class,
+            config('lte.auth.providers.lte.model'),
+            LteFileStorage::class,
+            LteFunction::class,
+        ], static::$models);
     }
 
     /**
@@ -101,12 +103,14 @@ class LteDbDumpCommand extends Command
         $method = $class->method('run')
             ->docDescription('Run the database seeds.')
             ->docReturnType('void')
-            ->line();
+            ->line()
+            ->line("\DB::statement('SET FOREIGN_KEY_CHECKS=0;');");
 
         foreach (static::$models as $model) {
             $model_name = class_basename(get_class($model));
             $method->line("ModelSaver::doMany($model_name::class, \$this->".$model->getTable().");");
         }
+        $method->line("\DB::statement('SET FOREIGN_KEY_CHECKS=1;');");
 
         $render = $class->render();
 

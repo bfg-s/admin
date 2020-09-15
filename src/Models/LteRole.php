@@ -41,4 +41,16 @@ class LteRole extends Model
     {
         return $this->belongsToMany(LteFunction::class, "lte_role_function", "lte_role_id", "lte_function_id");
     }
+
+    /**
+     * @return array
+     */
+    public function toDump()
+    {
+        $user_array = $this->toArray();
+
+        $user_array['roles'] = $this->roles->pluck('id')->toArray();
+
+        return $user_array;
+    }
 }
