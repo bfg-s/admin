@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Models;
 
 use Illuminate\Database\Seeder;
+use Lar\LteAdmin\Commands\LteDbDumpCommand;
 
 /**
  * Class LteSeeder
@@ -18,6 +19,11 @@ class LteSeeder extends Seeder
      */
     public function run()
     {
+        if (class_exists(LteDbDumpCommand::$file_name)) {
+
+            return ;
+        }
+
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         /** @var LteUser $user_model */

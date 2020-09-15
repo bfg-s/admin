@@ -22,7 +22,7 @@ class LteDbDumpCommand extends Command
     /**
      * @var string
      */
-    protected $file_name = "LteAdminDumpSeeder";
+    static $file_name = "LteAdminDumpSeeder";
 
     /**
      * @var array
@@ -69,14 +69,14 @@ class LteDbDumpCommand extends Command
      */
     public function handle()
     {
-        if (class_exists($this->file_name)) {
+        if (class_exists(static::$file_name)) {
 
-            $this->class_exists($this->file_name);
+            $this->class_exists(static::$file_name);
         }
 
-        $class = class_entity($this->file_name);
+        $class = class_entity(static::$file_name);
         $class->doc(function (DocumentorEntity $doc) {
-            $doc->description($this->file_name . " Class");
+            $doc->description(static::$file_name . " Class");
             $doc->tagCustom('date', now()->toDateTimeString());
         });
         $class->offAutoUse();
@@ -114,11 +114,11 @@ class LteDbDumpCommand extends Command
 
         $render = $class->render();
 
-        $file = database_path("seeds/{$this->file_name}.php");
+        $file = database_path("seeds/".static::$file_name.".php");
 
         file_put_contents($file, $render);
 
-        $this->info("Dump created on {$this->file_name} seed class.");
+        $this->info("Dump created on ".static::$file_name." seed class.");
     }
 
     /**
