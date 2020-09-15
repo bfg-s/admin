@@ -118,9 +118,11 @@ class ModelSaver
      */
     protected function update_model()
     {
-        if ($result = $this->model->update($this->data)) {
+        list($data, $add) = $this->getDatas();
 
-            foreach ($this->data as $key => $param) {
+        if ($result = $this->model->update($data)) {
+
+            foreach ($add as $key => $param) {
 
                 if (is_array($param) && method_exists($this->model, $key)) {
 
@@ -170,9 +172,11 @@ class ModelSaver
      */
     protected function create_model()
     {
-        if ($this->model = $this->model->create($this->data)) {
+        list($data, $add) = $this->getDatas();
 
-            foreach ($this->data as $key => $param) {
+        if ($this->model = $this->model->create($data)) {
+
+            foreach ($add as $key => $param) {
 
                 if (is_array($param) && method_exists($this->model, $key)) {
 
@@ -220,5 +224,32 @@ class ModelSaver
 
             return $this->model;
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFields()
+    {
+        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($this->model->getTable());
+
+        return $fields;
+    }
+
+    /**
+     * @return array[]
+     */
+    protected function getDatas()
+    {
+        $data = $this->data;
+        $result = [0 => []];
+        foreach ($this->getFields() as $field) {
+            if (isset($data[$field])) {
+                $result[0][$field] = $data[$field];
+                unset($data[$field]);
+            }
+        }
+        $result[1] = $data;
+        return $result;
     }
 }
