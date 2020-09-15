@@ -90,6 +90,7 @@ class LteDbDumpCommand extends Command
             $model = new $model;
             static::$models[$key] = $model;
             if (method_exists($model, 'scopeMakeDumpedModel')) {
+                
                 $data = $model::makeDumpedModel();
                 if ($data !== false) {
                     $class->prop('protected:' . $model->getTable(), entity(array_entity($data)->minimized()->render()));

@@ -241,15 +241,40 @@ class ModelSaver
      */
     protected function getDatas()
     {
+        $nullable = $this->getNullableFields();
         $data = $this->data;
         $result = [0 => []];
         foreach ($this->getFields() as $field) {
             if (isset($data[$field])) {
-                $result[0][$field] = $data[$field];
+                if ($data[$field] !== '') {
+                    $result[0][$field] = $data[$field];
+                } else if (isset($nullable[$field]) && $nullable[$field]) {
+                    $result[0][$field] = null;
+                } else {
+                    $result[0][$field] = $data[$field];
+                }
                 unset($data[$field]);
             }
         }
         $result[1] = $data;
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNullableFields()
+    {
+        $fields = \DB::select(
+            "SELECT COL.COLUMN_NAME, COL.IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS COL WHERE COL.TABLE_NAME = '{$this->model->getTable()}'"
+        );
+
+        $clear_fields = [];
+
+        foreach ($fields as $field) {
+            $clear_fields[$field->COLUMN_NAME] = $field->IS_NULLABLE === 'YES';
+        }
+
+        return $clear_fields;
     }
 }
