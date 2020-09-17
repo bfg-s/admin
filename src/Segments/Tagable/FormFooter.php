@@ -29,6 +29,16 @@ class FormFooter extends DIV implements onRender {
     ];
 
     /**
+     * @var string|null
+     */
+    protected $btn_text;
+
+    /**
+     * @var string|null
+     */
+    protected $btn_icon;
+
+    /**
      * @var bool
      */
     private $nav_redirect = true;
@@ -65,6 +75,23 @@ class FormFooter extends DIV implements onRender {
     }
 
     /**
+     * @param  string  $text
+     * @param  string|null  $icon
+     * @return $this
+     */
+    public function defaultBtn(string $text, string $icon = null)
+    {
+        $this->btn_text = $text;
+
+        if ($icon) {
+
+            $this->btn_icon = $icon;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  string  $id
      * @return $this
      */
@@ -87,7 +114,7 @@ class FormFooter extends DIV implements onRender {
 
         if ($type === 'edit' || isset($menu['post'])) {
 
-            $group->success(['fas fa-save', __('lte.save')])->setDatas([
+            $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'lte.save')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id
             ]);
@@ -95,7 +122,7 @@ class FormFooter extends DIV implements onRender {
 
         else if ($type === 'create') {
 
-            $group->success(['fas fa-plus', __('lte.add')])->setDatas([
+            $group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'lte.add')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id
             ]);
