@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
@@ -43,10 +44,16 @@ class FunctionsController extends Controller
 
             $table->id();
             $table->column('lte.role', [$this, 'show_roles']);
-            $table->column('lte.slug', 'slug')->sort()->input_editable()->copied();
+            $table->column('lte.slug', 'slug')->sort()->input_editable()
+                ->copied()->to_prepend_link('fas fa-glasses', null, '{class}');
             $table->column('lte.description', 'description')->to_lang()->has_lang()->str_limit(50)->textarea_editable()->sort();
             $table->active_switcher();
             $table->at();
+
+
+        })->next(function (Sheet $sheet, DIV $div) {
+
+            $div->alert('Lorem ipsum dolor', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, sit!', 'fas fa-users');
         });
     }
 

@@ -19,13 +19,16 @@ trait NavDefaultTools
         $this->lteAdministrationGroup(function  (NavGroup $group) {
 
             $group->lteAdministrators();
+            $group->lteRoles();
+            $group->ltePermission();
+            $group->lteFunctions();
 
-            $group->lteAccessGroup(function (NavGroup $group) {
-
-                $group->lteRoles();
-                $group->ltePermission();
-                $group->lteFunctions();
-            });
+//            $group->lteAccessGroup(function (NavGroup $group) {
+//
+//                $group->lteRoles();
+//                $group->ltePermission();
+//                $group->lteFunctions();
+//            });
         });
 
         return $this;

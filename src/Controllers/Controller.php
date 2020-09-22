@@ -274,7 +274,7 @@ class Controller extends BaseController
 
             $sclass = new $segment_class;
 
-            if ($sclass instanceof $this && method_exists($sclass, $method)) {
+            if (method_exists($sclass, $method)) {
 
                 return embedded_call([$sclass, $method], $parameters);
             }
