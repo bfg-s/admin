@@ -51,10 +51,12 @@ class FunctionsController extends Controller
             $table->at();
 
 
-        })->next(function (Sheet $sheet, DIV $div) {
-
-            $div->alert('Lorem ipsum dolor', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, sit!', 'fas fa-users');
         });
+
+//            ->next(function (Sheet $sheet, DIV $div) {
+//
+//            $div->alert('Lorem ipsum dolor', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, sit!', 'fas fa-users');
+//        });
     }
 
     /**
