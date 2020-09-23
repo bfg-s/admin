@@ -57,9 +57,11 @@ class LteBoot
         }
 
         static::formMacros();
-        static::makeGates();
 
-        //Component::injectCollection(Field::$form_components);
+        if (\Schema::hasTable('lte_functions')) {
+
+            static::makeGates();
+        }
     }
 
     /**
