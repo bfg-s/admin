@@ -7,6 +7,7 @@ use Lar\LteAdmin\Segments\Tagable\Alert;
 use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Col;
+use Lar\LteAdmin\Segments\Tagable\Divider;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
@@ -44,6 +45,7 @@ class TagableComponent extends Component {
         'info_box' => InfoBox::class,
         'tabs' => Tabs::class,
         'nested' => Nested::class,
+        'divider' => Divider::class,
     ];
 
     /**
