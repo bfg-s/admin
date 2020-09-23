@@ -45,8 +45,15 @@ class LteControllerCommand extends Command
     {
         $name = $this->argument('name');
 
-        if ($this->option('model')) {
-            $name_for_model = preg_replace('/(.*)Controller$/', '$1', $name);
+        $model = $this->hasOption('model') ? (
+            $this->option('model') ? $this->option('model') : preg_replace('/(.*)Controller$/', '$1', $name)
+        ) : false;
+
+        $resource = $this->option('resource');
+
+        if ($model) {
+
+            $resource = true;
         }
 
         if (!preg_match('/Controller$/', $name)) {
@@ -77,7 +84,7 @@ class LteControllerCommand extends Command
             ->extend('Controller')
             ->namespace($namespace);
 
-        if ($this->option('resource')) {
+        if ($resource) {
 
             $class->use(Info::class)
                 ->use(Sheet::class)
@@ -88,9 +95,13 @@ class LteControllerCommand extends Command
 
             $class->prop('static:model');
 
-            if ($this->option('model')) {
+            if ($model) {
 
-                $model_namespace = "App\\Models\\" . str_replace("/", "\\", $name_for_model);
+                if (!class_exists("App\\{$model}")) {
+                    $model_namespace = "App\\Models\\{$model}";
+                } else {
+                    $model_namespace = "App\\{$model}";
+                }
 
                 $class->prop("static:model", entity($model_namespace."::class"));
             }
@@ -135,21 +146,21 @@ class LteControllerCommand extends Command
 
         $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
 
-        if ($this->option('model') && !class_exists($model_namespace)) {
+        if ($model && isset($model_namespace) && !class_exists($model_namespace)) {
 
             $this->call("make:model", [
-                'name' => "Models/" . $name_for_model,
+                'name' => "Models/" . $model,
                 '--migration' => true,
                 '--factory' => true,
                 '--seed' => true
             ]);
 
             $this->call("make:getter", [
-                'name' => $name_for_model
+                'name' => $model
             ]);
 
             $this->call("make:jax", [
-                'name' => $name_for_model
+                'name' => $model
             ]);
         }
     }
@@ -174,9 +185,9 @@ class LteControllerCommand extends Command
     protected function getOptions()
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the controller already exists'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the controller already exists.'],
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller class.'],
-            ['model', 'm', InputOption::VALUE_NONE, 'Inject or create model and migrations.'],
+            ['model', 'm', InputOption::VALUE_OPTIONAL, 'Inject or create model from App\\Models.'],
         ];
     }
 }
