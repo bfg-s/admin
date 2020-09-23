@@ -46,7 +46,11 @@ class LteControllerCommand extends Command
         $name = $this->argument('name');
 
         $model = $this->hasOption('model') ? (
-            $this->option('model') ? $this->option('model') : preg_replace('/(.*)Controller$/', '$1', $name)
+            $this->option('model') ?
+                $this->option('model') :
+                \Str::singular(
+                    preg_replace('/(.*)Controller$/', '$1', $name)
+                )
         ) : false;
 
         $resource = $this->option('resource');
