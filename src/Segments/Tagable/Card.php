@@ -204,7 +204,7 @@ class Card extends DIV implements onRender {
      */
     public function footerForm(...$params)
     {
-        $this->div(['card-footer'])->appEnd(FormFooter::create(...$params));
+        $this->div(['card-footer'])->appEnd(FormFooter::create(...$params)->createDefaultCRUDFooter());
 
         return $this;
     }

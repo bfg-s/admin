@@ -69,8 +69,6 @@ class FormFooter extends DIV implements onRender {
             $this->setFormId(Form::$last_id);
         }
 
-        $this->createFooter();
-
         $this->callConstructEvents();
     }
 
@@ -105,7 +103,7 @@ class FormFooter extends DIV implements onRender {
     /**
      * @return $this
      */
-    protected function createFooter()
+    public function createDefaultCRUDFooter()
     {
         $group = new ButtonGroup(['group-sm']);
 
