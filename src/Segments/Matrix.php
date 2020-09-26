@@ -15,11 +15,11 @@ class Matrix extends Container {
     /**
      * Matrix constructor.
      * @param  \Closure|string|array  $title
-     * @param  \Closure|null  $warp
+     * @param  \Closure|array|null  $warp
      */
-    public function __construct($title, \Closure $warp = null)
+    public function __construct($title, $warp = null)
     {
-        if ($title instanceof \Closure) {
+        if (is_embedded_call($title)) {
             $warp = $title;
             $title = ['lte.add', 'lte.id_edit'];
         }
@@ -36,7 +36,7 @@ class Matrix extends Container {
             $div->card($title)->haveLink($card)
                 ->defaultTools()
                 ->bodyForm(function (Form $form) use ($warp, $card) {
-                    if ($warp) {
+                    if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             Form::class => $form,
                             Card::class => $card,

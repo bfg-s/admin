@@ -38,7 +38,7 @@ trait TableExtensionTrait {
      */
     static function addExtension(string $name, $object, string $method = null) {
 
-        if ($object instanceof \Closure) {
+        if (is_embedded_call($object)) {
 
             static::$extensions[$name] = $object;
         }
@@ -61,6 +61,22 @@ trait TableExtensionTrait {
         if (static::hasExtension($name)) {
 
             return embedded_call(static::$extensions[$name], $arguments);
+        }
+
+        return null;
+    }
+
+    /**
+     * Call extension
+     * @param  string  $name
+     * @param  array  $arguments
+     * @return mixed|null
+     */
+    public static function callE(string $name, array $arguments)
+    {
+        if (static::hasExtension($name)) {
+
+            return call_user_func_array(static::$extensions[$name], $arguments);
         }
 
         return null;

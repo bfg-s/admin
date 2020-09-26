@@ -124,12 +124,12 @@ class ConfigExtensionProvider {
 
     /**
      * @param  string  $name
-     * @param  \Closure  $closure
+     * @param  \Closure  $call
      * @return $this
      */
-    public function tableExtension(string $name, \Closure $closure)
+    public function tableExtension(string $name, \Closure $call)
     {
-        ModelTable::addExtension($name, $closure);
+        ModelTable::addExtension($name, $call);
 
         return $this;
     }

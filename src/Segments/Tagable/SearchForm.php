@@ -173,7 +173,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
 
             $method = null;
 
-            if ($condition instanceof \Closure) {
+            if (is_embedded_call($condition)) {
 
                 $method = $condition;
             }

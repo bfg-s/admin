@@ -14,12 +14,12 @@ use Lar\LteAdmin\Navigate;
 trait NavCommon
 {
     /**
-     * @param  \Closure  $closure
+     * @param  \Closure|array  $call
      * @return $this
      */
-    public function router(\Closure $closure)
+    public function router($call)
     {
-        $this->items['router'][] = $closure;
+        $this->items['router'][] = $call;
 
         return $this;
     }

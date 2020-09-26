@@ -10,7 +10,6 @@ use Lar\LteAdmin\Core\TableExtends\Formatter;
 use Lar\LteAdmin\Core\TagableComponent;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 

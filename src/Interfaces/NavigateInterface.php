@@ -11,10 +11,10 @@ interface NavigateInterface {
     /**
      * @param  string|null  $title
      * @param  null  $route
-     * @param  \Closure|null  $cb
+     * @param  \Closure|array|null  $cb
      * @return \Lar\LteAdmin\Core\NavGroup
      */
-    public function group(string $title = null, $route = null, \Closure $cb = null);
+    public function group(string $title = null, $route = null, $cb = null);
 
     /**
      * @param  string|null  $title

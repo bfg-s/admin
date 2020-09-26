@@ -59,7 +59,7 @@ class Form extends \Lar\Layout\Tags\FORM {
      */
     public function __construct($model = null, ...$params)
     {
-        if ($model instanceof \Closure) {
+        if (is_embedded_call($model)) {
 
             $params[] = $model;
 

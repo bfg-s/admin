@@ -118,7 +118,7 @@ class ModelTable extends Component {
     {
         parent::__construct();
 
-        if ($model instanceof \Closure) {
+        if (is_embedded_call($model)) {
 
             $params[] = $model;
             $model = null;

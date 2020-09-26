@@ -93,7 +93,7 @@ class Card extends DIV implements onRender {
 
     /**
      * Card constructor.
-     * @param $title
+     * @param \Closure|array|string|null $title
      * @param  mixed  ...$params
      */
     public function __construct($title = null, ...$params)
@@ -102,7 +102,7 @@ class Card extends DIV implements onRender {
 
         parent::__construct();
 
-        if ($title instanceof \Closure) {
+        if (is_embedded_call($title)) {
 
             $params[] = $title;
 
@@ -156,10 +156,10 @@ class Card extends DIV implements onRender {
 
     /**
      * @param  null  $model
-     * @param  \Closure|null  $after
+     * @param  \Closure|array|null  $after
      * @return ModelTable
      */
-    public function bodyModelTable($model = null, \Closure $after = null)
+    public function bodyModelTable($model = null, $after = null)
     {
         $this->search_form = new SearchForm();
 
@@ -210,12 +210,12 @@ class Card extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function defaultTools(\Closure $test = null)
+    public function defaultTools($test = null)
     {
-        $this->default_tools = $test ? $test : function () { return true; };
+        $this->default_tools = is_embedded_call($test) ? $test : function () { return true; };
 
         return $this;
     }
@@ -247,7 +247,11 @@ class Card extends DIV implements onRender {
     {
         $group = ButtonGroup::create(...$params);
 
-        $this->tools->appEnd($group);
+        if ($this->tools) {
+
+            $this->tools->appEnd($group);
+        }
+
 
         return $group;
     }

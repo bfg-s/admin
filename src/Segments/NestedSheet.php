@@ -15,11 +15,11 @@ class NestedSheet extends Container {
     /**
      * NestedSheet constructor.
      * @param $title
-     * @param  \Closure|null  $warp
+     * @param  \Closure|array|null  $warp
      */
-    public function __construct($title, \Closure $warp = null)
+    public function __construct($title, $warp = null)
     {
-        if ($title instanceof \Closure) {
+        if (is_embedded_call($title)) {
             $warp = $title;
             $title = 'lte.list';
         }
@@ -31,7 +31,7 @@ class NestedSheet extends Container {
                 ->defaultTools()
                 ->body()
                 ->nested(function (Nested $nested) use ($warp, $card) {
-                    if ($warp) {
+                    if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             Nested::class => $nested,
                             Card::class => $card,

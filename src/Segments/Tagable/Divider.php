@@ -20,8 +20,8 @@ class Divider extends DIV implements onRender {
     protected $class = 'row';
 
     /**
-     * Col constructor.
-     * @param  \Closure|string|array|null  $title
+     * Divider constructor.
+     * @param  null  $title
      * @param  mixed  ...$params
      * @throws \ReflectionException
      */

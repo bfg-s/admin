@@ -38,14 +38,17 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
-     * @param  \Closure  ...$closures
+     * @param  \Closure|array  ...$calls
      * @return $this
      */
-    public function do(...$closures)
+    public function do(...$calls)
     {
-        foreach ($closures as $closure) {
+        foreach ($calls as $call) {
 
-            $closure($this);
+            if (is_embedded_call($call)) {
+
+                call_user_func($call, $this);
+            }
         }
 
         return $this;
@@ -73,13 +76,13 @@ class NavGroup implements Arrayable, NavigateInterface
 
     /**
      * @param  string|null  $title
-     * @param  string|null|\Closure  $route
-     * @param  \Closure|null  $cb
+     * @param  string|null|\Closure|array  $route
+     * @param  \Closure|array|null  $cb
      * @return NavGroup
      */
-    public function group(string $title = null, $route = null, \Closure $cb = null)
+    public function group(string $title = null, $route = null, $cb = null)
     {
-        if ($route instanceof \Closure) {
+        if (is_embedded_call($route) && !is_string($route)) {
             $cb = $route;
             $route = null;
         }
@@ -93,8 +96,9 @@ class NavGroup implements Arrayable, NavigateInterface
             $this->includeAfterGroup($item->items['route']);
         }
 
-        if ($cb) {
-            $cb($item);
+        if (is_embedded_call($cb)) {
+
+            call_user_func($cb, $item);
         }
 
         return $item;

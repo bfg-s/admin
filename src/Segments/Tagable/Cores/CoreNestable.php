@@ -44,22 +44,22 @@ class CoreNestable extends DIV
     /**
      * Shoe default controls
      *
-     * @var \Closure
+     * @var \Closure|array
      */
     protected $controls;
 
     /**
-     * @var \Closure
+     * @var \Closure|array
      */
     protected $info_control;
 
     /**
-     * @var \Closure
+     * @var \Closure|array
      */
     protected $delete_control;
 
     /**
-     * @var \Closure
+     * @var \Closure|array
      */
     protected $edit_control;
 
@@ -268,42 +268,45 @@ class CoreNestable extends DIV
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableControls(\Closure $test = null)
+    public function disableControls($test = null)
     {
-        $this->controls = $test ? $test : function () { return false; };
+        $this->controls = is_embedded_call($test) ? $test : function () { return false; };
 
         return $this;
     }
 
     /**
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableInfo(\Closure $test = null)
+    public function disableInfo($test = null)
     {
-        $this->info_control = $test ? $test : function () { return false; };
+        $this->info_control = is_embedded_call($test) ? $test : function () { return false; };
 
         return $this;
     }
 
     /**
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableEdit(\Closure $test = null)
+    public function disableEdit($test = null)
     {
-        $this->edit_control = $test ? $test : function () { return false; };
+        $this->edit_control = is_embedded_call($test) ? $test : function () { return false; };
 
         return $this;
     }
 
     /**
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableDelete(\Closure $test = null)
+    public function disableDelete($test = null)
     {
-        $this->delete_control = $test ? $test : function () { return false; };
+        $this->delete_control = is_embedded_call($test) ? $test : function () { return false; };
 
         return $this;
     }

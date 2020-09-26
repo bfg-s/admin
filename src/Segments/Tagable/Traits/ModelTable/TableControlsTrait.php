@@ -13,37 +13,37 @@ use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 trait TableControlsTrait {
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $controls = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_info = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_edit = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_delete = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_force_delete = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_restore = null;
 
     /**
-     * @var \Closure|null
+     * @var \Closure|array|null
      */
     protected $control_selectable = null;
 
@@ -53,7 +53,7 @@ trait TableControlsTrait {
     protected $checks = true;
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controls($test = null)
@@ -64,7 +64,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlInfo($test = null)
@@ -75,7 +75,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlEdit($test = null)
@@ -86,7 +86,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlDelete($test = null)
@@ -97,7 +97,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlForceDelete($test = null)
@@ -108,7 +108,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlRestore($test = null)
@@ -119,7 +119,7 @@ trait TableControlsTrait {
     }
 
     /**
-     * @param  \Closure|mixed  $test
+     * @param  \Closure|array|mixed  $test
      * @return $this
      */
     public function controlSelect($test = null)
@@ -238,7 +238,7 @@ trait TableControlsTrait {
      */
     protected function set_test_var(string $var_name, $test)
     {
-        if ($test instanceof \Closure) {
+        if (is_embedded_call($test)) {
 
             $this->{$var_name} = $test;
         }
@@ -258,7 +258,7 @@ trait TableControlsTrait {
     {
         if ($this->{$var_name} !== null) {
 
-            return ($this->{$var_name})(...$args);
+            return call_user_func_array($this->{$var_name}, $args);
         }
 
         return true;

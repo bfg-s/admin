@@ -79,23 +79,23 @@ class Table extends TableParent {
 
     /**
      * @param  string  $row
-     * @param  \Closure  $closure
+     * @param  \Closure  $call
      * @return $this
      */
-    public function map(\Closure $closure)
+    public function map(\Closure $call)
     {
-        $this->map = $closure;
+        $this->map = $call;
 
         return $this;
     }
 
     /**
-     * @param  \Closure  $closure
+     * @param  \Closure  $call
      * @return $this
      */
-    public function mapWithKeys(\Closure $closure)
+    public function mapWithKeys(\Closure $call)
     {
-        $this->mapWithKeys = $closure;
+        $this->mapWithKeys = $call;
 
         return $this;
     }

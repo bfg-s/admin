@@ -37,14 +37,32 @@ class Formatter {
      */
     public function to_append($value, $props = [], Model $model = null)
     {
-        if (isset($props[0]) && $props[0] instanceof \Closure) {
-            $append = $props[0]($model);
+        if (isset($props[0]) && is_embedded_call($props[0])) {
+            $append = call_user_func($props[0], $model);
         } else {
             $append = implode(" ", $props);
             $append = $model ? tag_replace($append, $model) : $append;
         }
 
         return $value.$append;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @return string
+     */
+    public function to_prepend($value, $props = [], Model $model = null)
+    {
+        if (isset($props[0]) && is_embedded_call($props[0])) {
+            $prepend = call_user_func($props[0], $model);
+        } else {
+            $prepend = implode(" ", $props);
+            $prepend = $model ? tag_replace($prepend, $model) : $prepend;
+        }
+
+        return $prepend.$value;
     }
 
     /**
@@ -62,7 +80,7 @@ class Formatter {
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
-        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : null;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -72,24 +90,6 @@ class Formatter {
         }
 
         return $value . ' ' . $link;
-    }
-
-    /**
-     * @param $value
-     * @param  array  $props
-     * @param  Model|null  $model
-     * @return string
-     */
-    public function to_prepend($value, $props = [], Model $model = null)
-    {
-        if (isset($props[0]) && $props[0] instanceof \Closure) {
-            $prepend = $props[0]($model);
-        } else {
-            $prepend = implode(" ", $props);
-            $prepend = $model ? tag_replace($prepend, $model) : $prepend;
-        }
-
-        return $prepend.$value;
     }
 
     /**

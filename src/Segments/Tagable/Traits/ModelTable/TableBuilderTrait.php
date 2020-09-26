@@ -96,32 +96,38 @@ trait TableBuilderTrait {
 
             if (is_string($value)) {
                 $value = multi_dot_call($item, $value);
-            } else if (is_array($value) || $value instanceof \Closure) {
-                $value = embedded_call($value, [
-                    'model' => $item,
-                    'value' => $value,
-                    'field' => $column['field'],
-                    'sort' => $column['sort'],
-                    'title' => $column['label'],
-                    TD::class => $td,
-                    TR::class => $tr,
-                    TH::class => $column['header'],
-                    (is_object($item) ? get_class($item) : gettype($item)) => $item,
+            } else if (is_embedded_call($value)) {
+                $value = call_user_func_array($value, [
+                    $item, $column['label'], $td, $column['header'], $tr
                 ]);
+//                $value = embedded_call($value, [
+//                    'model' => $item,
+//                    'value' => $value,
+//                    'field' => $column['field'],
+//                    'sort' => $column['sort'],
+//                    'title' => $column['label'],
+//                    TD::class => $td,
+//                    TR::class => $tr,
+//                    TH::class => $column['header'],
+//                    (is_object($item) ? get_class($item) : gettype($item)) => $item,
+//                ]);
             }
             foreach ($column['macros'] as $macro) {
-                $value = static::callExtension($macro[0], [
-                    'model' => $item,
-                    'value' => $value,
-                    'field' => $column['field'],
-                    'sort' => $column['sort'],
-                    'title' => $column['label'],
-                    'props' => $macro[1],
-                    TD::class => $td,
-                    TR::class => $tr,
-                    TH::class => $column['header'],
-                    (is_object($item) ? get_class($item) : gettype($item)) => $item,
+                $value = static::callE($macro[0], [
+                    $value, $macro[1], $item, $column['field'], $column['label'], $td, $column['header'], $tr
                 ]);
+//                $value = static::callExtension($macro[0], [
+//                    'model' => $item,
+//                    'value' => $value,
+//                    'field' => $column['field'],
+//                    'sort' => $column['sort'],
+//                    'title' => $column['label'],
+//                    'props' => $macro[1],
+//                    TD::class => $td,
+//                    TR::class => $tr,
+//                    TH::class => $column['header'],
+//                    (is_object($item) ? get_class($item) : gettype($item)) => $item,
+//                ]);
             }
 
             $td->when($value);
@@ -179,8 +185,8 @@ trait TableBuilderTrait {
             foreach ($this->model_control as $item) {
                 if ($item instanceof SearchForm) {
                     $this->model = $item->makeModel($this->model);
-                } else if ($item instanceof \Closure) {
-                    $r = ($item)($this->model);
+                } else if (is_embedded_call($item)) {
+                    $r = call_user_func($item, $this->model);
                     if ($r) $this->model = $r;
                 } else if (is_array($item)) {
                     $this->model = eloquent_instruction($this->model, $item);

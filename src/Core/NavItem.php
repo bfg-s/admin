@@ -24,7 +24,7 @@ class NavItem implements Arrayable
      * NavItem constructor.
      * @param  string|null  $title
      * @param  string  $route
-     * @param  string|\Closure|null  $action
+     * @param  string|\Closure|array|null  $action
      */
     public function __construct(string $title = null, string $route = null, $action = null)
     {

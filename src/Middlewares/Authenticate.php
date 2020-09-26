@@ -104,11 +104,6 @@ class Authenticate
             return false;
         }
 
-        if (method_exists($class, 'roles') && is_array($class::$roles) && !lte_user()->hasRoles($class::$roles)) {
-
-            return false;
-        }
-
         if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {
 
             return false;

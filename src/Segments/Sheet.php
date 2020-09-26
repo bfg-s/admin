@@ -15,11 +15,11 @@ class Sheet extends Container {
     /**
      * Sheet constructor.
      * @param  \Closure|string  $title
-     * @param  \Closure|null  $warp
+     * @param  \Closure|array|null  $warp
      */
-    public function __construct($title, \Closure $warp = null)
+    public function __construct($title, $warp = null)
     {
-        if ($title instanceof \Closure) {
+        if (is_embedded_call($title)) {
             $warp = $title;
             $title = 'lte.list';
         }
@@ -33,7 +33,7 @@ class Sheet extends Container {
             $card = null;
             $div->card($title)->haveLink($card)
                 ->defaultTools()->bodyModelTable(function (ModelTable $table) use ($warp, $card) {
-                    if ($warp) {
+                    if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             ModelTable::class => $table,
                             Card::class => $card,

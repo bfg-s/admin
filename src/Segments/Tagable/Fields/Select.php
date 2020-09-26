@@ -46,7 +46,7 @@ class Select extends FormGroup
     protected $load_format;
 
     /**
-     * @var \Closure
+     * @var \Closure|array
      */
     protected $load_where;
 
@@ -127,10 +127,10 @@ class Select extends FormGroup
     /**
      * @param $subject
      * @param  string  $format
-     * @param  \Closure|null  $where
+     * @param  \Closure|array|null  $where
      * @return $this
      */
-    public function load($subject, string $format = null, \Closure $where = null)
+    public function load($subject, string $format = null, $where = null)
     {
         $this->load_subject = $subject;
         $this->load_format = $format;

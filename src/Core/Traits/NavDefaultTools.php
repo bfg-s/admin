@@ -36,14 +36,17 @@ trait NavDefaultTools
 
     /**
      * Make default administration group
-     * @param  \Closure  $closure
+     * @param  \Closure|array  $call
      * @return \Lar\LteAdmin\Core\NavGroup
      */
-    public function lteAdministrationGroup(\Closure $closure)
+    public function lteAdministrationGroup($call)
     {
-        return $this->group('lte.administration', 'admin', function (NavGroup $group) use ($closure) {
+        return $this->group('lte.administration', 'admin', function (NavGroup $group) use ($call) {
 
-            $closure($group);
+            if (is_embedded_call($call)) {
+
+                call_user_func($call, $group);
+            }
 
         })->icon_cogs();
     }
@@ -62,14 +65,17 @@ trait NavDefaultTools
 
     /**
      * Make default access group
-     * @param  \Closure  $closure
+     * @param  \Closure|array  $call
      * @return \Lar\LteAdmin\Core\NavGroup
      */
-    public function lteAccessGroup(\Closure $closure)
+    public function lteAccessGroup($call)
     {
-        return $this->group('lte.access', 'access', function (NavGroup $group) use ($closure) {
+        return $this->group('lte.access', 'access', function (NavGroup $group) use ($call) {
 
-            $closure($group);
+            if (is_embedded_call($call)) {
+
+                call_user_func($call, $group);
+            }
 
         })->icon_universal_access();
     }

@@ -82,7 +82,7 @@ class RoutesAdaptor
 
                     if (isset($menu['router']) && is_array($menu['router'])) {
                         foreach ($menu['router'] as $r) {
-                            if ($r instanceof \Closure) { $r($roads); }
+                            if (is_embedded_call($r)) { call_user_func($r, $roads); }
                         }
                     }
                 }
@@ -114,7 +114,7 @@ class RoutesAdaptor
 
             if (isset($menu['router']) && is_array($menu['router'])) {
                 foreach ($menu['router'] as $r) {
-                    if ($r instanceof \Closure) { $r($roads); }
+                    if (is_embedded_call($r)) { call_user_func($r, $roads); }
                 }
             }
 
@@ -162,7 +162,7 @@ class RoutesAdaptor
 
             if (isset($menu['router']) && is_array($menu['router'])) {
                 foreach ($menu['router'] as $r) {
-                    if ($r instanceof \Closure) { $r($roads); }
+                    if (is_embedded_call($r)) { call_user_func($r, $roads); }
                 }
             }
 

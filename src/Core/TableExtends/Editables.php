@@ -4,6 +4,8 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
+use Lar\Layout\Tags\TD;
+use Lar\Layout\Tags\TH;
 use Lar\LteAdmin\Segments\Tagable\Field;
 
 /**
@@ -14,12 +16,12 @@ class Editables {
 
     /**
      * @param $value
-     * @param $field
-     * @param  Model  $model
      * @param  array  $props
+     * @param  Model|null  $model
+     * @param  null  $field
      * @return \Lar\Layout\Abstracts\Component
      */
-    public function input_switcher($value, $field, Model $model, $props = [])
+    public function input_switcher($value, array $props = [], Model $model = null, $field = null)
     {
         if ($model) {
 
@@ -54,25 +56,37 @@ class Editables {
 
     /**
      * @param $value
-     * @param  Model  $model
-     * @param $title
-     * @param $field
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @param  null  $field
+     * @param  null  $title
      * @return string
      */
-    public function input_editable($value, Model $model, $title, $field)
-    {
+    public function input_editable(
+        $value,
+        array $props = [],
+        Model $model = null,
+        $field = null,
+        $title = null
+    ) {
         return $this->editable($value, $model, $title, $field, 'text');
     }
 
     /**
      * @param $value
-     * @param  Model  $model
-     * @param $title
-     * @param $field
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @param  null  $field
+     * @param  null  $title
      * @return string
      */
-    public function textarea_editable($value, Model $model, $title, $field)
-    {
+    public function textarea_editable(
+        $value,
+        array $props = [],
+        Model $model = null,
+        $field = null,
+        $title = null
+    ) {
         return $this->editable($value, $model, $title, $field, 'textarea');
     }
 

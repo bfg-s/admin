@@ -34,14 +34,14 @@ class Navigate implements NavigateInterface
     public static $extension;
 
     /**
-     * @param  \Closure  ...$closures
+     * @param  \Closure|array  ...$calls
      * @return $this
      */
-    public static function do(...$closures)
+    public static function do(...$calls)
     {
-        foreach ($closures as $closure) {
+        foreach ($calls as $call) {
 
-            $closure(\Navigate::instance(), static::$roads);
+            call_user_func($call, \Navigate::instance(), static::$roads);
         }
 
         return \Navigate::instance();
@@ -85,13 +85,13 @@ class Navigate implements NavigateInterface
 
     /**
      * @param  string|null  $title
-     * @param  string|null|\Closure  $route
-     * @param  \Closure|null  $cb
+     * @param  string|null|\Closure|array  $route
+     * @param  \Closure|array|null  $cb
      * @return \Lar\LteAdmin\Core\NavGroup
      */
-    public function group(string $title = null, $route = null, \Closure $cb = null)
+    public function group(string $title = null, $route = null, $cb = null)
     {
-        if ($route instanceof \Closure) {
+        if (is_embedded_call($route) && !is_string($route)) {
             $cb = $route;
             $route = null;
         }
@@ -105,8 +105,9 @@ class Navigate implements NavigateInterface
             $this->includeAfterGroup($item->items['route']);
         }
 
-        if ($cb) {
-            $cb($item, static::$roads);
+        if (is_embedded_call($cb)) {
+
+            call_user_func($cb, $item, static::$roads);
         }
 
         return $item;
@@ -115,7 +116,7 @@ class Navigate implements NavigateInterface
     /**
      * @param  string|null  $title
      * @param  string|null  $route
-     * @param  string|\Closure|null  $action
+     * @param  string|\Closure|array|null  $action
      * @return \Lar\LteAdmin\Core\NavItem
      */
     public function item(string $title = null, string $route = null, $action = null)

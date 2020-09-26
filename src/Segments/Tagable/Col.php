@@ -26,8 +26,9 @@ class Col extends DIV implements onRender {
 
     /**
      * Col constructor.
-     * @param int|\Closure $num
+     * @param  int|\Closure|array|null $num
      * @param  mixed  ...$params
+     * @throws \ReflectionException
      */
     public function __construct($num = null, ...$params)
     {

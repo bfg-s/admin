@@ -85,8 +85,9 @@ class Decorations {
      */
     public function copied($value, $props = [], Model $model = null)
     {
-        if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
-            $value_for_copy = $props[0]($model);
+        if (isset($props[0]) && is_embedded_call($props[0])) {
+
+            $value_for_copy = call_user_func($props[0], $model);
         }
 
         if (!$value) {
@@ -105,8 +106,8 @@ class Decorations {
      */
     public function copied_right($value, $props = [], Model $model = null)
     {
-        if (isset($props[0]) && $props[0] instanceof \Closure && $model) {
-            $value_for_copy = $props[0]($model);
+        if (isset($props[0]) && is_embedded_call($props[0])) {
+            $value_for_copy = call_user_func($props[0], $model);
         }
 
         if (!$value) {
@@ -123,7 +124,7 @@ class Decorations {
      */
     public function badge_number($value)
     {
-        return $this->badge($value, [$value <= 0 ? 'danger' : 'success']);
+        return $this->badge($value, [$value <= 0 || $value == 0 ? 'danger' : 'success']);
     }
 
     /**
@@ -135,7 +136,7 @@ class Decorations {
     public function badge($value, $props = [], Model $model = null)
     {
         $type = $props[0] ?? 'info';
-        if ($type instanceof \Closure) { $type = $type($model); }
+        if (is_embedded_call($type)) { $type = call_user_func($type, $model); }
         return "<span class=\"badge badge-{$type}\">{$value}</span>";
     }
 
@@ -144,9 +145,10 @@ class Decorations {
      * @param $props
      * @return string
      */
-    public function pill($value, $props = [])
+    public function pill($value, $props = [], Model $model = null)
     {
         $type = $props[0] ?? 'info';
+        if (is_embedded_call($type)) { $type = call_user_func($type, $model); }
         return "<span class=\"badge badge-pill badge-{$type}\">{$value}</span>";
     }
 

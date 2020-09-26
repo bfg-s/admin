@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\Info;
@@ -12,7 +11,6 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -40,6 +38,7 @@ class FunctionsController extends Controller
 
             $table->search->id();
             $table->search->input('slug', 'lte.slug');
+            $table->search->input('class', 'Class', '%=%');
             $table->search->at();
 
             $table->id();
@@ -52,11 +51,6 @@ class FunctionsController extends Controller
 
 
         });
-
-//            ->next(function (Sheet $sheet, DIV $div) {
-//
-//            $div->alert('Lorem ipsum dolor', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, sit!', 'fas fa-users');
-//        });
     }
 
     /**

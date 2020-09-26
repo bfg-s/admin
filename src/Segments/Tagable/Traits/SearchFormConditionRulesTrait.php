@@ -217,11 +217,9 @@ trait SearchFormConditionRulesTrait {
                                     $field['class']::transformValue($val) :
                                     $val;
 
-                                if ($field['method'] instanceof \Closure) {
+                                if (is_embedded_call($field['method'])) {
 
-                                    $result = ($field['method'])(
-                                        $model, $val, $key
-                                    );
+                                    $result = call_user_func($field['method'], $model, $val, $key);
 
                                     if ($result) { $model = $result; }
                                 }

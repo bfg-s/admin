@@ -48,31 +48,35 @@ class Container implements SegmentContainerInterface {
 
     /**
      * Container constructor.
-     * @param  \Closure  $warp
+     * @param  \Closure|array  $warp
      */
-    public function __construct(\Closure $warp)
+    public function __construct($warp)
     {
         $this->layout = 'lte::layout';
         $this->component = DIV::create();
         $this->callConstructEvents([DIV::class => $this->component]);
-        embedded_call($warp, [
-            DIV::class => $this->component,
-            static::class => $this
-        ]);
+        if (is_embedded_call($warp)) {
+            embedded_call($warp, [
+                DIV::class => $this->component,
+                static::class => $this
+            ]);
+        }
         $this->warp = $warp;
     }
 
     /**
      * Make next component in div
-     * @param  \Closure  $warp
+     * @param  \Closure|array  $warp
      * @return $this
      */
-    public function next(\Closure $warp)
+    public function next($warp)
     {
-        embedded_call($warp, [
-            DIV::class => $this->component,
-            static::class => $this
-        ]);
+        if (is_embedded_call($warp)) {
+            embedded_call($warp, [
+                DIV::class => $this->component,
+                static::class => $this
+            ]);
+        }
 
         return $this;
     }

@@ -30,7 +30,7 @@ class Nested extends DIV implements onRender {
 
     /**
      * Nested constructor.
-     * @param  null|Model|\Closure  $model
+     * @param  null|array|Model|\Closure  $model
      * @param  null|array|\Closure  $instructions
      * @param  mixed  ...$params
      * @throws \ReflectionException
@@ -39,13 +39,13 @@ class Nested extends DIV implements onRender {
     {
         parent::__construct();
 
-        if ($model instanceof \Closure) {
+        if (is_embedded_call($model)) {
 
             $params[] = $model;
             $model = null;
         }
 
-        if ($instructions instanceof \Closure) {
+        if (is_embedded_call($instructions)) {
 
             $params[] = $instructions;
             $instructions = [];
@@ -119,10 +119,10 @@ class Nested extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableControls(\Closure $test = null)
+    public function disableControls($test = null)
     {
         $this->nested->disableControls($test);
 
@@ -130,10 +130,10 @@ class Nested extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableInfo(\Closure $test = null)
+    public function disableInfo($test = null)
     {
         $this->nested->disableInfo($test);
 
@@ -141,10 +141,10 @@ class Nested extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableEdit(\Closure $test = null)
+    public function disableEdit($test = null)
     {
         $this->nested->disableEdit($test);
 
@@ -152,10 +152,10 @@ class Nested extends DIV implements onRender {
     }
 
     /**
-     * @param  \Closure|null  $test
+     * @param  \Closure|array|null  $test
      * @return $this
      */
-    public function disableDelete(\Closure $test = null)
+    public function disableDelete($test = null)
     {
         $this->nested->disableDelete($test);
 

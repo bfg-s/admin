@@ -357,7 +357,7 @@ abstract class FormGroup extends DIV {
 
         if ($this->value_to) {
 
-            $this->value = ($this->value_to)($this->value);
+            $this->value = call_user_func($this->value_to, $this->value);
         }
 
         $input_group->appEnd(
@@ -376,12 +376,12 @@ abstract class FormGroup extends DIV {
     }
 
     /**
-     * @param  \Closure  $closure
+     * @param  \Closure|array  $call
      * @return $this
      */
-    public function value_to(\Closure $closure)
+    public function value_to($call)
     {
-        $this->value_to = $closure;
+        $this->value_to = $call;
 
         return $this;
     }
