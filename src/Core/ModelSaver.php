@@ -151,7 +151,9 @@ class ModelSaver
             return $this->model->delete();
         }
 
-        else if ($result = $this->model->update($data)) {
+        $result = $this->model->update($data);
+
+        if ($result) {
 
             foreach ($add as $key => $param) {
 
@@ -206,7 +208,9 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
-        if ($this->model = $this->model->create($data)) {
+        $this->model = $this->model->create($data);
+
+        if ($this->model) {
 
             foreach ($add as $key => $param) {
 
@@ -280,14 +284,8 @@ class ModelSaver
      */
     protected function getDatas()
     {
-        $nullable = $this->getNullableFields();
         $data = $this->data;
         $key = $this->getModelKeyName();
-
-//        if (isset($data[static::DELETE_FIELD])) {
-//            dd($this->model, $key);
-//        }
-
         if (
             isset($data[static::DELETE_FIELD]) &&
             isset($data[$key]) &&
@@ -296,6 +294,7 @@ class ModelSaver
             $this->has_delete = true;
             return [[], []];
         }
+        $nullable = $this->getNullableFields();
         $result = [[]];
         foreach ($this->getFields() as $field) {
             if (isset($data[$field])) {
@@ -345,19 +344,8 @@ class ModelSaver
     public function getModelKeyName()
     {
         $key = null;
-
-        if ($this->model instanceof Relation) {
-
-            $key = $this->model->getModel()->getKeyName();
-
-        } else if ($this->model instanceof Model) {
-
-            $key = $this->model->getKeyName();
-
-        } else if ($this->model instanceof Builder) {
-
-            $key = $this->model->getModel()->getKeyName();
-        }
+        $model = $this->getModel();
+        if ($model) $key = $model->getKeyName();
 
         return $key;
     }
@@ -367,21 +355,33 @@ class ModelSaver
      */
     public function getModelTable()
     {
-        $key = null;
+        $table = null;
+        $model = $this->getModel();
+        if ($model) $table = $model->getTable();
+
+        return $table;
+    }
+
+    /**
+     * @return Model|null
+     */
+    public function getModel()
+    {
+        $model = null;
 
         if ($this->model instanceof Relation) {
 
-            $key = $this->model->getModel()->getTable();
+            $model = $this->model->getModel();
 
         } else if ($this->model instanceof Model) {
 
-            $key = $this->model->getTable();
+            $model = $this->model;
 
         } else if ($this->model instanceof Builder) {
 
-            $key = $this->model->getModel()->getTable();
+            $model = $this->model->getModel();
         }
 
-        return $key;
+        return $model;
     }
 }
