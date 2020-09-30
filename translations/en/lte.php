@@ -147,4 +147,5 @@ return [
     'delete_forever_subject'        => 'Delete forever :subject',
     'successfully_restored'         => 'Successfully restored!',
     'back'                          => 'Back',
+    'remove'                        => 'Remove',
 ];

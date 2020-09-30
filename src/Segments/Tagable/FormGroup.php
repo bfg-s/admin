@@ -127,6 +127,11 @@ abstract class FormGroup extends DIV {
     protected $value_to;
 
     /**
+     * @var array
+     */
+    static $construct_modify = [];
+
+    /**
      * FormGroup constructor.
      * @param  Component  $parent
      * @param  string  $title
@@ -153,6 +158,11 @@ abstract class FormGroup extends DIV {
         $this->model = Form::$current_model;
         $this->after_construct();
         $this->callConstructEvents();
+        foreach (FormGroup::$construct_modify as $item) {
+            if (is_callable($item)) {
+                call_user_func($item, $this, $this->model);
+            }
+        }
     }
 
     /**
@@ -490,12 +500,50 @@ abstract class FormGroup extends DIV {
     }
 
     /**
-     * @param  string  $var
+     * @param  string|null  $var
      * @return $this
      */
     public function state(string $var = null)
     {
         $this->data['state'] = $var ? $var : '';
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_id()
+    {
+        return $this->field_id;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function set_id($id)
+    {
+        $this->field_id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  string  $name
+     * @return $this
+     */
+    public function set_name(string $name)
+    {
+        $this->name = $name;
 
         return $this;
     }

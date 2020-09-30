@@ -126,8 +126,9 @@ class Form extends \Lar\Layout\Tags\FORM {
 
         if (isset($menu['model.param'])) {
 
-            $this->appEnd(INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
-                ->setDatas(['stated' => '_after']));
+            $this->appEnd(
+                INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
+            );
         }
 
         if (!$this->action && $type && $this->model && $menu) {

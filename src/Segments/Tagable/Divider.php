@@ -21,20 +21,41 @@ class Divider extends DIV implements onRender {
 
     /**
      * Divider constructor.
-     * @param  null  $title
+     * @param  mixed|null  $left_title
+     * @param  mixed|null  $right_title
      * @param  mixed  ...$params
-     * @throws \ReflectionException
      */
-    public function __construct($title = null, ...$params)
+    public function __construct($left_title = null, $right_title = null, ...$params)
     {
         parent::__construct();
 
-        if ($title) {
+        if ($left_title) {
 
-            $this->div(['col-auto'])->h4($title);
+            if (is_string($left_title)) {
+
+                $this->div(['col-auto'])->h4($left_title);
+            }
+
+            else {
+
+                $this->div(['col-auto'])->when($left_title);
+            }
         }
 
         $this->div(['col'])->hr();
+
+        if ($right_title) {
+
+            if (is_string($right_title)) {
+
+                $this->div(['col-auto'])->h4($right_title);
+            }
+
+            else {
+
+                $this->div(['col-auto'])->when($right_title);
+            }
+        }
 
         $this->when($params);
 

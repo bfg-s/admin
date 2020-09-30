@@ -40,10 +40,10 @@ class ButtonGroup extends DIV implements onRender {
     {
         parent::__construct();
 
+        $this->when($params);
+
         $this->addClass('btn-group btn-group-sm ml-1');
 
-        $this->when($params);
-        
         $this->menu = gets()->lte->menu->now;
 
         $this->model = gets()->lte->menu->model;

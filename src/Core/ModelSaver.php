@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Lar\Developer\Core\Traits\Eventable;
 use Lar\LteAdmin\Models\LteFileStorage;
@@ -17,6 +18,8 @@ use Lar\LteAdmin\Models\LteFileStorage;
 class ModelSaver
 {
     use Eventable;
+
+    const DELETE_FIELD = "__DELETE__";
 
     /**
      * Save model
@@ -31,6 +34,11 @@ class ModelSaver
      * @var array
      */
     protected $data;
+
+    /**
+     * @var bool
+     */
+    protected $has_delete = false;
 
     /**
      * ModelSaver constructor.
@@ -100,27 +108,49 @@ class ModelSaver
             }
         }
 
-        if ($this->model instanceof Model && $this->model->exists) {
+        list($data, $add) = $this->getDatas();
 
-            return $this->update_model();
+        if ($this->model instanceof Model) {
+
+            if ($this->model->exists) {
+
+                return $this->update_model($data, $add);
+            }
+
+            else if (isset($data['id']) && $m = $this->model->find($data['id'])) {
+
+                $this->model = $m;
+
+                return $this->update_model($data, $add);
+            }
+
+            else {
+
+                return $this->create_model($data, $add);
+            }
         }
 
         else {
 
-            return $this->create_model();
+            return $this->create_model($data, $add);
         }
     }
 
     /**
      * Update model
      *
+     * @param $data
+     * @param $add
      * @return bool|void
      */
-    protected function update_model()
+    protected function update_model($data, $add)
     {
-        list($data, $add) = $this->getDatas();
+        if ($this->has_delete) {
 
-        if ($result = $this->model->update($data)) {
+            return $this->model->delete();
+        }
+
+        else if ($result = $this->model->update($data)) {
 
             foreach ($add as $key => $param) {
 
@@ -134,7 +164,7 @@ class ModelSaver
                     }
 
                     else if ($builder instanceof HasMany) {
-                        if (isset($param[0]) && is_array($param[0])) {
+                        if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
                             $ids = $params_with_id->pluck('id')->toArray();
@@ -169,11 +199,12 @@ class ModelSaver
 
     /**
      * Create model
+     * @param $data
+     * @param $add
+     * @return Model
      */
-    protected function create_model()
+    protected function create_model($data, $add)
     {
-        list($data, $add) = $this->getDatas();
-
         if ($this->model = $this->model->create($data)) {
 
             foreach ($add as $key => $param) {
@@ -188,7 +219,7 @@ class ModelSaver
                     }
 
                     else if ($builder instanceof HasMany) {
-                        if (isset($param[0]) && is_array($param[0])) {
+                        if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
                             $ids = $params_with_id->pluck('id')->toArray();
@@ -231,7 +262,23 @@ class ModelSaver
      */
     protected function getFields()
     {
-        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($this->model->getTable());
+        $table = null;
+
+        if ($this->model instanceof Relation) {
+
+            $table = $this->model->getModel()->getTable();
+
+        } else if ($this->model instanceof Model) {
+
+            $table = $this->model->getTable();
+        }
+
+        if (!$table) {
+
+            return [];
+        }
+
+        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($table);
 
         return $fields;
     }
@@ -243,7 +290,26 @@ class ModelSaver
     {
         $nullable = $this->getNullableFields();
         $data = $this->data;
-        $result = [0 => []];
+        $key = null;
+
+        if ($this->model instanceof Relation) {
+
+            $key = $this->model->getModel()->getKeyName();
+
+        } else if ($this->model instanceof Model) {
+
+            $key = $this->model->getKeyName();
+        }
+
+        if (
+            isset($data[static::DELETE_FIELD]) &&
+            isset($data[$key]) &&
+            $data[static::DELETE_FIELD] == $data[$key]
+        ) {
+            $this->has_delete = true;
+            return [[], []];
+        }
+        $result = [[]];
         foreach ($this->getFields() as $field) {
             if (isset($data[$field])) {
                 if ($data[$field] !== '') {
@@ -265,13 +331,30 @@ class ModelSaver
      */
     protected function getNullableFields()
     {
+        $table = null;
+
+        if ($this->model instanceof Relation) {
+
+            $table = $this->model->getModel()->getTable();
+
+        } else if ($this->model instanceof Model) {
+
+            $table = $this->model->getTable();
+        }
+
+        if (!$table) {
+
+            return [];
+        }
+
         $fields = \DB::select(
-            "SELECT COL.COLUMN_NAME, COL.IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS COL WHERE COL.TABLE_NAME = '{$this->model->getTable()}'"
+            "SELECT COL.COLUMN_NAME, COL.IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS COL WHERE COL.TABLE_NAME = '{$table}'"
         );
 
         $clear_fields = [];
 
         foreach ($fields as $field) {
+
             $clear_fields[$field->COLUMN_NAME] = $field->IS_NULLABLE === 'YES';
         }
 

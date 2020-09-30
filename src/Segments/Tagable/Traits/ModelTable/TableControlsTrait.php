@@ -56,7 +56,7 @@ trait TableControlsTrait {
      * @param  \Closure|array|mixed  $test
      * @return $this
      */
-    public function controls($test = null)
+    public function controlGroup($test = null)
     {
         $this->set_test_var('controls', $test);
 

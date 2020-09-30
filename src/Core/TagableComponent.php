@@ -13,6 +13,7 @@ use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelRelation;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\Nested;
 use Lar\LteAdmin\Segments\Tagable\Row;
@@ -46,6 +47,7 @@ class TagableComponent extends Component {
         'tabs' => Tabs::class,
         'nested' => Nested::class,
         'divider' => Divider::class,
+        'model_relation' => ModelRelation::class,
     ];
 
     /**
