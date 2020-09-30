@@ -54,37 +54,46 @@ trait ModelRelationBuilderTrait {
             $container->appEnd($this->last_content);
             $this->_call_tpl($this->last_content, $item, $this);
             if ($this->last_content->get_test_var('control_group', [$item])) {
-                $container->col()->textRight()->p0()->when(function (Col $col) use ($relation, $item) {
 
-                    $del = $this->last_content->get_test_var('control_delete', [$item]);
+                $del = $this->last_content->get_test_var('control_delete', [$item]);
 
-                    $col->button_group(function (ButtonGroup $group) use ($relation, $item, $del) {
+                if ($del || $this->last_content->hasControls()) {
 
-                        $this->last_content->callControls($group, $item);
+                    $container->col()->textRight()->m0()->p0()->when(function (Col $col) use (
+                        $relation, $item, $del
+                    ) {
+                        $col->button_group(function (ButtonGroup $group) use ($relation, $item, $del) {
 
-                        if ($del) {
-                            $group->danger(['fas fa-trash', __('lte.delete')])
-                                ->on_click('lte::drop_relation', [
-                                    INPUT::create()->setType('hidden')->addClass('delete_field')
-                                        ->setName("{$this->relation_path}[".$item->{$item->getKeyName()}."][".ModelSaver::DELETE_FIELD."]")
-                                        ->setValue($item->{$item->getKeyName()})->render()
-                                ]);
+                            $this->last_content->callControls($group, $item);
+
+                            if ($del) {
+
+                                $group->danger(['fas fa-trash', __('lte.delete')])
+                                    ->on_click('lte::drop_relation', [
+                                        INPUT::create()->setType('hidden')->addClass('delete_field')
+                                            ->setName("{$this->relation_path}[".$item->{$item->getKeyName()}."][".ModelSaver::DELETE_FIELD."]")
+                                            ->setValue($item->{$item->getKeyName()})->render()
+                                    ]);
+                            }
+
+                        })->addCLass('control_relation');
+
+                        if ($this->last_content->get_test_var('control_restore') && $del) {
+                            $col->divider(null, function (DIV $div) use ($item) {
+                                $div->button_group(function (ButtonGroup $group) use ($item) {
+                                    $text_d = $this->last_content->get_test_var('control_restore_text');
+                                    $s = $text_d ? $text_d : (strtoupper($item->getKeyName()).': '.$item->{$item->getKeyName()});
+                                    $text = __('lte.restore_subject', ['subject' => $s]);
+                                    $group->secondary([
+                                        'fas fa-redo',
+                                        tag_replace($text, $item)
+                                    ])
+                                        ->on_click('lte::return_relation');
+                                });
+                            })->hide()->addClass('return_relation');
                         }
-                    })->addCLass('control_relation');
-
-                    if ($this->last_content->get_test_var('control_restore') && $del) {
-                        $col->divider(null, function (DIV $div) use ($item) {
-                            $div->button_group(function (ButtonGroup $group) use ($item) {
-                                $group->secondary([
-                                    'fas fa-redo',
-                                    __('lte.restore_subject', ['subject' => strtoupper($item->getKeyName()).': '.$item->{$item->getKeyName()}])
-                                ])
-                                    ->on_click('lte::return_relation');
-                            });
-                        })->hide()->addClass('return_relation');
-                    }
-
-                });
+                    });
+                }
             }
             $container->hr(['style' => 'border-top: 0;']);
             $this->appEnd($container);

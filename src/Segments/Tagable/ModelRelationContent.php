@@ -40,6 +40,11 @@ class ModelRelationContent extends DIV implements onRender {
     protected $control_restore = null;
 
     /**
+     * @var string|null
+     */
+    protected $control_restore_text = "";
+
+    /**
      * @var callable[]
      */
     protected $controls = [];
@@ -107,6 +112,17 @@ class ModelRelationContent extends DIV implements onRender {
     }
 
     /**
+     * @param  string  $text
+     * @return $this
+     */
+    public function controlRestoreText(string $text)
+    {
+        $this->control_restore_text = $text;
+
+        return $this;
+    }
+
+    /**
      * @param  \Closure|array|mixed  $test
      * @return $this
      */
@@ -166,7 +182,7 @@ class ModelRelationContent extends DIV implements onRender {
      */
     public function get_test_var(string $var_name, array $args = [])
     {
-        if (is_bool($this->{$var_name})) {
+        if (is_bool($this->{$var_name}) || is_string($this->{$var_name})) {
 
             return $this->{$var_name};
         }
@@ -188,5 +204,13 @@ class ModelRelationContent extends DIV implements onRender {
 
             call_user_func_array($control, $params);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasControls()
+    {
+        return !!count($this->controls);
     }
 }

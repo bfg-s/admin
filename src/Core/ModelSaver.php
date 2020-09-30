@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Core;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -262,16 +263,7 @@ class ModelSaver
      */
     protected function getFields()
     {
-        $table = null;
-
-        if ($this->model instanceof Relation) {
-
-            $table = $this->model->getModel()->getTable();
-
-        } else if ($this->model instanceof Model) {
-
-            $table = $this->model->getTable();
-        }
+        $table = $this->getModelTable();
 
         if (!$table) {
 
@@ -290,16 +282,11 @@ class ModelSaver
     {
         $nullable = $this->getNullableFields();
         $data = $this->data;
-        $key = null;
+        $key = $this->getModelKeyName();
 
-        if ($this->model instanceof Relation) {
-
-            $key = $this->model->getModel()->getKeyName();
-
-        } else if ($this->model instanceof Model) {
-
-            $key = $this->model->getKeyName();
-        }
+//        if (isset($data[static::DELETE_FIELD])) {
+//            dd($this->model, $key);
+//        }
 
         if (
             isset($data[static::DELETE_FIELD]) &&
@@ -331,16 +318,7 @@ class ModelSaver
      */
     protected function getNullableFields()
     {
-        $table = null;
-
-        if ($this->model instanceof Relation) {
-
-            $table = $this->model->getModel()->getTable();
-
-        } else if ($this->model instanceof Model) {
-
-            $table = $this->model->getTable();
-        }
+        $table = $this->getModelTable();
 
         if (!$table) {
 
@@ -359,5 +337,51 @@ class ModelSaver
         }
 
         return $clear_fields;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModelKeyName()
+    {
+        $key = null;
+
+        if ($this->model instanceof Relation) {
+
+            $key = $this->model->getModel()->getKeyName();
+
+        } else if ($this->model instanceof Model) {
+
+            $key = $this->model->getKeyName();
+
+        } else if ($this->model instanceof Builder) {
+
+            $key = $this->model->getModel()->getKeyName();
+        }
+
+        return $key;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModelTable()
+    {
+        $key = null;
+
+        if ($this->model instanceof Relation) {
+
+            $key = $this->model->getModel()->getTable();
+
+        } else if ($this->model instanceof Model) {
+
+            $key = $this->model->getTable();
+
+        } else if ($this->model instanceof Builder) {
+
+            $key = $this->model->getModel()->getTable();
+        }
+
+        return $key;
     }
 }
