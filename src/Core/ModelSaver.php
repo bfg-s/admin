@@ -42,6 +42,46 @@ class ModelSaver
     protected $has_delete = false;
 
     /**
+     * @var callable[]
+     */
+    protected static $on_save = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_saved = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_create = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_created = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_update = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_updated = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_delete = [];
+
+    /**
+     * @var callable[]
+     */
+    protected static $on_deleted = [];
+
+    /**
      * ModelSaver constructor.
      *
      * @param Model|string $model
@@ -147,11 +187,19 @@ class ModelSaver
     protected function update_model($data, $add)
     {
         if ($this->has_delete) {
-
-            return $this->model->delete();
+            $this->call_on('on_delete', $data);
+            $return = $this->model->delete();
+            $this->call_on('on_deleted', $data);
+            return $return;
         }
 
+        $this->call_on('on_save', $data);
+        $this->call_on('on_update', $data);
+
         $result = $this->model->update($data);
+
+        $this->call_on('on_saved', $result);
+        $this->call_on('on_updated', $result);
 
         if ($result) {
 
@@ -208,9 +256,15 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
+        $this->call_on('on_save', $data);
+        $this->call_on('on_create', $data);
+
         $this->model = $this->model->create($data);
 
         if ($this->model) {
+
+            $this->call_on('on_saved', $this->model);
+            $this->call_on('on_created', $this->model);
 
             foreach ($add as $key => $param) {
 
@@ -383,5 +437,80 @@ class ModelSaver
         }
 
         return $model;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_save(callable $call)
+    {
+        static::$on_save[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_saved(callable $call)
+    {
+        static::$on_saved[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_create(callable $call)
+    {
+        static::$on_create[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_created(callable $call)
+    {
+        static::$on_created[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_update(callable $call)
+    {
+        static::$on_update[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_updated(callable $call)
+    {
+        static::$on_updated[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_delete(callable $call)
+    {
+        static::$on_delete[] = $call;
+    }
+
+    /**
+     * @param  callable  $call
+     */
+    public static function on_deleted(callable $call)
+    {
+        static::$on_deleted[] = $call;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  mixed  ...$params
+     */
+    protected function call_on(string $name, ...$params)
+    {
+        foreach (static::$$name as $item) {
+            call_user_func_array($item, $params);
+        }
     }
 }
