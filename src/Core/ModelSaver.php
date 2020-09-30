@@ -448,59 +448,66 @@ class ModelSaver
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_saved(callable $call)
+    public static function on_saved(string $model, callable $call)
     {
-        static::$on_saved[] = $call;
+        static::$on_saved[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_create(callable $call)
+    public static function on_create(string $model, callable $call)
     {
-        static::$on_create[] = $call;
+        static::$on_create[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_created(callable $call)
+    public static function on_created(string $model, callable $call)
     {
-        static::$on_created[] = $call;
+        static::$on_created[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_update(callable $call)
+    public static function on_update(string $model, callable $call)
     {
-        static::$on_update[] = $call;
+        static::$on_update[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_updated(callable $call)
+    public static function on_updated(string $model, callable $call)
     {
-        static::$on_updated[] = $call;
+        static::$on_updated[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_delete(callable $call)
+    public static function on_delete(string $model, callable $call)
     {
-        static::$on_delete[] = $call;
+        static::$on_delete[$model][] = $call;
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_deleted(callable $call)
+    public static function on_deleted(string $model, callable $call)
     {
-        static::$on_deleted[] = $call;
+        static::$on_deleted[$model][] = $call;
     }
 
     /**
@@ -509,8 +516,14 @@ class ModelSaver
      */
     protected function call_on(string $name, ...$params)
     {
-        foreach (static::$$name as $item) {
-            call_user_func_array($item, $params);
+        $events = static::$$name;
+        $model = $this->getModel();
+        $class = $model ? get_class($model) : false;
+
+        if ($class && isset($events[$class])) {
+            foreach ($events[$class] as $item) {
+                call_user_func_array($item, $params);
+            }
         }
     }
 }
