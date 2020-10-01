@@ -14,4 +14,14 @@ class MultiSelect extends Select
     protected $params = [
         ['multiple' => 'multiple']
     ];
+
+    /**
+     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
+     * @param  bool  $first_default
+     * @return MultiSelect
+     */
+    public function options($options, bool $first_default = false)
+    {
+        return parent::options($options, $this->load_subject ? false: $first_default);
+    }
 }
