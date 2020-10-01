@@ -187,19 +187,19 @@ class ModelSaver
     protected function update_model($data, $add)
     {
         if ($this->has_delete) {
-            $this->call_on('on_delete', $this->model, $data);
+            $this->call_on('on_delete', $this->model, $this->data);
             $return = $this->model->delete();
-            $this->call_on('on_deleted', $this->model, $data);
+            $this->call_on('on_deleted', $this->model, $this->data);
             return $return;
         }
 
-        $this->call_on('on_save', $this->model, $data);
-        $this->call_on('on_update', $this->model, $data);
+        $this->call_on('on_save', $this->model, $this->data);
+        $this->call_on('on_update', $this->model, $this->data);
 
         $result = $this->model->update($data);
 
-        $this->call_on('on_saved', $result, $data);
-        $this->call_on('on_updated', $result, $data);
+        $this->call_on('on_saved', $result, $this->data);
+        $this->call_on('on_updated', $result, $this->data);
 
         if ($result) {
 
@@ -256,15 +256,15 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
-        $this->call_on('on_save', $this->model, $data);
-        $this->call_on('on_create', $this->model, $data);
+        $this->call_on('on_save', $this->model, $this->data);
+        $this->call_on('on_create', $this->model, $this->data);
 
         $this->model = $this->model->create($data);
 
         if ($this->model) {
 
-            $this->call_on('on_saved', $this->model);
-            $this->call_on('on_created', $this->model);
+            $this->call_on('on_saved', $this->model, $this->data);
+            $this->call_on('on_created', $this->model, $this->data);
 
             foreach ($add as $key => $param) {
 
