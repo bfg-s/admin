@@ -52,7 +52,7 @@ class Decorations {
         $size = $props[0] ?? 30;
 
         if ($value) {
-            if (!preg_match('/^http/', $value)) { $value = "/{$value}"; }
+            if (!preg_match('/^http/', $value)) { $value = "/" . trim($value. '/'); }
             return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
         } else {
             return "<span class=\"badge badge-dark\">none</span>";
