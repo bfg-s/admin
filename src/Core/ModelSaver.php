@@ -440,75 +440,101 @@ class ModelSaver
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_save(string $model, callable $call)
+    public static function on_save($model, callable $call = null)
     {
-        static::$on_save[$model][] = $call;
+        static::on('save', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_saved(string $model, callable $call)
+    public static function on_saved($model, callable $call = null)
     {
-        static::$on_saved[$model][] = $call;
+        static::on('saved', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_create(string $model, callable $call)
+    public static function on_create($model, callable $call = null)
     {
-        static::$on_create[$model][] = $call;
+        static::on('create', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_created(string $model, callable $call)
+    public static function on_created($model, callable $call = null)
     {
-        static::$on_created[$model][] = $call;
+        static::on('created', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_update(string $model, callable $call)
+    public static function on_update($model, callable $call = null)
     {
-        static::$on_update[$model][] = $call;
+        static::on('update', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_updated(string $model, callable $call)
+    public static function on_updated($model, callable $call = null)
     {
-        static::$on_updated[$model][] = $call;
+        static::on('updated', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_delete(string $model, callable $call)
+    public static function on_delete(string $model, callable $call = null)
     {
-        static::$on_delete[$model][] = $call;
+        static::on('delete', $model, $call);
     }
 
     /**
-     * @param  string  $model
-     * @param  callable  $call
+     * @param  string|callable  $model
+     * @param  callable|null  $call
      */
-    public static function on_deleted(string $model, callable $call)
+    public static function on_deleted(string $model, callable $call = null)
     {
-        static::$on_deleted[$model][] = $call;
+        static::on('deleted', $model, $call);
+    }
+
+    /**
+     * @param  string  $event
+     * @param $model
+     * @param  callable|null  $call
+     */
+    public static function on(string $event, $model, callable $call = null)
+    {
+        if (!$call && is_callable($model)) {
+
+            $call = $model;
+
+            $model = lte_controller_model();
+        }
+
+        $event = "on_$event";
+
+        if ($model && property_exists(static::class, $event) && is_callable($call)) {
+
+            $events = static::$$event;
+
+            $events[$model][] = $call;
+
+            static::$$event = $events;
+        }
     }
 
     /**

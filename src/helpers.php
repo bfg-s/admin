@@ -66,6 +66,24 @@ if (!function_exists('lte_controller_can')) {
     }
 }
 
+if (!function_exists('lte_controller_model')) {
+
+    /**
+     * @return string
+     */
+    function lte_controller_model () {
+
+        $class = \Str::parseCallback(\Route::currentRouteAction())[0];
+
+        if (property_exists($class, 'model')) {
+
+            return $class::$model;
+        }
+
+        return "";
+    }
+}
+
 if (!function_exists('lte_app_path')) {
 
     /**
