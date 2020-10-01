@@ -187,19 +187,19 @@ class ModelSaver
     protected function update_model($data, $add)
     {
         if ($this->has_delete) {
-            $this->call_on('on_delete', $data);
+            $this->call_on('on_delete', $this->model, $data);
             $return = $this->model->delete();
-            $this->call_on('on_deleted', $data);
+            $this->call_on('on_deleted', $this->model, $data);
             return $return;
         }
 
-        $this->call_on('on_save', $data);
-        $this->call_on('on_update', $data);
+        $this->call_on('on_save', $this->model, $data);
+        $this->call_on('on_update', $this->model, $data);
 
         $result = $this->model->update($data);
 
-        $this->call_on('on_saved', $result);
-        $this->call_on('on_updated', $result);
+        $this->call_on('on_saved', $result, $data);
+        $this->call_on('on_updated', $result, $data);
 
         if ($result) {
 
@@ -256,8 +256,8 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
-        $this->call_on('on_save', $data);
-        $this->call_on('on_create', $data);
+        $this->call_on('on_save', $this->model, $data);
+        $this->call_on('on_create', $this->model, $data);
 
         $this->model = $this->model->create($data);
 
