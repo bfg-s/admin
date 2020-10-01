@@ -351,7 +351,7 @@ class ModelSaver
         $nullable = $this->getNullableFields();
         $result = [[]];
         foreach ($this->getFields() as $field) {
-            if (isset($data[$field])) {
+            if (array_key_exists($field, $data)) {
                 if ($data[$field] !== '') {
                     $result[0][$field] = $data[$field];
                 } else if (isset($nullable[$field]) && $nullable[$field]) {
