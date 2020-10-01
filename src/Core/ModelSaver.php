@@ -187,19 +187,19 @@ class ModelSaver
     protected function update_model($data, $add)
     {
         if ($this->has_delete) {
-            $this->call_on('on_delete', $this->model, $this->data);
+            $this->call_on('on_delete', $this->data, $this->model);
             $return = $this->model->delete();
-            $this->call_on('on_deleted', $this->model, $this->data);
+            $this->call_on('on_deleted', $this->data, $this->model);
             return $return;
         }
 
-        $r1 = $this->call_on('on_save', $this->model, $this->data);
-        $r2 = $this->call_on('on_update', $this->model, $this->data);
+        $r1 = $this->call_on('on_save', $this->data, $this->model);
+        $r2 = $this->call_on('on_update', $this->data, $this->model);
 
         $result = $this->model->update(array_merge($data, $r1, $r2));
 
-        $this->call_on('on_saved', $result, $this->data);
-        $this->call_on('on_updated', $result, $this->data);
+        $this->call_on('on_saved', $this->data, $result);
+        $this->call_on('on_updated', $this->data, $result);
 
         if ($result) {
 
@@ -256,15 +256,15 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
-        $r1 = $this->call_on('on_save', $this->model, $this->data);
-        $r2 = $this->call_on('on_create', $this->model, $this->data);
+        $r1 = $this->call_on('on_save', $this->data, $this->model);
+        $r2 = $this->call_on('on_create', $this->data, $this->model);
 
         $this->model = $this->model->create(array_merge($data, $r1, $r2));
 
         if ($this->model) {
 
-            $this->call_on('on_saved', $this->model, $this->data);
-            $this->call_on('on_created', $this->model, $this->data);
+            $this->call_on('on_saved', $this->data, $this->model);
+            $this->call_on('on_created', $this->data, $this->model);
 
             foreach ($add as $key => $param) {
 
