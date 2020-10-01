@@ -9,7 +9,6 @@ use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation\ModelRelationBuilderTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation\ModelRelationHelpersTrait;
-use Lar\Tagable\Events\onRender;
 
 /**
  * Class ModelRelation
@@ -18,7 +17,7 @@ use Lar\Tagable\Events\onRender;
  * @mixin ModelRelationMacroList
  * @mixin ModelRelationMethods
  */
-class ModelRelation extends DIV implements onRender {
+class ModelRelation extends DIV {
 
     use FieldMassControl,
         Macroable,
@@ -65,6 +64,11 @@ class ModelRelation extends DIV implements onRender {
      * @var ModelRelationContent
      */
     protected $last_content;
+
+    /**
+     * @var callable
+     */
+    protected $on_empty;
 
     /**
      * @var array
@@ -115,13 +119,16 @@ class ModelRelation extends DIV implements onRender {
         else {
 
             static::$depth[] = $this->relation_name;
-
             $this->key = array_key_last(static::$depth);
+
+            if ($t = $this->_path_name()) {
+                $this->path_name = $t;
+            }
 
             $this->relation = $relation;
             $this->toExecute('_build');
             $this->create_content = $content;
-            $this->setDatas(['relation' => $this->relation_name]);
+            $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->path_name]);
         }
 
         $this->when($params);
@@ -143,16 +150,5 @@ class ModelRelation extends DIV implements onRender {
         }
 
         return parent::__call($name, $arguments);
-    }
-
-    /**
-     * @return mixed|void
-     */
-    public function onRender()
-    {
-        $this->rendered(function ($d) {
-            $this->_tpl($d);
-        });
-        $this->callRenderEvents();
     }
 }

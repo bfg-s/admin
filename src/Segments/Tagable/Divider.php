@@ -22,10 +22,11 @@ class Divider extends DIV implements onRender {
     /**
      * Divider constructor.
      * @param  mixed|null  $left_title
+     * @param  null  $center_title
      * @param  mixed|null  $right_title
      * @param  mixed  ...$params
      */
-    public function __construct($left_title = null, $right_title = null, ...$params)
+    public function __construct($left_title = null, $center_title = null, $right_title = null, ...$params)
     {
         parent::__construct();
 
@@ -33,7 +34,7 @@ class Divider extends DIV implements onRender {
 
             if (is_string($left_title)) {
 
-                $this->div(['col-auto'])->h4($left_title);
+                $this->div(['col-auto'])->h4($left_title)->textSecondary();
             }
 
             else {
@@ -42,13 +43,32 @@ class Divider extends DIV implements onRender {
             }
         }
 
-        $this->div(['col'])->hr();
+        if ($center_title) {
+
+            $this->div(['col'])->hr();
+
+            if (is_string($center_title)) {
+
+                $this->div(['col-auto'])->h4($center_title)->textSecondary();
+            }
+
+            else {
+
+                $this->div(['col-auto'])->when($center_title);
+            }
+
+            $this->div(['col'])->hr();
+
+        } else {
+
+            $this->div(['col'])->hr();
+        }
 
         if ($right_title) {
 
             if (is_string($right_title)) {
 
-                $this->div(['col-auto'])->h4($right_title);
+                $this->div(['col-auto'])->h4($right_title)->textSecondary();
             }
 
             else {

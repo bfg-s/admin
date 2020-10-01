@@ -41,8 +41,10 @@ trait ModelRelationBuilderTrait {
             $group->set_id(implode("_", static::$depth) . "_{$group->get_id()}_" . $model->{$model->getKeyName()});
         };
 
+        $datas = $this->relation->get();
+
         /** @var Model $item */
-        foreach ($this->relation->get() as $item) {
+        foreach ($datas as $item) {
             Form::$current_model = $item;
             $container = ModelRelationContent::create($relation, $item->{$item->getKeyName()});
             $container->appEnd(
@@ -79,7 +81,7 @@ trait ModelRelationBuilderTrait {
                         })->addCLass('control_relation');
 
                         if ($this->last_content->get_test_var('control_restore') && $del) {
-                            $col->divider(null, function (DIV $div) use ($item) {
+                            $col->divider(null, null, function (DIV $div) use ($item) {
                                 $div->button_group(function (ButtonGroup $group) use ($item) {
                                     $text_d = $this->last_content->get_test_var('control_restore_text');
                                     $s = $text_d ? $text_d : (strtoupper($item->getKeyName()).': '.$item->{$item->getKeyName()});
@@ -99,11 +101,27 @@ trait ModelRelationBuilderTrait {
             $this->appEnd($container);
         }
 
+        if (!$datas->count() && $this->on_empty) {
+
+            $container = ModelRelationContent::create($relation, 'empty', 'template_empty_container');
+            $this->last_content = ModelRelationContent::create($relation, 'template_empty_content', 'template_empty_content');
+            $this->_call_empty_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
+            $container->appEnd($this->last_content);
+            $this->appEnd($container);
+        }
+
         Form::$current_model = $old_model_form;
 
         unset(FormGroup::$construct_modify['build_relation']);
 
         $this->appEnd(TemplateArea::create("relation_{$this->path_name}_template"));
+
+        $this->rendered(function ($d) {
+
+            $this->_tpl($d);
+        });
+
+        $this->callRenderEvents();
 
         unset(static::$depth[$this->key]);
     }
@@ -114,11 +132,6 @@ trait ModelRelationBuilderTrait {
      */
     protected function _btn()
     {
-        if (!$this->last_content->get_test_var('control_create')) {
-
-            return "";
-        }
-
         $old_model_form = Form::$current_model;
 
         $relation = $this->relation_name;
@@ -133,6 +146,7 @@ trait ModelRelationBuilderTrait {
         $this->last_content = ModelRelationContent::create($relation, 'template_content', 'template_content');
         $container->appEnd($this->last_content);
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
+        if (!$this->last_content->get_test_var('control_create')) { return ""; }
         $container->col()->textRight()->p0()->button_group(function (ButtonGroup $group) use ($relation) {
             $group->setStyle("margin-left: 0!important;");
             $group->warning(['fas fa-minus', __('lte.remove')])->on_click('lte::drop_relation_tpl');
@@ -145,7 +159,10 @@ trait ModelRelationBuilderTrait {
         $hr = HR::create();
         $row = $hr->row();
         $row->col()->textRight()->button_group(function (ButtonGroup $group) use ($relation) {
-            $group->success(['fas fa-plus', __('lte.add')])->on_click('lte::add_relation_tpl', "relation_{$this->path_name}_template");
+            $group->success(['fas fa-plus', __('lte.add')])
+                ->on_click('lte::add_relation_tpl',
+                    $this->path_name
+                );
         });
         $row->appEnd(Template::create("relation_{$this->path_name}_template")->appEnd($container));
         return $hr->render();
@@ -167,13 +184,28 @@ trait ModelRelationBuilderTrait {
     }
 
     /**
+     * @param  mixed  ...$params
+     * @return mixed
+     */
+    protected function _call_empty_tpl(...$params)
+    {
+        if ($t = $this->_path_name()) {
+            $this->path_name = $t;
+        }
+
+        $return = call_user_func($this->on_empty, ...$params);
+
+        return $return;
+    }
+
+    /**
      * @return string
      */
     protected function _relation_path()
     {
         $depth = static::$depth;
         $first_key = array_key_first($depth);
-        if (!isset($depth[$first_key])) return "";
+        if (!isset($depth[$first_key])) return $this->relation_path = "";
         $first = $depth[$first_key];
         unset($depth[$first_key]);
         $this->relation_path = $first . (count($depth) ? "[" . implode("][", $depth) . "]" : '');
