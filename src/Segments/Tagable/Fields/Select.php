@@ -117,7 +117,7 @@ class Select extends FormGroup
             $this->options = $options;
         }
 
-        if ($first_default) {
+        if ($first_default && !$this->nullable) {
             $this->default(array_key_first($this->options));
         }
 
