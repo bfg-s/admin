@@ -193,10 +193,10 @@ class ModelSaver
             return $return;
         }
 
-        $this->call_on('on_save', $this->model, $this->data);
-        $this->call_on('on_update', $this->model, $this->data);
+        $r1 = $this->call_on('on_save', $this->model, $this->data);
+        $r2 = $this->call_on('on_update', $this->model, $this->data);
 
-        $result = $this->model->update($data);
+        $result = $this->model->update(array_merge($data, $r1, $r2));
 
         $this->call_on('on_saved', $result, $this->data);
         $this->call_on('on_updated', $result, $this->data);
@@ -256,10 +256,10 @@ class ModelSaver
      */
     protected function create_model($data, $add)
     {
-        $this->call_on('on_save', $this->model, $this->data);
-        $this->call_on('on_create', $this->model, $this->data);
+        $r1 = $this->call_on('on_save', $this->model, $this->data);
+        $r2 = $this->call_on('on_create', $this->model, $this->data);
 
-        $this->model = $this->model->create($data);
+        $this->model = $this->model->create(array_merge($data, $r1, $r2));
 
         if ($this->model) {
 
@@ -547,10 +547,15 @@ class ModelSaver
         $model = $this->getModel();
         $class = $model ? get_class($model) : false;
 
+        $result = [];
+
         if ($class && isset($events[$class])) {
             foreach ($events[$class] as $item) {
-                call_user_func_array($item, $params);
+                $r = call_user_func_array($item, $params);
+                if (is_array($r) && count($r)) $result = array_merge_recursive($result, $r);
             }
         }
+
+        return $result;
     }
 }
