@@ -440,11 +440,12 @@ class ModelSaver
     }
 
     /**
+     * @param  string  $model
      * @param  callable  $call
      */
-    public static function on_save(callable $call)
+    public static function on_save(string $model, callable $call)
     {
-        static::$on_save[] = $call;
+        static::$on_save[$model][] = $call;
     }
 
     /**
