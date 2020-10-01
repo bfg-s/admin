@@ -31,4 +31,14 @@ class SelectTags extends Select
             ->addClassIf($this->has_bug, 'is-invalid')
             ->addClass($this->class);
     }
+
+    /**
+     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
+     * @param  bool  $first_default
+     * @return SelectTags
+     */
+    public function options($options, bool $first_default = false)
+    {
+        return parent::options($options, $this->load_subject ? false: $first_default);
+    }
 }
