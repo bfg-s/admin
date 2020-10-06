@@ -151,7 +151,6 @@ trait ModelRelationBuilderTrait {
         $hr = $this->hr();
         $row = $hr->row();
         $row->col()->textRight()->button_group(function (ButtonGroup $group) {
-
             $group->success(['fas fa-plus', __('lte.add')])
                 ->on_click('lte::add_relation_tpl',
                     $this->relation_name
