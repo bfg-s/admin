@@ -46,19 +46,9 @@ class ModelRelation extends DIV {
     protected $path_name;
 
     /**
-     * @var string
-     */
-    protected $relation_path;
-
-    /**
      * @var \Closure|array
      */
     protected $create_content;
-
-    /**
-     * @var int
-     */
-    protected $key;
 
     /**
      * @var ModelRelationContent
@@ -69,11 +59,6 @@ class ModelRelation extends DIV {
      * @var callable
      */
     protected $on_empty;
-
-    /**
-     * @var array
-     */
-    static $depth = [];
 
     /**
      * ModelRelation constructor.
@@ -117,18 +102,10 @@ class ModelRelation extends DIV {
         }
 
         else {
-
-            static::$depth[] = $this->relation_name;
-            $this->key = array_key_last(static::$depth);
-
-            if ($t = $this->_path_name()) {
-                $this->path_name = $t;
-            }
-
             $this->relation = $relation;
             $this->toExecute('_build');
             $this->create_content = $content;
-            $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->path_name]);
+            $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->relation_name]);
         }
 
         $this->when($params);
