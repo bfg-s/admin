@@ -141,14 +141,6 @@ class ModelSaver
      */
     public function save()
     {
-        foreach ($this->data as $key => $datum) {
-
-            if (is_object($datum) && $datum instanceof UploadedFile) {
-
-                $this->data[$key] = LteFileStorage::makeFile($datum);
-            }
-        }
-
         list($data, $add) = $this->getDatas();
 
         if ($this->model instanceof Model) {
@@ -338,7 +330,14 @@ class ModelSaver
      */
     protected function getDatas()
     {
-        $data = $this->data;
+        $data = [];
+        foreach ($this->data as $key => $datum) {
+
+            if (is_object($datum) && $datum instanceof UploadedFile) {
+
+                $data[$key] = LteFileStorage::makeFile($datum);
+            }
+        }
         $key = $this->getModelKeyName();
         if (
             isset($data[static::DELETE_FIELD]) &&
