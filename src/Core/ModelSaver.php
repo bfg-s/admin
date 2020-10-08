@@ -337,6 +337,11 @@ class ModelSaver
 
                 $data[$key] = LteFileStorage::makeFile($datum);
             }
+
+            else {
+
+                $data[$key] = $datum;
+            }
         }
         $key = $this->getModelKeyName();
         if (
