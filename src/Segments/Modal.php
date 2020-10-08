@@ -44,6 +44,16 @@ class Modal extends DIV implements onRender {
     protected $footer_buttons = [];
 
     /**
+     * @var array
+     */
+    protected $left_footer_buttons = [];
+
+    /**
+     * @var array
+     */
+    protected $center_footer_buttons = [];
+
+    /**
      * Modal constructor.
      * @param  \Closure|array|null  $content
      * @param  mixed  ...$params
@@ -106,6 +116,34 @@ class Modal extends DIV implements onRender {
     }
 
     /**
+     * @param  string  $text
+     * @param  mixed  ...$params
+     * @return ModalFooterButton
+     */
+    public function left_btn(string $text = "", ...$params)
+    {
+        $btn = new ModalFooterButton($text, ...$params);
+
+        $this->left_footer_buttons[] = $btn;
+
+        return $btn;
+    }
+
+    /**
+     * @param  string  $text
+     * @param  mixed  ...$params
+     * @return ModalFooterButton
+     */
+    public function center_btn(string $text = "", ...$params)
+    {
+        $btn = new ModalFooterButton($text, ...$params);
+
+        $this->center_footer_buttons[] = $btn;
+
+        return $btn;
+    }
+
+    /**
      * @param $name
      * @param $arguments
      * @return bool|Form|\Lar\Tagable\Tag|mixed|string
@@ -148,8 +186,18 @@ class Modal extends DIV implements onRender {
 
         if (count($this->footer_buttons)) {
             $footer = $this->div(['modal-footer']);
+            $row = $footer->row();
+            $col_l = $row->div(['col-auto'])->textLeft();
+            $col_c = $row->div(['col-auto'])->textCenter();
+            $col_r = $row->div(['col-auto'])->textRight();
+            foreach ($this->left_footer_buttons as $footer_button) {
+                $col_l->appEnd($footer_button);
+            }
+            foreach ($this->center_footer_buttons as $footer_button) {
+                $col_c->appEnd($footer_button);
+            }
             foreach ($this->footer_buttons as $footer_button) {
-                $footer->appEnd($footer_button);
+                $col_r->appEnd($footer_button);
             }
         }
     }
