@@ -4,6 +4,7 @@ let tooltip_selector = '[title]:not([class^="select2"])';
 
 const load = () => {
     require('./lte_load')(tooltip_selector);
+    ljs.vue.mixin(require('./vue_mixin'));
     ljs.vue.component('global_search', require('./Components/GlobalSearch').default);
     ljs.vue.component('gate_tools', require('./Components/GatesTools').default);
     ljs.vue.component('scaffold_tools', require('./Components/ScaffoldTools').default);
@@ -14,6 +15,7 @@ const load = () => {
     ljs.vue.component('v-info', require('./Components/Common/Informer').default);
     ljs.vue.component('v-loading', VueElementLoading);
     ljs.vue.component('v-modal-collection', require('./Components/ModalCollection').default);
+    ljs.vue.component('v-navigator', require('./Components/Menu/Navigation').default);
 };
 
 const methods = require('./lar_methods.js');

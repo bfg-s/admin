@@ -1,5 +1,5 @@
 <template>
-    <div class="form-inline ml-3 d-none d-lg-block d-xl-block" data-load="lte::make_search">
+    <div class="form-inline ml-3 d-none d-lg-block d-xl-block">
         <div class="input-group input-group-sm">
             <input
                     class="form-control form-control-navbar global_search_input_focus"
@@ -71,16 +71,20 @@
         },
         mounted () {
 
-            document.querySelector('[role="menu"]')
-                .querySelectorAll('a[href^="http"]')
-                .forEach((obj) => {
-                    this.links.push({href: obj.href, inner: obj.innerHTML});
-                });
+            let menu = document.querySelector('[role="menu"]');
 
-            let q = ljs.help.query_get('q');
-            if (q) {
-                this.q = q;
-                this.created_with_q = true;
+            if (menu) {
+
+                menu.querySelectorAll('a[href^="http"]')
+                    .forEach((obj) => {
+                        this.links.push({href: obj.href, inner: obj.innerHTML});
+                    });
+
+                let q = ljs.help.query_get('q');
+                if (q) {
+                    this.q = q;
+                    this.created_with_q = true;
+                }
             }
         },
         methods: {

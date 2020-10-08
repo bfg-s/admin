@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin;
 
 use Lar\LteAdmin\Components\Vue\ModalCollection;
+use Lar\LteAdmin\Components\Vue\Navigator;
 
 /**
  * Class LteAdmin
@@ -47,6 +48,7 @@ class LteAdmin
     protected $content_segments = [
         'app_end_wrapper' => [],
         'prep_end_wrapper' => [
+            //['component' => Navigator::class, 'params' => []],
             ['component' => ModalCollection::class, 'params' => []]
         ],
         'app_end_content' => [],

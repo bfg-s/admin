@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Components\Vue\Navigator;
 use Lar\LteAdmin\Middlewares\Authenticate;
 use Lar\LteAdmin\Segments\AccessDenied;
 
@@ -40,6 +41,9 @@ class LteLayout extends LteBase
                 $div->view('lte::layout.nav');
 
                 $div->view('lte::layout.side_bar');
+//                $div->div(['main-sidebar sidebar-dark-primary elevation-4'])->appEnd(Navigator::create([
+//                    'items' => gets()->lte->menu->nested_collect
+//                ]));
 
                 $div->div(['content-wrapper'], function (DIV $div) {
 
