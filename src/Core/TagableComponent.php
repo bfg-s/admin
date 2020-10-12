@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Col;
 use Lar\LteAdmin\Segments\Tagable\Divider;
 use Lar\LteAdmin\Segments\Tagable\Field;
+use Lar\LteAdmin\Segments\Tagable\Fields\Hidden;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
@@ -48,6 +49,7 @@ class TagableComponent extends Component {
         'nested' => Nested::class,
         'divider' => Divider::class,
         'model_relation' => ModelRelation::class,
+        'hidden' => Hidden::class,
     ];
 
     /**
