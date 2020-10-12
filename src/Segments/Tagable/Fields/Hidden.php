@@ -16,6 +16,16 @@ class Hidden extends FormGroup
     protected $type = "hidden";
 
     /**
+     * @var bool
+     */
+    protected $vertical = true;
+
+    /**
+     * @var null
+     */
+    protected $icon = null;
+
+    /**
      * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
      */
     public function field()
