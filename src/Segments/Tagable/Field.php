@@ -16,6 +16,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\DateTimeRange;
 use Lar\LteAdmin\Segments\Tagable\Fields\DualSelect;
 use Lar\LteAdmin\Segments\Tagable\Fields\Email;
 use Lar\LteAdmin\Segments\Tagable\Fields\File;
+use Lar\LteAdmin\Segments\Tagable\Fields\Hidden;
 use Lar\LteAdmin\Segments\Tagable\Fields\Icon;
 use Lar\LteAdmin\Segments\Tagable\Fields\Image;
 use Lar\LteAdmin\Segments\Tagable\Fields\Info;
@@ -79,6 +80,7 @@ class Field extends DIV implements onRender {
         'codemirror' => CodeMirror::class,
         'info' => Info::class,
         'rating' => Rating::class,
+        'hidden' => Hidden::class,
     ];
 
     /**

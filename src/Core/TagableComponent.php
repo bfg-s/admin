@@ -48,8 +48,7 @@ class TagableComponent extends Component {
         'tabs' => Tabs::class,
         'nested' => Nested::class,
         'divider' => Divider::class,
-        'model_relation' => ModelRelation::class,
-        'hidden' => Hidden::class,
+        'model_relation' => ModelRelation::class
     ];
 
     /**
