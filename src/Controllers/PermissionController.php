@@ -84,6 +84,8 @@ class PermissionController extends Controller
                 ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), true)
                 ->required();
 
+            $form->input('description', 'lte.description');
+
             $form->switcher('active', 'lte.active')->switchSize('mini')
                 ->default(1);
 

@@ -14,7 +14,7 @@ class UpdateTableLtePermissionDescription extends Migration
     public function up()
     {
         Schema::table('lte_permission', function (Blueprint $table) {
-            $table->string('description')->after('state');
+            $table->string('description')->nullable()->after('state');
         });
     }
 
