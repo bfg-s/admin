@@ -194,29 +194,34 @@ trait SearchFormConditionRulesTrait {
         if (request()->has('q')) {
             $r = request('q');
             if (is_string($r)) {
-                $i=0;
-                foreach ($this->global_search_fields as $global_search_field) {
-                    $find = collect($this->fields)->where('field_name', $global_search_field)->first();
-                    if ($find) {
-                        if ($i) {
-                            $model = $model->orWhere($global_search_field, 'like', "%{$r}%");
-                        } else {
-                            $model = $model->where($global_search_field, 'like', "%{$r}%");
+
+                if ($this->global_search_fields) {
+                    $i=0;
+                    foreach ($this->global_search_fields as $global_search_field) {
+                        $find = collect($this->fields)->where('field_name', $global_search_field)->first();
+                        if ($find) {
+                            if ($i) {
+                                $model = $model->orWhere($global_search_field, 'like', "%{$r}%");
+                            } else {
+                                $model = $model->where($global_search_field, 'like', "%{$r}%");
+                            }
+                            $i++;
                         }
-                        $i++;
                     }
                 }
 
-//                collect($this->fields)
-//                    ->pluck('field_name')
-//                    ->map(function ($field, $k) use (&$model, $r) {
-//
-//                        if ($k) {
-//                            $model = $model->orWhere($field, 'like', "%{$r}%");
-//                        } else {
-//                            $model = $model->where($field, 'like', "%{$r}%");
-//                        }
-//                    });
+                else {
+                    collect($this->fields)
+                        ->pluck('field_name')
+                        ->map(function ($field, $k) use (&$model, $r) {
+
+                            if ($k) {
+                                $model = $model->orWhere($field, 'like', "%{$r}%");
+                            } else {
+                                $model = $model->where($field, 'like', "%{$r}%");
+                            }
+                        });
+                }
 
             } else if (is_array($r)) {
 

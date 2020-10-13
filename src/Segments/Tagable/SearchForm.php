@@ -90,9 +90,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     /**
      * @var array
      */
-    protected $global_search_fields = [
-        'id'
-    ];
+    protected $global_search_fields;
 
     /**
      * Form constructor.
