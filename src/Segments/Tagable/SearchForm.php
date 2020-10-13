@@ -88,6 +88,13 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     ];
 
     /**
+     * @var array
+     */
+    protected $global_search_fields = [
+        'id'
+    ];
+
+    /**
      * Form constructor.
      * @param  mixed  $model
      * @param  mixed  ...$params
@@ -142,6 +149,17 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     public function fieldsCount()
     {
         return count($this->fields);
+    }
+
+    /**
+     * @param  array  $params
+     * @return $this
+     */
+    public function globalSearchFields(array $params)
+    {
+        $this->global_search_fields = array_merge($this->global_search_fields, $params);
+
+        return $this;
     }
 
     /**
