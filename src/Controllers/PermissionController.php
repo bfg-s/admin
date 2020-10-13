@@ -50,6 +50,7 @@ class PermissionController extends Controller
             $table->search->at();
 
             $table->id();
+            $table->column('lte.description', 'description')->str_limit(50);
             $table->column('lte.path', 'path')->badge('success');
             $table->column('lte.methods', [$this, 'show_methods'])->sort('method');
             $table->column('lte.state', [$this, 'show_state'])->sort('state');

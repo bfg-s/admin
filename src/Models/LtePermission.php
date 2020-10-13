@@ -23,7 +23,7 @@ class LtePermission extends Model
      * @var string[]
      */
     protected $fillable = [
-        "path", "method", "state", "lte_role_id", "active" // state: open, close
+        "path", "method", "state", "description", "lte_role_id", "active" // state: open, close
     ];
 
     /**
