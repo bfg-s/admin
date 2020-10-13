@@ -157,7 +157,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
      */
     public function globalSearchFields(array $params)
     {
-        $this->global_search_fields = array_merge($this->global_search_fields, $params);
+        $this->global_search_fields = $params;
 
         return $this;
     }
