@@ -310,12 +310,26 @@ abstract class FormGroup extends DIV {
 
         return $this;
     }
-    
 
     /**
      * @return void
      */
     protected function on_build() {}
+
+    /**
+     * @var array
+     */
+    protected $fgs = [];
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function fg(callable $call)
+    {
+        $this->fgs[] = $call;
+        return $this;
+    }
 
     /**
      * Make wrapper for input
@@ -340,6 +354,10 @@ abstract class FormGroup extends DIV {
         }
 
         $fg = $this->div(['form-group row']);
+
+        foreach ($this->fgs as $fgs) {
+            call_user_func($fgs, $fg);
+        }
 
         if (!$this->reversed) {
 

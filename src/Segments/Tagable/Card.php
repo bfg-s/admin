@@ -127,6 +127,36 @@ class Card extends DIV implements onRender {
     }
 
     /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function headerObj(callable $call)
+    {
+        call_user_func($call, $this->head_obj);
+        return $this;
+    }
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function titleObj(callable $call)
+    {
+        call_user_func($call, $this->title_obj);
+        return $this;
+    }
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function toolsObj(callable $call)
+    {
+        call_user_func($call, $this->tools);
+        return $this;
+    }
+
+    /**
      * @param  mixed  ...$params
      * @return CardBody
      */
