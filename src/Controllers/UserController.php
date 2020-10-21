@@ -11,6 +11,7 @@ use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
+use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
 
@@ -45,11 +46,15 @@ class UserController extends Controller
                     ->body()
                     ->view('lte::auth.user_portfolio', ['user' => $this->model()]);
 
-                $row->col(9)
-                    ->card('lte.edit')
-                    ->success()
-                    ->body($this->matrix())
-                    ->form_footer();
+                $card = $row->col(9)
+                    ->card('lte.edit');
+
+                $card->success()
+                    ->body($this->matrix());
+
+                $card->footerForm(false, function (FormFooter $footer) {
+                    $footer->setType('edit');
+                });
             });
         });
     }

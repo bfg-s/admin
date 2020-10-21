@@ -40,6 +40,11 @@ class FormFooter extends DIV implements onRender {
     protected $btn_icon;
 
     /**
+     * @var string|null
+     */
+    protected $type;
+
+    /**
      * @var bool
      */
     private $nav_redirect = true;
@@ -102,13 +107,24 @@ class FormFooter extends DIV implements onRender {
     }
 
     /**
+     * @param  string  $type
+     * @return $this|\Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|FormFooter
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function createDefaultCRUDFooter()
     {
         $group = new ButtonGroup(['group-sm']);
 
-        $type = gets()->lte->menu->type;
+        $type = $this->type ?? gets()->lte->menu->type;
         $menu = gets()->lte->menu->now;
 
         if ($type === 'edit' || isset($menu['post'])) {
@@ -143,38 +159,6 @@ class FormFooter extends DIV implements onRender {
                     'edit_further' => __('lte.edit_further')
                 ]
             ]));
-
-//            $this->div(['col'])->div(['mb-0 clearfix'])->when(function (DIV $div) use ($type) {
-//
-//                $_after = session('_after', 'index');
-//
-//                $div->div(
-//                    ['icheck-primary float-left mr-2'],
-//                    INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_index', 'value' => 'index'])
-//                        ->setDatas(['state' => ''])->setCheckedIf($_after === 'index', 'checked')
-//                        ->label(['for' => '_after_select_index'])->text(__('lte.to_the_list'))
-//                );
-//
-//                if ($type === 'create') {
-//
-//                    $div->div(
-//                        ['icheck-primary float-left mr-2'],
-//                        INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
-//                            ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-//                            ->label(['for' => '_after_select_stay'])->text(__('lte.add_more'))
-//                    );
-//                }
-//
-//                if ($type === 'edit') {
-//
-//                    $div->div(
-//                        ['icheck-primary float-left mr-2'],
-//                        INPUT::create(['name' => '_after', 'type' => 'radio', 'id' => '_after_select_stay', 'value' => 'stay'])
-//                            ->setDatas(['state' => ''])->setCheckedIf($_after === 'stay', 'checked')
-//                            ->label(['for' => '_after_select_stay'])->text(__('lte.edit_further'))
-//                    );
-//                }
-//            });
         }
 
         $this->div(['col text-right'])
