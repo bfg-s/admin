@@ -28,15 +28,17 @@
                     @if(isset($action['title']) && $action['title']) @lang($action['title']) @endif
                 </button>
             @endforeach
-            <button class="dropdown-item"
-                    data-click="table_action"
-                    data-table="{{$table_id}}"
-                    data-object="{{$object}}"
-                    data-columns="{{json_encode($columns, JSON_UNESCAPED_UNICODE)}}"
-                    data-confirm="@lang('lte.delete_selected_rows')"
-                    data-jax="lte_admin.mass_delete"
-                    type="button"
-            ><i class="fas fa-trash"></i> @lang('lte.delete')</button>
+            @if($delete)
+                <button class="dropdown-item"
+                        data-click="table_action"
+                        data-table="{{$table_id}}"
+                        data-object="{{$object}}"
+                        data-columns="{{json_encode($columns, JSON_UNESCAPED_UNICODE)}}"
+                        data-confirm="@lang('lte.delete_selected_rows')"
+                        data-jax="lte_admin.mass_delete"
+                        type="button"
+                ><i class="fas fa-trash"></i> @lang('lte.delete')</button>
+            @endif
         </div>
     </div>
 @else

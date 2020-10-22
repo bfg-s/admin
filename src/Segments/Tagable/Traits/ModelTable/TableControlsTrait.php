@@ -53,6 +53,11 @@ trait TableControlsTrait {
     protected $checks = true;
 
     /**
+     * @var bool
+     */
+    protected $check_delete = true;
+
+    /**
      * @param  \Closure|array|mixed  $test
      * @return $this
      */
@@ -130,6 +135,17 @@ trait TableControlsTrait {
     }
 
     /**
+     * @param  null  $test
+     * @return $this
+     */
+    public function checkDelete($test = null)
+    {
+        $this->set_test_var('check_delete', $test);
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function disableChecks()
@@ -138,7 +154,10 @@ trait TableControlsTrait {
 
         return $this;
     }
-    
+
+    /**
+     * @var array
+     */
     protected $action = [];
 
     /**
@@ -175,6 +194,7 @@ trait TableControlsTrait {
                         'table_id' => $this->model_name,
                         'object' => $this->model_class,
                         'actions' => $this->action,
+                        'delete' => $this->get_test_var('check_delete'),
                         'columns' => collect($this->columns)->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })->pluck('field')->toArray()
                     ])->render();
                 }, function (Model $model) {
