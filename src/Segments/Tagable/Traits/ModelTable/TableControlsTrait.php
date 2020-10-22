@@ -55,7 +55,7 @@ trait TableControlsTrait {
     /**
      * @var bool
      */
-    protected $check_delete = true;
+    protected $check_delete = null;
 
     /**
      * @param  \Closure|array|mixed  $test
