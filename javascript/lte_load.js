@@ -10,6 +10,8 @@ module.exports = (tooltip_selector) => {
             obj.innerHTML = obj.dataset.oldText;
             obj.removeAttribute('data-old-text');
         });
-        "toast:error".exec(detail.options);
+        if (detail.options !== 'abort') {
+            "toast:error".exec(detail.options);
+        }
     });
 }
