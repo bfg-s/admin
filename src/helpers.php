@@ -92,7 +92,7 @@ if (!function_exists('lte_app_path')) {
      */
     function lte_app_path (string $path = '') {
 
-        return "/" . trim(trim(config('lte.paths.app'), '/') . '/' . trim($path, '/'), '/');
+        return rtrim(config('lte.paths.app') . '/' . trim($path, '/'), '/');
     }
 }
 

@@ -80,7 +80,7 @@ class DashboardGenerator extends Generator
             __('lte.os') => php_uname(),
             __('lte.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
             __('lte.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
-            'System Load Average' => sys_getloadavg()[0]
+            'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0
         ];
     }
 
