@@ -161,7 +161,7 @@ class Rating extends Input
     {
         $this->data['stars'] = $stars;
 
-        return parent::disabled();
+        return $this;
     }
 
     /**
