@@ -146,7 +146,7 @@ trait TableBuilderTrait {
                 if (is_string($column['sort'])) {
                     $select = request()->get($this->model_name . '_type', $this->order_type);
                     $now = request()->get($this->model_name, $this->order_field) == $column['sort'];
-                    $type = $now ? ($select === 'desc' ? 'up-alt' : 'down') : 'down';
+                    $type = $now ? ($select === 'desc' ? 'down': 'up-alt') : 'down';
                     $th->a()->setHref(urlWithGet([
                         $this->model_name => $column['sort'],
                         $this->model_name . "_type" => $now ? ($select === 'desc' ? 'asc' : 'desc') : 'asc'
