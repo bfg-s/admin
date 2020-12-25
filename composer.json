@@ -1,5 +1,6 @@
 {
     "name": "bfg/admin",
+    "description": "A group of components for generating standard-shaded components that make up the essence of the control panel.",
     "type": "bfg-script",
     "license": "MIT",
     "authors": [
