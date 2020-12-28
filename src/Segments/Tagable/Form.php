@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
@@ -185,6 +186,18 @@ class Form extends \Lar\Layout\Tags\FORM {
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    /**
+     * @param Model|Builder|string $model
+     * @param  \Closure  $closure
+     */
+    public static function withModel($model, \Closure $closure)
+    {
+        $tmp_model = static::$current_model;
+        static::$current_model = $model;
+        $closure();
+        static::$current_model = $tmp_model;
     }
 
     /**
