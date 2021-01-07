@@ -17,19 +17,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Bfg\\Admin\\": "src/"
+            "Admin\\": "app/"
         },
         "files": [
-            "src/helpers.php"
+            "helpers.php"
         ]
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Bfg\\Admin\\ServiceProvider"
+                "Admin\\Providers\\AppServiceProvider",
+                "Admin\\Providers\\ConsoleServiceProvider",
+                "Admin\\Providers\\RouteServiceProvider"
             ],
             "aliases": {
-                "Admin": "Bfg\\Admin\\Facade"
+                "Admin": "Admin\\Facades\\AdminFacade"
             }
         }
     }

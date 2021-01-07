@@ -1,6 +1,6 @@
 <?php
 
-namespace Bfg\Admin;
+namespace Admin;
 
 /**
  * Class Admin

@@ -1,21 +1,15 @@
 <?php
 
-namespace Lar\Admin\Middlewares;
+namespace Admin\Http\Middleware;
 
 use Closure;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Lar\Layout\Core\LConfigs;
-use Lar\Layout\Respond;
-use Lar\LteAdmin\LteBoot;
-use Lar\LteAdmin\Models\LtePermission;
 
 /**
  * Class Authenticate
- *
- * @package Lar\LteAdmin\Middlewares
+ * @package Admin\Http\Middleware
  */
 class Authenticate
 {
@@ -30,16 +24,12 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
+        if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
 
-            //session()->flash("respond", Respond::glob()->toJson());
-
-            return redirect()->route('lte.dashboard');
+            return redirect()->route('admin');
         }
         
-        if (Auth::guard('lte')->guest() && !$this->shouldPassThrough($request)) {
-
-            //session()->flash("respond", Respond::glob()->toJson());
+        if (Auth::guard('admin')->guest() && !$this->shouldPassThrough($request)) {
 
             $this->unauthenticated($request);
         }
@@ -57,8 +47,8 @@ class Authenticate
     protected function shouldPassThrough($request)
     {
         $excepts = [
-            lte_uri('login'),
-            lte_uri('logout'),
+            admin_uri('login'),
+            admin_uri('logout'),
         ];
 
         foreach ($excepts as $except) {
