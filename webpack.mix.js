@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-require("laravel-mix-vue3");
 
 /*
  |--------------------------------------------------------------------------
@@ -12,5 +11,5 @@ require("laravel-mix-vue3");
  |
  */
 
-mix.vue3('js/bootstrap.vue.ui.js', 'assets')
-    .postCss('css/bootstrap.ui.css', 'assets');
+mix.js('resources/js/lte.vue.js', 'public/js').vue();
+mix.postCss('resources/css/lte.ui.css', 'public/css');
