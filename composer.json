@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=8.0.0",
-        "bfg/layout": "^1.0.0"
+        "bfg/layout": "^1.0.0",
+        "bfg/ui": "^1.0.0"
     },
     "require-dev": {
     },
@@ -28,7 +29,8 @@
             "providers": [
                 "Admin\\Providers\\AppServiceProvider",
                 "Admin\\Providers\\ConsoleServiceProvider",
-                "Admin\\Providers\\RouteServiceProvider"
+                "Admin\\Providers\\RouteServiceProvider",
+                "Admin\\Providers\\EventServiceProvider"
             ],
             "aliases": {
                 "Admin": "Admin\\Facades\\AdminFacade"

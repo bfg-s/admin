@@ -1,0 +1,50 @@
+<?php
+
+namespace {NAMESPACE};
+
+use Lar\LteAdmin\ExtendProvider;
+use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use {NAMESPACE}\Extension\Config;
+use {NAMESPACE}\Extension\Install;
+use {NAMESPACE}\Extension\Uninstall;
+
+/**
+ * Class ServiceProvider
+ * @package {NAMESPACE}
+ */
+class ServiceProvider extends ExtendProvider
+{
+    /**
+     * Extension ID name
+     * @var string
+     */
+    public static $name = "{NAME}";
+
+    /**
+     * Extension call slug
+     * @var string
+     */
+    static $slug = "{SLUG}";
+
+    /**
+     * Extension description
+     * @var string
+     */
+    public static $description = "{DESCRIPTION}";
+
+    /**
+     * @var string
+     */
+    protected $install = Install::class;
+
+    /**
+     * @var string
+     */
+    protected $uninstall = Uninstall::class;
+
+    /**
+     * @var ConfigExtensionProvider|string
+     */
+    protected $config = Config::class;
+}
+

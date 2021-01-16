@@ -2,6 +2,7 @@
 
 namespace Admin\Http\Middleware;
 
+use Admin\Models\AdminPermission;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Auth;
 class Authenticate
 {
     /**
+     * Access token for the template.
+     * @var bool
+     */
+    static $access = true;
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -24,62 +31,65 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
+        $route_login = \Route::currentRouteName() === 'admin.login';
+
+        /**
+         * Redirect in case the administrator is logged in.
+         */
+        if (!Auth::guard('admin')->guest() && $route_login) {
 
             return redirect()->route('admin');
         }
-        
-        if (Auth::guard('admin')->guest() && !$this->shouldPassThrough($request)) {
+
+        /**
+         * An exception for the case when the user is not logged in and tries to access the page.
+         */
+        if (Auth::guard('admin')->guest() && !$route_login) {
 
             $this->unauthenticated($request);
+        }
+
+        /**
+         * Launch of all services and extensions of the admin panel.
+         */
+        \Admin::boot();
+
+        /**
+         * Checking the current access link.
+         */
+        if (!AdminPermission::checkCurrentPath()) {
+
+            if ($request->ajax() && !$request->pjax()) {
+
+                return response()->json([
+                    __('admin.error'), __('admin.access_denied')
+                ], 401);
+            }
+
+            else if (!$request->isMethod('get')) {
+
+                return back()->with('error', [__('admin.error'), __('admin.access_denied')]);
+            }
+
+            static::$access = false;
         }
 
         return $next($request);
     }
 
     /**
-     * Determine if the request has a URI that should pass through verification.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return bool
-     */
-    protected function shouldPassThrough($request)
-    {
-        $excepts = [
-            admin_uri('login'),
-            admin_uri('logout'),
-        ];
-
-        foreach ($excepts as $except) {
-
-            if ($except !== '/') {
-
-                $except = trim($except, '/');
-            }
-
-            if ($request->is($except)) {
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
+     * Call exception if unauthenticated
      * @param  Request  $request
      * @throws AuthenticationException
      */
     protected function unauthenticated(Request $request)
     {
         $all = $request->all();
-        if ($request->has('_pjax')) { unset($all['_pjax']); }
         $url = url()->current() . (count($all) ? "?" . http_build_query($all) : "");
         session(['return_authenticated_url' => $url]);
 
         throw new AuthenticationException(
-            'Unauthenticated.', ['lte'], route('lte.login')
+            'Unauthenticated.', ['admin'], route('admin.login')
         );
     }
 }
