@@ -2,14 +2,14 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Lar\LteAdmin\Core\UnInstallExtensionProvider;
-use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
+use Admin\Extension\Providers\UnInstallProvider;
+use Admin\Extension\Interfaces\ExtensionInterface;
 
 /**
- * Class Navigator
+ * Class Uninstall
  * @package {NAMESPACE}\Extension
  */
-class Uninstall extends UnInstallExtensionProvider implements ActionWorkExtensionInterface {
+class Uninstall extends UnInstallProvider implements ExtensionInterface {
 
     /**
      * @return void

@@ -84,9 +84,9 @@ class BaseExtension extends Command
         $base_dir = admin_app_path("Extensions/{$name}");
 
         foreach ([
-             $base_dir.'/src/Extension',
-             $base_dir.'/migrations',
-             $base_dir.'/views'
+             $base_dir.'/app/Extension',
+             //$base_dir.'/migrations',
+             //$base_dir.'/views'
         ] as $dir) {
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, 1);
@@ -95,15 +95,19 @@ class BaseExtension extends Command
         }
 
         foreach ([
-            $base_dir.'/views/.gitkeep' => '',
-            $base_dir.'/migrations/.gitkeep' => '',
+            //$base_dir.'/views/.gitkeep' => '',
+            //$base_dir.'/migrations/.gitkeep' => '',
+            $base_dir.'/.gitignore' => $this->get_stub('gitignore'),
+            $base_dir.'/package.json' => $this->get_stub('package_json'),
+            $base_dir.'/resources/js/app.js' => '',
+            $base_dir.'/resources/css/app.css' => '',
             $base_dir.'/composer.json' => $this->get_stub('composer'),
             $base_dir.'/README.md' => $this->get_stub('README'),
-            $base_dir.'/src/helpers.php' => $this->get_stub('helpers'),
-            $base_dir.'/src/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
-            $base_dir.'/src/Extension/Config.php' => $this->get_stub('Config'),
-            $base_dir.'/src/Extension/Install.php' => $this->get_stub('Install'),
-            $base_dir.'/src/Extension/Uninstall.php' => $this->get_stub('Uninstall')
+            $base_dir.'/app/helpers.php' => $this->get_stub('helpers'),
+            $base_dir.'/app/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
+            $base_dir.'/app/Extension/Config.php' => $this->get_stub('Config'),
+            $base_dir.'/app/Extension/Install.php' => $this->get_stub('Install'),
+            $base_dir.'/app/Extension/Uninstall.php' => $this->get_stub('Uninstall')
         ] as $file => $file_data) {
             if (!is_file($file)) {
                 file_put_contents($file, $file_data);

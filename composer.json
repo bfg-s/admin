@@ -33,7 +33,8 @@
                 "Admin\\Providers\\EventServiceProvider"
             ],
             "aliases": {
-                "Admin": "Admin\\Facades\\AdminFacade"
+                "Admin": "Admin\\Facades\\AdminFacade",
+                "AdminExtension": "Admin\\Facades\\AdminExtensionFacade"
             }
         }
     }

@@ -2,8 +2,8 @@
 
 namespace {NAMESPACE};
 
-use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use Admin\Extension\Extension;
+use Admin\Extension\Providers\ConfigProvider;
 use {NAMESPACE}\Extension\Config;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Uninstall;
@@ -12,7 +12,7 @@ use {NAMESPACE}\Extension\Uninstall;
  * Class ServiceProvider
  * @package {NAMESPACE}
  */
-class ServiceProvider extends ExtendProvider
+class ServiceProvider extends Extension
 {
     /**
      * Extension ID name
@@ -43,7 +43,7 @@ class ServiceProvider extends ExtendProvider
     protected $uninstall = Uninstall::class;
 
     /**
-     * @var ConfigExtensionProvider|string
+     * @var ConfigProvider|string
      */
     protected $config = Config::class;
 }
