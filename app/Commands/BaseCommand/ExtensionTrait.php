@@ -115,7 +115,7 @@ trait ExtensionTrait {
 
         list($folder, $extension) = explode("/", $name);
 
-        $namespace = "Bfg\\Admin\\".ucfirst(\Str::camel($folder !== 'bfg' ? $folder : 'extend'))."\\".ucfirst(\Str::camel($extension));
+        $namespace = "Admin\\".ucfirst(\Str::camel($folder !== 'bfg' ? $folder : 'extend'))."\\".ucfirst(\Str::camel($extension));
 
         $data = str_replace([
             '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{ADMIN_VERSION}',
