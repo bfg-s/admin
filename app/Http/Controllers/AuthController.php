@@ -17,7 +17,10 @@ class AuthController extends Controller {
     public function loginForm()
     {
         return Login::create(function () {
-            //Login::create();
+
+            Login\Form::create();
+
+            Login\Footer::toSlot('footer');
         });
     }
 

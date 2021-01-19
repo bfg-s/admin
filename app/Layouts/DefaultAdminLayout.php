@@ -31,7 +31,7 @@ class DefaultAdminLayout extends MainLayout {
      * DefaultAdminLayout constructor.
      * @param  mixed  ...$params
      */
-    public function __construct(...$params)
+    public function __construct()
     {
         $this->styles[] = 'css/admin.css';
 
@@ -44,10 +44,10 @@ class DefaultAdminLayout extends MainLayout {
 
         $this->bscripts[] = 'js/admin.js';
 
-        parent::__construct($params);
+        parent::__construct();
 
-        $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => admin_asset('images/favicon.png')]);
+        $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => admin_asset('images/bfg-logo.png')]);
 
-        $this->head->link(['rel' => 'apple-touch-icon', 'href' => admin_asset('images/favicon.png')]);
+        $this->head->link(['rel' => 'apple-touch-icon', 'href' => admin_asset('images/bfg-logo.png')]);
     }
 }

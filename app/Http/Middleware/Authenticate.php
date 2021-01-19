@@ -57,18 +57,18 @@ class Authenticate
         /**
          * Checking the current access link.
          */
-        if (!AdminPermission::checkCurrentPath() || !static::$access) {
+        if ((!AdminPermission::checkCurrentPath() || !static::$access) && !$route_login) {
 
             if ($request->ajax() && !$request->pjax()) {
 
                 return response()->json([
-                    __('admin.error'), __('admin.access_denied')
+                    __('admin.error') => __('admin.access_denied')
                 ], 401);
             }
 
             else if (!$request->isMethod('get')) {
 
-                return back()->with('error', [__('admin.error'), __('admin.access_denied')]);
+                return back()->with('error', [__('admin.error') => __('admin.access_denied')]);
             }
 
             static::$access = false;
