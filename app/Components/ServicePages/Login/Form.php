@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\Components\ServicePage\Login;
+namespace Admin\Components\ServicePages\Login;
 
 use Bfg\Layout\View\Component;
 
 /**
  * Class Form
- * @package Admin\UI\Components\ServicePage\Login
+ * @package Admin\UI\Components\ServicePages\Login
  */
 class Form extends Component
 {

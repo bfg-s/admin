@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\Components\ServicePage\Login;
+namespace Admin\Components\ServicePages\Login;
 
 use Bfg\Layout\View\Component;
 
 /**
  * Class Footer
- * @package Admin\Components\ServicePage\Login
+ * @package Admin\Components\ServicePages\Login
  */
 class Footer extends Component
 {
