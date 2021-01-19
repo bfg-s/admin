@@ -3,6 +3,11 @@
 return [
 
     /**
+     * Admin application service provider
+     */
+    'provider' => \App\Providers\AdminServiceProvider::class,
+
+    /**
      * Admin application namespace
      */
     'namespace' => "App\\Admin",
@@ -98,12 +103,9 @@ return [
         ]
     ],
 
-    'schema' => [
-        'style' => 'bootstrap',
-        'framework' => 'vue',
-        'theme' => 'lte'
-    ],
-
+    /**
+     * A footer configurations
+     */
     'footer' => [
         'copy' => '<strong>Copyright &copy; '.date('Y').'.</strong> All rights reserved.'
     ]

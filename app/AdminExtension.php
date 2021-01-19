@@ -6,25 +6,20 @@ use Admin\Extension\Extension;
 use Admin\Models\AdminUser;
 
 /**
- * Class Admin
- * @package Bfg\Admin
+ * Class AdminExtension
+ * @package Admin
  */
 class AdminExtension
 {
     /**
-     * @var string
+     * @var Extension[]
      */
-    protected $vesion = "1.0.3";
+    protected $installed = [];
 
     /**
      * @var Extension[]
      */
-    protected $installed_extensions = [];
-
-    /**
-     * @var Extension[]
-     */
-    protected $not_installed_extensions = [];
+    protected $not_installed = [];
 
     /**
      * @var bool[]
@@ -32,36 +27,10 @@ class AdminExtension
     protected $extensions;
 
     /**
-     * @return \Admin\Models\AdminUser|null
-     */
-    public function user()
-    {
-        /** @var AdminUser|null $user */
-        $user = $this->guard()->user();
-        return $user;
-    }
-
-    /**
-     * @return bool
-     */
-    public function guest()
-    {
-        return $this->guard()->guest();
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-     */
-    public function guard()
-    {
-        return \Auth::guard('admin');
-    }
-
-    /**
      * @param  \Admin\Extension\Extension  $provider
      * @throws \Exception
      */
-    public function registerExtension(Extension $provider)
+    public function register(Extension $provider)
     {
         if (!$provider::$name) {
 
@@ -75,32 +44,18 @@ class AdminExtension
 
         if (isset($this->extensions[$provider::$name]) || $provider::$slug === 'application') {
 
-            if (!isset($this->installed_extensions[$provider::$name])) {
+            if (!isset($this->installed[$provider::$name])) {
 
-                $this->installed_extensions[$provider::$name] = $provider;
+                $this->installed[$provider::$name] = $provider;
             }
         }
 
-        else if (!isset($this->not_installed_extensions[$provider::$name])) {
+        else if (!isset($this->not_installed[$provider::$name])) {
 
-            $this->not_installed_extensions[$provider::$name] = $provider;
+            $this->not_installed[$provider::$name] = $provider;
         }
 
         return true;
-    }
-
-    /**
-     * @param  string  $name
-     * @return bool|\Admin\Extension\Extension
-     */
-    public function extension(string $name)
-    {
-        if (isset($this->installed_extensions[$name])) {
-
-            return $this->installed_extensions[$name];
-        }
-
-        return false;
     }
 
     /**
@@ -108,13 +63,13 @@ class AdminExtension
      */
     public function extensions()
     {
-        return $this->installed_extensions;
+        return $this->installed;
     }
 
     /**
      * @return bool[]
      */
-    public function extensionList()
+    public function list()
     {
         return $this->extensions;
     }
@@ -123,48 +78,57 @@ class AdminExtension
      * @param  string  $name
      * @return bool
      */
-    public function isIncludedExtension(string $name)
+    public function isIncluded(string $name)
     {
-        return $this->hasExtension($name) ? $this->extensions[$name] : false;
+        return isset($this->extensions[$name]) ? $this->extensions[$name] : false;
     }
 
     /**
      * @param  string  $name
      * @return bool
      */
-    public function hasExtension(string $name)
+    public function isProviderIncluded(string $name)
     {
-        return isset($this->installed_extensions[$name]) || isset($this->not_installed_extensions[$name]);
+        return $this->has($name) ? $this->get($name)->included() : false;
     }
 
     /**
      * @param  string  $name
      * @return bool
      */
-    public function hasInInstalledExtension(string $name)
+    public function has(string $name)
     {
-        return isset($this->installed_extensions[$name]);
+        return isset($this->installed[$name]) || isset($this->not_installed[$name]);
     }
 
     /**
      * @param  string  $name
      * @return bool
      */
-    public function hasInNotInstalledExtension(string $name)
+    public function isInstalled(string $name)
     {
-        return isset($this->not_installed_extensions[$name]);
+        return isset($this->installed[$name]);
+    }
+
+    /**
+     * @param  string  $name
+     * @return bool
+     */
+    public function isNotInstalled(string $name)
+    {
+        return isset($this->not_installed[$name]);
     }
 
     /**
      * @param  string  $name
      * @return \Admin\Extension\Extension|null
      */
-    public function getExtension(string $name)
+    public function get(string $name)
     {
-        if (isset($this->installed_extensions[$name])) {
-            return $this->installed_extensions[$name];
-        } else if ($this->not_installed_extensions[$name]) {
-            return $this->not_installed_extensions[$name];
+        if (isset($this->installed[$name])) {
+            return $this->installed[$name];
+        } else if ($this->not_installed[$name]) {
+            return $this->not_installed[$name];
         }
         return null;
     }
@@ -172,32 +136,19 @@ class AdminExtension
     /**
      * @return \Admin\Extension\Extension[]
      */
-    public function notInstalledExtensions()
+    public function notInstalled()
     {
-        return $this->not_installed_extensions;
+        return $this->not_installed;
     }
 
     /**
      * @return array
      */
-    public function getAllExtension()
+    public function getAll()
     {
         return array_merge(
-            $this->installed_extensions,
-            $this->not_installed_extensions
-        );
-    }
-
-    /**
-     * @return string[]
-     */
-    public function extensionProviders()
-    {
-        return array_flip(
-            array_map(
-                'get_class',
-                $this->getAllExtension()
-            )
+            $this->installed,
+            $this->not_installed
         );
     }
 
@@ -206,20 +157,15 @@ class AdminExtension
      */
     public function boot()
     {
-        foreach ($this->extensions() as $extension) {
+        if (\Admin::installed()) {
 
-            if ($extension->included()) {
+            foreach ($this->extensions() as $extension) {
 
-                $extension->config()->boot();
+                if ($extension->included()) {
+
+                    $extension->config()->boot();
+                }
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function version()
-    {
-        return $this->vesion;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace {NAMESPACE}\Extension;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 use Admin\Extension\Providers\UnInstallProvider;
 use Admin\Extension\Interfaces\ExtensionInterface;
 
@@ -16,6 +19,8 @@ class Uninstall extends UnInstallProvider implements ExtensionInterface {
      */
     public function handle(): void
     {
+        // Schema::dropIfExists('admin_{FOLDER}_{EXTENSION}');
 
+        // $this->unpublish(__DIR__.'/../../public', public_path(admin_url_path('{NAME}')));
     }
 }

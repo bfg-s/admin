@@ -2,6 +2,7 @@
 
 namespace Admin\Http\Controllers;
 
+use Bfg\Admin\UI\Components\ServicePage\Login;
 use Illuminate\Http\Request;
 
 /**
@@ -15,7 +16,9 @@ class AuthController extends Controller {
      */
     public function loginForm()
     {
-        return "login form";
+        return Login::create(function () {
+            //Login::create();
+        });
     }
 
     /**

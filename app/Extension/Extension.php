@@ -5,6 +5,7 @@ namespace Admin\Extension;
 use Admin\Extension\Providers\ConfigProvider;
 use Admin\Extension\Providers\InstallProvider;
 use Admin\Extension\Providers\UnInstallProvider;
+use Admin\Extension\Providers\UpdateProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Command;
 
@@ -64,6 +65,11 @@ class Extension extends ServiceProvider
     /**
      * @var string
      */
+    protected $update = UpdateProvider::class;
+
+    /**
+     * @var string
+     */
     protected $uninstall = UnInstallProvider::class;
 
     /**
@@ -98,7 +104,7 @@ class Extension extends ServiceProvider
         $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        \Admin::registerExtension($this);
+        \AdminExtension::register($this);
     }
 
     /**
@@ -106,7 +112,7 @@ class Extension extends ServiceProvider
      */
     public function included()
     {
-        return !!\Admin::extension(static::$name);
+        return !!\AdminExtension::isIncluded(static::$name);
     }
 
     /**
@@ -170,7 +176,20 @@ class Extension extends ServiceProvider
 
         if ($this->install) {
 
-            (new $this->install($command, $this))->handle();
+            app($this->install, ['command' => $command, 'provider' => $this])->handle();
+        }
+    }
+
+    /**
+     * Install process
+     * @param  Command  $command
+     * @return void
+     */
+    public function update(Command $command): void {
+
+        if ($this->update) {
+
+            app($this->update, ['command' => $command, 'provider' => $this])->handle();
         }
     }
 
@@ -183,7 +202,7 @@ class Extension extends ServiceProvider
 
         if ($this->uninstall) {
 
-            (new $this->uninstall($command, $this))->handle();
+            app($this->uninstall, ['command' => $command, 'provider' => $this])->handle();
         }
     }
 
@@ -195,7 +214,7 @@ class Extension extends ServiceProvider
 
         if ($this->config && is_string($this->config)) {
 
-            $this->config = new $this->config($this);
+            $this->config = app($this->config, ['provider' => $this]);
         }
 
         return $this->config;

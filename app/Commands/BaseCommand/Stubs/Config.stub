@@ -10,5 +10,29 @@ use Admin\Extension\Providers\ConfigProvider;
  */
 class Config extends ConfigProvider {
 
+    /**
+     * Extension scripts
+     * @var array
+     */
+    protected $scripts = [
+        // '{NAME}/{EXTENSION}.js'
+    ];
 
+    /**
+     * Extension styles
+     * @var array
+     */
+    protected $styles = [
+        // '{NAME}/{EXTENSION}.css'
+    ];
+
+    /**
+     * On boot admin application
+     */
+    public function boot()
+    {
+        parent::boot();
+
+        //
+    }
 }

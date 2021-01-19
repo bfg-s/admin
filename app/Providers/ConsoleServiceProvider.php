@@ -64,7 +64,7 @@ class ConsoleServiceProvider extends ServiceProvider
         /**
          * Launch of all services and extensions of the admin panel.
          */
-        \Admin::boot();
+        \AdminExtension::boot();
 
         /**
          * Register admin commands
@@ -82,7 +82,7 @@ class ConsoleServiceProvider extends ServiceProvider
          * Register publisher admin assets
          */
         $this->publishes([
-            __DIR__.'/../../public' => public_path(admin_url_path()),
+            __DIR__.'/../../public' => admin_path_asset(),
         ], 'admin-assets');
 
         /**

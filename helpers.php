@@ -20,17 +20,30 @@ if ( ! function_exists('admin_asset') ) {
      */
     function admin_asset (string $path = null, $secure = null) {
 
-        return asset(admin_url_path($path), $secure);
+        return asset(admin_asset_url_path($path), $secure);
     }
 }
 
-if ( ! function_exists('admin_url_path') ) {
+if ( ! function_exists('admin_path_asset') ) {
+
+    /**
+     * @param string|null $path
+     * @param  null  $secure
+     * @return string
+     */
+    function admin_path_asset (string $path = null, $secure = null) {
+
+        return public_path(admin_asset_url_path($path), $secure);
+    }
+}
+
+if ( ! function_exists('admin_asset_url_path') ) {
 
     /**
      * @param  string|null  $path
      * @return string
      */
-    function admin_url_path (string $path = null) {
+    function admin_asset_url_path (string $path = null) {
 
         return "vendor/admin" . ($path ? "/" . trim($path, "/") : "");
     }

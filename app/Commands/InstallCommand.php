@@ -37,36 +37,17 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $this->call('vendor:publish', [
-            '--tag' => 'admin-migrations',
-            '--force' => $this->option('force')
-        ]);
-
-        $this->call('migrate', array_filter([
-            '--force' => $this->option('force')
-        ]));
-
-        if ($this->option('migrate')) {
-            return ;
-        }
+        $this->call('admin:update', ['--migrate' => true]);
 
         $make_seeds = false;
 
-        if (!\Schema::hasTable('admin_users')) {
-
-            $make_seeds = true;
-        }
-
-        else if (!AdminUser::count()) {
-
-            $make_seeds = true;
-        }
-
-        if ($make_seeds) {
+        if (!AdminUser::count()) {
 
             $this->call('db:seed', [
                 '--class' => AdminSeeder::class
             ]);
+
+            $make_seeds = true;
         }
 
         $base_dirs = ['/', '/Controllers', '/Extensions'];
@@ -118,51 +99,24 @@ class InstallCommand extends Command
             $this->info("File {$controller} created!");
         }
 
-        $this->call('vendor:publish', [
-            '--tag' => 'admin-assets',
-            '--force' => $this->option('force')
-        ]);
+        $gitignore = file_get_contents(base_path('.gitignore'));
 
-        $this->call('vendor:publish', [
-            '--tag' => 'admin-lang',
-            '--force' => $this->option('force')
-        ]);
+        $add_to_ignore = "";
 
-        if (!is_file(config_path('admin.php'))) {
-
-            $this->call('vendor:publish', [
-                '--tag' => 'admin-config'
-            ]);
+        if (strpos($gitignore, 'public/admin') === false) {
+            $add_to_ignore .= "public/admin\n";
+            $this->info("Add folder [public/admin] to .gitignore");
         }
 
-//        $gitignore = file_get_contents(base_path('.gitignore'));
-//
-//        $add_to_ignore = "";
-//
-//        if (strpos($gitignore, 'public/lte-asset') === false) {
-//            $add_to_ignore .= "public/lte-asset\n";
-//            $this->info("Add folder [public/lte-asset] to .gitignore");
-//        }
-//
-//        if (strpos($gitignore, 'public/lte-admin') === false) {
-//            $add_to_ignore .= "public/lte-admin\n";
-//            $this->info("Add folder [public/lte-admin] to .gitignore");
-//        }
-//
-//        if (strpos($gitignore, 'public/ljs') === false) {
-//            $add_to_ignore .= "public/ljs\n";
-//            $this->info("Add folder [public/ljs] to .gitignore");
-//        }
-//
-//        if ($add_to_ignore) {
-//
-//            file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
-//        }
-//
-//        if ($make_seeds) {
-//
-//            $this->call('lte:extension', ['--reinstall' => true, '--yes' => true, '--force' => true]);
-//        }
+        if ($add_to_ignore) {
+
+            file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
+        }
+
+        if ($make_seeds) {
+
+            $this->call('lte:extension', ['--install' => true, '--yes' => true, '--force' => true]);
+        }
 
         $this->info("Bfg Admin Installed");
     }

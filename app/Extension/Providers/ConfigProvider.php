@@ -17,17 +17,25 @@ class ConfigProvider {
     public $provider;
 
     /**
+     * Extension scripts
      * @var array
      */
     protected $scripts = [];
 
     /**
+     * Extension body scripts
+     * @var array
+     */
+    protected $bscripts = [];
+
+    /**
+     * Extension styles
      * @var array
      */
     protected $styles = [];
 
     /**
-     * The event listener mappings for the lte application.
+     * The event listener mappings for the admin application.
      * @var array
      */
     protected $listen = [];
@@ -48,7 +56,7 @@ class ConfigProvider {
     }
 
     /**
-     * On boot lte application
+     * On boot admin application
      */
     public function boot()
     {
@@ -70,6 +78,15 @@ class ConfigProvider {
     public function getScripts()
     {
         return $this->scripts;
+    }
+
+    /**
+     * Get extension body scripts
+     * @return array
+     */
+    public function getBScripts()
+    {
+        return $this->bscripts;
     }
 
     /**

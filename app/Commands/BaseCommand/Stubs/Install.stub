@@ -2,6 +2,9 @@
 
 namespace {NAMESPACE}\Extension;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 use Admin\Extension\Providers\InstallProvider;
 use Admin\Extension\Interfaces\ExtensionInterface;
 
@@ -16,6 +19,8 @@ class Install extends InstallProvider implements ExtensionInterface {
      */
     public function handle(): void
     {
+        // Schema::create('admin_{FOLDER}_{EXTENSION}', function (Blueprint $table) {});
 
+        // $this->publish(__DIR__.'/../../public', public_path(admin_url_path('{NAME}')));
     }
 }

@@ -89,7 +89,7 @@ class AdminUser extends Model implements AuthenticatableContract
      */
     public function getAvatarAttribute($avatar)
     {
-        return $avatar ? $avatar : admin_url_path('images/user.jpg');
+        return $avatar ? $avatar : admin_asset_url_path('images/user.jpg');
     }
 
     /**

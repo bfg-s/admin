@@ -13,6 +13,11 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
+     * @var bool
+     */
+    static $installed = false;
+
+    /**
      * Bootstrap services.
      *
      * @return void
@@ -38,7 +43,30 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        /**
+         * Admin installed flag
+         */
+        static::$installed = is_file(storage_path('admin_extensions.php'));
+
+        /**
+         * Merge configs
+         */
         $this->mergeAdminConfigs();
+
+        /**
+         * Merge config from having by default
+         */
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/admin.php', 'admin'
+        );
+
+        /**
+         * Exit if not installed
+         */
+        if (!static::$installed) {
+
+            return ;
+        }
 
         /**
          * Override errors
@@ -51,17 +79,10 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Register application provider if exists
          */
-        if (class_exists(\App\Providers\AdminServiceProvider::class)) {
+        if (class_exists($provider = config('admin.provider'))) {
 
-            $this->app->register(\App\Providers\AdminServiceProvider::class);
+            $this->app->register($provider);
         }
-
-        /**
-         * Merge config from having by default
-         */
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/admin.php', 'admin'
-        );
     }
 
     /**

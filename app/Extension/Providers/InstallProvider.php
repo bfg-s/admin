@@ -4,11 +4,9 @@ namespace Admin\Extension\Providers;
 
 use Admin\Extension\Extension;
 use Illuminate\Console\Command;
-use Illuminate\Database\Migrations\Migration;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class InstallProvider
@@ -42,78 +40,6 @@ class InstallProvider {
      */
     public function handle(): void {
 
-    }
-
-    /**
-     * @param  string  $path
-     * @param  bool  $publish
-     * @return bool
-     * @throws \League\Flysystem\FileNotFoundException
-     */
-    public function migrate(string $path, bool $publish = true)
-    {
-        if ($publish) {
-            $this->publish($path, database_path('migrations'));
-        }
-
-        if (is_dir($path)) {
-            $files = iterator_to_array(Finder::create()
-                ->files()
-                ->ignoreDotFiles(false)
-                ->in($path)
-                ->depth(0)
-                ->sortByName()
-                ->reverseSorting(), false);
-
-            if (!count($files)) {
-                $this->command->info('Nothing to migrate.');
-                return false;
-            }
-
-            foreach ($files as $file) {
-
-                $migration_name = str_replace('.php', '', $file->getFilename());
-
-                if (\DB::table('migrations')->where('migration', $migration_name)->first()) {
-                    continue;
-                }
-
-                $class = class_in_file($file->getPathname())['class'];
-
-                if (!class_exists($class) && is_file(database_path("migrations/".$file->getFilename()))) {
-                    include database_path("migrations/".$file->getFilename());
-                }
-
-                if (!class_exists($class)) {
-                    include $file->getPathname();
-                }
-
-                if (!class_exists($class)) {
-                    $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
-                    continue;
-                }
-
-                $migration = new $class;
-
-                if ($migration instanceof Migration) {
-                    if (method_exists($migration, 'up')) {
-                        $this->command->line("<comment>Migrating:</comment> {$migration_name}");
-                        $startTime = microtime(true);
-                        $migration->up();
-                        \DB::table('migrations')->insert(['migration' => $migration_name, 'batch' => 1]);
-                        $runTime = round(microtime(true) - $startTime, 2);
-                        $this->command->line("<info>Migrated:</info>  {$migration_name} ({$runTime} seconds)");
-                    } else {
-                        $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
-                    }
-                }
-            }
-        } else {
-            $this->command->error("[{$path}] Is not directory");
-            exit;
-        }
-
-        return true;
     }
 
     /**

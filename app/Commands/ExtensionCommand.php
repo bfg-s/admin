@@ -75,6 +75,11 @@ class ExtensionCommand extends BaseExtension
             return $this->uninstall_all();
         }
 
+        else if ($this->option('update')) {
+
+            return $this->update_all();
+        }
+
         else if ($this->option('reinstall')) {
 
             return $this->reinstall_all();
@@ -113,8 +118,9 @@ class ExtensionCommand extends BaseExtension
         return [
             ['show', 's', InputOption::VALUE_NONE, 'Show all existing packages'],
             ['install', 'i', InputOption::VALUE_NONE, 'Install any selected or all extensions'],
-            ['uninstall', 'u', InputOption::VALUE_NONE, 'UnInstall any selected or all extensions'],
+            ['update', 'u', InputOption::VALUE_NONE, 'Update any selected or all extensions'],
             ['reinstall', 'r', InputOption::VALUE_NONE, 'ReInstall any selected or all extension'],
+            ['uninstall', 'd', InputOption::VALUE_NONE, 'UnInstall any selected or all extensions'],
             ['force', 'f', InputOption::VALUE_NONE, 'Force action'],
 
             ['yes', 'y', InputOption::VALUE_NONE, 'Enter yes on all'],

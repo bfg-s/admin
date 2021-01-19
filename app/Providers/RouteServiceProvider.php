@@ -18,21 +18,22 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->call(function () {
+        if (\Admin::installed()) {
 
-            $app_route = base_path('routes/admin.php');
+            $this->app->call(function () {
+                $app_route = base_path('routes/admin.php');
 
-            if (is_file($app_route)) {
+                if (is_file($app_route)) {
+                    Route::middleware(['web', 'admin', 'admin_layout'])
+                        ->as(config('admin.route.name'))->prefix(config('admin.route.prefix'))
+                        ->group($app_route);
+                }
 
                 Route::middleware(['web', 'admin', 'admin_layout'])
                     ->as(config('admin.route.name'))->prefix(config('admin.route.prefix'))
-                    ->group($app_route);
-            }
-
-            Route::middleware(['web', 'admin', 'admin_layout'])
-                ->as(config('admin.route.name'))->prefix(config('admin.route.prefix'))
-                ->group(__DIR__ . '/../../routes/web.php');
-        });
+                    ->group(__DIR__.'/../../routes/web.php');
+            });
+        }
     }
 
     /**

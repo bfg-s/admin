@@ -1,0 +1,21 @@
+<?php
+
+namespace {NAMESPACE}\Extension;
+
+use Admin\Extension\Providers\UpdateProvider;
+use Admin\Extension\Interfaces\ExtensionInterface;
+
+/**
+ * Class Update
+ * @package {NAMESPACE}\Extension
+ */
+class Update extends UpdateProvider implements ExtensionInterface {
+
+    /**
+     * @return void
+     */
+    public function handle(): void
+    {
+        // $this->publish(__DIR__.'/../../public', public_path(admin_url_path('{NAME}')), true);
+    }
+}

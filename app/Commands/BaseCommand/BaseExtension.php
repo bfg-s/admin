@@ -28,7 +28,7 @@ class BaseExtension extends Command
      */
     protected function edit_extension($name)
     {
-        if (!\Admin::hasExtension($name)) {
+        if (!\AdminExtension::has($name)) {
 
             $this->error("Extension [$name] for edit not found!");
             return null;
@@ -85,8 +85,9 @@ class BaseExtension extends Command
 
         foreach ([
              $base_dir.'/app/Extension',
-             //$base_dir.'/migrations',
-             //$base_dir.'/views'
+             $base_dir.'/resources/js',
+             $base_dir.'/resources/css',
+             $base_dir.'/public',
         ] as $dir) {
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, 1);
@@ -96,7 +97,7 @@ class BaseExtension extends Command
 
         foreach ([
             //$base_dir.'/views/.gitkeep' => '',
-            //$base_dir.'/migrations/.gitkeep' => '',
+            $base_dir.'/public/.gitkeep' => '',
             $base_dir.'/.gitignore' => $this->get_stub('gitignore'),
             $base_dir.'/package.json' => $this->get_stub('package_json'),
             $base_dir.'/resources/js/app.js' => '',
@@ -107,6 +108,7 @@ class BaseExtension extends Command
             $base_dir.'/app/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
             $base_dir.'/app/Extension/Config.php' => $this->get_stub('Config'),
             $base_dir.'/app/Extension/Install.php' => $this->get_stub('Install'),
+            $base_dir.'/app/Extension/Update.php' => $this->get_stub('Update'),
             $base_dir.'/app/Extension/Uninstall.php' => $this->get_stub('Uninstall')
         ] as $file => $file_data) {
             if (!is_file($file)) {
@@ -129,9 +131,7 @@ class BaseExtension extends Command
      */
     protected function install_all()
     {
-        $this->info('Run install all extensions...');
-
-        foreach (\Admin::notInstalledExtensions() as $not_installed_extension) {
+        foreach (\AdminExtension::notInstalled() as $not_installed_extension) {
 
             $this->choiceInstall($not_installed_extension::$name);
         }
@@ -144,11 +144,22 @@ class BaseExtension extends Command
      */
     protected function uninstall_all()
     {
-        $this->info('Run uninstall all extensions...');
-
-        foreach (\Admin::extensions() as $installed_extension) {
+        foreach (\AdminExtension::extensions() as $installed_extension) {
 
             $this->choiceUninstall($installed_extension::$name);
+        }
+
+        return $this->choiceDone();
+    }
+
+    /**
+     * Update all extensions
+     */
+    protected function update_all()
+    {
+        foreach (\AdminExtension::extensions() as $installed_extension) {
+
+            $this->choiceUpdate($installed_extension::$name);
         }
 
         return $this->choiceDone();
@@ -159,9 +170,7 @@ class BaseExtension extends Command
      */
     protected function reinstall_all()
     {
-        $this->info('Run reinstall all extensions...');
-
-        foreach (\Admin::extensions() as $installed_extension) {
+        foreach (\AdminExtension::extensions() as $installed_extension) {
 
             $this->choiceReinstall($installed_extension::$name);
         }
@@ -176,23 +185,26 @@ class BaseExtension extends Command
     {
         $choice = "Done";
 
-        if (\Admin::hasInInstalledExtension($name)) {
+        if (\AdminExtension::isInstalled($name)) {
 
             if ($this->option('reinstall')) {
                 $choice = "Reinstall";
             } else if ($this->option('uninstall')) {
                 $choice = "Uninstall";
+            } else if ($this->option('update')) {
+                $choice = "Update";
             } else {
                 $choice = $this->choice("Extension [{$name}] is installed!", [
                     'Done',
-                    (\Admin::isIncludedExtension($name) ? 'Disable' : 'Enable'),
+                    (\AdminExtension::isIncluded($name) ? 'Disable' : 'Enable'),
+                    'Update',
                     'Reinstall',
                     'Uninstall'
                 ], 0);
             }
         }
 
-        else if (\Admin::hasInNotInstalledExtension($name)) {
+        else if (\AdminExtension::isNotInstalled($name)) {
 
             if (!$this->option('install')) {
                 $choice = $this->choice("Extension [{$name}] is NOT installed!", [
@@ -232,7 +244,7 @@ class BaseExtension extends Command
             $filter_list = collect($list)->filter(function ($ext) use ($name) {
                 return strpos($ext, $name) !== false;
             })->filter(function ($ext) {
-                return !\Admin::hasExtension($ext);
+                return !\AdminExtension::has($ext);
             });
 
             if (!$filter_list->count()) {
@@ -297,7 +309,7 @@ class BaseExtension extends Command
      * @param $name
      */
     protected function choiceEnable($name) {
-        if (\Admin::hasInInstalledExtension($name)) {
+        if (\AdminExtension::isInstalled($name)) {
             ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] enabled!");
             return null;
@@ -310,7 +322,7 @@ class BaseExtension extends Command
      * @param $name
      */
     protected function choiceDisable($name) {
-        if (\Admin::hasInInstalledExtension($name)) {
+        if (\AdminExtension::isInstalled($name)) {
             ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, false);
             $this->info("Extension [$name] disabled!");
             return null;
@@ -324,11 +336,26 @@ class BaseExtension extends Command
      */
     protected function choiceReinstall($name) {
 
-        if (\Admin::hasInInstalledExtension($name)) {
-            $this->info("Run reinstall [$name]...");
-            \Admin::extension($name)->uninstall($this);
-            \Admin::extension($name)->install($this);
+        if (\AdminExtension::isInstalled($name)) {
+            $this->info("Extension [$name] reinstallation...");
+            \AdminExtension::get($name)->uninstall($this);
+            \AdminExtension::get($name)->install($this);
             $this->info("Extension [$name] reinstalled!");
+            return null;
+        }
+        $this->error("Extension [$name] not found!");
+        return null;
+    }
+
+    /**
+     * @param $name
+     */
+    protected function choiceUpdate($name) {
+
+        if (\AdminExtension::isInstalled($name)) {
+            $this->info("Extension [$name] updating...");
+            \AdminExtension::get($name)->update($this);
+            $this->info("Extension [$name] updated!");
             return null;
         }
         $this->error("Extension [$name] not found!");
@@ -340,9 +367,9 @@ class BaseExtension extends Command
      */
     protected function choiceUninstall($name) {
 
-        $this->info("Run uninstall [$name]...");
-        if (\Admin::hasInInstalledExtension($name)) {
-            \Admin::extension($name)->uninstall($this);
+        if (\AdminExtension::isInstalled($name)) {
+            $this->info("Extension [$name] uninstalling...");
+            \AdminExtension::get($name)->uninstall($this);
             ConfigSaver::open(storage_path('admin_extensions.php'))->remove($name);
             $this->info("Extension [$name] uninstalled!");
             return null;
@@ -356,9 +383,9 @@ class BaseExtension extends Command
      */
     protected function choiceInstall($name) {
 
-        $this->info("Run install [$name]...");
-        if (\Admin::hasInNotInstalledExtension($name)) {
-            \Admin::extension($name)->install($this);
+        if (\AdminExtension::isNotInstalled($name)) {
+            $this->info("Extension [$name] installing...");
+            \AdminExtension::get($name)->install($this);
             ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] installed!");
             return null;
@@ -391,9 +418,9 @@ class BaseExtension extends Command
 
                 $all->push([
                     'name' => $name,
-                    'status' => \Admin::hasExtension($name) ? (\Admin::isIncludedExtension($name) ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
-                    'downloaded' => \Admin::hasExtension($name) ? '<info>Yes</info>' : '<comment>No</comment>',
-                    'installed' => \Admin::isIncludedExtension($name) ? '<info>Yes</info>' : '<comment>No</comment>'
+                    'status' => \AdminExtension::has($name) ? (\AdminExtension::isIncluded($name) ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
+                    'downloaded' => \AdminExtension::has($name) ? '<info>Yes</info>' : '<comment>No</comment>',
+                    'installed' => \AdminExtension::isIncluded($name) ? '<info>Yes</info>' : '<comment>No</comment>'
                 ]);
             }
 
@@ -407,7 +434,7 @@ class BaseExtension extends Command
             else {
 
                 $ch = collect($list)->filter(function ($ext) {
-                    return !\Admin::hasExtension($ext);
+                    return !\AdminExtension::has($ext);
                 })->toArray();
 
                 if (!count($ch)) {
@@ -459,8 +486,8 @@ class BaseExtension extends Command
      */
     protected function all_extensions()
     {
-        return collect(\Admin::getAllExtension())
-            ->filter(function (Extension $extension) { return $extension::$slug !== 'application'; })
+        return collect(\AdminExtension::getAll())
+            //->filter(function (Extension $extension) { return $extension::$slug !== 'application'; })
             ->values()
             ->map(function ($extension, $key) {
                 $name = $extension::$name;
@@ -468,8 +495,8 @@ class BaseExtension extends Command
                     'id' => $key+1,
                     'name' => $name,
                     'desc' => lang_in_text($extension::$description),
-                    'status' => \Admin::hasExtension($name) ? (\Admin::isIncludedExtension($name) ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
-                    'installed' => \Admin::hasExtension($name) ? '<info>Yes</info>' : '<comment>No</comment>'
+                    'status' => \AdminExtension::has($name) ? (\AdminExtension::isProviderIncluded($name) ? '<info>Enabled</info>' : '<comment>Disabled</comment>') : '<comment>Not installed</comment>',
+                    'installed' => \AdminExtension::has($name) ? '<info>Yes</info>' : '<comment>No</comment>'
                 ];
             })->sortBy('name');
     }

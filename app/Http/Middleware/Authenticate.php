@@ -52,12 +52,12 @@ class Authenticate
         /**
          * Launch of all services and extensions of the admin panel.
          */
-        \Admin::boot();
+        \AdminExtension::boot();
 
         /**
          * Checking the current access link.
          */
-        if (!AdminPermission::checkCurrentPath()) {
+        if (!AdminPermission::checkCurrentPath() || !static::$access) {
 
             if ($request->ajax() && !$request->pjax()) {
 

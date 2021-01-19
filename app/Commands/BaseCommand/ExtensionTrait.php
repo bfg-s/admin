@@ -58,7 +58,7 @@ trait ExtensionTrait {
      */
     protected function any_exists_extension($name)
     {
-        return \Admin::hasExtension($name) ? true : (array_search($name, $this->getRemotes()) !== false);
+        return \AdminExtension::has($name) ? true : (array_search($name, $this->getRemotes()) !== false);
     }
 
     /**

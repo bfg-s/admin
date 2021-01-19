@@ -21,7 +21,15 @@ class ApplicationProvider extends Extension
      */
     public function register()
     {
-        static::$name = \config('app.name');
+        if (!static::$name) {
+
+            static::$name = static::$slug;
+        }
+
+        if (!static::$description) {
+
+            static::$description = \config('app.name');
+        }
 
         parent::register();
     }

@@ -16,7 +16,7 @@ class UpdateCommand extends Command
      *
      * @var string
      */
-    protected $name = 'admin:update';
+        protected $name = 'admin:update';
 
     /**
      * The console command description.
@@ -47,6 +47,11 @@ class UpdateCommand extends Command
         ]);
 
         $this->call('vendor:publish', [
+            '--tag' => 'admin-ui-assets',
+            '--force' => true
+        ]);
+
+        $this->call('vendor:publish', [
             '--tag' => 'admin-lang',
             '--force' => true
         ]);
@@ -57,6 +62,8 @@ class UpdateCommand extends Command
                 '--tag' => 'admin-config'
             ]);
         }
+
+        $this->call('admin:extension', ['--update' => true]);
 
         $this->info("Bfg Admin Updated!");
 

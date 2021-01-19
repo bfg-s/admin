@@ -5,6 +5,7 @@ namespace {NAMESPACE};
 use Admin\Extension\Extension;
 use Admin\Extension\Providers\ConfigProvider;
 use {NAMESPACE}\Extension\Config;
+use {NAMESPACE}\Extension\Update;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Uninstall;
 
@@ -36,6 +37,11 @@ class ServiceProvider extends Extension
      * @var string
      */
     protected $install = Install::class;
+
+    /**
+     * @var string
+     */
+    protected $update = Update::class;
 
     /**
      * @var string
