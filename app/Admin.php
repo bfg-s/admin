@@ -2,13 +2,12 @@
 
 namespace Admin;
 
-use Admin\Extension\Extension;
 use Admin\Models\AdminUser;
 use Admin\Providers\AppServiceProvider;
 
 /**
  * Class Admin
- * @package Bfg\Admin
+ * @package Admin
  */
 class Admin
 {

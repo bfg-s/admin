@@ -102,11 +102,4 @@ return [
             'url' => env('APP_URL').'/uploads',
         ]
     ],
-
-    /**
-     * A footer configurations
-     */
-    'footer' => [
-        'copy' => '<strong>Copyright &copy; '.date('Y').'.</strong> All rights reserved.'
-    ]
 ];

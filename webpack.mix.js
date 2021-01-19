@@ -1,5 +1,9 @@
 const mix = require('laravel-mix');
 
+mix.options({
+    processCssUrls: false
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,4 +16,8 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/admin.js', 'public/js').vue();
+mix.js('resources/theme/theme.js', 'public/theme/default/theme.js').vue();
+
+
 mix.postCss('resources/css/admin.css', 'public/css');
+mix.sass('resources/theme/theme.scss', 'public/theme/default/theme.css');

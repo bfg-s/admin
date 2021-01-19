@@ -2,7 +2,7 @@
 
 namespace Admin\Http\Controllers;
 
-use Bfg\Admin\UI\Components\ServicePage\Login;
+use Admin\Components\ServicePage\Login;
 use Illuminate\Http\Request;
 
 /**

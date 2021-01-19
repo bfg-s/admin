@@ -79,6 +79,13 @@ class ConsoleServiceProvider extends ServiceProvider
         ], 'admin-config');
 
         /**
+         * Register publisher admin ui configs
+         */
+        $this->publishes([
+            __DIR__.'/../../config/admin-ui.php' => config_path('admin-ui.php'),
+        ], 'admin-ui-config');
+
+        /**
          * Register publisher admin assets
          */
         $this->publishes([

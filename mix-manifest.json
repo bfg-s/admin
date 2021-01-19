@@ -1,4 +1,6 @@
 {
     "/public/js/admin.js": "/public/js/admin.js",
-    "/public/css/admin.css": "/public/css/admin.css"
+    "/public/theme/default/theme.js": "/public/theme/default/theme.js",
+    "/public/css/admin.css": "/public/css/admin.css",
+    "/public/theme/default/theme.css": "/public/theme/default/theme.css"
 }

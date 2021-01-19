@@ -86,6 +86,6 @@ if ( ! function_exists('admin_uri') ) {
             $uri = "/" . trim($uri, '/');
         }
 
-        return trim(config('lte.route.prefix'), '/') . $uri;
+        return trim(config('admin.route.prefix'), '/') . $uri;
     }
 }

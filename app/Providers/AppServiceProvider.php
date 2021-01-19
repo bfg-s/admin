@@ -31,9 +31,14 @@ class AppServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin');
 
         /**
-         * Load component views namespace
+         * Load bfg component views namespace
          */
-        Blade::componentNamespace('Admin\\Components', 'app');
+        Blade::componentNamespace('Admin\\Components', 'aui');
+
+        /**
+         * Load bfg component views namespace
+         */
+        Blade::componentNamespace(admin_app_namespace('Components'), 'uui');
     }
 
     /**
@@ -58,6 +63,13 @@ class AppServiceProvider extends ServiceProvider
          */
         $this->mergeConfigFrom(
             __DIR__.'/../../config/admin.php', 'admin'
+        );
+
+        /**
+         * Merge config from having by default
+         */
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/admin-ui.php', 'admin-ui'
         );
 
         /**
