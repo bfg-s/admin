@@ -2,6 +2,7 @@
 
 namespace Admin\Events;
 
+use Admin\Http\Requests\AdminLoginRequest;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Http\Request;
@@ -17,15 +18,9 @@ class AdminLoginEvent
 
     /**
      * AdminLoginEvent constructor.
-     * @param  string  $login
-     * @param  string  $password
-     * @param  Request  $request
+     * @param  AdminLoginRequest  $request
      */
     public function __construct(
-        public string $login,
-        public string $password,
-        public Request $request,
-    ) {
-        //
-    }
+        public AdminLoginRequest $request,
+    ) {}
 }

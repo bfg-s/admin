@@ -2,6 +2,8 @@
 
 namespace Admin\Providers;
 
+use Admin\Events\AdminLoginEvent;
+use Admin\Listeners\AdminLogin\VerifyingListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -16,7 +18,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-
+        AdminLoginEvent::class => [
+            VerifyingListener::class
+        ]
     ];
 
     /**

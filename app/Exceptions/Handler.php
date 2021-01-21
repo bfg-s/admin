@@ -39,7 +39,7 @@ class Handler extends \App\Exceptions\Handler
 
             if ($exception instanceof NotFoundHttpException) {
 
-                return response(view('admin::404'));
+                return response(view('admin::errors.404'));
             }
 
             if (!\Admin::guest()) {

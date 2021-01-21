@@ -16,12 +16,17 @@ return [
      * BFG Admin default plugins
      */
     'plugins' => [
-        'scripts' => [
-            'theme/default/plugins/fontawesome/js/all.min.js'
-        ],
         'styles' => [
+            'theme/default/plugins/fontawesome/css/all.min.css',
+        ],
+        'scripts' => [
 
-        ]
+        ],
+        'bscripts' => [
+            'theme/default/plugins/popper.min.js',
+            'theme/default/plugins/chart.js/chart.min.js',
+            'theme/default/plugins/bootstrap/js/bootstrap.min.js',
+        ],
     ],
 
     /**

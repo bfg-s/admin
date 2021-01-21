@@ -47,6 +47,11 @@ class UpdateCommand extends Command
         ]);
 
         $this->call('vendor:publish', [
+            '--tag' => 'ui-assets',
+            '--force' => true
+        ]);
+
+        $this->call('vendor:publish', [
             '--tag' => 'admin-ui-assets',
             '--force' => true
         ]);

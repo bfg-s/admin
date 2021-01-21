@@ -29,6 +29,11 @@ class DefaultAdminLayout extends MainLayout {
     ];
 
     /**
+     * @var bool
+     */
+    protected $ui = true;
+
+    /**
      * DefaultAdminLayout constructor.
      * @param  mixed  ...$params
      */
@@ -70,6 +75,8 @@ class DefaultAdminLayout extends MainLayout {
 
         $this->scripts = array_merge($this->scripts, config('admin-ui.plugins.scripts'));
 
-        $this->scripts[] = "theme/{$theme}/theme.js";
+        $this->bscripts = array_merge($this->bscripts, config('admin-ui.plugins.bscripts'));
+
+        $this->bscripts[] = "theme/{$theme}/theme.js";
     }
 }

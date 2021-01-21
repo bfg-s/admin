@@ -2,6 +2,8 @@
 
 namespace Admin\Components\ServicePages\Login;
 
+use Admin\Events\AdminLoginEvent;
+use Admin\Http\Requests\AdminLoginRequest;
 use Bfg\Layout\View\Component;
 
 /**
@@ -17,8 +19,11 @@ class Form extends Component
      */
     public $componentName = "aui::servicePages.login.form";
 
-    public function submit()
+    /**
+     * @param  AdminLoginRequest  $request
+     */
+    public function submit(AdminLoginRequest $request)
     {
-
+        AdminLoginEvent::dispatch($request);
     }
 }

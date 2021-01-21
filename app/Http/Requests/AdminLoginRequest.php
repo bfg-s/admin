@@ -2,7 +2,8 @@
 
 namespace Admin\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+//use Illuminate\Foundation\Http\FormRequest;
+use Bfg\Dev\FormRequest;
 
 /**
  * Class AdminLoginRequest
@@ -30,6 +31,23 @@ class AdminLoginRequest extends FormRequest
         return [
             'login' => 'required|min:3|max:191',
             'password' => 'required|min:4|max:191',
+            'remember' => 'in:true,false',
+        ];
+    }
+
+    /**
+     * Transformation callback for request validated result
+     * @param  array  $validated
+     * @return array
+     */
+    protected function transformation(array $validated): array
+    {
+        return [
+            'auth' => [
+                'login' => $validated['login'],
+                'password' => $validated['password']
+            ],
+            'remember' => $validated['remember'] == 'true'
         ];
     }
 }
