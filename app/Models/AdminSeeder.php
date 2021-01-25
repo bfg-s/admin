@@ -74,6 +74,21 @@ class AdminSeeder extends Seeder
 
         AdminPermission::create(['path' => 'system*', 'method' => ['*'], 'state' => 'close', 'admin_role_id' => 3]);
 
+        AdminPage::create([
+            'order' => 0, 'icon' => 'fas fa-tachometer-alt', 'title' => 'admin.dashboard', 'action' => 'admin.home'
+        ]);
+        AdminPage::create([
+            'order' => 1, 'icon' => 'fas fa-toolbox', 'title' => 'admin.administration'
+        ]);
+        AdminPage::create([
+            'parent_id' => 2, 'order' => 3, 'icon' => 'fas fa-users',
+            'title' => 'admin.administrators', 'action' => 'admin.administrators'
+        ]);
+        AdminPage::create([
+            'parent_id' => 2, 'order' => 4, 'icon' => 'fas fa-bars',
+            'title' => 'admin.menu', 'action' => 'admin.menu'
+        ]);
+
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -148,4 +148,5 @@ return [
     'successfully_restored'         => 'Успішно відновлено!',
     'back'                          => 'Назад',
     'remove'                        => 'Прибрати',
+    'menu'                          => 'Меню',
 ];

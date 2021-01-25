@@ -148,4 +148,5 @@ return [
     'successfully_restored'         => 'Successfully restored!',
     'back'                          => 'Back',
     'remove'                        => 'Remove',
+    'menu'                          => 'Menu',
 ];

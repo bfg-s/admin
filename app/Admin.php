@@ -4,6 +4,7 @@ namespace Admin;
 
 use Admin\Models\AdminUser;
 use Admin\Providers\AppServiceProvider;
+use Admin\Providers\RunServiceProvider;
 
 /**
  * Class Admin
@@ -56,5 +57,14 @@ class Admin
     public function installed()
     {
         return AppServiceProvider::$installed;
+    }
+
+    /**
+     * Run bfg admin application
+     * @return \Illuminate\Support\ServiceProvider
+     */
+    public function boot()
+    {
+        return app()->register(RunServiceProvider::class);
     }
 }

@@ -20,7 +20,7 @@ class Footer extends Component
      *
      * @var string
      */
-    public $componentName = "aui::servicePages.login.footer";
+    public $componentName = "bfg::servicePages.login.footer";
 
     /**
      * Footer constructor.

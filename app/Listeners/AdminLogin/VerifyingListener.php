@@ -28,7 +28,7 @@ class VerifyingListener
 
             $event->request->session()->regenerate();
 
-            respond('toast.success', "User success auth by Login");
+            respond('toast.success', "User success auth by Login")->put('doc.reload');
 
             $login = true;
         }
@@ -37,7 +37,7 @@ class VerifyingListener
 
             $event->request->session()->regenerate();
 
-            respond('toast.success', "User success auth by E-Mail");
+            respond('toast.success', "User success auth by E-Mail")->put('doc.reload');
 
             $login = true;
         }

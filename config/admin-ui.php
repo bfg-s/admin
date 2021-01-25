@@ -1,31 +1,29 @@
 <?php
 
 return [
+    /**
+     * Admin panel logo url
+     */
+    'logo' => asset('vendor/admin/images/bfg-logo-big.png'),
 
     /**
-     * BFG Admin pane theme
+     * Admin panel favicon url
      */
-    'theme' => 'default',
-
-    /**
-     * Color schema of theme
-     */
-    'color' => 'light',
+    'favicon' => admin_asset('images/bfg-logo.png'),
 
     /**
      * BFG Admin default plugins
      */
     'plugins' => [
         'styles' => [
-            'theme/default/plugins/fontawesome/css/all.min.css',
+            'vendor/admin/theme/default/plugins/fontawesome/css/all.min.css',
+            'vendor/admin/theme/default/plugins/bootstrap-icons.css',
         ],
         'scripts' => [
-
         ],
         'bscripts' => [
-            'theme/default/plugins/popper.min.js',
-            'theme/default/plugins/chart.js/chart.min.js',
-            'theme/default/plugins/bootstrap/js/bootstrap.min.js',
+            'vendor/admin/theme/default/plugins/popper.min.js',
+            'vendor/admin/theme/default/plugins/chart.js/chart.min.js',
         ],
     ],
 

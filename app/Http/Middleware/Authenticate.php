@@ -38,7 +38,7 @@ class Authenticate
          */
         if (!Auth::guard('admin')->guest() && $route_login) {
 
-            return redirect()->route('admin');
+            return redirect()->route('admin.home');
         }
 
         /**
@@ -52,7 +52,7 @@ class Authenticate
         /**
          * Launch of all services and extensions of the admin panel.
          */
-        \AdminExtension::boot();
+        \Admin::boot();
 
         /**
          * Checking the current access link.

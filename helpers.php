@@ -24,6 +24,19 @@ if ( ! function_exists('admin_asset') ) {
     }
 }
 
+if ( ! function_exists('vendor_asset') ) {
+
+    /**
+     * @param string|null $path
+     * @param  null  $secure
+     * @return string
+     */
+    function vendor_asset (string $path = '', $secure = null) {
+
+        return asset(vendor_asset_url_path($path), $secure);
+    }
+}
+
 if ( ! function_exists('admin_path_asset') ) {
 
     /**
@@ -45,6 +58,18 @@ if ( ! function_exists('admin_asset_url_path') ) {
     function admin_asset_url_path (string $path = '') {
 
         return "vendor/admin/" . trim($path, "/");
+    }
+}
+
+if ( ! function_exists('vendor_asset_url_path') ) {
+
+    /**
+     * @param  string  $path
+     * @return string
+     */
+    function vendor_asset_url_path (string $path = '') {
+
+        return "vendor/" . trim($path, "/");
     }
 }
 

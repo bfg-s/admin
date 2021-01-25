@@ -31,7 +31,7 @@
 
 <script>
     export default {
-        name: "aui::servicePages.login.form",
+        name: "bfg::servicePages.login.form",
         props: {
             submit: {}
         },

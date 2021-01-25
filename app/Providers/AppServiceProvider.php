@@ -33,12 +33,12 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Load bfg component views namespace
          */
-        Blade::componentNamespace('Admin\\Components', 'aui');
+        Blade::componentNamespace('Admin\\Components', 'bfg');
 
         /**
          * Load bfg component views namespace
          */
-        Blade::componentNamespace(admin_app_namespace('Components'), 'uui');
+        Blade::componentNamespace(admin_app_namespace('Components'), 'admin');
     }
 
     /**

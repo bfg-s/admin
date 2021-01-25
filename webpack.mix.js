@@ -17,7 +17,7 @@ mix.options({
 
 mix.js('resources/js/admin.js', 'public/js').vue();
 mix.js('resources/theme/theme.js', 'public/theme/default/theme.js').vue();
+//mix.js('resources/lte_theme/theme.js', 'public/theme/lte/theme.js').vue();
 
-
-mix.postCss('resources/css/admin.css', 'public/css');
 mix.sass('resources/theme/theme.scss', 'public/theme/default/theme.css');
+//mix.sass('resources/lte_theme/theme.scss', 'public/theme/lte/theme.css');

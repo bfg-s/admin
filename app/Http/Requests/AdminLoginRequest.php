@@ -2,7 +2,6 @@
 
 namespace Admin\Http\Requests;
 
-//use Illuminate\Foundation\Http\FormRequest;
 use Bfg\Dev\FormRequest;
 
 /**

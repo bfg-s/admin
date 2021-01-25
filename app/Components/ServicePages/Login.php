@@ -15,5 +15,5 @@ class Login extends Component
      *
      * @var string
      */
-    public $componentName = "aui::servicePages.login";
+    public $componentName = "bfg::servicePages.login";
 }

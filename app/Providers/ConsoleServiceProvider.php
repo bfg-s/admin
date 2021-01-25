@@ -64,7 +64,7 @@ class ConsoleServiceProvider extends ServiceProvider
         /**
          * Launch of all services and extensions of the admin panel.
          */
-        \AdminExtension::boot();
+        \Admin::boot();
 
         /**
          * Register admin commands

@@ -1,0 +1,46 @@
+<?php
+
+namespace Admin\Components\Layout;
+
+use Bfg\Layout\View\Component;
+
+/**
+ * Class Logo
+ * @package Admin\Components\Layout
+ */
+class Logo extends Component
+{
+    /**
+     * Logo path
+     * @var string
+     */
+    public $logo;
+
+    /**
+     * Project name
+     * @var string
+     */
+    public $project;
+
+    /**
+     * The component alias name.
+     *
+     * @var string
+     */
+    public $componentName = "bfg::layout.logo";
+
+    /**
+     * @var string
+     */
+    protected static $slotable = 'logo';
+
+    /**
+     * Logo constructor.
+     */
+    public function __construct()
+    {
+        $this->logo = config('admin-ui.logo');
+
+        $this->project = config('app.name');
+    }
+}

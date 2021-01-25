@@ -56,7 +56,9 @@ class ConfigProvider {
     }
 
     /**
-     * On boot admin application
+     * Bootstrap services.
+     *
+     * @return void
      */
     public function boot()
     {
@@ -69,6 +71,16 @@ class ConfigProvider {
         foreach ($this->subscribe as $subscriber) {
             \Event::subscribe($subscriber);
         }
+    }
+
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+
     }
 
     /**

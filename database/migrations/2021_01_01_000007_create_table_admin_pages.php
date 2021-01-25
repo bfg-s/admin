@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableAdminMenu extends Migration
+class CreateTableAdminPages extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableAdminMenu extends Migration
      */
     public function up()
     {
-        Schema::create('admin_menu', function (Blueprint $table) {
+        Schema::create('admin_pages', function (Blueprint $table) {
 
             $table->bigIncrements('id');
 
@@ -25,21 +25,25 @@ class CreateTableAdminMenu extends Migration
 
             $table->string('title');
 
+            $table->text('description')->nullable();
+
             $table->string('action')->default('javascript:;');
 
-            $table->string('type')->default('menu'); // menu, link, modal, call
+            $table->string('type')->default('link'); // link, modal, call
 
             $table->string('target')->default('self'); // self, blank
+
+            $table->string('position')->default('menu'); // menu, bottom, navbar
 
             $table->boolean('active')->default(true);
 
             $table->timestamps();
         });
 
-        Schema::table('admin_menu', function (Blueprint $table) {
+        Schema::table('admin_pages', function (Blueprint $table) {
 
             $table->foreign('parent_id')->references('id')
-                ->on('admin_menu')->cascadeOnDelete()->cascadeOnUpdate();
+                ->on('admin_pages')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -50,6 +54,6 @@ class CreateTableAdminMenu extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_menu');
+        Schema::dropIfExists('admin_pages');
     }
 }

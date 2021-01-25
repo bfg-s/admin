@@ -17,7 +17,7 @@ class Form extends Component
      *
      * @var string
      */
-    public $componentName = "aui::servicePages.login.form";
+    public $componentName = "bfg::servicePages.login.form";
 
     /**
      * @param  AdminLoginRequest  $request

@@ -151,21 +151,4 @@ class AdminExtension
             $this->not_installed
         );
     }
-
-    /**
-     * Boot of admin application
-     */
-    public function boot()
-    {
-        if (\Admin::installed()) {
-
-            foreach ($this->extensions() as $extension) {
-
-                if ($extension->included()) {
-
-                    $extension->config()->boot();
-                }
-            }
-        }
-    }
 }

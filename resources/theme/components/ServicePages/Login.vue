@@ -18,22 +18,23 @@
 
 <script>
     export default {
-        name: "aui::servicePages.login",
+        name: "bfg::servicePages.login",
         props: {},
-        save: ['time'],
-        share: ['time'],
         data () {
             return {
-                time: 0
+                time: null
             };
         },
         mounted () {
-            setInterval(() => {
-                this.time = +new Date;
+            this.time = setInterval(() => {
+                console.log(1);
             }, 1000);
+        },
+        beforeUnmount() {
+            clearInterval(this.time);
         },
         computed: {},
         watch: {},
         methods: {}
     }
-</script>f
+</script>
