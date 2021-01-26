@@ -2,8 +2,7 @@
 
 namespace Admin\Commands\BaseCommand;
 
-use Admin\Extension\Extension;
-use Bfg\Dev\ConfigSaver;
+use Bfg\Dev\Support\FileSystem\ConfigFactory;
 use Illuminate\Console\Command;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
@@ -106,7 +105,7 @@ class BaseExtension extends Command
             $base_dir.'/README.md' => $this->get_stub('README'),
             $base_dir.'/app/helpers.php' => $this->get_stub('helpers'),
             $base_dir.'/app/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
-            $base_dir.'/app/Extension/Config.php' => $this->get_stub('Config'),
+            $base_dir.'/app/Extension/Kernel.php' => $this->get_stub('Kernel'),
             $base_dir.'/app/Extension/Install.php' => $this->get_stub('Install'),
             $base_dir.'/app/Extension/Update.php' => $this->get_stub('Update'),
             $base_dir.'/app/Extension/Uninstall.php' => $this->get_stub('Uninstall')
@@ -310,7 +309,7 @@ class BaseExtension extends Command
      */
     protected function choiceEnable($name) {
         if (\AdminExtension::isInstalled($name)) {
-            ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, true);
+            ConfigFactory::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] enabled!");
             return null;
         }
@@ -323,7 +322,7 @@ class BaseExtension extends Command
      */
     protected function choiceDisable($name) {
         if (\AdminExtension::isInstalled($name)) {
-            ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, false);
+            ConfigFactory::open(storage_path('admin_extensions.php'))->write($name, false);
             $this->info("Extension [$name] disabled!");
             return null;
         }
@@ -370,7 +369,7 @@ class BaseExtension extends Command
         if (\AdminExtension::isInstalled($name)) {
             $this->info("Extension [$name] uninstalling...");
             \AdminExtension::get($name)->uninstall($this);
-            ConfigSaver::open(storage_path('admin_extensions.php'))->remove($name);
+            ConfigFactory::open(storage_path('admin_extensions.php'))->remove($name);
             $this->info("Extension [$name] uninstalled!");
             return null;
         }
@@ -386,7 +385,7 @@ class BaseExtension extends Command
         if (\AdminExtension::isNotInstalled($name)) {
             $this->info("Extension [$name] installing...");
             \AdminExtension::get($name)->install($this);
-            ConfigSaver::open(storage_path('admin_extensions.php'))->write($name, true);
+            ConfigFactory::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] installed!");
             return null;
         }

@@ -3,7 +3,7 @@
 namespace Admin\Commands;
 
 use Admin\Extension\Providers\ApplicationProvider;
-use Admin\Extension\Providers\ConfigProvider;
+use Admin\Extension\Providers\KernelProvider;
 use Admin\Models\AdminSeeder;
 use Admin\Models\AdminUser;
 use Illuminate\Console\Command;
@@ -126,14 +126,14 @@ class InstallCommand extends Command
      */
     protected function makeApp()
     {
-        $config = admin_app_path('Config.php');
+        $config = admin_app_path('Kernel.php');
 
         if (!is_file($config)) {
 
-            $class = class_entity('Config');
+            $class = class_entity('Kernel');
             $class->namespace(admin_app_namespace());
             $class->wrap('php');
-            $class->extend(ConfigProvider::class);
+            $class->extend(KernelProvider::class);
             $class->method('boot')
                 ->line('parent::boot();')
                 ->line()
@@ -144,7 +144,7 @@ class InstallCommand extends Command
                 $class->render()
             );
 
-            $this->info("Config {$config} created!");
+            $this->info("Kernel {$config} created!");
         }
 
         $provider = app_path('Providers/AdminServiceProvider.php');
@@ -154,10 +154,10 @@ class InstallCommand extends Command
             $class = class_entity('AdminServiceProvider');
             $class->namespace('App\Providers');
             $class->wrap('php');
-            $class->use(admin_app_namespace('Config'));
+            $class->use(admin_app_namespace('Kernel'));
             $class->extend(ApplicationProvider::class);
 
-            $class->prop('protected:config', entity('Config::class'));
+            $class->prop('protected:config', entity('Kernel::class'));
 
             file_put_contents(
                 $provider,

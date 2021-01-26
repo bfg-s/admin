@@ -2,13 +2,13 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Admin\Extension\Providers\ConfigProvider;
+use Admin\Extension\Providers\KernelProvider;
 
 /**
- * Class Config
+ * Class Kernel
  * @package {NAMESPACE}\Extension
  */
-class Config extends ConfigProvider {
+class Kernel extends KernelProvider {
 
     /**
      * Extension scripts

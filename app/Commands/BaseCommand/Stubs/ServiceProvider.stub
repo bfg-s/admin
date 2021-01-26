@@ -3,8 +3,8 @@
 namespace {NAMESPACE};
 
 use Admin\Extension\Extension;
-use Admin\Extension\Providers\ConfigProvider;
-use {NAMESPACE}\Extension\Config;
+use Admin\Extension\Providers\KernelProvider;
+use {NAMESPACE}\Extension\Kernel;
 use {NAMESPACE}\Extension\Update;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Uninstall;
@@ -49,8 +49,8 @@ class ServiceProvider extends Extension
     protected $uninstall = Uninstall::class;
 
     /**
-     * @var ConfigProvider|string
+     * @var KernelProvider|string
      */
-    protected $config = Config::class;
+    protected $config = Kernel::class;
 }
 

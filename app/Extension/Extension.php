@@ -2,7 +2,7 @@
 
 namespace Admin\Extension;
 
-use Admin\Extension\Providers\ConfigProvider;
+use Admin\Extension\Providers\KernelProvider;
 use Admin\Extension\Providers\InstallProvider;
 use Admin\Extension\Providers\UnInstallProvider;
 use Admin\Extension\Providers\UpdateProvider;
@@ -73,9 +73,9 @@ class Extension extends ServiceProvider
     protected $uninstall = UnInstallProvider::class;
 
     /**
-     * @var ConfigProvider|string
+     * @var KernelProvider|string
      */
-    protected $config = ConfigProvider::class;
+    protected $config = KernelProvider::class;
 
     /**
      * Bootstrap services.
@@ -208,7 +208,7 @@ class Extension extends ServiceProvider
 
     /**
      * Extension configs
-     * @return ConfigProvider
+     * @return KernelProvider
      */
     public function config() {
 

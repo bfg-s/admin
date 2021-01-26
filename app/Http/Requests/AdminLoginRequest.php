@@ -2,7 +2,7 @@
 
 namespace Admin\Http\Requests;
 
-use Bfg\Dev\FormRequest;
+use Bfg\Dev\Support\Http\FormRequest;
 
 /**
  * Class AdminLoginRequest

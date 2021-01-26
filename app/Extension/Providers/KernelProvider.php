@@ -6,10 +6,10 @@ use Admin\Extension\Extension;
 use Illuminate\Support\Traits\Macroable;
 
 /**
- * Class ConfigProvider
+ * Class KernelProvider
  * @package Admin\Extension\Providers
  */
-class ConfigProvider {
+class KernelProvider {
 
     /**
      * @var Extension
@@ -47,7 +47,7 @@ class ConfigProvider {
     protected $subscribe = [];
 
     /**
-     * ConfigProvider constructor.
+     * KernelProvider constructor.
      * @param  Extension  $provider
      */
     public function __construct(Extension $provider)
