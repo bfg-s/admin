@@ -12,7 +12,8 @@
     "require": {
         "php": ">=8.0.0",
         "bfg/ui": "^1.0.0",
-        "bfg/layout": "^1.0.0"
+        "bfg/layout": "^1.0.0",
+        "bfg/route": "^1.0.0"
     },
     "require-dev": {
     },
