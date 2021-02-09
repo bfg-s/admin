@@ -109,7 +109,7 @@ class UnInstallExtensionProvider {
             }
 
             foreach ($files as $file) {
-                $class = class_in_file($file->getPathname())['class'];
+                $class = class_in_file($file->getPathname());
 
                 if (!class_exists($class) && is_file(database_path("migrations/".$file->getFilename()))) {
                     include database_path("migrations/".$file->getFilename());

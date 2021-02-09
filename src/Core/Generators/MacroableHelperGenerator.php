@@ -50,11 +50,8 @@ class MacroableHelperGenerator implements DumpExecute {
             $files = collect(\File::allFiles($dir))
                 ->map(function (SplFileInfo $file) { return $file->getPathname(); })
                 ->filter(function (string $file) { return \Str::is('*.php', $file) && is_file($file); })
-                ->map(function (string $file) {
-                    $cf = class_in_file($file);
-                    return $cf['class'] ? trim($cf['namespace'] . "\\" . $cf['class'], '\\') : false;
-                })
-                ->filter(function (string $class) { return $class && class_exists($class); });
+                ->map('class_in_file')
+                ->filter();
 
             $classes = array_merge($classes, $files->toArray());
         }

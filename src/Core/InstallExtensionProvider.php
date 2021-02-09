@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Core;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\ServiceProvider;
+use Lar\EntityCarrier\ClassGetter;
 use Lar\LteAdmin\ExtendProvider;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
@@ -79,7 +80,7 @@ class InstallExtensionProvider {
                     continue;
                 }
 
-                $class = class_in_file($file->getPathname())['class'];
+                $class = class_in_file($file->getPathname());
 
                 if (!class_exists($class) && is_file(database_path("migrations/".$file->getFilename()))) {
                     include database_path("migrations/".$file->getFilename());
