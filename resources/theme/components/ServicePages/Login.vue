@@ -22,16 +22,16 @@
         props: {},
         data () {
             return {
-                time: null
+                //time: null
             };
         },
         mounted () {
-            this.time = setInterval(() => {
-                console.log(1);
-            }, 1000);
+            // this.time = setInterval(() => {
+            //     console.log(1);
+            // }, 1000);
         },
         beforeUnmount() {
-            clearInterval(this.time);
+            //clearInterval(this.time);
         },
         computed: {},
         watch: {},

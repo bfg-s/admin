@@ -24,6 +24,7 @@ class AdminMenuResource extends JsonResource
 
         $return = [
             'id' => $this->id,
+            'parent_id' => $this->parent_id,
             'order' => $this->order,
             'icon' => $this->icon,
             'title' => __($this->title),

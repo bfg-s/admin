@@ -13,7 +13,8 @@
         "php": ">=8.0.0",
         "bfg/ui": "^1.0.0",
         "bfg/layout": "^1.0.0",
-        "bfg/route": "^1.0.0"
+        "bfg/route": "^1.0.0",
+        "laravel/framework": "^8.12"
     },
     "require-dev": {
     },

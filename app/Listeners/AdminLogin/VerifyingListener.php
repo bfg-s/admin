@@ -16,11 +16,7 @@ class VerifyingListener
      */
     public function handle(AdminLoginEvent $event)
     {
-        // $event->request
-
         $data = $event->request->transform();
-
-//        dd($data);
 
         $login = false;
 
@@ -28,7 +24,7 @@ class VerifyingListener
 
             $event->request->session()->regenerate();
 
-            respond('toast.success', "User success auth by Login")->put('doc.reload');
+            //respond('toast.success', "User success auth by Login");
 
             $login = true;
         }
@@ -37,7 +33,7 @@ class VerifyingListener
 
             $event->request->session()->regenerate();
 
-            respond('toast.success', "User success auth by E-Mail")->put('doc.reload');
+            //respond('toast.success', "User success auth by E-Mail");
 
             $login = true;
         }
@@ -49,9 +45,13 @@ class VerifyingListener
 
         if ($login && $event->request->session()->has('return_authenticated_url')) {
 
-            return redirect($event->request->session()->pull('return_authenticated_url'));
+            respond('doc.location', $event->request->session()->pull('return_authenticated_url'));
+
+        } else if ($login) {
+
+            respond('doc.reload');
         }
 
-        return redirect($event->request->headers->get('referer'));
+        return ['result' => $login];
     }
 }

@@ -23,6 +23,11 @@ class Footer extends Component
     public $componentName = "bfg::servicePages.login.footer";
 
     /**
+     * @var string
+     */
+    protected static $slotable = "footer";
+
+    /**
      * Footer constructor.
      */
     public function __construct()

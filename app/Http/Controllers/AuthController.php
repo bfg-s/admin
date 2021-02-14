@@ -2,6 +2,7 @@
 
 namespace Admin\Http\Controllers;
 
+use Admin\Attributes\AdminPage;
 use Admin\Components\ServicePages\Login;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class AuthController extends Controller {
     /**
      * @return string
      */
+    #[AdminPage('login')]
     public function loginForm()
     {
         return Login::create(function () {
@@ -36,6 +38,7 @@ class AuthController extends Controller {
     /**
      * @return string
      */
+    #[AdminPage('logout')]
     public function logout()
     {
         return 'logout';

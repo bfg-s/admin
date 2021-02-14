@@ -4,6 +4,10 @@ namespace Admin\Components\ServicePages\Login;
 
 use Admin\Events\AdminLoginEvent;
 use Admin\Http\Requests\AdminLoginRequest;
+use Admin\Http\Resources\AdminAuthResource;
+use Admin\Http\Resources\AdminMenuResource;
+use Admin\Models\AdminPage;
+use Bfg\Dev\Support\Behavior\EmbeddedAttributes\Action;
 use Bfg\Layout\View\Component;
 
 /**
@@ -20,10 +24,11 @@ class Form extends Component
     public $componentName = "bfg::servicePages.login.form";
 
     /**
-     * @param  AdminLoginRequest  $request
+     * Admin auth action
      */
-    public function submit(AdminLoginRequest $request)
-    {
-        AdminLoginEvent::dispatch($request);
-    }
+    #[Action(
+        AdminLoginRequest::class,
+        AdminLoginEvent::class,
+        AdminAuthResource::class,
+    )] public function submit() {}
 }

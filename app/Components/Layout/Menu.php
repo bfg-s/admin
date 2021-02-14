@@ -4,6 +4,7 @@ namespace Admin\Components\Layout;
 
 use Admin\Http\Resources\AdminMenuResource;
 use Admin\Models\AdminPage;
+use Admin\Repositories\AdminPageRepository;
 use Bfg\Layout\View\Component;
 
 /**
@@ -32,16 +33,12 @@ class Menu extends Component
 
     /**
      * Menu constructor.
+     * @param  AdminPageRepository  $repository
      */
-    public function __construct()
+    public function __construct(AdminPageRepository $repository)
     {
-        $this->items = AdminMenuResource::collection(
-            AdminPage::wherePosition(AdminPage::POSITION_MENU)
-                ->whereActive(1)
-                ->whereNull('parent_id')
-                ->with('childs')
-                ->orderBy('order')
-                ->get()
-        );
+        $this->items = $repository
+            ->wrap(AdminMenuResource::class)
+            ->position_menu_items;
     }
 }

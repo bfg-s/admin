@@ -1,6 +1,6 @@
 <template>
     <li :class="{'nav-item': true, 'has-submenu': has_sub_menu, 'submenu-item': has_parent}">
-        <a @click="click" :class="{'nav-link': true, 'submenu-toggle': has_sub_menu, 'submenu-link': has_parent, 'active': active}" :href="href" v-bind="collapse_attributes">
+        <a @click="click" :class="{'nav-link': !has_parent, 'submenu-toggle': has_sub_menu, 'submenu-link': has_parent, 'active': active}" :href="href" v-bind="collapse_attributes">
             <span v-if="item.icon && !has_parent" class="nav-icon">
                 <i :class="item.icon"></i>
             </span>
@@ -11,8 +11,8 @@
         </a>
         <div v-if="has_sub_menu" :id="pid" :class="{'collapse submenu submenu-2': true, show: ch}" :data-parent="`#${ppid}`">
             <ul class="submenu-list list-unstyled">
-                <template v-for="(child, index) in item.childs" :key="`item_${item}`">
-                    <v-menu-item :item="child" :ppid="pid" v-model:select="ch" :pid="pid+'-'+child.id" />
+                <template v-for="(child, index) in child" :key="`item_${item}`">
+                    <v-menu-item :item="child" :items="items" :ppid="pid" :pid="pid+'-'+child.id" :select-parent="selectThis" />
                 </template>
             </ul>
         </div>
@@ -22,28 +22,35 @@
 <script>
     export default {
         name: 'v-menu-item',
+        emits: ['update:select'],
         props: {
             item: {required: true},
+            items: {required: true},
             pid: {required: true},
             ppid: {default: ''},
-            root: {default: false},
+            selectParent: {},
         },
-        share: {selected: 'selected_menu_id'},
-        save: {selected: 'selected_menu_id'},
+        mixins: [],
+        share: {selected_item: 'menu'},
         data () {
             return {
-                selected: null,
-                ch: false,
+                selected_item: null,
+                ch: false
             };
         },
         mounted () {
             if (this.active) {
                 this.$emit('update:select', true);
+                this.selected_item = this.item;
+                if (this.selectParent) this.selectParent();
             }
         },
         computed: {
+            // ch () {
+            //     return this.selected_item ? this.item.id === this.selected_item.id : false;
+            // },
             active () {
-                return this.$root.app.server.route === this.item.route;
+                return this.selected_item ? this.item.id === this.selected_item.id : this.$root.app.server.route === this.item.route;
             },
             href () {
                 if (this.item.type === 'link') {
@@ -70,19 +77,16 @@
                 };
             },
             has_sub_menu () {
-                return !!this.item.childs.length;
+                return !!this.app.obj.find(this.items, ['parent_id', this.item.id]);
             },
             has_parent () {
-                return !!this.item.parent;
+                return !!this.item.parent_id;
+            },
+            child () {
+                return this.app.obj.filter(this.items, ['parent_id', this.item.id]);
             }
         },
-        watch: {
-            ch (val) {
-                if (val) {
-                    this.$emit('update:select', true);
-                }
-            }
-        },
+        watch: {},
         methods: {
             click (e) {
                 if (!this.has_sub_menu) {
@@ -90,7 +94,15 @@
                     if (this.item.route) {
                         this.$root.app.doc.location(this.item.action);
                     }
+
+                    this.selected_item = this.item;
+                } else {
+                    this.ch = !this.ch;
                 }
+            },
+            selectThis (ch = true) {
+                this.ch = ch;
+                if (this.selectParent) this.selectParent(this.ch);
             }
         }
     }

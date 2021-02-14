@@ -12,7 +12,7 @@ document.addEventListener('bfg:theme', (e) => {
 
     app.singleton('initTemplate', require('./core/iniTemplate'));
 
-    const context = require.context('./components', true, /^.*\.vue$/);
-
-    context.keys().forEach(file => app.components.new(context(file).default));
+    app.schema.context(
+        require.context('./components', true, /^.*\.vue$/)
+    );
 });

@@ -43,23 +43,11 @@ class DefaultLayout extends AdminLayout {
         $this->body->attr('class', 'app');
 
         $this->body->text(
-            Header::create(function (Header $header) {
-
-                Logo::create();
-
-                Menu::create();
-
-                MenuBottom::create();
-            })
+            Header::create()
         );
 
         $this->body->text(
-            Wrapper::create(function (Wrapper $wrapper) use ($content) {
-
-                $wrapper->text($content);
-
-                Footer::create();
-            })
+            Wrapper::create(['content' => $content])
         );
     }
 

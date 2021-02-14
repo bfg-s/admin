@@ -2,6 +2,9 @@
 
 namespace Admin\Components;
 
+use Admin\Components\Layout\Logo;
+use Admin\Components\Layout\Menu;
+use Admin\Components\Layout\MenuBottom;
 use Bfg\Layout\View\Component;
 
 /**
@@ -16,4 +19,16 @@ class Header extends Component
      * @var string
      */
     public $componentName = "bfg::header";
+
+    /**
+     * Inner append content
+     */
+    public function inner()
+    {
+        Logo::create();
+
+        Menu::create();
+
+        MenuBottom::create();
+    }
 }
