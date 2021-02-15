@@ -279,6 +279,21 @@ abstract class FormGroup extends DIV {
     }
 
     /**
+     * @param  string  $path
+     * @return $this
+     */
+    public function defaultFromModel(string $path)
+    {
+        if ($this->model) {
+            $this->value_to = function () use ($path) {
+                return multi_dot_call($this->model, $path);
+            };
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  mixed  ...$values
      * @return $this
      */
