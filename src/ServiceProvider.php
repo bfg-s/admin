@@ -239,15 +239,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Disable by default debug bar for everyone except root.
-         */
-        LayoutMiddleware::onLoad(function () {
-            if (!admin()->isRoot() && !\App::isLocal()) {
-                app('debugbar')->disable();
-            }
-        });
-
-        /**
          * Run lte with jax on admin page
          */
         JaxController::on_start(function () {
