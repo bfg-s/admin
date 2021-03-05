@@ -211,6 +211,19 @@ class ModelSaver
 
                     if ($builder instanceof BelongsToMany) {
 
+                        $fk = array_key_first($param);
+                        $fv = $param[$fk];
+
+                        if (is_array($fv)) {
+
+                            $param = collect($param)->filter(function ($i) {
+                                return !isset($i[static::DELETE_FIELD]);
+                            })->map(function ($i) {
+                                $lk = array_key_last($i);
+                                return $i[$lk];
+                            })->values()->toArray();
+                        }
+
                         $builder->sync($param);
                     }
 
@@ -278,6 +291,19 @@ class ModelSaver
                     $builder = $this->model->{$key}();
 
                     if ($builder instanceof BelongsToMany) {
+
+                        $fk = array_key_first($param);
+                        $fv = $param[$fk];
+
+                        if (is_array($fv)) {
+
+                            $param = collect($param)->filter(function ($i) {
+                                return !isset($i[static::DELETE_FIELD]);
+                            })->map(function ($i) {
+                                $lk = array_key_last($i);
+                                return $i[$lk];
+                            })->values()->toArray();
+                        }
 
                         $builder->sync($param);
                     }
