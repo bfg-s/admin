@@ -27,7 +27,7 @@ class AdminLte extends Executor {
     }
 
     drop_relation (field_name) {
-        let container = this.jq.parents('[data-relation]');
+        let container = this.jq.parents('.template_container');
         container.find('.control_relation').hide();
         container.find('.template_content').hide();
         container.find('.return_relation').show();
@@ -35,7 +35,7 @@ class AdminLte extends Executor {
     }
 
     return_relation () {
-        let container = this.jq.parents('[data-relation]');
+        let container = this.jq.parents('.template_container');
         container.find('.control_relation').show();
         container.find('.template_content').show();
         container.find('.return_relation').hide();

@@ -193,6 +193,8 @@ class CoreNestable extends DIV
      */
     protected function makeList(Collection $model, Component $object)
     {
+        $this->attr('data-order-field', $this->order_by_field);
+
         $object->ol(['dd-list'])->when(function (OL $ol) use ($model) {
 
             foreach ($model as $item) {
@@ -213,7 +215,7 @@ class CoreNestable extends DIV
                 $div->i(['class' => 'fas fa-arrows-alt']);
             });
             $li->div(['dd3-content'])->when(function (DIV $div) use ($item) {
-                $div->span(['text'])->text(multi_dot_call($item, $this->title_field));
+                $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
                 if(($this->controls)($item)) {
                     $div->div(['float-right'])
                         ->appEndIf($this->menu, ButtonGroup::create(function (ButtonGroup $group) use ($item) {

@@ -13,7 +13,7 @@ if (!request()->ajax() || request()->is('*dashboard*')) {
         $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
         if ($admin && isset($admin['version'])) {
 
-            \Lar\LteAdmin\LteAdmin::$vesion = ltrim($admin['version'], 'v');
+            \Lar\LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
         }
     }
 }

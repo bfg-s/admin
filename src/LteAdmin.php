@@ -15,7 +15,7 @@ class LteAdmin
     /**
      * @var string
      */
-    static $vesion = "3.1.12";
+    static $version = "3.1.12";
 
     /**
      * @var ExtendProvider[]
@@ -76,7 +76,7 @@ class LteAdmin
      */
     public function version()
     {
-        return LteAdmin::$vesion;
+        return LteAdmin::$version;
     }
 
     /**

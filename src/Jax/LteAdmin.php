@@ -26,12 +26,15 @@ class LteAdmin extends LteAdminExecutor
      * @param  int  $depth
      * @param  array  $data
      * @param  string|null  $parent_field
+     * @param  string  $order_field
+     * @throws \Throwable
      */
-    public function nestable_save(string $model, int $depth = 1, $data = [], string $parent_field = null)
+    public function nestable_save(string $model, int $depth = 1, $data = [], string $parent_field = null, string $order_field = 'order')
     {
         if (class_exists($model)) {
-            \DB::transaction(function () use ($model, $depth, $data, $parent_field) {
-                foreach ($this->nestable_collapse($data, $depth, $parent_field) as $item) {
+            \DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
+                foreach ($this->nestable_collapse($data, $depth, $parent_field, null, $order_field) as $item) {
+                    /** @var Model $model */
                     $model::where('id', $item['id'])->update($item['data']);
                 }
             });
@@ -44,10 +47,10 @@ class LteAdmin extends LteAdminExecutor
      * @param  int  $depth
      * @param  string|null  $parent_field
      * @param  null  $parent
-     * @param  int  $i
+     * @param  string  $order_field
      * @return array
      */
-    private function nestable_collapse(array $data, int $depth, string $parent_field = null, $parent = null)
+    private function nestable_collapse(array $data, int $depth, string $parent_field = null, $parent = null, string $order_field = 'order')
     {
         $result = [];
 
@@ -62,7 +65,7 @@ class LteAdmin extends LteAdminExecutor
                 $new['data']['parent_id'] = $parent;
             }
 
-            $new['data']['order'] = static::$i;
+            $new['data'][$order_field ?? 'order'] = static::$i;
 
             $result[] = $new;
 
@@ -70,7 +73,7 @@ class LteAdmin extends LteAdminExecutor
 
             if (isset($item['children'])) {
 
-                $result = array_merge($result, $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id']));
+                $result = array_merge($result, $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field));
             }
         }
 

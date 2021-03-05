@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Lar\Developer\Core\Traits\Eventable;
@@ -206,7 +209,7 @@ class ModelSaver
                         $builder->sync($param);
                     }
 
-                    else if ($builder instanceof HasMany) {
+                    else if ($builder instanceof HasMany || $builder instanceof MorphMany || $builder instanceof MorphToMany) {
                         if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
@@ -269,7 +272,12 @@ class ModelSaver
                         $builder->sync($param);
                     }
 
-                    else if ($builder instanceof HasMany) {
+                    else if (
+                        $builder instanceof HasMany ||
+                        $builder instanceof MorphMany ||
+                        $builder instanceof MorphToMany ||
+                        $builder instanceof HasManyThrough
+                    ) {
                         if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');

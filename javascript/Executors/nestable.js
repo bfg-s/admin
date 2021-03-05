@@ -17,6 +17,7 @@ module.exports = class extends Executor {
                 e.target.dataset.maxDepth,
                 list.nestable('serialize'),
                 e.target.dataset.parent,
+                e.target.dataset.orderField,
             )
         });
 
