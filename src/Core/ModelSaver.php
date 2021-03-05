@@ -202,6 +202,11 @@ class ModelSaver
 
                 if (is_array($param) && method_exists($this->model, $key)) {
 
+                    if (isset($param[static::DELETE_FIELD])) {
+
+                        unset($param[static::DELETE_FIELD]);
+                    }
+
                     $builder = $this->model->{$key}();
 
                     if ($builder instanceof BelongsToMany) {
@@ -264,6 +269,11 @@ class ModelSaver
             foreach ($add as $key => $param) {
 
                 if (is_array($param) && method_exists($this->model, $key)) {
+
+                    if (isset($param[static::DELETE_FIELD])) {
+
+                        unset($param[static::DELETE_FIELD]);
+                    }
 
                     $builder = $this->model->{$key}();
 
