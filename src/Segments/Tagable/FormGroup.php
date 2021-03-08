@@ -400,7 +400,7 @@ abstract class FormGroup extends DIV {
 
         if ($this->value_to) {
 
-            $this->value = call_user_func($this->value_to, $this->value);
+            $this->value = call_user_func($this->value_to, $this->value, $this->model);
         }
 
         $input_group->appEnd(
