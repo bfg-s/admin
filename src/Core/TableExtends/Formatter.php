@@ -165,13 +165,15 @@ class Formatter {
     public function to_string($value, $props = [])
     {
         if (is_object($value)) {
-
             return  get_class($value);
-        }
-
-        else if (is_array($value)) {
-
+        } else if (is_array($value)) {
             return json_encode($value);
+        } else if ($value===true) {
+            return "true";
+        } else if ($value===false) {
+            return "false";
+        } else if ($value===null) {
+            return "null";
         }
 
         return (string)$value;
