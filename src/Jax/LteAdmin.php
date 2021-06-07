@@ -27,10 +27,13 @@ class LteAdmin extends LteAdminExecutor
      * @param  array  $data
      * @param  string|null  $parent_field
      * @param  string  $order_field
+     * @return array
      * @throws \Throwable
      */
     public function nestable_save(string $model, int $depth = 1, $data = [], string $parent_field = null, string $order_field = 'order')
     {
+        if (!check_referer('PUT')) return [];
+
         if (class_exists($model)) {
             \DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
                 foreach ($this->nestable_collapse($data, $depth, $parent_field, null, $order_field) as $item) {
@@ -85,9 +88,12 @@ class LteAdmin extends LteAdminExecutor
      * @param  int|null  $id
      * @param  string|null  $field_name
      * @param  bool  $val
+     * @return array
      */
     public function custom_save(string $model = null, int $id = null, string $field_name = null, bool $val = false)
     {
+        if (!check_referer('PUT')) return [];
+
         /** @var Model $find */
         if ($model && class_exists($model) && $id && $field_name && $find = $model::find($id)) {
 
@@ -111,12 +117,26 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @param  string  $class
      * @param  array  $ids
+     * @param  array  $columns
+     * @param  string  $url
+     * @return array
+     * @throws \Exception
      */
-    public function mass_delete(string $class, array $ids)
+    public function mass_delete(string $class, array $ids, array $columns, string $url)
     {
+        if (!check_referer('DELETE')) return [];
+
         /** @var Model $class */
         if (class_exists($class) && method_exists($class, 'delete')) {
-            if ($class::whereIn('id', $ids)->delete()) {
+            $success = false;
+            foreach ($class::whereIn('id', $ids)->get() as $item) {
+                if ($item->delete()) {
+                    $success = true;
+                } else {
+                    $success = false;
+                }
+            }
+            if ($success) {
                 $this->toast_success(__('lte.successfully_deleted'))->reload();
             } else {
                 $this->toast_error(__('lte.unknown_error'));
@@ -130,6 +150,7 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @param  string  $handle
      * @param  array  $params
+     * @return \Lar\LteAdmin\Segments\Modal|mixed
      */
     public function load_modal(string $handle, array $params = [])
     {

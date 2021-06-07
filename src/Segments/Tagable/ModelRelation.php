@@ -61,13 +61,19 @@ class ModelRelation extends DIV {
     protected $on_empty;
 
     /**
+     * @var mixed
+     */
+    static protected $fm;
+    protected $fm_old;
+
+    /**
      * ModelRelation constructor.
-     * @param  string  $relation
+     * @param  string|array  $relation
      * @param  array|\Closure  $instructions
      * @param  callable|null  $content
      * @param  mixed  ...$params
      */
-    public function __construct(string $relation, $instructions, callable $content = null, ...$params)
+    public function __construct($relation, $instructions, callable $content = null, ...$params)
     {
         parent::__construct();
 
@@ -82,7 +88,12 @@ class ModelRelation extends DIV {
             $this->model($instructions);
         }
 
-        $this->relation_name = $relation;
+        if (is_array($relation)) {
+            $this->relation_name = $relation[0];
+            $relation = $relation[1];
+        } else {
+            $this->relation_name = $relation;
+        }
 
         if (Form::$current_model) {
 
@@ -93,7 +104,7 @@ class ModelRelation extends DIV {
             $m = gets()->lte->menu->model;
         }
 
-        if (is_object($m) && method_exists($m, $relation)) {
+        if (is_object($m)) {
             $relation = $m->{$relation}();
         }
 
@@ -102,6 +113,8 @@ class ModelRelation extends DIV {
         }
 
         else {
+            $this->fm_old = ModelRelation::$fm;
+            ModelRelation::$fm = $relation;
             $this->relation = $relation;
             $this->toExecute('_build');
             $this->create_content = $content;

@@ -32,14 +32,25 @@ class Number extends Input
     ];
 
     /**
+     * @param int|float  $step
+     * @return $this
+     */
+    public function step($step) {
+
+        $this->params[]['step'] = $step;
+
+        return $this;
+    }
+
+    /**
      * The field under validation must have a minimum value. Strings, numerics,
      * arrays, and files are evaluated in the same fashion as the size rule.
      *
-     * @param  int  $value
+     * @param  int|float  $value
      * @param  string|null  $message
      * @return $this
      */
-    public function min(int $value, string $message = null)
+    public function min($value, string $message = null)
     {
         $this->params[]['min'] = $value;
         return  $this->_rule(__FUNCTION__, [$value], $message);
@@ -50,11 +61,11 @@ class Number extends Input
      * Strings, numerics, arrays, and files are evaluated in the same fashion as
      * the size rule.
      *
-     * @param  int  $value
+     * @param  int|float  $value
      * @param  string|null  $message
      * @return $this
      */
-    public function max(int $value, string $message = null)
+    public function max($value, string $message = null)
     {
         $this->params[]['max'] = $value;
         return  $this->_rule(__FUNCTION__, [$value], $message);

@@ -23,6 +23,35 @@ class Checks extends FormGroup
     protected $icon = null;
 
     /**
+     * Checks constructor.
+     * @param  string  $name
+     * @param  string|null  $title
+     * @param ...$params
+     */
+    public function __construct(string $name, string $title = null, ...$params)
+    {
+        parent::__construct($name, $title, $params);
+
+        if (!request()->has($this->path)) {
+
+            request()->request->add(
+                array_dots_uncollapse(
+                    [$this->path => []],
+                    request()->all()
+                )
+            );
+        }
+    }
+
+    /**
+     * Make wrapper for input
+     */
+    protected function makeWrapper()
+    {
+        parent::makeWrapper();
+    }
+
+    /**
      * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
      */
     public function field()

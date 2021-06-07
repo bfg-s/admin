@@ -103,9 +103,10 @@ class ModelSaver
     }
 
     /**
-     * @param $model
+     * @template T
+     * @param T $model
      * @param  array  $data
-     * @return bool|void
+     * @return T|Model|bool|mixed
      */
     public static function do($model, array $data)
     {
@@ -140,7 +141,7 @@ class ModelSaver
     /**
      * Save method
      *
-     * @return bool|void|mixed
+     * @return Model|bool|mixed
      */
     public function save()
     {
@@ -272,7 +273,9 @@ class ModelSaver
         $r1 = $this->call_on('on_save', $this->data, $this->model);
         $r2 = $this->call_on('on_create', $this->data, $this->model);
 
-        $this->model = $this->model->create(array_merge($data, $r1, $r2));
+        $data_for_create = array_merge($data, $r1, $r2);
+
+        $this->model = $this->model->create($data_for_create);
 
         if ($this->model) {
 
@@ -350,6 +353,20 @@ class ModelSaver
 
             return $this->model;
         }
+    }
+
+    /**
+     * Insert relations when model creating
+     * @param  array  $data
+     * @return array
+     */
+    protected function insert_relations(array $data) {
+
+//        foreach ($data as $key => $datum) {
+//
+//        }
+
+        return $data;
     }
 
     /**

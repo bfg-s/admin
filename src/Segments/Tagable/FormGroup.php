@@ -212,10 +212,10 @@ abstract class FormGroup extends DIV {
     }
 
     /**
-     * @param  string  $icon
+     * @param  string|null  $icon
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $icon = null)
     {
         if ($this->icon !== null) {
 
@@ -557,7 +557,7 @@ abstract class FormGroup extends DIV {
      */
     public function set_id($id)
     {
-        $this->field_id = $id;
+        $this->field_id = \Str::slug($id, '_');
 
         return $this;
     }

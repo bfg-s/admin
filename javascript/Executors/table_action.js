@@ -13,7 +13,7 @@ module.exports = class extends Executor {
         if (ids.length && this.jax) {
 
             let call_jax = () => {
-                jax.path(this.jax, this.object, ids, this.columns)
+                jax.path(this.jax, this.object, ids, this.columns, this.url)
                     .then(() => {
                         $(`.select_${this.table}:checked`).each((i, obj) => {
                             obj.checked = false;
@@ -31,6 +31,11 @@ module.exports = class extends Executor {
                 call_jax();
             }
         }
+    }
+
+
+    get url () {
+        return this.target.dataset.url;
     }
 
     get table () {
@@ -54,7 +59,7 @@ module.exports = class extends Executor {
     }
 
     static __name () {
-    
+
         return "table_action";
     }
 };

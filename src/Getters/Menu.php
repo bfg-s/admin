@@ -10,7 +10,7 @@ use Lar\LteAdmin\Models\LtePermission;
 
 /**
  * Class Menu
- * 
+ *
  * @package Lar\LteAdmin\Getters
  */
 class Menu extends Getter
@@ -395,6 +395,11 @@ class Menu extends Getter
                 $item['model.param'] = \Str::singular(\Str::snake(class_basename($item['model'])));
             }
 
+            if (isset($item['link_params'])) {
+
+                $item['route_params'] = array_merge($item['route_params'] ?? [], call_user_func($item['link_params']));
+            }
+
             if ($item['route'] && \Route::has($item['route'])) {
 
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
@@ -402,34 +407,36 @@ class Menu extends Getter
 
             else if (isset($item['resource']) && \Route::has($item['route'] . '.index')) {
 
+                $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);
+
                 $item['current.type'] = str_replace($item['route'] . '.', '', \Route::currentRouteName());
 
                 $item['link'] = route($item['route'] . '.index', $item['route_params'] ?? []);
 
                 $item['link.show'] = function ($params) use ($item) {
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.show', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.show', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.update'] = function ($params) use ($item) {
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.update', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.update', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.destroy'] = function ($params) use ($item) {
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.destroy', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.destroy', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.edit'] = function ($params) use ($item) {
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.edit', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.edit', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.index'] = function (array $params = []) use ($item) {
-                    return route($item['route'] . '.index', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.index', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.store'] = function (array $params = []) use ($item) {
-                    return route($item['route'] . '.store', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.store', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.create'] = function (array $params = []) use ($item) {
-                    return route($item['route'] . '.create', array_merge(($item['route_params'] ?? []), $params));
+                    return route($item['route'] . '.create', array_merge($params, ($item['route_params'] ?? [])));
                 };
             }
 
@@ -442,7 +449,7 @@ class Menu extends Getter
 
                 $current_route = \Route::currentRouteName();
 
-                $item['selected'] = \Str::is($item['route'].'*', $current_route);
+                $item['selected'] = \Str::is($item['route'].'.*', $current_route);
             }
 
             else if (!$item['selected'] && $item['link'] && !$item['target']) {

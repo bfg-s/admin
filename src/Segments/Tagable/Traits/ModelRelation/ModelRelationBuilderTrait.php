@@ -14,6 +14,7 @@ use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 use Lar\LteAdmin\Segments\Tagable\Col;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
+use Lar\LteAdmin\Segments\Tagable\ModelRelation;
 use Lar\LteAdmin\Segments\Tagable\ModelRelationContent;
 
 /**
@@ -35,7 +36,9 @@ trait ModelRelationBuilderTrait {
         FormGroup::$construct_modify['build_relation'] = function (FormGroup $group, Model $model) {
             $k = $model->{$model->getKeyName()};
             $n = $group->get_name();
-            $group->set_name("{$this->relation_name}[{$k}][{$n}]");
+            $m = [];
+            preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $n, $m);
+            $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2]??''));
             $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
         };
 
@@ -118,6 +121,7 @@ trait ModelRelationBuilderTrait {
 
         $this->callRenderEvents();
 
+        ModelRelation::$fm = $this->fm_old;
     }
 
     /**
@@ -129,15 +133,19 @@ trait ModelRelationBuilderTrait {
         $old_model_form = Form::$current_model;
 
         FormGroup::$construct_modify['build_relation'] = function (FormGroup $group) {
-            $group->set_name("{$this->relation_name}[{__id__}][{$group->get_name()}]");
-            $group->set_id(time() . "_{$this->relation_name}_{$group->get_id()}");
+            $m = [];
+            preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $group->get_name(), $m);
+            $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2]??''));
+            $group->set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
         };
 
         Form::$current_model = null;
         $container = ModelRelationContent::create($this->relation_name, 'template_container');
         $this->last_content = ModelRelationContent::create($this->relation_name, 'template_content', 'template_content');
         $container->appEnd($this->last_content);
+        Form::$current_model = $this->relation->getQuery()->getModel();
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
+        Form::$current_model = null;
         if (!$this->last_content->get_test_var('control_create')) { return ""; }
         $container->col()->textRight()->p0()->button_group(function (ButtonGroup $group) {
             $group->setStyle("margin-left: 0!important;");

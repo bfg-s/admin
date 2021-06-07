@@ -5,9 +5,10 @@ class AdminLte extends Executor {
     add_relation_tpl (path) {
 
         let area = `relation_${path}_template`,
-            id = (new Date).getTime(),
+            // id = (new Date).getTime(),
             tpl = "tpl::get_tpl".exec(area),
-            zone = document.querySelector(`span[data-tpl="${area}"]`);
+            zone = document.querySelector(`span[data-tpl="${area}"]`),
+            id = zone ? `new_` + (zone.childElementCount+1) : (new Date).getTime();
 
         tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_id\_\_\}/g, id);
 
@@ -43,7 +44,7 @@ class AdminLte extends Executor {
     }
 
     static __name () {
-    
+
         return "lte";
     }
 }

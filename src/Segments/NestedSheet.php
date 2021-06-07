@@ -16,21 +16,30 @@ class NestedSheet extends Container {
      * NestedSheet constructor.
      * @param $title
      * @param  \Closure|array|null  $warp
+     * @param  bool  $tools
      */
-    public function __construct($title, $warp = null)
+    public function __construct($title, $warp = null, bool $tools = true)
     {
+        if (is_bool($warp)) {
+            $tools = $warp;
+            $warp = null;
+        }
         if (is_embedded_call($title)) {
             $warp = $title;
             $title = 'lte.list';
         }
 
-        parent::__construct(function (DIV $div) use ($title, $warp) {
-            $card = null;
-            $div->card($title)->haveLink($card)
-                ->nestedTools()
-                ->defaultTools()
+        parent::__construct(function (DIV $div) use ($title, $warp, $tools) {
+            $card = $div->card($title);
+
+            if ($tools) {
+                $card->nestedTools();
+            }
+
+            $card->defaultTools()
                 ->body()
                 ->nested(function (Nested $nested) use ($warp, $card) {
+
                     if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             Nested::class => $nested,

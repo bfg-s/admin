@@ -16,7 +16,7 @@ class NavItem implements Arrayable
     use FontAwesome, NavCommon;
 
     /**
-     * @var array 
+     * @var array
      */
     public $items = [];
 
@@ -180,7 +180,18 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  array  $route_params
+     * @param  callable  $callable
+     * @return $this
+     */
+    public function link_params(callable $callable)
+    {
+         $this->items['link_params'] = $callable;
+
+         return $this;
+    }
+
+    /**
+     * @param $model
      * @return $this
      */
     public function model($model)

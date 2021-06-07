@@ -97,10 +97,10 @@ class Nested extends DIV implements onRender {
     }
 
     /**
-     * @param  string  $field
+     * @param  string|callable  $field
      * @return $this
      */
-    public function titleField(string $field)
+    public function titleField($field)
     {
         $this->nested->title_field($field);
 
@@ -114,6 +114,17 @@ class Nested extends DIV implements onRender {
     public function maxDepth(int $depth)
     {
         $this->nested->maxDepth($depth);
+
+        return $this;
+    }
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function controls(callable $call) {
+
+        $this->nested->controls($call);
 
         return $this;
     }

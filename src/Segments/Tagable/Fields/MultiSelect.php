@@ -16,6 +16,11 @@ class MultiSelect extends Select
     ];
 
     /**
+     * @var null
+     */
+    protected $icon = null;
+
+    /**
      * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
      * @param  bool  $first_default
      * @return MultiSelect

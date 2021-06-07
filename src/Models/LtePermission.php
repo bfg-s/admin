@@ -13,7 +13,7 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
 class LtePermission extends Model
 {
     use DumpedModel;
-    
+
     /**
      * @var string
      */
@@ -62,19 +62,20 @@ class LtePermission extends Model
     }
 
     /**
-     * @param $url
+     * @param  string  $url
+     * @param  string  $method
      * @return bool
      */
-    public static function checkUrl($url)
+    public static function checkUrl(string $url, string $method = 'GET'): bool
     {
-        $result = true;
+        $result = !static::now()->where('path', '==', '*')->where('state', 'close')->first();
 
         /** @var LtePermission $close */
         foreach (static::now()->where('state', 'close') as $close) {
 
             $path = static::makeCheckedPath($close->path);
 
-            if (($close->method[0] === '*' || array_search('GET', $close->method) !== false) && \Str::is(url($path), $url)) {
+            if (($close->method[0] === '*' || array_search($method, $close->method) !== false) && \Str::is(url($path), $url)) {
 
                 $result = false;
                 break;
@@ -88,7 +89,7 @@ class LtePermission extends Model
 
                 $path = static::makeCheckedPath($open->path);
 
-                if (($open->method[0] === '*' || array_search('GET', $open->method) !== false) && \Str::is(url($path), $url)) {
+                if (($open->method[0] === '*' || array_search($method, $open->method) !== false) && \Str::is(url($path), $url)) {
 
                     $result = true;
                     break;
@@ -109,7 +110,12 @@ class LtePermission extends Model
             return true;
         }
 
-        $result = true;
+        if (request()->is(static::makeCheckedPath('profile*'))) {
+
+            return true;
+        }
+
+        $result = !static::now()->where('path', '==', '*')->where('state', 'close')->first();
 
         $method = request()->ajax() && !request()->pjax() && request()->has("_exec") ? 'POST' : request()->getMethod();
 

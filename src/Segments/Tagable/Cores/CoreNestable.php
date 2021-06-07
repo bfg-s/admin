@@ -32,7 +32,7 @@ class CoreNestable extends DIV
     protected $menu;
 
     /**
-     * @var string
+     * @var string|callable
      */
     protected $title_field = "title";
 
@@ -47,6 +47,13 @@ class CoreNestable extends DIV
      * @var \Closure|array
      */
     protected $controls;
+
+    /**
+     * Custom controls
+     *
+     * @var callable
+     */
+    protected $custom_controls;
 
     /**
      * @var \Closure|array
@@ -215,26 +222,40 @@ class CoreNestable extends DIV
                 $div->i(['class' => 'fas fa-arrows-alt']);
             });
             $li->div(['dd3-content'])->when(function (DIV $div) use ($item) {
-                $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
-                if(($this->controls)($item)) {
+//                $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
+                if (is_callable($this->title_field))  {
+                    $div->span(['text'])->text(call_user_func($this->title_field, $item));
+                } else {
+                    $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
+                }
+                $cc_access = ($this->controls)($item);
+                $cc = $this->custom_controls;
+                if($cc_access || $cc) {
                     $div->div(['float-right'])
-                        ->appEndIf($this->menu, ButtonGroup::create(function (ButtonGroup $group) use ($item) {
+                        ->appEndIf($this->menu, ButtonGroup::create(function (ButtonGroup $group) use ($item, $cc_access, $cc) {
 
                             $model = $item;
                             $key = $model->getRouteKey();
 
-                            if (($this->edit_control)($item)) {
-                                $group->resourceEdit($this->menu['link.edit']($key), '');
+                            if ($cc) {
+                                call_user_func($cc, $group, $model);
                             }
 
-                            if (($this->delete_control)($item)) {
-                                $group->resourceDestroy($this->menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
-                            }
+                            if ($cc_access) {
 
-                            if (($this->info_control)($item)) {
-                                $group->resourceInfo($this->menu['link.show']($key), '');
+                                if (($this->edit_control)($item)) {
+                                    $group->resourceEdit($this->menu['link.edit']($key), '');
+                                }
+
+                                if (($this->delete_control)($item)) {
+                                    $group->resourceDestroy($this->menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                                }
+
+                                if (($this->info_control)($item)) {
+                                    $group->resourceInfo($this->menu['link.show']($key), '');
+                                }
                             }
-                    }));
+                        }));
                 }
             });
             if ($this->maxDepth > 1) {
@@ -248,10 +269,10 @@ class CoreNestable extends DIV
     }
 
     /**
-     * @param  string  $field
+     * @param  string|callable  $field
      * @return $this
      */
-    public function title_field(string $field)
+    public function title_field($field)
     {
         $this->title_field = $field;
 
@@ -265,6 +286,17 @@ class CoreNestable extends DIV
     public function maxDepth(int $depth)
     {
         $this->maxDepth = $depth;
+
+        return $this;
+    }
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function controls(callable $call)
+    {
+        $this->custom_controls = $call;
 
         return $this;
     }

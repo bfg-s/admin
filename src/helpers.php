@@ -293,3 +293,49 @@ if ( ! function_exists('lte_now') ) {
         return gets()->lte->menu->now;
     }
 }
+
+if ( ! function_exists('array_callable_results') ) {
+
+    /**
+     * @param  array  $array
+     * @param  mixed  ...$callable_params
+     * @return array
+     */
+    function array_callable_results(array $array, ...$callable_params)
+    {
+        foreach ($array as $key => $item) {
+            if ($item instanceof Closure) {
+                $array[$key] = $item(...$callable_params);
+            }
+        }
+
+        return $array;
+    }
+}
+
+if ( ! function_exists('check_referer') ) {
+
+    /**
+     * @param  string  $method
+     * @param  string|null  $url
+     * @return bool
+     */
+    function check_referer(string $method = "GET", string $url = null)
+    {
+        $referer = request()->headers->get('referer');
+
+        $result = false;
+
+        if ($url || $referer) {
+
+            $result = \Lar\LteAdmin\Models\LtePermission::checkUrl($url ?: $referer, $method);
+        }
+
+        if (!$result) {
+
+            respond()->toast_error([__('lte.access_denied'), __('lte.error')]);
+        }
+
+        return $result;
+    }
+ }

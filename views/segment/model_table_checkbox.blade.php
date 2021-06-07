@@ -19,6 +19,7 @@
                         data-click="table_action"
                         data-table="{{$table_id}}"
                         data-object="{{$object}}"
+                        data-url="{{url()->current()}}"
                         data-columns="{{json_encode($columns, JSON_UNESCAPED_UNICODE)}}"
                         @if(isset($action['confirm']) && $action['confirm']) data-confirm="@lang($action['confirm'])" @endif
                         data-jax="{{$action['jax']}}"

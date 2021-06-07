@@ -8,7 +8,7 @@ module.exports = class extends Executor {
 
             return ;
         }
-        
+
         if (this.target.dataset.toolbar) {
 
             $options.toolbar = this.target.dataset.toolbar.split(' ');
@@ -24,6 +24,10 @@ module.exports = class extends Executor {
             options: {
                 resourceType: 'Images'
             }
+        };
+
+        $options.mediaEmbed = {
+            previewsInData: true
         };
 
         $options.image = {
@@ -58,7 +62,7 @@ module.exports = class extends Executor {
     }
 
     static __name () {
-    
+
         return "ckeditor";
     }
 };
