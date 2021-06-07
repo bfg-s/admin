@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\ClassEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Core\NavGroup;
-use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Navigate;
 
 /**

@@ -43,9 +43,14 @@ class FunctionsHelperGenerator implements DumpExecute {
      */
     protected function generateDefaultMethods(DocumentorEntity $doc)
     {
-        foreach (LteFunction::all() as $func) {
+        try {
+            if (\Schema::hasTable((new LteFunction)->getTable())) {
 
-            $doc->tagPropertyRead('bool', $func->slug, "Check if the user has access to the function ({$func->description})");
-        }
+                foreach (LteFunction::all() as $func) {
+
+                    $doc->tagPropertyRead('bool', $func->slug, "Check if the user has access to the function ({$func->description})");
+                }
+            }
+        } catch (\Exception $exception) {}
     }
 }
