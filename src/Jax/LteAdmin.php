@@ -117,12 +117,10 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @param  string  $class
      * @param  array  $ids
-     * @param  array  $columns
-     * @param  string  $url
      * @return array
      * @throws \Exception
      */
-    public function mass_delete(string $class, array $ids, array $columns, string $url)
+    public function mass_delete(string $class, array $ids)
     {
         if (!check_referer('DELETE')) return [];
 
