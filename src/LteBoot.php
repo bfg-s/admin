@@ -29,7 +29,7 @@ class LteBoot
         Decorations::class,
         Display::class
     ];
-    
+
     /**
      * Run boot Lte scripts
      */
@@ -57,7 +57,7 @@ class LteBoot
 
         static::formMacros();
 
-        if (\Schema::hasTable('lte_functions')) {
+        if (!app()->runningInConsole() && \Schema::hasTable('lte_functions')) {
 
             static::makeGates();
         }
@@ -88,7 +88,7 @@ class LteBoot
             $this->if($condition)->info('updated_at', 'lte.updated_at');
             $this->if($condition)->info('created_at', 'lte.created_at');
         });
-        
+
         Form::macro('info_id', function ($condition = null) {
             if ($condition === null) $condition = gets()->lte->menu->type === 'edit';
             $this->if($condition)->info('id', 'lte.id');
