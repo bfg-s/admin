@@ -582,6 +582,44 @@ abstract class FormGroup extends DIV {
     }
 
     /**
+     * @return string
+     */
+    public function get_path()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param  string  $path
+     * @return $this
+     */
+    public function set_path(string $path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param  string  $title
+     * @return $this
+     */
+    public function set_title(string $title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
      * @return \Lar\Layout\Tags\INPUT|mixed
      */
     abstract public function field();

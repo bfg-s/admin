@@ -13,6 +13,7 @@ use Lar\LteAdmin\Segments\Tagable\Fields\Hidden;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
+use Lar\LteAdmin\Segments\Tagable\Lang;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelRelation;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
@@ -34,6 +35,7 @@ class TagableComponent extends Component {
     protected $collection = [
         'row' => Row::class,
         'col' => Col::class,
+        'lang' => Lang::class,
         'card' => Card::class,
         'form' => Form::class,
         'form_footer' => FormFooter::class,
