@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -43,6 +44,11 @@ class ModelSaver
      * @var bool
      */
     protected $has_delete = false;
+
+    /**
+     * @var mixed
+     */
+    protected $src = null;
 
     /**
      * @var callable[]
@@ -174,6 +180,17 @@ class ModelSaver
     }
 
     /**
+     * @param $src
+     * @return $this
+     */
+    public function setSrc($src)
+    {
+        $this->src = $src;
+
+        return $this;
+    }
+
+    /**
      * Update model
      *
      * @param $data
@@ -236,24 +253,24 @@ class ModelSaver
                             $has = $builder->whereIn('id', $ids)->get();
                             foreach ($params_with_id as $with_id_key => $with_id) {
                                 if ($model = $has->where('id', $with_id['id'])->first()) {
-                                    (new static($model, $with_id))->save();
+                                    (new static($model, $with_id))->setSrc($builder)->save();
                                 } else {
                                     unset($ids[$with_id_key]);
                                 }
                             }
                             foreach ($param->whereNotIn('id', $ids) as $item) {
-                                (new static($this->model->{$key}(), $item))->save();
+                                (new static($this->model->{$key}(), $item))->setSrc($builder)->save();
                             }
                         }
                         else {
 
-                            (new static($this->model->{$key}(), $param))->save();
+                            (new static($this->model->{$key}(), $param))->setSrc($builder)->save();
                         }
                     }
 
                     else {
 
-                        (new static($this->model->{$key} ?? $builder, $param))->save();
+                        (new static($this->model->{$key} ?? $builder, $param))->setSrc($builder)->save();
                     }
                 }
             }
@@ -276,6 +293,21 @@ class ModelSaver
         $data_for_create = array_merge($data, $r1, $r2);
 
         $this->model = $this->model->create($data_for_create);
+
+        if ($this->src instanceof HasOne) {
+
+            $local_parent_relation = $this->src->getLocalKeyName();
+
+            $parent = $this->src->getParent();
+
+            if (
+                $local_parent_relation != $parent->getKeyName()
+            ) {
+                $parent->update([
+                    $local_parent_relation => $this->model->{$this->model->getKeyName()}
+                ]);
+            }
+        }
 
         if ($this->model) {
 
@@ -324,24 +356,24 @@ class ModelSaver
                             $has = $builder->whereIn('id', $ids)->get();
                             foreach ($params_with_id as $with_id_key => $with_id) {
                                 if ($model = $has->where('id', $with_id['id'])->first()) {
-                                    (new static($model, $with_id))->save();
+                                    (new static($model, $with_id))->setSrc($builder)->save();
                                 } else {
                                     unset($ids[$with_id_key]);
                                 }
                             }
                             foreach ($param->whereNotIn('id', $ids) as $item) {
-                                (new static($this->model->{$key}(), $item))->save();
+                                (new static($this->model->{$key}(), $item))->setSrc($builder)->save();
                             }
                         }
                         else {
 
-                            (new static($this->model->{$key}(), $param))->save();
+                            (new static($this->model->{$key}(), $param))->setSrc($builder)->save();
                         }
                     }
 
                     else {
 
-                        (new static($this->model->{$key} ?? $builder, $param))->save();
+                        (new static($this->model->{$key} ?? $builder, $param))->setSrc($builder)->save();
                     }
                 }
             }

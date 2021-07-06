@@ -2,13 +2,10 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
-use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
-use Lar\Tagable\Core\ContentCollectionArea;
-use Lar\Tagable\Core\Elements\ContentObject;
 use Lar\Tagable\Core\Extension\Content;
 use Lar\Tagable\Events\onRender;
 
@@ -33,7 +30,7 @@ class Lang extends DIV implements onRender {
      * @param  array|null  $lang_list
      * @param ...$params
      */
-    public function __construct(?array $lang_list, ...$params)
+    public function __construct(array $lang_list = null, ...$params)
     {
         $this->lang_list = $lang_list;
 
