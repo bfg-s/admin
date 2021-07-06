@@ -24,11 +24,19 @@ class Lang extends DIV implements onRender {
     use FieldMassControl, Macroable, BuildHelperTrait;
 
     /**
+     * @var array|null
+     */
+    protected $lang_list = null;
+
+    /**
      * Lang constructor.
+     * @param  array|null  $lang_list
      * @param ...$params
      */
-    public function __construct(...$params)
+    public function __construct(?array $lang_list, ...$params)
     {
+        $this->lang_list = $lang_list;
+
         $this->toExecute('make_lang');
 
         parent::__construct();
@@ -67,7 +75,7 @@ class Lang extends DIV implements onRender {
 
             if (is_object($inner_input) && $inner_input instanceof FormGroup) {
                 $inn = [];
-                foreach (array_values(config('layout.languages', [])) as $key => $lang) {
+                foreach (array_values($this->lang_list ?: config('layout.languages', [])) as $lang) {
                     $input = clone $inner_input;
                     $input->set_name($input->get_name() . "[{$lang}]");
                     $input->set_path($input->get_path() . ".{$lang}");
