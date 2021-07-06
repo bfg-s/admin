@@ -75,6 +75,7 @@ class Lang extends DIV implements onRender {
 
             if (is_object($inner_input) && $inner_input instanceof FormGroup) {
                 $inn = [];
+                $inner_input->unregister();
                 foreach (array_values($this->lang_list ?: config('layout.languages', [])) as $lang) {
                     $input = clone $inner_input;
                     $input->set_name($input->get_name() . "[{$lang}]");
