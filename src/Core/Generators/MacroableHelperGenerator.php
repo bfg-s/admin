@@ -44,7 +44,7 @@ class MacroableHelperGenerator implements DumpExecute {
         }
 
         $classes = [];
-        
+
         foreach ($dirs as $dir) {
 
             $files = collect(\File::allFiles($dir))
@@ -124,9 +124,9 @@ class MacroableHelperGenerator implements DumpExecute {
 
                     if (!isset($isset_classes[$namespace_name][$name])) {
 
-                        $namespace->class($name, function (ClassEntity $class_obj) use ($class) {
+                        $namespace->class($name, function ($class_obj) use ($class) {
 
-                            $class_obj->doc(function (DocumentorEntity $doc) use ($class) {
+                            $class_obj->doc(function ($doc) use ($class) {
 
                                 $this->macroMethods($doc, $class);
                             });
@@ -160,10 +160,10 @@ class MacroableHelperGenerator implements DumpExecute {
 
                     if (!isset($isset_classes[$namespace_name][$name])) {
 
-                        $namespace->class($name, function (ClassEntity $class_obj) use ($class) {
+                        $namespace->class($name, function ($class_obj) use ($class) {
 
-                            $class_obj->doc(function (DocumentorEntity $doc) use ($class) {
-
+                            $class_obj->doc(function ($doc) use ($class) {
+                                /** @var DocumentorEntity $doc */
                                 $this->extendMethods($doc, $class);
                             });
                         });
@@ -183,7 +183,7 @@ class MacroableHelperGenerator implements DumpExecute {
      * @param  DocumentorEntity  $doc
      * @param  array  $class_data
      */
-    protected function extendMethods(DocumentorEntity $doc, array $class_data)
+    protected function extendMethods($doc, array $class_data)
     {
         $m = $class_data['methods'];
         foreach ($m['data'] as $method => $method_class) {
@@ -264,7 +264,7 @@ class MacroableHelperGenerator implements DumpExecute {
      * @param  array  $class_data
      * @throws \ReflectionException
      */
-    protected function macroMethods(DocumentorEntity $doc, array $class_data)
+    protected function macroMethods($doc, array $class_data)
     {
         $class = $class_data['class'];
         /** @var Macroable $class */

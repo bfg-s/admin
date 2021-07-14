@@ -24,10 +24,11 @@ class FunctionsHelperGenerator implements DumpExecute {
 
         $namespace->wrap('php');
 
-        $namespace->class("FunctionsDoc", function (ClassEntity $class) {
+        $namespace->class("FunctionsDoc", function ($class) {
 
-            $class->doc(function (DocumentorEntity $doc) {
+            $class->doc(function ($doc) {
 
+                /** @var DocumentorEntity $doc */
                 $this->generateDefaultMethods($doc);
             });
         });
@@ -41,7 +42,7 @@ class FunctionsHelperGenerator implements DumpExecute {
      * @param DocumentorEntity $doc
      * @throws \ReflectionException
      */
-    protected function generateDefaultMethods(DocumentorEntity $doc)
+    protected function generateDefaultMethods($doc)
     {
         try {
             if (\Schema::hasTable((new LteFunction)->getTable())) {

@@ -22,18 +22,20 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
     {
         $namespace = namespace_entity("Lar\LteAdmin\Core");
 
-        $namespace->class("NavigatorExtensions", function (ClassEntity $class) {
+        $namespace->class("NavigatorExtensions", function ($class) {
 
-            $class->doc(function (DocumentorEntity $doc) {
+            $class->doc(function ($doc) {
 
+                /** @var DocumentorEntity $doc */
                 $this->generateDefaultMethods($doc);
             });
         });
 
-        $namespace->class("NavigatorMethods", function (ClassEntity $class) {
+        $namespace->class("NavigatorMethods", function ($class) {
 
-            $class->doc(function (DocumentorEntity $doc) {
+            $class->doc(function ($doc) {
 
+                /** @var DocumentorEntity $doc */
                 $this->generateAllMethods($doc);
             });
         });
@@ -46,7 +48,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
      *
      * @param  DocumentorEntity  $doc
      */
-    protected function generateAllMethods(DocumentorEntity $doc)
+    protected function generateAllMethods($doc)
     {
         $methods = [];
 
@@ -69,7 +71,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
      * @param DocumentorEntity $doc
      * @throws \ReflectionException
      */
-    protected function generateDefaultMethods(DocumentorEntity $doc)
+    protected function generateDefaultMethods($doc)
     {
         foreach (\LteAdmin::extensions() as $name => $provider) {
 
