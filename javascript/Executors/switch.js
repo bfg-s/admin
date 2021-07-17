@@ -26,11 +26,13 @@ module.exports = class extends Executor {
             else {
                 $(`[type="hidden"][name="${event.currentTarget.name}"]`).remove();
             }
+
+            "lte::flash_document".exec();
         });
     }
 
     static __name () {
-    
+
         return "switch";
     }
 };

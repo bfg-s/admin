@@ -9,12 +9,13 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Col;
 use Lar\LteAdmin\Segments\Tagable\Divider;
 use Lar\LteAdmin\Segments\Tagable\Field;
-use Lar\LteAdmin\Segments\Tagable\Fields\Hidden;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\InfoBox;
 use Lar\LteAdmin\Segments\Tagable\Lang;
+use Lar\LteAdmin\Segments\Tagable\Live;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
+use Lar\LteAdmin\Segments\Tagable\ModelLive;
 use Lar\LteAdmin\Segments\Tagable\ModelRelation;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\Nested;
@@ -50,6 +51,8 @@ class TagableComponent extends Component {
         'tabs' => Tabs::class,
         'nested' => Nested::class,
         'divider' => Divider::class,
+        'live' => Live::class,
+        'model_live' => ModelLive::class,
         'model_relation' => ModelRelation::class
     ];
 

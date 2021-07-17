@@ -28,4 +28,18 @@ module.exports = ($methods) => {
 
     ljs.regExec(require('./Executors/str'));
     ljs.regExec(require('./Executors/table_action'));
+    ljs.regExec(require('./Executors/tabs'));
+    ljs.regExec(require('./Executors/cookie'));
+
+    $(document).on('change', '[name]', (e) => {
+        let obj = e.target;
+        "lte::flash_document".exec(obj.name, obj.value);
+    });
+
+    $(document).on('pjax:complete', (xhr, req, status) => {
+
+        "tabs".exec();
+    });
+
+    "tabs".exec();
 };

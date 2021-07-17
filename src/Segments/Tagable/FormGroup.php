@@ -133,9 +133,8 @@ abstract class FormGroup extends DIV {
 
     /**
      * FormGroup constructor.
-     * @param  Component  $parent
-     * @param  string  $title
      * @param  string  $name
+     * @param  string|null  $title
      * @param  mixed  ...$params
      */
     public function __construct(string $name, string $title = null, ...$params)

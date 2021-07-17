@@ -112,7 +112,7 @@ class Controller extends BaseController
         }
 
         $updated = $this->requestToModel($save);
-        
+
         if ($updated) {
 
             static::fire_pipes($updated, 'updated');
@@ -279,14 +279,41 @@ class Controller extends BaseController
                 return embedded_call([$sclass, $method], $parameters);
             }
         }
-        
+
         $method_default = "{$method}_default";
 
         if (method_exists($this, $method_default)) {
-            
+
             return $this->{$method_default}();
         }
 
         parent::__call($method, $parameters);
+    }
+
+    /**
+     * @param  string|null  $name
+     * @param  null  $default
+     * @return array|mixed|null
+     */
+    public function form(string $name = null, $default = null)
+    {
+        $all = request()->all();
+
+        if ($name) {
+
+            return array_key_exists($name, $all) ? $all[$name] : $default;
+        }
+
+        return $all;
+    }
+
+    /**
+     * @param  string  $name
+     * @param $value
+     * @return bool
+     */
+    public function isForm(string $name, $value)
+    {
+        return $this->form($name) == $value;
     }
 }

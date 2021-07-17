@@ -17,6 +17,12 @@ class Tabs extends DIV implements onRender {
     use Macroable;
 
     /**
+     * Count of tabs
+     * @var int
+     */
+    protected static $counter = 0;
+
+    /**
      * @var bool
      */
     protected $only_content = true;
@@ -80,7 +86,7 @@ class Tabs extends DIV implements onRender {
         if (class_exists($title)) {
 
             $content = new $title();
-            
+
             if ($content instanceof TabContent) {
 
                 if ($content->getTitle()) {
@@ -100,7 +106,7 @@ class Tabs extends DIV implements onRender {
         }
 
         $this->makeNav();
-        $id = 'tab-' . md5($title);
+        $id = 'tab-' . md5($title) . '-' . static::$counter;
         $active = !$this->nav->contentCount();
         $a = $this->nav->li(['nav-item'])->a([
             'nav-link',
@@ -110,6 +116,7 @@ class Tabs extends DIV implements onRender {
             'aria-controls' => $id,
             'aria-selected' => $active ? 'true' : 'false'
         ])
+            ->on_click('tabs::tab_button')
             ->addClassIf($active, 'active')
             ->setHref("#{$id}");
 
@@ -126,6 +133,8 @@ class Tabs extends DIV implements onRender {
 
         $this->tab_contents
             ->appEnd($content);
+
+        static::$counter++;
 
         return $content;
     }
