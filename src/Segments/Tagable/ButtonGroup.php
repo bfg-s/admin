@@ -184,7 +184,7 @@ class ButtonGroup extends DIV implements onRender {
 
         return $this;
     }
-    
+
     /**
      * Resource group
      */
@@ -277,11 +277,11 @@ class ButtonGroup extends DIV implements onRender {
      * Resource add button
      * @param  string|null  $link
      * @param  string|null  $title
-     * @param  string|null  $rk_name
+     * @param  string|null  $message
      * @param  null  $key
      * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
      */
-    public function resourceDestroy(string $link = null, string $title = null, string $rk_name = null, $key = null)
+    public function resourceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
@@ -301,7 +301,7 @@ class ButtonGroup extends DIV implements onRender {
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    __('lte.delete_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key?":{$key}?":"")]),
                     $link . " >> \$jax.del"
                 ]
             ])->setTitleIf($title === '', __('lte.delete'));
@@ -314,11 +314,11 @@ class ButtonGroup extends DIV implements onRender {
      * Resource add button
      * @param  string|null  $link
      * @param  string|null  $title
-     * @param  string|null  $rk_name
+     * @param  string|null  $message
      * @param  null  $key
      * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
      */
-    public function resourceForceDestroy(string $link = null, string $title = null, string $rk_name = null, $key = null)
+    public function resourceForceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
@@ -338,7 +338,7 @@ class ButtonGroup extends DIV implements onRender {
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete_forever')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_forever_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    __('lte.delete_forever_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key?":{$key}?":"")]),
                     $link . "?force=1 >> \$jax.del"
                 ]
             ])->setTitleIf($title === '', __('lte.delete_forever'));
@@ -351,11 +351,11 @@ class ButtonGroup extends DIV implements onRender {
      * Resource add button
      * @param  string|null  $link
      * @param  string|null  $title
-     * @param  string|null  $rk_name
+     * @param  string|null  $message
      * @param  null  $key
      * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
      */
-    public function resourceRestore(string $link = null, string $title = null, string $rk_name = null, $key = null)
+    public function resourceRestore(string $link = null, string $title = null, string $message = null, $key = null)
     {
         if (!$link && $this->model && $this->model->exists) {
 
@@ -375,7 +375,7 @@ class ButtonGroup extends DIV implements onRender {
             return $this->warning(['fas fa-trash-restore-alt', $title ?? __('lte.restore')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.restore_subject', ['subject' => strtoupper($rk_name ?? $this->model->getRouteKeyName()).":{$key}?"]),
+                    __('lte.restore_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key?":{$key}?":"")]),
                     $link . "?restore=1 >> \$jax.del"
                 ]
             ])->setTitleIf($title === '', __('lte.restore'));
@@ -385,15 +385,15 @@ class ButtonGroup extends DIV implements onRender {
     }
 
     /**
-     * @param  array  $btn
+     * @param  string|array|null  $icon
      * @param  string|null  $form
      * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
-    public function submit($btn = null, string $form = null)
+    public function submit($icon = null, string $form = null)
     {
-        if (!$btn) {
+        if (!$icon) {
 
-            $btn = ['fas fa-save', __('lte.submit')];
+            $icon = ['fas fa-save', __('lte.submit')];
         }
 
         $datas = [
@@ -405,7 +405,7 @@ class ButtonGroup extends DIV implements onRender {
             $datas['form'] = $form;
         }
 
-        return $this->success($btn)->setDatas($datas);
+        return $this->success($icon)->setDatas($datas);
     }
 
     /**
