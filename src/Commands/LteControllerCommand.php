@@ -3,15 +3,12 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Segments\Info;
 use Lar\LteAdmin\Segments\Matrix;
 use Lar\LteAdmin\Segments\Sheet;
-use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -82,7 +79,7 @@ class LteControllerCommand extends Command
         }
 
         $dir = lte_app_path('Controllers' . $add_dir);
-        
+
         $class = class_entity($name)
             ->wrap('php')
             ->extend('Controller')
@@ -119,7 +116,7 @@ class LteControllerCommand extends Command
                 ->tab("\$table->id();")
                 ->tab("\$table->at();")
                 ->line("});")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Sheet::class); });
+                ->doc(function ($doc) { $doc->tagReturn(Sheet::class); });
 
             $class->method('matrix')->line()
                 ->line("return new Matrix(function (Form \$form) {")
@@ -127,14 +124,14 @@ class LteControllerCommand extends Command
                 ->tab("\$form->autoMake();")
                 ->tab("\$form->info_at();")
                 ->line("});")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Matrix::class); });
+                ->doc(function ($doc) { $doc->tagReturn(Matrix::class); });
 
             $class->method('show')->line()
                 ->line("return Info::create(function (ModelInfoTable \$table) {")
                 ->tab("\$table->id();")
                 ->tab("\$table->at();")
                 ->line("});")
-                ->doc(function (DocumentorEntity $doc) { $doc->tagReturn(Info::class); });
+                ->doc(function ($doc) { $doc->tagReturn(Info::class); });
 
         }
 
@@ -149,24 +146,6 @@ class LteControllerCommand extends Command
         file_put_contents($file, $class->render());
 
         $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
-
-        if ($model && isset($model_namespace) && !class_exists($model_namespace)) {
-
-            $this->call("make:model", [
-                'name' => "Models/" . $model,
-                '--migration' => true,
-                '--factory' => true,
-                '--seed' => true
-            ]);
-
-            $this->call("make:getter", [
-                'name' => $model
-            ]);
-
-            $this->call("make:jax", [
-                'name' => $model
-            ]);
-        }
     }
 
     /**
