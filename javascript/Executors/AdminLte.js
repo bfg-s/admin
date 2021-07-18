@@ -6,16 +6,18 @@ class AdminLte extends Executor {
         let data = {};
         let areas = [];
         $('.__live__').each((i, o) => areas.push(o.getAttribute('id')));
-        $(":input").serializeArray().map(({name, value}) => data[name] = value);
-        if (changed_name) data[changed_name] = changed_value;
-        data._areas = areas;
-        $.get(location.href, data, (content) => {
-            if (typeof content === 'object') {
-                Object.keys(content).map((key) => {
-                    $(`#${key}`).html(content[key]);
-                });
-            }
-        })
+        if (areas.length) {
+            $(":input").serializeArray().map(({name, value}) => data[name] = value);
+            if (changed_name) data[changed_name] = changed_value;
+            data._areas = areas;
+            $.get(location.href, data, (content) => {
+                if (typeof content === 'object') {
+                    Object.keys(content).map((key) => {
+                        $(`#${key}`).html(content[key]);
+                    });
+                }
+            })
+        }
     }
 
     add_relation_tpl (path) {

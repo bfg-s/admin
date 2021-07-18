@@ -28,11 +28,20 @@ class Live extends SPAN implements onRender {
      * Live constructor.
      * @param ...$params
      */
-    public function __construct(...$params)
+    public function __construct($condition, ...$params)
     {
         parent::__construct();
 
-        $this->when($params);
+        if ($condition instanceof \Closure) {
+
+            $params[] = $condition;
+            $condition = true;
+        }
+
+        if ($condition) {
+
+            $this->when($params);
+        }
 
         $this->addClass('__live__')
             ->setId('live-' . static::$counter);

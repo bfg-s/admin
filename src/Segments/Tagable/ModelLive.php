@@ -24,7 +24,7 @@ class ModelLive extends Live {
      */
     public function __construct(string $path, $need_value, ...$params)
     {
-        parent::__construct();
+        parent::__construct(true);
 
         if ($need_value instanceof \Closure) {
 
@@ -36,7 +36,7 @@ class ModelLive extends Live {
 
         $request_value = multi_dot_call(request()->all(), $path);
 
-        $this->value = old($path, ($model ? (multi_dot_call($model, $path, false) ?? $request_value): $request_value));
+        $this->value = old($path, $request_value ?: ($model ? multi_dot_call($model, $path, false) : null));
 
         $this->conditions($need_value, $params);
     }

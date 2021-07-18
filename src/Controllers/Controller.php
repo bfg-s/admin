@@ -291,29 +291,33 @@ class Controller extends BaseController
     }
 
     /**
-     * @param  string|null  $name
+     * @param  string|null  $path
      * @param  null  $default
      * @return array|mixed|null
      */
-    public function form(string $name = null, $default = null)
+    public function form(string $path = null, $default = null)
     {
-        $all = request()->all();
+        if ($path) {
 
-        if ($name) {
-
-            return array_key_exists($name, $all) ? $all[$name] : $default;
+            return request($path, $default);
         }
 
-        return $all;
+        return request()->all();
     }
 
     /**
-     * @param  string  $name
-     * @param $value
+     * @param  string  $path
+     * @param $need_value
      * @return bool
      */
-    public function isForm(string $name, $value)
+    public function isForm(string $path, $need_value)
     {
-        return $this->form($name) == $value;
+        $model = Form::$current_model;
+
+        $request_value = multi_dot_call($this->form(), $path);
+
+        $value = old($path, $request_value ?: ($model ? multi_dot_call($model, $path, false) : null));
+
+        return $value == $need_value;
     }
 }
