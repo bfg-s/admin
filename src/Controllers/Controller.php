@@ -303,7 +303,7 @@ class Controller extends BaseController
 
             if ($model && $model->exists) {
 
-                return multi_dot_call(static::$model, $path) ?: request($path, $default);
+                return multi_dot_call($model, $path) ?: request($path, $default);
             }
 
             return request($path, $default);
