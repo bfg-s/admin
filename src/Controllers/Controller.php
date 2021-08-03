@@ -299,6 +299,11 @@ class Controller extends BaseController
     {
         if ($path) {
 
+            if (property_exists(static::class, 'model')) {
+
+                return multi_dot_call(static::$model, $path) ?: request($path, $default);
+            }
+
             return request($path, $default);
         }
 
