@@ -209,7 +209,16 @@ class ModelSaver
         $r1 = $this->call_on('on_save', $this->data, $this->model);
         $r2 = $this->call_on('on_update', $this->data, $this->model);
 
-        $result = $this->model->update(array_merge($data, $r1, $r2));
+        $event_data = array_merge($r1, $r2);
+
+        if ($event_data) {
+
+            $this->data = array_merge($this->data, $event_data);
+
+            list($data, $add) = $this->getDatas();
+        }
+
+        $result = $this->model->update(array_merge($data, $event_data));
 
         $this->call_on('on_saved', $this->data, $result);
         $this->call_on('on_updated', $this->data, $result);
@@ -290,7 +299,16 @@ class ModelSaver
         $r1 = $this->call_on('on_save', $this->data, $this->model);
         $r2 = $this->call_on('on_create', $this->data, $this->model);
 
-        $data_for_create = array_merge($data, $r1, $r2);
+        $event_data = array_merge($r1, $r2);
+
+        if ($event_data) {
+
+            $this->data = array_merge($this->data, $event_data);
+
+            list($data, $add) = $this->getDatas();
+        }
+
+        $data_for_create = array_merge($data, $event_data);
 
         $this->model = $this->model->create($data_for_create);
 
