@@ -107,6 +107,42 @@ class LteInstallCommand extends Command
             );
 
             $this->info("File {$extensions} created!");
+
+            $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
+
+            if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump']) === false) {
+
+                $base_composer['scripts']['post-autoload-dump'][] = 'chmod -R 0777 public/uploads';
+                $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
+
+                file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
+
+                $this->info("File composer.json updated!");
+            }
+
+            $gitignore = file_get_contents(base_path('.gitignore'));
+
+            $add_to_ignore = "";
+
+            if (strpos($gitignore, 'public/lte-asset') === false) {
+                $add_to_ignore .= "public/lte-asset\n";
+                $this->info("Add folder [public/lte-asset] to .gitignore");
+            }
+
+            if (strpos($gitignore, 'public/lte-admin') === false) {
+                $add_to_ignore .= "public/lte-admin\n";
+                $this->info("Add folder [public/lte-admin] to .gitignore");
+            }
+
+            if (strpos($gitignore, 'public/ljs') === false) {
+                $add_to_ignore .= "public/ljs\n";
+                $this->info("Add folder [public/ljs] to .gitignore");
+            }
+
+            if ($add_to_ignore) {
+
+                file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
+            }
         }
 
         $controller = lte_app_path('Controllers/Controller.php');
@@ -148,42 +184,6 @@ class LteInstallCommand extends Command
             $this->call('vendor:publish', [
                 '--tag' => 'lte-config'
             ]);
-        }
-
-        $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
-
-        if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump']) === false) {
-
-            $base_composer['scripts']['post-autoload-dump'][] = 'chmod -R 0777 public/uploads';
-            $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
-
-            file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
-
-            $this->info("File composer.json updated!");
-        }
-
-        $gitignore = file_get_contents(base_path('.gitignore'));
-
-        $add_to_ignore = "";
-
-        if (strpos($gitignore, 'public/lte-asset') === false) {
-            $add_to_ignore .= "public/lte-asset\n";
-            $this->info("Add folder [public/lte-asset] to .gitignore");
-        }
-
-        if (strpos($gitignore, 'public/lte-admin') === false) {
-            $add_to_ignore .= "public/lte-admin\n";
-            $this->info("Add folder [public/lte-admin] to .gitignore");
-        }
-
-        if (strpos($gitignore, 'public/ljs') === false) {
-            $add_to_ignore .= "public/ljs\n";
-            $this->info("Add folder [public/ljs] to .gitignore");
-        }
-
-        if ($add_to_ignore) {
-
-            file_put_contents(base_path('.gitignore'), trim($gitignore) . "\n" . $add_to_ignore);
         }
 
         if ($make_seeds) {

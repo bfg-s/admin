@@ -301,7 +301,7 @@ class Controller extends BaseController
 
             $model = $this->model();
 
-            if ($model && $model->exists) {
+            if ($model && $model->exists && !request()->has($path)) {
 
                 return multi_dot_call($model, $path) ?: request($path, $default);
             }

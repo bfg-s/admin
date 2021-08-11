@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Fields\Amount;
+use Lar\LteAdmin\Segments\Tagable\Fields\Autocomplete;
 use Lar\LteAdmin\Segments\Tagable\Fields\Checks;
 use Lar\LteAdmin\Segments\Tagable\Fields\CKEditor;
 use Lar\LteAdmin\Segments\Tagable\Fields\CodeMirror;
