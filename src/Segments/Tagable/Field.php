@@ -82,6 +82,7 @@ class Field extends DIV implements onRender {
         'info' => Info::class,
         'rating' => Rating::class,
         'hidden' => Hidden::class,
+        'autocomplete' => Autocomplete::class,
     ];
 
     /**
