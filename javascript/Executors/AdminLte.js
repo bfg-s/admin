@@ -3,14 +3,14 @@
 class AdminLte extends Executor {
 
     flash_document (changed_name = null, changed_value = null) {
-        let data = {};
-        let areas = [];
-        $('.__live__').each((i, o) => areas.push(o.getAttribute('id')));
-        if (areas.length) {
-            $(":input").serializeArray().map(({name, value}) => data[name] = value);
-            if (changed_name) data[changed_name] = changed_value;
-            data._areas = areas;
-            $.get(location.href, data, (content) => {
+        let data = $(":input").serializeArray();
+        let lives = $('.__live__');
+        if (lives[0]) {
+            lives.each((i, o) => data.push({name: '_areas[]', value: o.getAttribute('id')}));
+            data.map(({name}, key) => {
+                if (changed_name && name === changed_name) data[key] = {name, value: changed_value};
+            });
+            $.get(location.href + "", data, (content) => {
                 if (typeof content === 'object') {
                     Object.keys(content).map((key) => {
                         $(`#${key}`).html(content[key]);
