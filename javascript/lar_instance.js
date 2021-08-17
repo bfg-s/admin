@@ -33,7 +33,9 @@ module.exports = ($methods) => {
 
     $(document).on('change', '[name]', (e) => {
         let obj = e.target;
-        "lte::flash_document".exec(obj.name, obj.value);
+        if (!$(obj).parents('.__live__')[0]) {
+            "lte::flash_document".exec(obj.name, obj.value);
+        }
     });
 
     $(document).on('pjax:complete', (xhr, req, status) => {

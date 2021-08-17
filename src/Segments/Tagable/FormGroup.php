@@ -433,7 +433,10 @@ abstract class FormGroup extends DIV {
      */
     protected function create_value () {
 
-        return old($this->path, ($this->model ? (multi_dot_call($this->model, $this->path, false) ?? $this->value): $this->value));
+        return old(
+            $this->path,
+            request($this->path, $this->model ? (multi_dot_call($this->model, $this->path, false) ?? $this->value): $this->value)
+        );
     }
 
     /**
