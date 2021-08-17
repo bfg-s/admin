@@ -66,8 +66,9 @@ class MacroableHelperGenerator implements DumpExecute {
                     continue ;
                 }
 
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $command->error($exception->getMessage());
+                \Log::error($exception);
                 continue ;
             }
 
@@ -204,9 +205,10 @@ class MacroableHelperGenerator implements DumpExecute {
                 } else {
                     $ref = new \ReflectionClass($method_class);
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 //dd($method, $method_class);
                 $this->command->error($e->getMessage());
+                \Log::error($e);
             }
             $params = $m[4];
             if ($method_class instanceof \Closure) {
