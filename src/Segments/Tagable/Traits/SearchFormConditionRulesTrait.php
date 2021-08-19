@@ -199,7 +199,7 @@ trait SearchFormConditionRulesTrait {
                     $i=0;
                     foreach ($this->global_search_fields as $global_search_field) {
                         $find = collect($this->fields)->where('field_name', $global_search_field)->first();
-                        if ($find) {
+                        if ($find && (!isset($find['method']) || !is_embedded_call($find['method']))) {
                             if ($i) {
                                 $model = $model->orWhere($global_search_field, 'like', "%{$r}%");
                             } else {
@@ -215,10 +215,13 @@ trait SearchFormConditionRulesTrait {
                         ->pluck('field_name')
                         ->map(function ($field, $k) use (&$model, $r) {
 
-                            if ($k) {
-                                $model = $model->orWhere($field, 'like', "%{$r}%");
-                            } else {
-                                $model = $model->where($field, 'like', "%{$r}%");
+                            if (!isset($field['method']) || !is_embedded_call($field['method'])) {
+
+                                if ($k) {
+                                    $model = $model->orWhere($field, 'like', "%{$r}%");
+                                } else {
+                                    $model = $model->where($field, 'like', "%{$r}%");
+                                }
                             }
                         });
                 }

@@ -20,7 +20,7 @@ class Formatter {
     public function str_limit($value, $props = [])
     {
         $limit = $props[0] ?? 20;
-        $str = \Str::limit($value, $limit);
+        $str = \Str::limit(strip_tags($value), $limit);
 
         if ($value == $str) {
 
