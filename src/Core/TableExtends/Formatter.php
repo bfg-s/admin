@@ -31,7 +31,6 @@ class Formatter {
         return "<span title='{$value}'>" . $str . "</span>";
     }
 
-
     /**
      * @param $value
      * @param  array  $props
