@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Core\TableExtends;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
+use Lar\Layout\Tags\I;
 
 /**
  * Class Formatter
@@ -19,14 +20,147 @@ class Formatter {
      */
     public function str_limit($value, $props = [])
     {
+        $value = strip_tags($value);
         $limit = $props[0] ?? 20;
-        $str = \Str::limit(strip_tags($value), $limit);
+        $str = \Str::limit($value, $limit);
 
         if ($value == $str) {
 
             return $str;
         }
         return "<span title='{$value}'>" . $str . "</span>";
+    }
+
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @return string
+     * @throws \Exception
+     */
+    public function admin_resource_route($value, array $props = [], Model $model = null)
+    {
+        if (!isset($props[0]) || !$props[0]) { // route name
+
+            throw new \Exception('Enter admin resource name!');
+        }
+        if (!isset($props[1]) || !$props[1]) { // url param name
+
+            $props[1] = \Str::singular($props[0]);
+        }
+        if (!isset($props[2]) || !$props[2]) { // model param name
+
+            $props[2] = \Str::singular($props[0]).'_id';
+        }
+
+        $urlIndex = route(
+            config('lte.route.name') . $props[0] . ".index"
+        );
+
+        $urlEdit = route(
+            config('lte.route.name') . $props[0] . ".edit",
+            [$props[1] => $model ? $model->{$props[2]} : '']
+        );
+
+        $urlShow = route(
+            config('lte.route.name') . $props[0] . ".show",
+            [$props[1] => $model ? $model->{$props[2]} : '']
+        );
+
+        $urlIndex = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlIndex) ?
+            $urlIndex : false;
+
+        $urlEdit = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlEdit) ?
+            $urlEdit : false;
+
+        $urlShow = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlShow) ?
+            $urlShow : false;
+
+        return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+            )->setTitle(__('lte.edit')) : "") . $value .
+
+            ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
+            )->setTitle(__('lte.information')) : "") .
+
+            ($urlIndex ? A::create(['ml-1 link text-sm'])->setHref($urlIndex)->appEnd(
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-list-alt')
+            )->setTitle(__('lte.list')) : "");
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @return string
+     * @throws \Exception
+     */
+    public function admin_resource_route_edit($value, array $props = [], Model $model = null)
+    {
+        if (!isset($props[0]) || !$props[0]) { // route name
+
+            throw new \Exception('Enter admin resource name!');
+        }
+        if (!isset($props[1]) || !$props[1]) { // url param name
+
+            $props[1] = \Str::singular($props[0]);
+        }
+        if (!isset($props[2]) || !$props[2]) { // model param name
+
+            $props[2] = \Str::singular($props[0]).'_id';
+        }
+
+        $urlEdit = route(
+            config('lte.route.name') . $props[0] . ".edit",
+            [$props[1] => $model ? $model->{$props[2]} : '']
+        );
+
+        $urlEdit = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlEdit) ?
+            $urlEdit : false;
+
+
+        return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+            )->setTitle(__('lte.edit')) : "") . $value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @return string
+     * @throws \Exception
+     */
+    public function admin_resource_route_show($value, array $props = [], Model $model = null)
+    {
+        if (!isset($props[0]) || !$props[0]) { // route name
+
+            throw new \Exception('Enter admin resource name!');
+        }
+        if (!isset($props[1]) || !$props[1]) { // url param name
+
+            $props[1] = \Str::singular($props[0]);
+        }
+        if (!isset($props[2]) || !$props[2]) { // model param name
+
+            $props[2] = \Str::singular($props[0]).'_id';
+        }
+
+        $urlShow = route(
+            config('lte.route.name') . $props[0] . ".show",
+            [$props[1] => $model ? $model->{$props[2]} : '']
+        );
+
+        $urlShow = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlShow) ?
+            $urlShow : false;
+
+        return  $value .
+
+            ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
+            )->setTitle(__('lte.information')) : "");
     }
 
     /**
