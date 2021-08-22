@@ -130,7 +130,7 @@ class Select extends FormGroup
      * @param  \Closure|array|null  $where
      * @return $this
      */
-    public function load($subject, string $format = null, $where = null)
+    public function load($subject, string $format = 'id:name', $where = null)
     {
         $this->load_subject = $subject;
         $this->load_format = $format;
