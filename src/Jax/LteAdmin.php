@@ -38,7 +38,9 @@ class LteAdmin extends LteAdminExecutor
             \DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
                 foreach ($this->nestable_collapse($data, $depth, $parent_field, null, $order_field) as $item) {
                     /** @var Model $model */
-                    $model::where('id', $item['id'])->update($item['data']);
+                    if ($model = $model::where('id', $item['id'])->first()) {
+                        $model->update($item['data']);
+                    }
                 }
             });
             static::$i = 0;
