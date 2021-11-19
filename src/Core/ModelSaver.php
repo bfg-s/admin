@@ -63,6 +63,11 @@ class ModelSaver
     /**
      * @var callable[]
      */
+    protected static $on_finish = [];
+
+    /**
+     * @var callable[]
+     */
     protected static $on_create = [];
 
     /**
@@ -220,10 +225,10 @@ class ModelSaver
 
         $result = $this->model->update(array_merge($data, $event_data));
 
-        $this->call_on('on_saved', $this->data, $result);
-        $this->call_on('on_updated', $this->data, $result);
-
         if ($result) {
+
+            $this->call_on('on_saved', $this->data, $result);
+            $this->call_on('on_updated', $this->data, $result);
 
             foreach ($add as $key => $param) {
 
@@ -283,6 +288,8 @@ class ModelSaver
                     }
                 }
             }
+
+            $this->call_on('on_finish', $this->data, $this->model);
         }
 
         return $result;
@@ -395,6 +402,8 @@ class ModelSaver
                     }
                 }
             }
+
+            $this->call_on('on_finish', $this->data, $this->model);
 
             return $this->model;
         }
@@ -570,6 +579,15 @@ class ModelSaver
     public static function on_saved($model, callable $call = null)
     {
         static::on('saved', $model, $call);
+    }
+
+    /**
+     * @param  string|callable  $model
+     * @param  callable|null  $call
+     */
+    public static function on_finish($model, callable $call = null)
+    {
+        static::on('finish', $model, $call);
     }
 
     /**
