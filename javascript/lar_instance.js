@@ -43,5 +43,10 @@ module.exports = ($methods) => {
         "tabs".exec();
     });
 
+    $(document).on('click', '[href^=\\#tab-]', (e) => {
+        e.preventDefault();
+        history.pushState("", document.title, e.target.href)
+    })
+
     "tabs".exec();
 };

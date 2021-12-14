@@ -10,11 +10,9 @@ module.exports = class extends Executor {
         }
     }
 
-    tab_button () {
-
-        this.event.preventDefault();
-
-        history.pushState("", document.title, this.target.href)
+    tab_button (e) {
+        // this.event.preventDefault();
+        // history.pushState("", document.title, this.target.href)
     }
 
     get tab_regexp () {

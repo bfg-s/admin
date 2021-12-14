@@ -73,13 +73,14 @@ class Tabs extends DIV implements onRender {
     /**
      * @param  string  $title
      * @param  string|mixed  $icon
-     * @param  array  $attrs
+     * @param  \Closure|null  $contentCb
+     * @param  bool|null  $active
      * @return Component
      */
-    public function tab(string $title, $icon = null, ...$attrs)
+    public function tab(string $title, $icon = null, ?\Closure $contentCb = null, ?bool $active = null)
     {
         if($icon && !is_string($icon)) {
-            $attrs[] = $icon;
+            $contentCb = $icon;
             $icon = null;
         }
 
@@ -107,7 +108,7 @@ class Tabs extends DIV implements onRender {
 
         $this->makeNav();
         $id = 'tab-' . md5($title) . '-' . static::$counter;
-        $active = !$this->nav->contentCount();
+        $active = $active === null ? !$this->nav->contentCount() : $active;
         $a = $this->nav->li(['nav-item'])->a([
             'nav-link',
             'id' => $id . "-label",
@@ -116,7 +117,7 @@ class Tabs extends DIV implements onRender {
             'aria-controls' => $id,
             'aria-selected' => $active ? 'true' : 'false'
         ])
-            ->on_click('tabs::tab_button')
+            //->on_click('tabs::tab_button')
             ->addClassIf($active, 'active')
             ->setHref("#{$id}");
 
@@ -128,7 +129,7 @@ class Tabs extends DIV implements onRender {
             'id' => $id,
             'aria-labelledby' => $id . "-label"
         ])->when($this->tab_content_props)
-            ->when($attrs)
+            ->when($contentCb)
             ->addClassIf($active, 'active show');
 
         $this->tab_contents

@@ -12,7 +12,7 @@ use Lar\Layout\Core\LConfigs;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LtePermission;
-use voku\helper\HtmlDomParser;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class Authenticate
@@ -60,6 +60,7 @@ class Authenticate
 
         if (!$this->access()) {
             if ($request->ajax() && !$request->pjax()) {
+                lte_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
                 $respond = ["0:toast::error" => [__('lte.access_denied'), __('lte.error')]];
 
                 if (request()->has("_exec")) {
@@ -69,6 +70,7 @@ class Authenticate
                 return response()->json($respond);
             } else {
                 if (!$request->isMethod('get')) {
+                    lte_log_danger('Pattern go to the forbidden zone', 'Blocked GET request', 'fas fa-shield-alt');
                     session()->flash("respond",
                         respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
 
@@ -79,6 +81,8 @@ class Authenticate
             static::$access = false;
         }
 
+        lte_log_primary('Loaded page', trim(\Route::currentRouteAction(), '\\'));
+
         /** @var Response $res */
         $res = $next($request);
 
@@ -88,12 +92,12 @@ class Authenticate
             if ($_areas) {
                 $hashes = \Cache::get('admin_areas_hashes', []);
 
-                $html = HtmlDomParser::str_get_html($res->getContent());
+                $html = new Crawler($res->getContent());
 
                 $result_areas = [];
 
                 foreach ($_areas as $area) {
-                    $html_text = $html->find("#{$area}", 0)->innerText();
+                    $html_text = $html->filter("#{$area}")->eq(0)->html();
                     $html_hash = md5($html_text);
                     if (isset($hashes[$area])) {
                         if ($hashes[$area] != $html_hash) {

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Respond;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Info;
@@ -41,6 +42,14 @@ class Controller extends BaseController
      * @var array
      */
     public static $crypt_fields = [];
+
+    /**
+     * Controller constructor
+     */
+    public function __construct()
+    {
+        $this->makeModelEvents();
+    }
 
     /**
      * Display a listing of the resource.
@@ -326,5 +335,25 @@ class Controller extends BaseController
         $value = old($path, $request_value ?: ($model ? multi_dot_call($model, $path, false) : null));
 
         return $value == $need_value;
+    }
+
+    private function makeModelEvents()
+    {
+        if (
+            property_exists($this, 'model')
+            && class_exists(static::$model)
+        ) {
+            /** @var Model $model */
+            $model = static::$model;
+            $model::created(function ($model) {
+                lte_log_info('Created model', get_class($model), 'fas fa-plus');
+            });
+            $model::updated(function ($model) {
+                lte_log_info('Updated model', get_class($model), 'fas fa-highlighter');
+            });
+            $model::deleted(function ($model) {
+                lte_log_danger('Deleted model', get_class($model), 'fas fa-trash');
+            });
+        }
     }
 }

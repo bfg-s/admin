@@ -1,5 +1,57 @@
 <?php
 
+if (!function_exists('lte_log')) {
+    /**
+     * @param  string  $title
+     * @param  string|null  $detail
+     * @param  string|null  $icon
+     * @return string
+     */
+    function lte_log (string $title, ?string $detail = null, string $icon = null) {
+        $params = [];
+        $params['icon'] = $icon ?: (gets()->lte->menu->now ? gets()->lte->menu->now['icon'] : $icon);
+        $params['title'] = $title;
+        $params['detail'] = $detail;
+        $params['ip'] = request()->ip();
+        $params['url'] = url()->current();
+        $params['route'] = \Route::currentRouteName();
+        $params['method'] = request()->method();
+        $params['web_id'] = \Auth::check() ? \Auth::id() : null;
+        $params['session_id'] = session()->getId();
+        $params['user_agent'] = request()->userAgent();
+
+        return admin() ? admin()->logs()->create($params) : false;
+    }
+
+    function lte_log_warning (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-warning");
+    }
+
+    function lte_log_primary (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-primary");
+    }
+
+    function lte_log_secondary (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-secondary");
+    }
+
+    function lte_log_success (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-success");
+    }
+
+    function lte_log_info (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-info");
+    }
+
+    function lte_log_danger (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-danger");
+    }
+
+    function lte_log_dark (string $title, ?string $detail = null, string $icon = null) {
+        return lte_log($title, $detail, ($icon ?: "fas fa-lightbulb") . " bg-dark");
+    }
+}
+
 if (!function_exists('lte_relative_path')) {
 
     /**

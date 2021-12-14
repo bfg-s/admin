@@ -28,7 +28,7 @@ class Info extends Container {
             $card = null;
             $div->card($title)->haveLink($card)
                 ->defaultTools()
-                ->foolBody()->model_info_table(function (ModelInfoTable $table) use ($warp, $card) {
+                ->fullBody()->model_info_table(function (ModelInfoTable $table) use ($warp, $card) {
                     if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             ModelInfoTable::class => $table,

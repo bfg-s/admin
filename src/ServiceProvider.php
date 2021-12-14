@@ -62,13 +62,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $listen = [
-        \Lar\LteAdmin\Events\Scaffold::class => [
-            \Lar\LteAdmin\Listeners\Scaffold\CreateMigration::class,
-            \Lar\LteAdmin\Listeners\Scaffold\CreateModel::class,
-            \Lar\LteAdmin\Listeners\Scaffold\CreateController::class,
-            \Lar\LteAdmin\Listeners\Scaffold\CreateControllerPermissions::class,
-            \Lar\LteAdmin\Listeners\Scaffold\RunMigrate::class,
-        ]
+
     ];
 
     /**

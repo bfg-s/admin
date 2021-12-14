@@ -8,7 +8,6 @@ const load = () => {
     ljs.vue.component('global_search', require('./Components/GlobalSearch').default);
     ljs.vue.component('gate_tools', require('./Components/GatesTools').default);
     ljs.vue.component('scaffold_tools', require('./Components/ScaffoldTools').default);
-    ljs.vue.component('terminal_tools', require('./Components/TerminalTools').default);
     ljs.vue.component('live_reloader', require('./Components/LiveReloader').default);
     ljs.vue.component('form_action_after_save', require('./Components/FormActionAfterSave').default);
     ljs.vue.component('v-select', require('./Components/Common/Select2').default);

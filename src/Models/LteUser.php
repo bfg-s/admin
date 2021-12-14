@@ -65,6 +65,14 @@ class LteUser extends Model implements AuthenticatableContract
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs()
+    {
+        return $this->hasMany(LteLog::class, "lte_user_id", "id");
+    }
+
+    /**
      * @return string[]
      */
     public function functions()

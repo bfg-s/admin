@@ -7,13 +7,17 @@ use Illuminate\Validation\Rule;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\ModelSaver;
+use Lar\LteAdmin\Models\LteLog;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
+use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\Row;
+use Lar\LteAdmin\Segments\Tagable\TabContent;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
+use Lar\LteAdmin\Segments\Tagable\Timeline;
 
 /**
  * Class HomeController
@@ -50,7 +54,7 @@ class UserController extends Controller
                     ->card('lte.edit');
 
                 $card->success()
-                    ->body($this->matrix());
+                    ->fullBody($this->matrix());
 
                 $card->footerForm(false, function (FormFooter $footer) {
                     $footer->setType('edit');
@@ -68,23 +72,60 @@ class UserController extends Controller
 
             $form->vertical();
 
-            $form->image('avatar', 'lte.avatar');
+            $form->tab('lte.settings', 'fas fa-cogs', function (TabContent $content) {
 
-            $form->input('login', 'lte.login_name')
-                ->required()
-                ->unique(LteUser::class, 'login', $this->model()->id);
+                $content->image('avatar', 'lte.avatar');
 
-            $form->email('email', 'lte.email_address')
-                ->required()
-                ->unique(LteUser::class, 'email', $this->model()->id);
+                $content->input('login', 'lte.login_name')
+                    ->required()
+                    ->unique(LteUser::class, 'login', $this->model()->id);
 
-            $form->input('name', 'lte.name')
-                ->required();
+                $content->email('email', 'lte.email_address')
+                    ->required()
+                    ->unique(LteUser::class, 'email', $this->model()->id);
 
-            $form->br()->h5(__('lte.password'))->hr();
+                $content->input('name', 'lte.name')
+                    ->required();
 
-            $form->password('password', 'lte.new_password')
-                ->confirm();
+                $content->br()->h5(__('lte.password'))->hr();
+
+                $content->password('password', 'lte.new_password')
+                    ->confirm();
+            }, !request()->has('ltelog_per_page') && !request()->has('ltelog_page'));
+
+            $form->tab('lte.timeline', 'fas fa-history', function (TabContent $content) {
+
+                $content->div(['col-md-12'])->timeline($this->model()->logs(), function (Timeline $timeline) {
+
+                    $timeline->set_title(function (LteLog $log) {
+
+                        return $log->title . ($log->detail ? " <small>({$log->detail})</small>":"");
+                    });
+
+                    $timeline->set_body(function (DIV $div, LteLog $log) {
+
+                        $div->p0()->model_info_table($log, function (ModelInfoTable $table) {
+
+                            $table->row('IP', 'ip')->copied();
+                            $table->row('URL', 'url')->copied();
+                            $table->row('Route', 'route')->copied();
+                            $table->row('Method', 'method')->copied();
+                            $table->row('User Agent', 'user_agent')->copied();
+                            $table->row('Session ID', 'session_id')->copied();
+                            $table->row('WEB ID', 'web_id')->copied();
+                        });
+                    });
+                });
+            }, request()->has('ltelog_per_page') || request()->has('ltelog_page'));
+
+
+            ModelSaver::on_updated(get_class($this->model()), function ($form) {
+                if (isset($form['password']) && $form['password']) {
+                    lte_log_success('Changed the password', get_class($this->model()), 'fas fa-key');
+                } else {
+                    lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
+                }
+            });
         });
     }
 
@@ -102,6 +143,8 @@ class UserController extends Controller
      */
     public function logout(Respond $respond)
     {
+        lte_log_success('Was logout', null, 'fas fa-sign-out-alt');
+
         \Auth::guard('lte')->logout();
 
         $respond->redirect(route('lte.login'));

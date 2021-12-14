@@ -125,7 +125,7 @@ return [
     'yes'                           => 'Yes',
     'no'                            => 'No',
     'modules'                       => 'Modules',
-    'confirmation'                  => 'confirmation',
+    'confirmation'                  => 'Confirmation',
     'about_method'                  => [
         'access'                    => 'Access',
         'index'                     => 'Main page',

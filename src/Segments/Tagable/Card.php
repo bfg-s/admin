@@ -179,7 +179,7 @@ class Card extends DIV implements onRender {
      * @param  mixed  ...$params
      * @return CardBody
      */
-    public function foolBody(...$params)
+    public function fullBody(...$params)
     {
         return $this->body(['p-0'], ...$params);
     }
@@ -294,7 +294,7 @@ class Card extends DIV implements onRender {
         $this->callRenderEvents();
 
         $this->make_default_tools();
-        
+
         $this->addClass("card-{$this->type}");
 
         $model = gets()->lte->menu->model;

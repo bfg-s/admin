@@ -41,7 +41,9 @@ class AuthController
 
             $request->session()->regenerate();
 
-            \respond()->toast_success("User success auth by Login");
+            \respond()->toast_success("Was authorized using login!");
+
+            lte_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
         }
@@ -50,7 +52,9 @@ class AuthController
 
             $request->session()->regenerate();
 
-            \respond()->toast_success("User success auth by E-Mail");
+            \respond()->toast_success("Was authorized using E-Mail!");
+
+            lte_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
 
             $login = true;
         }

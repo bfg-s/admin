@@ -33,9 +33,13 @@ class Password extends Input
     {
         $this->_front_rule_equal_to("#input_{$this->name}_confirmation")->confirmed()->crypt();
 
+        $info = null;
+
         if (!$label && $this->title) {
 
-            $label = $this->title . " " . __('lte.confirmation');
+            $label = $this->title;
+
+            $info = __('lte.confirmation');
         }
 
         $p = $this->parent_field;
@@ -44,8 +48,12 @@ class Password extends Input
             $p = $this->_();
         }
 
-        $p->password($this->name . '_confirmation', $label, ...$this->params)
+        $p = $p->password($this->name . '_confirmation', $label, ...$this->params)
             ->icon($this->icon)->mergeDataList($this->data)->_front_rule_equal_to("#input_{$this->name}");
+
+        if ($info) {
+            $p->info($info);
+        }
 
         return $this;
     }

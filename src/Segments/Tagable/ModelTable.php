@@ -71,12 +71,12 @@ class ModelTable extends Component {
     /**
      * @var int
      */
-    protected $per_page = 10;
+    protected $per_page = 15;
 
     /**
      * @var int[]
      */
-    protected $per_pages = [10, 20, 50, 100];
+    protected $per_pages = [10, 15, 20, 50, 100];
 
     /**
      * @var string
@@ -86,7 +86,7 @@ class ModelTable extends Component {
     /**
      * @var string
      */
-    protected $order_type = 'asc';
+    protected $order_type = 'desc';
 
     /**
      * @var array

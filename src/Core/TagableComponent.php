@@ -23,6 +23,7 @@ use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\SmallBox;
 use Lar\LteAdmin\Segments\Tagable\Table;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
+use Lar\LteAdmin\Segments\Tagable\Timeline;
 
 /**
  * Class TagableComponent
@@ -53,7 +54,8 @@ class TagableComponent extends Component {
         'divider' => Divider::class,
         'live' => Live::class,
         'model_live' => ModelLive::class,
-        'model_relation' => ModelRelation::class
+        'model_relation' => ModelRelation::class,
+        'timeline' => Timeline::class,
     ];
 
     /**

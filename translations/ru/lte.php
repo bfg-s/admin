@@ -125,7 +125,7 @@ return [
     'yes'                           => 'Да',
     'no'                            => 'Нет',
     'modules'                       => 'Модули',
-    'confirmation'                  => 'подтверждение',
+    'confirmation'                  => 'Подтверждение',
     'about_method'                  => [
         'access'                    => 'Доступ',
         'index'                     => 'Главная страница',

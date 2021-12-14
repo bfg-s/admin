@@ -129,8 +129,13 @@ class Menu extends Getter
             if (property_exists($class, 'model')) {
                 $return = $class::$model;
             } else {
-                $class::$no_getter_model = true;
-                $return = (new $class)->model();
+                if (property_exists($class, 'no_getter_model')) $class::$no_getter_model = true;
+                $class = (new $class);
+                if (method_exists($class, 'model')) {
+                    $return = $class->model();
+                } else {
+                    $return = null;
+                }
             }
         }
 
