@@ -148,4 +148,6 @@ return [
     'successfully_restored'         => 'Успішно відновлено!',
     'back'                          => 'Назад',
     'remove'                        => 'Прибрати',
+    'settings'                      => 'Налаштування',
+    'timeline'                      => 'Таймлайн',
 ];

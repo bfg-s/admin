@@ -16,7 +16,8 @@
         "php": ">=7.2.0",
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
-        "lar/layout": "^2.5.0",
+        "lar/layout": "^v2.5.0",
+        "lar/ljs": "^v2.5.7",
         "almasaeed2010/adminlte": "^3.0"
     },
     "require-dev": {},

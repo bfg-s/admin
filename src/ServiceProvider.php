@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
-use Lar\Layout\Middleware\LayoutMiddleware;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
@@ -100,7 +99,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register app routes
          */
         if (is_file(lte_app_path('routes.php'))) {
-
             \Road::domain(config('lte.route.domain', ''))
                 ->web()
                 ->middleware(['lte-auth'])
@@ -117,7 +115,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register web routes
          */
         if (is_file(base_path('routes/admin.php'))) {
-
             \Road::domain(config('lte.route.domain', ''))
                 ->web()
                 ->middleware(['lte-auth'])
@@ -140,7 +137,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             ->middleware(['lte-auth'])
             ->prefix(config('lte.route.prefix'))
             ->name(config('lte.route.name'))
-            ->group(__DIR__ . '/routes.php');
+            ->group(__DIR__.'/routes.php');
 
         /**
          * Register publishers configs
@@ -162,7 +159,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
             base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
-            __DIR__ . '/../assets' => public_path('/lte-admin'),
+            __DIR__.'/../assets' => public_path('/lte-admin'),
         ], 'lte-assets');
 
         /**
@@ -193,7 +190,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->loadViewsFrom(__DIR__.'/../views', 'lte');
 
         if ($this->app->runningInConsole()) {
-
             /**
              * Register lte admin getter for console
              */
@@ -228,7 +224,9 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Simple bind in service container
          */
         foreach ($this->bind as $key => $item) {
-            if (is_numeric($key)) $key = $item;
+            if (is_numeric($key)) {
+                $key = $item;
+            }
             $this->app->bind($key, $item);
         }
 
@@ -237,7 +235,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         JaxController::on_start(function () {
             $ref = request()->server->get('HTTP_REFERER');
-            if ($ref && \Str::is(url(config('lte.route.prefix')  . "*"), $ref)) {
+            if ($ref && \Str::is(url(config('lte.route.prefix')."*"), $ref)) {
                 LteBoot::run();
             }
         });
@@ -260,7 +258,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * App register provider
          */
         if (class_exists('App\Providers\LteServiceProvider')) {
-
             $this->app->register('App\Providers\LteServiceProvider');
         }
 
@@ -315,7 +312,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerJax()
     {
-        JaxExecutor::addNamespace(__DIR__ . '/Jax', 'Lar\\LteAdmin\\Jax');
+        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Lar\\LteAdmin\\Jax');
     }
 
     /**
@@ -326,7 +323,6 @@ class ServiceProvider extends ServiceProviderIlluminate
     protected function registerRouteMiddleware()
     {
         foreach ($this->routeMiddleware as $key => $middleware) {
-
             app('router')->aliasMiddleware($key, $middleware);
         }
     }
