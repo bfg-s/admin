@@ -180,7 +180,7 @@ class Controller extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @return Respond
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
      * @throws \Exception
      */
     public function destroy_default() {

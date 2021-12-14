@@ -95,27 +95,7 @@ class UserController extends Controller
 
             $form->tab('lte.timeline', 'fas fa-history', function (TabContent $content) {
 
-                $content->div(['col-md-12'])->timeline($this->model()->logs(), function (Timeline $timeline) {
-
-                    $timeline->set_title(function (LteLog $log) {
-
-                        return $log->title . ($log->detail ? " <small>({$log->detail})</small>":"");
-                    });
-
-                    $timeline->set_body(function (DIV $div, LteLog $log) {
-
-                        $div->p0()->model_info_table($log, function (ModelInfoTable $table) {
-
-                            $table->row('IP', 'ip')->copied();
-                            $table->row('URL', 'url')->copied();
-                            $table->row('Route', 'route')->copied();
-                            $table->row('Method', 'method')->copied();
-                            $table->row('User Agent', 'user_agent')->copied();
-                            $table->row('Session ID', 'session_id')->copied();
-                            $table->row('WEB ID', 'web_id')->copied();
-                        });
-                    });
-                });
+                static::timelineComponent($content, $this->model()->logs());
             }, request()->has('ltelog_per_page') || request()->has('ltelog_page'));
 
 
@@ -125,6 +105,31 @@ class UserController extends Controller
                 } else {
                     lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
                 }
+            });
+        });
+    }
+
+    public static function timelineComponent($content, $model)
+    {
+        $content->div(['col-md-12'])->timeline($model, function (Timeline $timeline) {
+
+            $timeline->set_title(function (LteLog $log) {
+
+                return $log->title . ($log->detail ? " <small>({$log->detail})</small>":"");
+            });
+
+            $timeline->set_body(function (DIV $div, LteLog $log) {
+
+                $div->p0()->model_info_table($log, function (ModelInfoTable $table) {
+
+                    $table->row('IP', 'ip')->copied();
+                    $table->row('URL', 'url')->copied();
+                    $table->row('Route', 'route')->copied();
+                    $table->row('Method', 'method')->copied();
+                    $table->row('User Agent', 'user_agent')->copied();
+                    $table->row('Session ID', 'session_id')->copied();
+                    $table->row('WEB ID', 'web_id')->copied();
+                });
             });
         });
     }
