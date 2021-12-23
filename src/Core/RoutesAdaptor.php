@@ -25,9 +25,24 @@ class RoutesAdaptor
 
         $extensions = LteAdmin::$nav_extensions;
 
+        if (isset($extensions['application'])) {
+
+            Navigate::$extension = $extensions['application'];
+
+            $extensions['application']->navigator(\Navigate::instance());
+
+            Navigate::$extension = null;
+
+            $extensions = LteAdmin::$nav_extensions;
+        }
+
         if (count($extensions)) {
 
-            foreach ($extensions as $extension) {
+            foreach ($extensions as $key => $extension) {
+
+                if ($key === 'application') {
+                    continue;
+                }
 
                 if (is_array($extension)) {
 

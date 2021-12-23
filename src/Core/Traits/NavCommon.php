@@ -59,7 +59,7 @@ trait NavCommon
 
         return $this;
     }
-    
+
     /**
      * @param array $data
      * @return $this
@@ -170,7 +170,7 @@ trait NavCommon
             $instructions = $type;
             $type = 'info';
         }
-        
+
         if ($data !== null) {
 
             $this->items['badge'] = [
@@ -276,6 +276,44 @@ trait NavCommon
     public function badge_warning($data = null, array $instructions =  null)
     {
         return $this->badge($data, 'warning', $instructions);
+    }
+
+    /**
+     * @return void
+     */
+    public function injectExtensionHere()
+    {
+        $extensions = LteAdmin::$nav_extensions;
+
+        foreach ($extensions as $key => $extension) {
+
+            if ($key === 'application') {
+                continue;
+            }
+
+            if (is_array($extension)) {
+
+                foreach ($extension as $item) {
+
+                    Navigate::$extension = $item;
+
+                    $item->navigator($this);
+
+                    Navigate::$extension = null;
+                }
+
+            }
+            else {
+
+                Navigate::$extension = $extension;
+
+                $extension->navigator($this);
+
+                Navigate::$extension = null;
+            }
+
+            unset(LteAdmin::$nav_extensions[$key]);
+        }
     }
 
     /**
