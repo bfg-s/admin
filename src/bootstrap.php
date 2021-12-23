@@ -4,16 +4,18 @@ use Illuminate\Support\Collection;
 
 if (!request()->ajax() || request()->is('*dashboard*')) {
 
-    $lock_file = base_path('composer.lock');
+    if (class_exists(\Composer\InstalledVersions::class)) {
+        \Lar\LteAdmin\LteAdmin::$version = \Composer\InstalledVersions::getPrettyVersion('lar/lte-admin');
+    } else {
+        $lock_file = base_path('composer.lock');
+        if (is_file($lock_file)) {
+            $lock = file_get_contents($lock_file);
+            $json = json_decode($lock, 1);
+            $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
+            if ($admin && isset($admin['version'])) {
 
-    if (is_file($lock_file)) {
-
-        $lock = file_get_contents($lock_file);
-        $json = json_decode($lock, 1);
-        $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
-        if ($admin && isset($admin['version'])) {
-
-            \Lar\LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
+                \Lar\LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
+            }
         }
     }
 }
