@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'login_title'                   => 'LTE <b>Admin</b>',
     'login_message'                 => 'Sign in to start your session',
     'email'                         => 'Login/Email',
     'password'                      => 'Password',

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'login_title'                   => 'LTE <b>Адмін</b>',
     'login_message'                 => 'Вхід до системи',
     'email'                         => 'Логін/Пошта',
     'password'                      => 'Пароль',

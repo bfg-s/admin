@@ -1,6 +1,6 @@
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{route('lte.home')}}">LTE <b>Admin</b></a>
+        <a href="{{route('lte.home')}}">{!! __('lte.login_title') !!}</a>
     </div>
     <!-- /.login-logo -->
     <div class="card">
