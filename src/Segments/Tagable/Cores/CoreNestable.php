@@ -34,7 +34,7 @@ class CoreNestable extends DIV
     /**
      * @var string|callable
      */
-    protected $title_field = "title";
+    protected $title_field = "name";
 
     /**
      * @var string

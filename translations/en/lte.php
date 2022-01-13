@@ -151,4 +151,5 @@ return [
     'remove'                        => 'Remove',
     'settings'                      => 'Settings',
     'timeline'                      => 'Timeline',
+    'sort'                          => 'Sort',
 ];

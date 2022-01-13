@@ -416,31 +416,62 @@ class Menu extends Getter
 
                 $item['current.type'] = str_replace($item['route'] . '.', '', \Route::currentRouteName());
 
-                $item['link'] = route($item['route'] . '.index', $item['route_params'] ?? []);
+                $item['link'] = ((isset($item['resource_only']) && !in_array('index', $item['resource_only']))
+                    || (isset($item['resource_except']) && in_array('index', $item['resource_except'])))
+                    ? null
+                    : route($item['route'] . '.index', $item['route_params'] ?? []);
 
                 $item['link.show'] = function ($params) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('show', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('show', $item['resource_except']))
+                    ) { return null; }
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
                     return route($item['route'] . '.show', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.update'] = function ($params) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('update', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('update', $item['resource_except']))
+                    ) { return null; }
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
                     return route($item['route'] . '.update', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.destroy'] = function ($params) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('destroy', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('destroy', $item['resource_except']))
+                    ) { return null; }
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
                     return route($item['route'] . '.destroy', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.edit'] = function ($params) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('edit', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('edit', $item['resource_except']))
+                    ) { return null; }
                     if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
                     return route($item['route'] . '.edit', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.index'] = function (array $params = []) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('index', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('index', $item['resource_except']))
+                    ) { return null; }
                     return route($item['route'] . '.index', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.store'] = function (array $params = []) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('store', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('store', $item['resource_except']))
+                    ) { return null; }
                     return route($item['route'] . '.store', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.create'] = function (array $params = []) use ($item) {
+                    if (
+                        (isset($item['resource_only']) && !in_array('create', $item['resource_only']))
+                        || (isset($item['resource_except']) && in_array('create', $item['resource_except']))
+                    ) { return null; }
                     return route($item['route'] . '.create', array_merge($params, ($item['route_params'] ?? [])));
                 };
             }

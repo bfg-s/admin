@@ -68,6 +68,34 @@ class NavItem implements Arrayable
      */
 
     /**
+     * @param ...$methods
+     * @return $this
+     */
+    public function only(...$methods)
+    {
+        if ($methods && isset($this->items['resource'])) {
+
+            $this->items['resource_only'] = $methods;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ...$methods
+     * @return $this
+     */
+    public function except(...$methods)
+    {
+        if ($methods && isset($this->items['resource'])) {
+
+            $this->items['resource_except'] = $methods;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  string|null  $where
      * @return $this
      */

@@ -20,6 +20,11 @@ class Card extends DIV implements onRender {
     use TypesTrait, FontAwesome, Macroable;
 
     /**
+     * @var SearchForm
+     */
+    public $search_form;
+
+    /**
      * @var array
      */
     protected $props = [
@@ -80,11 +85,6 @@ class Card extends DIV implements onRender {
      * @var bool
      */
     protected $default_tools = false;
-
-    /**
-     * @var SearchForm
-     */
-    protected $search_form;
 
     /**
      * @var bool
@@ -185,16 +185,29 @@ class Card extends DIV implements onRender {
     }
 
     /**
+     * @return $this
+     */
+    public function withSearchForm()
+    {
+        if (!$this->search_form) {
+
+            $this->search_form = new SearchForm();
+
+            $this->div(['#table_search_form', 'collapse'])
+                ->div(['card-body'], $this->search_form);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  null  $model
      * @param  \Closure|array|null  $after
      * @return ModelTable
      */
     public function bodyModelTable($model = null, $after = null)
     {
-        $this->search_form = new SearchForm();
-
-        $this->div(['#table_search_form', 'collapse'])
-            ->div(['card-body'], $this->search_form);
+        $this->withSearchForm();
 
         $this->table = $this->body(['p-0', 'table-responsive'])
             ->model_table($model, function (ModelTable $table) {

@@ -71,7 +71,7 @@ class Controller extends BaseController
      */
     public function create_default() {
 
-        return $this->matrix();
+        return app()->call([$this, 'matrix']);
     }
 
     /**
@@ -81,7 +81,7 @@ class Controller extends BaseController
      */
     public function edit_default() {
 
-        return $this->matrix();
+        return app()->call([$this, 'matrix']);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments;
 
+use Illuminate\Support\Traits\Conditionable;
 use Lar\Developer\Core\Traits\Eventable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
@@ -15,7 +16,7 @@ use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
  */
 class Container implements SegmentContainerInterface {
 
-    use FontAwesome, Eventable, Piplineble;
+    use FontAwesome, Eventable, Piplineble, Conditionable;
 
     /**
      * @var string
