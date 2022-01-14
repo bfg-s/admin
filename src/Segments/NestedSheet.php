@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\Nested;
 /**
  * Class NestedSheet
  * @package Lar\LteAdmin\Segments
+ * @deprecated Use the LtePage
  */
 class NestedSheet extends Container {
 

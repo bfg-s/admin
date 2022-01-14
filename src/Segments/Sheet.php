@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\ModelTable;
 /**
  * Class Sheet
  * @package Lar\LteAdmin\Segments
+ * @deprecated Use the LtePage
  */
 class Sheet extends Container {
 

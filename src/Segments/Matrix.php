@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\Form;
 /**
  * Class Matrix
  * @package Lar\LteAdmin\Segments
+ * @deprecated Use the LtePage
  */
 class Matrix extends Container {
 

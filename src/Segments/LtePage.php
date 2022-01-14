@@ -70,16 +70,20 @@ class LtePage extends Container {
             $callback = $title;
             $title = "";
         }
+        $originTitle = $title;
+        $title = is_array($title) && isset($title[0]) ? $title[0] : $title;
         if (lte_model_type('index')) {
             $title = $title ?: 'lte.list';
         } else if (lte_model_type('create')) {
             $title = $title ?: 'lte.add';
         } else if (lte_model_type('edit')) {
+            $title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $title;
             $title = $title ?: 'lte.id_edit';
         } else if (lte_model_type('show')) {
             $title = $title ?: 'lte.information';
         }
         $this->card = $this->component->card($title);
+        $this->buttonGroup = $this->card->group();
         $this->callCallBack($callback);
         return $this;
     }
@@ -207,6 +211,20 @@ class LtePage extends Container {
             ? $this->card->group()
             : $this->component->button_group();
         $this->callCallBack($callback);
+        return $this;
+    }
+
+    /**
+     * @param  callable|null  $callback
+     * @return static
+     */
+    public function chartjs(callable $callback = null)
+    {
+        if ($this->card) {
+            $this->card->fullBody()->chart_js($callback);
+        } else {
+            $this->component->chart_js($callback);
+        }
         return $this;
     }
 

@@ -152,4 +152,10 @@ return [
     'settings'                      => 'Налаштування',
     'timeline'                      => 'Таймлайн',
     'sort'                          => 'Сортувати',
+    'statistic_for_today'           => ':entity за день',
+    'statistic_per_week'            => ':entity за тиждень',
+    'statistic_per_year'            => ':entity за рік',
+    'statistic_total'               => 'Всього :entity',
+    'added_to_users'                => 'Додано користувачів',
+    'activity'                      => 'Активність',
 ];

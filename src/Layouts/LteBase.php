@@ -48,6 +48,7 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
         'lte-asset/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'lte-asset/plugins/daterangepicker/daterangepicker.css',
+        'lte-asset/plugins/chart.js/Chart.min.css',
 
         'lte-admin/plugins/bootstrap-fileinput/css/fileinput.min.css',
         'lte-admin/plugins/bootstrap-fileinput/themes/explorer-fas/theme.css',
@@ -72,6 +73,7 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/bootstrap/js/bootstrap.bundle.min.js',
         'lte-asset/js/adminlte.min.js',
 
+        'lte-asset/plugins/chart.js/Chart.min.js',
         'lte-asset/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js',
         'lte-asset/plugins/bootstrap-slider/bootstrap-slider.min.js',
         'lte-asset/plugins/bootstrap-switch/js/bootstrap-switch.min.js',

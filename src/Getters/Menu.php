@@ -485,7 +485,8 @@ class Menu extends Getter
 
                 $current_route = \Route::currentRouteName();
 
-                $item['selected'] = \Str::is($item['route'].'.*', $current_route);
+                $item['selected'] = $item['route'] == $current_route
+                    || \Str::is($item['route'].'.*', $current_route);
             }
 
             else if (!$item['selected'] && $item['link'] && !$item['target']) {

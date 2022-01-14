@@ -159,6 +159,11 @@ class NavItem implements Arrayable
      */
     public function resource(string $name, string $resource = 'Controller', array $options = [])
     {
+        $pos = strpos($resource, "\\");
+        if ($pos !== false && $pos != 0) {
+            $resource = "\\".$resource;
+        }
+
         $this->items['resource'] = ['name' => $name, 'action' => $resource, 'options' => $options];
 
         if (!isset($this->items['route']) || !$this->items['route']) {

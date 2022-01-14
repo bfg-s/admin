@@ -152,4 +152,10 @@ return [
     'settings'                      => 'Settings',
     'timeline'                      => 'Timeline',
     'sort'                          => 'Sort',
+    'statistic_for_today'           => ':entity for today',
+    'statistic_per_week'            => ':entity per week',
+    'statistic_per_year'            => ':entity per year',
+    'statistic_total'               => 'Total :entity',
+    'added_to_users'                => 'Added to users',
+    'activity'                      => 'Activity',
 ];

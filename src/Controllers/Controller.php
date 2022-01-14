@@ -285,7 +285,7 @@ class Controller extends BaseController
 
             if (method_exists($sclass, $method)) {
 
-                return embedded_call([$sclass, $method], $parameters);
+                return app()->call([$sclass, $method], $parameters);
             }
         }
 

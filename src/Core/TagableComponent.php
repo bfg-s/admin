@@ -6,6 +6,7 @@ use Lar\Layout\Abstracts\Component;
 use Lar\LteAdmin\Segments\Tagable\Alert;
 use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 use Lar\LteAdmin\Segments\Tagable\Card;
+use Lar\LteAdmin\Segments\Tagable\ChartJs;
 use Lar\LteAdmin\Segments\Tagable\Col;
 use Lar\LteAdmin\Segments\Tagable\Divider;
 use Lar\LteAdmin\Segments\Tagable\Field;
@@ -21,6 +22,7 @@ use Lar\LteAdmin\Segments\Tagable\ModelTable;
 use Lar\LteAdmin\Segments\Tagable\Nested;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\SmallBox;
+use Lar\LteAdmin\Segments\Tagable\StatisticPeriods;
 use Lar\LteAdmin\Segments\Tagable\Table;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
 use Lar\LteAdmin\Segments\Tagable\Timeline;
@@ -56,6 +58,8 @@ class TagableComponent extends Component {
         'model_live' => ModelLive::class,
         'model_relation' => ModelRelation::class,
         'timeline' => Timeline::class,
+        'statistic_periods' => StatisticPeriods::class,
+        'chart_js' => ChartJs::class,
     ];
 
     /**

@@ -9,6 +9,7 @@ use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 /**
  * Class Info
  * @package Lar\LteAdmin\Segments
+ * @deprecated Use the LtePage
  */
 class Info extends Container {
 

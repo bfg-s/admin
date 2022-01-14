@@ -2,7 +2,9 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
@@ -11,6 +13,7 @@ use Lar\LteAdmin\Models\LteLog;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Tagable\Card;
+use Lar\LteAdmin\Segments\Tagable\Cores\ChartJsBuilder;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
@@ -98,6 +101,11 @@ class UserController extends Controller
                 static::timelineComponent($content, $this->model()->logs());
             }, request()->has('ltelog_per_page') || request()->has('ltelog_page'));
 
+            $form->tab('lte.activity', 'fas fa-chart-line', function (TabContent $content) {
+
+                static::activityComponent($content, $this->model()->logs());
+            });
+
 
             ModelSaver::on_updated(get_class($this->model()), function ($form) {
                 if (isset($form['password']) && $form['password']) {
@@ -106,6 +114,28 @@ class UserController extends Controller
                     lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
                 }
             });
+        });
+    }
+
+    public static function activityComponent($content, $model)
+    {
+        $content->chart_js(function (ChartJsBuilder $builder) use ($model) {
+            /** @var Collection $all */
+            $all = $model->get(['created_at']);
+            $all = $all->groupBy(function (Model $model) {
+                return $model->created_at->format('Y.m.d');
+            })->map(function (Collection $collection) {
+                return $collection->count();
+            });
+
+            $builder
+                ->type('line')
+                ->size(['width' => 400, 'height' => 100])
+                ->labels($all->keys()->toArray())
+                ->simpleDatasets(
+                    __('lte.activity'),
+                    $all->values()->toArray()
+                );
         });
     }
 

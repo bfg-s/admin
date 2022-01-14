@@ -186,15 +186,18 @@ trait TableControlsTrait {
     {
         if ($this->get_test_var('controls')) {
 
-            if ($this->checks && !request()->has('show_deleted')) {
-                $this->to_prepend()->column(function (SPAN $span) {
+            $hasDelete = gets()->lte->menu->now['link.destroy'](0);
+            $show = !!(count($this->action) ?: $hasDelete);
+
+            if ($this->checks && !request()->has('show_deleted') && $show) {
+                $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
                     $span->_addClass('fit');
                     $span->view('lte::segment.model_table_checkbox', [
                         'id' => false,
                         'table_id' => $this->model_name,
                         'object' => $this->model_class,
                         'actions' => $this->action,
-                        'delete' => $this->get_test_var('check_delete'),
+                        'delete' => $this->get_test_var('check_delete') && $hasDelete,
                         'columns' => collect($this->columns)->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })->pluck('field')->toArray()
                     ])->render();
                 }, function (Model $model) {
