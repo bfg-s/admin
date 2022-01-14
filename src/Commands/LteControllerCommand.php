@@ -3,12 +3,12 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\LteAdmin\Segments\Info;
-use Lar\LteAdmin\Segments\Matrix;
-use Lar\LteAdmin\Segments\Sheet;
+use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -42,13 +42,15 @@ class LteControllerCommand extends Command
     {
         $name = $this->argument('name');
 
-        $model = $this->hasOption('model') ? (
-            $this->option('model') ?
-                $this->option('model') :
-                \Str::singular(
-                    preg_replace('/(.*)Controller$/', '$1', $name)
-                )
-        ) : false;
+        $model = $this->option('model') ?
+            $this->option('model') :
+            \Str::singular(
+                preg_replace('/(.*)Controller$/', '$1', $name)
+            );
+
+        $only = $this->option('only')
+            ? explode(',', $this->option('only'))
+            : ['index', 'matrix', 'show'];
 
         $resource = $this->option('resource');
 
@@ -87,11 +89,10 @@ class LteControllerCommand extends Command
 
         if ($resource) {
 
-            $class->use(Info::class)
-                ->use(Sheet::class)
-                ->use(Matrix::class)
-                ->use(Form::class)
+            $class->use(Form::class)
+                ->use(LtePage::class)
                 ->use(ModelTable::class)
+                ->use(SearchForm::class)
                 ->use(ModelInfoTable::class);
 
             $class->prop('static:model');
@@ -107,32 +108,55 @@ class LteControllerCommand extends Command
                 $class->prop("static:model", entity($model_namespace."::class"));
             }
 
-            $class->method('index')->line()
-                ->line("return Sheet::create(function (ModelTable \$table) {")
-                ->line()
-                ->tab("\$table->search->id();")
-                ->tab("\$table->search->at();")
-                ->line()
-                ->tab("\$table->id();")
-                ->tab("\$table->at();")
-                ->line("});")
-                ->doc(function ($doc) { $doc->tagReturn(Sheet::class); });
-
-            $class->method('matrix')->line()
-                ->line("return new Matrix(function (Form \$form) {")
-                ->tab("\$form->info_id();")
-                ->tab("\$form->autoMake();")
-                ->tab("\$form->info_at();")
-                ->line("});")
-                ->doc(function ($doc) { $doc->tagReturn(Matrix::class); });
-
-            $class->method('show')->line()
-                ->line("return Info::create(function (ModelInfoTable \$table) {")
-                ->tab("\$table->id();")
-                ->tab("\$table->at();")
-                ->line("});")
-                ->doc(function ($doc) { $doc->tagReturn(Info::class); });
-
+            if (in_array('index', $only)) {
+                $class->method('index')
+                    ->param('page', null, 'LtePage')
+                    ->line("return \$page")
+                    ->tab("->card()")
+                    ->tab("->withTools()")
+                    ->tab("->search(function (SearchForm \$form) {")
+                    ->tab("    \$form->id();")
+                    ->tab("    \$form->at();")
+                    ->tab("})")
+                    ->tab("->table(function (ModelTable \$table) {")
+                    ->tab("    \$table->id();")
+                    ->tab("    \$table->at();")
+                    ->tab("});")
+                    ->doc(function ($doc) {
+                        /** @var DocumentorEntity $doc */
+                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                    });
+            }
+            if (in_array('matrix', $only)) {
+                $class->method('matrix')
+                    ->param('page', null, 'LtePage')
+                    ->line("return \$page")
+                    ->tab("->card()")
+                    ->tab("->withTools()")
+                    ->tab("->form(function (Form \$form) {")
+                    ->tab("    \$form->info_id();")
+                    ->tab("    \$form->info_at();")
+                    ->tab("});")
+                    ->doc(function ($doc) {
+                        /** @var DocumentorEntity $doc */
+                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                    });
+            }
+            if (in_array('show', $only)) {
+                $class->method('show')
+                    ->param('page', null, 'LtePage')
+                    ->line("return \$page")
+                    ->tab("->card()")
+                    ->tab("->withTools()")
+                    ->tab("->info(function (ModelInfoTable \$table) {")
+                    ->tab("    \$table->id();")
+                    ->tab("    \$table->at();")
+                    ->tab("});")
+                    ->doc(function ($doc) {
+                        /** @var DocumentorEntity $doc */
+                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                    });
+            }
         }
 
         $file = $dir . '/' . $name . '.php';
@@ -146,6 +170,15 @@ class LteControllerCommand extends Command
         file_put_contents($file, $class->render());
 
         $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
+
+        if ($resource && isset($model_namespace) && !class_exists($model_namespace)) {
+            $this->warn("Model [$model] not found!");
+            if ($this->confirm("Create a new model [$model]?")) {
+                $this->call('make:model', [
+                    'name' => $model
+                ]);
+            }
+        }
     }
 
     /**
@@ -170,6 +203,7 @@ class LteControllerCommand extends Command
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the controller already exists.'],
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller class.'],
+            ['only', 'o', InputOption::VALUE_OPTIONAL, 'Select methods for generate.'],
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'Inject or create model from App\\Models.'],
         ];
     }

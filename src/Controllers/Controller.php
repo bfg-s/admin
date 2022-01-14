@@ -5,12 +5,11 @@ namespace Lar\LteAdmin\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Respond;
 use Lar\Developer\Core\Traits\Piplineble;
-use Lar\LteAdmin\Segments\Info;
-use Lar\LteAdmin\Segments\Matrix;
-use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class Controller
@@ -53,21 +52,28 @@ class Controller extends BaseController
 
     /**
      * Display a listing of the resource.
-     *
-     * @return Sheet
+     * @param LtePage $page
+     * @return LtePage
      */
-    public function index_default() {
+    public function index_default(LtePage $page) {
 
-        return Sheet::create(function (ModelTable $table) {
-            $table->id();
-            $table->at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->search(function (SearchForm $form) {
+                $form->id();
+                $form->at();
+            })
+            ->table(function (ModelTable $table) {
+                $table->id();
+                $table->at();
+            });
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Matrix
+     * @return LtePage
      */
     public function create_default() {
 
@@ -77,7 +83,7 @@ class Controller extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @return Matrix
+     * @return LtePage
      */
     public function edit_default() {
 
@@ -86,15 +92,18 @@ class Controller extends BaseController
 
     /**
      * Display the specified resource.
-     *
-     * @return Info
+     * @param LtePage $page
+     * @return LtePage
      */
-    public function show_default() {
+    public function show_default(LtePage $page) {
 
-        return Info::create(function (ModelInfoTable $table) {
-            $table->id();
-            $table->at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->info(function (ModelInfoTable $table) {
+                $table->id();
+                $table->at();
+            });
     }
 
     /**
@@ -293,7 +302,7 @@ class Controller extends BaseController
 
         if (method_exists($this, $method_default)) {
 
-            return $this->{$method_default}();
+            return app()->call([$this, $method_default]);
         }
 
         parent::__call($method, $parameters);

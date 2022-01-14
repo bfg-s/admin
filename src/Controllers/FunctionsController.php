@@ -4,13 +4,11 @@ namespace Lar\LteAdmin\Controllers;
 
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Segments\Info;
-use Lar\LteAdmin\Segments\Matrix;
-use Lar\LteAdmin\Segments\Sheet;
-use Lar\LteAdmin\Segments\Tagable\Card;
+use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -30,59 +28,69 @@ class FunctionsController extends Controller
     static $roles = ['root'];
 
     /**
-     * @return Sheet
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function index()
+    public function index(LtePage $page)
     {
-        return Sheet::create(function (ModelTable $table, Card $card) {
-
-            $table->search->id();
-            $table->search->input('slug', 'lte.slug');
-            $table->search->input('class', 'Class', '%=%');
-            $table->search->at();
-
-            $table->id();
-            $table->column('lte.role', [$this, 'show_roles']);
-            $table->column('lte.slug', 'slug')->sort()->input_editable()
-                ->copied()->to_prepend_link('fas fa-glasses', null, '{class}');
-            $table->column('lte.description', 'description')->to_lang()->has_lang()->str_limit(50)->textarea_editable()->sort();
-            $table->active_switcher();
-            $table->at();
-
-
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->search(function (SearchForm $form) {
+                $form->id();
+                $form->input('slug', 'lte.slug');
+                $form->input('class', 'Class', '%=%');
+                $form->at();
+            })
+            ->table(function (ModelTable $table) {
+                $table->id();
+                $table->column('lte.role', [$this, 'show_roles']);
+                $table->column('lte.slug', 'slug')->sort()->input_editable()
+                    ->copied()->to_prepend_link('fas fa-glasses', null, '{class}');
+                $table->column('lte.description', 'description')->to_lang()->has_lang()->str_limit(50)->textarea_editable()->sort();
+                $table->active_switcher();
+                $table->at();
+            });
     }
 
     /**
-     * @return Matrix
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function matrix()
+    public function matrix(LtePage $page)
     {
-        return Matrix::create(function (Form $form) {
-            $form->info_id();
-            $form->input('slug', 'lte.slug')->required()
-                ->slugable();
-            $form->checks('roles', 'lte.roles')->required()
-                ->options(LteRole::all()->pluck('name', 'id'));
-            $form->textarea('description', 'lte.description');
-            $form->switcher('active', 'lte.active')->boolean();
-            $form->info_at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->form(function (Form $form) {
+                $form->info_id();
+                $form->input('slug', 'lte.slug')->required()
+                    ->slugable();
+                $form->checks('roles', 'lte.roles')->required()
+                    ->options(LteRole::all()->pluck('name', 'id'));
+                $form->textarea('description', 'lte.description');
+                $form->switcher('active', 'lte.active')->boolean();
+                $form->info_at();
+            });
     }
 
     /**
-     * @return Info
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function show()
+    public function show(LtePage $page)
     {
-        return Info::create(function (ModelInfoTable $table) {
-            $table->id();
-            $table->row('lte.role', [$this, 'show_roles']);
-            $table->row('lte.slug', 'slug')->copied();
-            $table->row('lte.description', 'description')->to_lang()->has_lang()->str_limit(50);
-            $table->row('lte.active', 'active')->input_switcher();
-            $table->at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->info(function (ModelInfoTable $table) {
+                $table->id();
+                $table->row('lte.role', [$this, 'show_roles']);
+                $table->row('lte.slug', 'slug')->copied();
+                $table->row('lte.description', 'description')->to_lang()->has_lang()->str_limit(50);
+                $table->row('lte.active', 'active')->input_switcher();
+                $table->at();
+            });
     }
 
     /**

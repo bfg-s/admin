@@ -228,6 +228,20 @@ class LtePage extends Container {
         return $this;
     }
 
+    /**
+     * @param  callable|null  $callback
+     * @return static
+     */
+    public function periods(callable $callback = null)
+    {
+        if ($this->card) {
+            $this->card->body()->statistic_periods($callback);
+        } else {
+            $this->component->statistic_periods($callback);
+        }
+        return $this;
+    }
+
 
     public function whenNeed(string $method, callable $callback = null, $default = null)
     {

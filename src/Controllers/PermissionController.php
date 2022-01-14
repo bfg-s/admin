@@ -3,12 +3,11 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Lar\LteAdmin\Models\LtePermission;
-use Lar\LteAdmin\Segments\Info;
-use Lar\LteAdmin\Segments\Matrix;
-use Lar\LteAdmin\Segments\Sheet;
+use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -37,76 +36,80 @@ class PermissionController extends Controller
     ];
 
     /**
-     * @return Sheet
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function index()
+    public function index(LtePage $page)
     {
-        return Sheet::create(function (ModelTable $table) {
-
-            $table->search->id();
-            $table->search->input('path', 'lte.path');
-            $table->search->select('lte_role_id', 'lte.role')
-                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'))->nullable();
-            $table->search->at();
-
-            $table->id();
-            $table->column('lte.description', 'description')->str_limit(50);
-            $table->column('lte.path', 'path')->badge('success');
-            $table->column('lte.methods', [$this, 'show_methods'])->sort('method');
-            $table->column('lte.state', [$this, 'show_state'])->sort('state');
-            $table->column('lte.role', 'role.name')->sort('role_id');
-            $table->active_switcher();
-            $table->at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->search(function (SearchForm $form) {
+                $form->id();
+                $form->input('path', 'lte.path');
+                $form->select('lte_role_id', 'lte.role')
+                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'))->nullable();
+                $form->at();
+            })
+            ->table(function (ModelTable $table) {
+                $table->id();
+                $table->column('lte.description', 'description')->str_limit(50);
+                $table->column('lte.path', 'path')->badge('success');
+                $table->column('lte.methods', [$this, 'show_methods'])->sort('method');
+                $table->column('lte.state', [$this, 'show_state'])->sort('state');
+                $table->column('lte.role', 'role.name')->sort('role_id');
+                $table->active_switcher();
+                $table->at();
+            });
     }
 
     /**
-     * @return Matrix
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function matrix()
+    public function matrix(LtePage $page)
     {
-        return Matrix::create(function (Form $form) {
-
-            $form->info_id();
-
-            $form->input('path', 'lte.path')
-                ->required();
-
-            $form->multi_select('method[]', 'lte.methods')
-                ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function($i) {return [$i => $i];})->toArray())
-                ->required();
-
-            $form->radios('state', 'lte.state')
-                ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
-                ->required();
-
-            $form->radios('lte_role_id', 'lte.role')
-                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), true)
-                ->required();
-
-            $form->input('description', 'lte.description');
-
-            $form->switcher('active', 'lte.active')->switchSize('mini')
-                ->default(1);
-
-            $form->info_at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->form(function (Form $form) {
+                $form->info_id();
+                $form->input('path', 'lte.path')
+                    ->required();
+                $form->multi_select('method[]', 'lte.methods')
+                    ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function($i) {return [$i => $i];})->toArray())
+                    ->required();
+                $form->radios('state', 'lte.state')
+                    ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
+                    ->required();
+                $form->radios('lte_role_id', 'lte.role')
+                    ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), true)
+                    ->required();
+                $form->input('description', 'lte.description');
+                $form->switcher('active', 'lte.active')->switchSize('mini')
+                    ->default(1);
+                $form->info_at();
+            });
     }
 
     /**
-     * @return Info
+     * @param  LtePage  $page
+     * @return LtePage
      */
-    public function show()
+    public function show(LtePage $page)
     {
-        return Info::create(function (ModelInfoTable $table) {
-            $table->id();
-            $table->row('lte.path', 'path')->badge('success');
-            $table->row('lte.methods', [$this, 'show_methods']);
-            $table->row('lte.state', [$this, 'show_state']);
-            $table->row('lte.role', 'role.name');
-            $table->row('lte.active', 'active')->yes_no();
-            $table->at();
-        });
+        return $page
+            ->card()
+            ->withTools()
+            ->info(function (ModelInfoTable $table) {
+                $table->id();
+                $table->row('lte.path', 'path')->badge('success');
+                $table->row('lte.methods', [$this, 'show_methods']);
+                $table->row('lte.state', [$this, 'show_state']);
+                $table->row('lte.role', 'role.name');
+                $table->row('lte.active', 'active')->yes_no();
+                $table->at();
+            });
     }
 
     /**
