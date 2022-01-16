@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Fields\Amount;
 use Lar\LteAdmin\Segments\Tagable\Fields\Autocomplete;
@@ -47,7 +48,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Field extends DIV implements onRender {
 
-    use FieldMassControl, Macroable;
+    use FieldMassControl, Macroable, Delegable;
 
     /**
      * @var array
@@ -89,6 +90,8 @@ class Field extends DIV implements onRender {
      * @var bool
      */
     protected $only_content = true;
+
+    protected $label = null;
 
     /**
      * Fields constructor.

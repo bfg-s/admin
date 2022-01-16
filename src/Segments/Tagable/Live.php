@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\SPAN;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
@@ -17,7 +18,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Live extends SPAN implements onRender {
 
-    use FieldMassControl, Macroable, BuildHelperTrait;
+    use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
      * @var int

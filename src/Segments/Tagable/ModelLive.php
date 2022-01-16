@@ -2,11 +2,15 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Lar\LteAdmin\Core\Traits\Delegable;
+
 /**
  * Class ModelLive
  * @package Lar\LteAdmin\Segments\Tagable
  */
 class ModelLive extends Live {
+
+    use Delegable;
 
     const NOT_NULL = "NOT_NULL";
     const NULL = "NULL";

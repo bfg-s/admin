@@ -40,7 +40,7 @@ trait TableBuilderTrait {
 
         foreach ($this->columns as $key => $column) {
 
-            if (request()->has('show_deleted') && !$column['trash']) {
+            if ((request()->has('show_deleted') && !$column['trash']) || $column['hide']) {
 
                 continue;
             }
@@ -50,7 +50,7 @@ trait TableBuilderTrait {
             $header_count++;
         }
 
-        if (request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
+        if (request()->has('q') && request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
 
             die($this->paginate->toJson());
         }
@@ -87,7 +87,7 @@ trait TableBuilderTrait {
 
             $value = $column['field'];
 
-            if (request()->has('show_deleted') && !$column['trash']) {
+            if ((request()->has('show_deleted') && !$column['trash']) || $column['hide']) {
 
                 continue;
             }

@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\SPAN;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Developer\Core\Traits\Piplineble;
 
@@ -19,7 +20,7 @@ use function GraphQL\Validator\DocumentValidator;
  */
 class ModelInfoTable extends DIV {
 
-    use Macroable, Piplineble;
+    use Macroable, Piplineble, Delegable;
 
     /**
      * @var bool

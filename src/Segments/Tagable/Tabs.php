@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
@@ -14,7 +15,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Tabs extends DIV implements onRender {
 
-    use Macroable;
+    use Macroable, Delegable;
 
     /**
      * Count of tabs
@@ -73,11 +74,11 @@ class Tabs extends DIV implements onRender {
     /**
      * @param  string  $title
      * @param  string|mixed  $icon
-     * @param  \Closure|null  $contentCb
+     * @param  callable|null  $contentCb
      * @param  bool|null  $active
      * @return Component
      */
-    public function tab(string $title, $icon = null, ?\Closure $contentCb = null, ?bool $active = null)
+    public function tab(string $title, $icon = null, callable $contentCb = null, ?bool $active = null)
     {
         if($icon && !is_string($icon)) {
             $contentCb = $icon;
@@ -129,7 +130,9 @@ class Tabs extends DIV implements onRender {
             'id' => $id,
             'aria-labelledby' => $id . "-label"
         ])->when($this->tab_content_props)
-            ->when($contentCb)
+            ->when(function (TabContent $content) use ($contentCb) {
+                call_user_func($contentCb, $content);
+            })
             ->addClassIf($active, 'active show');
 
         $this->tab_contents

@@ -101,9 +101,14 @@ class UserController extends Controller
                 static::timelineComponent($content, $this->model()->logs());
             }, request()->has('ltelog_per_page') || request()->has('ltelog_page'));
 
-            $form->tab('lte.activity', 'fas fa-chart-line', function (TabContent $content) {
+            $form->tab('lte.day_activity', 'fas fa-chart-line', function (TabContent $content) {
 
-                static::activityComponent($content, $this->model()->logs());
+                static::activityDayComponent($content, $this->model()->logs());
+            });
+
+            $form->tab('lte.year_activity', 'fas fa-chart-line', function (TabContent $content) {
+
+                static::activityYearComponent($content, $this->model()->logs());
             });
 
 
@@ -117,26 +122,30 @@ class UserController extends Controller
         });
     }
 
-    public static function activityComponent($content, $model)
+    public static function activityDayComponent(TabContent $content, $model)
     {
-        $content->chart_js(function (ChartJsBuilder $builder) use ($model) {
-            /** @var Collection $all */
-            $all = $model->get(['created_at']);
-            $all = $all->groupBy(function (Model $model) {
-                return $model->created_at->format('Y.m.d');
-            })->map(function (Collection $collection) {
-                return $collection->count();
-            });
+        $content->chart_js($model)
+            ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
+            ->groupDataByAt('created_at', 'H:i')
+            ->eachPointCount('lte.activity')
+            ->eachPoint('lte.page_loadings', function ($c) { return $c->where('method', 'GET')->count(); })
+            ->eachPoint('lte.creates', function ($c) { return $c->where('method', 'POST')->count(); })
+            ->eachPoint('lte.updates', function ($c) { return $c->where('method', 'PUT')->count(); })
+            ->eachPoint('lte.deletes', function ($c) { return $c->where('method', 'DELETE')->count(); })
+            ->miniChart();
+    }
 
-            $builder
-                ->type('line')
-                ->size(['width' => 400, 'height' => 100])
-                ->labels($all->keys()->toArray())
-                ->simpleDatasets(
-                    __('lte.activity'),
-                    $all->values()->toArray()
-                );
-        });
+    public static function activityYearComponent(TabContent $content, $model)
+    {
+        $content->chart_js($model)
+            ->setDataBetween('created_at', now()->startOfYear()->startOfDay(), now()->endOfDay())
+            ->groupDataByAt('created_at')
+            ->eachPointCount('lte.activity')
+            ->eachPoint('lte.page_loadings', function ($c) { return $c->where('method', 'GET')->count(); })
+            ->eachPoint('lte.creates', function ($c) { return $c->where('method', 'POST')->count(); })
+            ->eachPoint('lte.updates', function ($c) { return $c->where('method', 'PUT')->count(); })
+            ->eachPoint('lte.deletes', function ($c) { return $c->where('method', 'DELETE')->count(); })
+            ->miniChart();
     }
 
     public static function timelineComponent($content, $model)

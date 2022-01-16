@@ -3,13 +3,15 @@
 namespace Lar\LteAdmin;
 
 use Lar\Layout\Abstracts\Component;
+use Lar\LteAdmin\Core\LtePageMixin;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
 use Lar\LteAdmin\Core\TableExtends\Display;
 use Lar\LteAdmin\Core\TableExtends\Editables;
 use Lar\LteAdmin\Core\TableExtends\Formatter;
-use Lar\LteAdmin\Core\TagableComponent;
+use Lar\LteAdmin\Core\TaggableComponent;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteUser;
+use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
@@ -32,13 +34,16 @@ class LteBoot
 
     /**
      * Run boot Lte scripts
+     * @throws \ReflectionException
      */
     public static function run()
     {
         /**
          * Register tagable components
          */
-        TagableComponent::create();
+        TaggableComponent::create();
+
+        LtePage::mixin(new LtePageMixin);
 
         include __DIR__ . '/bootstrap.php';
 

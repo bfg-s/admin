@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
@@ -19,7 +20,7 @@ use Lar\Tagable\Events\onRender;
  */
 class StatisticPeriods extends DIV implements onRender {
 
-    use FieldMassControl, Macroable, BuildHelperTrait, FontAwesome;
+    use FieldMassControl, Macroable, BuildHelperTrait, FontAwesome, Delegable;
 
     /**
      * @var string

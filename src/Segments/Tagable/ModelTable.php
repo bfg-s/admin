@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableExtensionTrait;
@@ -29,12 +31,15 @@ class ModelTable extends Component {
         TableBuilderTrait,
         TableControlsTrait,
         Macroable,
-        Piplineble;
+        Piplineble,
+        Delegable;
 
     /**
      * @var string
      */
     protected $element = "table";
+    protected $label = null;
+    protected $hasHidden = false;
 
     /**
      * @var string[]
@@ -150,6 +155,16 @@ class ModelTable extends Component {
         $this->toExecute("_create_controls", "_build");
 
         $this->save_table_requests();
+    }
+
+    public static function toContainer(DIV $div, $arguments)
+    {
+        if ($div instanceof Card) {
+
+            return $div->bodyModelTable(...$arguments);
+        }
+
+        return $div;
     }
 
     /**

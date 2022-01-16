@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
@@ -18,7 +19,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Lang extends DIV implements onRender {
 
-    use FieldMassControl, Macroable, BuildHelperTrait;
+    use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
      * @var array|null

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Controllers\ModalController;
+use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Resources\LteFunctionResource;
@@ -182,5 +183,17 @@ class LteAdmin extends LteAdminExecutor
         }
 
         abort(404);
+    }
+
+    public function export_excel(string $model, array $ids, string $order, string $order_type)
+    {
+        $prepared = new PrepareExport($model, $ids, $order, $order_type);
+        return \Excel::download($prepared, class_basename($model) . '_' .now()->format('Y_m_d_His') . '.xlsx');
+    }
+
+    public function export_csv(string $model, array $ids, string $order, string $order_type)
+    {
+        $prepared = new PrepareExport($model, $ids, $order, $order_type);
+        return \Excel::download($prepared, class_basename($model) . '_' .now()->format('Y_m_d_His') . '.csv');
     }
 }

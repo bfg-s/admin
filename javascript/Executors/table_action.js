@@ -1,21 +1,15 @@
-const get = require('lodash/get');
-
 module.exports = class extends Executor {
 
     __invoke () {
 
-        let ids = [];
+        let ids = this.selectedIds;
 
-        $(`.select_${this.table}:checked`).each((i, obj) => {
-            ids.push(Number(obj.value));
-        });
-
-        if (ids.length && this.jax) {
+        if ((ids.length || !this.warning) && this.jax) {
 
             let call_jax = () => {
-                jax.path(this.jax, this.object, ids, this.columns, this.url)
+                jax.path(this.jax, this.object, ids, this.columns, this.order, this.orderType, this.url)
                     .then(() => {
-                        $(`.select_${this.table}:checked`).each((i, obj) => {
+                        $(`.select_${this.table}`).each((i, obj) => {
                             obj.checked = false;
                         });
                         $(`[name="select_${this.table}"]`)[0].checked = false;
@@ -30,7 +24,35 @@ module.exports = class extends Executor {
 
                 call_jax();
             }
+        } else if (this.warning) {
+            "alert::warning".exec(this.warning);
         }
+    }
+
+    exportToExcel () {
+        let ids = this.selectedIds;
+        ljs.progress.start();
+        "toast::success".exec("Downloading...");
+        jax.lte_admin.export_excel(this.object, ids, this.order, this.orderType)
+            .then(() => {
+                "toast::success".exec("Saving...");
+            })
+            .finally(() => {
+                ljs.progress.done()
+            });
+    }
+
+    exportToCsv () {
+        let ids = this.selectedIds;
+        ljs.progress.start();
+        "toast::success".exec("Downloading...");
+        jax.lte_admin.export_csv(this.object, ids, this.order, this.orderType)
+            .then(() => {
+                "toast::success".exec("Saving...");
+            })
+            .finally(() => {
+                ljs.progress.done()
+            });
     }
 
 
@@ -54,8 +76,32 @@ module.exports = class extends Executor {
         return this.target.dataset.jax;
     }
 
+    get warning () {
+        return this.target.dataset.warning;
+    }
+
     get columns () {
         return JSON.parse(this.target.dataset.columns);
+    }
+
+    get openColumns () {
+        return JSON.parse(this.target.dataset.openColumns);
+    }
+
+    get order () {
+        return this.target.dataset.order;
+    }
+
+    get orderType () {
+        return this.target.dataset.orderType;
+    }
+
+    get selectedIds () {
+        let ids = [];
+        $(`.select_${this.table}:checked`).each((i, obj) => {
+            ids.push(Number(obj.value));
+        });
+        return ids;
     }
 
     static __name () {

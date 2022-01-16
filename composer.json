@@ -18,8 +18,8 @@
         "symfony/css-selector": "^v6.0.1",
         "lar/layout": "^v2.5.0",
         "lar/ljs": "^v2.5.7",
-        "bfg/chartjs": "^3.1",
-        "almasaeed2010/adminlte": "^3.0"
+        "almasaeed2010/adminlte": "^3.0",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {},
     "autoload": {

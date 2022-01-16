@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Amount;
 use Lar\LteAdmin\Segments\Tagable\SearchFields\Checks;
@@ -35,7 +36,8 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
 
     use SearchFormConditionRulesTrait,
         SearchFormHelpersTrait,
-        Macroable;
+        Macroable,
+        Delegable;
 
     /**
      * @var array

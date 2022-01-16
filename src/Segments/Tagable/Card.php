@@ -3,9 +3,12 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\H3;
 use Lar\Layout\Traits\FontAwesome;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
@@ -17,7 +20,9 @@ use Lar\Tagable\Events\onRender;
  */
 class Card extends DIV implements onRender {
 
-    use TypesTrait, FontAwesome, Macroable;
+    use TypesTrait, FontAwesome, Macroable, Delegable;
+
+    static $isContainer = true;
 
     /**
      * @var SearchForm

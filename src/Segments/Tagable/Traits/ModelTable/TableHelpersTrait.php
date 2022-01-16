@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
@@ -102,7 +103,8 @@ trait TableHelpersTrait {
             'sort' => false,
             'trash' => true,
             'info' => false,
-            'macros' => []
+            'hide' => is_string($field) && request()->has($this->model_name.'_'.$field) && request($this->model_name.'_'.$field) == 0,
+            'macros' => [],
         ];
 
         if ($this->prepend) {
@@ -110,6 +112,36 @@ trait TableHelpersTrait {
             array_unshift($this->columns, $col);
         } else {
             $this->columns[$this->last] = $col;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function to_export(callable $callback = null)
+    {
+        if (isset($this->columns[$this->last])) {
+
+            PrepareExport::$columns[$this->last] = [
+                'header' => $this->columns[$this->last]['label'],
+                'field' => $callback ?: $this->columns[$this->last]['field'],
+            ];
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function only_export(callable $callback = null)
+    {
+        if (isset($this->columns[$this->last])) {
+
+            $this->to_export($callback);
+            unset($this->columns[$this->last]);
         }
 
         return $this;
@@ -168,6 +200,21 @@ trait TableHelpersTrait {
                             $this->columns[$this->last]['field'] :
                             false
                     );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function to_hide()
+    {
+        if (
+            isset($this->columns[$this->last]) && isset($this->columns[$this->last]['field'])) {
+            $this->hasHidden = true;
+            $this->columns[$this->last]['hide']
+                = !(request($this->model_name.'_'.$this->columns[$this->last]['field']) == 1);
         }
 
         return $this;

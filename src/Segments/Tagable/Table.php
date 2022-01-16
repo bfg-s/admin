@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Layout\Tags\TABLE as TableParent;
@@ -13,8 +14,8 @@ use Lar\Layout\Tags\TABLE as TableParent;
  * @mixin TableMacroList
  */
 class Table extends TableParent {
-    
-    use TypesTrait, Macroable;
+
+    use TypesTrait, Macroable, Delegable;
 
     /**
      * @var array

@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Traits\FontAwesome;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
@@ -12,7 +13,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
  */
 class ModalFooterButton extends BUTTON {
 
-    use TypesTrait, FontAwesome;
+    use TypesTrait, FontAwesome, Delegable;
 
     /**
      * @var array

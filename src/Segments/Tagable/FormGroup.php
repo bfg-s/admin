@@ -8,6 +8,7 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\Layout\Traits\FontAwesome;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\RulesBackTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
@@ -19,7 +20,7 @@ use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
  */
 abstract class FormGroup extends DIV {
 
-    use RulesFrontTrait, RulesBackTrait, FontAwesome, Macroable;
+    use RulesFrontTrait, RulesBackTrait, FontAwesome, Macroable, Delegable;
 
     /**
      * @var bool

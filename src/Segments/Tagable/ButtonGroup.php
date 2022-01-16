@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
@@ -15,7 +16,7 @@ use Lar\Tagable\Events\onRender;
  */
 class ButtonGroup extends DIV implements onRender {
 
-    use Macroable;
+    use Macroable, Delegable;
 
     /**
      * @var array|null

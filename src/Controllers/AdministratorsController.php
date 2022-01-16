@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\LtePage;
@@ -37,6 +38,13 @@ class AdministratorsController extends Controller
         return !($type === 'delete' && $this->model()->id == 1);
     }
 
+    public function explanation(): Explanation
+    {
+        return Explanation::new(
+            Card::new()->defaultTools([$this, 'canDelete'])
+        );
+    }
+
     /**
      * @param  LtePage  $page
      * @return LtePage
@@ -45,7 +53,6 @@ class AdministratorsController extends Controller
     {
         return $page
             ->card('lte.admin_list')
-            ->withTools([$this, 'canDelete'])
             ->search(function (SearchForm $form) {
                 $form->id();
                 $form->email('email', 'lte.email_address');
@@ -74,7 +81,6 @@ class AdministratorsController extends Controller
     {
         return $page
             ->card(['lte.add_admin', 'lte.edit_admin'])
-            ->withTools([$this, 'canDelete'])
             ->form(function (Form $form) {
                 $form->info_id();
                 $form->image('avatar', 'lte.avatar')->nullable();
@@ -103,7 +109,6 @@ class AdministratorsController extends Controller
     public function show(LtePage $page)
     {
         return $page->card()
-            ->withTools([$this, 'canDelete'])
             ->info(function (ModelInfoTable $table) {
                 $table->row('lte.avatar', 'avatar')->avatar(150);
                 $table->row('lte.role', [$this, 'show_role']);

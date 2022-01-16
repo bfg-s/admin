@@ -94,14 +94,13 @@ class MacroableHelperGenerator implements DumpExecute {
                 ];
             }
 
-            if ($methods = get_doc_var($doc, 'methods')) {
-
+            foreach ($this->get_variables($doc, 'methods') as $method) {
                 $macroable_classes[$ns][] = [
                     'type' => 'methods',
                     'class' => $class,
                     'name' => class_basename($class),
                     'doc' => $doc,
-                    'methods' => $methods,
+                    'methods' => $method,
                     'ref' => $refl
                 ];
             }
@@ -120,7 +119,7 @@ class MacroableHelperGenerator implements DumpExecute {
                 $type = $class['type'];
 
                 if ($type === 'macro') {
-                    $class['macro_return'] = "self|static|\\" . trim($class['class'], "\\");
+                    $class['macro_return'] = "\\" . trim($class['class'], "\\");
                     if ($mr = get_doc_var($class['doc'], 'macro_return')) $class['macro_return'] .= "|\\" . trim($mr);
 
                     $name = get_doc_var($class['doc'], 'helper_name');
@@ -210,7 +209,6 @@ class MacroableHelperGenerator implements DumpExecute {
                     $ref = new \ReflectionClass($method_class);
                 }
             } catch (\Throwable $e) {
-                //dd($method, $method_class);
                 $this->command->error($e->getMessage());
                 \Log::error($e);
             }
@@ -223,6 +221,11 @@ class MacroableHelperGenerator implements DumpExecute {
                 if (!$params && $ref->hasMethod('__construct')) {
                     $params = "(".refl_params_entity($ref->getMethod('__construct')->getParameters()).")";
                 }
+            }
+
+            if ($ref->hasMethod('__construct')) {
+                $params = preg_replace("/\*\s*\)$/", refl_params_entity($ref->getMethod('__construct')->getParameters()).")", $params);
+                $params = preg_replace("/^\(\s*\*/", refl_params_entity($ref->getMethod('__construct')->getParameters()).")", $params);
             }
 
             $upd = function ($m) use ($class_data, $method_class) {
@@ -284,5 +287,27 @@ class MacroableHelperGenerator implements DumpExecute {
                 "Field Macro $macro_name"
             );
         }
+    }
+
+
+
+    /**
+     * @param  string  $doc
+     * @param  string  $var_name
+     * @return array
+     */
+    public static function get_variables(string $doc, string $var_name)
+    {
+        $result = [];
+
+        foreach (explode("\n", $doc) as $line) {
+
+            if (preg_match('/@'.$var_name.'\s(.*)/m', $line, $matches)) {
+
+                $result[] = isset($matches[1]) ? trim($matches[1]) : null;
+            }
+        }
+
+        return $result;
     }
 }

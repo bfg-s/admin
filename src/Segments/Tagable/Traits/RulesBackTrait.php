@@ -10,6 +10,8 @@ use Lar\LteAdmin\Controllers\Controller;
  */
 trait RulesBackTrait {
 
+    protected $print_front = true;
+
     /**
      * The field under validation must be yes, on, 1, or true.
      * This is useful for validating "Terms of Service" acceptance.
@@ -395,7 +397,9 @@ trait RulesBackTrait {
      */
     public function email(string $message = null)
     {
-        $this->_front_rule_email();
+        if ($this->print_front) {
+            $this->_front_rule_email();
+        }
         return  $this->rule(__FUNCTION__, $message);
     }
     public function email_if($condition, string $message = null)
@@ -803,7 +807,9 @@ trait RulesBackTrait {
      */
     public function numeric(string $message = null)
     {
-        $this->_front_rule_number();
+        if ($this->print_front) {
+            $this->_front_rule_number();
+        }
         return  $this->rule(__FUNCTION__, $message);
     }
     public function numeric_if($condition, string $message = null)
@@ -876,7 +882,9 @@ trait RulesBackTrait {
      */
     public function required(string $message = null)
     {
-        $this->_front_rule_required();
+        if ($this->print_front) {
+            $this->_front_rule_required();
+        }
         return  $this->rule(__FUNCTION__, $message);
     }
     public function required_condition($condition, string $message = null)
@@ -1097,7 +1105,9 @@ trait RulesBackTrait {
      */
     public function url(string $message = null)
     {
-        $this->_front_rule_url();
+        if ($this->print_front) {
+            $this->_front_rule_url();
+        }
         return $this->rule(__FUNCTION__, $message);
     }
     public function url_if($condition, string $message = null)

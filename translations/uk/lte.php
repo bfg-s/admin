@@ -158,4 +158,10 @@ return [
     'statistic_total'               => 'Всього :entity',
     'added_to_users'                => 'Додано користувачів',
     'activity'                      => 'Активність',
+    'creates'                       => 'Створив',
+    'updates'                       => 'Оновив',
+    'deletes'                       => 'Видалив',
+    'page_loadings'                 => 'Завантажив сторінку',
+    'day_activity'                  => 'Діяльність на добу',
+    'year_activity'                 => 'Активность за рік',
 ];

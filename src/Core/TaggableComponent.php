@@ -31,12 +31,12 @@ use Lar\LteAdmin\Segments\Tagable\Timeline;
  * Class TagableComponent
  * @package Lar\LteAdmin\Core
  */
-class TagableComponent extends Component {
+class TaggableComponent extends Component {
 
     /**
      * @var string[]
      */
-    protected $collection = [
+    public static $collection = [
         'row' => Row::class,
         'col' => Col::class,
         'lang' => Lang::class,
@@ -67,6 +67,6 @@ class TagableComponent extends Component {
      */
     public function __construct()
     {
-        static::injectCollection($this->collection);
+        static::injectCollection(static::$collection);
     }
 }

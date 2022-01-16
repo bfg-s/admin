@@ -158,4 +158,14 @@ return [
     'statistic_total'               => 'Total :entity',
     'added_to_users'                => 'Added to users',
     'activity'                      => 'Activity',
+    'creates'                       => 'Creates',
+    'updates'                       => 'Updates',
+    'deletes'                       => 'Deletes',
+    'page_loadings'                 => 'Page loadings',
+    'day_activity'                  => 'Activity per day',
+    'year_activity'                 => 'Activity for the year',
+
+    'before_need_to_select'         => 'Choose at least one element',
+    'show'                          => 'Show',
+    'hide'                          => 'Hide',
 ];

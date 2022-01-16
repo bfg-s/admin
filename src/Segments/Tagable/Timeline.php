@@ -11,6 +11,7 @@ use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Segments\Segment;
 
 /**
@@ -21,6 +22,8 @@ use Lar\LteAdmin\Segments\Segment;
  * @mixin TimelineMethods
  */
 class Timeline extends Segment {
+
+    use Delegable;
 
     /**
      * @var string

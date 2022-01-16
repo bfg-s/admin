@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
@@ -23,7 +24,8 @@ class ModelRelation extends DIV {
         Macroable,
         BuildHelperTrait,
         ModelRelationHelpersTrait,
-        ModelRelationBuilderTrait;
+        ModelRelationBuilderTrait,
+        Delegable;
 
     /**
      * @var array

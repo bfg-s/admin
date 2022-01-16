@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreNestable;
@@ -16,7 +17,7 @@ use Lar\Tagable\Events\onRender;
  */
 class Nested extends DIV implements onRender {
 
-    use Macroable, Piplineble;
+    use Macroable, Piplineble, Delegable;
 
     /**
      * @var bool

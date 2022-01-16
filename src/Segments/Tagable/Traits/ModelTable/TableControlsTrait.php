@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Traits\ModelTable;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\SPAN;
+use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 
 /**
@@ -167,16 +168,43 @@ trait TableControlsTrait {
      * @param  null  $confirm
      * @return $this
      */
-    public function action($jax, $title, $icon = null, $confirm = null)
+    public function action($jax, $title, $icon = null, $confirm = null, ?string $warning = "lte.before_need_to_select")
     {
         $this->action[] = [
             'jax' => $jax,
             'title' => $title,
             'icon' => $icon,
-            'confirm' => $confirm
+            'confirm' => $confirm,
+            'warning' => $warning,
         ];
 
         return $this;
+    }
+
+    public function getActionData()
+    {
+        $hasDelete = $this->get_test_var('check_delete') && gets()->lte->menu->now['link.destroy'](0);
+        $select_type = request()->get($this->model_name . '_type', $this->order_type);
+        $this->order_field = request()->get($this->model_name, $this->order_field);
+        return [
+            'table_id' => $this->model_name,
+            'object' => $this->model_class,
+            'hasHidden' => $this->hasHidden,
+            'hasDelete' => $hasDelete,
+            'show' => count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden,
+            'actions' => $this->action,
+            'order_field' => $this->order_field,
+            'select_type' => $select_type,
+            'columns' => collect($this->columns)
+                ->filter(function ($i) { return isset($i['field']) && is_string($i['field']) && !$i['hide']; })
+                ->pluck('field')
+                ->toArray(),
+            'all_columns' => collect($this->columns)
+//                ->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })
+                ->filter(function ($i) { return isset($i['label']) && $i['label']; })
+                ->map(function ($i) { unset($i['macros']); return $i; })
+                ->toArray(),
+        ];
     }
 
     /**
@@ -187,7 +215,7 @@ trait TableControlsTrait {
         if ($this->get_test_var('controls')) {
 
             $hasDelete = gets()->lte->menu->now['link.destroy'](0);
-            $show = !!(count($this->action) ?: $hasDelete);
+            $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
 
             if ($this->checks && !request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
