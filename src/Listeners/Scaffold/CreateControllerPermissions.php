@@ -2,15 +2,8 @@
 
 namespace Lar\LteAdmin\Listeners\Scaffold;
 
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Events\Scaffold;
 use Lar\LteAdmin\Models\LteFunction;
-use Lar\LteAdmin\Segments\Info;
-use Lar\LteAdmin\Segments\Matrix;
-use Lar\LteAdmin\Segments\Sheet;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
  * Class CreateController

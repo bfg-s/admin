@@ -191,7 +191,7 @@ trait TableControlsTrait {
             'object' => $this->model_class,
             'hasHidden' => $this->hasHidden,
             'hasDelete' => $hasDelete,
-            'show' => count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden,
+            'show' => (count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden) && $this->checks,
             'actions' => $this->action,
             'order_field' => $this->order_field,
             'select_type' => $select_type,

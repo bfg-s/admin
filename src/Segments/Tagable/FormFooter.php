@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Vue\FormActionAfterSave;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;

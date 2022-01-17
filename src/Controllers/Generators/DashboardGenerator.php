@@ -7,7 +7,6 @@ use Lar\Developer\Generator;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Row;
-use PDO;
 
 /**
  * Class DashboardGenerator

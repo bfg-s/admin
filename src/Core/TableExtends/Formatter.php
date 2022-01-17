@@ -18,7 +18,7 @@ class Formatter {
      * @param $value
      * @return string
      */
-    public function str_limit($value, $props = [])
+    public function str_limit($value = null, $props = [])
     {
         $value = strip_tags($value);
         $limit = $props[0] ?? 20;
@@ -168,7 +168,7 @@ class Formatter {
      * @param  Model|null  $model
      * @return string
      */
-    public function to_append($value, $props = [], Model $model = null)
+    public function to_append($value = null, $props = [], Model $model = null)
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $append = call_user_func($props[0], $model);
@@ -186,7 +186,7 @@ class Formatter {
      * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend($value, $props = [], Model $model = null)
+    public function to_prepend($value = null, $props = [], Model $model = null)
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $prepend = call_user_func($props[0], $model);
@@ -204,7 +204,7 @@ class Formatter {
      * @param  Model|null  $model
      * @return string
      */
-    public function to_append_link($value, $props = [], Model $model = null)
+    public function to_append_link($value = null, $props = [], Model $model = null)
     {
         if (!$value) {
 
@@ -231,7 +231,7 @@ class Formatter {
      * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend_link($value, $props = [], Model $model = null)
+    public function to_prepend_link($value = null, $props = [], Model $model = null)
     {
         if (!$value) {
 
@@ -257,7 +257,7 @@ class Formatter {
      * @param $value
      * @return string
      */
-    public function number_format($value, $props = [])
+    public function number_format($value = null, $props = [])
     {
         $dec = $props[0] ?? 0;
         $dec_point = $props[1] ?? '.';
@@ -272,7 +272,7 @@ class Formatter {
      * @param $value
      * @return string
      */
-    public function money($value, $props = [])
+    public function money($value = null, $props = [])
     {
         if (!$value) $value = 0;
 
@@ -285,7 +285,7 @@ class Formatter {
      * @param  Model|null  $model
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function to_lang($value, $props = [], Model $model = null)
+    public function to_lang($value = null, $props = [], Model $model = null)
     {
         return $model ? tag_replace(__($value, $props), $model) : __($value, $props);
     }
@@ -295,7 +295,7 @@ class Formatter {
      * @param  array  $props
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function to_string($value, $props = [])
+    public function to_string($value = null, $props = [])
     {
         if (is_object($value)) {
             return  get_class($value);
@@ -317,7 +317,7 @@ class Formatter {
      * @param  array  $props
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function has_lang($value, $props = [])
+    public function has_lang($value = null, $props = [])
     {
         return lang_in_text($value);
     }
@@ -327,7 +327,7 @@ class Formatter {
      * @param  array  $props
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function trim($value, $props = [])
+    public function trim($value = null, $props = [])
     {
         if (isset($props[0])) {
 
@@ -342,7 +342,7 @@ class Formatter {
      * @param  array  $props
      * @return string
      */
-    public function carbon_format($value, $props = [])
+    public function carbon_format($value = null, $props = [])
     {
         $format = $props[0] ?? 'Y-m-d H:i:s';
 
@@ -364,7 +364,7 @@ class Formatter {
      * @param  array  $props
      * @return string
      */
-    public function carbon_time($value, $props = [])
+    public function carbon_time($value = null, $props = [])
     {
         $format = $props[0] ?? 'H:i:s';
         $time = explode(":", $value);
@@ -381,7 +381,7 @@ class Formatter {
      * @param  array  $props
      * @return mixed|string
      */
-    public function explode($value, $props = [])
+    public function explode($value = null, $props = [])
     {
         $delimiter = $props[0] ?? null;
 

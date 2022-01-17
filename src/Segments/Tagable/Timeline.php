@@ -3,14 +3,11 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\H3;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Segments\Segment;
 

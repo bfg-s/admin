@@ -97,9 +97,9 @@
 </template>
 
 <script>
-    import filter from "lodash/filter";
+import filter from "lodash/filter";
 
-    export default {
+export default {
         name: 'GatesTools',
         props: ['action', 'lte', 'roles', 'funcs'],
         data () {

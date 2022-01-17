@@ -2,12 +2,9 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\LtePage;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
  * Class HomeController
@@ -21,6 +18,35 @@ class RolesController extends Controller
      */
     static $model = LteRole::class;
 
+    public function explanation(): Explanation
+    {
+        return Explanation::new(
+            $this->card()->defaultTools()
+        )->index(
+            $this->search()->id(),
+            $this->search()->input('name', 'lte.title'),
+            $this->search()->input('slug', 'lte.slug'),
+            $this->search()->at(),
+        )->index(
+            $this->table()->id(),
+            $this->table()->col('lte.title', 'name')->sort(),
+            $this->table()->col('lte.slug', 'slug')->sort()->badge('success'),
+            $this->table()->at(),
+        )->edit(
+            $this->form()->info_id(),
+        )->form(
+            $this->form()->input('name', 'lte.title')->required()->duplication_how_slug('#input_slug'),
+            $this->form()->input('slug', 'lte.slug')->required()->slugable(),
+        )->edit(
+            $this->form()->info_at(),
+        )->show(
+            $this->info()->id(),
+            $this->info()->row('lte.title', 'name'),
+            $this->info()->row('lte.slug', 'slug')->badge('success'),
+            $this->info()->at(),
+        );
+    }
+
     /**
      * @param  LtePage  $page
      * @return LtePage
@@ -29,19 +55,8 @@ class RolesController extends Controller
     {
         return $page
             ->card('lte.list_of_roles')
-            ->withTools()
-            ->search(function (SearchForm $form) {
-                $form->id();
-                $form->input('name', 'lte.title');
-                $form->input('slug', 'lte.slug');
-                $form->at();
-            })
-            ->table(function (ModelTable $table) {
-                $table->id();
-                $table->column('lte.title', 'name')->sort();
-                $table->column('lte.slug', 'slug')->sort()->badge('success');
-                $table->at();
-            });
+            ->search()
+            ->table();
     }
 
     /**
@@ -52,29 +67,6 @@ class RolesController extends Controller
     {
         return $page
             ->card(['lte.add_role', 'lte.edit_role'])
-            ->withTools()
-            ->form(function (Form $form) {
-                $form->info_id();
-                $form->input('name', 'lte.title')->required()->duplication_how_slug('#input_slug');
-                $form->input('slug', 'lte.slug')->required()->slugable();
-                $form->info_at();
-            });
-    }
-
-    /**
-     * @param  LtePage  $page
-     * @return LtePage
-     */
-    public function show(LtePage $page)
-    {
-        return $page
-            ->card()
-            ->withTools()
-            ->info(function (ModelInfoTable $table) {
-                $table->id();
-                $table->row('lte.title', 'name');
-                $table->row('lte.slug', 'slug')->badge('success');
-                $table->at();
-            });
+            ->form();
     }
 }

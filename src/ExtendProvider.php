@@ -2,16 +2,16 @@
 
 namespace Lar\LteAdmin;
 
+use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\LteAdmin\Core\ConfigExtensionProvider;
 use Lar\LteAdmin\Core\InstallExtensionProvider;
+use Lar\LteAdmin\Core\NavGroup;
 use Lar\LteAdmin\Core\NavigatorExtensionProvider;
 use Lar\LteAdmin\Core\PermissionsExtensionProvider;
 use Lar\LteAdmin\Core\UnInstallExtensionProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
-use Lar\LteAdmin\Core\NavGroup;
-use Illuminate\Console\Command;
 use Lar\LteAdmin\Models\LteFunction;
 
 /**

@@ -2,8 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
-use Lar\LteAdmin\Segments\Tagable\Cores\CoreSelect2Tags;
-
 /**
  * Class Autocomplete
  * @package Lar\LteAdmin\Segments\Tagable\Fields

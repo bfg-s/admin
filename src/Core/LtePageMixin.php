@@ -171,9 +171,13 @@ class LtePageMixin
         return function (callable $callback = null) {
 
             if ($this->hasClass(Card::class)) {
-                $this->getClass(Card::class)->fullBody()->chart_js($callback);
+                $this->registerClass(
+                    $this->getClass(Card::class)->fullBody()->chart_js($callback)
+                );
             } else {
-                $this->getClass(DIV::class)->chart_js($callback);
+                $this->registerClass(
+                    $this->getClass(DIV::class)->chart_js($callback)
+                );
             }
             return $this;
         };
@@ -184,9 +188,13 @@ class LtePageMixin
         return function (callable $callback = null) {
 
             if ($this->hasClass(Card::class)) {
-                $this->getClass(Card::class)->body()->statistic_periods($callback);
+                $this->registerClass(
+                    $this->getClass(Card::class)->body()->statistic_periods($callback)
+                );
             } else {
-                $this->getClass(DIV::class)->statistic_periods($callback);
+                $this->registerClass(
+                    $this->getClass(DIV::class)->statistic_periods($callback)
+                );
             }
             return $this;
         };

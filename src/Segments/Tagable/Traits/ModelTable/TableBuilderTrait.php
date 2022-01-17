@@ -2,12 +2,11 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Traits\ModelTable;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
-use Lar\Layout\Tags\TD;
 use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;

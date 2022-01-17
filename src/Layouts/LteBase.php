@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\LayoutComponent;
-use Lar\Layout\Core\LConfigs;
 use Lar\LteAdmin\LteAdmin;
 
 /**

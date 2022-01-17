@@ -2,10 +2,9 @@
 
 namespace Lar\LteAdmin;
 
-use Closure;
 use Illuminate\Routing\Router;
-use Lar\LteAdmin\Core\Delegate;
 use Illuminate\Support\Traits\Conditionable;
+use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Segments\Tagable\FieldInputTypesMethods;
 
 /**
@@ -53,7 +52,10 @@ final class Explanation
 
     public function create(...$delegates)
     {
-        if ($this->router->currentRouteNamed("*.create")) {
+        if (
+            $this->router->currentRouteNamed("*.create")
+            || $this->router->currentRouteNamed("*.store")
+        ) {
 
             $this->with(...$delegates);
         }
@@ -63,7 +65,10 @@ final class Explanation
 
     public function edit(...$delegates)
     {
-        if ($this->router->currentRouteNamed("*.edit")) {
+        if (
+            $this->router->currentRouteNamed("*.edit")
+            || $this->router->currentRouteNamed("*.update")
+        ) {
 
             $this->with(...$delegates);
         }

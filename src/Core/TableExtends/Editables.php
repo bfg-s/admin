@@ -4,8 +4,6 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
-use Lar\Layout\Tags\TD;
-use Lar\Layout\Tags\TH;
 use Lar\LteAdmin\Segments\Tagable\Field;
 
 /**

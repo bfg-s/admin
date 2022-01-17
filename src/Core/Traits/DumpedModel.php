@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Core\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Trait DumpedModel

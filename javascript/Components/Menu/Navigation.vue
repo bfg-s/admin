@@ -17,9 +17,9 @@
 </template>
 
 <script>
-    import filter from 'lodash/filter';
+import filter from 'lodash/filter';
 
-    export default {
+export default {
         name: 'v-navigator',
         props: ['items'],
         data () {

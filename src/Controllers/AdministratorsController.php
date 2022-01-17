@@ -7,10 +7,6 @@ use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\LtePage;
 use Lar\LteAdmin\Segments\Tagable\Card;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Lar\LteAdmin\Segments\Tagable\TabContent;
 
 /**
@@ -41,7 +37,51 @@ class AdministratorsController extends Controller
     public function explanation(): Explanation
     {
         return Explanation::new(
-            Card::new()->defaultTools([$this, 'canDelete'])
+            $this->card()->defaultTools([$this, 'canDelete'])
+        )->index(
+            $this->search()->id(),
+            $this->search()->email('email', 'lte.email_address'),
+            $this->search()->input('login', 'lte.login_name'),
+            $this->search()->input('name', 'lte.name'),
+            $this->search()->at(),
+        )->index(
+            $this->table()->id(),
+            $this->table()->col('lte.avatar', 'avatar')->avatar(),
+            $this->table()->col('lte.role', [$this, 'show_role']),
+            $this->table()->col('lte.email_address', 'email')->sort(),
+            $this->table()->col('lte.login_name', 'login')->sort(),
+            $this->table()->col('lte.name', 'name')->sort(),
+            $this->table()->at(),
+            $this->table()->controlDelete(function (LteUser $user) { return $user->id !== 1 && admin()->id !== $user->id; }),
+            $this->table()->disableChecks(),
+        )->edit(
+            $this->form()->info_id(),
+        )->form(
+            $this->form()->image('avatar', 'lte.avatar')->nullable(),
+            $this->form()->tab('lte.common', 'fas fa-cogs', function (TabContent $tab)  {
+                $tab->input('login', 'lte.login_name')
+                    ->required()
+                    ->unique(LteUser::class, 'login', $this->model()->id);
+                $tab->input('name', 'lte.name')->required();
+                $tab->email('email', 'lte.email_address')
+                    ->required()->unique(LteUser::class, 'email', $this->model()->id);
+                $tab->multi_select('roles[]', 'lte.role')->icon_user_secret()
+                    ->options(LteRole::all()->pluck('name','id'));
+            }),
+            $this->form()->tab('lte.password', 'fas fa-key', function (TabContent $tab)  {
+                $tab->password('password', 'lte.new_password')
+                    ->confirm()->required_condition($this->isType('create'));
+            }),
+        )->edit(
+            $this->form()->info_at(),
+        )->show(
+            $this->info()->id(),
+            $this->info()->row('lte.avatar', 'avatar')->avatar(150),
+            $this->info()->row('lte.role', [$this, 'show_role']),
+            $this->info()->row('lte.email_address', 'email'),
+            $this->info()->row('lte.login_name', 'login'),
+            $this->info()->row('lte.name', 'name'),
+            $this->info()->at(),
         );
     }
 
@@ -53,24 +93,8 @@ class AdministratorsController extends Controller
     {
         return $page
             ->card('lte.admin_list')
-            ->search(function (SearchForm $form) {
-                $form->id();
-                $form->email('email', 'lte.email_address');
-                $form->input('login', 'lte.login_name');
-                $form->input('name', 'lte.name');
-                $form->at();
-            })
-            ->table(function (ModelTable $table) {
-                $table->id();
-                $table->column('lte.avatar', 'avatar')->avatar();
-                $table->column('lte.role', [$this, 'show_role']);
-                $table->column('lte.email_address', 'email')->sort();
-                $table->column('lte.login_name', 'login')->sort();
-                $table->column('lte.name', 'name')->sort();
-                $table->at();
-                $table->controlDelete(function (LteUser $user) { return $user->id !== 1 && admin()->id !== $user->id; });
-                $table->disableChecks();
-            });
+            ->search()
+            ->table();
     }
 
     /**
@@ -81,25 +105,7 @@ class AdministratorsController extends Controller
     {
         return $page
             ->card(['lte.add_admin', 'lte.edit_admin'])
-            ->form(function (Form $form) {
-                $form->info_id();
-                $form->image('avatar', 'lte.avatar')->nullable();
-                $form->tab('lte.common', 'fas fa-cogs', function (TabContent $tab)  {
-                    $tab->input('login', 'lte.login_name')
-                        ->required()
-                        ->unique(LteUser::class, 'login', $this->model()->id);
-                    $tab->input('name', 'lte.name')->required();
-                    $tab->email('email', 'lte.email_address')
-                        ->required()->unique(LteUser::class, 'email', $this->model()->id);
-                    $tab->multi_select('roles[]', 'lte.role')->icon_user_secret()
-                        ->options(LteRole::all()->pluck('name','id'));
-                });
-                $form->tab('lte.password', 'fas fa-key', function (TabContent $tab)  {
-                    $tab->password('password', 'lte.new_password')
-                        ->confirm()->required_condition($this->isType('create'));
-                });
-                $form->info_at();
-            });
+            ->form();
     }
 
     /**
@@ -109,17 +115,15 @@ class AdministratorsController extends Controller
     public function show(LtePage $page)
     {
         return $page->card()
-            ->info(function (ModelInfoTable $table) {
-                $table->row('lte.avatar', 'avatar')->avatar(150);
-                $table->row('lte.role', [$this, 'show_role']);
-                $table->row('lte.email_address', 'email');
-                $table->row('lte.login_name', 'login');
-                $table->row('lte.name', 'name');
-                $table->at();
-            })
+            ->info()
             ->card('lte.activity', function (Card $card) {
-                $card->warning();
-                UserController::activityComponent($card->body(), $this->model()->logs());
+                $body = $card->warning()->fullBody();
+                $body->tab('lte.day_activity', 'fas fa-chart-line', function (TabContent $content) {
+                    UserController::activityDayComponent($content, $this->model()->logs());
+                });
+                $body->tab('lte.year_activity', 'fas fa-chart-line', function (TabContent $content) {
+                    UserController::activityYearComponent($content, $this->model()->logs());
+                });
             })
             ->card('lte.timeline', function (Card $card) {
                 $card->danger();

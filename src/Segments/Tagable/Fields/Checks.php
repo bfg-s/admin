@@ -32,7 +32,7 @@ class Checks extends FormGroup
     {
         parent::__construct($name, $title, $params);
 
-        if (!request()->has($this->path)) {
+        if (!request()->has($this->path) && !request()->has('__only_has')) {
 
             request()->request->add(
                 array_dots_uncollapse(

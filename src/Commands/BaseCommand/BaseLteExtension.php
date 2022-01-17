@@ -2,10 +2,9 @@
 
 namespace Lar\LteAdmin\Commands\BaseCommand;
 
-use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
-use Lar\LteAdmin\LteAdmin;
 use Lar\Layout\CfgFile;
+use Lar\LteAdmin\LteAdmin;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;

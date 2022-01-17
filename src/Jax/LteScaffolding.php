@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Jax;
 
-use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Events\Scaffold;
 
 /**

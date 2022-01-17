@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Controllers\ModalController;
 use Lar\LteAdmin\Segments\Modal;
 use Lar\LteAdmin\Segments\Tagable\ModalBody;

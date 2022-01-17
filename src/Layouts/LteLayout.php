@@ -4,7 +4,6 @@ namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Vue\Navigator;
 use Lar\LteAdmin\Middlewares\Authenticate;
 use Lar\LteAdmin\Segments\AccessDenied;
 

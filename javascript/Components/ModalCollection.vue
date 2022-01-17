@@ -19,9 +19,9 @@
 
 <script>
 
-    import merge from 'lodash/merge';
+import merge from 'lodash/merge';
 
-    export default {
+export default {
         name: 'modal',
         $exec: ['put', 'hide', 'toggle', 'destroy'],
         $remember: ['modals'],

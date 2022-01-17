@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Core;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class PrepareExport implements FromCollection
@@ -55,7 +54,9 @@ class PrepareExport implements FromCollection
                 if (is_string($column['field'])) {
                     $exportCollection[$column['header']][] = multi_dot_call($item, $column['field']);
                 } else if (is_callable($column['field'])) {
-                    $exportCollection[$column['header']][] = app()->call($column['field']);
+                    $exportCollection[$column['header']][] = embedded_call($column['field'], [
+                        $this->model => $item
+                    ]);
                 }
             }
         }

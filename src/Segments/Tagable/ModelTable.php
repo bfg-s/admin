@@ -2,20 +2,20 @@
 
 namespace Lar\LteAdmin\Segments\Tagable;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Lar\Developer\Core\Traits\Piplineble;
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Developer\Core\Traits\Piplineble;
-use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableExtensionTrait;
-use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableControlsTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableBuilderTrait;
+use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableControlsTrait;
+use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableExtensionTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableHelpersTrait;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Abstracts\Component;
-use Illuminate\Support\Collection;
 
 /**
  * Class ModelTable

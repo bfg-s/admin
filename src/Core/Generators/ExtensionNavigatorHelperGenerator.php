@@ -4,7 +4,6 @@ namespace Lar\LteAdmin\Core\Generators;
 
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
-use Lar\EntityCarrier\Core\Entities\ClassEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Navigate;
 

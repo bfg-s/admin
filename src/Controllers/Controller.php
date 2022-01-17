@@ -3,25 +3,35 @@
 namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Respond;
 use Lar\Developer\Core\Traits\Piplineble;
+use Lar\Layout\Respond;
 use Lar\LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
+use Lar\LteAdmin\Core\Delegate;
+use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Segments\LtePage;
+use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 use Lar\LteAdmin\Segments\Tagable\Card;
+use Lar\LteAdmin\Segments\Tagable\ChartJs;
+use Lar\LteAdmin\Segments\Tagable\ControllerMacroList;
+use Lar\LteAdmin\Segments\Tagable\ControllerMethods;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
+use Lar\LteAdmin\Segments\Tagable\Nested;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
+use Lar\LteAdmin\Segments\Tagable\StatisticPeriods;
 
 /**
  * Class Controller
  *
  * @package Lar\LteAdmin\Controllers
+ * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list ()
+ * @mixin ControllerMethods
+ * @mixin ControllerMacroList
  */
 class Controller extends BaseController
 {
-    use Piplineble, DefaultControllerResourceMethodsTrait;
+    use Piplineble, DefaultControllerResourceMethodsTrait, Macroable;
 
     /**
      * Permission functions for methods
@@ -46,6 +56,26 @@ class Controller extends BaseController
     public static $crypt_fields = [];
 
     /**
+     * @var string[]
+     */
+    public static $explanation_list = [
+        'card' => Card::class,
+        'search' => SearchForm::class,
+        'table' => ModelTable::class,
+        'nested' => Nested::class,
+        'form' => Form::class,
+        'info' => ModelInfoTable::class,
+        'buttons' => ButtonGroup::class,
+        'chartjs' => ChartJs::class,
+        'periods' => StatisticPeriods::class,
+    ];
+
+    /**
+     * @var bool
+     */
+    protected $isDefault = false;
+
+    /**
      * Controller constructor
      */
     public function __construct()
@@ -55,11 +85,12 @@ class Controller extends BaseController
 
     public function explanation(): Explanation
     {
-        return Explanation::new(
+        return $this->isDefault ? Explanation::new(
             Card::new()->defaultTools()
         )->index(
             SearchForm::new()->id(),
             SearchForm::new()->at(),
+        )->index(
             ModelTable::new()->id(),
             ModelTable::new()->at(),
         )->form(
@@ -68,7 +99,7 @@ class Controller extends BaseController
         )->show(
             ModelInfoTable::new()->id(),
             ModelInfoTable::new()->at(),
-        );
+        ) : Explanation::new();
     }
 
     /**
@@ -102,6 +133,11 @@ class Controller extends BaseController
      */
     public function __call($method, $parameters)
     {
+        if (isset(static::$explanation_list[$method])) {
+            return new Delegate(static::$explanation_list[$method]);
+        }
+
+        $this->isDefault = true;
         return app()->call([$this, "{$method}_default"]);
     }
 
@@ -110,7 +146,7 @@ class Controller extends BaseController
      * @param  null  $default
      * @return array|mixed|null
      */
-    public function form(string $path = null, $default = null)
+    public function request(string $path = null, $default = null)
     {
         if ($path) {
 
@@ -132,7 +168,7 @@ class Controller extends BaseController
      * @param $need_value
      * @return bool
      */
-    public function isForm(string $path, $need_value)
+    public function isRequest(string $path, $need_value)
     {
         $model = Form::$current_model;
 

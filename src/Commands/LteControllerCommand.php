@@ -4,11 +4,8 @@ namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Segments\LtePage;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -89,11 +86,7 @@ class LteControllerCommand extends Command
 
         if ($resource) {
 
-            $class->use(Form::class)
-                ->use(LtePage::class)
-                ->use(ModelTable::class)
-                ->use(SearchForm::class)
-                ->use(ModelInfoTable::class);
+            $class->use(LtePage::class);
 
             $class->prop('static:model');
 
@@ -108,20 +101,34 @@ class LteControllerCommand extends Command
                 $class->prop("static:model", entity($model_namespace."::class"));
             }
 
+            $class->method('explanation')
+                ->line("return Explanation::new(")
+                ->tab("\$this->card()->defaultTools()")
+                ->line(")->index(")
+                ->tab("\$this->search()->id(),")
+                ->tab("\$this->search()->at()")
+                ->line(")->index(")
+                ->tab("\$this->table()->id(),")
+                ->tab("\$this->table()->at()")
+                ->line(")->form(")
+                ->tab("\$this->form()->info_id(),")
+                ->tab("\$this->form()->info_at()")
+                ->line(")->show(")
+                ->tab("\$this->info()->id(),")
+                ->tab("\$this->info()->at()")
+                ->line(");")
+                ->doc(function ($doc) {
+                    /** @var DocumentorEntity $doc */
+                    $doc->tagReturn(Explanation::class);
+                })->returnType(Explanation::class);
+
             if (in_array('index', $only)) {
                 $class->method('index')
                     ->param('page', null, 'LtePage')
                     ->line("return \$page")
                     ->tab("->card()")
-                    ->tab("->withTools()")
-                    ->tab("->search(function (SearchForm \$form) {")
-                    ->tab("    \$form->id();")
-                    ->tab("    \$form->at();")
-                    ->tab("})")
-                    ->tab("->table(function (ModelTable \$table) {")
-                    ->tab("    \$table->id();")
-                    ->tab("    \$table->at();")
-                    ->tab("});")
+                    ->tab("->search()")
+                    ->tab("->table();")
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
@@ -132,11 +139,7 @@ class LteControllerCommand extends Command
                     ->param('page', null, 'LtePage')
                     ->line("return \$page")
                     ->tab("->card()")
-                    ->tab("->withTools()")
-                    ->tab("->form(function (Form \$form) {")
-                    ->tab("    \$form->info_id();")
-                    ->tab("    \$form->info_at();")
-                    ->tab("});")
+                    ->tab("->form();")
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
@@ -147,11 +150,7 @@ class LteControllerCommand extends Command
                     ->param('page', null, 'LtePage')
                     ->line("return \$page")
                     ->tab("->card()")
-                    ->tab("->withTools()")
-                    ->tab("->info(function (ModelInfoTable \$table) {")
-                    ->tab("    \$table->id();")
-                    ->tab("    \$table->at();")
-                    ->tab("});")
+                    ->tab("->info();")
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);

@@ -176,13 +176,13 @@
 </template>
 
 <script>
-    import merge from 'lodash/merge';
-    import map from 'lodash/map';
-    import VSelect2 from "./Common/Select2";
-    import VInfo from "./Common/Informer";
-    import draggable from "vuedraggable";
+import merge from 'lodash/merge';
+import map from 'lodash/map';
+import VSelect2 from "./Common/Select2";
+import VInfo from "./Common/Informer";
+import draggable from "vuedraggable";
 
-    export default {
+export default {
         name: 'ScaffoldTools',
         components: {VInfo, VSelect2, draggable},
         props: ['fields'],

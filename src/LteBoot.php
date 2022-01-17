@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin;
 
-use Lar\Layout\Abstracts\Component;
 use Lar\LteAdmin\Core\LtePageMixin;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
 use Lar\LteAdmin\Core\TableExtends\Display;

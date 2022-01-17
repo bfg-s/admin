@@ -2,24 +2,17 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Validation\Rule;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\ModelSaver;
 use Lar\LteAdmin\Models\LteLog;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Segments\Container;
-use Lar\LteAdmin\Segments\Tagable\Card;
-use Lar\LteAdmin\Segments\Tagable\Cores\ChartJsBuilder;
 use Lar\LteAdmin\Segments\Tagable\Form;
 use Lar\LteAdmin\Segments\Tagable\FormFooter;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 use Lar\LteAdmin\Segments\Tagable\Row;
 use Lar\LteAdmin\Segments\Tagable\TabContent;
-use Lar\LteAdmin\Segments\Tagable\Tabs;
 use Lar\LteAdmin\Segments\Tagable\Timeline;
 
 /**
@@ -124,28 +117,26 @@ class UserController extends Controller
 
     public static function activityDayComponent(TabContent $content, $model)
     {
-        $content->chart_js($model)
+        $chart = $content->chart_js($model)
             ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
-            ->groupDataByAt('created_at', 'H:i')
-            ->eachPointCount('lte.activity')
-            ->eachPoint('lte.page_loadings', function ($c) { return $c->where('method', 'GET')->count(); })
-            ->eachPoint('lte.creates', function ($c) { return $c->where('method', 'POST')->count(); })
-            ->eachPoint('lte.updates', function ($c) { return $c->where('method', 'PUT')->count(); })
-            ->eachPoint('lte.deletes', function ($c) { return $c->where('method', 'DELETE')->count(); })
-            ->miniChart();
+            ->groupDataByAt('created_at', 'H:i');
+
+        foreach ($model->distinct('title')->pluck('title') as $item) {
+            $chart->eachPoint($item, function ($c) use ($item) { return $c->where('title', $item)->count(); });
+        }
+        $chart->miniChart();
     }
 
     public static function activityYearComponent(TabContent $content, $model)
     {
-        $content->chart_js($model)
+        $chart = $content->chart_js($model)
             ->setDataBetween('created_at', now()->startOfYear()->startOfDay(), now()->endOfDay())
-            ->groupDataByAt('created_at')
-            ->eachPointCount('lte.activity')
-            ->eachPoint('lte.page_loadings', function ($c) { return $c->where('method', 'GET')->count(); })
-            ->eachPoint('lte.creates', function ($c) { return $c->where('method', 'POST')->count(); })
-            ->eachPoint('lte.updates', function ($c) { return $c->where('method', 'PUT')->count(); })
-            ->eachPoint('lte.deletes', function ($c) { return $c->where('method', 'DELETE')->count(); })
-            ->miniChart();
+            ->groupDataByAt('created_at');
+
+        foreach ($model->distinct('title')->pluck('title') as $item) {
+            $chart->eachPoint($item, function ($c) use ($item) { return $c->where('title', $item)->count(); });
+        }
+        $chart->miniChart();
     }
 
     public static function timelineComponent($content, $model)

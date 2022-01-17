@@ -2,8 +2,6 @@
 
 namespace Lar\LteAdmin\Segments\Tagable\Traits;
 
-use Lar\LteAdmin\Segments\Tagable\Alert;
-
 /**
  * Trait TypesTrait
  * @package Lar\LteAdmin\Segments\Tagable\Traits

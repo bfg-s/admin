@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Exceptions;
 
 use Lar\LteAdmin\Layouts\LteAuthLayout;
-use Lar\LteAdmin\Layouts\LteLayout;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 

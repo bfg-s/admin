@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin;
 
 use Lar\LteAdmin\Components\Vue\ModalCollection;
-use Lar\LteAdmin\Components\Vue\Navigator;
 
 /**
  * Class LteAdmin

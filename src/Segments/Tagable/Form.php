@@ -4,11 +4,11 @@ namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;

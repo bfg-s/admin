@@ -4,10 +4,8 @@ namespace Lar\LteAdmin\Core\Generators;
 
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
-use Lar\EntityCarrier\Core\Entities\ClassEntity;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\LteBoot;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**

@@ -4,10 +4,10 @@ namespace Lar\LteAdmin\Segments;
 
 use Illuminate\Support\Traits\Conditionable;
 use Lar\Developer\Core\Traits\Eventable;
+use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
 
 /**

@@ -3,7 +3,6 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\LteAdmin\Core\LtePipe;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

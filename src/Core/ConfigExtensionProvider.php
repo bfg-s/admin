@@ -2,9 +2,9 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;

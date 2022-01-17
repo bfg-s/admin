@@ -7,7 +7,6 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Components\Template;
 use Lar\Layout\Components\TemplateArea;
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\HR;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Core\ModelSaver;
 use Lar\LteAdmin\Segments\Tagable\ButtonGroup;

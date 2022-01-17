@@ -8,7 +8,6 @@ use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
-use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
 
 /**

@@ -11,7 +11,6 @@ use Lar\LteAdmin\Models\LteFileStorage;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LtePermission;
 use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Models\LteUser;
 
 /**
  * Class LteDbDumpCommand

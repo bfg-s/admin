@@ -3,10 +3,8 @@
 namespace Lar\LteAdmin\Segments\Tagable;
 
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\H3;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;

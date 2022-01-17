@@ -4,17 +4,15 @@ namespace Lar\LteAdmin\Core\Traits;
 
 use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Segments\Tagable\Form;
 
 trait Delegable
 {
     /**
-     * @param ...$params
      * @return static|Delegate
      */
-    public static function new(...$params)
+    public static function new()
     {
-        return new Delegate(static::class, ...$params);
+        return new Delegate(static::class);
     }
 
     public function explain(Explanation $explanation)

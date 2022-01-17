@@ -267,13 +267,15 @@ abstract class FormGroup extends DIV {
         return $this;
     }
 
+    protected $default = null;
+
     /**
      * @param $value
      * @return $this
      */
     public function default($value)
     {
-        $this->value = $value;
+        $this->default = $value;
 
         return $this;
     }
@@ -434,10 +436,15 @@ abstract class FormGroup extends DIV {
      */
     protected function create_value () {
 
-        return old(
-            $this->path,
-            request($this->path, $this->model ? (multi_dot_call($this->model, $this->path, false) ?? $this->value): $this->value)
-        );
+        $val = old($this->path);
+        if (!$val) {
+            $val = request($this->path) ?: null;
+        }
+        if (!$val && $this->model) {
+            $val = multi_dot_call($this->model, $this->path, false);
+        }
+
+        return $val ?: $this->default;
     }
 
     /**

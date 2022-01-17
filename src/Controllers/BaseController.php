@@ -5,8 +5,8 @@ namespace Lar\LteAdmin\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Lar\LteAdmin\Core\ModelSaver;
 use Illuminate\Routing\Controller;
+use Lar\LteAdmin\Core\ModelSaver;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LteRole;
 
