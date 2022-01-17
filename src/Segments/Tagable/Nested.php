@@ -109,6 +109,17 @@ class Nested extends DIV implements onRender {
     }
 
     /**
+     * @param  string|callable  $field
+     * @return $this
+     */
+    public function parentField($field)
+    {
+        $this->nested->parent_field($field);
+
+        return $this;
+    }
+
+    /**
      * @param  int  $depth
      * @return $this
      */

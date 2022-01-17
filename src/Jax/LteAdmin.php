@@ -65,7 +65,7 @@ class LteAdmin extends LteAdminExecutor
 
             if ($depth > 1) {
 
-                $new['data']['parent_id'] = $parent;
+                $new['data'][$parent_field ?? 'parent_id'] = $parent;
             }
 
             $new['data'][$order_field ?? 'order'] = static::$i;

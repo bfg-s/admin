@@ -21,7 +21,7 @@ class RolesController extends Controller
     public function explanation(): Explanation
     {
         return Explanation::new(
-            $this->card()->defaultTools()
+            $this->card()->defaultTools(),
         )->index(
             $this->search()->id(),
             $this->search()->input('name', 'lte.title'),

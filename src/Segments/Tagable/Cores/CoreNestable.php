@@ -280,6 +280,17 @@ class CoreNestable extends DIV
     }
 
     /**
+     * @param  string|callable  $field
+     * @return $this
+     */
+    public function parent_field($field)
+    {
+        $this->parent_field = $field;
+
+        return $this;
+    }
+
+    /**
      * @param  int  $depth
      * @return $this
      */

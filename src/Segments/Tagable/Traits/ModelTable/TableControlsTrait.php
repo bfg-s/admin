@@ -168,7 +168,7 @@ trait TableControlsTrait {
      * @param  null  $confirm
      * @return $this
      */
-    public function action($jax, $title, $icon = null, $confirm = null, ?string $warning = "lte.before_need_to_select")
+    public function action($jax, $title, $icon = null, $confirm = null, $warning = "lte.before_need_to_select")
     {
         $this->action[] = [
             'jax' => $jax,
