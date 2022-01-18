@@ -14,15 +14,15 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\LteAdmin\Segments\Tagable\Traits\FormAutoMakeTrait;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @macro_return Lar\LteAdmin\Segments\Tagable\FormGroup
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin FormMethods
  * @mixin FormMacroList
  */
-class Form extends \Lar\Layout\Tags\FORM {
-
+class Form extends \Lar\Layout\Tags\FORM
+{
     use FieldMassControl,
         FormAutoMakeTrait,
         Macroable,
@@ -33,7 +33,7 @@ class Form extends \Lar\Layout\Tags\FORM {
     /**
      * @var Model|null
      */
-    static $current_model;
+    public static $current_model;
 
     /**
      * @var Model
@@ -43,7 +43,7 @@ class Form extends \Lar\Layout\Tags\FORM {
     /**
      * @var string
      */
-    protected $method = "post";
+    protected $method = 'post';
 
     /**
      * @var string|null
@@ -63,21 +63,16 @@ class Form extends \Lar\Layout\Tags\FORM {
     public function __construct($model = null, ...$params)
     {
         if (is_embedded_call($model)) {
-
             $params[] = $model;
-
         } else {
-
             $this->model = $model;
         }
 
-        if (!$this->model) {
-
+        if (! $this->model) {
             $this->model = gets()->lte->menu->model;
         }
 
         if ($this->model) {
-
             $this->model = static::fire_pipes($this->model, get_class($this->model));
         }
 
@@ -115,7 +110,7 @@ class Form extends \Lar\Layout\Tags\FORM {
     }
 
     /**
-     * Form builder
+     * Form builder.
      */
     protected function buildForm()
     {
@@ -128,34 +123,25 @@ class Form extends \Lar\Layout\Tags\FORM {
         $type = gets()->lte->menu->type;
 
         if (isset($menu['model.param'])) {
-
             $this->appEnd(
                 INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
             );
         }
 
-        if (!$this->action && $type && $this->model && $menu) {
-
+        if (! $this->action && $type && $this->model && $menu) {
             $key = $this->model->getOriginal($this->model->getRouteKeyName());
 
             if ($type === 'edit' && isset($menu['link.update'])) {
-
                 $this->action = $menu['link.update']($key);
                 $this->hiddens(['_method' => 'PUT']);
-            }
-            else if ($type === 'create' && isset($menu['link.store'])) {
-
+            } elseif ($type === 'create' && isset($menu['link.store'])) {
                 $this->action = $menu['link.store']();
             }
+        } elseif (isset($menu['post']) && isset($menu['route']) && \Route::has($menu['route'].'.post')) {
+            $this->action = route($menu['route'].'.post', $menu['route_params'] ?? []);
         }
 
-        else if (isset($menu['post']) && isset($menu['route']) && \Route::has($menu['route'] . '.post')) {
-
-            $this->action = route($menu['route'] . '.post', $menu['route_params'] ?? []);
-        }
-
-        if (!$this->action) {
-
+        if (! $this->action) {
             $this->action = url()->current();
         }
 
@@ -181,7 +167,6 @@ class Form extends \Lar\Layout\Tags\FORM {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             $call->setModel($this->model);
 
             return $call;
@@ -211,14 +196,11 @@ class Form extends \Lar\Layout\Tags\FORM {
     public static function __callStatic($name, $arguments)
     {
         if ($call = static::static_call_group($name, $arguments)) {
-
             if (static::$current_model) {
-
                 $call->setModel(static::$current_model);
             }
 
             if (Component::$last_component) {
-
                 Component::$last_component->appEnd($call);
             }
 

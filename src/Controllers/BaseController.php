@@ -11,7 +11,7 @@ use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Trait ControllerMethods
+ * Trait ControllerMethods.
  * @package Lar\LteAdmin\Core\Traits
  */
 abstract class BaseController extends Controller
@@ -21,15 +21,15 @@ abstract class BaseController extends Controller
     /**
      * @var ExtendProvider|null
      */
-    static $extension_affiliation;
+    public static $extension_affiliation;
 
     /**
      * @var bool
      */
-    static $no_getter_model = false;
+    public static $no_getter_model = false;
 
     /**
-     * Save request to model
+     * Save request to model.
      *
      * @param  array|null  $data
      * @return bool|void
@@ -52,7 +52,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get only exists model
+     * Get only exists model.
      *
      * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|string|null
      */
@@ -62,17 +62,17 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get menu model
+     * Get menu model.
      *
      * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|string|null
      */
     public function model()
     {
-        return !static::$no_getter_model ? gets()->lte->menu->model : null;
+        return ! static::$no_getter_model ? gets()->lte->menu->model : null;
     }
 
     /**
-     * Get model primary
+     * Get model primary.
      *
      * @return \Lar\LteAdmin\Getters\Menu|object|string|null
      */
@@ -82,7 +82,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get now menu
+     * Get now menu.
      *
      * @return array|\Lar\LteAdmin\Getters\Menu|null
      */
@@ -92,7 +92,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get resource type
+     * Get resource type.
      *
      * @return \Lar\LteAdmin\Getters\Menu|string|null
      */
@@ -102,7 +102,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Check type for resource
+     * Check type for resource.
      *
      * @param  string  $type
      * @return bool
@@ -119,8 +119,7 @@ abstract class BaseController extends Controller
      */
     public function data($name = null, $default = null)
     {
-        if (!$name) {
-
+        if (! $name) {
             return gets()->lte->menu->data;
         }
 
@@ -161,7 +160,7 @@ abstract class BaseController extends Controller
      */
     public function new_modal(string $method, array $params = [])
     {
-        return (new ModalController($params))->setHandle(static::class . "::" . $method);
+        return (new ModalController($params))->setHandle(static::class.'::'.$method);
     }
 
     /**
@@ -170,20 +169,17 @@ abstract class BaseController extends Controller
     public static function extension_affiliation()
     {
         if (static::$extension_affiliation) {
-
             return static::$extension_affiliation;
         }
 
-        $provider = "ServiceProvider";
+        $provider = 'ServiceProvider';
 
         $providers = \LteAdmin::extensionProviders();
 
         $iteration = 1;
 
-        while (!empty($piece = body_namespace_element(static::class, $iteration))) {
-
+        while (! empty($piece = body_namespace_element(static::class, $iteration))) {
             if (isset($providers["{$piece}\\{$provider}"])) {
-
                 static::$extension_affiliation = \LteAdmin::getExtension($providers["{$piece}\\{$provider}"]);
 
                 break;
@@ -205,25 +201,23 @@ abstract class BaseController extends Controller
     {
         $provider = static::extension_affiliation();
 
-        $p_desc = "";
+        $p_desc = '';
 
         if ($provider && $provider::$description) {
-
             $p_desc = $provider::$description;
         }
 
-        if (!$p_desc) {
-
+        if (! $p_desc) {
             $p_desc = static::class;
         }
 
         return [
             'slug' => $method,
             'class' => static::class,
-            'description' => $p_desc . ($description ? " [$description]" : (\Lang::has("lte.about_method.{$method}") ? " [@lte.about_method.{$method}]":" [{$method}]")),
+            'description' => $p_desc.($description ? " [$description]" : (\Lang::has("lte.about_method.{$method}") ? " [@lte.about_method.{$method}]" : " [{$method}]")),
             'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
                 return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
-            })->filter()->values()->toArray()
+            })->filter()->values()->toArray(),
         ];
     }
 }

@@ -9,7 +9,7 @@ use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Segments\Tagable\Row;
 
 /**
- * Class DashboardGenerator
+ * Class DashboardGenerator.
  * @package Lar\LteAdmin\Controllers\Generators
  */
 class DashboardGenerator extends Generator
@@ -23,7 +23,7 @@ class DashboardGenerator extends Generator
      * @var array
      */
     protected $required = [
-        'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql', 'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif'
+        'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql', 'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif',
     ];
 
     /**
@@ -60,26 +60,21 @@ class DashboardGenerator extends Generator
         $mods = get_loaded_extensions();
 
         foreach ($mods as $key => $mod) {
-
             if (array_search($mod, $this->required) !== false) {
-
                 $mods[$key] = "<span class=\"badge badge-success\">{$mod}</span>";
-            }
-
-            else {
-
+            } else {
                 $mods[$key] = "<span class=\"badge badge-warning\">{$mod}</span>";
             }
         }
 
         return [
-            __('lte.php_version') =>  "<span class=\"badge badge-dark\">v".versionString(PHP_VERSION)."</span>",
+            __('lte.php_version') =>  '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
             __('lte.php_modules') => implode(', ', $mods),
             __('lte.cgi') => php_sapi_name(),
             __('lte.os') => php_uname(),
             __('lte.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
             __('lte.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
-            'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0
+            'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0,
         ];
     }
 
@@ -92,8 +87,8 @@ class DashboardGenerator extends Generator
         $lte_user_model = config('lte.auth.providers.lte.model');
 
         return [
-            __('lte.laravel_version') =>  "<span class=\"badge badge-dark\">v".versionString(\App::version())."</span>",
-            __('lte.lte_version') =>   "<span class=\"badge badge-dark\">v".versionString(\LteAdmin::version())."</span>",
+            __('lte.laravel_version') =>  '<span class="badge badge-dark">v'.versionString(\App::version()).'</span>',
+            __('lte.lte_version') =>   '<span class="badge badge-dark">v'.versionString(\LteAdmin::version()).'</span>',
             __('lte.timezone') => config('app.timezone'),
             __('lte.language') => config('app.locale'),
             __('lte.languages_involved') => implode(', ', config('layout.languages')),
@@ -105,13 +100,13 @@ class DashboardGenerator extends Generator
                 $component->_addClass(['table-secondary']);
                 $component->_find('th')->h6(['m-0'], __('lte.drivers'));
             },
-            __('lte.broadcast_driver') => "<span class=\"badge badge-secondary\">".config('broadcasting.default')."</span>",
-            __('lte.cache_driver') => "<span class=\"badge badge-secondary\">".config('cache.default')."</span>",
-            __('lte.session_driver') => "<span class=\"badge badge-secondary\">".config('session.driver')."</span>",
-            __('lte.queue_driver') => "<span class=\"badge badge-secondary\">".config('queue.default')."</span>",
-            __('lte.mail_driver') => "<span class=\"badge badge-secondary\">".config('mail.driver')."</span>",
-            __('lte.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
-            __('lte.hashing_driver') => "<span class=\"badge badge-secondary\">".config('hashing.driver')."</span>",
+            __('lte.broadcast_driver') => '<span class="badge badge-secondary">'.config('broadcasting.default').'</span>',
+            __('lte.cache_driver') => '<span class="badge badge-secondary">'.config('cache.default').'</span>',
+            __('lte.session_driver') => '<span class="badge badge-secondary">'.config('session.driver').'</span>',
+            __('lte.queue_driver') => '<span class="badge badge-secondary">'.config('queue.default').'</span>',
+            __('lte.mail_driver') => '<span class="badge badge-secondary">'.config('mail.driver').'</span>',
+            __('lte.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
+            __('lte.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
         ];
     }
 
@@ -121,7 +116,7 @@ class DashboardGenerator extends Generator
     protected function composerInfo()
     {
         $return = [
-            __('lte.composer_version') =>  "<span class=\"badge badge-dark\">v".versionString(Composer::getVersion())."</span>",
+            __('lte.composer_version') =>  '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
             '' => function (Component $component) {
                 $component->_addClass(['table-secondary']);
                 $component->_find('th')->h6(['m-0'], __('lte.required'));
@@ -133,7 +128,6 @@ class DashboardGenerator extends Generator
         $dependencies = json_decode($json, true)['require'];
 
         foreach ($dependencies as $name => $ver) {
-
             $return[$name] = "<span class=\"badge badge-dark\">{$ver}</span>";
         }
 
@@ -146,10 +140,10 @@ class DashboardGenerator extends Generator
     protected function databaseInfo()
     {
         /** @var \PDO $pdo */
-        $pdo = \DB::query("SHOW VARIABLES")->getConnection()->getPdo();
+        $pdo = \DB::query('SHOW VARIABLES')->getConnection()->getPdo();
 
         return [
-            __('lte.server_version') => "<span class=\"badge badge-dark\">v".versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION))."</span>",
+            __('lte.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION)).'</span>',
             __('lte.client_version') => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
             __('lte.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
             __('lte.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),

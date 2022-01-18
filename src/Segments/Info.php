@@ -7,12 +7,12 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
- * Class Info
+ * Class Info.
  * @package Lar\LteAdmin\Segments
  * @deprecated Use the LtePage
  */
-class Info extends Container {
-
+class Info extends Container
+{
     /**
      * Matrix constructor.
      * @param  \Closure|string  $title
@@ -34,7 +34,7 @@ class Info extends Container {
                         embedded_call($warp, [
                             ModelInfoTable::class => $table,
                             Card::class => $card,
-                            static::class => $this
+                            static::class => $this,
                         ]);
                     }
                 });

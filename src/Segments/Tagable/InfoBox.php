@@ -9,19 +9,19 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class SmallBox
+ * Class SmallBox.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin InfoBoxMacroList
  */
-class InfoBox extends DIV {
-
+class InfoBox extends DIV
+{
     use FontAwesome, TypesTrait, Macroable, Delegable;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'small-box'
+        'small-box',
     ];
 
     /**
@@ -121,7 +121,7 @@ class InfoBox extends DIV {
     }
 
     /**
-     * Build alert
+     * Build alert.
      */
     protected function _build()
     {
@@ -134,16 +134,20 @@ class InfoBox extends DIV {
         if ($this->body) {
             $this->body = is_array($this->body) ? $this->body : [$this->body];
             $inner->h3()
-                ->text(' ' . ($this->body[0] ?? ''))
-                ->sup(['style' => 'font-size: 20px'])->text(' ' . ($this->body[1] ?? ''));
+                ->text(' '.($this->body[0] ?? ''))
+                ->sup(['style' => 'font-size: 20px'])->text(' '.($this->body[1] ?? ''));
         }
 
-        if ($this->title) $inner->p($this->title);
+        if ($this->title) {
+            $inner->p($this->title);
+        }
 
-        if ($this->icon) $this->div(['icon'])->i([$this->icon]);
+        if ($this->icon) {
+            $this->div(['icon'])->i([$this->icon]);
+        }
 
         if ($this->link) {
-            $link = !is_array($this->link) ? [$this->link] : $this->link;
+            $link = ! is_array($this->link) ? [$this->link] : $this->link;
             $a = $this->a(['small-box-footer'])->setHrefIf(isset($link[0]), $link[0]);
             $a->text($link[1] ?? __('lte.more_info'), ':space');
             $a->i([$link[2] ?? 'fas fa-arrow-circle-right']);

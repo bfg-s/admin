@@ -7,12 +7,12 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class InstallExtensionProvider
+ * Class InstallExtensionProvider.
  * @package Lar\LteAdmin\Core
  * @mixin NavigatorMethods
  */
-class NavigatorExtensionProvider implements NavigateInterface {
-
+class NavigatorExtensionProvider implements NavigateInterface
+{
     /**
      * @var NavigateInterface|Navigate|NavGroup
      */
@@ -37,8 +37,8 @@ class NavigatorExtensionProvider implements NavigateInterface {
     /**
      * @return void
      */
-    public function handle(): void {
-
+    public function handle(): void
+    {
     }
 
     /**

@@ -6,30 +6,30 @@ use Lar\Layout\Abstracts\LayoutComponent;
 use Lar\LteAdmin\LteAdmin;
 
 /**
- * Landing Class
+ * Landing Class.
  *
  * @package App\Layouts
  */
 class LteBase extends LayoutComponent
 {
     /**
-     * Protected variable Name
+     * Protected variable Name.
      *
      * @var string
      */
-    protected $name = "lte_layout";
+    protected $name = 'lte_layout';
 
     /**
      * @var string
      */
-    protected $default_title = "LteAdmin";
+    protected $default_title = 'LteAdmin';
 
     /**
      * @var array
      */
     protected $head_styles = [
         'ljs' => [
-            'fancy', 'select2'
+            'fancy', 'select2',
         ],
 
         'lte-asset/plugins/fontawesome-free/css/all.min.css',
@@ -58,7 +58,6 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/codemirror/lib/codemirror.css',
         'lte-admin/plugins/star-rating/star-rating.min.css',
         'lte-admin/plugins/star-rating/krajee-fas/theme.min.css',
-
 
         'lte-admin/css/app.css',
         'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
@@ -126,7 +125,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/ptty.jquery.js',
 
         'ljs' => [
-            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy'
+            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy',
         ],
 
         'lte-admin/js/app.js',
@@ -136,7 +135,7 @@ class LteBase extends LayoutComponent
      * @var array
      */
     protected $metas = [
-        ['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']
+        ['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'],
     ];
 
     /**
@@ -151,7 +150,6 @@ class LteBase extends LayoutComponent
         $this->body_scripts['ljs'][] = 'vue';
 
         foreach (\LteAdmin::extensions() as $extension) {
-
             $this->body_scripts = array_merge_recursive($this->body_scripts, $extension->config()->getScripts());
 
             $this->head_styles = array_merge_recursive($this->head_styles, $extension->config()->getStyles());

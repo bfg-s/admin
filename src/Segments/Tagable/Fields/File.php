@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class File
+ * Class File.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class File extends Input
@@ -11,7 +11,7 @@ class File extends Input
     /**
      * @var string
      */
-    protected $type = "file";
+    protected $type = 'file';
 
     /**
      * @var string
@@ -22,7 +22,7 @@ class File extends Input
      * @var string[]
      */
     protected $data = [
-        'load' => 'file'
+        'load' => 'file',
     ];
 
     /**
@@ -31,10 +31,10 @@ class File extends Input
      */
     public function exts(...$exts)
     {
-        if (!isset($this->data['exts'])) {
-            $this->data['exts'] = implode("|", $exts);
+        if (! isset($this->data['exts'])) {
+            $this->data['exts'] = implode('|', $exts);
         } else {
-            $this->data['exts'] .= implode("|", $exts);
+            $this->data['exts'] .= implode('|', $exts);
         }
 
         return $this;

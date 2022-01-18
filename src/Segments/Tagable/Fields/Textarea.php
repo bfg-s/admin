@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Textarea
+ * Class Textarea.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Textarea extends FormGroup
@@ -28,7 +28,7 @@ class Textarea extends FormGroup
         return \Lar\Layout\Tags\TEXTAREA::create([
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title
+            'placeholder' => $this->title,
         ], ...$this->params)
             ->text($this->value)
             ->setRules($this->rules)

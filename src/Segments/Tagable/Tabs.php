@@ -9,16 +9,16 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin TabsMacroList
  */
-class Tabs extends DIV implements onRender {
-
+class Tabs extends DIV implements onRender
+{
     use Macroable, Delegable;
 
     /**
-     * Count of tabs
+     * Count of tabs.
      * @var int
      */
     protected static $counter = 0;
@@ -57,14 +57,13 @@ class Tabs extends DIV implements onRender {
     }
 
     /**
-     * Create tab from classes
+     * Create tab from classes.
      * @param  array  $list
      * @return $this
      */
     public function tabList(array $list)
     {
         foreach ($list as $item) {
-
             $this->tab($item);
         }
 
@@ -80,17 +79,15 @@ class Tabs extends DIV implements onRender {
      */
     public function tab(string $title, $icon = null, callable $contentCb = null, ?bool $active = null)
     {
-        if($icon && !is_string($icon)) {
+        if ($icon && ! is_string($icon)) {
             $contentCb = $icon;
             $icon = null;
         }
 
         if (class_exists($title)) {
-
             $content = new $title();
 
             if ($content instanceof TabContent) {
-
                 if ($content->getTitle()) {
                     $title = $content->getTitle();
                 }
@@ -108,27 +105,29 @@ class Tabs extends DIV implements onRender {
         }
 
         $this->makeNav();
-        $id = 'tab-' . md5($title) . '-' . static::$counter;
-        $active = $active === null ? !$this->nav->contentCount() : $active;
+        $id = 'tab-'.md5($title).'-'.static::$counter;
+        $active = $active === null ? ! $this->nav->contentCount() : $active;
         $a = $this->nav->li(['nav-item'])->a([
             'nav-link',
-            'id' => $id . "-label",
+            'id' => $id.'-label',
             'data-toggle' => 'pill',
             'role' => 'tab',
             'aria-controls' => $id,
-            'aria-selected' => $active ? 'true' : 'false'
+            'aria-selected' => $active ? 'true' : 'false',
         ])
             //->on_click('tabs::tab_button')
             ->addClassIf($active, 'active')
             ->setHref("#{$id}");
 
-        if ($icon) $a->i([$icon, 'mr-1']);
+        if ($icon) {
+            $a->i([$icon, 'mr-1']);
+        }
 
         $a->text(__($title));
 
         $content = (isset($content) ? $content : TabContent::create())->attr([
             'id' => $id,
-            'aria-labelledby' => $id . "-label"
+            'aria-labelledby' => $id.'-label',
         ])->when($this->tab_content_props)
             ->when(function (TabContent $content) use ($contentCb) {
                 call_user_func($contentCb, $content);
@@ -157,10 +156,9 @@ class Tabs extends DIV implements onRender {
     /**
      * @return $this
      */
-    protected function makeNav () {
-
-        if (!$this->nav) {
-
+    protected function makeNav()
+    {
+        if (! $this->nav) {
             $this->nav = $this->ul(['nav nav-tabs', 'role' => 'tablist']);
             $this->tab_contents = $this->div(['tab-content']);
         }

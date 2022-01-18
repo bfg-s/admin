@@ -8,11 +8,11 @@ use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class FunctionsHelperGenerator
+ * Class FunctionsHelperGenerator.
  * @package Lar\LteAdmin\Core
  */
-class ExtensionNavigatorHelperGenerator implements DumpExecute {
-
+class ExtensionNavigatorHelperGenerator implements DumpExecute
+{
     /**
      * @param  Command  $command
      * @return mixed|string
@@ -21,8 +21,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
     {
         $namespace = namespace_entity("Lar\LteAdmin\Core");
 
-        $namespace->class("NavigatorExtensions", function ($class) {
-
+        $namespace->class('NavigatorExtensions', function ($class) {
             $class->doc(function ($doc) {
 
                 /** @var DocumentorEntity $doc */
@@ -30,8 +29,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
             });
         });
 
-        $namespace->class("NavigatorMethods", function ($class) {
-
+        $namespace->class('NavigatorMethods', function ($class) {
             $class->doc(function ($doc) {
 
                 /** @var DocumentorEntity $doc */
@@ -43,7 +41,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
     }
 
     /**
-     * Generate all methods
+     * Generate all methods.
      *
      * @param  DocumentorEntity  $doc
      */
@@ -57,15 +55,14 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
             $methods[$method->getName()] = $method;
         }
         foreach ($methods as $method) {
-
             $ret = pars_return_from_doc($method->getDocComment());
 
-            $doc->tagMethod('self|static|' . ($ret ? $ret : '\\'.Navigate::class), $method->getName() . "(".refl_params_entity($method->getParameters()).")", pars_description_from_doc($method->getDocComment()));
+            $doc->tagMethod('self|static|'.($ret ? $ret : '\\'.Navigate::class), $method->getName().'('.refl_params_entity($method->getParameters()).')', pars_description_from_doc($method->getDocComment()));
         }
     }
 
     /**
-     * Generate default methods
+     * Generate default methods.
      *
      * @param DocumentorEntity $doc
      * @throws \ReflectionException
@@ -73,7 +70,6 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute {
     protected function generateDefaultMethods($doc)
     {
         foreach (\LteAdmin::extensions() as $name => $provider) {
-
             $doc->tagMethod('void', $provider::$slug, "Make extension routes ($name})");
         }
     }

@@ -9,19 +9,19 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class SmallBox
+ * Class SmallBox.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin SmallBoxMacroList
  */
-class SmallBox extends DIV {
-
+class SmallBox extends DIV
+{
     use FontAwesome, TypesTrait, Macroable, Delegable;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'info-box'
+        'info-box',
     ];
 
     /**
@@ -103,7 +103,7 @@ class SmallBox extends DIV {
     }
 
     /**
-     * Build alert
+     * Build alert.
      */
     protected function _build()
     {
@@ -117,7 +117,9 @@ class SmallBox extends DIV {
 
         $content->span(['info-box-text'], $this->title);
 
-        if (!is_array($this->body)) $this->body = [$this->body];
+        if (! is_array($this->body)) {
+            $this->body = [$this->body];
+        }
 
         $content->span(['info-box-number'], ($this->body[0] ?? ''))->small($this->body[1] ?? '');
 

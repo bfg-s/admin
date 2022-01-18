@@ -3,55 +3,51 @@
 namespace Lar\LteAdmin\Segments\Tagable\Traits\ModelTable;
 
 /**
- * Trait TableExtensionTrait
+ * Trait TableExtensionTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait TableExtensionTrait {
-
+trait TableExtensionTrait
+{
     /**
      * @var array
      */
-    static $extensions = [];
+    public static $extensions = [];
 
     /**
-     * Add extension class
+     * Add extension class.
      * @param  string  $class
      */
     public static function addExtensionClass(string $class)
     {
         if (class_exists($class)) {
-
             $class = new $class();
 
             foreach (get_class_methods($class) as $method) {
-
                 static::addExtension($method, $class);
             }
         }
     }
 
     /**
-     * Add macro
+     * Add macro.
      * @param  string  $name
      * @param  \Closure|object $object
      * @param  string|null  $method
      */
-    static function addExtension(string $name, $object, string $method = null) {
-
+    public static function addExtension(string $name, $object, string $method = null)
+    {
         if (is_embedded_call($object)) {
-
             static::$extensions[$name] = $object;
-        }
-
-        else {
-
-            if (!$method) { $method = $name; }
+        } else {
+            if (! $method) {
+                $method = $name;
+            }
             static::$extensions[$name] = [$object, $method];
         }
     }
 
     /**
-     * Call extension
+     * Call extension.
      * @param  string  $name
      * @param  array  $arguments
      * @return mixed|null
@@ -59,7 +55,6 @@ trait TableExtensionTrait {
     public static function callExtension(string $name, array $arguments)
     {
         if (static::hasExtension($name)) {
-
             return embedded_call(static::$extensions[$name], $arguments);
         }
 
@@ -67,7 +62,7 @@ trait TableExtensionTrait {
     }
 
     /**
-     * Call extension
+     * Call extension.
      * @param  string  $name
      * @param  array  $arguments
      * @return mixed|null
@@ -75,7 +70,6 @@ trait TableExtensionTrait {
     public static function callE(string $name, array $arguments)
     {
         if (static::hasExtension($name)) {
-
             return call_user_func_array(static::$extensions[$name], $arguments);
         }
 
@@ -83,7 +77,7 @@ trait TableExtensionTrait {
     }
 
     /**
-     * Check has extension
+     * Check has extension.
      * @param  string  $name
      * @return bool
      */
@@ -93,7 +87,7 @@ trait TableExtensionTrait {
     }
 
     /**
-     * Extension getter
+     * Extension getter.
      * @return array
      */
     public static function getExtensionList()

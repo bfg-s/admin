@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Components\Vue;
 use Lar\Tagable\Vue;
 
 /**
- * Class Navigator
+ * Class Navigator.
  * @package Lar\LteAdmin\Components\Vue
  */
 class Navigator extends Vue
@@ -13,5 +13,5 @@ class Navigator extends Vue
     /**
      * @var string
      */
-    protected $element = "v-navigator";
+    protected $element = 'v-navigator';
 }

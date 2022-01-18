@@ -28,11 +28,11 @@ use Lar\LteAdmin\Segments\Tagable\Tabs;
 use Lar\LteAdmin\Segments\Tagable\Timeline;
 
 /**
- * Class TagableComponent
+ * Class TagableComponent.
  * @package Lar\LteAdmin\Core
  */
-class TaggableComponent extends Component {
-
+class TaggableComponent extends Component
+{
     /**
      * @var string[]
      */

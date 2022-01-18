@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Jax;
 use Lar\LteAdmin\Events\Scaffold;
 
 /**
- * Class LteScaffolding
+ * Class LteScaffolding.
  * @package Lar\LteAdmin\Jax
  */
 class LteScaffolding extends LteAdminExecutor

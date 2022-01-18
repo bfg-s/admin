@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Numeric
+ * Class Numeric.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Numeric extends Input
@@ -11,13 +11,13 @@ class Numeric extends Input
     /**
      * @var string
      */
-    protected $icon = "fas fa-hashtag";
+    protected $icon = 'fas fa-hashtag';
 
     /**
      * @var string[]
      */
     protected $data = [
         'load' => 'mask',
-        'load-params' => '9{0,}'
+        'load-params' => '9{0,}',
     ];
 }

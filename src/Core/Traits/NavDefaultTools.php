@@ -5,19 +5,18 @@ namespace Lar\LteAdmin\Core\Traits;
 use Lar\LteAdmin\Core\NavGroup;
 
 /**
- * Trait NavDefaultToos
+ * Trait NavDefaultToos.
  * @package Lar\LteAdmin\Core\Traits
  */
 trait NavDefaultTools
 {
     /**
-     * Make auto default tools
+     * Make auto default tools.
      * @return $this
      */
     public function makeDefaults()
     {
-        $this->lteAdministrationGroup(function  (NavGroup $group) {
-
+        $this->lteAdministrationGroup(function (NavGroup $group) {
             $group->lteAdministrators();
             $group->lteRoles();
             $group->ltePermission();
@@ -35,24 +34,21 @@ trait NavDefaultTools
     }
 
     /**
-     * Make default administration group
+     * Make default administration group.
      * @param  \Closure|array  $call
      * @return \Lar\LteAdmin\Core\NavGroup
      */
     public function lteAdministrationGroup($call)
     {
         return $this->group('lte.administration', 'admin', function (NavGroup $group) use ($call) {
-
             if (is_embedded_call($call)) {
-
                 call_user_func($call, $group);
             }
-
         })->icon_cogs();
     }
 
     /**
-     * Make administrator list tool
+     * Make administrator list tool.
      * @param  string|null  $action
      * @return \Lar\LteAdmin\Core\NavItem
      */
@@ -64,24 +60,21 @@ trait NavDefaultTools
     }
 
     /**
-     * Make default access group
+     * Make default access group.
      * @param  \Closure|array  $call
      * @return \Lar\LteAdmin\Core\NavGroup
      */
     public function lteAccessGroup($call)
     {
         return $this->group('lte.access', 'access', function (NavGroup $group) use ($call) {
-
             if (is_embedded_call($call)) {
-
                 call_user_func($call, $group);
             }
-
         })->icon_universal_access();
     }
 
     /**
-     * Make roles list tool
+     * Make roles list tool.
      * @param  string|null  $action
      * @return \Lar\LteAdmin\Core\NavItem
      */
@@ -93,7 +86,7 @@ trait NavDefaultTools
     }
 
     /**
-     * Make permissions list tool
+     * Make permissions list tool.
      * @param  string|null  $action
      * @return \Lar\LteAdmin\Core\NavItem
      */
@@ -105,7 +98,7 @@ trait NavDefaultTools
     }
 
     /**
-     * Make functions/gates list tool
+     * Make functions/gates list tool.
      * @param  string|null  $action
      * @return \Lar\LteAdmin\Core\NavItem
      */

@@ -14,7 +14,6 @@ class CreateTableLteLog extends Migration
     public function up()
     {
         Schema::create('lte_logs', function (Blueprint $table) {
-
             $table->string('title');
             $table->text('detail')->nullable();
             $table->string('ip', 64);

@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Radios
+ * Class Radios.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class Radios extends \Lar\LteAdmin\Segments\Tagable\Fields\Radios
@@ -11,5 +11,5 @@ class Radios extends \Lar\LteAdmin\Segments\Tagable\Fields\Radios
     /**
      * @var string
      */
-    static $condition = "=";
+    public static $condition = '=';
 }

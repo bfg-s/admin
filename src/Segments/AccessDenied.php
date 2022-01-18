@@ -5,11 +5,11 @@ namespace Lar\LteAdmin\Segments;
 use Lar\Layout\Tags\DIV;
 
 /**
- * Class AccessDenied
+ * Class AccessDenied.
  * @package Lar\LteAdmin\Segments
  */
-class AccessDenied extends Container {
-
+class AccessDenied extends Container
+{
     /**
      * AccessDenied constructor.
      */

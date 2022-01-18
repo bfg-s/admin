@@ -11,14 +11,14 @@ use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class NavGroup
+ * Class NavGroup.
  * @package Lar\LteAdmin\Core
  * @mixin NavigatorExtensions
  */
 class NavGroup implements Arrayable, NavigateInterface
 {
     use FontAwesome, NavCommon, NavDefaultTools;
-    
+
     /**
      * @var array
      */
@@ -34,7 +34,6 @@ class NavGroup implements Arrayable, NavigateInterface
         $this->title($title)
             ->route($route)
             ->extension(Navigate::$extension);
-
     }
 
     /**
@@ -44,9 +43,7 @@ class NavGroup implements Arrayable, NavigateInterface
     public function do(...$calls)
     {
         foreach ($calls as $call) {
-
             if (is_embedded_call($call)) {
-
                 call_user_func($call, $this);
             }
         }
@@ -67,7 +64,6 @@ class NavGroup implements Arrayable, NavigateInterface
         $this->items['items'][] = $item;
 
         if (isset($item->items['route'])) {
-
             $this->includeAfterGroup($item->items['route']);
         }
 
@@ -82,22 +78,20 @@ class NavGroup implements Arrayable, NavigateInterface
      */
     public function group(string $title = null, $route = null, $cb = null)
     {
-        if (is_embedded_call($route) && !is_string($route)) {
+        if (is_embedded_call($route) && ! is_string($route)) {
             $cb = $route;
             $route = null;
         }
 
-        $item = new NavGroup($title, $route);
+        $item = new self($title, $route);
 
         $this->items['items'][] = $item;
 
         if (isset($item->items['route'])) {
-
             $this->includeAfterGroup($item->items['route']);
         }
 
         if (is_embedded_call($cb)) {
-
             call_user_func($cb, $item);
         }
 
@@ -130,7 +124,7 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toArray()
     {
@@ -151,7 +145,6 @@ class NavGroup implements Arrayable, NavigateInterface
     public function __call($name, $arguments)
     {
         if (isset(LteAdmin::$nav_extensions[$name])) {
-
             Navigate::$extension = LteAdmin::$nav_extensions[$name];
 
             LteAdmin::$nav_extensions[$name]->navigator($this);

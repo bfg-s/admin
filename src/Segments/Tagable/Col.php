@@ -10,14 +10,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ColMacroList
  * @mixin ColMethods
  */
-class Col extends DIV implements onRender {
-
+class Col extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
@@ -36,11 +36,8 @@ class Col extends DIV implements onRender {
         parent::__construct();
 
         if (is_numeric($num)) {
-
             $this->class .= "-{$num}";
-
-        } else if ($num) {
-
+        } elseif ($num) {
             $params[] = $num;
         }
 
@@ -60,7 +57,6 @@ class Col extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

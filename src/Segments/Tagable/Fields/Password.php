@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Password
+ * Class Password.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Password extends Input
@@ -11,18 +11,18 @@ class Password extends Input
     /**
      * @var string
      */
-    protected $type = "password";
+    protected $type = 'password';
 
     /**
      * @var string
      */
-    protected $icon = "fas fa-key";
+    protected $icon = 'fas fa-key';
 
     /**
      * @var array
      */
     protected $params = [
-        ['autocomplete' => 'new-password']
+        ['autocomplete' => 'new-password'],
     ];
 
     /**
@@ -35,8 +35,7 @@ class Password extends Input
 
         $info = null;
 
-        if (!$label && $this->title) {
-
+        if (! $label && $this->title) {
             $label = $this->title;
 
             $info = __('lte.confirmation');
@@ -44,11 +43,11 @@ class Password extends Input
 
         $p = $this->parent_field;
 
-        if (!$p) {
+        if (! $p) {
             $p = $this->_();
         }
 
-        $p = $p->password($this->name . '_confirmation', $label, ...$this->params)
+        $p = $p->password($this->name.'_confirmation', $label, ...$this->params)
             ->icon($this->icon)->mergeDataList($this->data)->_front_rule_equal_to("#input_{$this->name}");
 
         if ($info) {

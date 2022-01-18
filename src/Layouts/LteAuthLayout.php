@@ -3,23 +3,23 @@
 namespace Lar\LteAdmin\Layouts;
 
 /**
- * Landing Class
+ * Landing Class.
  *
  * @package App\Layouts
  */
 class LteAuthLayout extends LteBase
 {
     /**
-     * Protected variable Name
+     * Protected variable Name.
      *
      * @var string
      */
-    protected $name = "lte_auth_layout";
+    protected $name = 'lte_auth_layout';
 
     /**
      * @var string
      */
-    protected $pjax = "lte-login-container";
+    protected $pjax = 'lte-login-container';
 
     /**
      * LteAuthLayout constructor.

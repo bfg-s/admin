@@ -5,19 +5,19 @@ namespace Lar\LteAdmin\Segments\Tagable\Traits;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Trait FormGroupRulesTrait
+ * Trait FormGroupRulesTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait RulesFrontTrait {
-
+trait RulesFrontTrait
+{
     /**
-     * Validation rules
+     * Validation rules.
      * @var array
      */
     protected $rules = [];
 
     /**
-     * поле обязательное для заполнения
+     * поле обязательное для заполнения.
      * @return $this|FormGroup
      */
     protected function _front_rule_required()
@@ -28,7 +28,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * проверяет корректность e-mail адреса
+     * проверяет корректность e-mail адреса.
      * @return $this|FormGroup
      */
     protected function _front_rule_email()
@@ -39,7 +39,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * проверяет корректность url адреса
+     * проверяет корректность url адреса.
      * @return $this|FormGroup
      */
     protected function _front_rule_url()
@@ -50,7 +50,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * проверяет корректность даты
+     * проверяет корректность даты.
      * @return $this|FormGroup
      */
     protected function _front_rule_date()
@@ -61,7 +61,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * проверка на число
+     * проверка на число.
      * @return $this|FormGroup
      */
     protected function _front_rule_number()
@@ -72,7 +72,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * только цифры
+     * только цифры.
      * @return $this|FormGroup
      */
     protected function _front_rule_digits()
@@ -83,7 +83,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * равное чему-то (например другому полю equalTo: "#pswd")
+     * равное чему-то (например другому полю equalTo: "#pswd").
      * @param  string  $field
      * @return $this|FormGroup
      */
@@ -95,7 +95,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * максимальное кол-во символов
+     * максимальное кол-во символов.
      * @param  int  $max
      * @return $this|FormGroup
      */
@@ -107,7 +107,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * минимальное кол-во символов
+     * минимальное кол-во символов.
      * @param  int  $min
      * @return $this|FormGroup
      */
@@ -119,7 +119,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * кол-во символов от скольких и до скольких (rangelength: [2, 5])
+     * кол-во символов от скольких и до скольких (rangelength: [2, 5]).
      * @param  int  $min
      * @param  int  $max
      * @return $this|FormGroup
@@ -132,7 +132,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * число должно быть в диапазоне от и до (range: [2, 12])
+     * число должно быть в диапазоне от и до (range: [2, 12]).
      * @param  int  $min
      * @param  int  $max
      * @return $this|FormGroup
@@ -145,7 +145,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * максимальное значение числа
+     * максимальное значение числа.
      * @param  int  $max
      * @return $this|FormGroup
      */
@@ -157,7 +157,7 @@ trait RulesFrontTrait {
     }
 
     /**
-     * минимальное значение числа
+     * минимальное значение числа.
      * @param  int  $min
      * @return $this|FormGroup
      */

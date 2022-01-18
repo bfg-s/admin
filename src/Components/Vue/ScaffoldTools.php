@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Components\Vue;
 use Lar\Tagable\Vue;
 
 /**
- * Class GlobalSearch
+ * Class GlobalSearch.
  * @package Lar\LteAdmin\Components\Vue
  */
 class ScaffoldTools extends Vue
@@ -13,5 +13,5 @@ class ScaffoldTools extends Vue
     /**
      * @var string
      */
-    protected $element = "scaffold_tools";
+    protected $element = 'scaffold_tools';
 }

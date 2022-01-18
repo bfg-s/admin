@@ -7,12 +7,12 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Nested;
 
 /**
- * Class NestedSheet
+ * Class NestedSheet.
  * @package Lar\LteAdmin\Segments
  * @deprecated Use the LtePage
  */
-class NestedSheet extends Container {
-
+class NestedSheet extends Container
+{
     /**
      * NestedSheet constructor.
      * @param $title
@@ -40,12 +40,11 @@ class NestedSheet extends Container {
             $card->defaultTools()
                 ->body()
                 ->nested(function (Nested $nested) use ($warp, $card) {
-
                     if (is_embedded_call($warp)) {
                         embedded_call($warp, [
                             Nested::class => $nested,
                             Card::class => $card,
-                            static::class => $this
+                            static::class => $this,
                         ]);
                     }
                 });

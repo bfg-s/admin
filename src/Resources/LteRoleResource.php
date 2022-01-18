@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Class LteRoleResource
+ * Class LteRoleResource.
  * @package Lar\LteAdmin\Resources
  * @mixin LteRole
  */
@@ -23,7 +23,7 @@ class LteRoleResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 }

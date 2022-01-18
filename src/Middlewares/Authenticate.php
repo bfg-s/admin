@@ -15,7 +15,7 @@ use Lar\LteAdmin\Models\LtePermission;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Class Authenticate
+ * Class Authenticate.
  *
  * @package Lar\LteAdmin\Middlewares
  */
@@ -29,7 +29,7 @@ class Authenticate
     /**
      * @var bool
      */
-    static $access = true;
+    public static $access = true;
 
     /**
      * Handle an incoming request.
@@ -42,14 +42,14 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
-            session()->flash("respond", Respond::glob()->toJson());
+        if (! Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
+            session()->flash('respond', Respond::glob()->toJson());
 
             return redirect()->route('lte.dashboard');
         }
 
-        if (Auth::guard('lte')->guest() && !$this->shouldPassThrough($request)) {
-            session()->flash("respond", Respond::glob()->toJson());
+        if (Auth::guard('lte')->guest() && ! $this->shouldPassThrough($request)) {
+            session()->flash('respond', Respond::glob()->toJson());
 
             $this->unauthenticated($request);
         }
@@ -58,20 +58,20 @@ class Authenticate
 
         LConfigs::add('uploader', route('lte.uploader'));
 
-        if (!$this->access()) {
-            if ($request->ajax() && !$request->pjax()) {
+        if (! $this->access()) {
+            if ($request->ajax() && ! $request->pjax()) {
                 lte_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
-                $respond = ["0:toast::error" => [__('lte.access_denied'), __('lte.error')]];
+                $respond = ['0:toast::error' => [__('lte.access_denied'), __('lte.error')]];
 
-                if (request()->has("_exec")) {
-                    $respond["1:doc::reload"] = null;
+                if (request()->has('_exec')) {
+                    $respond['1:doc::reload'] = null;
                 }
 
                 return response()->json($respond);
             } else {
-                if (!$request->isMethod('get')) {
+                if (! $request->isMethod('get')) {
                     lte_log_danger('Pattern go to the forbidden zone', 'Blocked GET request', 'fas fa-shield-alt');
-                    session()->flash("respond",
+                    session()->flash('respond',
                         respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
 
                     return back();
@@ -131,17 +131,17 @@ class Authenticate
         $now = lte_now();
 
         list($class, $method) = \Str::parseCallback(\Route::currentRouteAction(), 'index');
-        $classes = [trim($class, "\\")];
+        $classes = [trim($class, '\\')];
 
         if ($now && isset($now['extension']) && $now['extension']) {
             $classes[] = get_class($now['extension']);
         }
 
-        if (!lte_controller_can()) {
+        if (! lte_controller_can()) {
             return false;
         }
 
-        if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {
+        if (isset($now['roles']) && ! lte_user()->hasRoles($now['roles'])) {
             return false;
         }
 
@@ -185,7 +185,7 @@ class Authenticate
         if ($request->has('_pjax')) {
             unset($all['_pjax']);
         }
-        $url = url()->current().(count($all) ? "?".http_build_query($all) : "");
+        $url = url()->current().(count($all) ? '?'.http_build_query($all) : '');
         session(['return_authenticated_url' => $url]);
 
         throw new AuthenticationException(

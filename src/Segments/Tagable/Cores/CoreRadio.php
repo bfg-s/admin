@@ -8,7 +8,7 @@ use Lar\Layout\Tags\INPUT;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class CoreRadio
+ * Class CoreRadio.
  * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreRadio extends DIV implements onRender
@@ -18,7 +18,7 @@ class CoreRadio extends DIV implements onRender
      */
     protected $props = [
         'clearfix mb-0',
-        'data-inputable' => ''
+        'data-inputable' => '',
     ];
 
     /**
@@ -43,12 +43,10 @@ class CoreRadio extends DIV implements onRender
         $this->when($params);
 
         if ($values instanceof Arrayable) {
-
             $values = $values->toArray();
         }
 
-        if (!is_array($values)) {
-
+        if (! is_array($values)) {
             $values = [$values];
         }
 
@@ -62,7 +60,6 @@ class CoreRadio extends DIV implements onRender
     public function id($id)
     {
         if ($id) {
-
             $this->id = $id;
         }
 
@@ -76,7 +73,6 @@ class CoreRadio extends DIV implements onRender
     public function name($name)
     {
         if ($name) {
-
             $this->name = $name;
             $this->setName($name);
         }
@@ -91,12 +87,8 @@ class CoreRadio extends DIV implements onRender
     public function value($value)
     {
         if ($value !== null) {
-
             $this->value = $value;
-        }
-
-        else {
-
+        } else {
             $this->value = $this->getValue();
         }
 
@@ -111,8 +103,7 @@ class CoreRadio extends DIV implements onRender
         if ($this->values) {
             $i = 0;
             foreach ($this->values as $value => $title) {
-
-                $id = $this->id ? 'radio-' . $this->id . '-' . $i : 'radio-' . $i;
+                $id = $this->id ? 'radio-'.$this->id.'-'.$i : 'radio-'.$i;
 
                 $this->div(
                     ['icheck-primary float-left mr-3'],

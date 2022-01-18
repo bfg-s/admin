@@ -8,11 +8,11 @@ use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Models\LteFunction;
 
 /**
- * Class FunctionsHelperGenerator
+ * Class FunctionsHelperGenerator.
  * @package Lar\LteAdmin\Core
  */
-class FunctionsHelperGenerator implements DumpExecute {
-
+class FunctionsHelperGenerator implements DumpExecute
+{
     /**
      * @param  Command  $command
      * @return mixed|string
@@ -23,8 +23,7 @@ class FunctionsHelperGenerator implements DumpExecute {
 
         $namespace->wrap('php');
 
-        $namespace->class("FunctionsDoc", function ($class) {
-
+        $namespace->class('FunctionsDoc', function ($class) {
             $class->doc(function ($doc) {
 
                 /** @var DocumentorEntity $doc */
@@ -36,7 +35,7 @@ class FunctionsHelperGenerator implements DumpExecute {
     }
 
     /**
-     * Generate default methods
+     * Generate default methods.
      *
      * @param DocumentorEntity $doc
      * @throws \ReflectionException
@@ -45,12 +44,11 @@ class FunctionsHelperGenerator implements DumpExecute {
     {
         try {
             if (\Schema::hasTable((new LteFunction)->getTable())) {
-
                 foreach (LteFunction::all() as $func) {
-
                     $doc->tagPropertyRead('bool', $func->slug, "Check if the user has access to the function ({$func->description})");
                 }
             }
-        } catch (\Exception $exception) {}
+        } catch (\Exception $exception) {
+        }
     }
 }

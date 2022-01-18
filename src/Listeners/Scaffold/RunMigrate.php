@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Listeners\Scaffold;
 use Lar\LteAdmin\Events\Scaffold;
 
 /**
- * Class RunMigrate
+ * Class RunMigrate.
  * @package App\Listeners\Lar\LteAdmin\Listeners\Scaffold
  */
 class RunMigrate
@@ -19,10 +19,9 @@ class RunMigrate
     public function handle(Scaffold $event)
     {
         if ($event->create['migration'] && $event->create['migrate']) {
-
             \Artisan::call('migrate');
 
-            respond()->toast_success("Migration performed!");
+            respond()->toast_success('Migration performed!');
         }
     }
 }

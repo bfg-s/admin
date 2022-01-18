@@ -11,21 +11,21 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class ModalBody
+ * Class ModalBody.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ModalBodyMacroList
  * @mixin ModalBodyMethods
  */
-class ModalBody extends DIV implements onRender {
-
+class ModalBody extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'modal-body'
+        'modal-body',
     ];
 
     /**
@@ -59,7 +59,6 @@ class ModalBody extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

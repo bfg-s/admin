@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class CKEditor
+ * Class CKEditor.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class CKEditor extends FormGroup
@@ -19,7 +19,7 @@ class CKEditor extends FormGroup
      * @var string[]
      */
     protected $data = [
-        'load' => 'ckeditor'
+        'load' => 'ckeditor',
     ];
 
     /**
@@ -36,7 +36,7 @@ class CKEditor extends FormGroup
         return \Lar\Layout\Tags\TEXTAREA::create([
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title
+            'placeholder' => $this->title,
         ], ...$this->params)
             ->text($this->value)
             ->setRules($this->rules)

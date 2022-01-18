@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Lar\LteAdmin\Models\LteFunction;
 
 /**
- * Class LteFunctionResource
+ * Class LteFunctionResource.
  * @package Lar\LteAdmin\Resources
  * @mixin LteFunction
  */
@@ -25,7 +25,7 @@ class LteFunctionResource extends JsonResource
             'slug' => $this->slug,
             'class' => $this->class,
             'description' => lang_in_text($this->description),
-            'roles' => LteRoleResource::collection($this->roles)->toArray($request)
+            'roles' => LteRoleResource::collection($this->roles)->toArray($request),
         ];
     }
 }

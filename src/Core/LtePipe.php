@@ -3,10 +3,9 @@
 namespace Lar\LteAdmin\Core;
 
 /**
- * Class LtePipe
+ * Class LtePipe.
  * @package Lar\LteAdmin\Core
  */
 class LtePipe
 {
-
 }

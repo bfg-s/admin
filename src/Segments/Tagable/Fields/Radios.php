@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreRadio;
 
 /**
- * Class Radios
+ * Class Radios.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Radios extends Checks

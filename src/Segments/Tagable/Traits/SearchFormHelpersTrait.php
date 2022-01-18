@@ -3,11 +3,11 @@
 namespace Lar\LteAdmin\Segments\Tagable\Traits;
 
 /**
- * Trait SearchFormHelpersTrait
+ * Trait SearchFormHelpersTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait SearchFormHelpersTrait {
-
+trait SearchFormHelpersTrait
+{
     /**
      * @return $this
      */

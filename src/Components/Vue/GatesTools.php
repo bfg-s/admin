@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Components\Vue;
 use Lar\Tagable\Vue;
 
 /**
- * Class GlobalSearch
+ * Class GlobalSearch.
  * @package Lar\LteAdmin\Components\Vue
  */
 class GatesTools extends Vue
@@ -13,5 +13,5 @@ class GatesTools extends Vue
     /**
      * @var string
      */
-    protected $element = "gate_tools";
+    protected $element = 'gate_tools';
 }

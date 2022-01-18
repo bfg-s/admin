@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class PrepareExport implements FromCollection
 {
-    static $columns = [];
+    public static $columns = [];
 
     /**
      * @var Model|string
@@ -53,9 +53,9 @@ class PrepareExport implements FromCollection
             foreach (static::$columns as $column) {
                 if (is_string($column['field'])) {
                     $exportCollection[$column['header']][] = multi_dot_call($item, $column['field']);
-                } else if (is_callable($column['field'])) {
+                } elseif (is_callable($column['field'])) {
                     $exportCollection[$column['header']][] = embedded_call($column['field'], [
-                        $this->model => $item
+                        $this->model => $item,
                     ]);
                 }
             }
@@ -71,6 +71,7 @@ class PrepareExport implements FromCollection
             $i++;
         }
         array_unshift($result, $headers);
+
         return collect($result);
     }
 }

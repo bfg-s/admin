@@ -5,19 +5,18 @@ namespace Lar\LteAdmin\Controllers;
 use Illuminate\Http\Request;
 
 /**
- * Class AuthController
+ * Class AuthController.
  *
  * @package Lar\LteAdmin\Controllers
  */
 class AuthController
 {
     /**
-     * Make login page
+     * Make login page.
      */
     public function login()
     {
-        if (!\LteAdmin::guest()) {
-
+        if (! \LteAdmin::guest()) {
             return redirect()->route('lte.dashboard');
         }
 
@@ -37,35 +36,27 @@ class AuthController
 
         $login = false;
 
-        if (\Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password], $request->remember=='on' ? true : false)) {
-
+        if (\Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password], $request->remember == 'on' ? true : false)) {
             $request->session()->regenerate();
 
-            \respond()->toast_success("Was authorized using login!");
+            \respond()->toast_success('Was authorized using login!');
 
             lte_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
-        }
-
-        else if (\Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password], $request->remember=='on' ? true : false)) {
-
+        } elseif (\Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password], $request->remember == 'on' ? true : false)) {
             $request->session()->regenerate();
 
-            \respond()->toast_success("Was authorized using E-Mail!");
+            \respond()->toast_success('Was authorized using E-Mail!');
 
             lte_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
 
             $login = true;
-        }
-
-        else {
-
-            \respond()->toast_error("User not found!");
+        } else {
+            \respond()->toast_error('User not found!');
         }
 
         if ($login && session()->has('return_authenticated_url')) {
-
             return redirect(session()->pull('return_authenticated_url'));
         }
 

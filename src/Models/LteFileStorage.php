@@ -7,7 +7,7 @@ use Illuminate\Http\UploadedFile;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LteFileStorage
+ * Class LteFileStorage.
  *
  * @package Lar\Admin\Models
  */
@@ -18,7 +18,7 @@ class LteFileStorage extends Model
     /**
      * @var string
      */
-    protected $table = "lte_file_storage";
+    protected $table = 'lte_file_storage';
 
     /**
      * The attributes that are mass assignable.
@@ -44,16 +44,11 @@ class LteFileStorage extends Model
     public function __construct($attributes = [])
     {
         if (is_array($attributes)) {
-
             parent::__construct($attributes);
-        }
-
-        else {
-
+        } else {
             parent::__construct([]);
 
             if ($attributes instanceof UploadedFile) {
-
                 $this->createFile($attributes);
             }
         }
@@ -70,7 +65,7 @@ class LteFileStorage extends Model
     }
 
     /**
-     * Get all active menu
+     * Get all active menu.
      *
      * @param $query
      * @return mixed
@@ -87,15 +82,14 @@ class LteFileStorage extends Model
      */
     public function hasFile(UploadedFile $file, string $storage = null)
     {
-        if (!$storage) {
-
+        if (! $storage) {
             $storage = config('lte.upload.disk');
         }
 
-        return $this->where("original_name", $file->getClientOriginalName())
-            ->where("mime_type", $file->getMimeType())
-            ->where("size", $file->getSize())
-            ->where("driver", $storage)
+        return $this->where('original_name', $file->getClientOriginalName())
+            ->where('mime_type', $file->getMimeType())
+            ->where('size', $file->getSize())
+            ->where('driver', $storage)
             ->exists();
     }
 
@@ -109,68 +103,58 @@ class LteFileStorage extends Model
      */
     public function createFile(UploadedFile $file = null, string $storage = null, string $storage_path = null, string $field = null, string $form = null)
     {
-        if (!$file) {
-
+        if (! $file) {
             return null;
         }
 
-        if (!$storage) {
-
+        if (! $storage) {
             $storage = config('lte.upload.disk');
         }
 
-        if (!$storage_path) {
-
+        if (! $storage_path) {
             $storage_path = is_image($file->getPathname()) ?
                 config('lte.upload.directory.image') :
                 config('lte.upload.directory.file');
         }
 
-        $test =  $this->where("original_name", $file->getClientOriginalName())
-            ->where("mime_type", $file->getMimeType())
-            ->where("size", $file->getSize())
-            ->where("driver", $storage)
+        $test = $this->where('original_name', $file->getClientOriginalName())
+            ->where('mime_type', $file->getMimeType())
+            ->where('size', $file->getSize())
+            ->where('driver', $storage)
             ->first();
 
-        if (!$test) {
-
+        if (! $test) {
             $result = $file->store($storage_path, $storage);
 
-            $path = trim(str_replace(env('APP_URL') . '/', '', config("filesystems.disks.{$storage}.url")), '/');
+            $path = trim(str_replace(env('APP_URL').'/', '', config("filesystems.disks.{$storage}.url")), '/');
 
-            $root = trim(config("filesystems.disks.{$storage}.url"), '/') . '/' . trim($storage_path, '/');
+            $root = trim(config("filesystems.disks.{$storage}.url"), '/').'/'.trim($storage_path, '/');
 
-            if (!is_dir($root)) {
-
+            if (! is_dir($root)) {
                 mkdir($root, 0777, true);
             }
 
             /** @var LteFileStorage $result */
             $result = $this->create([
-                "original_name" => $file->getClientOriginalName(),
-                "file_name" => $path . '/' . $result,
-                "mime_type" => $file->getMimeType(),
-                "size" => $file->getSize(),
-                "form" => $form,
-                "field" => $field,
-                "driver" => $storage,
-                "driver_path" => $storage_path
+                'original_name' => $file->getClientOriginalName(),
+                'file_name' => $path.'/'.$result,
+                'mime_type' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'form' => $form,
+                'field' => $field,
+                'driver' => $storage,
+                'driver_path' => $storage_path,
             ]);
 
             if ($this->return_model) {
-
                 return $result;
             }
 
             $this->result = $result->file_name;
 
             return $result->file_name;
-        }
-
-        else {
-
+        } else {
             if ($this->return_model) {
-
                 return $test;
             }
 
@@ -191,12 +175,10 @@ class LteFileStorage extends Model
     public static function makeFile($file = null, string $storage = null, string $storage_path = null, string $field = null, string $form = null)
     {
         if (is_string($file) && request()->hasFile($file)) {
-
             $file = request()->file($file);
         }
 
-        if (!$file instanceof UploadedFile) {
-
+        if (! $file instanceof UploadedFile) {
             return $file;
         }
 
@@ -209,7 +191,6 @@ class LteFileStorage extends Model
     public function __toString()
     {
         if ($this->result) {
-
             return $this->result;
         }
 

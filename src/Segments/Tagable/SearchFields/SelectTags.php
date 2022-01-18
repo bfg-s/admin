@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class SelectTags
+ * Class SelectTags.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class SelectTags extends \Lar\LteAdmin\Segments\Tagable\Fields\SelectTags
@@ -11,10 +11,10 @@ class SelectTags extends \Lar\LteAdmin\Segments\Tagable\Fields\SelectTags
     /**
      * @var string
      */
-    static $condition = "in";
+    public static $condition = 'in';
 
     /**
-     * After construct event
+     * After construct event.
      */
     protected function after_construct()
     {

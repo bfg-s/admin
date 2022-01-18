@@ -8,7 +8,7 @@ use Lar\LteAdmin\Core\Traits\NavCommon;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class NavGroup
+ * Class NavGroup.
  * @package Lar\LteAdmin\Core
  */
 class NavItem implements Arrayable
@@ -41,7 +41,6 @@ class NavItem implements Arrayable
     public function head_title(string $title = null)
     {
         if ($title !== null) {
-
             $this->items['head_title'] = $title;
         }
 
@@ -55,16 +54,14 @@ class NavItem implements Arrayable
     public function link(string $link = null)
     {
         if ($link !== null) {
-
             $this->items['link'] = $link;
         }
 
         return $this;
     }
 
-
     /**
-     * Route methods
+     * Route methods.
      */
 
     /**
@@ -74,7 +71,6 @@ class NavItem implements Arrayable
     public function only(...$methods)
     {
         if ($methods && isset($this->items['resource'])) {
-
             $this->items['resource_only'] = $methods;
         }
 
@@ -88,7 +84,6 @@ class NavItem implements Arrayable
     public function except(...$methods)
     {
         if ($methods && isset($this->items['resource'])) {
-
             $this->items['resource_except'] = $methods;
         }
 
@@ -102,7 +97,6 @@ class NavItem implements Arrayable
     public function where(string $where = null)
     {
         if ($where !== null) {
-
             $this->items['where'] = $where;
         }
 
@@ -116,7 +110,6 @@ class NavItem implements Arrayable
     public function method(string $method = null)
     {
         if ($method !== null) {
-
             $this->items['method'] = strtolower($method);
         }
 
@@ -130,7 +123,6 @@ class NavItem implements Arrayable
     public function view(string $view = null)
     {
         if ($view !== null) {
-
             $this->items['view'] = $view;
         }
 
@@ -144,7 +136,6 @@ class NavItem implements Arrayable
     public function action($action)
     {
         if ($action !== null) {
-
             $this->items['action'] = $action;
         }
 
@@ -159,20 +150,18 @@ class NavItem implements Arrayable
      */
     public function resource(string $name, string $resource = 'Controller', array $options = [])
     {
-        $pos = strpos($resource, "\\");
+        $pos = strpos($resource, '\\');
         if ($pos !== false && $pos != 0) {
-            $resource = "\\".$resource;
+            $resource = '\\'.$resource;
         }
 
         $this->items['resource'] = ['name' => $name, 'action' => $resource, 'options' => $options];
 
-        if (!isset($this->items['route']) || !$this->items['route']) {
-
+        if (! isset($this->items['route']) || ! $this->items['route']) {
             $this->items['route'] = $name;
         }
 
-        if (!isset($this->items['model.param'])) {
-
+        if (! isset($this->items['model.param'])) {
             $this->items['model.param'] = \Str::singular(
                 \Str::contains($name, '/') ? last(explode('/', $name)) : $name
             );
@@ -218,9 +207,9 @@ class NavItem implements Arrayable
      */
     public function link_params(callable $callable)
     {
-         $this->items['link_params'] = $callable;
+        $this->items['link_params'] = $callable;
 
-         return $this;
+        return $this;
     }
 
     /**
@@ -256,8 +245,6 @@ class NavItem implements Arrayable
         return $this;
     }
 
-
-
     /**
      * @param  array  $params
      * @return $this
@@ -265,7 +252,6 @@ class NavItem implements Arrayable
     public function badge_params(array $params)
     {
         if ($this->items['badge']) {
-
             $this->items['badge']['params'] = $params;
         }
 
@@ -273,7 +259,7 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function toArray()
     {

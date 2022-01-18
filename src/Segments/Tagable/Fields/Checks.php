@@ -7,7 +7,7 @@ use Lar\LteAdmin\Segments\Tagable\Cores\CoreCheckBox;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Checks
+ * Class Checks.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Checks extends FormGroup
@@ -32,8 +32,7 @@ class Checks extends FormGroup
     {
         parent::__construct($name, $title, $params);
 
-        if (!request()->has($this->path) && !request()->has('__only_has')) {
-
+        if (! request()->has($this->path) && ! request()->has('__only_has')) {
             request()->request->add(
                 array_dots_uncollapse(
                     [$this->path => []],
@@ -44,7 +43,7 @@ class Checks extends FormGroup
     }
 
     /**
-     * Make wrapper for input
+     * Make wrapper for input.
      */
     protected function makeWrapper()
     {

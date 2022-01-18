@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class DualSelect
+ * Class DualSelect.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class DualSelect extends Select
@@ -16,19 +16,19 @@ class DualSelect extends Select
     /**
      * @var string
      */
-    protected $class = "form-control duallistbox";
+    protected $class = 'form-control duallistbox';
 
     /**
      * @var string[]
      */
     protected $data = [
-        'load' => 'duallist'
+        'load' => 'duallist',
     ];
 
     /**
      * @var array
      */
     protected $params = [
-        ['multiple' => 'multiple']
+        ['multiple' => 'multiple'],
     ];
 }

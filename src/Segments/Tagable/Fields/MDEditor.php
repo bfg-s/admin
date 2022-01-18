@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class MDEditor
+ * Class MDEditor.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class MDEditor extends FormGroup
@@ -19,7 +19,7 @@ class MDEditor extends FormGroup
      * @var string[]
      */
     protected $data = [
-        'load' => 'md::simple'
+        'load' => 'md::simple',
     ];
 
     /**
@@ -31,7 +31,7 @@ class MDEditor extends FormGroup
             'id' => $this->field_id,
             'data-name' => $this->name,
             'data-placeholder' => $this->title,
-            'm-0'
+            'm-0',
         ], ...$this->params)
             ->text(e($this->value))
             ->setRules($this->rules)

@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
- * Class Handler
+ * Class Handler.
  * @package Lar\LteAdmin\Exceptions
  */
 class Handler extends \App\Exceptions\Handler
@@ -37,16 +37,14 @@ class Handler extends \App\Exceptions\Handler
     public function render($request, Throwable $exception)
     {
         if ($request->is('*/'.config('lte.route.prefix').'*')) {
-
             if ($exception instanceof NotFoundHttpException) {
-
                 $layout = new LteAuthLayout();
                 $layout->setInContent(view('lte::404'));
+
                 return response($layout->render());
             }
 
-            if (!\LteAdmin::guest()) {
-
+            if (! \LteAdmin::guest()) {
                 ob_clean();
             }
         }

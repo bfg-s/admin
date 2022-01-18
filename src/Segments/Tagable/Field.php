@@ -39,21 +39,21 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @macro_return Lar\LteAdmin\Segments\Tagable\FormGroup
  * @methods static::$form_components (string $name, string $label = null, ...$params)
  * @mixin FieldMethods
  * @mixin FieldMacroList
  */
-class Field extends DIV implements onRender {
-
+class Field extends DIV implements onRender
+{
     use FieldMassControl, Macroable, Delegable;
 
     /**
      * @var array
      */
-    static $form_components = [
+    public static $form_components = [
         'input' => Input::class,
         'password' => Password::class,
         'email' => Email::class,
@@ -115,7 +115,6 @@ class Field extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -131,7 +130,6 @@ class Field extends DIV implements onRender {
     public static function __callStatic($name, $arguments)
     {
         if ($call = static::static_call_group($name, $arguments)) {
-
             return $call;
         }
 

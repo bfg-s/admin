@@ -13,7 +13,7 @@ use Lar\LteAdmin\Models\LtePermission;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Class LteDbDumpCommand
+ * Class LteDbDumpCommand.
  * @package Lar\LteAdmin\Commands
  */
 class LteDbDumpCommand extends Command
@@ -21,7 +21,7 @@ class LteDbDumpCommand extends Command
     /**
      * @var string
      */
-    static $file_name = "LteAdminDumpSeeder";
+    public static $file_name = 'LteAdminDumpSeeder';
 
     /**
      * @var array
@@ -69,20 +69,19 @@ class LteDbDumpCommand extends Command
     public function handle()
     {
         if (class_exists(static::$file_name)) {
-
             $this->class_exists(static::$file_name);
         }
 
         $class = class_entity(static::$file_name);
         $class->doc(function (DocumentorEntity $doc) {
-            $doc->description(static::$file_name . " Class");
+            $doc->description(static::$file_name.' Class');
             $doc->tagCustom('date', now()->toDateTimeString());
         });
         $class->offAutoUse();
         $class->wrap('php');
         $class->use(Seeder::class);
         $class->use(ModelSaver::class);
-        $class->extend("Seeder");
+        $class->extend('Seeder');
 
         /** @var Model $model */
         foreach (static::$models as $key => $model) {
@@ -91,7 +90,7 @@ class LteDbDumpCommand extends Command
             if (method_exists($model, 'scopeMakeDumpedModel')) {
                 $data = $model::makeDumpedModel();
                 if ($data !== false) {
-                    $class->prop('protected:' . $model->getTable(), entity(array_entity($data)->minimized()->render()));
+                    $class->prop('protected:'.$model->getTable(), entity(array_entity($data)->minimized()->render()));
                     $class->use(get_class($model));
                 } else {
                     unset(static::$models[$key]);
@@ -107,17 +106,17 @@ class LteDbDumpCommand extends Command
 
         foreach (static::$models as $model) {
             $model_name = class_basename(get_class($model));
-            $method->line("ModelSaver::doMany($model_name::class, \$this->".$model->getTable().");");
+            $method->line("ModelSaver::doMany($model_name::class, \$this->".$model->getTable().');');
         }
         $method->line("\DB::statement('SET FOREIGN_KEY_CHECKS=1;');");
 
         $render = $class->render();
 
-        $file = database_path("seeds/".static::$file_name.".php");
+        $file = database_path('seeds/'.static::$file_name.'.php');
 
         file_put_contents($file, $render);
 
-        $this->info("Dump created on ".static::$file_name." seed class.");
+        $this->info('Dump created on '.static::$file_name.' seed class.');
     }
 
     /**
@@ -131,11 +130,10 @@ class LteDbDumpCommand extends Command
         $date = get_doc_var($ref->getDocComment(), 'date');
 
         if ($date) {
+            $name = str_replace(['-', ' ', ':'], '_', $date);
 
-            $name = str_replace(['-',' ',':'], '_', $date);
-
-            if (!is_dir(database_path("seeds/LteAdminDumps"))) {
-                mkdir(database_path("seeds/LteAdminDumps"), 0777, true);
+            if (! is_dir(database_path('seeds/LteAdminDumps'))) {
+                mkdir(database_path('seeds/LteAdminDumps'), 0777, true);
             }
 
             file_put_contents(

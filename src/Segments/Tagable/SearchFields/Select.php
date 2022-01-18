@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Select
+ * Class Select.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class Select extends \Lar\LteAdmin\Segments\Tagable\Fields\Select
@@ -11,10 +11,10 @@ class Select extends \Lar\LteAdmin\Segments\Tagable\Fields\Select
     /**
      * @var string
      */
-    static $condition = "=";
+    public static $condition = '=';
 
     /**
-     * After construct event
+     * After construct event.
      */
     protected function after_construct()
     {

@@ -12,14 +12,14 @@ use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Segments\Segment;
 
 /**
- * Class Timeline
+ * Class Timeline.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin TimelineMacroList
  * @mixin TimelineMethods
  */
-class Timeline extends Segment {
-
+class Timeline extends Segment
+{
     use Delegable;
 
     /**
@@ -174,9 +174,8 @@ class Timeline extends Segment {
 
         $this->order_type = $this->callCallableCurrent('order_type', $this);
 
-        if (request()->has($this->model_name . '_per_page') && in_array(request()->get($this->model_name . '_per_page'), $this->per_pages)) {
-
-            $this->per_page = (string)request()->get($this->model_name . '_per_page');
+        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'), $this->per_pages)) {
+            $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 
         $paginate = $this->getPaginate();
@@ -186,16 +185,13 @@ class Timeline extends Segment {
         );
 
         foreach ($paginate as $model) {
-
             $rootDiv = $this->div();
 
             if ($model[$this->order_field] instanceof Carbon && $model[$this->order_field]->day == 1) {
-
                 $rootDiv->div(['time-label'])->span(['bg-green'])->text($model[$this->order_field]->toDateTimeString());
             }
 
             $rootDiv->when(function (DIV $div) use ($model) {
-
                 $i = $div->i();
 
                 $icon = $this->callCallableExtender('icon', $model, $i, 'fas fa-lightbulb bg-blue');
@@ -205,8 +201,7 @@ class Timeline extends Segment {
                 }
 
                 $div->div(['timeline-item'], function (DIV $div) use ($model) {
-
-                    $div->span(['time'])->i(['fas fa-clock'])->_()->text($model[$this->order_field] ? " " . butty_date_time($model[$this->order_field]) : '');
+                    $div->span(['time'])->i(['fas fa-clock'])->_()->text($model[$this->order_field] ? ' '.butty_date_time($model[$this->order_field]) : '');
 
                     $h3 = $div->h3(['timeline-header']);
 
@@ -237,7 +232,6 @@ class Timeline extends Segment {
         }
 
         if ($paginate->lastPage() == $paginate->currentPage()) {
-
             $this->div()->i(['fas fa-clock bg-gray']);
         }
 
@@ -246,7 +240,6 @@ class Timeline extends Segment {
         );
 
         if ($paginate) {
-
             $this->appEnd(
                 $this->paginateFooter($paginate)
             );
@@ -264,13 +257,14 @@ class Timeline extends Segment {
     protected function callCallableExtender(string $segment, $model, $area, $default = null)
     {
         $s = $this->{$segment};
+
         return $s && is_string($s) ? ($model->{$s} ?: $default) : (
             $s && is_embedded_call($s) ? embedded_call($s, [
                 get_class($area) => $area,
                 (is_object($model) ? get_class($model) : 'model') => $model,
                 'model' => $model,
                 static::class => $this,
-            ])  : $default
+            ]) : $default
         );
     }
 
@@ -289,7 +283,7 @@ class Timeline extends Segment {
             $value && is_embedded_call($value) ? embedded_call($value, [
                 get_class($area) => $area,
                 static::class => $this,
-            ])  : $value
+            ]) : $value
         );
     }
 
@@ -298,31 +292,24 @@ class Timeline extends Segment {
      */
     protected function getPaginate()
     {
-        if (!$this->model) {
+        if (! $this->model) {
             return [];
         }
 
         if ($this->model instanceof Model) {
-
             $paginate = new (get_class($this->model));
-
-        } else if (is_string($this->model)) {
-
+        } elseif (is_string($this->model)) {
             $paginate = new $this->model;
-
-        } else if (is_array($this->model)) {
-
+        } elseif (is_array($this->model)) {
             $paginate = collect($this->model);
-
         } else {
-
             $paginate = $this->model;
         }
 
         return ($paginate instanceof Collection
                     ? $paginate->sortByDesc($this->order_field, 'desc')
                     : $paginate->orderBy($this->order_field, 'desc')
-                )->paginate($this->per_page, ['*'],$this->model_name . "_page");
+                )->paginate($this->per_page, ['*'], $this->model_name.'_page');
     }
 
     /**
@@ -339,8 +326,8 @@ class Timeline extends Segment {
             'per_page' => $this->per_page,
             'per_pages' => $this->per_pages,
             'elements' => $this->paginationElements($paginate),
-            'page_name' => $this->model_name . "_page",
-            'per_name' => $this->model_name . '_per_page',
+            'page_name' => $this->model_name.'_page',
+            'per_name' => $this->model_name.'_per_page',
         ]) : '';
     }
 

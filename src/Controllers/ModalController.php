@@ -9,7 +9,7 @@ use Lar\Layout\Core\HTMLCustomCommand;
 use Lar\LteAdmin\Segments\Modal;
 
 /**
- * Class ModalController
+ * Class ModalController.
  * @package Lar\LteAdmin\Controllers
  */
 class ModalController extends HTMLCustomCommand
@@ -44,7 +44,7 @@ class ModalController extends HTMLCustomCommand
     /**
      * @var string
      */
-    protected $method = "index";
+    protected $method = 'index';
 
     /**
      * @var string
@@ -78,13 +78,9 @@ class ModalController extends HTMLCustomCommand
     public function setMethod(string $method = null)
     {
         if ($method) {
-
             $this->method = $method;
-        }
-
-        else {
-
-            $this->method = "index";
+        } else {
+            $this->method = 'index';
         }
 
         return $this;
@@ -97,12 +93,8 @@ class ModalController extends HTMLCustomCommand
     public function setClass(string $handle = null)
     {
         if ($handle) {
-
             $this->class = $handle;
-        }
-
-        else {
-
+        } else {
             $this->class = static::class;
         }
 
@@ -116,7 +108,6 @@ class ModalController extends HTMLCustomCommand
     public function setHandle(string $handle = null)
     {
         if ($handle) {
-
             $this->handle = $handle;
         }
 
@@ -130,7 +121,6 @@ class ModalController extends HTMLCustomCommand
     public function setCreate(array $create = null)
     {
         if ($create) {
-
             $this->create = $create;
         }
 
@@ -151,12 +141,11 @@ class ModalController extends HTMLCustomCommand
     /**
      * @return Modal
      */
-    public function index() {
-
+    public function index()
+    {
         $link = [$this, 'create'];
 
         if ($this->create) {
-
             $link = $this->create;
         }
 
@@ -185,7 +174,7 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
-     * Extra big size
+     * Extra big size.
      * @return $this
      */
     public function extra()
@@ -196,7 +185,7 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
-     * Big size
+     * Big size.
      * @return $this
      */
     public function big()
@@ -207,7 +196,7 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
-     * Small size
+     * Small size.
      * @return $this
      */
     public function small()
@@ -230,9 +219,9 @@ class ModalController extends HTMLCustomCommand
                     'backdrop' => $this->backdrop,
                     'focus' => $this->focus,
                     'keyboard' => $this->escape,
-                    'size' => $this->size
-                ]
-            ]
+                    'size' => $this->size,
+                ],
+            ],
         ];
     }
 

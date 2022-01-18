@@ -10,11 +10,11 @@ use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
- * Class InstallExtensionProvider
+ * Class InstallExtensionProvider.
  * @package Lar\LteAdmin\Core
  */
-class ConfigExtensionProvider {
-
+class ConfigExtensionProvider
+{
     /**
      * @var ExtendProvider
      */
@@ -72,35 +72,28 @@ class ConfigExtensionProvider {
     }
 
     /**
-     * On boot lte application
+     * On boot lte application.
      */
     public function boot()
     {
         /** @var Macroable $class */
         foreach ($this->mixins as $class => $mixin) {
-
             if (is_array($mixin)) {
-
                 foreach ($mixin as $item) {
-
                     $class::mixin($item);
                 }
-
             } else {
-
                 $class::mixin($mixin);
             }
         }
 
         /** @var Controller $controller */
         foreach ($this->save_pipes as $controller => $controller_pipe) {
-
             $controller::pipes($controller_pipe, 'save');
         }
 
         /** @var Controller $controller */
         foreach ($this->delete_pipes as $controller => $controller_pipe) {
-
             $controller::pipes($controller_pipe, 'delete');
         }
 
@@ -158,7 +151,7 @@ class ConfigExtensionProvider {
     }
 
     /**
-     * Get extension scripts
+     * Get extension scripts.
      * @return array
      */
     public function getScripts()
@@ -167,7 +160,7 @@ class ConfigExtensionProvider {
     }
 
     /**
-     * Get extension styles
+     * Get extension styles.
      * @return array
      */
     public function getStyles()

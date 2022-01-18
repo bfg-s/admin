@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MakeUser
+ * Class MakeUser.
  *
  * @package Lar\Admin\Commands
  */
@@ -48,15 +48,14 @@ class LteMixinCommand extends Command
         $namespace = $this->namespace();
         $path = $this->rp();
 
-        if (!is_dir($path)) {
-
+        if (! is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
         $class = class_entity($name)->wrap('php');
         $class->namespace($namespace);
 
-        file_put_contents($path . "/" . $name . ".php", $class);
+        file_put_contents($path.'/'.$name.'.php', $class);
 
         $this->info("Mixin [$namespace\\$name] generated!");
     }
@@ -68,8 +67,8 @@ class LteMixinCommand extends Command
     {
         $return = ucfirst(\Str::camel(\Arr::last($this->segments())));
 
-        if (!preg_match('/Mixin$/', $return)) {
-            $return .= "Mixin";
+        if (! preg_match('/Mixin$/', $return)) {
+            $return .= 'Mixin';
         }
 
         return $return;
@@ -80,7 +79,7 @@ class LteMixinCommand extends Command
      */
     protected function segments()
     {
-        return array_map("Str::snake", explode("/", $this->argument('name')));
+        return array_map('Str::snake', explode('/', $this->argument('name')));
     }
 
     /**
@@ -88,32 +87,29 @@ class LteMixinCommand extends Command
      */
     protected function namespace()
     {
-
-
-        return $this->option('dir') ? implode("\\",
-            array_map("ucfirst",
-                array_map("Str::camel",
-                    explode("/", $this->option('dir'))
+        return $this->option('dir') ? implode('\\',
+            array_map('ucfirst',
+                array_map('Str::camel',
+                    explode('/', $this->option('dir'))
                 )
             )
-        ) : lte_app_namespace('Mixins') . $this->path("\\");
+        ) : lte_app_namespace('Mixins').$this->path('\\');
     }
 
     /**
      * @param  string  $delimiter
      * @return string
      */
-    protected function path(string $delimiter = "/")
+    protected function path(string $delimiter = '/')
     {
         $segments = $this->segments();
 
         unset($segments[array_key_last($segments)]);
 
-        $add = "";
+        $add = '';
 
         if (count($segments)) {
-
-            $add .= $delimiter . implode($delimiter, array_map("ucfirst",array_map('Str::camel', $segments)));
+            $add .= $delimiter.implode($delimiter, array_map('ucfirst', array_map('Str::camel', $segments)));
         }
 
         return $add;
@@ -125,10 +121,10 @@ class LteMixinCommand extends Command
     protected function rp()
     {
         if ($this->option('dir')) {
-
-            return "/". trim(base_path($this->option('dir') . '/' . trim($this->path(), '/')), '/');
+            return '/'.trim(base_path($this->option('dir').'/'.trim($this->path(), '/')), '/');
         }
-        return "/". trim(lte_app_path('Mixins/' . trim($this->path(), '/')), '/');
+
+        return '/'.trim(lte_app_path('Mixins/'.trim($this->path(), '/')), '/');
     }
 
     /**

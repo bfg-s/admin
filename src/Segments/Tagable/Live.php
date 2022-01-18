@@ -10,14 +10,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Live
+ * Class Live.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ColMacroList
  * @mixin ColMethods
  */
-class Live extends SPAN implements onRender {
-
+class Live extends SPAN implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
@@ -34,18 +34,16 @@ class Live extends SPAN implements onRender {
         parent::__construct();
 
         if ($condition instanceof \Closure) {
-
             $params[] = $condition;
             $condition = true;
         }
 
         if ($condition) {
-
             $this->when($params);
         }
 
         $this->addClass('__live__')
-            ->setId('live-' . static::$counter);
+            ->setId('live-'.static::$counter);
 
         static::$counter++;
 
@@ -61,7 +59,6 @@ class Live extends SPAN implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

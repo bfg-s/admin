@@ -3,18 +3,18 @@
 namespace Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation;
 
 /**
- * Trait ModelRelationHelpersTrait
+ * Trait ModelRelationHelpersTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation
  */
-trait ModelRelationHelpersTrait {
-
+trait ModelRelationHelpersTrait
+{
     /**
      * @param  array|\Closure  $instruction
      * @return $this
      */
     public function model($instruction)
     {
-        $this->model_instruction = array_merge($this->model_instruction, (array)$instruction);
+        $this->model_instruction = array_merge($this->model_instruction, (array) $instruction);
 
         return $this;
     }

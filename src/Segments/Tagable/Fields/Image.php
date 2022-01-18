@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Image
+ * Class Image.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Image extends File
@@ -11,7 +11,7 @@ class Image extends File
     /**
      * @var string
      */
-    protected $type = "file";
+    protected $type = 'file';
 
     /**
      * @var string
@@ -22,11 +22,11 @@ class Image extends File
      * @var string[]
      */
     protected $data = [
-        'load' => 'file'
+        'load' => 'file',
     ];
 
     /**
-     * After construct event
+     * After construct event.
      */
     protected function after_construct()
     {

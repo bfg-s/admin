@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class MakeUser
+ * Class MakeUser.
  *
  * @package Lar\Admin\Commands
  */
@@ -47,47 +47,28 @@ class LteExtensionCommand extends BaseLteExtension
         $name = $this->argument('name');
 
         if (is_numeric($name) && $find = $this->all_extensions()->where('id', $name)->first()) {
-
             $name = $find['name'];
         }
 
         if ($name) {
-
             if ($this->option('edit')) {
-
                 return $this->edit_extension($name);
             }
 
             if ($this->option('make')) {
-
                 return $this->make_extension($name);
             }
 
             return $this->work_with_extension($name);
-        }
-
-        else if ($this->option('install')) {
-
+        } elseif ($this->option('install')) {
             return $this->install_all();
-        }
-
-        else if ($this->option('uninstall')) {
-
+        } elseif ($this->option('uninstall')) {
             return $this->uninstall_all();
-        }
-
-        else if ($this->option('reinstall')) {
-
+        } elseif ($this->option('reinstall')) {
             return $this->reinstall_all();
-        }
-
-        else if ($this->option('show')) {
-
+        } elseif ($this->option('show')) {
             return $this->remote_list();
-        }
-
-        else {
-
+        } else {
             return $this->installed_list();
         }
     }
@@ -121,7 +102,7 @@ class LteExtensionCommand extends BaseLteExtension
             ['yes', 'y', InputOption::VALUE_NONE, 'Enter yes on all'],
 
             ['make', 'm', InputOption::VALUE_NONE, 'Create extension by selected name'],
-            ['edit', 'e', InputOption::VALUE_NONE, 'Edit extension by selected name']
+            ['edit', 'e', InputOption::VALUE_NONE, 'Edit extension by selected name'],
         ];
     }
 }

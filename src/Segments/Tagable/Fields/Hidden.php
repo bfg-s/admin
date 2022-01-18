@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Hidden
+ * Class Hidden.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Hidden extends FormGroup
@@ -13,7 +13,7 @@ class Hidden extends FormGroup
     /**
      * @var string
      */
-    protected $type = "hidden";
+    protected $type = 'hidden';
 
     /**
      * @var bool
@@ -34,7 +34,7 @@ class Hidden extends FormGroup
             'type' => $this->type,
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title
+            'placeholder' => $this->title,
         ], ...$this->params)
             ->setValue($this->value);
     }

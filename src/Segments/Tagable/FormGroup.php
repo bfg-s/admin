@@ -14,12 +14,12 @@ use Lar\LteAdmin\Segments\Tagable\Traits\RulesBackTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\RulesFrontTrait;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin FormGroupMacroList
  */
-abstract class FormGroup extends DIV {
-
+abstract class FormGroup extends DIV
+{
     use RulesFrontTrait, RulesBackTrait, FontAwesome, Macroable, Delegable;
 
     /**
@@ -40,7 +40,7 @@ abstract class FormGroup extends DIV {
     /**
      * @var string
      */
-    protected $icon = "fas fa-pencil-alt";
+    protected $icon = 'fas fa-pencil-alt';
 
     /**
      * @var string
@@ -130,7 +130,7 @@ abstract class FormGroup extends DIV {
     /**
      * @var array
      */
-    static $construct_modify = [];
+    public static $construct_modify = [];
 
     /**
      * FormGroup constructor.
@@ -145,8 +145,8 @@ abstract class FormGroup extends DIV {
         $this->title = $title ? __($title) : $title;
         $this->name = $name;
         $this->params = array_merge($this->params, $params);
-        $this->field_id = 'input_' . \Str::slug($this->name, '_');
-        $this->path = trim(str_replace(['[',']'], '.', str_replace('[]', '', $name)), '.');
+        $this->field_id = 'input_'.\Str::slug($this->name, '_');
+        $this->path = trim(str_replace(['[', ']'], '.', str_replace('[]', '', $name)), '.');
         $this->errors = request()->session()->get('errors') ?: new ViewErrorBag;
         $this->has_bug = $this->errors->getBag('default')->has($name);
         if (\Route::current()) {
@@ -154,11 +154,13 @@ abstract class FormGroup extends DIV {
             $this->admin_controller = property_exists($this->controller, 'permission_functions');
         }
         $this->toExecute('makeWrapper');
-        if (!$title) { $this->vertical(); }
+        if (! $title) {
+            $this->vertical();
+        }
         $this->model = Form::$current_model;
         $this->after_construct();
         $this->callConstructEvents();
-        foreach (FormGroup::$construct_modify as $item) {
+        foreach (self::$construct_modify as $item) {
             if (is_callable($item)) {
                 call_user_func($item, $this, $this->model);
             }
@@ -177,9 +179,11 @@ abstract class FormGroup extends DIV {
     }
 
     /**
-     * After construct event
+     * After construct event.
      */
-    protected function after_construct(){}
+    protected function after_construct()
+    {
+    }
 
     /**
      * @return $this
@@ -218,7 +222,6 @@ abstract class FormGroup extends DIV {
     public function icon(string $icon = null)
     {
         if ($this->icon !== null) {
-
             $this->icon = $icon;
         }
 
@@ -331,7 +334,9 @@ abstract class FormGroup extends DIV {
     /**
      * @return void
      */
-    protected function on_build() {}
+    protected function on_build()
+    {
+    }
 
     /**
      * @var array
@@ -345,11 +350,12 @@ abstract class FormGroup extends DIV {
     public function fg(callable $call)
     {
         $this->fgs[] = $call;
+
         return $this;
     }
 
     /**
-     * Make wrapper for input
+     * Make wrapper for input.
      */
     protected function makeWrapper()
     {
@@ -358,7 +364,6 @@ abstract class FormGroup extends DIV {
         $this->on_build();
 
         if ($this->only_input) {
-
             $this->value = $this->create_value();
 
             $this->appEnd(
@@ -367,7 +372,7 @@ abstract class FormGroup extends DIV {
                 $this->app_end_field()
             );
 
-            return ;
+            return;
         }
 
         $fg = $this->div(['form-group row']);
@@ -376,8 +381,7 @@ abstract class FormGroup extends DIV {
             call_user_func($fgs, $fg);
         }
 
-        if (!$this->reversed) {
-
+        if (! $this->reversed) {
             $this->make_label($fg);
         }
 
@@ -387,21 +391,19 @@ abstract class FormGroup extends DIV {
         $group_width = 12 - $this->label_width;
         $input_group = $fg->div()->addClassIf($icon, 'input-group')
             ->addClassIf($this->vertical, 'w-100')
-            ->addClassIf(!$this->vertical && $this->title, "col-sm-{$group_width}");
+            ->addClassIf(! $this->vertical && $this->title, "col-sm-{$group_width}");
 
         $this->make_icon_wrapper($input_group, $icon);
 
         $fg->setDatas(['label-width' => $this->label_width]);
 
         if ($this->vertical) {
-
             $fg->setDatas(['vertical' => 'true']);
         }
 
         $this->value = $this->create_value();
 
         if ($this->value_to) {
-
             $this->value = call_user_func($this->value_to, $this->value, $this->model);
         }
 
@@ -412,7 +414,6 @@ abstract class FormGroup extends DIV {
         );
 
         if ($this->reversed) {
-
             $this->make_label($fg);
         }
 
@@ -434,17 +435,17 @@ abstract class FormGroup extends DIV {
     /**
      * @return mixed
      */
-    protected function create_value () {
-
+    protected function create_value()
+    {
         $val = old($this->path);
-        if (!$val) {
+        if (! $val) {
             $val = request($this->path) ?: null;
         }
-        if (!$val && $this->model) {
+        if (! $val && $this->model) {
             $val = multi_dot_call($this->model, $this->path, false);
         }
 
-        return $val ?: $this->default;
+        return $val !== null ? $val : $this->default;
     }
 
     /**
@@ -461,9 +462,8 @@ abstract class FormGroup extends DIV {
     protected function make_label(DIV $form_group)
     {
         if ($this->title) {
-
             $form_group->label(['for' => $this->field_id, 'class' => 'col-form-label'], $this->title)
-                ->addClassIf(!$this->vertical, 'col-sm-'.$this->label_width);
+                ->addClassIf(! $this->vertical, 'col-sm-'.$this->label_width);
         }
     }
 
@@ -475,7 +475,6 @@ abstract class FormGroup extends DIV {
     protected function make_icon_wrapper(DIV $input_group, $icon = null)
     {
         if ($icon) {
-
             $input_group->div(['class' => 'input-group-prepend'])
                 ->span(['class' => 'input-group-text'], $icon);
         }
@@ -490,15 +489,14 @@ abstract class FormGroup extends DIV {
     protected function make_info_message(DIV $fg)
     {
         if ($this->info) {
-
             $group_width = 12 - $this->label_width;
 
-            if (!$this->vertical) {
+            if (! $this->vertical) {
                 $fg->div(["col-sm-{$this->label_width}"]);
             }
             $fg->small(['text-primary invalid-feedback d-block'])
-                ->addClassIf(!$this->vertical, "col-sm-{$group_width}")
-                ->i(['fas fa-info-circle'])->_text(":space", $this->info);
+                ->addClassIf(! $this->vertical, "col-sm-{$group_width}")
+                ->i(['fas fa-info-circle'])->_text(':space', $this->info);
         }
 
         return $this;
@@ -511,19 +509,17 @@ abstract class FormGroup extends DIV {
     protected function make_error_massages(DIV $fg)
     {
         if ($this->name && $this->errors && $this->errors->has($this->name)) {
-
             $group_width = 12 - $this->label_width;
 
             $messages = $this->errors->get($this->name);
 
             foreach ($messages as $mess) {
-
-                if (!$this->vertical) {
+                if (! $this->vertical) {
                     $fg->div(["col-sm-{$this->label_width}"]);
                 }
                 $fg->small(['error invalid-feedback d-block'])
-                    ->addClassIf(!$this->vertical, "col-sm-{$group_width}")
-                    ->small(['fas fa-exclamation-triangle'])->_text(":space", $mess);
+                    ->addClassIf(! $this->vertical, "col-sm-{$group_width}")
+                    ->small(['fas fa-exclamation-triangle'])->_text(':space', $mess);
             }
         }
 

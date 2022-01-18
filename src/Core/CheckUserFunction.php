@@ -3,12 +3,12 @@
 namespace Lar\LteAdmin\Core;
 
 /**
- * Class CheckUserFunction
+ * Class CheckUserFunction.
  * @package Lar\LteAdmin\Core
  * @mixin FunctionsDoc
  */
-class CheckUserFunction {
-
+class CheckUserFunction
+{
     /**
      * @var array
      */
@@ -47,6 +47,6 @@ class CheckUserFunction {
      */
     public function __set($name, $value)
     {
-        $this->list[$name] = !!$value;
+        $this->list[$name] = (bool) $value;
     }
 }

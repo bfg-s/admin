@@ -8,7 +8,7 @@ use Lar\LteAdmin\Middlewares\Authenticate;
 use Lar\LteAdmin\Segments\AccessDenied;
 
 /**
- * Landing Class
+ * Landing Class.
  *
  * @package App\Layouts
  */
@@ -19,7 +19,7 @@ class LteLayout extends LteBase
      *
      * @var bool|string
      */
-    protected $pjax = "lte-content-container";
+    protected $pjax = 'lte-content-container';
 
     /**
      * LteLayout constructor.
@@ -34,9 +34,7 @@ class LteLayout extends LteBase
         $this->body->addClass('hold-transition sidebar-mini text-sm layout-fixed layout-navbar-fixed');
 
         try {
-
             $this->body->div(['wrapper'], function (DIV $div) {
-
                 $div->view('lte::layout.nav');
 
                 $div->view('lte::layout.side_bar');
@@ -45,7 +43,6 @@ class LteLayout extends LteBase
 //                ]));
 
                 $div->div(['content-wrapper'], function (DIV $div) {
-
                     $this->toComponent($div, 'prep_end_wrapper');
 
                     $div->section(['content', 'id' => 'lte-content-container'])
@@ -60,14 +57,13 @@ class LteLayout extends LteBase
 
                 $div->view('lte::layout.control_sidebar');
             });
-
         } catch (\Exception $exception) {
             dd($exception);
         }
     }
 
     /**
-     * Add data in to layout content
+     * Add data in to layout content.
      *
      * @param $data
      * @return void
@@ -76,21 +72,14 @@ class LteLayout extends LteBase
     public function setInContent($data)
     {
         try {
-
             if (Authenticate::$access) {
-
                 $this->container->appEnd($data);
 
                 $this->toComponent($this->container, 'app_end_content');
-            }
-
-            else {
-
+            } else {
                 $this->container->appEnd(AccessDenied::create());
             }
-
         } catch (\Exception $exception) {
-
             dd($exception);
         }
     }

@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Icon
+ * Class Icon.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Rating extends Input
@@ -23,8 +23,8 @@ class Rating extends Input
      */
     protected $params = [
         [
-            'data-load' => 'rating'
-        ]
+            'data-load' => 'rating',
+        ],
     ];
 
     /**
@@ -35,7 +35,7 @@ class Rating extends Input
         'step' => '1',
         'show-clear' => 'false',
         'show-caption' => 'false',
-        'size' => 'sm'
+        'size' => 'sm',
     ];
 
     /**
@@ -53,7 +53,6 @@ class Rating extends Input
         $this->data['min'] = $value;
 
         if ($value == 0) {
-
             $this->data['show-clear'] = 'true';
         }
 
@@ -73,7 +72,7 @@ class Rating extends Input
     }
 
     /**
-     * @param int|double $step
+     * @param int|float $step
      * @return $this
      */
     public function step($step)

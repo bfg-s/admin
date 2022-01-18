@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\Cores\CoreSelect2Tags;
 
 /**
- * Class SelectTags
+ * Class SelectTags.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class SelectTags extends Select
@@ -23,7 +23,7 @@ class SelectTags extends Select
         return CoreSelect2Tags::create($this->options, [
             'name' => $this->name,
             'data-placeholder' => $this->title,
-            'id' => $this->field_id
+            'id' => $this->field_id,
         ], ...$this->params)
             ->setValues($this->value)
             ->makeOptions()
@@ -39,6 +39,6 @@ class SelectTags extends Select
      */
     public function options($options, bool $first_default = false)
     {
-        return parent::options($options, $this->load_subject ? false: $first_default);
+        return parent::options($options, $this->load_subject ? false : $first_default);
     }
 }

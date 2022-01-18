@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LteLog
+ * Class LteLog.
  *
  * @package Lar\LteAdmin\Models
  */
@@ -19,30 +19,30 @@ class LteLog extends Model
     /**
      * @var string
      */
-    protected $table = "lte_logs";
+    protected $table = 'lte_logs';
 
     /**
      * @var array
      */
     protected $fillable = [
-        "icon", "lte_user_id", "title", "detail", "ip", "url", "route", "method", "session_id", "user_agent", "web_id"
+        'icon', 'lte_user_id', 'title', 'detail', 'ip', 'url', 'route', 'method', 'session_id', 'user_agent', 'web_id',
     ];
 
     /**
      * @var string[]
      */
     protected $casts = [
-        "icon" => 'string',
-        "lte_user_id" => 'int',
-        "title" => 'string',
-        "detail" => 'string',
-        "ip" => 'string',
-        "url" => 'string',
-        "route" => 'string',
-        "method" => 'string',
-        "session_id" => 'string',
-        "user_agent" => 'string',
-        "web_id" => 'int',
+        'icon' => 'string',
+        'lte_user_id' => 'int',
+        'title' => 'string',
+        'detail' => 'string',
+        'ip' => 'string',
+        'url' => 'string',
+        'route' => 'string',
+        'method' => 'string',
+        'session_id' => 'string',
+        'user_agent' => 'string',
+        'web_id' => 'int',
     ];
 
     /**

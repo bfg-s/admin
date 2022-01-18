@@ -14,7 +14,6 @@ class CreateTableLteRoles extends Migration
     public function up()
     {
         Schema::create('lte_roles', function (Blueprint $table) {
-
             $table->bigIncrements('id');
 
             $table->string('name');

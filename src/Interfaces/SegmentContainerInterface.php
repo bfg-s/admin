@@ -5,9 +5,9 @@ namespace Lar\LteAdmin\Interfaces;
 use Illuminate\Contracts\Support\Renderable;
 
 /**
- * Interface SegmentContainerInterface
+ * Interface SegmentContainerInterface.
  * @package Lar\LteAdmin\Interfaces
  */
-interface SegmentContainerInterface extends Renderable {
-
+interface SegmentContainerInterface extends Renderable
+{
 }

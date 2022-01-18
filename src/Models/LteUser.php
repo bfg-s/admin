@@ -12,7 +12,7 @@ use Lar\LteAdmin\Core\CheckUserFunction;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LteUser
+ * Class LteUser.
  *
  * @package Lar\LteAdmin\Models
  */
@@ -28,20 +28,20 @@ class LteUser extends Model implements AuthenticatableContract
     /**
      * @var string
      */
-    protected $table = "lte_users";
+    protected $table = 'lte_users';
 
     /**
      * @var array
      */
     protected $fillable = [
-        "login", "email", "name", "avatar", "password"
+        'login', 'email', 'name', 'avatar', 'password',
     ];
 
     /**
      * @var array
      */
     protected $guarded = [
-        "password", "remember_token"
+        'password', 'remember_token',
     ];
 
     protected $casts = [];
@@ -61,7 +61,7 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function roles()
     {
-        return $this->belongsToMany(LteRole::class, "lte_role_user", "lte_user_id", "lte_role_id");
+        return $this->belongsToMany(LteRole::class, 'lte_role_user', 'lte_user_id', 'lte_role_id');
     }
 
     /**
@@ -69,7 +69,7 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function logs()
     {
-        return $this->hasMany(LteLog::class, "lte_user_id", "id");
+        return $this->hasMany(LteLog::class, 'lte_user_id', 'id');
     }
 
     /**
@@ -77,8 +77,7 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function functions()
     {
-        if (!isset(static::$functions[$this->id])) {
-
+        if (! isset(static::$functions[$this->id])) {
             static::$functions[$this->id] = LteFunction::withCount(['roles' => function ($many) {
                 $many->whereIn('lte_role_id', $this->roles->pluck('id')->toArray());
             }])->where('active', 1)
@@ -104,8 +103,7 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function func()
     {
-        if (!isset(static::$check_user_func_instances[$this->id])) {
-
+        if (! isset(static::$check_user_func_instances[$this->id])) {
             static::$check_user_func_instances[$this->id] = new CheckUserFunction($this->functions());
         }
 

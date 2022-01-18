@@ -16,7 +16,7 @@ use Lar\LteAdmin\Segments\Tagable\TabContent;
 use Lar\LteAdmin\Segments\Tagable\Timeline;
 
 /**
- * Class HomeController
+ * Class HomeController.
  *
  * @package Lar\LteAdmin\Controllers
  */
@@ -33,13 +33,11 @@ class UserController extends Controller
     public function index()
     {
         return Container::create(function (DIV $div, Container $container) {
-
             $container->title($this->model()->name)
                 ->icon_user()
                 ->breadcrumb('lte.administrator', 'lte.profile');
 
             $div->row(function (Row $row) {
-
                 $row->col(3)
                     ->card('lte.information')
                     ->primary()
@@ -65,11 +63,9 @@ class UserController extends Controller
     public function matrix()
     {
         return Form::create(function (Form $form) {
-
             $form->vertical();
 
             $form->tab('lte.settings', 'fas fa-cogs', function (TabContent $content) {
-
                 $content->image('avatar', 'lte.avatar');
 
                 $content->input('login', 'lte.login_name')
@@ -87,23 +83,19 @@ class UserController extends Controller
 
                 $content->password('password', 'lte.new_password')
                     ->confirm();
-            }, !request()->has('ltelog_per_page') && !request()->has('ltelog_page'));
+            }, ! request()->has('ltelog_per_page') && ! request()->has('ltelog_page'));
 
             $form->tab('lte.timeline', 'fas fa-history', function (TabContent $content) {
-
                 static::timelineComponent($content, $this->model()->logs());
             }, request()->has('ltelog_per_page') || request()->has('ltelog_page'));
 
             $form->tab('lte.day_activity', 'fas fa-chart-line', function (TabContent $content) {
-
                 static::activityDayComponent($content, $this->model()->logs());
             });
 
             $form->tab('lte.year_activity', 'fas fa-chart-line', function (TabContent $content) {
-
                 static::activityYearComponent($content, $this->model()->logs());
             });
-
 
             ModelSaver::on_updated(get_class($this->model()), function ($form) {
                 if (isset($form['password']) && $form['password']) {
@@ -122,7 +114,9 @@ class UserController extends Controller
             ->groupDataByAt('created_at', 'H:i');
 
         foreach ($model->distinct('title')->pluck('title') as $item) {
-            $chart->eachPoint($item, function ($c) use ($item) { return $c->where('title', $item)->count(); });
+            $chart->eachPoint($item, function ($c) use ($item) {
+                return $c->where('title', $item)->count();
+            });
         }
         $chart->miniChart();
     }
@@ -134,7 +128,9 @@ class UserController extends Controller
             ->groupDataByAt('created_at');
 
         foreach ($model->distinct('title')->pluck('title') as $item) {
-            $chart->eachPoint($item, function ($c) use ($item) { return $c->where('title', $item)->count(); });
+            $chart->eachPoint($item, function ($c) use ($item) {
+                return $c->where('title', $item)->count();
+            });
         }
         $chart->miniChart();
     }
@@ -142,16 +138,12 @@ class UserController extends Controller
     public static function timelineComponent($content, $model)
     {
         $content->div(['col-md-12'])->timeline($model, function (Timeline $timeline) {
-
             $timeline->set_title(function (LteLog $log) {
-
-                return $log->title . ($log->detail ? " <small>({$log->detail})</small>":"");
+                return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             });
 
             $timeline->set_body(function (DIV $div, LteLog $log) {
-
                 $div->p0()->model_info_table($log, function (ModelInfoTable $table) {
-
                     $table->row('IP', 'ip')->copied();
                     $table->row('URL', 'url')->copied();
                     $table->row('Route', 'route')->copied();

@@ -10,11 +10,11 @@ use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\Segments\Tagable\SearchForm;
 
 /**
- * Trait TableHelpersTrait
+ * Trait TableHelpersTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait TableHelpersTrait {
-
+trait TableHelpersTrait
+{
     /**
      * @param SearchForm|\Closure|array $instruction
      * @return $this
@@ -22,7 +22,6 @@ trait TableHelpersTrait {
     public function model($instruction)
     {
         if ($instruction instanceof SearchForm) {
-
             $this->search = $instruction;
         }
 
@@ -38,7 +37,6 @@ trait TableHelpersTrait {
     public function perPage(int $per_page)
     {
         if (is_int($this->per_page)) {
-
             $this->per_page = $per_page;
         }
 
@@ -71,7 +69,7 @@ trait TableHelpersTrait {
     }
 
     /**
-     * Alias of column
+     * Alias of column.
      * @param  string|\Closure|array|null  $label
      * @param  string|\Closure|array|null  $field
      * @return $this
@@ -89,7 +87,6 @@ trait TableHelpersTrait {
     public function column($label, $field = null)
     {
         if ($field === null) {
-
             $field = $label;
 
             $label = null;
@@ -97,13 +94,16 @@ trait TableHelpersTrait {
 
         $this->last = uniqid('column');
 
+        $key = \Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
+
         $col = [
             'field' => $field,
             'label' => is_string($label) ? __($label) : $label,
             'sort' => false,
             'trash' => true,
             'info' => false,
-            'hide' => is_string($field) && request()->has($this->model_name.'_'.$field) && request($this->model_name.'_'.$field) == 0,
+            'key' => is_string($field) ? $key : null,
+            'hide' => request()->has($key) && request($key) == 0,
             'macros' => [],
         ];
 
@@ -123,7 +123,6 @@ trait TableHelpersTrait {
     public function to_export(callable $callback = null)
     {
         if (isset($this->columns[$this->last])) {
-
             PrepareExport::$columns[$this->last] = [
                 'header' => $this->columns[$this->last]['label'],
                 'field' => $callback ?: $this->columns[$this->last]['field'],
@@ -139,7 +138,6 @@ trait TableHelpersTrait {
     public function only_export(callable $callback = null)
     {
         if (isset($this->columns[$this->last])) {
-
             $this->to_export($callback);
             unset($this->columns[$this->last]);
         }
@@ -163,7 +161,6 @@ trait TableHelpersTrait {
     public function not_trash()
     {
         if (isset($this->columns[$this->last])) {
-
             $this->columns[$this->last]['trash'] = false;
         }
 
@@ -177,7 +174,6 @@ trait TableHelpersTrait {
     public function info(string $info)
     {
         if (isset($this->columns[$this->last])) {
-
             $this->columns[$this->last]['info'] = $info;
         }
 
@@ -191,7 +187,6 @@ trait TableHelpersTrait {
     public function sort(string $field = null)
     {
         if (isset($this->columns[$this->last])) {
-
             $this->columns[$this->last]['sort'] =
                 $field ?
                     $field :
@@ -208,13 +203,26 @@ trait TableHelpersTrait {
     /**
      * @return $this
      */
-    public function to_hide()
+    public function to_hide(string $key = null)
     {
+        if ($key) {
+            $this->columns[$this->last]['key']
+                = $this->model_name.'_'.\Str::slug($key, '_');
+        }
         if (
-            isset($this->columns[$this->last]) && isset($this->columns[$this->last]['field'])) {
+            ! $this->columns[$this->last]['key']
+            && $this->columns[$this->last]['sort']
+        ) {
+            $this->columns[$this->last]['key']
+                = $this->columns[$this->last]['sort'];
+        }
+        if (
+            isset($this->columns[$this->last])
+            && $this->columns[$this->last]['key']
+        ) {
             $this->hasHidden = true;
             $this->columns[$this->last]['hide']
-                = !(request($this->model_name.'_'.$this->columns[$this->last]['field']) == 1);
+                = ! (request($this->columns[$this->last]['key']) == 1);
         }
 
         return $this;
@@ -281,10 +289,10 @@ trait TableHelpersTrait {
     }
 
     /**
-     * Has models on process
+     * Has models on process.
      * @var array
      */
-    static protected $models = [];
+    protected static $models = [];
 
     /**
      * @param $model
@@ -292,23 +300,33 @@ trait TableHelpersTrait {
      */
     public function getModelName()
     {
-        if ($this->model_name) { return $this->model_name; }
+        if ($this->model_name) {
+            return $this->model_name;
+        }
         $class = null;
-        if ($this->model instanceof Model) { $class = get_class($this->model); }
-        else if ($this->model instanceof Builder) { $class = get_class($this->model->getModel()); }
-        else if ($this->model instanceof Relation) { $class = get_class($this->model->getModel()); }
-        else if (is_object($this->model)) { $class = get_class($this->model); }
-        else if (is_string($this->model)) { $class = $this->model; }
-        else if (is_array($this->model)) { $class = substr(md5(json_encode($this->model)), 0, 10); }
+        if ($this->model instanceof Model) {
+            $class = get_class($this->model);
+        } elseif ($this->model instanceof Builder) {
+            $class = get_class($this->model->getModel());
+        } elseif ($this->model instanceof Relation) {
+            $class = get_class($this->model->getModel());
+        } elseif (is_object($this->model)) {
+            $class = get_class($this->model);
+        } elseif (is_string($this->model)) {
+            $class = $this->model;
+        } elseif (is_array($this->model)) {
+            $class = substr(md5(json_encode($this->model)), 0, 10);
+        }
         $this->model_class = $class;
         $return = $class ? strtolower(class_basename($class)) : $this->getUnique();
-        $prep = "";
+        $prep = '';
         if (isset(static::$models[$return])) {
             $prep .= static::$models[$return];
             static::$models[$return]++;
         } else {
             static::$models[$return] = 1;
         }
+
         return $return.$prep;
     }
 
@@ -325,8 +343,8 @@ trait TableHelpersTrait {
             'per_page' => $this->per_page,
             'per_pages' => $this->per_pages,
             'elements' => $this->paginationElements($this->paginate),
-            'page_name' => $this->model_name . "_page",
-            'per_name' => $this->model_name . '_per_page',
+            'page_name' => $this->model_name.'_page',
+            'per_name' => $this->model_name.'_per_page',
         ]) : '';
     }
 }

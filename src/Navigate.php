@@ -10,7 +10,7 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\Roads\Roads;
 
 /**
- * Class Navigate
+ * Class Navigate.
  * @package Lar\LteAdmin
  * @mixin \Lar\LteAdmin\Core\NavigatorExtensions
  */
@@ -40,7 +40,6 @@ class Navigate implements NavigateInterface
     public static function do(...$calls)
     {
         foreach ($calls as $call) {
-
             call_user_func($call, \Navigate::instance(), static::$roads);
         }
 
@@ -53,7 +52,7 @@ class Navigate implements NavigateInterface
      */
     public function menu_header(string $title)
     {
-        Navigate::$items[] = collect(['main_header' => $title]);
+        self::$items[] = collect(['main_header' => $title]);
 
         return $this;
     }
@@ -66,7 +65,7 @@ class Navigate implements NavigateInterface
      */
     public function nav_bar_view(string $view, array $params = [], bool $prepend = false)
     {
-        Navigate::$items[] = collect(['nav_bar_view' => $view, 'params' => $params, 'prepend' => $prepend]);
+        self::$items[] = collect(['nav_bar_view' => $view, 'params' => $params, 'prepend' => $prepend]);
 
         return $this;
     }
@@ -78,7 +77,7 @@ class Navigate implements NavigateInterface
      */
     public function left_nav_bar_view(string $view, array $params = [])
     {
-        Navigate::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
+        self::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
 
         return $this;
     }
@@ -91,22 +90,20 @@ class Navigate implements NavigateInterface
      */
     public function group(string $title = null, $route = null, $cb = null)
     {
-        if (is_embedded_call($route) && !is_string($route)) {
+        if (is_embedded_call($route) && ! is_string($route)) {
             $cb = $route;
             $route = null;
         }
 
         $item = new NavGroup($title, $route);
 
-        Navigate::$items[] = $item;
+        self::$items[] = $item;
 
         if (isset($item->items['route'])) {
-
             $this->includeAfterGroup($item->items['route']);
         }
 
         if (is_embedded_call($cb)) {
-
             call_user_func($cb, $item, static::$roads);
         }
 
@@ -123,10 +120,9 @@ class Navigate implements NavigateInterface
     {
         $item = new NavItem($title, $route, $action);
 
-        Navigate::$items[] = $item;
+        self::$items[] = $item;
 
         if (isset($item->items['route'])) {
-
             $this->includeAfterGroup($item->items['route']);
         }
 
@@ -138,16 +134,16 @@ class Navigate implements NavigateInterface
      */
     public function get()
     {
-        foreach (Navigate::$items as $key => $item) {
+        foreach (self::$items as $key => $item) {
             /** @var Arrayable $item */
-            if (!is_array($item)) {
-                Navigate::$items[$key] = $item->toArray();
+            if (! is_array($item)) {
+                self::$items[$key] = $item->toArray();
             } else {
-                Navigate::$items[$key] = $item;
+                self::$items[$key] = $item;
             }
         }
 
-        return Navigate::$items;
+        return self::$items;
     }
 
     /**
@@ -155,7 +151,7 @@ class Navigate implements NavigateInterface
      */
     public function getMaked()
     {
-        return Navigate::$items;
+        return self::$items;
     }
 
     /**
@@ -188,12 +184,11 @@ class Navigate implements NavigateInterface
     public function __call($name, $arguments)
     {
         if (isset(LteAdmin::$nav_extensions[$name])) {
-
-            Navigate::$extension = LteAdmin::$nav_extensions[$name];
+            self::$extension = LteAdmin::$nav_extensions[$name];
 
             LteAdmin::$nav_extensions[$name]->navigator($this);
 
-            Navigate::$extension = null;
+            self::$extension = null;
 
             unset(LteAdmin::$nav_extensions[$name]);
         }
@@ -206,20 +201,15 @@ class Navigate implements NavigateInterface
     protected function includeAfterGroup($name)
     {
         if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
-
-
             foreach (LteAdmin::$nav_extensions[$name] as $item) {
-
-                if (!is_array($item)) {
-
-                    Navigate::$extension = $item;
+                if (! is_array($item)) {
+                    self::$extension = $item;
 
                     $item->navigator($this);
 
-                    Navigate::$extension = null;
+                    self::$extension = null;
                 }
             }
-
 
             unset(LteAdmin::$nav_extensions[$name]);
         }

@@ -12,15 +12,15 @@ use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin CardMacroList
  */
-class Card extends DIV implements onRender {
-
+class Card extends DIV implements onRender
+{
     use TypesTrait, FontAwesome, Macroable, Delegable;
 
-    static $isContainer = true;
+    public static $isContainer = true;
 
     /**
      * @var SearchForm
@@ -31,7 +31,7 @@ class Card extends DIV implements onRender {
      * @var array
      */
     protected $props = [
-        'card', 'card-outline'
+        'card', 'card-outline',
     ];
 
     /**
@@ -101,16 +101,13 @@ class Card extends DIV implements onRender {
      */
     public function __construct($title = null, ...$params)
     {
-        $this->type = "primary";
+        $this->type = 'primary';
 
         parent::__construct();
 
         if (is_embedded_call($title)) {
-
             $params[] = $title;
-
-        } else if ($title) {
-
+        } elseif ($title) {
             $this->title = $title;
 
             $this->head_obj = $this->div(['card-header']);
@@ -136,6 +133,7 @@ class Card extends DIV implements onRender {
     public function headerObj(callable $call)
     {
         call_user_func($call, $this->head_obj);
+
         return $this;
     }
 
@@ -146,6 +144,7 @@ class Card extends DIV implements onRender {
     public function titleObj(callable $call)
     {
         call_user_func($call, $this->title_obj);
+
         return $this;
     }
 
@@ -156,6 +155,7 @@ class Card extends DIV implements onRender {
     public function toolsObj(callable $call)
     {
         call_user_func($call, $this->tools);
+
         return $this;
     }
 
@@ -167,6 +167,7 @@ class Card extends DIV implements onRender {
     {
         $body = CardBody::create(...$params)->haveLink($this->body);
         $this->appEnd($body);
+
         return $body;
     }
 
@@ -192,8 +193,7 @@ class Card extends DIV implements onRender {
      */
     public function withSearchForm()
     {
-        if (!$this->search_form) {
-
+        if (! $this->search_form) {
             $this->search_form = new SearchForm();
 
             $this->div(['#table_search_form', 'collapse'])
@@ -261,7 +261,9 @@ class Card extends DIV implements onRender {
      */
     public function defaultTools($test = null)
     {
-        $this->default_tools = is_embedded_call($test) ? $test : function () { return true; };
+        $this->default_tools = is_embedded_call($test) ? $test : function () {
+            return true;
+        };
 
         return $this;
     }
@@ -294,10 +296,8 @@ class Card extends DIV implements onRender {
         $group = ButtonGroup::create(...$params);
 
         if ($this->tools) {
-
             $this->tools->appEnd($group);
         }
-
 
         return $group;
     }
@@ -316,9 +316,7 @@ class Card extends DIV implements onRender {
         $model = gets()->lte->menu->model;
 
         if ($this->title_obj) {
-
             if ($this->icon) {
-
                 $this->title_obj->text("<i class=\"{$this->icon} mr-1\"></i>");
             }
 
@@ -328,7 +326,6 @@ class Card extends DIV implements onRender {
         }
 
         if ($this->tools) {
-
             $this->tools->appEnd($this->group);
         }
     }
@@ -345,7 +342,7 @@ class Card extends DIV implements onRender {
     }
 
     /**
-     * Make default tools
+     * Make default tools.
      */
     protected function make_default_tools()
     {
@@ -356,16 +353,15 @@ class Card extends DIV implements onRender {
 
             if ($test('search') && lte_controller_can('search')) {
                 $this->group(function (ButtonGroup $group) {
-
                     $group->primary(['fas fa-search', __('lte.search')])
                         ->setDatas([
                             'toggle' => 'collapse',
-                            'target' => '#table_search_form'
+                            'target' => '#table_search_form',
                         ])->attr([
                             'aria-expanded' => 'true',
-                            'aria-controls' =>  'table_search_form'
+                            'aria-controls' =>  'table_search_form',
                         ])->whenRender(function (BUTTON $button) {
-                            if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                            if (! $this->search_form || ! $this->search_form->fieldsCount()) {
                                 $button->attr(['d-none']);
                             }
                         });
@@ -375,7 +371,7 @@ class Card extends DIV implements onRender {
                             ->attr('id', 'cancel_search_params')
                             ->on_click('doc::location', urlWithGet([], ['q', 'page']))
                             ->whenRender(function (BUTTON $button) {
-                                if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                                if (! $this->search_form || ! $this->search_form->fieldsCount()) {
                                     $button->attr(['d-none']);
                                 }
                             });
@@ -389,8 +385,7 @@ class Card extends DIV implements onRender {
                 $model = gets()->lte->menu->model;
 
                 if ($model && property_exists($model, 'forceDeleting')) {
-
-                    if (!request()->has('show_deleted')) {
+                    if (! request()->has('show_deleted')) {
                         $this->group()->dark('fas fa-trash')
                             ->on_click('doc::location', urlWithGet(['show_deleted' => 1]));
                     } else {
@@ -399,32 +394,25 @@ class Card extends DIV implements onRender {
                 }
             }
 
-            if ($this->now['current.type'] && !request()->has('show_deleted')) {
-
+            if ($this->now['current.type'] && ! request()->has('show_deleted')) {
                 $type = $this->now['current.type'];
 
                 if ($type === 'create') {
-
                     if ($test('list') && lte_controller_can('index')) {
                         $this->group->resourceList();
                     }
-                }
-
-                else if ($type === 'edit' || $type === 'show') {
-
+                } elseif ($type === 'edit' || $type === 'show') {
                     if ($test('list') && lte_controller_can('index')) {
                         $this->group->resourceList();
                     }
 
                     if ($type === 'show') {
-
                         if ($test('edit') && lte_controller_can('edit')) {
                             $this->group->resourceEdit();
                         }
                     }
 
                     if ($type === 'edit') {
-
                         if ($test('info') && lte_controller_can('show')) {
                             $this->group->resourceInfo();
                         }
@@ -436,7 +424,6 @@ class Card extends DIV implements onRender {
                 }
 
                 if ($type !== 'create') {
-
                     if ($test('add') && lte_controller_can('create')) {
                         $this->group->resourceAdd();
                     }

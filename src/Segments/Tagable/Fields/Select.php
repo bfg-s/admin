@@ -8,7 +8,7 @@ use Lar\LteAdmin\Segments\Tagable\Cores\CoreSelect2;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Select
+ * Class Select.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Select extends FormGroup
@@ -16,7 +16,7 @@ class Select extends FormGroup
     /**
      * @var string
      */
-    protected $icon = "fas fa-mouse-pointer";
+    protected $icon = 'fas fa-mouse-pointer';
 
     /**
      * @var array
@@ -26,13 +26,13 @@ class Select extends FormGroup
     /**
      * @var string
      */
-    protected $class = "form-control";
+    protected $class = 'form-control';
 
     /**
      * @var string[]
      */
     protected $data = [
-        'load' => 'select2'
+        'load' => 'select2',
     ];
 
     /**
@@ -66,13 +66,15 @@ class Select extends FormGroup
                 $this->load_format,
                 $this->value,
                 $this->nullable ? $this->title : null,
-                $this->field_id . '_',
+                $this->field_id.'_',
                 $this->load_where
             );
 
             $r_name = $selector->getName();
 
-            if (request()->has($r_name)) { exit($selector->toJson(JSON_UNESCAPED_UNICODE)); }
+            if (request()->has($r_name)) {
+                exit($selector->toJson(JSON_UNESCAPED_UNICODE));
+            }
 
             $this->data['select-name'] = $r_name;
 
@@ -81,7 +83,6 @@ class Select extends FormGroup
             $vals = $selector->getValueData();
 
             if ($vals) {
-
                 $this->options($vals, true);
             }
         }
@@ -89,7 +90,7 @@ class Select extends FormGroup
         return CoreSelect2::create($this->options, [
             'name' => $this->name,
             'data-placeholder' => $this->title,
-            'id' => $this->field_id
+            'id' => $this->field_id,
         ], ...$this->params)
             ->setValues($this->value)
             ->makeOptions()
@@ -117,7 +118,7 @@ class Select extends FormGroup
             $this->options = $options;
         }
 
-        if ($first_default && !$this->nullable) {
+        if ($first_default && ! $this->nullable) {
             $this->default(array_key_first($this->options));
         }
 
@@ -137,7 +138,6 @@ class Select extends FormGroup
         $this->load_where = $where;
 
         if ($where) {
-
             $this->data['with-where'] = 'true';
         }
 

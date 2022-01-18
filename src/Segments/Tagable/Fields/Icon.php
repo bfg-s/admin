@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Icon
+ * Class Icon.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Icon extends Input
@@ -11,7 +11,7 @@ class Icon extends Input
     /**
      * @var string
      */
-    protected $icon = "fas fa-icons";
+    protected $icon = 'fas fa-icons';
 
     /**
      * @return string

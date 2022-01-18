@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Number
+ * Class Number.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Number extends Input
@@ -11,7 +11,7 @@ class Number extends Input
     /**
      * @var string
      */
-    protected $type = "number";
+    protected $type = 'number';
 
     /**
      * @var string
@@ -28,15 +28,15 @@ class Number extends Input
      */
     protected $data = [
         'load' => 'number',
-        'center' => 'false'
+        'center' => 'false',
     ];
 
     /**
      * @param int|float  $step
      * @return $this
      */
-    public function step($step) {
-
+    public function step($step)
+    {
         $this->params[]['step'] = $step;
 
         return $this;
@@ -53,6 +53,7 @@ class Number extends Input
     public function min($value, string $message = null)
     {
         $this->params[]['min'] = $value;
+
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
 
@@ -68,6 +69,7 @@ class Number extends Input
     public function max($value, string $message = null)
     {
         $this->params[]['max'] = $value;
+
         return  $this->_rule(__FUNCTION__, [$value], $message);
     }
 

@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class Input
+ * Class Input.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Input extends FormGroup
@@ -13,7 +13,7 @@ class Input extends FormGroup
     /**
      * @var string
      */
-    protected $type = "text";
+    protected $type = 'text';
 
     /**
      * @var bool
@@ -29,7 +29,7 @@ class Input extends FormGroup
             'type' => $this->type,
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title
+            'placeholder' => $this->title,
         ], ...$this->params)
             ->setValue($this->value)
             ->setRules($this->rules)
@@ -54,7 +54,7 @@ class Input extends FormGroup
      */
     public function duplication_how_slug(string $to)
     {
-        $this->on_keyup("str::slug", $to);
+        $this->on_keyup('str::slug', $to);
 
         return $this;
     }
@@ -65,7 +65,7 @@ class Input extends FormGroup
      */
     public function duplication(string $to)
     {
-        $this->on_keyup("$::val", "{$to} && >>$:val");
+        $this->on_keyup('$::val', "{$to} && >>$:val");
 
         return $this;
     }

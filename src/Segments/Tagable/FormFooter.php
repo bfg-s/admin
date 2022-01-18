@@ -9,12 +9,12 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin FormFooterMacroList
  */
-class FormFooter extends DIV implements onRender {
-
+class FormFooter extends DIV implements onRender
+{
     use Macroable, Delegable;
 
     /**
@@ -26,7 +26,7 @@ class FormFooter extends DIV implements onRender {
      * @var array
      */
     protected $props = [
-        'row'
+        'row',
     ];
 
     /**
@@ -59,19 +59,14 @@ class FormFooter extends DIV implements onRender {
         parent::__construct();
 
         if (is_bool($nav_redirect)) {
-
             $this->nav_redirect = $nav_redirect;
-        }
-
-        else {
-
+        } else {
             $this->when($nav_redirect);
         }
 
         $this->when($params);
 
         if (Form::$last_id) {
-
             $this->setFormId(Form::$last_id);
         }
 
@@ -88,7 +83,6 @@ class FormFooter extends DIV implements onRender {
         $this->btn_text = $text;
 
         if ($icon) {
-
             $this->btn_icon = $icon;
         }
 
@@ -128,42 +122,33 @@ class FormFooter extends DIV implements onRender {
         $menu = gets()->lte->menu->now;
 
         if ($type === 'edit' || isset($menu['post'])) {
-
             $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'lte.save')])->setDatas([
                 'click' => 'submit',
-                'form' => $this->form_id
+                'form' => $this->form_id,
             ]);
-        }
-
-        else if ($type === 'create') {
-
+        } elseif ($type === 'create') {
             $group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'lte.add')])->setDatas([
                 'click' => 'submit',
-                'form' => $this->form_id
+                'form' => $this->form_id,
             ]);
-        }
-
-        else {
-
+        } else {
             $group->submit(null, $this->form_id);
         }
 
         if (($type === 'create' || $type === 'edit') && $this->nav_redirect) {
-
             $this->appEnd(FormActionAfterSave::create([
                 'select' => session('_after', 'index'),
                 'type' => $type,
                 'lang' => [
                     'to_the_list' => __('lte.to_the_list'),
                     'add_more' => __('lte.add_more'),
-                    'edit_further' => __('lte.edit_further')
-                ]
+                    'edit_further' => __('lte.edit_further'),
+                ],
             ]));
         }
 
         $this->div(['col text-right'])
             ->appEnd($group);
-
 
         return $this;
     }

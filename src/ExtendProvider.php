@@ -15,41 +15,41 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Models\LteFunction;
 
 /**
- * Class ServiceProvider
+ * Class ServiceProvider.
  *
  * @package Lar\Layout
  */
 class ExtendProvider extends ServiceProviderIlluminate
 {
     /**
-     * Extension ID name
+     * Extension ID name.
      * @var string
      */
-    static $name;
+    public static $name;
 
     /**
-     * Extension call slug
+     * Extension call slug.
      * @var string
      */
-    static $slug;
+    public static $slug;
 
     /**
-     * Extension description
+     * Extension description.
      * @var string
      */
-    static $description = "";
+    public static $description = '';
 
     /**
-     * Role list access on extension
+     * Role list access on extension.
      * @var Collection|LteFunction[]|null
      */
-    static $roles;
+    public static $roles;
 
     /**
-     * After route to set
+     * After route to set.
      * @var null|string
      */
-    static $after;
+    public static $after;
 
     /**
      * @var array
@@ -68,7 +68,7 @@ class ExtendProvider extends ServiceProviderIlluminate
     ];
 
     /**
-     * Simple bind in app service provider
+     * Simple bind in app service provider.
      * @var array
      */
     protected $bind = [
@@ -113,11 +113,9 @@ class ExtendProvider extends ServiceProviderIlluminate
             ->lte;
 
         if ($func) {
-
             $func = $func->functions->list;
 
             if ($func) {
-
                 $func = $func->where('class', static::class)
                     ->where('slug', 'access')
                     ->first();
@@ -129,7 +127,9 @@ class ExtendProvider extends ServiceProviderIlluminate
         }
 
         foreach ($this->bind as $key => $item) {
-            if (is_numeric($key)) $key = $item;
+            if (is_numeric($key)) {
+                $key = $item;
+            }
             $this->app->bind($key, $item);
         }
     }
@@ -143,7 +143,9 @@ class ExtendProvider extends ServiceProviderIlluminate
      */
     public function register()
     {
-        if (!static::$name) { $this->getNameAndDescription(); }
+        if (! static::$name) {
+            $this->getNameAndDescription();
+        }
         $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
@@ -167,18 +169,16 @@ class ExtendProvider extends ServiceProviderIlluminate
     {
         // register route middleware.
         foreach ($this->routeMiddleware as $key => $middleware) {
-
             app('router')->aliasMiddleware($key, $middleware);
         }
     }
 
     /**
-     * Generate extension slug
+     * Generate extension slug.
      */
-    protected function generateSlug() {
-
-        if (!static::$slug) {
-
+    protected function generateSlug()
+    {
+        if (! static::$slug) {
             static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$name);
         }
 
@@ -186,98 +186,90 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Get name and description from composer.json
+     * Get name and description from composer.json.
      */
     protected function getNameAndDescription()
     {
         $dir = dirname((new \ReflectionClass(static::class))->getFileName());
 
-        $file = $dir . '/../composer.json';
+        $file = $dir.'/../composer.json';
 
         if (is_file($file)) {
-
             $data = json_decode(file_get_contents($file), 1);
 
             if (isset($data['name'])) {
-
                 static::$name = $data['name'];
             }
 
             if (isset($data['description'])) {
-
                 static::$description = $data['description'];
             }
         }
     }
 
     /**
-     * Extension navigator element
+     * Extension navigator element.
      * @param  Navigate|NavGroup|NavigateInterface  $navigate
      * @return void
      */
-    public function navigator(NavigateInterface $navigate): void {
-
+    public function navigator(NavigateInterface $navigate): void
+    {
         if ($this->navigator) {
-
             (new $this->navigator($navigate, $this))->handle();
         }
     }
 
     /**
-     * Install process
+     * Install process.
      * @param  Command  $command
      * @return void
      */
-    public function install(Command $command): void {
-
+    public function install(Command $command): void
+    {
         if ($this->install) {
-
             (new $this->install($command, $this))->handle();
         }
     }
 
     /**
-     * Uninstall process
+     * Uninstall process.
      * @param  Command  $command
      * @return void
      */
-    public function uninstall(Command $command): void {
-
+    public function uninstall(Command $command): void
+    {
         if ($this->uninstall) {
-
             (new $this->uninstall($command, $this))->handle();
         }
     }
 
     /**
-     * Permission process
+     * Permission process.
      * @param  Command  $command
      * @param  string  $type
      * @return void
      */
-    public function permission(Command $command, string $type): void {
-
+    public function permission(Command $command, string $type): void
+    {
         if ($this->permissions) {
             if ($type === 'up') {
                 (new $this->permissions($command, $this))->up();
-            } else if ($type === 'down') {
+            } elseif ($type === 'down') {
                 (new $this->permissions($command, $this))->down();
             }
         }
     }
 
     /**
-     * Extension configs
+     * Extension configs.
      * @return ConfigExtensionProvider
      */
-    public function config() {
-
+    public function config()
+    {
         if ($this->config && is_string($this->config)) {
-
             $this->config = new $this->config($this);
         }
 
         return $this->config;
     }
 }
-

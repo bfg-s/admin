@@ -6,7 +6,7 @@ use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Models\LtePermission;
 
 /**
- * Class HomeController
+ * Class HomeController.
  *
  * @package Lar\LteAdmin\Controllers
  */
@@ -15,7 +15,7 @@ class PermissionController extends Controller
     /**
      * @var string
      */
-    static $model = \Lar\LteAdmin\Models\LtePermission::class;
+    public static $model = \Lar\LteAdmin\Models\LtePermission::class;
 
     /**
      * @var string[]
@@ -28,7 +28,7 @@ class PermissionController extends Controller
         'PUT' => 'warning',
         'PATCH' => 'info',
         'DELETE' => 'light',
-        'OPTIONS' => 'dark'
+        'OPTIONS' => 'dark',
     ];
 
     public function explanation(): Explanation
@@ -56,7 +56,9 @@ class PermissionController extends Controller
             $this->form()->input('path', 'lte.path')
                 ->required(),
             $this->form()->multi_select('method[]', 'lte.methods')
-                ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function($i) {return [$i => $i];})->toArray())
+                ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function ($i) {
+                    return [$i => $i];
+                })->toArray())
                 ->required(),
             $this->form()->radios('state', 'lte.state')
                 ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
@@ -97,6 +99,6 @@ class PermissionController extends Controller
      */
     public function show_state(LtePermission $permission)
     {
-        return "<span class=\"badge badge-".($permission->state === 'open' ? 'success' : 'danger')."\">".($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>')." ".__("lte.{$permission->state}")."</span>";
+        return '<span class="badge badge-'.($permission->state === 'open' ? 'success' : 'danger').'">'.($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>').' '.__("lte.{$permission->state}").'</span>';
     }
 }

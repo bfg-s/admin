@@ -7,7 +7,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class Scaffold
+ * Class Scaffold.
  * @package Lar\LteAdmin\Events
  */
 class Scaffold
@@ -73,8 +73,8 @@ class Scaffold
     {
         $this->data = $data;
         $this->table_name = $this->data['table_name'];
-        $this->model = implode("\\", $this->data['model']);
-        $this->controller = implode("\\", $this->data['controller']);
+        $this->model = implode('\\', $this->data['model']);
+        $this->controller = implode('\\', $this->data['controller']);
         $this->create = $this->data['create'];
         $this->fields = $this->data['fields'];
         $this->primary = $this->data['primary'];

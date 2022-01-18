@@ -6,7 +6,7 @@ use Lar\LteAdmin\Events\Scaffold;
 use Lar\LteAdmin\Models\LteFunction;
 
 /**
- * Class CreateController
+ * Class CreateController.
  * @package App\Listeners\Lar\LteAdmin\Listeners\Scaffold
  */
 class CreateControllerPermissions
@@ -20,7 +20,6 @@ class CreateControllerPermissions
     public function handle(Scaffold $event)
     {
         if ($event->create['controller_permissions']) {
-
             $insert = [
                 ['slug' => 'index', 'description' => '[GET] Model data list'],
                 ['slug' => 'create', 'description' => '[GET] Model create form'],
@@ -30,7 +29,7 @@ class CreateControllerPermissions
                 ['slug' => 'update', 'description' => '[PUT/PATCH] Model update data'],
                 ['slug' => 'destroy', 'description' => '[DELETE] Model delete data'],
                 ['slug' => 'restore', 'description' => '[DELETE] Model restore deleted data'],
-                ['slug' => 'force_destroy', 'description' => '[DELETE] Model force delete data']
+                ['slug' => 'force_destroy', 'description' => '[DELETE] Model force delete data'],
             ];
 
             foreach ($insert as $item) {

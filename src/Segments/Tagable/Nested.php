@@ -11,12 +11,12 @@ use Lar\LteAdmin\Segments\Tagable\Cores\CoreNestable;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin NestedMacroList
  */
-class Nested extends DIV implements onRender {
-
+class Nested extends DIV implements onRender
+{
     use Macroable, Piplineble, Delegable;
 
     /**
@@ -41,25 +41,21 @@ class Nested extends DIV implements onRender {
         parent::__construct();
 
         if (is_embedded_call($model)) {
-
             $params[] = $model;
             $model = null;
         }
 
         if (is_embedded_call($instructions)) {
-
             $params[] = $instructions;
             $instructions = [];
         }
 
         if (is_array($model)) {
-
             $instructions = $model;
             $model = null;
         }
 
-        if (!$model) {
-
+        if (! $model) {
             $model = gets()->lte->menu->model;
         }
 
@@ -134,8 +130,8 @@ class Nested extends DIV implements onRender {
      * @param  callable  $call
      * @return $this
      */
-    public function controls(callable $call) {
-
+    public function controls(callable $call)
+    {
         $this->nested->controls($call);
 
         return $this;

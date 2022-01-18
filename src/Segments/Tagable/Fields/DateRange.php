@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\Traits\DateControlTrait;
 
 /**
- * Class DateRange
+ * Class DateRange.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class DateRange extends Input
@@ -15,19 +15,19 @@ class DateRange extends Input
     /**
      * @var string
      */
-    protected $icon = "fas fa-calendar";
+    protected $icon = 'fas fa-calendar';
 
     /**
      * @var string[]
      */
     protected $data = [
-        'load' => 'picker::daterange'
+        'load' => 'picker::daterange',
     ];
 
     /**
      * @var array
      */
     protected $params = [
-        ['autocomplete' => 'off']
+        ['autocomplete' => 'off'],
     ];
 }

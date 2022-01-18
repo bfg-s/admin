@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Class CodeMirror
+ * Class CodeMirror.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class CodeMirror extends FormGroup
@@ -18,7 +18,7 @@ class CodeMirror extends FormGroup
     /**
      * @var string
      */
-    protected $mode = "html";
+    protected $mode = 'html';
 
     /**
      * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
@@ -28,7 +28,7 @@ class CodeMirror extends FormGroup
         return \Lar\Layout\Tags\TEXTAREA::create([
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title
+            'placeholder' => $this->title,
         ], ...$this->params)
             ->text(e($this->value))
             ->setRules($this->rules)

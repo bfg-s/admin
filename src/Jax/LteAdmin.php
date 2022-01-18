@@ -9,7 +9,7 @@ use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\LteBoot;
 
 /**
- * Class LteAdmin
+ * Class LteAdmin.
  * @package App\Http\JaxExecutors
  */
 class LteAdmin extends LteAdminExecutor
@@ -17,7 +17,7 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @var int
      */
-    static protected $i = 0;
+    protected static $i = 0;
 
     /**
      * @param  string  $model
@@ -30,7 +30,9 @@ class LteAdmin extends LteAdminExecutor
      */
     public function nestable_save(string $model, int $depth = 1, $data = [], string $parent_field = null, string $order_field = 'order')
     {
-        if (!check_referer('PUT')) return [];
+        if (! check_referer('PUT')) {
+            return [];
+        }
 
         if (class_exists($model)) {
             \DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
@@ -58,13 +60,11 @@ class LteAdmin extends LteAdminExecutor
         $result = [];
 
         foreach ($data as $item) {
-
             $new = [];
 
             $new['id'] = $item['id'];
 
             if ($depth > 1) {
-
                 $new['data'][$parent_field ?? 'parent_id'] = $parent;
             }
 
@@ -75,7 +75,6 @@ class LteAdmin extends LteAdminExecutor
             static::$i++;
 
             if (isset($item['children'])) {
-
                 $result = array_merge($result, $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field));
             }
         }
@@ -92,22 +91,18 @@ class LteAdmin extends LteAdminExecutor
      */
     public function custom_save(string $model = null, int $id = null, string $field_name = null, bool $val = false)
     {
-        if (!check_referer('PUT')) return [];
+        if (! check_referer('PUT')) {
+            return [];
+        }
 
         /** @var Model $find */
         if ($model && class_exists($model) && $id && $field_name && $find = $model::find($id)) {
-
             if ($find) {
-
                 $find->{$field_name} = $val;
 
                 if ($find->save()) {
-
                     $this->toast_success(__('lte.saved_successfully'));
-                }
-
-                else {
-
+                } else {
                     $this->toast_error(__('lte.unknown_error'));
                 }
             }
@@ -122,7 +117,9 @@ class LteAdmin extends LteAdminExecutor
      */
     public function mass_delete(string $class, array $ids)
     {
-        if (!check_referer('DELETE')) return [];
+        if (! check_referer('DELETE')) {
+            return [];
+        }
 
         /** @var Model $class */
         if (class_exists($class) && method_exists($class, 'delete')) {
@@ -139,7 +136,6 @@ class LteAdmin extends LteAdminExecutor
             } else {
                 $this->toast_error(__('lte.unknown_error'));
             }
-
         } else {
             $this->toast_error(__('lte.unknown_error'));
         }
@@ -156,26 +152,25 @@ class LteAdmin extends LteAdminExecutor
 
         if (strpos($handle, '@') !== false) {
             $handle = Str::parseCallback($handle, 'index');
-            if (!class_exists($handle[0])) {
+            if (! class_exists($handle[0])) {
                 if (class_exists(lte_app_namespace("Modals\\{$handle[0]}"))) {
                     $handle[0] = lte_app_namespace("Modals\\{$handle[0]}");
                 } else {
                     abort(404);
                 }
             }
+
             return embedded_call($handle, $params);
-        }
-
-        else if (strpos($handle, '::') !== false) {
-
+        } elseif (strpos($handle, '::') !== false) {
             $handle = explode('::', $handle);
-            if (!class_exists($handle[0])) {
+            if (! class_exists($handle[0])) {
                 if (class_exists(lte_app_namespace($handle[0]))) {
                     $handle[0] = lte_app_namespace($handle[0]);
                 } else {
                     abort(404);
                 }
             }
+
             return (new ModalController())->setCreate($handle)->index();
         }
 
@@ -185,12 +180,14 @@ class LteAdmin extends LteAdminExecutor
     public function export_excel(string $model, array $ids, string $order, string $order_type)
     {
         $prepared = new PrepareExport($model, $ids, $order, $order_type);
-        return \Excel::download($prepared, class_basename($model) . '_' .now()->format('Y_m_d_His') . '.xlsx');
+
+        return \Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.xlsx');
     }
 
     public function export_csv(string $model, array $ids, string $order, string $order_type)
     {
         $prepared = new PrepareExport($model, $ids, $order, $order_type);
-        return \Excel::download($prepared, class_basename($model) . '_' .now()->format('Y_m_d_His') . '.csv');
+
+        return \Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');
     }
 }

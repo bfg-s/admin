@@ -11,14 +11,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class StatisticsPeriods
+ * Class StatisticsPeriods.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin StatisticsPeriodsMacroList
  * @mixin StatisticsPeriodsMethods
  */
-class StatisticPeriods extends DIV implements onRender {
-
+class StatisticPeriods extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, FontAwesome, Delegable;
 
     /**
@@ -42,19 +42,15 @@ class StatisticPeriods extends DIV implements onRender {
 
         $this->model = $model;
 
-        if (!$this->model) {
-
+        if (! $this->model) {
             $this->model = gets()->lte->menu->model;
-
-        } else if (is_string($this->model)) {
-
+        } elseif (is_string($this->model)) {
             $this->model = new $this->model;
         }
 
         $this->entity = __($nameOfSubject);
 
-        if (!$this->entity && $this->model) {
-
+        if (! $this->entity && $this->model) {
             $this->entity = \Str::plural(class_basename($this->model::class));
         }
 
@@ -72,9 +68,10 @@ class StatisticPeriods extends DIV implements onRender {
         $this->col()
             ->info_box(
                 __('lte.statistic_for_today', ['entity' => $this->entity]),
-                $this->model::whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() . " ",
+                $this->model::whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->success();
+
         return $this;
     }
 
@@ -83,9 +80,10 @@ class StatisticPeriods extends DIV implements onRender {
         $this->col()
             ->info_box(
                 __('lte.statistic_per_week', ['entity' => $this->entity]),
-                $this->model::whereBetween('created_at', [now()->subWeek()->startOfDay(), now()->endOfDay()])->count() . " ",
+                $this->model::whereBetween('created_at', [now()->subWeek()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->info();
+
         return $this;
     }
 
@@ -94,9 +92,10 @@ class StatisticPeriods extends DIV implements onRender {
         $this->col()
             ->info_box(
                 __('lte.statistic_per_year', ['entity' => $this->entity]),
-                $this->model::whereBetween('created_at', [now()->subYear()->startOfDay(), now()->endOfDay()])->count() . " ",
+                $this->model::whereBetween('created_at', [now()->subYear()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->warning();
+
         return $this;
     }
 
@@ -108,6 +107,7 @@ class StatisticPeriods extends DIV implements onRender {
                 $this->model::count(),
                 $this->icon
             )->primary();
+
         return $this;
     }
 
@@ -131,7 +131,6 @@ class StatisticPeriods extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

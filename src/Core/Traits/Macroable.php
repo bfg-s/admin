@@ -6,7 +6,7 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * Trait Macroable
+ * Trait Macroable.
  * @package Lar\LteAdmin\Core\Traits
  */
 trait Macroable
@@ -41,7 +41,9 @@ trait Macroable
      */
     public static function mixin($mixin, $replace = true)
     {
-        if (is_string($mixin)) { $mixin = new $mixin(); }
+        if (is_string($mixin)) {
+            $mixin = new $mixin();
+        }
 
         $methods = (new ReflectionClass($mixin))->getMethods(
             ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
@@ -74,7 +76,6 @@ trait Macroable
     public static function get_macro_reflex(string $name)
     {
         if (isset(static::$macros[$name])) {
-
             return new \ReflectionFunction(static::$macros[$name]);
         }
 

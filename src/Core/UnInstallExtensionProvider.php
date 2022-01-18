@@ -7,11 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 use Lar\LteAdmin\ExtendProvider;
 
 /**
- * Class InstallExtensionProvider
+ * Class InstallExtensionProvider.
  * @package Lar\LteAdmin\Core
  */
-class UnInstallExtensionProvider {
-
+class UnInstallExtensionProvider
+{
     /**
      * @var Command
      */
@@ -35,8 +35,8 @@ class UnInstallExtensionProvider {
     /**
      * @return void
      */
-    public function handle(): void {
-
+    public function handle(): void
+    {
     }
 
     /**
@@ -49,11 +49,10 @@ class UnInstallExtensionProvider {
         $deleted = 0;
 
         if (is_array($where)) {
-
             foreach ($where as $where_arr => $in_arr) {
-
                 $deleted += $this->unpublish($where_arr, $in_arr);
             }
+
             return $deleted;
         }
 
@@ -62,28 +61,33 @@ class UnInstallExtensionProvider {
         $in_real_path = str_replace(base_path(), '', realpath($in));
 
         if (is_file($where) && is_file($in)) {
-
             if (basename($where) === basename($in)) {
-
-                try { unlink($in); $deleted++; } catch (\Exception $e) {}
+                try {
+                    unlink($in);
+                    $deleted++;
+                } catch (\Exception $e) {
+                }
 
                 if ($deleted) {
-
                     $this->command->line("<info>Removed file</info> <comment>[{$in_real_path}]</comment> <info>how</info> <comment>[{$where_real_path}]</comment>");
                 }
             }
+        } elseif (is_dir($where) && is_dir($in)) {
+            $in_files = collect(\File::allFiles($in, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) {
+                return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
+            });
 
-        } else if (is_dir($where) && is_dir($in)) {
-
-            $in_files = collect(\File::allFiles($in, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) { return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()]; });
-
-            $where_files = collect(\File::allFiles($where, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) { return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()]; });
+            $where_files = collect(\File::allFiles($where, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) {
+                return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
+            });
 
             foreach ($where_files as $where_file) {
-
                 if ($in_file = $in_files->where('relativePath', $where_file['relativePath'])->first()) {
-
-                    try { unlink($in_file['pathname']); $deleted++; } catch (\Exception $e) {}
+                    try {
+                        unlink($in_file['pathname']);
+                        $deleted++;
+                    } catch (\Exception $e) {
+                    }
                 }
             }
 
@@ -103,25 +107,26 @@ class UnInstallExtensionProvider {
         if (is_dir($path)) {
             $files = \File::files($path);
 
-            if (!count($files)) {
+            if (! count($files)) {
                 $this->command->info('Nothing to rollback.');
+
                 return false;
             }
 
             foreach ($files as $file) {
                 $class = class_in_file($file->getPathname());
 
-                if (!class_exists($class) && is_file(database_path("migrations/".$file->getFilename()))) {
-                    include database_path("migrations/".$file->getFilename());
+                if (! class_exists($class) && is_file(database_path('migrations/'.$file->getFilename()))) {
+                    include database_path('migrations/'.$file->getFilename());
                 }
 
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     include $file->getPathname();
                 }
 
                 $migration_name = str_replace('.php', '', $file->getFilename());
 
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
                     continue;
                 }
@@ -129,7 +134,7 @@ class UnInstallExtensionProvider {
                 $migration = new $class;
 
                 if ($migration instanceof Migration) {
-                    if (method_exists($migration, 'ignore') && ($migration->ignore() && !$this->command->option('force'))) {
+                    if (method_exists($migration, 'ignore') && ($migration->ignore() && ! $this->command->option('force'))) {
                         $this->command->line("<comment>Ignored-migration:</comment> {$migration_name}");
                         continue;
                     }

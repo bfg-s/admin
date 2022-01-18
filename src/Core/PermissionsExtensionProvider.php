@@ -8,11 +8,11 @@ use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Class InstallExtensionProvider
+ * Class InstallExtensionProvider.
  * @package Lar\LteAdmin\Core
  */
-class PermissionsExtensionProvider {
-
+class PermissionsExtensionProvider
+{
     /**
      * @var Command
      */
@@ -34,7 +34,7 @@ class PermissionsExtensionProvider {
     }
 
     /**
-     * Make all extension permissions
+     * Make all extension permissions.
      */
     public function up()
     {
@@ -42,15 +42,19 @@ class PermissionsExtensionProvider {
             $roles = $this->roles();
             if (is_array($roles)) {
                 ModelSaver::doMany(LteRole::class, $roles);
-                if (count($roles)) { $this->command->info('Created ' . count($roles) . ' roles.'); }
+                if (count($roles)) {
+                    $this->command->info('Created '.count($roles).' roles.');
+                }
             }
         }
         $pushed = ModelSaver::doMany(LteFunction::class, array_merge([$this->makeFunction('access')], $this->functions()));
-        if ($pushed->count()) { $this->command->info('Created ' . $pushed->count() . ' permission functions.'); }
+        if ($pushed->count()) {
+            $this->command->info('Created '.$pushed->count().' permission functions.');
+        }
     }
 
     /**
-     * Drop all extension permissions
+     * Drop all extension permissions.
      * @throws \Exception
      */
     public function down()
@@ -60,7 +64,9 @@ class PermissionsExtensionProvider {
             if (is_array($roles)) {
                 $roles_count = 0;
                 foreach ($roles as $role) {
-                    if (LteRole::where('slug', $role['slug'])->delete()) {$roles_count++;}
+                    if (LteRole::where('slug', $role['slug'])->delete()) {
+                        $roles_count++;
+                    }
                 }
                 if ($roles_count) {
                     $this->command->info('Deleted '.$roles_count.' roles.');
@@ -78,7 +84,9 @@ class PermissionsExtensionProvider {
                 $functions_count++;
             }
         }
-        if ($functions_count) { $this->command->info('Deleted ' . $functions_count . ' permission functions.'); }
+        if ($functions_count) {
+            $this->command->info('Deleted '.$functions_count.' permission functions.');
+        }
     }
 
     /**
@@ -92,18 +100,18 @@ class PermissionsExtensionProvider {
         return [
             'slug' => $slug,
             'class' => get_class($this->provider),
-            'description' => $this->provider::$description . ($description ? " [$description]" : (\Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]":" [{$slug}]")),
+            'description' => $this->provider::$description.($description ? " [$description]" : (\Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]" : " [{$slug}]")),
             'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
                 return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
-            })->filter()->values()->toArray()
+            })->filter()->values()->toArray(),
         ];
     }
 
     /**
      * @return array
      */
-    public function functions(): array {
-
+    public function functions(): array
+    {
         return [];
     }
 }

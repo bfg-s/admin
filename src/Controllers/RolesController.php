@@ -7,7 +7,7 @@ use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Segments\LtePage;
 
 /**
- * Class HomeController
+ * Class HomeController.
  *
  * @package Lar\LteAdmin\Controllers
  */
@@ -16,7 +16,7 @@ class RolesController extends Controller
     /**
      * @var string
      */
-    static $model = LteRole::class;
+    public static $model = LteRole::class;
 
     public function explanation(): Explanation
     {

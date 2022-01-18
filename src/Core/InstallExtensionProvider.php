@@ -11,11 +11,11 @@ use League\Flysystem\MountManager;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Class InstallExtensionProvider
+ * Class InstallExtensionProvider.
  * @package Lar\LteAdmin\Core
  */
-class InstallExtensionProvider {
-
+class InstallExtensionProvider
+{
     /**
      * @var Command
      */
@@ -40,8 +40,8 @@ class InstallExtensionProvider {
     /**
      * @return void
      */
-    public function handle(): void {
-
+    public function handle(): void
+    {
     }
 
     /**
@@ -65,13 +65,13 @@ class InstallExtensionProvider {
                 ->sortByName()
                 ->reverseSorting(), false);
 
-            if (!count($files)) {
+            if (! count($files)) {
                 $this->command->info('Nothing to migrate.');
+
                 return false;
             }
 
             foreach ($files as $file) {
-
                 $migration_name = str_replace('.php', '', $file->getFilename());
 
                 if (\DB::table('migrations')->where('migration', $migration_name)->first()) {
@@ -80,15 +80,15 @@ class InstallExtensionProvider {
 
                 $class = class_in_file($file->getPathname());
 
-                if (!class_exists($class) && is_file(database_path("migrations/".$file->getFilename()))) {
-                    include database_path("migrations/".$file->getFilename());
+                if (! class_exists($class) && is_file(database_path('migrations/'.$file->getFilename()))) {
+                    include database_path('migrations/'.$file->getFilename());
                 }
 
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     include $file->getPathname();
                 }
 
-                if (!class_exists($class)) {
+                if (! class_exists($class)) {
                     $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
                     continue;
                 }
@@ -126,9 +126,7 @@ class InstallExtensionProvider {
     public function publish($from, string $to = null, bool $force = false)
     {
         if (is_array($from)) {
-
             foreach ($from as $from_arr => $to_arr) {
-
                 $this->publish($from_arr, $to_arr, $force);
             }
 
@@ -136,7 +134,6 @@ class InstallExtensionProvider {
         }
 
         $status = function ($type) use ($from, $to) {
-
             $from = str_replace(base_path(), '', realpath($from));
 
             $to = str_replace(base_path(), '', realpath($to));
@@ -145,20 +142,16 @@ class InstallExtensionProvider {
         };
 
         if (is_file($from)) {
-
             $directory = dirname($to);
 
-            if (!is_dir($directory)) {
-
+            if (! is_dir($directory)) {
                 \File::makeDirectory($directory, 0755, true);
             }
 
             \File::copy($from, $to);
 
             $status('File');
-
         } elseif (is_dir($from)) {
-
             $manager = new MountManager([
                 'from' => new Flysystem(new LocalAdapter($from)),
                 'to' => new Flysystem(new LocalAdapter($to)),
@@ -171,10 +164,7 @@ class InstallExtensionProvider {
             }
 
             $status('Directory');
-        }
-
-        else {
-
+        } else {
             return false;
         }
 

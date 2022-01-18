@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class LteModalCommand
+ * Class LteModalCommand.
  * @package Lar\LteAdmin\Commands
  */
 class LteModalCommand extends Command
@@ -50,8 +50,7 @@ class LteModalCommand extends Command
         $namespace = $this->namespace();
         $path = $this->rp();
 
-        if (!is_dir($path)) {
-
+        if (! is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
@@ -60,14 +59,14 @@ class LteModalCommand extends Command
         $class->use(Modal::class);
         $class->use(ModalBody::class);
         $class->extend(ModalController::class);
-        $class->method("create")
+        $class->method('create')
             ->param('body', null, ModalBody::class)
             ->param('modal', null, Modal::class)
             ->line()
             ->line("\$modal->title('{$name}');")
             ->line("\$body->text('{$namespace}\\{$name}');");
 
-        file_put_contents($path . "/" . $name . ".php", $class);
+        file_put_contents($path.'/'.$name.'.php', $class);
 
         $this->info("Modal [$namespace\\$name] generated!");
     }
@@ -79,8 +78,8 @@ class LteModalCommand extends Command
     {
         $return = ucfirst(\Str::camel(\Arr::last($this->segments())));
 
-        if (!preg_match('/Modal$/', $return)) {
-            $return .= "Modal";
+        if (! preg_match('/Modal$/', $return)) {
+            $return .= 'Modal';
         }
 
         return $return;
@@ -91,7 +90,7 @@ class LteModalCommand extends Command
      */
     protected function segments()
     {
-        return array_map("Str::snake", explode("/", $this->argument('name')));
+        return array_map('Str::snake', explode('/', $this->argument('name')));
     }
 
     /**
@@ -99,32 +98,29 @@ class LteModalCommand extends Command
      */
     protected function namespace()
     {
-
-
-        return $this->option('dir') ? implode("\\",
-            array_map("ucfirst",
-                array_map("Str::camel",
-                    explode("/", $this->option('dir'))
+        return $this->option('dir') ? implode('\\',
+            array_map('ucfirst',
+                array_map('Str::camel',
+                    explode('/', $this->option('dir'))
                 )
             )
-        ) : lte_app_namespace('Modals') . $this->path("\\");
+        ) : lte_app_namespace('Modals').$this->path('\\');
     }
 
     /**
      * @param  string  $delimiter
      * @return string
      */
-    protected function path(string $delimiter = "/")
+    protected function path(string $delimiter = '/')
     {
         $segments = $this->segments();
 
         unset($segments[array_key_last($segments)]);
 
-        $add = "";
+        $add = '';
 
         if (count($segments)) {
-
-            $add .= $delimiter . implode($delimiter, array_map("ucfirst",array_map('Str::camel', $segments)));
+            $add .= $delimiter.implode($delimiter, array_map('ucfirst', array_map('Str::camel', $segments)));
         }
 
         return $add;
@@ -136,10 +132,10 @@ class LteModalCommand extends Command
     protected function rp()
     {
         if ($this->option('dir')) {
-
-            return "/". trim(base_path($this->option('dir') . '/' . trim($this->path(), '/')), '/');
+            return '/'.trim(base_path($this->option('dir').'/'.trim($this->path(), '/')), '/');
         }
-        return "/". trim(lte_app_path('Modals/' . trim($this->path(), '/')), '/');
+
+        return '/'.trim(lte_app_path('Modals/'.trim($this->path(), '/')), '/');
     }
 
     /**

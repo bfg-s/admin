@@ -27,10 +27,10 @@ abstract class Segment extends DIV implements onRender
     protected $model_name = null;
 
     /**
-     * Has models on process
+     * Has models on process.
      * @var array
      */
-    static protected $models = [];
+    protected static $models = [];
 
     public function __construct(...$params)
     {
@@ -52,7 +52,6 @@ abstract class Segment extends DIV implements onRender
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -70,31 +69,30 @@ abstract class Segment extends DIV implements onRender
     }
 
     /**
-     * Component mount method
+     * Component mount method.
      * @return void
      */
-    abstract protected function mount ();
+    abstract protected function mount();
 
     /**
      * For construct params.
-     * if you what's expect of model or relation parameter
+     * if you what's expect of model or relation parameter.
      * @param  array  $params
      * @return array
      */
     protected function expectModel(array $params)
     {
         $model = null;
-        if (isset($params[0]) && !is_embedded_call($params[0])) {
+        if (isset($params[0]) && ! is_embedded_call($params[0])) {
             $model = $params[0];
             unset($params[0]);
         }
 
-        if (!$model && Form::$current_model) {
-
+        if (! $model && Form::$current_model) {
             $model = Form::$current_model;
         }
 
-        if (!$model) {
+        if (! $model) {
             $model = gets()->lte->menu->model;
         }
 
@@ -109,23 +107,33 @@ abstract class Segment extends DIV implements onRender
      */
     public function getModelName()
     {
-        if ($this->model_name) { return $this->model_name; }
+        if ($this->model_name) {
+            return $this->model_name;
+        }
         $class = null;
-        if ($this->model instanceof Model) { $class = get_class($this->model); }
-        else if ($this->model instanceof Builder) { $class = get_class($this->model->getModel()); }
-        else if ($this->model instanceof Relation) { $class = get_class($this->model->getModel()); }
-        else if (is_object($this->model)) { $class = get_class($this->model); }
-        else if (is_string($this->model)) { $class = $this->model; }
-        else if (is_array($this->model)) { $class = substr(md5(json_encode($this->model)), 0, 10); }
+        if ($this->model instanceof Model) {
+            $class = get_class($this->model);
+        } elseif ($this->model instanceof Builder) {
+            $class = get_class($this->model->getModel());
+        } elseif ($this->model instanceof Relation) {
+            $class = get_class($this->model->getModel());
+        } elseif (is_object($this->model)) {
+            $class = get_class($this->model);
+        } elseif (is_string($this->model)) {
+            $class = $this->model;
+        } elseif (is_array($this->model)) {
+            $class = substr(md5(json_encode($this->model)), 0, 10);
+        }
         $this->model_class = $class;
         $return = $class ? strtolower(class_basename($class)) : $this->getUnique();
-        $prep = "";
+        $prep = '';
         if (isset(static::$models[$return])) {
             $prep .= static::$models[$return];
             static::$models[$return]++;
         } else {
             static::$models[$return] = 1;
         }
+
         return $return.$prep;
     }
 }

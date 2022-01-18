@@ -3,11 +3,11 @@
 namespace Lar\LteAdmin\Interfaces;
 
 /**
- * Interface NavigateInterface
+ * Interface NavigateInterface.
  * @package Lar\LteAdmin\Interfaces
  */
-interface NavigateInterface {
-
+interface NavigateInterface
+{
     /**
      * @param  string|null  $title
      * @param  null  $route

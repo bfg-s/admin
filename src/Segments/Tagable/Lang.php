@@ -11,14 +11,14 @@ use Lar\Tagable\Core\Extension\Content;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ColMacroList
  * @mixin ColMethods
  */
-class Lang extends DIV implements onRender {
-
+class Lang extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
@@ -53,7 +53,6 @@ class Lang extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -61,14 +60,13 @@ class Lang extends DIV implements onRender {
     }
 
     /**
-     * Make languages inputs
+     * Make languages inputs.
      */
     public function make_lang()
     {
         $inner = [];
 
         foreach ($this->content as $inner_input) {
-
             $inner_input = $inner_input->getOriginalValue();
 
             if (is_object($inner_input) && $inner_input instanceof FormGroup) {
@@ -76,17 +74,15 @@ class Lang extends DIV implements onRender {
                 $inner_input->unregister();
                 foreach (array_values($this->lang_list ?: config('layout.languages', [])) as $lang) {
                     $input = clone $inner_input;
-                    $input->set_name($input->get_name() . "[{$lang}]");
-                    $input->set_path($input->get_path() . ".{$lang}");
-                    $input->set_id($input->get_id() . "_{$lang}");
-                    $input->set_title($input->get_title() . " [" . strtoupper($lang) . ']');
+                    $input->set_name($input->get_name()."[{$lang}]");
+                    $input->set_path($input->get_path().".{$lang}");
+                    $input->set_id($input->get_id()."_{$lang}");
+                    $input->set_title($input->get_title().' ['.strtoupper($lang).']');
                     $inn[] = $input->render();
                 }
 
                 $inner[] = new Content($inn[array_key_last($inn)], $this);
-
             } else {
-
                 $inner[] = new Content($inner_input, $this);
             }
         }

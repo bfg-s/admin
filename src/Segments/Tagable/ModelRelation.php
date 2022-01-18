@@ -12,14 +12,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation\ModelRelationBuilderTrait
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation\ModelRelationHelpersTrait;
 
 /**
- * Class ModelRelation
+ * Class ModelRelation.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ModelRelationMacroList
  * @mixin ModelRelationMethods
  */
-class ModelRelation extends DIV {
-
+class ModelRelation extends DIV
+{
     use FieldMassControl,
         Macroable,
         BuildHelperTrait,
@@ -65,7 +65,7 @@ class ModelRelation extends DIV {
     /**
      * @var mixed
      */
-    static protected $fm;
+    protected static $fm;
     protected $fm_old;
 
     /**
@@ -80,13 +80,11 @@ class ModelRelation extends DIV {
         parent::__construct();
 
         if (is_callable($instructions)) {
-
             $content = $instructions;
             $instructions = [];
         }
 
         if (is_array($instructions)) {
-
             $this->model($instructions);
         }
 
@@ -98,11 +96,8 @@ class ModelRelation extends DIV {
         }
 
         if (Form::$current_model) {
-
             $m = Form::$current_model;
-        }
-
-        else {
+        } else {
             $m = gets()->lte->menu->model;
         }
 
@@ -110,13 +105,11 @@ class ModelRelation extends DIV {
             $relation = $m->{$relation}();
         }
 
-        if (!($relation instanceof Relation)) {
-            $this->alert("Danger!", "Relation not found!")->danger();
-        }
-
-        else {
-            $this->fm_old = ModelRelation::$fm;
-            ModelRelation::$fm = $relation;
+        if (! ($relation instanceof Relation)) {
+            $this->alert('Danger!', 'Relation not found!')->danger();
+        } else {
+            $this->fm_old = self::$fm;
+            self::$fm = $relation;
             $this->relation = $relation;
             $this->toExecute('_build');
             $this->create_content = $content;
@@ -137,7 +130,6 @@ class ModelRelation extends DIV {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

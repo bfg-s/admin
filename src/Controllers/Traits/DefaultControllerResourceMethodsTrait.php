@@ -25,8 +25,8 @@ trait DefaultControllerResourceMethodsTrait
      *
      * @return LtePage
      */
-    public function create_default() {
-
+    public function create_default()
+    {
         return method_exists($this, 'matrix') ? app()->call([$this, 'matrix']) : app()->call([$this, 'matrix_default']);
     }
 
@@ -35,8 +35,8 @@ trait DefaultControllerResourceMethodsTrait
      *
      * @return LtePage
      */
-    public function edit_default() {
-
+    public function edit_default()
+    {
         return method_exists($this, 'matrix') ? app()->call([$this, 'matrix']) : app()->call([$this, 'matrix_default']);
     }
 
@@ -58,8 +58,8 @@ trait DefaultControllerResourceMethodsTrait
      * @param  array|null  $data
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update_default(array $data = null) {
-
+    public function update_default(array $data = null)
+    {
         if (method_exists($this, 'edit')) {
             embedded_call([$this, 'edit']);
         } else {
@@ -71,21 +71,16 @@ trait DefaultControllerResourceMethodsTrait
         $save = static::fire_pipes($save, 'save');
 
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
-
             return $back;
         }
 
         $updated = $this->requestToModel($save);
 
         if ($updated) {
-
             static::fire_pipes($updated, 'updated');
 
             respond()->toast_success(__('lte.saved_successfully'));
-        }
-
-        else {
-
+        } else {
             respond()->toast_error(__('lte.unknown_error'));
         }
 
@@ -98,8 +93,8 @@ trait DefaultControllerResourceMethodsTrait
      * @param  array|null  $data
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store_default(array $data = null) {
-
+    public function store_default(array $data = null)
+    {
         if (method_exists($this, 'create')) {
             embedded_call([$this, 'create']);
         } else {
@@ -111,21 +106,16 @@ trait DefaultControllerResourceMethodsTrait
         $save = static::fire_pipes($save, 'save');
 
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
-
             return $back;
         }
 
         $stored = $this->requestToModel($save);
 
         if ($stored) {
-
             static::fire_pipes($stored, 'stored');
 
             respond()->toast_success(__('lte.successfully_created'));
-        }
-
-        else {
-
+        } else {
             respond()->toast_error(__('lte.unknown_error'));
         }
 
@@ -138,8 +128,8 @@ trait DefaultControllerResourceMethodsTrait
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
      * @throws \Exception
      */
-    public function destroy_default() {
-
+    public function destroy_default()
+    {
         $model = $this->existsModel();
 
         $force = request()->has('force') && request()->get('force');
@@ -147,52 +137,36 @@ trait DefaultControllerResourceMethodsTrait
         $restore = request()->has('restore') && request()->get('restore');
 
         if ($force || $restore) {
-
             $model = $this->model()->onlyTrashed()->where($this->model()->getRouteKeyName(), $this->model_primary());
         }
 
         $model = static::fire_pipes($model, 'delete');
 
         if ($model) {
-
             try {
-
                 if ($restore && $model->restore()) {
-
                     respond()->toast_success(__('lte.successfully_restored'));
 
                     respond()->reload();
-                }
-                else if ($force && $model->forceDelete()) {
-
+                } elseif ($force && $model->forceDelete()) {
                     respond()->toast_success(__('lte.successfully_deleted'));
 
                     respond()->reload();
-                }
-                else if ($model->delete()) {
-
+                } elseif ($model->delete()) {
                     respond()->toast_success(__('lte.successfully_deleted'));
 
                     respond()->reload();
-                }
-
-                else {
-
+                } else {
                     respond()->toast_error(__('lte.unknown_error'));
                 }
             } catch (\Exception $exception) {
-
-                if (!\App::isLocal()) {
+                if (! \App::isLocal()) {
                     respond()->toast_error(__('lte.unknown_error'));
                 } else {
                     respond()->toast_error($exception->getMessage());
                 }
             }
-
-        }
-
-        else {
-
+        } else {
             respond()->toast_error(__('lte.model_not_found'));
         }
 

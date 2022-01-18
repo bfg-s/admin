@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Cores;
 use Lar\Layout\Tags\SELECT;
 
 /**
- * Class CoreSelect2
+ * Class CoreSelect2.
  * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreSelect2 extends SELECT
@@ -41,12 +41,9 @@ class CoreSelect2 extends SELECT
      */
     public function setValues($value)
     {
-        if (!$this->hasAttribute('value')) {
-
+        if (! $this->hasAttribute('value')) {
             $this->value = $value;
-        }
-
-        else {
+        } else {
             $this->value = $this->getValue();
             $this->removeAttribute('value');
         }

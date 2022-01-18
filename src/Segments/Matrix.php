@@ -7,12 +7,12 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\Form;
 
 /**
- * Class Matrix
+ * Class Matrix.
  * @package Lar\LteAdmin\Segments
  * @deprecated Use the LtePage
  */
-class Matrix extends Container {
-
+class Matrix extends Container
+{
     /**
      * Matrix constructor.
      * @param  \Closure|string|array  $title
@@ -26,7 +26,6 @@ class Matrix extends Container {
         }
 
         if (is_array($title)) {
-
             $title = lte_model_type('create') ?
                 (isset($title[0]) ? $title[0] : 'lte.add') :
                 (isset($title[1]) ? $title[1] : 'lte.id_edit');
@@ -41,7 +40,7 @@ class Matrix extends Container {
                         embedded_call($warp, [
                             Form::class => $form,
                             Card::class => $card,
-                            static::class => $this
+                            static::class => $this,
                         ]);
                     }
                 })->footerForm();

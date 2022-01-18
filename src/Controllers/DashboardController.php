@@ -10,7 +10,7 @@ use Lar\LteAdmin\Segments\Container;
 use Lar\LteAdmin\Segments\Tagable\Cores\ChartJsBuilder;
 
 /**
- * Class DashboardController
+ * Class DashboardController.
  *
  * @package Lar\LteAdmin\Controllers
  */
@@ -22,7 +22,6 @@ class DashboardController extends Controller
     public function index()
     {
         return Container::create(function (DashboardGenerator $generator, DIV $div) {
-
             $div->statistic_periods(config('auth.providers.users.model'))
                 ->icon_users()
                 ->forToday()
@@ -50,7 +49,6 @@ class DashboardController extends Controller
             });
 
             if (admin()->isRoot()) {
-
                 $generator->aboutServer();
             }
         });

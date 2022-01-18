@@ -3,11 +3,11 @@
 namespace Lar\LteAdmin\Interfaces;
 
 /**
- * Interface ActionWorkExtensionInterface
+ * Interface ActionWorkExtensionInterface.
  * @package Lar\LteAdmin\Interfaces
  */
-interface ActionWorkExtensionInterface {
-
+interface ActionWorkExtensionInterface
+{
     /**
      * @return void
      */

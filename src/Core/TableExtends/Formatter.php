@@ -8,11 +8,11 @@ use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
 
 /**
- * Class Formatter
+ * Class Formatter.
  * @package Lar\LteAdmin\Core\TableExtends
  */
-class Formatter {
-
+class Formatter
+{
     /**
      * @param $props
      * @param $value
@@ -25,10 +25,10 @@ class Formatter {
         $str = \Str::limit($value, $limit);
 
         if ($value == $str) {
-
             return $str;
         }
-        return "<span title='{$value}'>" . $str . "</span>";
+
+        return "<span title='{$value}'>".$str.'</span>';
     }
 
     /**
@@ -40,30 +40,30 @@ class Formatter {
      */
     public function admin_resource_route($value, array $props = [], Model $model = null)
     {
-        if (!isset($props[0]) || !$props[0]) { // route name
+        if (! isset($props[0]) || ! $props[0]) { // route name
 
             throw new \Exception('Enter admin resource name!');
         }
-        if (!isset($props[1]) || !$props[1]) { // url param name
+        if (! isset($props[1]) || ! $props[1]) { // url param name
 
             $props[1] = \Str::singular($props[0]);
         }
-        if (!isset($props[2]) || !$props[2]) { // model param name
+        if (! isset($props[2]) || ! $props[2]) { // model param name
 
             $props[2] = \Str::singular($props[0]).'_id';
         }
 
         $urlIndex = route(
-            config('lte.route.name') . $props[0] . ".index"
+            config('lte.route.name').$props[0].'.index'
         );
 
         $urlEdit = route(
-            config('lte.route.name') . $props[0] . ".edit",
+            config('lte.route.name').$props[0].'.edit',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
         $urlShow = route(
-            config('lte.route.name') . $props[0] . ".show",
+            config('lte.route.name').$props[0].'.show',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
@@ -78,15 +78,15 @@ class Formatter {
 
         return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : "") . $value .
+            )->setTitle(__('lte.edit')) : '').$value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
-            )->setTitle(__('lte.information')) : "") .
+            )->setTitle(__('lte.information')) : '').
 
             ($urlIndex ? A::create(['ml-1 link text-sm'])->setHref($urlIndex)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-list-alt')
-            )->setTitle(__('lte.list')) : "");
+            )->setTitle(__('lte.list')) : '');
     }
 
     /**
@@ -98,31 +98,30 @@ class Formatter {
      */
     public function admin_resource_route_edit($value, array $props = [], Model $model = null)
     {
-        if (!isset($props[0]) || !$props[0]) { // route name
+        if (! isset($props[0]) || ! $props[0]) { // route name
 
             throw new \Exception('Enter admin resource name!');
         }
-        if (!isset($props[1]) || !$props[1]) { // url param name
+        if (! isset($props[1]) || ! $props[1]) { // url param name
 
             $props[1] = \Str::singular($props[0]);
         }
-        if (!isset($props[2]) || !$props[2]) { // model param name
+        if (! isset($props[2]) || ! $props[2]) { // model param name
 
             $props[2] = \Str::singular($props[0]).'_id';
         }
 
         $urlEdit = route(
-            config('lte.route.name') . $props[0] . ".edit",
+            config('lte.route.name').$props[0].'.edit',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
         $urlEdit = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-
         return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : "") . $value;
+            )->setTitle(__('lte.edit')) : '').$value;
     }
 
     /**
@@ -134,32 +133,32 @@ class Formatter {
      */
     public function admin_resource_route_show($value, array $props = [], Model $model = null)
     {
-        if (!isset($props[0]) || !$props[0]) { // route name
+        if (! isset($props[0]) || ! $props[0]) { // route name
 
             throw new \Exception('Enter admin resource name!');
         }
-        if (!isset($props[1]) || !$props[1]) { // url param name
+        if (! isset($props[1]) || ! $props[1]) { // url param name
 
             $props[1] = \Str::singular($props[0]);
         }
-        if (!isset($props[2]) || !$props[2]) { // model param name
+        if (! isset($props[2]) || ! $props[2]) { // model param name
 
             $props[2] = \Str::singular($props[0]).'_id';
         }
 
         $urlShow = route(
-            config('lte.route.name') . $props[0] . ".show",
+            config('lte.route.name').$props[0].'.show',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
         $urlShow = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return  $value .
+        return  $value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
-            )->setTitle(__('lte.information')) : "");
+            )->setTitle(__('lte.information')) : '');
     }
 
     /**
@@ -173,7 +172,7 @@ class Formatter {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $append = call_user_func($props[0], $model);
         } else {
-            $append = implode(" ", $props);
+            $append = implode(' ', $props);
             $append = $model ? tag_replace($append, $model) : $append;
         }
 
@@ -191,7 +190,7 @@ class Formatter {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $prepend = call_user_func($props[0], $model);
         } else {
-            $prepend = implode(" ", $props);
+            $prepend = implode(' ', $props);
             $prepend = $model ? tag_replace($prepend, $model) : $prepend;
         }
 
@@ -206,8 +205,7 @@ class Formatter {
      */
     public function to_append_link($value = null, $props = [], Model $model = null)
     {
-        if (!$value) {
-
+        if (! $value) {
             return '<span class="badge badge-dark">NULL</span>';
         }
 
@@ -222,7 +220,7 @@ class Formatter {
             $link->attr(['title' => $title]);
         }
 
-        return $value . ' ' . $link;
+        return $value.' '.$link;
     }
 
     /**
@@ -233,14 +231,13 @@ class Formatter {
      */
     public function to_prepend_link($value = null, $props = [], Model $model = null)
     {
-        if (!$value) {
-
+        if (! $value) {
             return '<span class="badge badge-dark">NULL</span>';
         }
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
-        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) :  false;
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : false;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -249,7 +246,7 @@ class Formatter {
             $link->attr(['title' => $title]);
         }
 
-        return  $link . ' ' . $value;
+        return  $link.' '.$value;
     }
 
     /**
@@ -264,7 +261,7 @@ class Formatter {
         $sep = $props[2] ?? ',';
         $end = $props[3] ?? '';
 
-        return number_format($value, $dec, $dec_point, $sep) . $end;
+        return number_format($value, $dec, $dec_point, $sep).$end;
     }
 
     /**
@@ -274,9 +271,11 @@ class Formatter {
      */
     public function money($value = null, $props = [])
     {
-        if (!$value) $value = 0;
+        if (! $value) {
+            $value = 0;
+        }
 
-        return number_format($value, 2, '.', ',') . ' ' . ($props[0] ?? '$');
+        return number_format($value, 2, '.', ',').' '.($props[0] ?? '$');
     }
 
     /**
@@ -299,17 +298,17 @@ class Formatter {
     {
         if (is_object($value)) {
             return  get_class($value);
-        } else if (is_array($value)) {
+        } elseif (is_array($value)) {
             return json_encode($value);
-        } else if ($value===true) {
-            return "true";
-        } else if ($value===false) {
-            return "false";
-        } else if ($value===null) {
-            return "null";
+        } elseif ($value === true) {
+            return 'true';
+        } elseif ($value === false) {
+            return 'false';
+        } elseif ($value === null) {
+            return 'null';
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 
     /**
@@ -330,7 +329,6 @@ class Formatter {
     public function trim($value = null, $props = [])
     {
         if (isset($props[0])) {
-
             return trim($value, $props[0]);
         }
 
@@ -347,12 +345,8 @@ class Formatter {
         $format = $props[0] ?? 'Y-m-d H:i:s';
 
         if ($value instanceof Carbon) {
-
             return $value->format($format);
-        }
-
-        else if (is_numeric($value)) {
-
+        } elseif (is_numeric($value)) {
             return Carbon::createFromTimestamp($value)->format($format);
         }
 
@@ -367,7 +361,7 @@ class Formatter {
     public function carbon_time($value = null, $props = [])
     {
         $format = $props[0] ?? 'H:i:s';
-        $time = explode(":", $value);
+        $time = explode(':', $value);
 
         return now()
             ->setHour($time[0] ?? 0)
@@ -386,13 +380,11 @@ class Formatter {
         $delimiter = $props[0] ?? null;
 
         if ($delimiter) {
-
             $key = $props[1] ?? 0;
 
             $exploded = explode($delimiter, $value);
 
             if (isset($exploded[$key])) {
-
                 $value = $exploded[$key];
             }
         }

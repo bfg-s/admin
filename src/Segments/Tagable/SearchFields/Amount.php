@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Amount
+ * Class Amount.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class Amount extends \Lar\LteAdmin\Segments\Tagable\Fields\Amount
@@ -11,5 +11,5 @@ class Amount extends \Lar\LteAdmin\Segments\Tagable\Fields\Amount
     /**
      * @var string
      */
-    static $condition = ">=";
+    public static $condition = '>=';
 }

@@ -8,18 +8,18 @@ use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class ModalFooterButton
+ * Class ModalFooterButton.
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class ModalFooterButton extends BUTTON {
-
+class ModalFooterButton extends BUTTON
+{
     use TypesTrait, FontAwesome, Delegable;
 
     /**
      * @var array
      */
     protected $props = [
-        'btn', 'btn-sm'
+        'btn', 'btn-sm',
     ];
 
     /**
@@ -37,7 +37,7 @@ class ModalFooterButton extends BUTTON {
      * @param  string  $text
      * @param  mixed  ...$params
      */
-    public function __construct(string $text = "", ...$params)
+    public function __construct(string $text = '', ...$params)
     {
         parent::__construct();
 
@@ -54,8 +54,7 @@ class ModalFooterButton extends BUTTON {
     public function cancel()
     {
         if (request()->modal) {
-
-            $this->on_click("modal:hide", request()->modal);
+            $this->on_click('modal:hide', request()->modal);
         }
 
         return $this;
@@ -67,8 +66,7 @@ class ModalFooterButton extends BUTTON {
     public function destroy()
     {
         if (request()->modal) {
-
-            $this->on_click("modal:destroy", request()->modal);
+            $this->on_click('modal:destroy', request()->modal);
         }
 
         return $this;
@@ -80,27 +78,24 @@ class ModalFooterButton extends BUTTON {
     public function toggle()
     {
         if (request()->modal) {
-
-            $this->on_click("modal:toggle", request()->modal);
+            $this->on_click('modal:toggle', request()->modal);
         }
 
         return $this;
     }
 
     /**
-     * Build button
+     * Build button.
      */
     protected function _build()
     {
-        $this->addClass("btn-" . $this->type);
+        $this->addClass('btn-'.$this->type);
 
         if ($this->icon) {
-
             $this->i([$this->icon], ':space');
         }
 
         if ($this->text) {
-
             $this->text($this->text);
         }
     }

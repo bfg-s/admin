@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Switcher
+ * Class Switcher.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Switcher extends Input
@@ -11,7 +11,7 @@ class Switcher extends Input
     /**
      * @var string
      */
-    protected $type = "checkbox";
+    protected $type = 'checkbox';
 
     /**
      * @var string
@@ -27,19 +27,19 @@ class Switcher extends Input
      * @var string[]
      */
     protected $data = [
-        'load' => 'switch'
+        'load' => 'switch',
     ];
 
     /**
-     * On build
+     * On build.
      */
     protected function on_build()
     {
-        if (!isset($this->data['on-text'])) {
+        if (! isset($this->data['on-text'])) {
             $this->data['on-text'] = __('lte.on');
         }
 
-        if (!isset($this->data['off-text'])) {
+        if (! isset($this->data['off-text'])) {
             $this->data['off-text'] = __('lte.off');
         }
     }
@@ -50,7 +50,6 @@ class Switcher extends Input
     protected function create_value()
     {
         if (parent::create_value()) {
-
             $this->params[] = ['checked' => 'true'];
         }
 
@@ -76,9 +75,15 @@ class Switcher extends Input
      */
     public function labels(string $on = null, string $off = null, string $label = null)
     {
-        if ($on) $this->data['on-text'] = $on;
-        if ($off) $this->data['off-text'] = $off;
-        if ($label) $this->data['label-text'] = $label;
+        if ($on) {
+            $this->data['on-text'] = $on;
+        }
+        if ($off) {
+            $this->data['off-text'] = $off;
+        }
+        if ($label) {
+            $this->data['label-text'] = $label;
+        }
 
         return $this;
     }

@@ -14,14 +14,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class ChartJs
+ * Class ChartJs.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ChartJsMacroList
  * @mixin ChartJsMethods
  */
-class ChartJs extends DIV implements onRender {
-
+class ChartJs extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
@@ -32,7 +32,7 @@ class ChartJs extends DIV implements onRender {
     protected $model;
     protected $dataBuilder;
 
-    static protected $count = 0;
+    protected static $count = 0;
 
     protected $size = 100;
     protected $type = 'line';
@@ -56,28 +56,24 @@ class ChartJs extends DIV implements onRender {
 
         $this->model = $model;
 
-        if (!$this->model) {
-
+        if (! $this->model) {
             $this->model = gets()->lte->menu->model;
-
-        } else if (is_string($this->model)) {
-
+        } elseif (is_string($this->model)) {
             $this->model = new $this->model;
         }
 
         $this->builder = new ChartJsBuilder();
 
         if ($this->model) {
-
-            $this->builder->name(strtolower(str_replace('\\', '_', $this->model::class))."_".static::$count);
+            $this->builder->name(strtolower(str_replace('\\', '_', $this->model::class)).'_'.static::$count);
         }
 
         if (is_callable($callback)) {
             embedded_call($callback, [
                 static::class => $this,
-                ChartJsBuilder::class => $this->builder
+                ChartJsBuilder::class => $this->builder,
             ]);
-        } else if ($callback) {
+        } elseif ($callback) {
             $params[] = $callback;
         }
 
@@ -89,12 +85,14 @@ class ChartJs extends DIV implements onRender {
     public function size(int $size)
     {
         $this->size = $size;
+
         return $this;
     }
 
     public function type(int $type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -107,7 +105,6 @@ class ChartJs extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -126,14 +123,9 @@ class ChartJs extends DIV implements onRender {
         $this->callRenderEvents();
     }
 
-
-
-
-
-
-    public function prepareData(callable $callback = null): ChartJs
+    public function prepareData(callable $callback = null): self
     {
-        if (!$this->dataBuilder) {
+        if (! $this->dataBuilder) {
             $this->dataBuilder = $this->model;
         }
         if ($callback) {
@@ -153,8 +145,6 @@ class ChartJs extends DIV implements onRender {
         });
     }
 
-
-
     public function groupDataByAt(string $atColumn, string $format = 'Y.m.d')
     {
         return $this->prepareData(function ($model) use ($atColumn, $format) {
@@ -172,8 +162,6 @@ class ChartJs extends DIV implements onRender {
             });
         });
     }
-
-
 
     public function eachPointCount(string $title)
     {
@@ -195,13 +183,11 @@ class ChartJs extends DIV implements onRender {
             'title' => $title,
             'data' => collect($this->dataBuilder)->map(function ($collection) use ($callback, $default) {
                 return $collection instanceof Collection ? call_user_func($callback, $collection) : $default;
-            })
+            }),
         ];
 
         return $this;
     }
-
-
 
     public function miniChart()
     {
@@ -214,23 +200,27 @@ class ChartJs extends DIV implements onRender {
             $bgColor = $this->randColor();
             $this->builder->addDataset(
                 [
-                    "label" => __($dataset['title']),
+                    'label' => __($dataset['title']),
                     'backgroundColor' => $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
                     'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => $this->randColor(), //"#fff",
-                    "pointHoverBorderColor" => $this->randColor(),
+                    'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
+                    'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
+                    'pointHoverBackgroundColor' => $this->randColor(), //"#fff",
+                    'pointHoverBorderColor' => $this->randColor(),
                     'data' => collect($dataset['data'])->values()->toArray(),
                 ]
             );
         }
+
         return $this;
     }
 
     protected function randColor(int $min = 1, $max = 255)
     {
-        $r1 = rand($min,$max); $r2 = rand($min,$max); $r3 = rand($min,$max);
+        $r1 = rand($min, $max);
+        $r2 = rand($min, $max);
+        $r3 = rand($min, $max);
+
         return [$r1, $r2, $r3];
     }
 

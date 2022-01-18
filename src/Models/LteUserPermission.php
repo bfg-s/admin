@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Models;
 
 /**
- * Trait LteUserPermission
+ * Trait LteUserPermission.
  *
  * @package Lar\LteAdmin\Models
  */
@@ -24,9 +24,7 @@ trait LteUserPermission
     public function hasRoles(array $roles)
     {
         foreach ($roles as $role) {
-
             if ($this->hasRole($role)) {
-
                 return true;
             }
         }
@@ -40,7 +38,7 @@ trait LteUserPermission
      */
     public function hasRole(string $role)
     {
-        return !!$this->roles->where('slug', $role)->count();
+        return (bool) $this->roles->where('slug', $role)->count();
     }
 
     /**
@@ -64,7 +62,7 @@ trait LteUserPermission
      */
     public function isRootAdmin()
     {
-        return $this->hasRoles(['root','admin']);
+        return $this->hasRoles(['root', 'admin']);
     }
 
     /**

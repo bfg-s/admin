@@ -17,14 +17,14 @@ use Lar\LteAdmin\Segments\Tagable\ModelRelation;
 use Lar\LteAdmin\Segments\Tagable\ModelRelationContent;
 
 /**
- * Trait ModelRelationBuilderTrait
+ * Trait ModelRelationBuilderTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits\ModelRelation
  * @mixin Component
  */
-trait ModelRelationBuilderTrait {
-
+trait ModelRelationBuilderTrait
+{
     /**
-     * Build relation rows
+     * Build relation rows.
      */
     protected function _build()
     {
@@ -37,7 +37,7 @@ trait ModelRelationBuilderTrait {
             $n = $group->get_name();
             $m = [];
             preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $n, $m);
-            $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2]??''));
+            $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2] ?? ''));
             $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
         };
 
@@ -56,28 +56,23 @@ trait ModelRelationBuilderTrait {
             $container->appEnd($this->last_content);
             $this->_call_tpl($this->last_content, $item, $this);
             if ($this->last_content->get_test_var('control_group', [$item])) {
-
                 $del = $this->last_content->get_test_var('control_delete', [$item]);
 
                 if ($del || $this->last_content->hasControls()) {
-
                     $container->col()->textRight()->m0()->p0()->when(function (Col $col) use (
                         $item, $del
                     ) {
                         $col->button_group(function (ButtonGroup $group) use ($item, $del) {
-
                             $this->last_content->callControls($group, $item);
 
                             if ($del) {
-
                                 $group->danger(['fas fa-trash', __('lte.delete')])
                                     ->on_click('lte::drop_relation', [
                                         INPUT::create()->setType('hidden')->addClass('delete_field')
-                                            ->setName("{$this->relation_name}[".$item->{$item->getKeyName()}."][".ModelSaver::DELETE_FIELD."]")
-                                            ->setValue($item->{$item->getKeyName()})->render()
+                                            ->setName("{$this->relation_name}[".$item->{$item->getKeyName()}.']['.ModelSaver::DELETE_FIELD.']')
+                                            ->setValue($item->{$item->getKeyName()})->render(),
                                     ]);
                             }
-
                         })->addCLass('control_relation');
 
                         if ($this->last_content->get_test_var('control_restore') && $del) {
@@ -88,7 +83,7 @@ trait ModelRelationBuilderTrait {
                                     $text = __('lte.restore_subject', ['subject' => $s]);
                                     $group->secondary([
                                         'fas fa-redo',
-                                        tag_replace($text, $item)
+                                        tag_replace($text, $item),
                                     ])
                                         ->on_click('lte::return_relation');
                                 });
@@ -101,8 +96,7 @@ trait ModelRelationBuilderTrait {
             $this->appEnd($container);
         }
 
-        if (!$datas->count() && $this->on_empty) {
-
+        if (! $datas->count() && $this->on_empty) {
             $container = ModelRelationContent::create($this->relation_name, 'empty', 'template_empty_container');
             $this->last_content = ModelRelationContent::create($this->relation_name, 'template_empty_content', 'template_empty_content');
             $this->_call_empty_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
@@ -124,7 +118,7 @@ trait ModelRelationBuilderTrait {
     }
 
     /**
-     * Build relation template maker button
+     * Build relation template maker button.
      * @return string
      */
     protected function _btn()
@@ -134,7 +128,7 @@ trait ModelRelationBuilderTrait {
         FormGroup::$construct_modify['build_relation'] = function (FormGroup $group) {
             $m = [];
             preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $group->get_name(), $m);
-            $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2]??''));
+            $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2] ?? ''));
             $group->set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
         };
 
@@ -145,9 +139,11 @@ trait ModelRelationBuilderTrait {
         Form::$current_model = $this->relation->getQuery()->getModel();
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
         Form::$current_model = null;
-        if (!$this->last_content->get_test_var('control_create')) { return ""; }
+        if (! $this->last_content->get_test_var('control_create')) {
+            return '';
+        }
         $container->col()->textRight()->p0()->button_group(function (ButtonGroup $group) {
-            $group->setStyle("margin-left: 0!important;");
+            $group->setStyle('margin-left: 0!important;');
             $group->warning(['fas fa-minus', __('lte.remove')])->on_click('lte::drop_relation_tpl');
         });
         $container->hr(['style' => 'border-top: 0;']);

@@ -22,7 +22,7 @@ use Lar\LteAdmin\Segments\Tagable\SearchForm;
 use Lar\LteAdmin\Segments\Tagable\StatisticPeriods;
 
 /**
- * Class Controller
+ * Class Controller.
  *
  * @package Lar\LteAdmin\Controllers
  * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list ()
@@ -34,11 +34,11 @@ class Controller extends BaseController
     use Piplineble, DefaultControllerResourceMethodsTrait, Macroable;
 
     /**
-     * Permission functions for methods
+     * Permission functions for methods.
      *
      * @var array
      */
-    static $permission_functions = [];
+    public static $permission_functions = [];
 
     /**
      * @var array
@@ -76,7 +76,7 @@ class Controller extends BaseController
     protected $isDefault = false;
 
     /**
-     * Controller constructor
+     * Controller constructor.
      */
     public function __construct()
     {
@@ -107,25 +107,23 @@ class Controller extends BaseController
      */
     public function returnTo()
     {
-        if (request()->ajax() && !request()->pjax()) {
-
+        if (request()->ajax() && ! request()->pjax()) {
             return respond()->reload();
         }
 
         $_after = request()->get('_after', 'index');
 
         if ($_after === 'index' && $menu = gets()->lte->menu->now) {
-
             $last = session()->pull('temp_lte_table_data', []);
 
-            return \redirect($menu['link'] . (count($last) ? '?'.http_build_query($last) : ''))->with('_after', $_after);
+            return \redirect($menu['link'].(count($last) ? '?'.http_build_query($last) : ''))->with('_after', $_after);
         }
 
         return back()->with('_after', $_after);
     }
 
     /**
-     * Trap for default methods
+     * Trap for default methods.
      *
      * @param string $method
      * @param array $parameters
@@ -138,6 +136,7 @@ class Controller extends BaseController
         }
 
         $this->isDefault = true;
+
         return app()->call([$this, "{$method}_default"]);
     }
 
@@ -149,11 +148,9 @@ class Controller extends BaseController
     public function request(string $path = null, $default = null)
     {
         if ($path) {
-
             $model = $this->model();
 
-            if ($model && $model->exists && !request()->has($path)) {
-
+            if ($model && $model->exists && ! request()->has($path)) {
                 return multi_dot_call($model, $path) ?: request($path, $default);
             }
 

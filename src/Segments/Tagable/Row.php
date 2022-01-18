@@ -10,21 +10,21 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin RowMacroList
  * @mixin RowMethods
  */
-class Row extends DIV implements onRender {
-
+class Row extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'row'
+        'row',
     ];
 
     /**
@@ -49,7 +49,6 @@ class Row extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 

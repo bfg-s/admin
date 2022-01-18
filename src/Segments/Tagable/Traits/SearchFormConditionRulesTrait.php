@@ -5,11 +5,11 @@ namespace Lar\LteAdmin\Segments\Tagable\Traits;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Trait SearchFormConditionRulesTrait
+ * Trait SearchFormConditionRulesTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait SearchFormConditionRulesTrait {
-
+trait SearchFormConditionRulesTrait
+{
     /**
      * @param  Model  $model
      * @param $key
@@ -84,7 +84,7 @@ trait SearchFormConditionRulesTrait {
      */
     protected function like_right($model, $value, $key)
     {
-        return $model->where($key, 'like', "%" . $value);
+        return $model->where($key, 'like', '%'.$value);
     }
 
     /**
@@ -95,7 +95,7 @@ trait SearchFormConditionRulesTrait {
      */
     protected function like_left($model, $value, $key)
     {
-        return $model->where($key, 'like', $value . "%");
+        return $model->where($key, 'like', $value.'%');
     }
 
     /**
@@ -106,7 +106,7 @@ trait SearchFormConditionRulesTrait {
      */
     protected function like_any($model, $value, $key)
     {
-        return $model->where($key, 'like', "%" . $value . "%");
+        return $model->where($key, 'like', '%'.$value.'%');
     }
 
     /**
@@ -118,7 +118,6 @@ trait SearchFormConditionRulesTrait {
     protected function nullable($model, $value, $key)
     {
         if ($value) {
-
             return $model->whereNull($key);
         }
 
@@ -134,7 +133,6 @@ trait SearchFormConditionRulesTrait {
     protected function not_nullable($model, $value, $key)
     {
         if ($value) {
-
             return $model->whereNotNull($key);
         }
 
@@ -194,12 +192,11 @@ trait SearchFormConditionRulesTrait {
         if (request()->has('q')) {
             $r = request('q');
             if (is_string($r)) {
-
                 if ($this->global_search_fields) {
-                    $i=0;
+                    $i = 0;
                     foreach ($this->global_search_fields as $global_search_field) {
                         $find = collect($this->fields)->where('field_name', $global_search_field)->first();
-                        if ($find && (!isset($find['method']) || !is_embedded_call($find['method']))) {
+                        if ($find && (! isset($find['method']) || ! is_embedded_call($find['method']))) {
                             if ($i) {
                                 $model = $model->orWhere($global_search_field, 'like', "%{$r}%");
                             } else {
@@ -208,15 +205,11 @@ trait SearchFormConditionRulesTrait {
                             $i++;
                         }
                     }
-                }
-
-                else {
+                } else {
                     collect($this->fields)
                         ->pluck('field_name')
                         ->map(function ($field, $k) use (&$model, $r) {
-
-                            if (!isset($field['method']) || !is_embedded_call($field['method'])) {
-
+                            if (! isset($field['method']) || ! is_embedded_call($field['method'])) {
                                 if ($k) {
                                     $model = $model->orWhere($field, 'like', "%{$r}%");
                                 } else {
@@ -225,27 +218,22 @@ trait SearchFormConditionRulesTrait {
                             }
                         });
                 }
-
-            } else if (is_array($r)) {
-
+            } elseif (is_array($r)) {
                 foreach ($r as $key => $val) {
                     if ($val != null) {
                         foreach ($this->fields as $field) {
                             if ($field['field_name'] === $key) {
-
                                 $val = method_exists($field['class'], 'transformValue') ?
                                     $field['class']::transformValue($val) :
                                     $val;
 
                                 if (is_embedded_call($field['method'])) {
-
                                     $result = call_user_func($field['method'], $model, $val, $key);
 
-                                    if ($result) { $model = $result; }
-                                }
-
-                                else {
-
+                                    if ($result) {
+                                        $model = $result;
+                                    }
+                                } else {
                                     $model = $this->{$field['method']}(
                                         $model, $val, $key
                                     );
@@ -256,7 +244,7 @@ trait SearchFormConditionRulesTrait {
                 }
             }
         }
-        
+
         return $model;
     }
 }

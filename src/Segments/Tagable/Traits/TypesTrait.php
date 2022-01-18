@@ -3,22 +3,22 @@
 namespace Lar\LteAdmin\Segments\Tagable\Traits;
 
 /**
- * Trait TypesTrait
+ * Trait TypesTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait TypesTrait {
-
+trait TypesTrait
+{
     /**
      * @var string
      */
-    protected $type = "info";
+    protected $type = 'info';
 
     /**
      * @return $this
      */
     public function primary()
     {
-        $this->type = "primary";
+        $this->type = 'primary';
 
         return $this;
     }
@@ -28,7 +28,7 @@ trait TypesTrait {
      */
     public function secondary()
     {
-        $this->type = "secondary";
+        $this->type = 'secondary';
 
         return $this;
     }
@@ -38,7 +38,7 @@ trait TypesTrait {
      */
     public function success()
     {
-        $this->type = "success";
+        $this->type = 'success';
 
         return $this;
     }
@@ -48,7 +48,7 @@ trait TypesTrait {
      */
     public function danger()
     {
-        $this->type = "danger";
+        $this->type = 'danger';
 
         return $this;
     }
@@ -58,7 +58,7 @@ trait TypesTrait {
      */
     public function warning()
     {
-        $this->type = "warning";
+        $this->type = 'warning';
 
         return $this;
     }
@@ -68,7 +68,7 @@ trait TypesTrait {
      */
     public function info()
     {
-        $this->type = "info";
+        $this->type = 'info';
 
         return $this;
     }
@@ -78,7 +78,7 @@ trait TypesTrait {
      */
     public function light()
     {
-        $this->type = "light";
+        $this->type = 'light';
 
         return $this;
     }
@@ -88,7 +88,7 @@ trait TypesTrait {
      */
     public function dark()
     {
-        $this->type = "dark";
+        $this->type = 'dark';
 
         return $this;
     }

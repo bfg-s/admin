@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Tests\Unit;
 use Tests\TestCase;
 
 /**
- * Class HelpersTest
+ * Class HelpersTest.
  * @package Lar\LteAdmin\Tests\Unit
  */
 class HelpersTest extends TestCase

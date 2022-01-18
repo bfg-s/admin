@@ -21,18 +21,18 @@ class LtePageMixin
         return function ($title = null, callable $callback = null) {
             if (is_embedded_call($title)) {
                 $callback = $title;
-                $title = "";
+                $title = '';
             }
             $originTitle = $title;
             $title = is_array($title) && isset($title[0]) ? $title[0] : $title;
             if (lte_model_type('index')) {
                 $title = $title ?: 'lte.list';
-            } else if (lte_model_type('create')) {
+            } elseif (lte_model_type('create')) {
                 $title = $title ?: 'lte.add';
-            } else if (lte_model_type('edit')) {
+            } elseif (lte_model_type('edit')) {
                 $title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $title;
                 $title = $title ?: 'lte.id_edit';
-            } else if (lte_model_type('show')) {
+            } elseif (lte_model_type('show')) {
                 $title = $title ?: 'lte.information';
             }
 
@@ -41,6 +41,7 @@ class LtePageMixin
                     ->group()
             );
             $this->callCallBack($callback);
+
             return $this;
         };
     }
@@ -49,7 +50,6 @@ class LtePageMixin
     {
         return function (callable $callback = null) {
             if ($this->hasClass(Card::class)) {
-
                 $this->getClass(Card::class)->withSearchForm();
                 $this->registerClass($this->getClass(Card::class)->search_form);
                 $this->callCallBack($callback);
@@ -88,7 +88,6 @@ class LtePageMixin
     public function nested()
     {
         return function (callable $callback = null) {
-
             $this->getClass(Card::class)->nestedTools();
 
             $callback = function (Nested $nested) use ($callback) {
@@ -99,6 +98,7 @@ class LtePageMixin
             } else {
                 $this->getClass(DIV::class)->nested($callback);
             }
+
             return $this;
         };
     }
@@ -106,7 +106,6 @@ class LtePageMixin
     public function ordered()
     {
         return function (callable $callback = null) {
-
             $callback = function (Nested $nested) use ($callback) {
                 $this->callCallBack($callback, $nested);
             };
@@ -115,6 +114,7 @@ class LtePageMixin
             } else {
                 $this->getClass(DIV::class)->nested($callback);
             }
+
             return $this;
         };
     }
@@ -122,7 +122,6 @@ class LtePageMixin
     public function form()
     {
         return function (callable $callback = null) {
-
             $callback = function (Form $form) use ($callback) {
                 $this->callCallBack($callback, $form);
             };
@@ -131,6 +130,7 @@ class LtePageMixin
             } else {
                 $this->getClass(DIV::class)->form($callback);
             }
+
             return $this;
         };
     }
@@ -138,7 +138,6 @@ class LtePageMixin
     public function info()
     {
         return function (callable $callback = null) {
-
             $callback = function (ModelInfoTable $table) use ($callback) {
                 $this->callCallBack($callback, $table);
             };
@@ -147,6 +146,7 @@ class LtePageMixin
             } else {
                 $this->getClass(DIV::class)->model_info_table($callback);
             }
+
             return $this;
         };
     }
@@ -154,7 +154,6 @@ class LtePageMixin
     public function buttons()
     {
         return function (callable $callback = null) {
-
             if ($this->hasClass(Card::class)) {
                 $this->registerClass($this->getClass(Card::class)->group());
             } else {
@@ -162,6 +161,7 @@ class LtePageMixin
             }
 
             $this->callCallBack($callback);
+
             return $this;
         };
     }
@@ -169,7 +169,6 @@ class LtePageMixin
     public function chartjs()
     {
         return function (callable $callback = null) {
-
             if ($this->hasClass(Card::class)) {
                 $this->registerClass(
                     $this->getClass(Card::class)->fullBody()->chart_js($callback)
@@ -179,6 +178,7 @@ class LtePageMixin
                     $this->getClass(DIV::class)->chart_js($callback)
                 );
             }
+
             return $this;
         };
     }
@@ -186,7 +186,6 @@ class LtePageMixin
     public function periods()
     {
         return function (callable $callback = null) {
-
             if ($this->hasClass(Card::class)) {
                 $this->registerClass(
                     $this->getClass(Card::class)->body()->statistic_periods($callback)
@@ -196,6 +195,7 @@ class LtePageMixin
                     $this->getClass(DIV::class)->statistic_periods($callback)
                 );
             }
+
             return $this;
         };
     }
@@ -203,10 +203,10 @@ class LtePageMixin
     public function withTools()
     {
         return function ($test = null) {
-
             if ($this->hasClass(Card::class)) {
                 $this->getClass(Card::class)->defaultTools($test);
             }
+
             return $this;
         };
     }
@@ -214,7 +214,6 @@ class LtePageMixin
     public function whenNeed()
     {
         return function (string $method, callable $callback = null, $default = null) {
-
             $this->when(request()->has('method') ? request('method') == $method : $default, function (LtePage $page) use ($method, $callback) {
                 $page->{$method}($callback);
             });

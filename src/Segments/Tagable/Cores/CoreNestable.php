@@ -18,7 +18,7 @@ class CoreNestable extends DIV
      * @var string[]
      */
     protected $props = [
-        'dd'
+        'dd',
     ];
 
     /**
@@ -34,22 +34,22 @@ class CoreNestable extends DIV
     /**
      * @var string|callable
      */
-    protected $title_field = "name";
+    protected $title_field = 'name';
 
     /**
      * @var string
      */
-    protected $parent_field = "parent_id";
+    protected $parent_field = 'parent_id';
 
     /**
-     * Shoe default controls
+     * Shoe default controls.
      *
      * @var \Closure|array
      */
     protected $controls;
 
     /**
-     * Custom controls
+     * Custom controls.
      *
      * @var callable
      */
@@ -73,12 +73,12 @@ class CoreNestable extends DIV
     /**
      * @var string
      */
-    private $order_by_field = "order";
+    private $order_by_field = 'order';
 
     /**
      * @var string
      */
-    private $order_by_type = "asc";
+    private $order_by_type = 'asc';
 
     /**
      * @var int
@@ -96,9 +96,9 @@ class CoreNestable extends DIV
         $this->controls =
         $this->info_control =
         $this->delete_control =
-        $this->edit_control = function () { return true; };
-
-
+        $this->edit_control = function () {
+            return true;
+        };
 
         $this->model = eloquent_instruction($model, $instructions);
 
@@ -120,7 +120,6 @@ class CoreNestable extends DIV
         $this->order_by_type = 'desc';
 
         if ($field) {
-
             $this->order_by_field = $field;
         }
 
@@ -135,12 +134,10 @@ class CoreNestable extends DIV
     public function orderBy(string $field = null, string $order = null)
     {
         if ($field) {
-
             $this->order_by_field = $field;
         }
 
         if ($order) {
-
             $this->order_by_type = $order;
         }
 
@@ -148,7 +145,7 @@ class CoreNestable extends DIV
     }
 
     /**
-     * Build nestable
+     * Build nestable.
      * @return $this
      */
     public function build()
@@ -156,32 +153,20 @@ class CoreNestable extends DIV
         $model = null;
 
         if ($this->model instanceof Relation) {
-
             $model = $this->model->getQuery()->getModel();
-        }
-
-        else if ($this->model instanceof Builder) {
-
+        } elseif ($this->model instanceof Builder) {
             $model = $this->model->getModel();
-        }
-
-        else if ($this->model instanceof Model) {
-
+        } elseif ($this->model instanceof Model) {
             $model = $this->model;
         }
 
         if ($model) {
-
             if (array_search($this->parent_field, $model->getFillable()) === false) {
-
                 $this->maxDepth = 1;
             }
 
             $this->setDatas(['model' => get_class($model)]);
-        }
-
-        else {
-
+        } else {
             $this->maxDepth = 1;
         }
 
@@ -203,9 +188,7 @@ class CoreNestable extends DIV
         $this->attr('data-order-field', $this->order_by_field);
 
         $object->ol(['dd-list'])->when(function (OL $ol) use ($model) {
-
             foreach ($model as $item) {
-
                 $this->makeItem($ol, $item);
             }
         });
@@ -223,17 +206,16 @@ class CoreNestable extends DIV
             });
             $li->div(['dd3-content'])->when(function (DIV $div) use ($item) {
 //                $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
-                if (is_callable($this->title_field))  {
+                if (is_callable($this->title_field)) {
                     $div->span(['text'])->text(call_user_func($this->title_field, $item));
                 } else {
                     $div->span(['text'])->text(__(multi_dot_call($item, $this->title_field)));
                 }
                 $cc_access = ($this->controls)($item);
                 $cc = $this->custom_controls;
-                if($cc_access || $cc) {
+                if ($cc_access || $cc) {
                     $div->div(['float-right'])
                         ->appEndIf($this->menu, ButtonGroup::create(function (ButtonGroup $group) use ($item, $cc_access, $cc) {
-
                             $model = $item;
                             $key = $model->getRouteKey();
 
@@ -242,7 +224,6 @@ class CoreNestable extends DIV
                             }
 
                             if ($cc_access) {
-
                                 if (($this->edit_control)($item)) {
                                     $group->resourceEdit($this->menu['link.edit']($key), '');
                                 }
@@ -318,7 +299,9 @@ class CoreNestable extends DIV
      */
     public function disableControls($test = null)
     {
-        $this->controls = is_embedded_call($test) ? $test : function () { return false; };
+        $this->controls = is_embedded_call($test) ? $test : function () {
+            return false;
+        };
 
         return $this;
     }
@@ -329,7 +312,9 @@ class CoreNestable extends DIV
      */
     public function disableInfo($test = null)
     {
-        $this->info_control = is_embedded_call($test) ? $test : function () { return false; };
+        $this->info_control = is_embedded_call($test) ? $test : function () {
+            return false;
+        };
 
         return $this;
     }
@@ -340,7 +325,9 @@ class CoreNestable extends DIV
      */
     public function disableEdit($test = null)
     {
-        $this->edit_control = is_embedded_call($test) ? $test : function () { return false; };
+        $this->edit_control = is_embedded_call($test) ? $test : function () {
+            return false;
+        };
 
         return $this;
     }
@@ -351,7 +338,9 @@ class CoreNestable extends DIV
      */
     public function disableDelete($test = null)
     {
-        $this->delete_control = is_embedded_call($test) ? $test : function () { return false; };
+        $this->delete_control = is_embedded_call($test) ? $test : function () {
+            return false;
+        };
 
         return $this;
     }

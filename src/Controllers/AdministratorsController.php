@@ -10,7 +10,7 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\TabContent;
 
 /**
- * Class AdministratorsController
+ * Class AdministratorsController.
  * @package Lar\LteAdmin\Controllers
  */
 class AdministratorsController extends Controller
@@ -18,7 +18,7 @@ class AdministratorsController extends Controller
     /**
      * @var string
      */
-    static $model = LteUser::class;
+    public static $model = LteUser::class;
 
     /**
      * @param  LteUser  $user
@@ -26,12 +26,12 @@ class AdministratorsController extends Controller
      */
     public function show_role(LteUser $user)
     {
-        return '<span class="badge badge-success">' . $user->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
+        return '<span class="badge badge-success">'.$user->roles->pluck('name')->implode('</span> <span class="badge badge-success">').'</span>';
     }
 
     public function canDelete($type)
     {
-        return !($type === 'delete' && $this->model()->id == 1);
+        return ! ($type === 'delete' && $this->model()->id == 1);
     }
 
     public function explanation(): Explanation
@@ -52,13 +52,15 @@ class AdministratorsController extends Controller
             $this->table()->col('lte.login_name', 'login')->sort(),
             $this->table()->col('lte.name', 'name')->sort(),
             $this->table()->at(),
-            $this->table()->controlDelete(function (LteUser $user) { return $user->id !== 1 && admin()->id !== $user->id; }),
+            $this->table()->controlDelete(function (LteUser $user) {
+                return $user->id !== 1 && admin()->id !== $user->id;
+            }),
             $this->table()->disableChecks(),
         )->edit(
             $this->form()->info_id(),
         )->form(
             $this->form()->image('avatar', 'lte.avatar')->nullable(),
-            $this->form()->tab('lte.common', 'fas fa-cogs', function (TabContent $tab)  {
+            $this->form()->tab('lte.common', 'fas fa-cogs', function (TabContent $tab) {
                 $tab->input('login', 'lte.login_name')
                     ->required()
                     ->unique(LteUser::class, 'login', $this->model()->id);
@@ -66,9 +68,9 @@ class AdministratorsController extends Controller
                 $tab->email('email', 'lte.email_address')
                     ->required()->unique(LteUser::class, 'email', $this->model()->id);
                 $tab->multi_select('roles[]', 'lte.role')->icon_user_secret()
-                    ->options(LteRole::all()->pluck('name','id'));
+                    ->options(LteRole::all()->pluck('name', 'id'));
             }),
-            $this->form()->tab('lte.password', 'fas fa-key', function (TabContent $tab)  {
+            $this->form()->tab('lte.password', 'fas fa-key', function (TabContent $tab) {
                 $tab->password('password', 'lte.new_password')
                     ->confirm()->required_condition($this->isType('create'));
             }),

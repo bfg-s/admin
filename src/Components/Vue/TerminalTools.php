@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Components\Vue;
 use Lar\Tagable\Vue;
 
 /**
- * Class GlobalSearch
+ * Class GlobalSearch.
  * @package Lar\LteAdmin\Components\Vue
  */
 class TerminalTools extends Vue
@@ -13,5 +13,5 @@ class TerminalTools extends Vue
     /**
      * @var string
      */
-    protected $element = "terminal_tools";
+    protected $element = 'terminal_tools';
 }

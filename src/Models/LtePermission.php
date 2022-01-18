@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LtePermission
+ * Class LtePermission.
  * @package Lar\LteAdmin\Models
  */
 class LtePermission extends Model
@@ -17,26 +17,26 @@ class LtePermission extends Model
     /**
      * @var string
      */
-    protected $table = "lte_permission";
+    protected $table = 'lte_permission';
 
     /**
      * @var string[]
      */
     protected $fillable = [
-        "path", "method", "state", "description", "lte_role_id", "active" // state: open, close
+        'path', 'method', 'state', 'description', 'lte_role_id', 'active', // state: open, close
     ];
 
     /**
      * @var string[]
      */
     protected $casts = [
-        'method' => 'array'
+        'method' => 'array',
     ];
 
     /**
      * @var Collection
      */
-    static $now;
+    public static $now;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -52,7 +52,6 @@ class LtePermission extends Model
     public static function now()
     {
         if (static::$now) {
-
             return static::$now;
         }
 
@@ -68,29 +67,25 @@ class LtePermission extends Model
      */
     public static function checkUrl(string $url, string $method = 'GET'): bool
     {
-        $result = !static::now()->where('path', '==', '*')->where('state', 'close')->first();
+        $result = ! static::now()->where('path', '==', '*')->where('state', 'close')->first();
 
         /** @var LtePermission $close */
         foreach (static::now()->where('state', 'close') as $close) {
-
             $path = static::makeCheckedPath($close->path);
 
             if (($close->method[0] === '*' || array_search($method, $close->method) !== false) && \Str::is(url($path), $url)) {
-
                 $result = false;
                 break;
             }
         }
 
-        if (!$result) {
+        if (! $result) {
 
             /** @var LtePermission $close */
             foreach (static::now()->where('state', 'open') as $open) {
-
                 $path = static::makeCheckedPath($open->path);
 
                 if (($open->method[0] === '*' || array_search($method, $open->method) !== false) && \Str::is(url($path), $url)) {
-
                     $result = true;
                     break;
                 }
@@ -105,47 +100,40 @@ class LtePermission extends Model
      */
     public static function check()
     {
-        if (!lte_user()) {
-
+        if (! lte_user()) {
             return true;
         }
 
         if (request()->is(static::makeCheckedPath('profile*'))) {
-
             return true;
         }
 
-        $result = !static::now()->where('path', '==', '*')->where('state', 'close')->first();
+        $result = ! static::now()->where('path', '==', '*')->where('state', 'close')->first();
 
-        $method = request()->ajax() && !request()->pjax() && request()->has("_exec") ? 'POST' : request()->getMethod();
+        $method = request()->ajax() && ! request()->pjax() && request()->has('_exec') ? 'POST' : request()->getMethod();
 
         /** @var LtePermission $close */
         foreach (static::now()->where('state', 'close') as $close) {
-
             $path = static::makeCheckedPath($close->path);
 
             if (($close->method[0] === '*' || array_search($method, $close->method) !== false) && request()->is($path)) {
-
                 $result = false;
                 break;
             }
         }
 
-        if (!$result) {
+        if (! $result) {
 
             /** @var LtePermission $close */
             foreach (static::now()->where('state', 'open') as $open) {
-
                 $path = static::makeCheckedPath($open->path);
 
                 if (($open->method[0] === '*' || array_search($method, $open->method) !== false) && request()->is($path)) {
-
                     $result = true;
                     break;
                 }
             }
         }
-
 
         return $result;
     }

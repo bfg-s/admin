@@ -9,7 +9,7 @@ use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LtePermission;
 
 /**
- * Class Menu
+ * Class Menu.
  *
  * @package Lar\LteAdmin\Getters
  */
@@ -18,7 +18,7 @@ class Menu extends Getter
     /**
      * @var string
      */
-    public static $name = "lte.menu";
+    public static $name = 'lte.menu';
 
     /**
      * @var int
@@ -39,10 +39,11 @@ class Menu extends Getter
     public static function now()
     {
         $return = gets()->lte->menu->nested_collect->where('route', '=', \Route::currentRouteName())->first();
-        if (!$return) {
+        if (! $return) {
             $route = preg_replace('/\.[a-zA-Z0-9\_\-]+$/', '', \Route::currentRouteName());
             $return = gets()->lte->menu->nested_collect->where('route', '=', $route)->first();
         }
+
         return $return;
     }
 
@@ -56,12 +57,11 @@ class Menu extends Getter
         $menu = gets()->lte->menu->now;
 
         if ($menu && isset($menu['current.type'])) {
-
             $return = $menu['current.type'];
 
             if ($return === 'store') {
                 $return = 'create';
-            } else if ($return === 'update') {
+            } elseif ($return === 'update') {
                 $return = 'edit';
             }
         }
@@ -81,11 +81,9 @@ class Menu extends Getter
         $menu = gets()->lte->menu->now;
 
         if ($menu && isset($menu['data'])) {
-
             $return = $menu['data'];
 
             if ($__name_) {
-
                 $return = isset($return[$__name_]) ? $return[$__name_] : $__default;
             }
         }
@@ -101,7 +99,6 @@ class Menu extends Getter
         $menu = gets()->lte->menu->now;
 
         if (\Route::current() && isset($menu['model.param'])) {
-
             return \Route::current()->parameter($menu['model.param']);
         }
 
@@ -118,18 +115,16 @@ class Menu extends Getter
         $menu = gets()->lte->menu->now;
 
         if ($menu && isset($menu['model'])) {
-
             $return = $menu['model'];
-        }
-
-        else if (\Route::current() && $action = \Route::currentRouteAction()) {
-
+        } elseif (\Route::current() && $action = \Route::currentRouteAction()) {
             $class = Str::parseCallback($action)[0];
 
             if (property_exists($class, 'model')) {
                 $return = $class::$model;
             } else {
-                if (property_exists($class, 'no_getter_model')) $class::$no_getter_model = true;
+                if (property_exists($class, 'no_getter_model')) {
+                    $class::$no_getter_model = true;
+                }
                 $class = (new $class);
                 if (method_exists($class, 'model')) {
                     $return = $class->model();
@@ -148,11 +143,8 @@ class Menu extends Getter
         $pm = null;
 
         if (isset($menu['model.param'])) {
-
             $pm = $menu['model.param'];
-
         } else {
-
             $pm = \Str::singular(\Str::snake(class_basename($return)));
         }
 
@@ -160,12 +152,10 @@ class Menu extends Getter
             $pm &&
             $return &&
             $return instanceof Model &&
-            !$return->exists &&
+            ! $return->exists &&
             \Route::current()->hasParameter($pm)
         ) {
-
             if ($find = $return->where($return->getRouteKeyName(), \Route::current()->parameter($pm))->first()) {
-
                 $return = $find;
             }
         }
@@ -191,16 +181,11 @@ class Menu extends Getter
         $result[$subject['id']] = $subject;
 
         if ($subject['parent_id']) {
-
             $parent = gets()->lte->menu->nested_collect->where('active', true)->where('id', $subject['parent_id'])->first();
 
             if ($parent) {
-
                 return static::get_parents($parent, $result);
-            }
-
-            else {
-
+            } else {
                 return $result;
             }
         }
@@ -224,8 +209,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.index'])) {
-
+        if (isset($menu['link.index'])) {
             return $menu['link.index']($params);
         }
 
@@ -240,8 +224,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.show'])) {
-
+        if (isset($menu['link.show'])) {
             return $menu['link.show']($params);
         }
 
@@ -256,8 +239,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.update'])) {
-
+        if (isset($menu['link.update'])) {
             return $menu['link.update']($params);
         }
 
@@ -272,8 +254,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.destroy'])) {
-
+        if (isset($menu['link.destroy'])) {
             return $menu['link.destroy']($params);
         }
 
@@ -288,8 +269,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.edit'])) {
-
+        if (isset($menu['link.edit'])) {
             return $menu['link.edit']($params);
         }
 
@@ -304,8 +284,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.store'])) {
-
+        if (isset($menu['link.store'])) {
             return $menu['link.store']($params);
         }
 
@@ -320,8 +299,7 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if  (isset($menu['link.create'])) {
-
+        if (isset($menu['link.create'])) {
             return $menu['link.create']($params);
         }
 
@@ -337,16 +315,16 @@ class Menu extends Getter
      */
     public static function nested($__route_items_ = false, int $__route_parent_id_ = 0, $__route_name_ = 'lte', array $__parent = null)
     {
-        if ($__route_items_ === false) { $__route_items_ = \Navigate::getMaked(); }
+        if ($__route_items_ === false) {
+            $__route_items_ = \Navigate::getMaked();
+        }
 
         $return = [];
 
         foreach ($__route_items_ as $key => $item) {
-
             $childs = false;
 
             if (isset($item['items'])) {
-
                 $childs = $item['items'];
                 unset($item['items']);
             }
@@ -355,169 +333,169 @@ class Menu extends Getter
 
             $add = [
                 'id' => $id,
-                'parent_id' => $__route_parent_id_
+                'parent_id' => $__route_parent_id_,
             ];
 
             if ($__parent && isset($__parent['roles'])) {
-
                 $item['roles'] = $__parent['roles'];
             }
 
-            if (!isset($item['route'])) {
-
+            if (! isset($item['route'])) {
                 $item['route'] = false;
-            }
-
-            else if ($__route_name_) {
-
-                if (str_replace(['{','?','}'], '', $item['route']) !== $item['route']) {
-
+            } elseif ($__route_name_) {
+                if (str_replace(['{', '?', '}'], '', $item['route']) !== $item['route']) {
                     $item['route'] = $__route_name_;
-                }
-
-                else {
-
-                    $item['route'] = $__route_name_ . '.' . (isset($item['resource']['name']) ? str_replace('/', '.', $item['resource']['name']) : $item['route']);
+                } else {
+                    $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace('/', '.', $item['resource']['name']) : $item['route']);
                 }
             }
 
             $item['target'] = false;
 
-            if (!isset($item['link'])) {
-
+            if (! isset($item['link'])) {
                 $item['link'] = false;
-            }
-
-            else if (preg_match('/^http/', $item['link'])) {
-
+            } elseif (preg_match('/^http/', $item['link'])) {
                 $item['target'] = true;
             }
 
             $item['current.type'] = null;
 
-            if (isset($item['model']) && !isset($item['model.param'])) {
-
+            if (isset($item['model']) && ! isset($item['model.param'])) {
                 $item['model.param'] = \Str::singular(\Str::snake(class_basename($item['model'])));
             }
 
             if (isset($item['link_params'])) {
-
                 $item['route_params'] = array_merge($item['route_params'] ?? [], call_user_func($item['link_params']));
             }
 
             if ($item['route'] && \Route::has($item['route'])) {
-
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
-            }
-
-            else if (isset($item['resource']) && \Route::has($item['route'] . '.index')) {
-
+            } elseif (isset($item['resource']) && \Route::has($item['route'].'.index')) {
                 $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);
 
-                $item['current.type'] = str_replace($item['route'] . '.', '', \Route::currentRouteName());
+                $item['current.type'] = str_replace($item['route'].'.', '', \Route::currentRouteName());
 
-                $item['link'] = ((isset($item['resource_only']) && !in_array('index', $item['resource_only']))
+                $item['link'] = ((isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
                     || (isset($item['resource_except']) && in_array('index', $item['resource_except'])))
                     ? null
-                    : route($item['route'] . '.index', $item['route_params'] ?? []);
+                    : route($item['route'].'.index', $item['route_params'] ?? []);
 
                 $item['link.show'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('show', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('show', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('show', $item['resource_except']))
-                    ) { return null; }
-                    if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.show', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+                    if (! is_array($params) && isset($item['model.param'])) {
+                        $params = [$item['model.param'] => $params];
+                    }
+
+                    return route($item['route'].'.show', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.update'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('update', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('update', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('update', $item['resource_except']))
-                    ) { return null; }
-                    if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.update', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+                    if (! is_array($params) && isset($item['model.param'])) {
+                        $params = [$item['model.param'] => $params];
+                    }
+
+                    return route($item['route'].'.update', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.destroy'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('destroy', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('destroy', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('destroy', $item['resource_except']))
-                    ) { return null; }
-                    if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.destroy', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+                    if (! is_array($params) && isset($item['model.param'])) {
+                        $params = [$item['model.param'] => $params];
+                    }
+
+                    return route($item['route'].'.destroy', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.edit'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('edit', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('edit', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('edit', $item['resource_except']))
-                    ) { return null; }
-                    if (!is_array($params) && isset($item['model.param'])) { $params = [$item['model.param'] => $params]; }
-                    return route($item['route'] . '.edit', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+                    if (! is_array($params) && isset($item['model.param'])) {
+                        $params = [$item['model.param'] => $params];
+                    }
+
+                    return route($item['route'].'.edit', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.index'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('index', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('index', $item['resource_except']))
-                    ) { return null; }
-                    return route($item['route'] . '.index', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+
+                    return route($item['route'].'.index', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.store'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('store', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('store', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('store', $item['resource_except']))
-                    ) { return null; }
-                    return route($item['route'] . '.store', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+
+                    return route($item['route'].'.store', array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link.create'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && !in_array('create', $item['resource_only']))
+                        (isset($item['resource_only']) && ! in_array('create', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('create', $item['resource_except']))
-                    ) { return null; }
-                    return route($item['route'] . '.create', array_merge($params, ($item['route_params'] ?? [])));
+                    ) {
+                        return null;
+                    }
+
+                    return route($item['route'].'.create', array_merge($params, ($item['route_params'] ?? [])));
                 };
             }
 
-            if (!isset($item['selected'])) {
-
+            if (! isset($item['selected'])) {
                 $item['selected'] = false;
             }
 
-            if (!$item['selected'] && $item['route']) {
-
+            if (! $item['selected'] && $item['route']) {
                 $current_route = \Route::currentRouteName();
 
                 $item['selected'] = $item['route'] == $current_route
                     || \Str::is($item['route'].'.*', $current_route);
-            }
-
-            else if (!$item['selected'] && $item['link'] && !$item['target']) {
+            } elseif (! $item['selected'] && $item['link'] && ! $item['target']) {
                 $link = trim($item['link'], '/');
                 $link = ltrim($link, \App::getLocale());
                 $link = trim($link, '/');
                 $path = ltrim(request()->decodedPath().'/', \App::getLocale());
                 $path = trim($path, '/');
 
-                $item['link'] = "/".\App::getLocale().'/'.$link;
+                $item['link'] = '/'.\App::getLocale().'/'.$link;
 
                 $item['selected'] = \Str::is($link.'*', $path);
             }
 
-            if (!isset($item['active'])) {
-
+            if (! isset($item['active'])) {
                 $item['active'] = isset($item['title']);
-            }
-
-            else if ($item['active'] && !isset($item['title'])) {
-
+            } elseif ($item['active'] && ! isset($item['title'])) {
                 $item['title'] = false;
             }
 
             if (isset($item['link']) && $item['link'] && isset($item['active']) && $item['active']) {
-
                 $item['active'] = LtePermission::checkUrl($item['link']);
             }
 
-            if (isset($item['active']) && $item['active'] && isset($item['controller']))  {
-
+            if (isset($item['active']) && $item['active'] && isset($item['controller'])) {
                 $item['active'] = lte_controller_can('index', $item['controller']);
             }
 
@@ -539,10 +517,9 @@ class Menu extends Getter
             static::$nested_counter++;
 
             if ($childs) {
-
                 $chl = static::nested($childs, $id, $item['route'] ?? 'lte', $result);
 
-                $return[$last]['active'] = !!collect($chl)->where('active', true)->count();
+                $return[$last]['active'] = (bool) collect($chl)->where('active', true)->count();
 
                 $return = array_merge($return, $chl);
             }
@@ -551,10 +528,8 @@ class Menu extends Getter
         return $return;
     }
 
-
     public static function collapse($item)
     {
-
     }
 
     /**

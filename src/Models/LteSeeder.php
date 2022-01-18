@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Lar\LteAdmin\Commands\LteDbDumpCommand;
 
 /**
- * Class LteSeeder
+ * Class LteSeeder.
  *
  * @package Lar\LteAdmin\Models
  */
@@ -20,8 +20,7 @@ class LteSeeder extends Seeder
     public function run()
     {
         if (class_exists(LteDbDumpCommand::$file_name)) {
-
-            return ;
+            return;
         }
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -36,21 +35,21 @@ class LteSeeder extends Seeder
             'login' => 'root',
             'password' => bcrypt('root'),
             'name'     => 'Root',
-            'email'    => 'root@root.com'
+            'email'    => 'root@root.com',
         ]);
 
         $user_model::create([
             'login' => 'admin',
             'password' => bcrypt('admin'),
             'name'     => 'Admin',
-            'email'    => 'admin@admin.com'
+            'email'    => 'admin@admin.com',
         ]);
 
         $user_model::create([
             'login' => 'moderator',
             'password' => bcrypt('moderator'),
             'name'     => 'Moderator',
-            'email'    => 'moderator@moderator.com'
+            'email'    => 'moderator@moderator.com',
         ]);
 
         // create a role.

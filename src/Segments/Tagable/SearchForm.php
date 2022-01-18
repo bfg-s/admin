@@ -26,14 +26,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\SearchFormConditionRulesTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\SearchFormHelpersTrait;
 
 /**
- * Class SearchForm
+ * Class SearchForm.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
  * @mixin SearchFormMacroList
  * @mixin SearchFormMethods
  */
-class SearchForm extends \Lar\Layout\Tags\FORM {
-
+class SearchForm extends \Lar\Layout\Tags\FORM
+{
     use SearchFormConditionRulesTrait,
         SearchFormHelpersTrait,
         Macroable,
@@ -42,7 +42,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     /**
      * @var array
      */
-    static $field_components = [
+    public static $field_components = [
         'input' => Input::class,
         'email' => Email::class,
         'number' => Number::class,
@@ -60,7 +60,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
         'multi_select' => MultiSelect::class,
         'select_tags' => SelectTags::class,
         'checks' => Checks::class,
-        'radios' => Radios::class
+        'radios' => Radios::class,
     ];
 
     /**
@@ -86,7 +86,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
         'in' => 'where_in',
         'not_in' => 'where_not_in',
         'between' => 'where_between',
-        'not_between' => 'where_not_between'
+        'not_between' => 'where_not_between',
     ];
 
     /**
@@ -111,7 +111,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     }
 
     /**
-     * Form builder
+     * Form builder.
      */
     protected function buildForm()
     {
@@ -126,20 +126,15 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
         $chunks = collect($this->fields)->chunk(3);
 
         foreach ($chunks as $chunk) {
-
             $this->row(function (Row $row) use ($chunk) {
-
                 foreach ($chunk as $field) {
-
                     $row->col()->pl3()->pr3()->appEnd($field['class']);
                 }
             });
         }
 
         $this->div()->textRight()->button_group(function (ButtonGroup $group) use ($action) {
-
             $group->success(['fas fa-search', __('lte.to_find')])->setType('submit');
-
         });
     }
 
@@ -171,7 +166,6 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
     public function __call($name, $arguments)
     {
         if (isset(static::$field_components[$name])) {
-
             $class = static::$field_components[$name];
 
             $field_name = $arguments[0] ?? null;
@@ -181,7 +175,6 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
             $class = new $class("q[{$field_name}]", $label);
 
             if ($class instanceof FormGroup) {
-
                 $class->set_parent($this);
 
                 $class->vertical();
@@ -192,16 +185,10 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
             $method = null;
 
             if (is_embedded_call($condition)) {
-
                 $method = $condition;
-            }
-
-            else if (is_string($condition) && isset($this->conditions[$condition])) {
-
+            } elseif (is_string($condition) && isset($this->conditions[$condition])) {
                 $method = $this->conditions[$condition];
-
             } else {
-
                 if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
                     $condition = $class::$condition;
                 } else {
@@ -209,7 +196,6 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
                 }
 
                 if (is_string($condition) && isset($this->conditions[$condition])) {
-
                     $method = $this->conditions[$condition];
                 }
             }
@@ -219,7 +205,7 @@ class SearchForm extends \Lar\Layout\Tags\FORM {
                 'condition' => $condition,
                 'field_name' => $field_name,
                 'method' => $method,
-                'class' => $class
+                'class' => $class,
             ];
 
             return $class;

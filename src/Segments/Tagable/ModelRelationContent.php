@@ -10,14 +10,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class ModelRelationContent
+ * Class ModelRelationContent.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ModelRelationContentMacroList
  * @mixin ModelRelationContentMethods
  */
-class ModelRelationContent extends DIV implements onRender {
-
+class ModelRelationContent extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait, Delegable;
 
     /**
@@ -43,7 +43,7 @@ class ModelRelationContent extends DIV implements onRender {
     /**
      * @var string|null
      */
-    protected $control_restore_text = "";
+    protected $control_restore_text = '';
 
     /**
      * @var callable[]
@@ -64,7 +64,7 @@ class ModelRelationContent extends DIV implements onRender {
         $this->when($params);
 
         $this->setDatas([
-            "relation-{$relation}" => $name
+            "relation-{$relation}" => $name,
         ]);
 
         $this->addClass($class);
@@ -143,7 +143,6 @@ class ModelRelationContent extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -166,13 +165,11 @@ class ModelRelationContent extends DIV implements onRender {
     protected function set_test_var(string $var_name, $test)
     {
         if (is_embedded_call($test)) {
-
             $this->{$var_name} = $test;
-        }
-
-        else {
-
-            $this->{$var_name} = function () use ($test) { return !!$test; };
+        } else {
+            $this->{$var_name} = function () use ($test) {
+                return (bool) $test;
+            };
         }
     }
 
@@ -184,12 +181,8 @@ class ModelRelationContent extends DIV implements onRender {
     public function get_test_var(string $var_name, array $args = [])
     {
         if (is_bool($this->{$var_name}) || is_string($this->{$var_name})) {
-
             return $this->{$var_name};
-        }
-
-        else if ($this->{$var_name} !== null) {
-
+        } elseif ($this->{$var_name} !== null) {
             return call_user_func_array($this->{$var_name}, $args);
         }
 
@@ -202,7 +195,6 @@ class ModelRelationContent extends DIV implements onRender {
     public function callControls(...$params)
     {
         foreach ($this->controls as $control) {
-
             call_user_func_array($control, $params);
         }
     }
@@ -212,6 +204,6 @@ class ModelRelationContent extends DIV implements onRender {
      */
     public function hasControls()
     {
-        return !!count($this->controls);
+        return (bool) count($this->controls);
     }
 }

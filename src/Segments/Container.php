@@ -11,11 +11,11 @@ use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
 
 /**
- * Class Container
+ * Class Container.
  * @package Lar\LteAdmin\Segments
  */
-class Container implements SegmentContainerInterface {
-
+class Container implements SegmentContainerInterface
+{
     use FontAwesome, Eventable, Piplineble, Conditionable;
 
     /**
@@ -26,7 +26,7 @@ class Container implements SegmentContainerInterface {
     /**
      * @var string
      */
-    protected $content_yield = "content";
+    protected $content_yield = 'content';
 
     /**
      * @var Component
@@ -59,14 +59,14 @@ class Container implements SegmentContainerInterface {
         if (is_embedded_call($warp)) {
             embedded_call($warp, [
                 DIV::class => $this->component,
-                static::class => $this
+                static::class => $this,
             ]);
         }
         $this->warp = $warp;
     }
 
     /**
-     * Make next component in div
+     * Make next component in div.
      * @param  \Closure|array  $warp
      * @return $this
      */
@@ -75,7 +75,7 @@ class Container implements SegmentContainerInterface {
         if (is_embedded_call($warp)) {
             embedded_call($warp, [
                 DIV::class => $this->component,
-                static::class => $this
+                static::class => $this,
             ]);
         }
 
@@ -100,13 +100,15 @@ class Container implements SegmentContainerInterface {
      */
     public function title(string $title, string $icon = null)
     {
-        if (!$this->page_title) {
+        if (! $this->page_title) {
             $this->page_title = ['title' => $title];
         } else {
             $this->page_title['title'] = $title;
         }
 
-        if ($icon) { $this->page_title['icon'] = $icon; }
+        if ($icon) {
+            $this->page_title['icon'] = $icon;
+        }
 
         return $this;
     }
@@ -118,13 +120,15 @@ class Container implements SegmentContainerInterface {
      */
     public function icon(string $icon, string $title = null)
     {
-        if (!$this->page_title) {
+        if (! $this->page_title) {
             $this->page_title = ['icon' => $icon];
         } else {
             $this->page_title['icon'] = $icon;
         }
 
-        if ($title) { $this->page_title['title'] = $title; }
+        if ($title) {
+            $this->page_title['title'] = $title;
+        }
 
         return $this;
     }
@@ -141,7 +145,7 @@ class Container implements SegmentContainerInterface {
             'yield' => $this->content_yield,
             'component' => $this->component,
             'page_info' => $this->page_title,
-            'breadcrumb' => $this->breadcrumb
+            'breadcrumb' => $this->breadcrumb,
         ]);
     }
 

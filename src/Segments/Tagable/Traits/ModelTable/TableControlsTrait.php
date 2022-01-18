@@ -8,11 +8,11 @@ use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
 
 /**
- * Trait TableControlsTrait
+ * Trait TableControlsTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits\ModelTable
  */
-trait TableControlsTrait {
-
+trait TableControlsTrait
+{
     /**
      * @var \Closure|array|null
      */
@@ -166,9 +166,10 @@ trait TableControlsTrait {
      * @param $title
      * @param  null  $icon
      * @param  null  $confirm
+     * @param  string|null  $warning
      * @return $this
      */
-    public function action($jax, $title, $icon = null, $confirm = null, $warning = "lte.before_need_to_select")
+    public function action($jax, $title, $icon = null, $confirm = null, ?string $warning = 'lte.before_need_to_select')
     {
         $this->action[] = [
             'jax' => $jax,
@@ -184,8 +185,9 @@ trait TableControlsTrait {
     public function getActionData()
     {
         $hasDelete = $this->get_test_var('check_delete') && gets()->lte->menu->now['link.destroy'](0);
-        $select_type = request()->get($this->model_name . '_type', $this->order_type);
+        $select_type = request()->get($this->model_name.'_type', $this->order_type);
         $this->order_field = request()->get($this->model_name, $this->order_field);
+
         return [
             'table_id' => $this->model_name,
             'object' => $this->model_class,
@@ -196,28 +198,34 @@ trait TableControlsTrait {
             'order_field' => $this->order_field,
             'select_type' => $select_type,
             'columns' => collect($this->columns)
-                ->filter(function ($i) { return isset($i['field']) && is_string($i['field']) && !$i['hide']; })
+                ->filter(function ($i) {
+                    return isset($i['field']) && is_string($i['field']) && ! $i['hide'];
+                })
                 ->pluck('field')
                 ->toArray(),
             'all_columns' => collect($this->columns)
-//                ->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })
-                ->filter(function ($i) { return isset($i['label']) && $i['label']; })
-                ->map(function ($i) { unset($i['macros']); return $i; })
+                ->filter(function ($i) {
+                    return isset($i['label']) && $i['label'];
+                })
+                ->map(function ($i) {
+                    unset($i['macros']);
+
+                    return $i;
+                })
                 ->toArray(),
         ];
     }
 
     /**
-     * Create default controls
+     * Create default controls.
      */
     protected function _create_controls()
     {
         if ($this->get_test_var('controls')) {
-
             $hasDelete = gets()->lte->menu->now['link.destroy'](0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
 
-            if ($this->checks && !request()->has('show_deleted') && $show) {
+            if ($this->checks && ! request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
                     $span->_addClass('fit');
                     $span->view('lte::segment.model_table_checkbox', [
@@ -226,21 +234,20 @@ trait TableControlsTrait {
                         'object' => $this->model_class,
                         'actions' => $this->action,
                         'delete' => $this->get_test_var('check_delete') && $hasDelete,
-                        'columns' => collect($this->columns)->filter(function ($i) { return isset($i['field']) && is_string($i['field']); })->pluck('field')->toArray()
+                        'columns' => collect($this->columns)->filter(function ($i) {
+                            return isset($i['field']) && is_string($i['field']);
+                        })->pluck('field')->toArray(),
                     ])->render();
                 }, function (Model $model) {
-
                     return view('lte::segment.model_table_checkbox', [
                         'id' => $model->id,
                         'table_id' => $this->model_name,
-                        'disabled' => !$this->get_test_var('control_selectable', [$model])
+                        'disabled' => ! $this->get_test_var('control_selectable', [$model]),
                     ])->render();
-
                 }, null, true);
             }
 
             if (request()->has('show_deleted')) {
-
                 $this->deleted_at();
             }
 
@@ -248,14 +255,12 @@ trait TableControlsTrait {
                 $span->_addClass('fit');
             }, function (Model $model) {
                 return ButtonGroup::create(function (ButtonGroup $group) use ($model) {
-
                     $menu = gets()->lte->menu->now;
 
                     if ($menu) {
-
                         $key = $model->getRouteKey();
 
-                        if (!request()->has('show_deleted')) {
+                        if (! request()->has('show_deleted')) {
                             if (isset($menu['link.edit']) && $this->get_test_var('control_edit', [$model]) && lte_controller_can('edit')) {
                                 $group->resourceEdit($menu['link.edit']($key), '');
                             }
@@ -268,7 +273,6 @@ trait TableControlsTrait {
                                 $group->resourceInfo($menu['link.show']($key), '');
                             }
                         } else {
-
                             if (isset($menu['link.destroy']) && $this->get_test_var('control_restore', [$model]) && lte_controller_can('restore')) {
                                 $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
                             }
@@ -290,13 +294,11 @@ trait TableControlsTrait {
     protected function set_test_var(string $var_name, $test)
     {
         if (is_embedded_call($test)) {
-
             $this->{$var_name} = $test;
-        }
-
-        else {
-
-            $this->{$var_name} = function () use ($test) { return !!$test; };
+        } else {
+            $this->{$var_name} = function () use ($test) {
+                return (bool) $test;
+            };
         }
     }
 
@@ -308,7 +310,6 @@ trait TableControlsTrait {
     protected function get_test_var(string $var_name, array $args = [])
     {
         if ($this->{$var_name} !== null) {
-
             return call_user_func_array($this->{$var_name}, $args);
         }
 

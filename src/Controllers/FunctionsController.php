@@ -7,7 +7,7 @@ use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Class HomeController
+ * Class HomeController.
  *
  * @package Lar\LteAdmin\Controllers
  */
@@ -16,12 +16,12 @@ class FunctionsController extends Controller
     /**
      * @var string
      */
-    static $model = LteFunction::class;
+    public static $model = LteFunction::class;
 
     /**
      * @var array
      */
-    static $roles = ['root'];
+    public static $roles = ['root'];
 
     public function explanation(): Explanation
     {
@@ -69,6 +69,6 @@ class FunctionsController extends Controller
      */
     public function show_roles(LteFunction $function)
     {
-        return '<span class="badge badge-success">' . $function->roles->pluck('name')->implode('</span> <span class="badge badge-success">') . '</span>';
+        return '<span class="badge badge-success">'.$function->roles->pluck('name')->implode('</span> <span class="badge badge-success">').'</span>';
     }
 }

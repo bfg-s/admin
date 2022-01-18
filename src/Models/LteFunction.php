@@ -7,43 +7,43 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LtePermission
+ * Class LtePermission.
  * @package Lar\LteAdmin\Models
  */
 class LteFunction extends Model
 {
     use DumpedModel;
-    
+
     /**
      * @var string
      */
-    protected $table = "lte_functions";
+    protected $table = 'lte_functions';
 
     /**
      * @var string[]
      */
     protected $fillable = [
-        "slug", "class", "description", "active"
+        'slug', 'class', 'description', 'active',
     ];
 
     /**
      * @var array
      */
     protected $attributes = [
-        'active' => 1
+        'active' => 1,
     ];
 
     /**
      * @var Collection
      */
-    static $now;
+    public static $now;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
-        return $this->belongsToMany(LteRole::class, "lte_role_function", "lte_function_id", "lte_role_id");
+        return $this->belongsToMany(LteRole::class, 'lte_role_function', 'lte_function_id', 'lte_role_id');
     }
 
     /**

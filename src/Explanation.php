@@ -34,16 +34,16 @@ final class Explanation
         $this->router = $router;
     }
 
-    public static function new(...$delegates): Explanation
+    public static function new(...$delegates): self
     {
-        $field = app(Explanation::class);
+        $field = app(self::class);
+
         return $field->with(...$delegates);
     }
 
     public function index(...$delegates)
     {
-        if ($this->router->currentRouteNamed("*.index")) {
-
+        if ($this->router->currentRouteNamed('*.index')) {
             $this->with(...$delegates);
         }
 
@@ -53,10 +53,9 @@ final class Explanation
     public function create(...$delegates)
     {
         if (
-            $this->router->currentRouteNamed("*.create")
-            || $this->router->currentRouteNamed("*.store")
+            $this->router->currentRouteNamed('*.create')
+            || $this->router->currentRouteNamed('*.store')
         ) {
-
             $this->with(...$delegates);
         }
 
@@ -66,10 +65,9 @@ final class Explanation
     public function edit(...$delegates)
     {
         if (
-            $this->router->currentRouteNamed("*.edit")
-            || $this->router->currentRouteNamed("*.update")
+            $this->router->currentRouteNamed('*.edit')
+            || $this->router->currentRouteNamed('*.update')
         ) {
-
             $this->with(...$delegates);
         }
 
@@ -83,8 +81,7 @@ final class Explanation
 
     public function show(...$delegates)
     {
-        if ($this->router->currentRouteNamed("*.show")) {
-
+        if ($this->router->currentRouteNamed('*.show')) {
             $this->with(...$delegates);
         }
 
@@ -98,7 +95,7 @@ final class Explanation
     public function with($delegate = null)
     {
         if ($delegate) {
-            if (!is_array($delegate)) {
+            if (! is_array($delegate)) {
                 $delegate = func_get_args();
             }
             foreach ($delegate as $item) {
@@ -107,13 +104,14 @@ final class Explanation
                 }
                 if (is_array($item)) {
                     $this->with($item);
-                } else if ($item instanceof Delegate) {
+                } elseif ($item instanceof Delegate) {
                     $this->delegates[] = $item;
-                } else if ($item instanceof Explanation) {
+                } elseif ($item instanceof self) {
                     $this->delegates = array_merge($this->delegates, $item->delegates);
                 }
             }
         }
+
         return $this;
     }
 
@@ -125,12 +123,13 @@ final class Explanation
                 unset($this->delegates[$key]);
             }
         }
+
         return $this;
     }
 
     public function isEmpty()
     {
-        return !count($this->delegates);
+        return ! count($this->delegates);
     }
 
     protected function apply(Delegate $delegate, object $instance)

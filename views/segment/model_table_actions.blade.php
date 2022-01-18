@@ -6,9 +6,9 @@
     <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
         @if($hasHidden)
             @foreach($all_columns as $column)
-                @if(!is_array($column['field']))
-                <button class="dropdown-item" type="button" data-click="doc::location" data-param="{{urlWithGet([$table_id.'_'.$column['field'] => (int)!in_array($column['field'], $columns)])}}">
-                    <i class="fas fa-border-{{in_array($column['field'], $columns) ? 'all':'none'}}"></i> {{__(in_array($column['field'], $columns) ? 'lte.hide':'lte.show')}} {{$column['label']}}
+                @if($column['key'])
+                <button class="dropdown-item" type="button" data-click="doc::location" data-param="{{urlWithGet([$column['key'] => (int)$column['hide']])}}">
+                    <i class="fas fa-border-{{!$column['hide'] ? 'all':'none'}}"></i> {{__(!$column['hide']? 'lte.hide':'lte.show')}} "{{$column['label']}}"
                 </button>
                 @endif
             @endforeach

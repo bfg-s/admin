@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Number
+ * Class Number.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class Number extends \Lar\LteAdmin\Segments\Tagable\Fields\Number
@@ -11,5 +11,5 @@ class Number extends \Lar\LteAdmin\Segments\Tagable\Fields\Number
     /**
      * @var string
      */
-    static $condition = "=";
+    public static $condition = '=';
 }

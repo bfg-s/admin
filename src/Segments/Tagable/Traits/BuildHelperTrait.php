@@ -5,11 +5,11 @@ namespace Lar\LteAdmin\Segments\Tagable\Traits;
 use Lar\LteAdmin\Segments\Tagable\Tabs;
 
 /**
- * Trait BuildHelperTrait
+ * Trait BuildHelperTrait.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait BuildHelperTrait {
-
+trait BuildHelperTrait
+{
     /**
      * @param  string  $title
      * @param  string|mixed  $icon

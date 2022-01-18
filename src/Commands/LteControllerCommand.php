@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Class LteUpdateAssets
+ * Class LteUpdateAssets.
  *
  * @package Lar\LteAdmin\Commands
  */
@@ -52,32 +52,30 @@ class LteControllerCommand extends Command
         $resource = $this->option('resource');
 
         if ($model) {
-
             $resource = true;
         }
 
-        if (!preg_match('/Controller$/', $name)) {
-            $name .= "Controller";
+        if (! preg_match('/Controller$/', $name)) {
+            $name .= 'Controller';
         }
 
-        $ex = explode("/", $name);
+        $ex = explode('/', $name);
 
-        $add_dir = "";
+        $add_dir = '';
 
         $namespace = lte_app_namespace('Controllers');
 
         if (count($ex) > 1) {
+            $a = str_replace($ex[count($ex) - 1], '', $name);
 
-            $a = str_replace($ex[count($ex)-1], '', $name);
+            $add_dir = '/'.$a;
 
-            $add_dir = '/' . $a;
+            $namespace .= '\\'.trim(str_replace('/', '\\', $a), '\\');
 
-            $namespace .= '\\' . trim(str_replace('/', '\\', $a), '\\');
-
-            $name = $ex[count($ex)-1];
+            $name = $ex[count($ex) - 1];
         }
 
-        $dir = lte_app_path('Controllers' . $add_dir);
+        $dir = lte_app_path('Controllers'.$add_dir);
 
         $class = class_entity($name)
             ->wrap('php')
@@ -85,38 +83,36 @@ class LteControllerCommand extends Command
             ->namespace($namespace);
 
         if ($resource) {
-
             $class->use(LtePage::class);
 
             $class->prop('static:model');
 
             if ($model) {
-
-                if (!class_exists("App\\{$model}")) {
+                if (! class_exists("App\\{$model}")) {
                     $model_namespace = "App\\Models\\{$model}";
                 } else {
                     $model_namespace = "App\\{$model}";
                 }
 
-                $class->prop("static:model", entity($model_namespace."::class"));
+                $class->prop('static:model', entity($model_namespace.'::class'));
             }
 
             $class->method('explanation')
-                ->line("return Explanation::new(")
-                ->tab("\$this->card()->defaultTools()")
-                ->line(")->index(")
-                ->tab("\$this->search()->id(),")
-                ->tab("\$this->search()->at()")
-                ->line(")->index(")
-                ->tab("\$this->table()->id(),")
-                ->tab("\$this->table()->at()")
-                ->line(")->form(")
-                ->tab("\$this->form()->info_id(),")
-                ->tab("\$this->form()->info_at()")
-                ->line(")->show(")
-                ->tab("\$this->info()->id(),")
-                ->tab("\$this->info()->at()")
-                ->line(");")
+                ->line('return Explanation::new(')
+                ->tab('$this->card()->defaultTools(),')
+                ->line(')->index(')
+                ->tab('$this->search()->id(),')
+                ->tab('$this->search()->at(),')
+                ->line(')->index(')
+                ->tab('$this->table()->id(),')
+                ->tab('$this->table()->at(),')
+                ->line(')->form(')
+                ->tab('$this->form()->info_id(),')
+                ->tab('$this->form()->info_at(),')
+                ->line(')->show(')
+                ->tab('$this->info()->id(),')
+                ->tab('$this->info()->at(),')
+                ->line(');')
                 ->doc(function ($doc) {
                     /** @var DocumentorEntity $doc */
                     $doc->tagReturn(Explanation::class);
@@ -125,10 +121,10 @@ class LteControllerCommand extends Command
             if (in_array('index', $only)) {
                 $class->method('index')
                     ->param('page', null, 'LtePage')
-                    ->line("return \$page")
-                    ->tab("->card()")
-                    ->tab("->search()")
-                    ->tab("->table();")
+                    ->line('return $page')
+                    ->tab('->card()')
+                    ->tab('->search()')
+                    ->tab('->table();')
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
@@ -137,9 +133,9 @@ class LteControllerCommand extends Command
             if (in_array('matrix', $only)) {
                 $class->method('matrix')
                     ->param('page', null, 'LtePage')
-                    ->line("return \$page")
-                    ->tab("->card()")
-                    ->tab("->form();")
+                    ->line('return $page')
+                    ->tab('->card()')
+                    ->tab('->form();')
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
@@ -148,9 +144,9 @@ class LteControllerCommand extends Command
             if (in_array('show', $only)) {
                 $class->method('show')
                     ->param('page', null, 'LtePage')
-                    ->line("return \$page")
-                    ->tab("->card()")
-                    ->tab("->info();")
+                    ->line('return $page')
+                    ->tab('->card()')
+                    ->tab('->info();')
                     ->doc(function ($doc) {
                         /** @var DocumentorEntity $doc */
                         $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
@@ -158,23 +154,23 @@ class LteControllerCommand extends Command
             }
         }
 
-        $file = $dir . '/' . $name . '.php';
+        $file = $dir.'/'.$name.'.php';
 
-        if (is_file($file) && !$this->option('force')) {
-
+        if (is_file($file) && ! $this->option('force')) {
             $this->error("Controller [{$namespace}\\{$name}] exists!");
+
             return;
         }
 
         file_put_contents($file, $class->render());
 
-        $this->info('Controller [' . $dir . '/' . $name . '.php] created!');
+        $this->info('Controller ['.$dir.'/'.$name.'.php] created!');
 
-        if ($resource && isset($model_namespace) && !class_exists($model_namespace)) {
+        if ($resource && isset($model_namespace) && ! class_exists($model_namespace)) {
             $this->warn("Model [$model] not found!");
             if ($this->confirm("Create a new model [$model]?")) {
                 $this->call('make:model', [
-                    'name' => $model
+                    'name' => $model,
                 ]);
             }
         }

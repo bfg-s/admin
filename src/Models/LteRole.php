@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
- * Class LteRole
+ * Class LteRole.
  *
  * @package Lar\LteAdmin\Models
  */
@@ -17,13 +17,13 @@ class LteRole extends Model
     /**
      * @var string
      */
-    protected $table = "lte_roles";
+    protected $table = 'lte_roles';
 
     /**
      * @var array
      */
     protected $fillable = [
-        "name", "slug"
+        'name', 'slug',
     ];
 
     /**
@@ -31,7 +31,7 @@ class LteRole extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(config('lte.auth.providers.lte.model'), "lte_role_user", "lte_role_id", "lte_user_id");
+        return $this->belongsToMany(config('lte.auth.providers.lte.model'), 'lte_role_user', 'lte_role_id', 'lte_user_id');
     }
 
     /**
@@ -39,6 +39,6 @@ class LteRole extends Model
      */
     public function functions()
     {
-        return $this->belongsToMany(LteFunction::class, "lte_role_function", "lte_role_id", "lte_function_id");
+        return $this->belongsToMany(LteFunction::class, 'lte_role_function', 'lte_role_id', 'lte_function_id');
     }
 }

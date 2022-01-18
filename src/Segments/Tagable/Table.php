@@ -9,12 +9,12 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin TableMacroList
  */
-class Table extends TableParent {
-
+class Table extends TableParent
+{
     use TypesTrait, Macroable, Delegable;
 
     /**
@@ -26,7 +26,7 @@ class Table extends TableParent {
      * @var string[]
      */
     protected $props = [
-        'table', 'table-sm', 'table-hover'
+        'table', 'table-sm', 'table-hover',
     ];
 
     /**
@@ -65,7 +65,7 @@ class Table extends TableParent {
             $rows = $rows->toArray();
         }
 
-        if (!is_array($rows)) {
+        if (! is_array($rows)) {
             $params[] = $rows;
         } else {
             $this->array_build = $rows;
@@ -73,7 +73,7 @@ class Table extends TableParent {
 
         $this->when($params);
 
-        $this->toExecute("ifArray");
+        $this->toExecute('ifArray');
 
         $this->callConstructEvents();
     }
@@ -102,7 +102,7 @@ class Table extends TableParent {
     }
 
     /**
-     * Create table from array
+     * Create table from array.
      */
     protected function ifArray()
     {
@@ -119,12 +119,11 @@ class Table extends TableParent {
      * @param  array  $headers
      * @param  array  $rows
      */
-    protected function build_header_table(array $headers, array $rows) {
-
+    protected function build_header_table(array $headers, array $rows)
+    {
         $head = $this->thead()->addClassIf($this->type, "thead-{$this->type}")->tr();
 
         foreach ($headers as $header) {
-
             $head->th(['scope' => 'col'], $header);
         }
 
@@ -135,19 +134,17 @@ class Table extends TableParent {
      * @param  array  $rows
      * @param  bool  $has_header
      */
-    protected function build_easy_table(array $rows, bool $has_header = false) {
-
+    protected function build_easy_table(array $rows, bool $has_header = false)
+    {
         if ($this->map) {
-
             $rows = collect($rows)->map($this->map)->toArray();
         }
 
-        if  ($this->mapWithKeys) {
-
+        if ($this->mapWithKeys) {
             $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
         }
 
-        if (!$has_header && $this->type) {
+        if (! $has_header && $this->type) {
             $this->addClass("table-{$this->type}");
         }
 
@@ -157,9 +154,9 @@ class Table extends TableParent {
         $simple = false;
         foreach ($rows as $key => $row) {
             $tr = $body->tr();
-            if (is_array($row) && !$simple) {
+            if (is_array($row) && ! $simple) {
                 foreach (array_values($row) as $ki => $col) {
-                    if (!$ki && $this->first_th) {
+                    if (! $ki && $this->first_th) {
                         $tr->th(['scope' => 'row'])->when($col);
                     } else {
                         $tr->td()->when($col);

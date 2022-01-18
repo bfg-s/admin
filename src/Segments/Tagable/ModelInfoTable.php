@@ -9,17 +9,15 @@ use Lar\Layout\Tags\SPAN;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 
-use function GraphQL\Validator\DocumentValidator;
-
 /**
- * Class Col
+ * Class Col.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\ModelTable::$extensions (...$params)
  * @mixin ModelInfoTableMacroList
  * @mixin ModelInfoTableMethods
  */
-class ModelInfoTable extends DIV {
-
+class ModelInfoTable extends DIV
+{
     use Macroable, Piplineble, Delegable;
 
     /**
@@ -50,21 +48,16 @@ class ModelInfoTable extends DIV {
     public function __construct($model = null, ...$params)
     {
         if ($model instanceof Model || is_array($model)) {
-
             $this->model = $model;
-        }
-
-        else {
-
+        } else {
             $params[] = $model;
         }
 
-        if (!$this->model) {
-
+        if (! $this->model) {
             $this->model = gets()->lte->menu->model;
         }
 
-        if (!is_array($this->model)) {
+        if (! is_array($this->model)) {
             $this->model = static::fire_pipes($this->model, get_class($this->model));
         }
 
@@ -98,7 +91,6 @@ class ModelInfoTable extends DIV {
     public function info(string $info)
     {
         if ($this->last && isset($this->rows[$this->last])) {
-
             $this->rows[$this->last]['info'] = $info;
         }
 
@@ -166,7 +158,7 @@ class ModelInfoTable extends DIV {
     }
 
     /**
-     * Build table
+     * Build table.
      */
     protected function buildTable()
     {
@@ -181,15 +173,15 @@ class ModelInfoTable extends DIV {
                 $macros = $row['macros'];
                 if (is_string($field)) {
                     $field = multi_dot_call($this->model, $field);
-                } else if (is_array($field) || is_embedded_call($field)) {
+                } elseif (is_array($field) || is_embedded_call($field)) {
                     $field = embedded_call($field, [
                         is_object($this->model) ? get_class($this->model) : 'model' => $this->model,
-                        ModelInfoTable::class => $this
+                        self::class => $this,
                     ]);
                 }
                 foreach ($macros as $macro) {
                     $field = ModelTable::callExtension($macro[0], [
-                        'model' => !is_array($this->model) ? $this->model : null,
+                        'model' => ! is_array($this->model) ? $this->model : null,
                         'value' => $field,
                         'field' => $row['field'],
                         'title' => $row['label'],
@@ -217,7 +209,6 @@ class ModelInfoTable extends DIV {
     public function __call($name, $arguments)
     {
         if (ModelTable::hasExtension($name) && $this->last) {
-
             $this->rows[$this->last]['macros'][] = [$name, $arguments];
 
             return $this;

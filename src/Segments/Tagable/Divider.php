@@ -7,11 +7,11 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Divider
+ * Class Divider.
  * @package Lar\LteAdmin\Segments\Tagable
  */
-class Divider extends DIV implements onRender {
-
+class Divider extends DIV implements onRender
+{
     use Macroable;
 
     /**
@@ -31,48 +31,31 @@ class Divider extends DIV implements onRender {
         parent::__construct();
 
         if ($left_title) {
-
             if (is_string($left_title)) {
-
                 $this->div(['col-auto'])->h4($left_title)->textSecondary();
-            }
-
-            else {
-
+            } else {
                 $this->div(['col-auto'])->when($left_title);
             }
         }
 
         if ($center_title) {
-
             $this->div(['col'])->hr();
 
             if (is_string($center_title)) {
-
                 $this->div(['col-auto'])->h4($center_title)->textSecondary();
-            }
-
-            else {
-
+            } else {
                 $this->div(['col-auto'])->when($center_title);
             }
 
             $this->div(['col'])->hr();
-
         } else {
-
             $this->div(['col'])->hr();
         }
 
         if ($right_title) {
-
             if (is_string($right_title)) {
-
                 $this->div(['col-auto'])->h4($right_title)->textSecondary();
-            }
-
-            else {
-
+            } else {
                 $this->div(['col-auto'])->when($right_title);
             }
         }

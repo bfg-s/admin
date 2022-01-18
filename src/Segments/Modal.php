@@ -12,15 +12,15 @@ use Lar\LteAdmin\Segments\Tagable\Traits\FieldMassControl;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class Modal
+ * Class Modal.
  * @package Lar\LteAdmin\Segments
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods Lar\LteAdmin\Segments\Tagable\Field::$form_components (string $name, string $label = null, ...$params)
  * @mixin ModalMacroList
  * @mixin ModalMethods
  */
-class Modal extends DIV implements onRender {
-
+class Modal extends DIV implements onRender
+{
     use FieldMassControl, Macroable, BuildHelperTrait;
 
     /**
@@ -70,10 +70,9 @@ class Modal extends DIV implements onRender {
         $this->body = new ModalBody($this);
 
         if ($content) {
-
             embedded_call($content, [
                 ModalBody::class => $this->body,
-                static::class => $this
+                static::class => $this,
             ]);
         }
 
@@ -106,7 +105,7 @@ class Modal extends DIV implements onRender {
      * @param  mixed  ...$params
      * @return ModalFooterButton
      */
-    public function btn(string $text = "", ...$params)
+    public function btn(string $text = '', ...$params)
     {
         $btn = new ModalFooterButton($text, ...$params);
 
@@ -120,7 +119,7 @@ class Modal extends DIV implements onRender {
      * @param  mixed  ...$params
      * @return ModalFooterButton
      */
-    public function left_btn(string $text = "", ...$params)
+    public function left_btn(string $text = '', ...$params)
     {
         $btn = new ModalFooterButton($text, ...$params);
 
@@ -134,7 +133,7 @@ class Modal extends DIV implements onRender {
      * @param  mixed  ...$params
      * @return ModalFooterButton
      */
-    public function center_btn(string $text = "", ...$params)
+    public function center_btn(string $text = '', ...$params)
     {
         $btn = new ModalFooterButton($text, ...$params);
 
@@ -152,7 +151,6 @@ class Modal extends DIV implements onRender {
     public function __call($name, $arguments)
     {
         if ($call = $this->call_group($name, $arguments)) {
-
             return $call;
         }
 
@@ -168,7 +166,6 @@ class Modal extends DIV implements onRender {
         $this->callRenderEvents();
 
         if ($this->temporary) {
-
             $this->attr('data-temporary');
         }
 

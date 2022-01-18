@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class Facade
- * 
+ * Class Facade.
+ *
  * @package Lar
  */
 class NavigateFacade extends FacadeIlluminate

@@ -2,13 +2,12 @@
 
 namespace Lar\LteAdmin\Core\Traits;
 
-
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Trait NavCommon
+ * Trait NavCommon.
  * @package Lar\LteAdmin\Core\Traits
  */
 trait NavCommon
@@ -31,7 +30,6 @@ trait NavCommon
     public function extension(ExtendProvider $provider = null)
     {
         if ($provider) {
-
             $this->items['extension'] = $provider;
         }
 
@@ -66,7 +64,7 @@ trait NavCommon
      */
     public function data(array $data)
     {
-        if (!isset($this->items['data'])) {
+        if (! isset($this->items['data'])) {
             $this->items['data'] = $data;
         } else {
             $this->items['data'] = array_merge($this->items['data'], $data);
@@ -104,7 +102,6 @@ trait NavCommon
     public function title(string $title = null)
     {
         if ($title !== null) {
-
             $this->items['title'] = $title;
         }
 
@@ -140,7 +137,6 @@ trait NavCommon
     public function route(string $route = null)
     {
         if ($route !== null) {
-
             $this->items['route'] = $route;
         }
 
@@ -164,7 +160,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge($data = null, $type = 'info', array $instructions =  null)
+    public function badge($data = null, $type = 'info', array $instructions = null)
     {
         if (is_array($type)) {
             $instructions = $type;
@@ -172,12 +168,11 @@ trait NavCommon
         }
 
         if ($data !== null) {
-
             $this->items['badge'] = [
                 'id' => \Str::slug(($this->items['route'] ?? ($this->items['name'] ?? false)), '_'),
                 'text' => $data,
                 'type' => $type,
-                'instructions' => $instructions
+                'instructions' => $instructions,
             ];
         }
 
@@ -191,7 +186,6 @@ trait NavCommon
     public function badge_title(string $title)
     {
         if ($this->items['badge']) {
-
             $this->items['badge']['title'] = $title;
         }
 
@@ -203,7 +197,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_danger($data = null, array $instructions =  null)
+    public function badge_danger($data = null, array $instructions = null)
     {
         return $this->badge($data, 'danger', $instructions);
     }
@@ -213,7 +207,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_dark($data = null, array $instructions =  null)
+    public function badge_dark($data = null, array $instructions = null)
     {
         return $this->badge($data, 'dark', $instructions);
     }
@@ -223,7 +217,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_light($data = null, array $instructions =  null)
+    public function badge_light($data = null, array $instructions = null)
     {
         return $this->badge($data, 'light', $instructions);
     }
@@ -233,7 +227,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_pill($data = null, array $instructions =  null)
+    public function badge_pill($data = null, array $instructions = null)
     {
         return $this->badge($data, 'pill', $instructions);
     }
@@ -243,7 +237,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_primary($data = null, array $instructions =  null)
+    public function badge_primary($data = null, array $instructions = null)
     {
         return $this->badge($data, 'primary', $instructions);
     }
@@ -253,7 +247,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_secondary($data = null, array $instructions =  null)
+    public function badge_secondary($data = null, array $instructions = null)
     {
         return $this->badge($data, 'secondary', $instructions);
     }
@@ -263,7 +257,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_success($data = null, array $instructions =  null)
+    public function badge_success($data = null, array $instructions = null)
     {
         return $this->badge($data, 'success', $instructions);
     }
@@ -273,7 +267,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_warning($data = null, array $instructions =  null)
+    public function badge_warning($data = null, array $instructions = null)
     {
         return $this->badge($data, 'warning', $instructions);
     }
@@ -286,25 +280,19 @@ trait NavCommon
         $extensions = LteAdmin::$nav_extensions;
 
         foreach ($extensions as $key => $extension) {
-
             if ($key === 'application') {
                 continue;
             }
 
             if (is_array($extension)) {
-
                 foreach ($extension as $item) {
-
                     Navigate::$extension = $item;
 
                     $item->navigator($this);
 
                     Navigate::$extension = null;
                 }
-
-            }
-            else {
-
+            } else {
                 Navigate::$extension = $extension;
 
                 $extension->navigator($this);
@@ -323,16 +311,13 @@ trait NavCommon
     protected function includeAfterGroup($name)
     {
         if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
-
             foreach (LteAdmin::$nav_extensions[$name] as $item) {
-
                 Navigate::$extension = $item;
 
                 $item->navigator($this);
 
                 Navigate::$extension = null;
             }
-
 
             unset(LteAdmin::$nav_extensions[$name]);
         }

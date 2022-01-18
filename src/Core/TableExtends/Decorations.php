@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Segments\Tagable\Field;
 
 /**
- * Class Decorations
+ * Class Decorations.
  * @package Lar\LteAdmin\Core\TableExtends
  */
-class Decorations {
-
+class Decorations
+{
     /**
      * @param $value
      * @param  array  $props
@@ -33,11 +33,14 @@ class Decorations {
      */
     public function password_stars($value, $props = [])
     {
-        if (!$value) { return $this->true_data($value); }
+        if (! $value) {
+            return $this->true_data($value);
+        }
         $star = $props[0] ?? '•';
         $id = uniqid('password_');
         $id_showed = "showed_{$id}";
         $stars = str_repeat($star, strlen(strip_tags($value)));
+
         return "<span id='{$id}'><i data-click='0> $::hide 1> $::show' data-params='#{$id} && #{$id_showed}' class='fas fa-eye' style='cursor:pointer'></i> {$stars}</span>".
             "<span id='{$id_showed}' style='display:none'><i data-click='0> $::hide 1> $::show' data-params='#{$id_showed} && #{$id}' class='fas fa-eye-slash' style='cursor:pointer'></i> {$value}</span>";
     }
@@ -52,10 +55,13 @@ class Decorations {
         $size = $props[0] ?? 30;
 
         if ($value) {
-            if (!preg_match('/^http/', $value)) { $value = "/" . trim($value, '/'); }
+            if (! preg_match('/^http/', $value)) {
+                $value = '/'.trim($value, '/');
+            }
+
             return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
         } else {
-            return "<span class=\"badge badge-dark\">none</span>";
+            return '<span class="badge badge-dark">none</span>';
         }
     }
 
@@ -70,10 +76,10 @@ class Decorations {
             if (is_image(public_path($value))) {
                 return $this->avatar($value, $props);
             } else {
-                return "<span class=\"badge badge-info\" title='{$value}'>".basename($value)."</span>";
+                return "<span class=\"badge badge-info\" title='{$value}'>".basename($value).'</span>';
             }
         } else {
-            return "<span class=\"badge badge-dark\">none</span>";
+            return '<span class="badge badge-dark">none</span>';
         }
     }
 
@@ -86,16 +92,14 @@ class Decorations {
     public function copied($value, $props = [], Model $model = null)
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
-
             $value_for_copy = call_user_func($props[0], $model);
         }
 
-        if (!$value) {
-
+        if (! $value) {
             return $this->true_data($value);
         }
 
-        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a> " . $value;
+        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a> ".$value;
     }
 
     /**
@@ -110,12 +114,11 @@ class Decorations {
             $value_for_copy = call_user_func($props[0], $model);
         }
 
-        if (!$value) {
-
+        if (! $value) {
             return $this->true_data($value);
         }
 
-        return $value . " <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a>";
+        return $value." <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a>";
     }
 
     /**
@@ -136,7 +139,10 @@ class Decorations {
     public function badge($value, $props = [], Model $model = null)
     {
         $type = $props[0] ?? 'info';
-        if (is_embedded_call($type)) { $type = call_user_func($type, $model); }
+        if (is_embedded_call($type)) {
+            $type = call_user_func($type, $model);
+        }
+
         return "<span class=\"badge badge-{$type}\">{$value}</span>";
     }
 
@@ -148,7 +154,10 @@ class Decorations {
     public function pill($value, $props = [], Model $model = null)
     {
         $type = $props[0] ?? 'info';
-        if (is_embedded_call($type)) { $type = call_user_func($type, $model); }
+        if (is_embedded_call($type)) {
+            $type = call_user_func($type, $model);
+        }
+
         return "<span class=\"badge badge-pill badge-{$type}\">{$value}</span>";
     }
 
@@ -158,8 +167,8 @@ class Decorations {
      */
     public function yes_no($value)
     {
-        return $value ? "<span class=\"badge badge-success\">".__('lte.yes')."</span>" :
-            "<span class=\"badge badge-danger\">".__('lte.no')."</span>";
+        return $value ? '<span class="badge badge-success">'.__('lte.yes').'</span>' :
+            '<span class="badge badge-danger">'.__('lte.no').'</span>';
     }
 
     /**
@@ -168,8 +177,8 @@ class Decorations {
      */
     public function on_off($value)
     {
-        return $value ? "<span class=\"badge badge-success\">".__('lte.on')."</span>" :
-            "<span class=\"badge badge-danger\">".__('lte.off')."</span>";
+        return $value ? '<span class="badge badge-success">'.__('lte.on').'</span>' :
+            '<span class="badge badge-danger">'.__('lte.off').'</span>';
     }
 
     /**
@@ -180,6 +189,7 @@ class Decorations {
     public function fa_icon($value, $props = [])
     {
         $size = $props[0] ?? 22;
+
         return "<i class='{$value}' title='{$value}' style='font-size: {$size}px'></i>";
     }
 
@@ -192,9 +202,10 @@ class Decorations {
     {
         $c = collect($value);
         $limit = $props[0] ?? 5;
-        return '<span class="badge badge-info">' .
-            $c->take($limit)->implode('</span> <span class="badge badge-info">') .
-            '</span>' . ($c->count() > $limit ? ' ... <span class="badge badge-warning" title="'.$c->skip($limit)->implode(', ').'">'.($c->count()-$limit).'x</span>' : '');
+
+        return '<span class="badge badge-info">'.
+            $c->take($limit)->implode('</span> <span class="badge badge-info">').
+            '</span>'.($c->count() > $limit ? ' ... <span class="badge badge-warning" title="'.$c->skip($limit)->implode(', ').'">'.($c->count() - $limit).'x</span>' : '');
     }
 
     /**
@@ -205,6 +216,7 @@ class Decorations {
     public function color_cube($value, $props = [])
     {
         $size = $props[0] ?? 22;
+
         return "<i class=\"fas fa-square\" title='{$value}' style=\"color: {$value}; font-size: {$size}px\"></i>";
     }
 
@@ -217,32 +229,16 @@ class Decorations {
         $return = \Lar\Layout\Tags\SPAN::create(['badge']);
 
         if (is_null($value)) {
-
-            return $return->addClass('badge-dark')->text("NULL");
-        }
-
-        else if ($value === true) {
-
+            return $return->addClass('badge-dark')->text('NULL');
+        } elseif ($value === true) {
             return $return->addClass('badge-success')->text('TRUE');
-        }
-
-        else if ($value === false) {
-
+        } elseif ($value === false) {
             return $return->addClass('badge-danger')->text('FALSE');
-        }
-
-        else if (is_array($value)) {
-
+        } elseif (is_array($value)) {
             return $return->addClass('badge-info')->text('Array('.count($value).')');
-        }
-
-        else if ($value instanceof Carbon) {
-
+        } elseif ($value instanceof Carbon) {
             return $value->format('Y-m-d H:i:s');
-        }
-
-        else {
-
+        } else {
             return $value;
         }
     }

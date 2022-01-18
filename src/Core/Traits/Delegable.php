@@ -29,11 +29,9 @@ trait Delegable
     public function explainForce($explanation)
     {
         if (is_callable($explanation)) {
-
             $explanation = call_user_func($explanation);
         }
         if ($explanation instanceof Explanation) {
-
             $explanation->applyFor('*', $this);
         }
 

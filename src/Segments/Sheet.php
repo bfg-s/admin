@@ -7,12 +7,12 @@ use Lar\LteAdmin\Segments\Tagable\Card;
 use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
 /**
- * Class Sheet
+ * Class Sheet.
  * @package Lar\LteAdmin\Segments
  * @deprecated Use the LtePage
  */
-class Sheet extends Container {
-
+class Sheet extends Container
+{
     /**
      * Sheet constructor.
      * @param  \Closure|string  $title
@@ -38,7 +38,7 @@ class Sheet extends Container {
                         embedded_call($warp, [
                             ModelTable::class => $table,
                             Card::class => $card,
-                            static::class => $this
+                            static::class => $this,
                         ]);
                     }
                 });

@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Cores;
 use Lar\Layout\Tags\SELECT;
 
 /**
- * Class CoreSelect2Tags
+ * Class CoreSelect2Tags.
  * @package Lar\LteAdmin\Segments\Tagable\Core
  */
 class CoreSelect2Tags extends SELECT
@@ -19,7 +19,7 @@ class CoreSelect2Tags extends SELECT
      * @var string[]
      */
     protected $props = [
-        'multiple' => 'multiple'
+        'multiple' => 'multiple',
     ];
 
     /**
@@ -49,12 +49,9 @@ class CoreSelect2Tags extends SELECT
      */
     public function setValues($value)
     {
-        if (!$this->hasAttribute('value')) {
-
+        if (! $this->hasAttribute('value')) {
             $this->value = $value;
-        }
-
-        else {
+        } else {
             $this->value = $this->getValue();
             $this->removeAttribute('value');
         }
@@ -69,19 +66,19 @@ class CoreSelect2Tags extends SELECT
     {
         if (is_array($this->value)) {
             foreach ($this->value as $item) {
-                $key = array_search($item,$this->options);
+                $key = array_search($item, $this->options);
                 if ($key !== false) {
                     unset($this->options[$key]);
                 }
                 $this->option($item)
-                    ->setValue((string)$item)
+                    ->setValue((string) $item)
                     ->setSelected();
             }
         }
 
         foreach ($this->options as $option) {
             $this->option($option)
-                ->setValue((string)$option);
+                ->setValue((string) $option);
         }
 
         return $this;

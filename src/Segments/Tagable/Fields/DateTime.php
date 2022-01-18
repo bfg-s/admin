@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Segments\Tagable\Fields;
 use Lar\LteAdmin\Segments\Tagable\Traits\DateControlTrait;
 
 /**
- * Class DateTime
+ * Class DateTime.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class DateTime extends Input
@@ -15,25 +15,25 @@ class DateTime extends Input
     /**
      * @var string
      */
-    protected $icon = "fas fa-calendar-plus";
+    protected $icon = 'fas fa-calendar-plus';
 
     /**
      * @var string[]
      */
     protected $data = [
         'load' => 'picker::datetime',
-        'toggle' => 'datetimepicker'
+        'toggle' => 'datetimepicker',
     ];
 
     /**
      * @var array
      */
     protected $params = [
-        ['autocomplete' => 'off']
+        ['autocomplete' => 'off'],
     ];
 
     /**
-     * On build
+     * On build.
      */
     protected function on_build()
     {

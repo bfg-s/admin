@@ -9,13 +9,13 @@ use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
 
 /**
- * Class LtePage
+ * Class LtePage.
  * @package Lar\LteAdmin\Segments
  * @macro_return Lar\LteAdmin\Segments\LtePage
  * @mixin LtePageMacroList
  */
-class LtePage extends Container {
-
+class LtePage extends Container
+{
     use Macroable;
 
     /**
@@ -39,8 +39,7 @@ class LtePage extends Container {
      */
     public function __construct(
         Router $router
-    )
-    {
+    ) {
         parent::__construct(null);
         $this->router = $router;
         $this->registerClass($this->component);
@@ -56,13 +55,12 @@ class LtePage extends Container {
      * @param Explanation|callable $extend
      * @return static
      */
-    public function explanation($extend): LtePage
+    public function explanation($extend): self
     {
         if (is_callable($extend)) {
             $extend = call_user_func($extend);
         }
         if ($extend instanceof Explanation) {
-
             $this->explanations[] = $extend;
         }
 
@@ -82,7 +80,7 @@ class LtePage extends Container {
         }
         if ($callback && is_callable($callback)) {
             embedded_call($callback, array_merge([
-                static::class => $this
+                static::class => $this,
             ], $this->classes));
         }
     }
@@ -97,6 +95,7 @@ class LtePage extends Container {
         $className = get_class($class);
         $this->classes[$className] = $class;
         $this->applyExplanations($className, $class);
+
         return $class;
     }
 
@@ -134,10 +133,11 @@ class LtePage extends Container {
                 'Method %s::%s does not exist.', static::class, $name
             ));
         }
-        $macro = LtePage::$macros[$name];
+        $macro = self::$macros[$name];
         if ($macro instanceof \Closure) {
-            return call_user_func_array($macro->bindTo($this, LtePage::class), $arguments);
+            return call_user_func_array($macro->bindTo($this, self::class), $arguments);
         }
+
         return $macro(...$arguments);
     }
 

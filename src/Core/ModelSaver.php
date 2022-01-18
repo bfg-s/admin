@@ -17,24 +17,24 @@ use Lar\Developer\Core\Traits\Eventable;
 use Lar\LteAdmin\Models\LteFileStorage;
 
 /**
- * Class ModelSaver
+ * Class ModelSaver.
  * @package Lar\Developer\Core
  */
 class ModelSaver
 {
     use Eventable;
 
-    const DELETE_FIELD = "__DELETE__";
+    const DELETE_FIELD = '__DELETE__';
 
     /**
-     * Save model
+     * Save model.
      *
      * @var Model
      */
     protected $model;
 
     /**
-     * Save data
+     * Save data.
      *
      * @var array
      */
@@ -104,7 +104,6 @@ class ModelSaver
     public function __construct($model, array $data)
     {
         if (is_string($model)) {
-
             $model = new $model;
         }
 
@@ -134,14 +133,11 @@ class ModelSaver
         $results = collect();
 
         foreach ($data as $datum) {
-
             if ($datum instanceof Arrayable) {
-
                 $datum = $datum->toArray();
             }
 
             if (is_array($datum) && count($datum)) {
-
                 $results->push((new static($model, $datum))->save());
             }
         }
@@ -150,7 +146,7 @@ class ModelSaver
     }
 
     /**
-     * Save method
+     * Save method.
      *
      * @return Model|bool|mixed
      */
@@ -159,27 +155,16 @@ class ModelSaver
         list($data, $add) = $this->getDatas();
 
         if ($this->model instanceof Model) {
-
             if ($this->model->exists) {
-
                 return $this->update_model($data, $add);
-            }
-
-            else if (isset($data['id']) && $m = $this->model->find($data['id'])) {
-
+            } elseif (isset($data['id']) && $m = $this->model->find($data['id'])) {
                 $this->model = $m;
 
                 return $this->update_model($data, $add);
-            }
-
-            else {
-
+            } else {
                 return $this->create_model($data, $add);
             }
-        }
-
-        else {
-
+        } else {
             return $this->create_model($data, $add);
         }
     }
@@ -196,7 +181,7 @@ class ModelSaver
     }
 
     /**
-     * Update model
+     * Update model.
      *
      * @param $data
      * @param $add
@@ -208,6 +193,7 @@ class ModelSaver
             $this->call_on('on_delete', $this->data, $this->model);
             $return = $this->model->delete();
             $this->call_on('on_deleted', $this->data, $this->model);
+
             return $return;
         }
 
@@ -217,7 +203,6 @@ class ModelSaver
         $event_data = array_merge($r1, $r2);
 
         if ($event_data) {
-
             $this->data = array_merge($this->data, $event_data);
 
             list($data, $add) = $this->getDatas();
@@ -226,40 +211,33 @@ class ModelSaver
         $result = $this->model->update(array_merge($data, $event_data));
 
         if ($result) {
-
             $this->call_on('on_saved', $this->data, $result);
             $this->call_on('on_updated', $this->data, $result);
 
             foreach ($add as $key => $param) {
-
                 if (is_array($param) && method_exists($this->model, $key)) {
-
                     if (isset($param[static::DELETE_FIELD])) {
-
                         unset($param[static::DELETE_FIELD]);
                     }
 
                     $builder = $this->model->{$key}();
 
                     if ($builder instanceof BelongsToMany) {
-
                         $fk = array_key_first($param);
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-
                             $param = collect($param)->filter(function ($i) {
-                                return !isset($i[static::DELETE_FIELD]);
+                                return ! isset($i[static::DELETE_FIELD]);
                             })->map(function ($i) {
                                 $lk = array_key_last($i);
+
                                 return $i[$lk];
                             })->values()->toArray();
                         }
 
                         $builder->sync($param);
-                    }
-
-                    else if ($builder instanceof HasMany || $builder instanceof MorphMany || $builder instanceof MorphToMany) {
+                    } elseif ($builder instanceof HasMany || $builder instanceof MorphMany || $builder instanceof MorphToMany) {
                         if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
@@ -275,15 +253,10 @@ class ModelSaver
                             foreach ($param->whereNotIn('id', $ids) as $item) {
                                 (new static($this->model->{$key}(), $item))->setSrc($builder)->save();
                             }
-                        }
-                        else {
-
+                        } else {
                             (new static($this->model->{$key}(), $param))->setSrc($builder)->save();
                         }
-                    }
-
-                    else {
-
+                    } else {
                         (new static($this->model->{$key} ?? $builder, $param))->setSrc($builder)->save();
                     }
                 }
@@ -296,7 +269,7 @@ class ModelSaver
     }
 
     /**
-     * Create model
+     * Create model.
      * @param $data
      * @param $add
      * @return Model
@@ -309,7 +282,6 @@ class ModelSaver
         $event_data = array_merge($r1, $r2);
 
         if ($event_data) {
-
             $this->data = array_merge($this->data, $event_data);
 
             list($data, $add) = $this->getDatas();
@@ -320,7 +292,6 @@ class ModelSaver
         $this->model = $this->model->create($data_for_create);
 
         if ($this->src instanceof HasOne) {
-
             $local_parent_relation = $this->src->getLocalKeyName();
 
             $parent = $this->src->getParent();
@@ -329,46 +300,39 @@ class ModelSaver
                 $local_parent_relation != $parent->getKeyName()
             ) {
                 $parent->update([
-                    $local_parent_relation => $this->model->{$this->model->getKeyName()}
+                    $local_parent_relation => $this->model->{$this->model->getKeyName()},
                 ]);
             }
         }
 
         if ($this->model) {
-
             $this->call_on('on_saved', $this->data, $this->model);
             $this->call_on('on_created', $this->data, $this->model);
 
             foreach ($add as $key => $param) {
-
                 if (is_array($param) && method_exists($this->model, $key)) {
-
                     if (isset($param[static::DELETE_FIELD])) {
-
                         unset($param[static::DELETE_FIELD]);
                     }
 
                     $builder = $this->model->{$key}();
 
                     if ($builder instanceof BelongsToMany) {
-
                         $fk = array_key_first($param);
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-
                             $param = collect($param)->filter(function ($i) {
-                                return !isset($i[static::DELETE_FIELD]);
+                                return ! isset($i[static::DELETE_FIELD]);
                             })->map(function ($i) {
                                 $lk = array_key_last($i);
+
                                 return $i[$lk];
                             })->values()->toArray();
                         }
 
                         $builder->sync($param);
-                    }
-
-                    else if (
+                    } elseif (
                         $builder instanceof HasMany ||
                         $builder instanceof MorphMany ||
                         $builder instanceof MorphToMany ||
@@ -389,15 +353,10 @@ class ModelSaver
                             foreach ($param->whereNotIn('id', $ids) as $item) {
                                 (new static($this->model->{$key}(), $item))->setSrc($builder)->save();
                             }
-                        }
-                        else {
-
+                        } else {
                             (new static($this->model->{$key}(), $param))->setSrc($builder)->save();
                         }
-                    }
-
-                    else {
-
+                    } else {
                         (new static($this->model->{$key} ?? $builder, $param))->setSrc($builder)->save();
                     }
                 }
@@ -406,20 +365,18 @@ class ModelSaver
             $this->call_on('on_finish', $this->data, $this->model);
 
             return $this->model;
-        }
-
-        else {
-
+        } else {
             return $this->model;
         }
     }
 
     /**
-     * Insert relations when model creating
+     * Insert relations when model creating.
      * @param  array  $data
      * @return array
      */
-    protected function insert_relations(array $data) {
+    protected function insert_relations(array $data)
+    {
 
 //        foreach ($data as $key => $datum) {
 //
@@ -435,8 +392,7 @@ class ModelSaver
     {
         $table = $this->getModelTable();
 
-        if (!$table) {
-
+        if (! $table) {
             return [];
         }
 
@@ -452,14 +408,9 @@ class ModelSaver
     {
         $data = [];
         foreach ($this->data as $key => $datum) {
-
             if (is_object($datum) && $datum instanceof UploadedFile) {
-
                 $data[$key] = LteFileStorage::makeFile($datum);
-            }
-
-            else {
-
+            } else {
                 $data[$key] = $datum;
             }
         }
@@ -470,6 +421,7 @@ class ModelSaver
             $data[static::DELETE_FIELD] == $data[$key]
         ) {
             $this->has_delete = true;
+
             return [[], []];
         }
         $nullable = $this->getNullableFields();
@@ -478,7 +430,7 @@ class ModelSaver
             if (array_key_exists($field, $data)) {
                 if ($data[$field] !== '') {
                     $result[0][$field] = $data[$field];
-                } else if (isset($nullable[$field]) && $nullable[$field]) {
+                } elseif (isset($nullable[$field]) && $nullable[$field]) {
                     $result[0][$field] = null;
                 } else {
                     $result[0][$field] = $data[$field];
@@ -487,6 +439,7 @@ class ModelSaver
             }
         }
         $result[1] = $data;
+
         return $result;
     }
 
@@ -497,8 +450,7 @@ class ModelSaver
     {
         $table = $this->getModelTable();
 
-        if (!$table) {
-
+        if (! $table) {
             return [];
         }
 
@@ -509,7 +461,6 @@ class ModelSaver
         $clear_fields = [];
 
         foreach ($fields as $field) {
-
             $clear_fields[$field->COLUMN_NAME] = $field->IS_NULLABLE === 'YES';
         }
 
@@ -523,7 +474,9 @@ class ModelSaver
     {
         $key = null;
         $model = $this->getModel();
-        if ($model) $key = $model->getKeyName();
+        if ($model) {
+            $key = $model->getKeyName();
+        }
 
         return $key;
     }
@@ -535,7 +488,9 @@ class ModelSaver
     {
         $table = null;
         $model = $this->getModel();
-        if ($model) $table = $model->getTable();
+        if ($model) {
+            $table = $model->getTable();
+        }
 
         return $table;
     }
@@ -548,15 +503,10 @@ class ModelSaver
         $model = null;
 
         if ($this->model instanceof Relation) {
-
             $model = $this->model->getModel();
-
-        } else if ($this->model instanceof Model) {
-
+        } elseif ($this->model instanceof Model) {
             $model = $this->model;
-
-        } else if ($this->model instanceof Builder) {
-
+        } elseif ($this->model instanceof Builder) {
             $model = $this->model->getModel();
         }
 
@@ -651,8 +601,7 @@ class ModelSaver
      */
     public static function on(string $event, $model, callable $call = null)
     {
-        if (!$call && is_callable($model)) {
-
+        if (! $call && is_callable($model)) {
             $call = $model;
 
             $model = lte_controller_model();
@@ -661,7 +610,6 @@ class ModelSaver
         $event = "on_$event";
 
         if ($model && property_exists(static::class, $event) && is_callable($call)) {
-
             $events = static::$$event;
 
             $events[$model][] = $call;
@@ -685,7 +633,9 @@ class ModelSaver
         if ($class && isset($events[$class])) {
             foreach ($events[$class] as $item) {
                 $r = call_user_func_array($item, $params);
-                if (is_array($r) && count($r)) $result = array_merge_recursive($result, $r);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
             }
         }
 

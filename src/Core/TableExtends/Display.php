@@ -8,11 +8,11 @@ use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
 
 /**
- * Class Display
+ * Class Display.
  * @package Lar\LteAdmin\Core\TableExtends
  */
-class Display {
-
+class Display
+{
     /**
      * @param $value
      * @param  array  $props

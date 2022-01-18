@@ -5,7 +5,7 @@ namespace Lar\LteAdmin\Core\Traits;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Trait DumpedModel
+ * Trait DumpedModel.
  * @package Lar\LteAdmin\Core\Traits
  */
 trait DumpedModel
@@ -17,13 +17,13 @@ trait DumpedModel
     public function scopeMakeDumpedModel(Builder $q)
     {
         if (method_exists($this, 'initializeSoftDeletes')) {
-
             $q = $q->withTrashed();
         }
 
         if (method_exists($this, 'toDump')) {
-
-            return $q->get()->map(function ($model) { return $model->toDump(); })->toArray();
+            return $q->get()->map(function ($model) {
+                return $model->toDump();
+            })->toArray();
         }
 
         $result = $q->get()->toArray();

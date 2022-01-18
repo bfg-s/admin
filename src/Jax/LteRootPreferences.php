@@ -6,18 +6,18 @@ use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Resources\LteFunctionResource;
 
 /**
- * Class LteAdmin
+ * Class LteAdmin.
  * @package App\Http\JaxExecutors
  */
 class LteRootPreferences extends LteAdmin
 {
     /**
-     * Public method access
-     * 
+     * Public method access.
+     *
      * @return bool
      */
-    public function access() {
-        
+    public function access()
+    {
         return parent::access() && \LteAdmin::user()->isRoot();
     }
 
@@ -29,22 +29,19 @@ class LteRootPreferences extends LteAdmin
     public function update_functions(array $funcs, string $class)
     {
         foreach ($funcs as $func) {
-
             if (isset($func['id'])) {
                 /** @var LteFunction $f */
                 $f = LteFunction::find($func['id']);
                 $f->update([
                         'description' => $func['description'],
-                        'slug' => $func['slug']
+                        'slug' => $func['slug'],
                     ]);
-            }
-
-            else {
+            } else {
                 /** @var LteFunction $f */
                 $f = LteFunction::create([
                     'description' => $func['description'],
                     'slug' => $func['slug'],
-                    'class' => trim($class, '\\')
+                    'class' => trim($class, '\\'),
                 ]);
             }
             $f->roles()->sync(collect($func['roles'])->pluck('id')->toArray());

@@ -25,7 +25,7 @@ use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
 /**
- * Class ServiceProvider
+ * Class ServiceProvider.
  *
  * @package Lar\Layout
  */
@@ -44,11 +44,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteGeneratorCommand::class,
         LteModalCommand::class,
         LteJaxCommand::class,
-        LteDbDumpCommand::class
+        LteDbDumpCommand::class,
     ];
 
     /**
-     * Simple bind in app service provider
+     * Simple bind in app service provider.
      * @var array
      */
     protected $bind = [
@@ -70,7 +70,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $routeMiddleware = [
-        'lte-auth' => Authenticate::class
+        'lte-auth' => Authenticate::class,
     ];
 
     /**
@@ -87,7 +87,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     public function boot()
     {
         /**
-         * Register AdminLte Events
+         * Register AdminLte Events.
          */
         foreach ($this->listen as $event => $listeners) {
             foreach (array_unique($listeners) as $listener) {
@@ -96,7 +96,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Register app routes
+         * Register app routes.
          */
         if (is_file(lte_app_path('routes.php'))) {
             \Road::domain(config('lte.route.domain', ''))
@@ -112,7 +112,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Register web routes
+         * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
             \Road::domain(config('lte.route.domain', ''))
@@ -128,7 +128,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Register Lte Admin basic routes
+         * Register Lte Admin basic routes.
          */
         \Road::domain(config('lte.route.domain', ''))
             ->web()
@@ -140,21 +140,21 @@ class ServiceProvider extends ServiceProviderIlluminate
             ->group(__DIR__.'/routes.php');
 
         /**
-         * Register publishers configs
+         * Register publishers configs.
          */
         $this->publishes([
-            __DIR__.'/../config/lte.php' => config_path('lte.php')
+            __DIR__.'/../config/lte.php' => config_path('lte.php'),
         ], 'lte-config');
 
         /**
-         * Register publishers lang
+         * Register publishers lang.
          */
         $this->publishes([
-            __DIR__.'/../translations' => resource_path('lang')
+            __DIR__.'/../translations' => resource_path('lang'),
         ], 'lte-lang');
 
         /**
-         * Register publishers assets
+         * Register publishers assets.
          */
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
@@ -163,7 +163,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'lte-assets');
 
         /**
-         * Register publishers adminlte assets
+         * Register publishers adminlte assets.
          */
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
@@ -171,37 +171,37 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'lte-adminlte-assets');
 
         /**
-         * Register publishers migrations
+         * Register publishers migrations.
          */
         $this->publishes([
             __DIR__.'/../migrations' => database_path('migrations'),
         ], 'lte-migrations');
 
         /**
-         * Register publishers html examples
+         * Register publishers html examples.
          */
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/pages') => public_path('/lte-html'),
         ], 'lte-html');
 
         /**
-         * Load AdminLte views
+         * Load AdminLte views.
          */
         $this->loadViewsFrom(__DIR__.'/../views', 'lte');
 
         if ($this->app->runningInConsole()) {
             /**
-             * Register lte admin getter for console
+             * Register lte admin getter for console.
              */
             \Get::create('lte');
 
             /**
-             * Run lte boots
+             * Run lte boots.
              */
             LteBoot::run();
 
             /**
-             * Helper registration
+             * Helper registration.
              */
             DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
             DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
@@ -209,19 +209,19 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Make lte view variables
+         * Make lte view variables.
          */
         $this->viewVariables();
 
         /**
-         * Register getters
+         * Register getters.
          */
         \Get::register(\Lar\LteAdmin\Getters\Menu::class);
         \Get::register(\Lar\LteAdmin\Getters\Role::class);
         \Get::register(\Lar\LteAdmin\Getters\Functions::class);
 
         /**
-         * Simple bind in service container
+         * Simple bind in service container.
          */
         foreach ($this->bind as $key => $item) {
             if (is_numeric($key)) {
@@ -231,17 +231,17 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Run lte with jax on admin page
+         * Run lte with jax on admin page.
          */
         JaxController::on_start(function () {
             $ref = request()->server->get('HTTP_REFERER');
-            if ($ref && \Str::is(url(config('lte.route.prefix')."*"), $ref)) {
+            if ($ref && \Str::is(url(config('lte.route.prefix').'*'), $ref)) {
                 LteBoot::run();
             }
         });
 
         /**
-         * Register Jax namespace
+         * Register Jax namespace.
          */
         \LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
     }
@@ -255,14 +255,14 @@ class ServiceProvider extends ServiceProviderIlluminate
     public function register()
     {
         /**
-         * App register provider
+         * App register provider.
          */
         if (class_exists('App\Providers\LteServiceProvider')) {
             $this->app->register('App\Providers\LteServiceProvider');
         }
 
         /**
-         * Override errors
+         * Override errors.
          */
         $this->app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -270,19 +270,19 @@ class ServiceProvider extends ServiceProviderIlluminate
         );
 
         /**
-         * Merge config from having by default
+         * Merge config from having by default.
          */
         $this->mergeConfigFrom(
             __DIR__.'/../config/lte.php', 'lte'
         );
 
         /**
-         * Register Lte middleware
+         * Register Lte middleware.
          */
         $this->registerRouteMiddleware();
 
         /**
-         * Register Lte commands
+         * Register Lte commands.
          */
         $this->commands($this->commands);
 
@@ -292,23 +292,23 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->loadAuthAndDiscConfig();
 
         /**
-         * Register Lte layout
+         * Register Lte layout.
          */
-        Layout::registerComponent("lte_layout", \Lar\LteAdmin\Layouts\LteLayout::class);
+        Layout::registerComponent('lte_layout', \Lar\LteAdmin\Layouts\LteLayout::class);
 
         /**
-         * Register Lte Login layout
+         * Register Lte Login layout.
          */
-        Layout::registerComponent("lte_auth_layout", \Lar\LteAdmin\Layouts\LteAuthLayout::class);
+        Layout::registerComponent('lte_auth_layout', \Lar\LteAdmin\Layouts\LteAuthLayout::class);
 
         /**
-         * Register lte jax executors
+         * Register lte jax executors.
          */
         $this->registerJax();
     }
 
     /**
-     * Register jax executors
+     * Register jax executors.
      */
     protected function registerJax()
     {
@@ -339,14 +339,13 @@ class ServiceProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Make lte view variables
+     * Make lte view variables.
      */
     private function viewVariables()
     {
         app('view')->share([
             'lte' => config('lte'),
-            'default_page' => config('lte.paths.view', 'admin').'.page'
+            'default_page' => config('lte.paths.view', 'admin').'.page',
         ]);
     }
 }
-

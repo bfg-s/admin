@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Color
+ * Class Color.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Color extends Input
@@ -11,13 +11,13 @@ class Color extends Input
     /**
      * @var string
      */
-    protected $icon = "fas fa-fill-drip";
+    protected $icon = 'fas fa-fill-drip';
 
     /**
      * @var string[]
      */
     protected $data = [
-        'load' => 'picker::color'
+        'load' => 'picker::color',
     ];
 
     /**

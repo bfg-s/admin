@@ -6,11 +6,11 @@ use Lar\LteAdmin\Segments\Tagable\Field;
 use Lar\LteAdmin\Segments\Tagable\FormGroup;
 
 /**
- * Trait FieldMassControl
+ * Trait FieldMassControl.
  * @package Lar\LteAdmin\Segments\Tagable\Traits
  */
-trait FieldMassControl {
-
+trait FieldMassControl
+{
     /**
      * @var bool
      */
@@ -81,38 +81,29 @@ trait FieldMassControl {
     protected function call_group($name, array $arguments)
     {
         if (isset(Field::$form_components[$name])) {
-
             $class = Field::$form_components[$name];
 
             $class = new $class(...$arguments);
 
             if ($class instanceof FormGroup) {
-
                 $class->set_parent($this);
 
                 if ($this->vertical) {
-
                     $class->vertical();
                 }
 
                 if ($this->reversed) {
-
                     $class->reversed();
                 }
 
                 if ($this->label_width !== null) {
-
                     $class->label_width($this->label_width);
                 }
             }
 
             if ($this->set) {
-
                 $this->appEnd($class);
-            }
-
-            else {
-
+            } else {
                 $class->unregister();
             }
 

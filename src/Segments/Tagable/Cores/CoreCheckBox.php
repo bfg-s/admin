@@ -9,7 +9,7 @@ use Lar\Layout\Tags\INPUT;
 use Lar\Tagable\Events\onRender;
 
 /**
- * Class CoreCheckBox
+ * Class CoreCheckBox.
  * @package Lar\LteAdmin\Segments\Tagable\Cores
  */
 class CoreCheckBox extends DIV implements onRender
@@ -19,7 +19,7 @@ class CoreCheckBox extends DIV implements onRender
      */
     protected $props = [
         'clearfix mb-0',
-        'data-inputable' => ''
+        'data-inputable' => '',
     ];
 
     /**
@@ -44,12 +44,10 @@ class CoreCheckBox extends DIV implements onRender
         $this->when($params);
 
         if ($values instanceof Arrayable) {
-
             $values = $values->toArray();
         }
 
-        if (!is_array($values)) {
-
+        if (! is_array($values)) {
             $values = [$values];
         }
 
@@ -63,7 +61,6 @@ class CoreCheckBox extends DIV implements onRender
     public function id($id)
     {
         if ($id) {
-
             $this->id = $id;
         }
 
@@ -77,7 +74,6 @@ class CoreCheckBox extends DIV implements onRender
     public function name($name)
     {
         if ($name) {
-
             $this->name = $name;
             $this->setName($name);
         }
@@ -92,22 +88,16 @@ class CoreCheckBox extends DIV implements onRender
     public function value($value)
     {
         if ($value instanceof Collection) {
-
             $value = $value->pluck('id');
         }
 
         if ($value instanceof Arrayable) {
-
             $value = $value->toArray();
         }
 
         if ($value !== null) {
-
             $this->value = $value;
-        }
-
-        else {
-
+        } else {
             $this->value = $this->getValue();
         }
 
@@ -122,24 +112,19 @@ class CoreCheckBox extends DIV implements onRender
         if ($this->values) {
             $i = 0;
             foreach ($this->values as $value => $title) {
-
-                $id = $this->id ? 'checkbox-' . $this->id . '-' . $i : 'checkbox-' . $i;
+                $id = $this->id ? 'checkbox-'.$this->id.'-'.$i : 'checkbox-'.$i;
 
                 $checked = false;
 
                 if (is_array($this->value) && (array_search($value, $this->value) !== false)) {
-
                     $checked = true;
-                }
-
-                else if ($this->value == $value) {
-
+                } elseif ($this->value == $value) {
                     $checked = true;
                 }
 
                 $this->div(
                     ['icheck-primary float-left mr-3'],
-                    INPUT::create(['type' => 'checkbox', 'id' => $id, 'name' => $this->name . "[]", 'value' => $value])
+                    INPUT::create(['type' => 'checkbox', 'id' => $id, 'name' => $this->name.'[]', 'value' => $value])
                         ->setCheckedIf($checked, 'true')
                         ->label(['for' => $id], $title)
                 );

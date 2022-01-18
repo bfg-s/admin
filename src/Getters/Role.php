@@ -5,8 +5,8 @@ namespace Lar\LteAdmin\Getters;
 use Lar\Developer\Getter;
 
 /**
- * Class Menu
- * 
+ * Class Menu.
+ *
  * @package Lar\LteAdmin\Getters
  */
 class Role extends Getter
@@ -14,11 +14,10 @@ class Role extends Getter
     /**
      * @var string
      */
-    public static $name = "lte.role";
+    public static $name = 'lte.role';
 
     public static function functions()
     {
-
     }
 
     /**

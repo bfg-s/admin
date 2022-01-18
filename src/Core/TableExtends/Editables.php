@@ -7,11 +7,11 @@ use Lar\Layout\Tags\A;
 use Lar\LteAdmin\Segments\Tagable\Field;
 
 /**
- * Class Editables
+ * Class Editables.
  * @package Lar\LteAdmin\Core\TableExtends
  */
-class Editables {
-
+class Editables
+{
     /**
      * @param $value
      * @param  array  $props
@@ -22,11 +22,9 @@ class Editables {
     public function input_switcher($value, array $props = [], Model $model = null, $field = null)
     {
         if ($model) {
-
             $now = lte_now();
 
             if (isset($now['link.update'])) {
-
                 return Field::switcher($field)
                     ->only_input()
                     ->labels(...$props)
@@ -45,7 +43,7 @@ class Editables {
                     get_class($model),
                     $model->id,
                     $field,
-                    '>>$:is(:checked)'
+                    '>>$:is(:checked)',
                 ]);
         }
 
@@ -101,7 +99,6 @@ class Editables {
         $now = lte_now();
 
         if ($model && $now && isset($now['link.update'])) {
-
             $val = multi_dot_call($model, $field);
 
             return A::create(['href' => '#'])->setDatas([
@@ -110,7 +107,7 @@ class Editables {
                 'type' => $type,
                 'url' => $now['link.update']($model->getRouteKey()),
                 'name' => $field,
-                'value' => is_array($val) ? json_encode($val) : $val
+                'value' => is_array($val) ? json_encode($val) : $val,
             ])->on_load('editable')->text($value);
         }
 

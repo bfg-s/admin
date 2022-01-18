@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\SearchFields;
 
 /**
- * Class Switcher
+ * Class Switcher.
  * @package Lar\LteAdmin\Segments\Tagable\SearchFields
  */
 class Switcher extends \Lar\LteAdmin\Segments\Tagable\Fields\Switcher
@@ -11,5 +11,5 @@ class Switcher extends \Lar\LteAdmin\Segments\Tagable\Fields\Switcher
     /**
      * @var string
      */
-    static $condition = "=";
+    public static $condition = '=';
 }

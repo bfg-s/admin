@@ -9,19 +9,19 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Segments\Tagable\Traits\TypesTrait;
 
 /**
- * Class Alert
+ * Class Alert.
  * @package Lar\LteAdmin\Segments\Tagable
  * @mixin AlertMacroList
  */
-class Alert extends DIV {
-
+class Alert extends DIV
+{
     use FontAwesome, TypesTrait, Macroable, Delegable;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'alert', 'role' => 'alert'
+        'alert', 'role' => 'alert',
     ];
 
     /**
@@ -102,30 +102,26 @@ class Alert extends DIV {
     }
 
     /**
-     * Build alert
+     * Build alert.
      */
     protected function _build()
     {
         $this->callRenderEvents();
 
         if ($this->title) {
-
             $h4 = $this->h4(['alert-heading']);
 
             if ($this->icon) {
-
                 $h4->i([$this->icon]);
                 $h4->text(':space');
             }
 
             if ($this->title) {
-
                 $h4->text(__($this->title));
             }
         }
 
         if ($this->body) {
-
             $this->appEnd($this->body);
         }
 

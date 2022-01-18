@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Segments\Tagable\Fields;
 
 /**
- * Class Autocomplete
+ * Class Autocomplete.
  * @package Lar\LteAdmin\Segments\Tagable\Fields
  */
 class Autocomplete extends Select

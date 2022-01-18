@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 use Lar\LteAdmin\LteAdmin;
 
 /**
- * Class Facade
- * 
+ * Class Facade.
+ *
  * @package Lar
  */
 class LteAdminFacade extends FacadeIlluminate

@@ -5,7 +5,7 @@ namespace Lar\LteAdmin;
 use Lar\LteAdmin\Components\Vue\ModalCollection;
 
 /**
- * Class LteAdmin
+ * Class LteAdmin.
  *
  * @package Lar\CryptoApi
  */
@@ -14,32 +14,32 @@ class LteAdmin
     /**
      * @var string
      */
-    static $version = "3.1.12";
+    public static $version = '3.1.12';
 
     /**
      * @var ExtendProvider[]
      */
-    static $nav_extensions = [];
+    public static $nav_extensions = [];
 
     /**
      * @var ExtendProvider[]
      */
-    static $installed_extensions = [];
+    public static $installed_extensions = [];
 
     /**
      * @var ExtendProvider[]
      */
-    static $not_installed_extensions = [];
+    public static $not_installed_extensions = [];
 
     /**
      * @var bool[]
      */
-    static $extensions;
+    public static $extensions;
 
     /**
      * @var bool
      */
-    static $echo = false;
+    public static $echo = false;
 
     /**
      * @var array
@@ -48,7 +48,7 @@ class LteAdmin
         'app_end_wrapper' => [],
         'prep_end_wrapper' => [
             //['component' => Navigator::class, 'params' => []],
-            ['component' => ModalCollection::class, 'params' => []]
+            ['component' => ModalCollection::class, 'params' => []],
         ],
         'app_end_content' => [],
         'prep_end_content' => [],
@@ -75,7 +75,7 @@ class LteAdmin
      */
     public function version()
     {
-        return LteAdmin::$version;
+        return self::$version;
     }
 
     /**
@@ -87,7 +87,6 @@ class LteAdmin
     public function toSegment(string $segment, string $component, array $params = [])
     {
         if (isset($this->content_segments[$segment])) {
-
             $this->content_segments[$segment][] = ['component' => $component, 'params' => $params];
         }
 
@@ -102,7 +101,7 @@ class LteAdmin
      */
     public function toWrapper(string $component, array $params = [], bool $prepend = false)
     {
-        $segment = $prepend ? "prep_end_wrapper" : "app_end_wrapper";
+        $segment = $prepend ? 'prep_end_wrapper' : 'app_end_wrapper';
 
         return $this->toSegment($segment, $component, $params);
     }
@@ -115,7 +114,7 @@ class LteAdmin
      */
     public function toContent(string $component, array $params = [], bool $prepend = false)
     {
-        $segment = $prepend ? "prep_end_content" : "app_end_content";
+        $segment = $prepend ? 'prep_end_content' : 'app_end_content';
 
         return $this->toSegment($segment, $component, $params);
     }
@@ -127,7 +126,6 @@ class LteAdmin
     public function getSegments(string $segment)
     {
         if (isset($this->content_segments[$segment])) {
-
             return $this->content_segments[$segment];
         }
 
@@ -140,36 +138,28 @@ class LteAdmin
      */
     public function registerExtension(ExtendProvider $provider)
     {
-        if (!$provider::$name) {
-
+        if (! $provider::$name) {
             return false;
         }
 
-        if (!LteAdmin::$extensions) {
-
-            LteAdmin::$extensions = include storage_path('lte_extensions.php');
+        if (! self::$extensions) {
+            self::$extensions = include storage_path('lte_extensions.php');
         }
 
-        if (isset(LteAdmin::$extensions[$provider::$name]) || $provider::$slug === 'application') {
-
-            if (!isset(LteAdmin::$installed_extensions[$provider::$name])) {
-
-                LteAdmin::$installed_extensions[$provider::$name] = $provider;
+        if (isset(self::$extensions[$provider::$name]) || $provider::$slug === 'application') {
+            if (! isset(self::$installed_extensions[$provider::$name])) {
+                self::$installed_extensions[$provider::$name] = $provider;
 
                 if ($provider->included()) {
-
-                    if (!$provider::$after) {
-                        LteAdmin::$nav_extensions[$provider::$slug] = $provider;
+                    if (! $provider::$after) {
+                        self::$nav_extensions[$provider::$slug] = $provider;
                     } else {
-                        LteAdmin::$nav_extensions[$provider::$after][] = $provider;
+                        self::$nav_extensions[$provider::$after][] = $provider;
                     }
                 }
             }
-        }
-
-        else if (!isset(LteAdmin::$not_installed_extensions[$provider::$name])) {
-
-            LteAdmin::$not_installed_extensions[$provider::$name] = $provider;
+        } elseif (! isset(self::$not_installed_extensions[$provider::$name])) {
+            self::$not_installed_extensions[$provider::$name] = $provider;
         }
 
         return true;
@@ -181,9 +171,8 @@ class LteAdmin
      */
     public function extension(string $name)
     {
-        if (isset(LteAdmin::$installed_extensions[$name])) {
-
-            return LteAdmin::$installed_extensions[$name];
+        if (isset(self::$installed_extensions[$name])) {
+            return self::$installed_extensions[$name];
         }
 
         return false;
@@ -194,7 +183,7 @@ class LteAdmin
      */
     public function extensions()
     {
-        return LteAdmin::$installed_extensions;
+        return self::$installed_extensions;
     }
 
     /**
@@ -203,11 +192,12 @@ class LteAdmin
      */
     public function getExtension(string $name)
     {
-        if (isset(LteAdmin::$installed_extensions[$name])) {
-            return LteAdmin::$installed_extensions[$name];
-        } else if (LteAdmin::$not_installed_extensions[$name]) {
-            return LteAdmin::$not_installed_extensions[$name];
+        if (isset(self::$installed_extensions[$name])) {
+            return self::$installed_extensions[$name];
+        } elseif (self::$not_installed_extensions[$name]) {
+            return self::$not_installed_extensions[$name];
         }
+
         return null;
     }
 
@@ -220,8 +210,8 @@ class LteAdmin
             array_map(
                 'get_class',
                 array_merge(
-                    LteAdmin::$installed_extensions,
-                    LteAdmin::$not_installed_extensions
+                    self::$installed_extensions,
+                    self::$not_installed_extensions
                 )
             )
         );

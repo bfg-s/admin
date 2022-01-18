@@ -3,16 +3,16 @@
 namespace Lar\LteAdmin;
 
 /**
- * Class AppServiceProvider
+ * Class AppServiceProvider.
  * @package Lar\LteAdmin
  */
 class ApplicationServiceProvider extends ExtendProvider
 {
     /**
-     * Extension call slug
+     * Extension call slug.
      * @var string
      */
-    static $slug = "application";
+    public static $slug = 'application';
 
     /**
      * @throws \Exception
@@ -32,4 +32,3 @@ class ApplicationServiceProvider extends ExtendProvider
         return true;
     }
 }
-

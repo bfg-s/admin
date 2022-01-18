@@ -18,14 +18,14 @@ use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableExtensionTrait;
 use Lar\LteAdmin\Segments\Tagable\Traits\ModelTable\TableHelpersTrait;
 
 /**
- * Class ModelTable
+ * Class ModelTable.
  * @package Lar\LteAdmin\Segments\Tagable
  * @methods static::$extensions (...$params)
  * @mixin ModelTableMacroList
  * @mixin ModelTableMethods
  */
-class ModelTable extends Component {
-
+class ModelTable extends Component
+{
     use TableHelpersTrait,
         TableExtensionTrait,
         TableBuilderTrait,
@@ -37,7 +37,7 @@ class ModelTable extends Component {
     /**
      * @var string
      */
-    protected $element = "table";
+    protected $element = 'table';
     protected $label = null;
     protected $hasHidden = false;
 
@@ -45,7 +45,7 @@ class ModelTable extends Component {
      * @var string[]
      */
     protected $props = [
-        'table', 'table-sm', 'table-hover'
+        'table', 'table-sm', 'table-hover',
     ];
 
     /**
@@ -124,12 +124,11 @@ class ModelTable extends Component {
         parent::__construct();
 
         if (is_embedded_call($model)) {
-
             $params[] = $model;
             $model = null;
         }
 
-        if (!$model) {
+        if (! $model) {
             $this->model = gets()->lte->menu->model;
         } else {
             $this->model = is_string($model) ? new $model() : $model;
@@ -138,13 +137,11 @@ class ModelTable extends Component {
         $this->model_name = $this->getModelName();
 
         if (request()->has($this->model_name)) {
-
             $this->order_field = request()->get($this->model_name);
         }
 
-        if (request()->has($this->model_name . "_type")) {
-
-            $type = request()->get($this->model_name . "_type");
+        if (request()->has($this->model_name.'_type')) {
+            $type = request()->get($this->model_name.'_type');
             $this->order_type = $type === 'asc' || $type === 'desc' ? $type : 'asc';
         }
 
@@ -152,7 +149,7 @@ class ModelTable extends Component {
 
         $this->callConstructEvents();
 
-        $this->toExecute("_create_controls", "_build");
+        $this->toExecute('_create_controls', '_build');
 
         $this->save_table_requests();
     }
@@ -160,7 +157,6 @@ class ModelTable extends Component {
     public static function toContainer(DIV $div, $arguments)
     {
         if ($div instanceof Card) {
-
             return $div->bodyModelTable(...$arguments);
         }
 
@@ -168,7 +164,7 @@ class ModelTable extends Component {
     }
 
     /**
-     * Save last table request for returns
+     * Save last table request for returns.
      */
     protected function save_table_requests()
     {
@@ -186,7 +182,6 @@ class ModelTable extends Component {
     public function __call($name, $arguments)
     {
         if (static::hasExtension($name) && isset($this->columns[$this->last])) {
-
             $this->columns[$this->last]['macros'][] = [$name, $arguments];
 
             return $this;
