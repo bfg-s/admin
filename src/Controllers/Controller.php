@@ -7,11 +7,11 @@ use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Components\ButtonsComponent;
 use Lar\LteAdmin\Components\CardBodyComponent;
-use Lar\LteAdmin\Components\Contents\CardContent;
 use Lar\LteAdmin\Components\ChartJsComponent;
+use Lar\LteAdmin\Components\Contents\CardContent;
+use Lar\LteAdmin\Components\Contents\GridRowContent;
 use Lar\LteAdmin\Components\FormComponent;
 use Lar\LteAdmin\Components\GridColumnComponent;
-use Lar\LteAdmin\Components\Contents\GridRowContent;
 use Lar\LteAdmin\Components\ModelInfoTableComponent;
 use Lar\LteAdmin\Components\ModelTableComponent;
 use Lar\LteAdmin\Components\NestedComponent;
@@ -70,35 +70,36 @@ class Controller extends BaseController
 
     public static function getHelpMethodList()
     {
-        $result = Controller::$explanation_list;
+        $result = self::$explanation_list;
         foreach ($result as $key => $extension) {
-            $result[$key."_by_request"] = $extension;
-            $result[$key."_by_default"] = $extension;
+            $result[$key.'_by_request'] = $extension;
+            $result[$key.'_by_default'] = $extension;
         }
+
         return $result;
     }
 
     public static function getExplanationList()
     {
-        return Controller::$explanation_list;
+        return self::$explanation_list;
     }
 
     public static function extend(string $name, string $class)
     {
-        if (!static::hasExtend($name)) {
-            Controller::$explanation_list[$name] = $class;
+        if (! static::hasExtend($name)) {
+            self::$explanation_list[$name] = $class;
         }
     }
 
     public static function hasExtend(string $name)
     {
-        return isset(Controller::$explanation_list[$name]);
+        return isset(self::$explanation_list[$name]);
     }
 
     public static function applyExtend(Page $page, string $name, array $delegates = [])
     {
         if (static::hasExtend($name)) {
-            $class = Controller::$explanation_list[$name];
+            $class = self::$explanation_list[$name];
             if (method_exists($class, 'registrationInToContainer')) {
                 $class::registrationInToContainer($page, $delegates, $name);
             } else {
@@ -112,7 +113,7 @@ class Controller extends BaseController
                     );
                 }
             }
-        };
+        }
     }
 
     /**
@@ -177,8 +178,9 @@ class Controller extends BaseController
      */
     public function __get(string $name)
     {
-        if ($name == 'page')
+        if ($name == 'page') {
             return Page::new();
+        }
 
         if (isset(static::$explanation_list[$name])) {
             return new Delegate(static::$explanation_list[$name]);

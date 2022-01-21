@@ -110,7 +110,7 @@ class AdministratorsController extends Controller
                 $this->card->title('lte.activity')->warningType(),
                 $this->card->tab('lte.day_activity', 'fas fa-chart-line', function (TabContentComponent $content) {
                     UserController::activityDayComponent($content, $this->model()->logs());
-                }, !$request->has('ltelog_page')),
+                }, ! $request->has('ltelog_page')),
                 $this->card->tab('lte.year_activity', 'fas fa-chart-line', function (TabContentComponent $content) {
                     UserController::activityYearComponent($content, $this->model()->logs());
                 }, false),

@@ -75,12 +75,10 @@ class TableComponent extends TableParent
         }
 
         if ($rows instanceof Arrayable) {
-
             $rows = $rows->toArray();
         }
 
         if (is_array($rows)) {
-
             $this->array_build = $rows;
         }
 

@@ -27,7 +27,7 @@ class StatisticPeriodComponent extends DIV implements onRender
     protected $class = 'row';
     protected $model;
     protected $entity;
-    protected $icon = "fas fa-lightbulb";
+    protected $icon = 'fas fa-lightbulb';
 
     /**
      * @var Page

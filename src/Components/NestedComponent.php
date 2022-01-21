@@ -56,10 +56,9 @@ class NestedComponent extends DIV implements onRender, ControllerContainerInterf
      * @param  SearchFormComponent|callable|array|null  $callback
      * @return $this
      */
-    public function model(SearchFormComponent|callable|array $callback = null)
+    public function model($callback = null)
     {
         if ($callback) {
-
             if ($callback instanceof SearchFormComponent) {
                 $callback = $callback->makeModel($this->model);
             }
@@ -195,7 +194,6 @@ class NestedComponent extends DIV implements onRender, ControllerContainerInterf
     public static function registrationInToContainer(Page $page, array $delegates = [], string $name = 'nested')
     {
         if ($name === 'nested') {
-
             $page->getClass(CardContent::class)?->nestedTools();
         }
 

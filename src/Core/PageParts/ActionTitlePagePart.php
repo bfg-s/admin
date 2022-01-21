@@ -6,5 +6,4 @@ use Illuminate\Support\Stringable;
 
 class ActionTitlePagePart extends Stringable
 {
-
 }

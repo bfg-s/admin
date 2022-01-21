@@ -113,7 +113,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
 
         parent::__construct();
 
-        if (!$this->title) {
+        if (! $this->title) {
             $originTitle = $this->title;
             $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
             if (lte_model_type('index')) {
@@ -145,8 +145,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
 
     public function tab(string $title, $icon = null, callable $contentCb = null, ?bool $active = null)
     {
-        if (!$this->body) {
-
+        if (! $this->body) {
             $this->fullBody();
         }
 
@@ -287,6 +286,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
     {
         $footer = FormFooterComponent::create(...$params)->createDefaultCRUDFooter();
         $this->div(['card-footer'])->appEnd($footer);
+
         return $footer;
     }
 

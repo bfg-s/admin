@@ -111,12 +111,15 @@ class NestableComponentCore extends DIV
     {
         if (is_array($callable)) {
             $this->model = eloquent_instruction($this->model, $callable);
-        } else if (is_callable($callable)) {
+        } elseif (is_callable($callable)) {
             $r = call_user_func($callable, $this->model);
-            if ($r) $this->model = $r;
-        } else if ($callable) {
+            if ($r) {
+                $this->model = $r;
+            }
+        } elseif ($callable) {
             $this->model = $callable;
         }
+
         return $this;
     }
 

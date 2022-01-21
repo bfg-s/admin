@@ -197,7 +197,7 @@ class ModelTableComponent extends Component implements ControllerContainerInterf
             );
 
             $page->getClass(CardContent::class)->headerObj(function (DIV $div) use ($page) {
-                $ad = $page->getClass(ModelTableComponent::class)->getActionData();
+                $ad = $page->getClass(self::class)->getActionData();
                 if ($ad['show']) {
                     $div->prepEnd()->view('lte::segment.model_table_actions', $ad);
                 }

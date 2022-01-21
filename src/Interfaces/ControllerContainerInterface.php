@@ -7,7 +7,6 @@ use Lar\LteAdmin\Page;
 
 interface ControllerContainerInterface
 {
-    
     /**
      * @param  Page  $page
      * @param  Delegate[]  $delegates

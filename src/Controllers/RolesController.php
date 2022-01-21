@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Page;
 

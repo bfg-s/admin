@@ -113,10 +113,9 @@ class Menu extends Getter
         $current = \Route::current();
 
         if ($current->controller) {
-
             if (method_exists($current->controller, 'getModel')) {
                 $return = call_user_func([$current->controller, 'getModel']);
-            } else if (property_exists($current->controller, 'model')) {
+            } elseif (property_exists($current->controller, 'model')) {
                 $controller = $current->controller;
                 $return = $controller::$model;
             } else {

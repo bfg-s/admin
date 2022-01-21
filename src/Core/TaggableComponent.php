@@ -4,17 +4,17 @@ namespace Lar\LteAdmin\Core;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\LteAdmin\Components\AlertComponent;
-use Lar\LteAdmin\Components\FormFooterComponent;
-use Lar\LteAdmin\Components\StatisticPeriodComponent;
-use Lar\LteAdmin\Components\TableComponent;
-use Lar\LteAdmin\Components\TimelineComponent;
 use Lar\LteAdmin\Components\DividerComponent;
 use Lar\LteAdmin\Components\FieldComponent;
+use Lar\LteAdmin\Components\FormFooterComponent;
 use Lar\LteAdmin\Components\InfoBoxComponent;
 use Lar\LteAdmin\Components\LangComponent;
 use Lar\LteAdmin\Components\ModelRelationComponent;
 use Lar\LteAdmin\Components\SmallBoxComponent;
+use Lar\LteAdmin\Components\StatisticPeriodComponent;
+use Lar\LteAdmin\Components\TableComponent;
 use Lar\LteAdmin\Components\TabsComponent;
+use Lar\LteAdmin\Components\TimelineComponent;
 use Lar\LteAdmin\Controllers\Controller;
 
 class TaggableComponent extends Component

@@ -158,7 +158,7 @@ class MacroableHelperGenerator implements DumpExecute
                     }
                     if (! class_exists($class['methods'][2]) || ! property_exists($class['methods'][2], $class['methods'][3])) {
                         continue;
-                    } else if (method_exists($class['methods'][2], 'getHelpMethodList')) {
+                    } elseif (method_exists($class['methods'][2], 'getHelpMethodList')) {
                         $class['methods']['data'] = call_user_func([$class['methods'][2], 'getHelpMethodList']);
                     } else {
                         $c = $class['methods'][2];
@@ -261,7 +261,7 @@ class MacroableHelperGenerator implements DumpExecute
                 return $upd($m);
             }, $params);
 
-            if (!$isProperty || $isAny) {
+            if (! $isProperty || $isAny) {
                 $doc->tagMethod(
                     $type,
                     $method.$params,

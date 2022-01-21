@@ -15,7 +15,6 @@ use Lar\LteAdmin\Core\Container;
 use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
 use Lar\LteAdmin\Interfaces\ControllerContentInterface;
 
 /**
@@ -45,7 +44,7 @@ class Page extends Container
     protected $router;
 
     /**
-     * The last content component
+     * The last content component.
      * @var string
      */
     protected $content;
