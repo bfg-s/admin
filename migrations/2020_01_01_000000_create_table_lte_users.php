@@ -13,7 +13,7 @@ class CreateTableLteUsers extends Migration
      */
     public function up()
     {
-        Schema::create('lte_users', function (Blueprint $table) {
+        Schema::create('lte_users', static function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('login', 190)->unique();

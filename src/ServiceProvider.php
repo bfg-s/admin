@@ -24,11 +24,6 @@ use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
 use Lar\LteAdmin\Middlewares\Authenticate;
 
-/**
- * Class ServiceProvider.
- *
- * @package Lar\Layout
- */
 class ServiceProvider extends ServiceProviderIlluminate
 {
     /**
@@ -233,7 +228,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Run lte with jax on admin page.
          */
-        JaxController::on_start(function () {
+        JaxController::on_start(static function () {
             $ref = request()->server->get('HTTP_REFERER');
             if ($ref && \Str::is(url(config('lte.route.prefix').'*'), $ref)) {
                 LteBoot::run();

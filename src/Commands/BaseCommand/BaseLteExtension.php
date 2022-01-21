@@ -9,10 +9,6 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
 
-/**
- * Class BaseLteExtension.
- * @package Lar\LteAdmin\Commands\BaseCommand
- */
 class BaseLteExtension extends Command
 {
     use LteExtensionTrait;
@@ -211,9 +207,9 @@ class BaseLteExtension extends Command
         if (array_search($name, $list) !== false) {
             return $this->download_extension($name, $this->option('install'));
         } else {
-            $filter_list = collect($list)->filter(function ($ext) use ($name) {
+            $filter_list = collect($list)->filter(static function ($ext) use ($name) {
                 return strpos($ext, $name) !== false;
-            })->filter(function ($ext) {
+            })->filter(static function ($ext) {
                 return ! isset(LteAdmin::$installed_extensions[$ext]) &&
                     ! isset(LteAdmin::$not_installed_extensions[$ext]);
             });
@@ -394,7 +390,7 @@ class BaseLteExtension extends Command
                 $this->info('All remote extensions on packagist.org:');
                 $this->table(['Name', 'Status', 'Downloaded', 'Installed'], $all->sortBy('name')->toArray());
             } else {
-                $ch = collect($list)->filter(function ($ext) {
+                $ch = collect($list)->filter(static function ($ext) {
                     return ! isset(LteAdmin::$installed_extensions[$ext]) &&
                         ! isset(LteAdmin::$not_installed_extensions[$ext]);
                 })->toArray();
@@ -452,11 +448,11 @@ class BaseLteExtension extends Command
     protected function all_extensions()
     {
         return collect(array_merge(LteAdmin::$installed_extensions, LteAdmin::$not_installed_extensions))
-            ->filter(function ($extension) {
+            ->filter(static function ($extension) {
                 return $extension::$slug !== 'application';
             })
             ->values()
-            ->map(function ($extension, $key) {
+            ->map(static function ($extension, $key) {
                 $name = $extension::$name;
 
                 return [

@@ -6,11 +6,6 @@ use Illuminate\Console\Command;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Models\LteUser as User;
 
-/**
- * Class MakeUser.
- *
- * @package Lar\Admin\Commands
- */
 class LteUserCommand extends Command
 {
     /**

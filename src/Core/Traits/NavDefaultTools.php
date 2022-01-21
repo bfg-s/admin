@@ -4,10 +4,6 @@ namespace Lar\LteAdmin\Core\Traits;
 
 use Lar\LteAdmin\Core\NavGroup;
 
-/**
- * Trait NavDefaultToos.
- * @package Lar\LteAdmin\Core\Traits
- */
 trait NavDefaultTools
 {
     /**
@@ -16,7 +12,7 @@ trait NavDefaultTools
      */
     public function makeDefaults()
     {
-        $this->lteAdministrationGroup(function (NavGroup $group) {
+        $this->lteAdministrationGroup(static function (NavGroup $group) {
             $group->lteAdministrators();
             $group->lteRoles();
             $group->ltePermission();
@@ -40,7 +36,7 @@ trait NavDefaultTools
      */
     public function lteAdministrationGroup($call)
     {
-        return $this->group('lte.administration', 'admin', function (NavGroup $group) use ($call) {
+        return $this->group('lte.administration', 'admin', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {
                 call_user_func($call, $group);
             }
@@ -66,7 +62,7 @@ trait NavDefaultTools
      */
     public function lteAccessGroup($call)
     {
-        return $this->group('lte.access', 'access', function (NavGroup $group) use ($call) {
+        return $this->group('lte.access', 'access', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {
                 call_user_func($call, $group);
             }

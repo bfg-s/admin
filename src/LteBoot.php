@@ -2,7 +2,9 @@
 
 namespace Lar\LteAdmin;
 
-use Lar\LteAdmin\Core\LtePageMixin;
+use Lar\LteAdmin\Components\FormComponent;
+use Lar\LteAdmin\Components\ModelTableComponent;
+use Lar\LteAdmin\Core\PageMixin;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
 use Lar\LteAdmin\Core\TableExtends\Display;
 use Lar\LteAdmin\Core\TableExtends\Editables;
@@ -10,14 +12,7 @@ use Lar\LteAdmin\Core\TableExtends\Formatter;
 use Lar\LteAdmin\Core\TaggableComponent;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Segments\LtePage;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
-/**
- * Class LteBoot.
- * @package Lar\LteAdmin
- */
 class LteBoot
 {
     /**
@@ -42,12 +37,12 @@ class LteBoot
          */
         TaggableComponent::create();
 
-        LtePage::mixin(new LtePageMixin);
+        Page::mixin(new PageMixin);
 
         include __DIR__.'/bootstrap.php';
 
         foreach (static::$table_classes as $item) {
-            ModelTable::addExtensionClass($item);
+            ModelTableComponent::addExtensionClass($item);
         }
 
         foreach (\LteAdmin::extensions() as $extension) {
@@ -70,7 +65,7 @@ class LteBoot
     {
         /** @var LteFunction $item */
         foreach (LteFunction::with('roles')->where('active', 1)->get() as $item) {
-            \Gate::define("{$item->class}@{$item->slug}", function (LteUser $user) use ($item) {
+            \Gate::define("{$item->class}@{$item->slug}", static function (LteUser $user) use ($item) {
                 return $user->hasRoles($item->roles->pluck('slug')->toArray());
             });
         }
@@ -81,7 +76,7 @@ class LteBoot
      */
     protected static function formMacros()
     {
-        Form::macro('info_at', function ($condition = null) {
+        FormComponent::macro('info_at', function ($condition = null) {
             if ($condition === null) {
                 $condition = gets()->lte->menu->type === 'edit';
             }
@@ -92,7 +87,7 @@ class LteBoot
             $this->if($condition)->info('created_at', 'lte.created_at');
         });
 
-        Form::macro('info_id', function ($condition = null) {
+        FormComponent::macro('info_id', function ($condition = null) {
             if ($condition === null) {
                 $condition = gets()->lte->menu->type === 'edit';
             }

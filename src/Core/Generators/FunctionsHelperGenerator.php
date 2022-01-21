@@ -7,10 +7,6 @@ use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Models\LteFunction;
 
-/**
- * Class FunctionsHelperGenerator.
- * @package Lar\LteAdmin\Core
- */
 class FunctionsHelperGenerator implements DumpExecute
 {
     /**

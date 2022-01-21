@@ -52,7 +52,7 @@ class PrepareExport implements FromCollection
         foreach ($query->get() as $item) {
             foreach (static::$columns as $column) {
                 if (is_string($column['field'])) {
-                    $exportCollection[$column['header']][] = multi_dot_call($item, $column['field']);
+                    $exportCollection[$column['header']][] = e(multi_dot_call($item, $column['field']));
                 } elseif (is_callable($column['field'])) {
                     $exportCollection[$column['header']][] = embedded_call($column['field'], [
                         $this->model => $item,

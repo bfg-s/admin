@@ -5,11 +5,6 @@ namespace Lar\LteAdmin\Getters;
 use Lar\Developer\Getter;
 use Lar\LteAdmin\Models\LteFunction;
 
-/**
- * Class Menu.
- *
- * @package Lar\LteAdmin\Getters
- */
 class Functions extends Getter
 {
     /**

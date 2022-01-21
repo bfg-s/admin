@@ -16,10 +16,6 @@ use Illuminate\Http\UploadedFile;
 use Lar\Developer\Core\Traits\Eventable;
 use Lar\LteAdmin\Models\LteFileStorage;
 
-/**
- * Class ModelSaver.
- * @package Lar\Developer\Core
- */
 class ModelSaver
 {
     use Eventable;
@@ -227,9 +223,9 @@ class ModelSaver
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-                            $param = collect($param)->filter(function ($i) {
+                            $param = collect($param)->filter(static function ($i) {
                                 return ! isset($i[static::DELETE_FIELD]);
-                            })->map(function ($i) {
+                            })->map(static function ($i) {
                                 $lk = array_key_last($i);
 
                                 return $i[$lk];
@@ -322,9 +318,9 @@ class ModelSaver
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-                            $param = collect($param)->filter(function ($i) {
+                            $param = collect($param)->filter(static function ($i) {
                                 return ! isset($i[static::DELETE_FIELD]);
-                            })->map(function ($i) {
+                            })->map(static function ($i) {
                                 $lk = array_key_last($i);
 
                                 return $i[$lk];
@@ -611,9 +607,7 @@ class ModelSaver
 
         if ($model && property_exists(static::class, $event) && is_callable($call)) {
             $events = static::$$event;
-
             $events[$model][] = $call;
-
             static::$$event = $events;
         }
     }
@@ -621,6 +615,7 @@ class ModelSaver
     /**
      * @param  string  $name
      * @param  mixed  ...$params
+     * @return array
      */
     protected function call_on(string $name, ...$params)
     {
@@ -633,6 +628,23 @@ class ModelSaver
         if ($class && isset($events[$class])) {
             foreach ($events[$class] as $item) {
                 $r = call_user_func_array($item, $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        $currentRoute = \Route::current();
+
+        if (
+            $currentRoute
+            && $model
+            && $currentRoute->controller
+            && property_exists($currentRoute->controller, $name)
+        ) {
+            $controllerModel = get_class($currentRoute->controller->model());
+            if ($controllerModel == $class) {
+                $r = call_user_func_array([$currentRoute->controller, $name], $params);
                 if (is_array($r) && count($r)) {
                     $result = array_merge_recursive($result, $r);
                 }

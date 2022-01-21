@@ -7,11 +7,6 @@ use Lar\LteAdmin\Core\LtePipe;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MakeUser.
- *
- * @package Lar\Admin\Commands
- */
 class LtePipeCommand extends Command
 {
     /**

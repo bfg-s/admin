@@ -7,10 +7,6 @@ use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 
-/**
- * Class InstallExtensionProvider.
- * @package Lar\LteAdmin\Core
- */
 class PermissionsExtensionProvider
 {
     /**
@@ -101,7 +97,7 @@ class PermissionsExtensionProvider
             'slug' => $slug,
             'class' => get_class($this->provider),
             'description' => $this->provider::$description.($description ? " [$description]" : (\Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]" : " [{$slug}]")),
-            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
+            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(static function ($item) {
                 return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
             })->filter()->values()->toArray(),
         ];

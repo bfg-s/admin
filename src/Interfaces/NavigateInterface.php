@@ -2,10 +2,6 @@
 
 namespace Lar\LteAdmin\Interfaces;
 
-/**
- * Interface NavigateInterface.
- * @package Lar\LteAdmin\Interfaces
- */
 interface NavigateInterface
 {
     /**

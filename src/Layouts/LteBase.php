@@ -5,11 +5,6 @@ namespace Lar\LteAdmin\Layouts;
 use Lar\Layout\Abstracts\LayoutComponent;
 use Lar\LteAdmin\LteAdmin;
 
-/**
- * Landing Class.
- *
- * @package App\Layouts
- */
 class LteBase extends LayoutComponent
 {
     /**
@@ -128,14 +123,9 @@ class LteBase extends LayoutComponent
             'jq', 'alert', 'nav', 'mask', 'select2', 'fancy',
         ],
 
+        'vendor/emitter/emitter.js',
         'lte-admin/js/app.js',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $metas = [
-        ['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'],
+        'lte-admin/plugins/alpine.min.js',
     ];
 
     /**
@@ -161,6 +151,8 @@ class LteBase extends LayoutComponent
 
         parent::__construct();
 
+        $this->head->meta(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']);
+        $this->head->meta(['name' => 'csrf-token', 'content' => session()->token()]);
         $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => asset('lte-admin/img/favicon.png')]);
         $this->head->link(['rel' => 'apple-touch-icon', 'href' => asset('lte-admin/img/favicon.png')]);
     }

@@ -3,27 +3,48 @@
 namespace Lar\LteAdmin\Controllers\Traits;
 
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Segments\LtePage;
+use Lar\LteAdmin\Page;
 
 trait DefaultControllerResourceMethodsTrait
 {
     /**
-     * Display a listing of the resource.
-     * @param LtePage $page
-     * @return LtePage
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelTableComponent|\Lar\LteAdmin\Components\SearchFormComponent|Page|\Lar\LteAdmin\PageMethods
      */
-    public function index_default(LtePage $page)
+    public function index_default(Page $page)
     {
         return $page
             ->card()
-            ->search()
-            ->table();
+            ->search_form()
+            ->model_table();
+    }
+
+    /**
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\FormComponent|Page|\Lar\LteAdmin\PageMethods
+     */
+    public function matrix_default(Page $page)
+    {
+        return $page
+            ->card()
+            ->form();
+    }
+
+    /**
+     * Display the specified resource.
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelInfoTableComponent|Page|\Lar\LteAdmin\PageMethods
+     */
+    public function show_default(Page $page)
+    {
+        return $page
+            ->card()
+            ->model_info_table();
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return LtePage
+     * @return mixed
      */
     public function create_default()
     {
@@ -32,8 +53,7 @@ trait DefaultControllerResourceMethodsTrait
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return LtePage
+     * @return mixed
      */
     public function edit_default()
     {
@@ -41,22 +61,12 @@ trait DefaultControllerResourceMethodsTrait
     }
 
     /**
-     * Display the specified resource.
-     * @param LtePage $page
-     * @return LtePage
-     */
-    public function show_default(LtePage $page)
-    {
-        return $page
-            ->card()
-            ->info();
-    }
-
-    /**
      * Update the specified resource in storage.
-     *
      * @param  array|null  $data
-     * @return \Illuminate\Http\RedirectResponse
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     public function update_default(array $data = null)
     {
@@ -89,9 +99,11 @@ trait DefaultControllerResourceMethodsTrait
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  array|null  $data
-     * @return \Illuminate\Http\RedirectResponse
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     public function store_default(array $data = null)
     {
@@ -171,12 +183,5 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         return respond();
-    }
-
-    public function matrix_default(LtePage $page)
-    {
-        return $page
-            ->card()
-            ->form();
     }
 }

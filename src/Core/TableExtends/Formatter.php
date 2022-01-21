@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
 
-/**
- * Class Formatter.
- * @package Lar\LteAdmin\Core\TableExtends
- */
 class Formatter
 {
     /**
@@ -211,7 +207,7 @@ class Formatter
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
-        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : null;
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $value;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -220,7 +216,7 @@ class Formatter
             $link->attr(['title' => $title]);
         }
 
-        return $value.' '.$link;
+        return urldecode($value).' '.$link;
     }
 
     /**

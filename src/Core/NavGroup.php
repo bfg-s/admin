@@ -11,8 +11,6 @@ use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class NavGroup.
- * @package Lar\LteAdmin\Core
  * @mixin NavigatorExtensions
  */
 class NavGroup implements Arrayable, NavigateInterface

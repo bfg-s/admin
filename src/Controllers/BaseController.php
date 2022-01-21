@@ -11,8 +11,7 @@ use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LteRole;
 
 /**
- * Trait ControllerMethods.
- * @package Lar\LteAdmin\Core\Traits
+ * @template CurrentModel
  */
 abstract class BaseController extends Controller
 {
@@ -24,9 +23,9 @@ abstract class BaseController extends Controller
     public static $extension_affiliation;
 
     /**
-     * @var bool
+     * @var CurrentModel
      */
-    public static $no_getter_model = false;
+    public static $model;
 
     /**
      * Save request to model.
@@ -64,11 +63,11 @@ abstract class BaseController extends Controller
     /**
      * Get menu model.
      *
-     * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|string|null
+     * @return CurrentModel|\App\Models\Product|\App\Models\User|\Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|string|null
      */
     public function model()
     {
-        return ! static::$no_getter_model ? gets()->lte->menu->model : null;
+        return gets()->lte->menu->model;
     }
 
     /**
@@ -215,7 +214,7 @@ abstract class BaseController extends Controller
             'slug' => $method,
             'class' => static::class,
             'description' => $p_desc.($description ? " [$description]" : (\Lang::has("lte.about_method.{$method}") ? " [@lte.about_method.{$method}]" : " [{$method}]")),
-            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(function ($item) {
+            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(static function ($item) {
                 return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
             })->filter()->values()->toArray(),
         ];

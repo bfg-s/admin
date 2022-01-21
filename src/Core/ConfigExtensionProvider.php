@@ -3,16 +3,12 @@
 namespace Lar\LteAdmin\Core;
 
 use Lar\Developer\Core\Traits\Piplineble;
+use Lar\LteAdmin\Components\ModelTableComponent;
+use Lar\LteAdmin\Components\FieldComponent;
 use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Segments\Tagable\Field;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
 
-/**
- * Class InstallExtensionProvider.
- * @package Lar\LteAdmin\Core
- */
 class ConfigExtensionProvider
 {
     /**
@@ -122,7 +118,7 @@ class ConfigExtensionProvider
      */
     public function tableExtension(string $name, \Closure $call)
     {
-        ModelTable::addExtension($name, $call);
+        ModelTableComponent::addExtension($name, $call);
 
         return $this;
     }
@@ -133,7 +129,7 @@ class ConfigExtensionProvider
      */
     public function tableExtensionClass(string $class)
     {
-        ModelTable::addExtensionClass($class);
+        ModelTableComponent::addExtensionClass($class);
 
         return $this;
     }
@@ -145,7 +141,7 @@ class ConfigExtensionProvider
      */
     public function formField(string $name, string $class)
     {
-        Field::registerFormComponent($name, $class);
+        FieldComponent::registerFormComponent($name, $class);
 
         return $this;
     }

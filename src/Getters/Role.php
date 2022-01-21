@@ -4,11 +4,6 @@ namespace Lar\LteAdmin\Getters;
 
 use Lar\Developer\Getter;
 
-/**
- * Class Menu.
- *
- * @package Lar\LteAdmin\Getters
- */
 class Role extends Getter
 {
     /**

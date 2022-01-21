@@ -5,10 +5,6 @@ namespace Lar\LteAdmin\Commands\BaseCommand;
 use Composer\Json\JsonFormatter;
 use Lar\LteAdmin\LteAdmin;
 
-/**
- * Trait LteExtensionTrait.
- * @package Lar\LteAdmin\Commands\BaseCommand
- */
 trait LteExtensionTrait
 {
     public static $desc;

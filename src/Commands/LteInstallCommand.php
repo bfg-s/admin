@@ -12,11 +12,6 @@ use Lar\LteAdmin\Models\LteSeeder;
 use Lar\LteAdmin\Models\LteUser;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class LteUpdateAssets.
- *
- * @package Lar\LteAdmin\Commands
- */
 class LteInstallCommand extends Command
 {
     /**
@@ -102,7 +97,6 @@ class LteInstallCommand extends Command
             $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
 
             if (! isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump']) === false) {
-                $base_composer['scripts']['post-autoload-dump'][] = 'chmod -R 0777 public/uploads';
                 $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
 
                 file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
@@ -139,7 +133,7 @@ class LteInstallCommand extends Command
         if (! is_file($controller)) {
             file_put_contents(
                 $controller,
-                "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\n/**\n * Controller Class\n *\n * @package ".lte_app_namespace('Controllers')."\n */\nclass Controller extends LteController\n{\n\t\n}"
+                "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\nclass Controller extends LteController\n{\n\t\n}"
             );
 
             $this->info("File {$controller} created!");

@@ -14,11 +14,6 @@ use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LtePermission;
 use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * Class Authenticate.
- *
- * @package Lar\LteAdmin\Middlewares
- */
 class Authenticate
 {
     /**
@@ -56,6 +51,7 @@ class Authenticate
 
         LteBoot::run();
 
+        LConfigs::add('home', route('lte.home'));
         LConfigs::add('uploader', route('lte.uploader'));
 
         if (! $this->access()) {

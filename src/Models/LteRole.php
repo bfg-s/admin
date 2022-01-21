@@ -5,11 +5,6 @@ namespace Lar\LteAdmin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
-/**
- * Class LteRole.
- *
- * @package Lar\LteAdmin\Models
- */
 class LteRole extends Model
 {
     use DumpedModel;

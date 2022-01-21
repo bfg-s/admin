@@ -8,10 +8,6 @@ use Lar\LteAdmin\Controllers\ModalController;
 use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\LteBoot;
 
-/**
- * Class LteAdmin.
- * @package App\Http\JaxExecutors
- */
 class LteAdmin extends LteAdminExecutor
 {
     /**
@@ -144,7 +140,7 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @param  string  $handle
      * @param  array  $params
-     * @return \Lar\LteAdmin\Segments\Modal|mixed
+     * @return \Lar\LteAdmin\Components\ModalComponent|mixed
      */
     public function load_modal(string $handle, array $params = [])
     {

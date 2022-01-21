@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
-/**
- * Class LtePermission.
- * @package Lar\LteAdmin\Models
- */
 class LteFunction extends Model
 {
     use DumpedModel;

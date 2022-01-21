@@ -2,11 +2,6 @@
 
 namespace Lar\LteAdmin\Layouts;
 
-/**
- * Landing Class.
- *
- * @package App\Layouts
- */
 class LteAuthLayout extends LteBase
 {
     /**

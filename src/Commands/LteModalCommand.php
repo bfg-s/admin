@@ -3,16 +3,12 @@
 namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
+use Lar\LteAdmin\Components\ModalBodyComponent;
+use Lar\LteAdmin\Components\ModalComponent;
 use Lar\LteAdmin\Controllers\ModalController;
-use Lar\LteAdmin\Segments\Modal;
-use Lar\LteAdmin\Segments\Tagable\ModalBody;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class LteModalCommand.
- * @package Lar\LteAdmin\Commands
- */
 class LteModalCommand extends Command
 {
     /**
@@ -56,12 +52,12 @@ class LteModalCommand extends Command
 
         $class = class_entity($name)->wrap('php');
         $class->namespace($namespace);
-        $class->use(Modal::class);
-        $class->use(ModalBody::class);
+        $class->use(ModalComponent::class);
+        $class->use(ModalBodyComponent::class);
         $class->extend(ModalController::class);
         $class->method('create')
-            ->param('body', null, ModalBody::class)
-            ->param('modal', null, Modal::class)
+            ->param('body', null, ModalBodyComponent::class)
+            ->param('modal', null, ModalComponent::class)
             ->line()
             ->line("\$modal->title('{$name}');")
             ->line("\$body->text('{$namespace}\\{$name}');");

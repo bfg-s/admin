@@ -13,7 +13,7 @@ class UpdateTableLtePermissionDescription extends Migration
      */
     public function up()
     {
-        Schema::table('lte_permission', function (Blueprint $table) {
+        Schema::table('lte_permission', static function (Blueprint $table) {
             $table->string('description')->nullable()->after('state');
         });
     }
@@ -25,7 +25,7 @@ class UpdateTableLtePermissionDescription extends Migration
      */
     public function down()
     {
-        Schema::table('lte_permission', function (Blueprint $table) {
+        Schema::table('lte_permission', static function (Blueprint $table) {
             $table->dropColumn(['description']);
         });
     }

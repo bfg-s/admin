@@ -6,11 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
-/**
- * Class LteFileStorage.
- *
- * @package Lar\Admin\Models
- */
 class LteFileStorage extends Model
 {
     use DumpedModel;

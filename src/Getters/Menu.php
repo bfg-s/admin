@@ -3,16 +3,11 @@
 namespace Lar\LteAdmin\Getters;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Lar\Developer\Getter;
+use Lar\LteAdmin\Exceptions\ShouldBeModelInControllerException;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LtePermission;
 
-/**
- * Class Menu.
- *
- * @package Lar\LteAdmin\Getters
- */
 class Menu extends Getter
 {
     /**
@@ -107,6 +102,7 @@ class Menu extends Getter
 
     /**
      * @return \Illuminate\Database\Eloquent\Model|string|null
+     * @throws ShouldBeModelInControllerException
      */
     public static function model()
     {
@@ -114,23 +110,17 @@ class Menu extends Getter
 
         $menu = gets()->lte->menu->now;
 
-        if ($menu && isset($menu['model'])) {
-            $return = $menu['model'];
-        } elseif (\Route::current() && $action = \Route::currentRouteAction()) {
-            $class = Str::parseCallback($action)[0];
+        $current = \Route::current();
 
-            if (property_exists($class, 'model')) {
-                $return = $class::$model;
+        if ($current->controller) {
+
+            if (method_exists($current->controller, 'getModel')) {
+                $return = call_user_func([$current->controller, 'getModel']);
+            } else if (property_exists($current->controller, 'model')) {
+                $controller = $current->controller;
+                $return = $controller::$model;
             } else {
-                if (property_exists($class, 'no_getter_model')) {
-                    $class::$no_getter_model = true;
-                }
-                $class = (new $class);
-                if (method_exists($class, 'model')) {
-                    $return = $class->model();
-                } else {
-                    $return = null;
-                }
+                throw new ShouldBeModelInControllerException();
             }
         }
 
@@ -140,17 +130,10 @@ class Menu extends Getter
             $return = new $return;
         }
 
-        $pm = null;
-
-        if (isset($menu['model.param'])) {
-            $pm = $menu['model.param'];
-        } else {
-            $pm = \Str::singular(\Str::snake(class_basename($return)));
-        }
+        $pm = $menu['model.param'] ?? \Str::singular(\Str::snake(class_basename($return)));
 
         if (
             $pm &&
-            $return &&
             $return instanceof Model &&
             ! $return->exists &&
             \Route::current()->hasParameter($pm)
@@ -380,7 +363,7 @@ class Menu extends Getter
                     ? null
                     : route($item['route'].'.index', $item['route_params'] ?? []);
 
-                $item['link.show'] = function ($params) use ($item) {
+                $item['link.show'] = static function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('show', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('show', $item['resource_except']))
@@ -393,7 +376,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.show', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.update'] = function ($params) use ($item) {
+                $item['link.update'] = static function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('update', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('update', $item['resource_except']))
@@ -406,7 +389,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.update', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.destroy'] = function ($params) use ($item) {
+                $item['link.destroy'] = static function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('destroy', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('destroy', $item['resource_except']))
@@ -419,7 +402,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.destroy', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.edit'] = function ($params) use ($item) {
+                $item['link.edit'] = static function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('edit', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('edit', $item['resource_except']))
@@ -432,7 +415,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.edit', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.index'] = function (array $params = []) use ($item) {
+                $item['link.index'] = static function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('index', $item['resource_except']))
@@ -442,7 +425,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.index', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.store'] = function (array $params = []) use ($item) {
+                $item['link.store'] = static function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('store', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('store', $item['resource_except']))
@@ -452,7 +435,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.store', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.create'] = function (array $params = []) use ($item) {
+                $item['link.create'] = static function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('create', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('create', $item['resource_except']))

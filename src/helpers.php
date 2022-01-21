@@ -14,7 +14,7 @@ if (! function_exists('lte_log')) {
         $params['title'] = $title;
         $params['detail'] = $detail;
         $params['ip'] = request()->ip();
-        $params['url'] = url()->current();
+        $params['url'] = url()->full();
         $params['route'] = \Route::currentRouteName();
         $params['method'] = request()->method();
         $params['web_id'] = \Auth::check() ? \Auth::id() : null;

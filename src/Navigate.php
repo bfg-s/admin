@@ -10,8 +10,6 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\Roads\Roads;
 
 /**
- * Class Navigate.
- * @package Lar\LteAdmin
  * @mixin \Lar\LteAdmin\Core\NavigatorExtensions
  */
 class Navigate implements NavigateInterface

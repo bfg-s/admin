@@ -5,40 +5,34 @@ namespace Lar\LteAdmin\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
+use Lar\LteAdmin\Components\ButtonsComponent;
+use Lar\LteAdmin\Components\CardBodyComponent;
+use Lar\LteAdmin\Components\Contents\CardContent;
+use Lar\LteAdmin\Components\ChartJsComponent;
+use Lar\LteAdmin\Components\FormComponent;
+use Lar\LteAdmin\Components\GridColumnComponent;
+use Lar\LteAdmin\Components\Contents\GridRowContent;
+use Lar\LteAdmin\Components\ModelInfoTableComponent;
+use Lar\LteAdmin\Components\ModelTableComponent;
+use Lar\LteAdmin\Components\NestedComponent;
+use Lar\LteAdmin\Components\SearchFormComponent;
+use Lar\LteAdmin\Components\StatisticPeriodComponent;
 use Lar\LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
 use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Exceptions\NotFoundExplainForControllerException;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
-use Lar\LteAdmin\Segments\Tagable\Card;
-use Lar\LteAdmin\Segments\Tagable\ChartJs;
-use Lar\LteAdmin\Segments\Tagable\ControllerMacroList;
-use Lar\LteAdmin\Segments\Tagable\ControllerMethods;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\Nested;
-use Lar\LteAdmin\Segments\Tagable\SearchForm;
-use Lar\LteAdmin\Segments\Tagable\StatisticPeriods;
+use Lar\LteAdmin\Page;
 
 /**
- * Class Controller.
- *
- * @package Lar\LteAdmin\Controllers
- * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list ()
+ * @property-read Page $page
+ * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (likeProperty)
  * @mixin ControllerMethods
  * @mixin ControllerMacroList
  */
 class Controller extends BaseController
 {
     use Piplineble, DefaultControllerResourceMethodsTrait, Macroable;
-
-    /**
-     * Permission functions for methods.
-     *
-     * @var array
-     */
-    public static $permission_functions = [];
 
     /**
      * @var array
@@ -58,22 +52,68 @@ class Controller extends BaseController
     /**
      * @var string[]
      */
-    public static $explanation_list = [
-        'card' => Card::class,
-        'search' => SearchForm::class,
-        'table' => ModelTable::class,
-        'nested' => Nested::class,
-        'form' => Form::class,
-        'info' => ModelInfoTable::class,
-        'buttons' => ButtonGroup::class,
-        'chartjs' => ChartJs::class,
-        'periods' => StatisticPeriods::class,
+    protected static $explanation_list = [
+        'row' => GridRowContent::class,
+        'column' => GridColumnComponent::class,
+        'card' => CardContent::class,
+        'card_body' => CardBodyComponent::class,
+        'search_form' => SearchFormComponent::class,
+        'model_table' => ModelTableComponent::class,
+        'nested' => NestedComponent::class,
+        'ordered' => NestedComponent::class,
+        'form' => FormComponent::class,
+        'model_info_table' => ModelInfoTableComponent::class,
+        'buttons' => ButtonsComponent::class,
+        'chart_js' => ChartJsComponent::class,
+        'statistic_periods' => StatisticPeriodComponent::class,
     ];
 
-    /**
-     * @var bool
-     */
-    protected $isDefault = false;
+    public static function getHelpMethodList()
+    {
+        $result = Controller::$explanation_list;
+        foreach ($result as $key => $extension) {
+            $result[$key."_by_request"] = $extension;
+            $result[$key."_by_default"] = $extension;
+        }
+        return $result;
+    }
+
+    public static function getExplanationList()
+    {
+        return Controller::$explanation_list;
+    }
+
+    public static function extend(string $name, string $class)
+    {
+        if (!static::hasExtend($name)) {
+            Controller::$explanation_list[$name] = $class;
+        }
+    }
+
+    public static function hasExtend(string $name)
+    {
+        return isset(Controller::$explanation_list[$name]);
+    }
+
+    public static function applyExtend(Page $page, string $name, array $delegates = [])
+    {
+        if (static::hasExtend($name)) {
+            $class = Controller::$explanation_list[$name];
+            if (method_exists($class, 'registrationInToContainer')) {
+                $class::registrationInToContainer($page, $delegates, $name);
+            } else {
+                if ($page->hasClass(CardContent::class)) {
+                    $page->registerClass(
+                        $page->getClass(CardContent::class)->body()->{$name}($delegates)
+                    );
+                } else {
+                    $page->registerClass(
+                        $page->getContent()->{$name}($delegates)
+                    );
+                }
+            }
+        };
+    }
 
     /**
      * Controller constructor.
@@ -85,25 +125,17 @@ class Controller extends BaseController
 
     public function explanation(): Explanation
     {
-        return $this->isDefault ? Explanation::new(
-            Card::new()->defaultTools()
-        )->index(
-            SearchForm::new()->id(),
-            SearchForm::new()->at(),
-        )->index(
-            ModelTable::new()->id(),
-            ModelTable::new()->at(),
-        )->form(
-            Form::new()->info_id(),
-            Form::new()->info_at(),
-        )->show(
-            ModelInfoTable::new()->id(),
-            ModelInfoTable::new()->at(),
-        ) : Explanation::new();
+        return Explanation::new(
+            $this->card->defaultTools(
+                method_exists($this, 'defaultTools') ? [$this, 'defaultTools'] : null
+            )
+        );
     }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function returnTo()
     {
@@ -131,13 +163,28 @@ class Controller extends BaseController
      */
     public function __call($method, $parameters)
     {
-        if (isset(static::$explanation_list[$method])) {
-            return new Delegate(static::$explanation_list[$method]);
-        }
-
-        $this->isDefault = true;
+//        if (isset(static::$explanation_list[$method])) {
+//            return new Delegate(static::$explanation_list[$method]);
+//        }
 
         return app()->call([$this, "{$method}_default"]);
+    }
+
+    /**
+     * @param  string  $name
+     * @return Delegate
+     * @throws NotFoundExplainForControllerException
+     */
+    public function __get(string $name)
+    {
+        if ($name == 'page')
+            return Page::new();
+
+        if (isset(static::$explanation_list[$name])) {
+            return new Delegate(static::$explanation_list[$name]);
+        }
+
+        throw new NotFoundExplainForControllerException($name);
     }
 
     /**
@@ -151,7 +198,7 @@ class Controller extends BaseController
             $model = $this->model();
 
             if ($model && $model->exists && ! request()->has($path)) {
-                return multi_dot_call($model, $path) ?: request($path, $default);
+                return e(multi_dot_call($model, $path) ?: request($path, $default));
             }
 
             return request($path, $default);
@@ -167,7 +214,7 @@ class Controller extends BaseController
      */
     public function isRequest(string $path, $need_value)
     {
-        $model = Form::$current_model;
+        $model = FormComponent::$current_model;
 
         $request_value = multi_dot_call($this->form(), $path);
 
@@ -184,13 +231,13 @@ class Controller extends BaseController
         ) {
             /** @var Model $model */
             $model = static::$model;
-            $model::created(function ($model) {
+            $model::created(static function ($model) {
                 lte_log_info('Created model', get_class($model), 'fas fa-plus');
             });
-            $model::updated(function ($model) {
+            $model::updated(static function ($model) {
                 lte_log_info('Updated model', get_class($model), 'fas fa-highlighter');
             });
-            $model::deleted(function ($model) {
+            $model::deleted(static function ($model) {
                 lte_log_danger('Deleted model', get_class($model), 'fas fa-trash');
             });
         }

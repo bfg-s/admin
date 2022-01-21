@@ -6,10 +6,6 @@ use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 
-/**
- * Trait NavCommon.
- * @package Lar\LteAdmin\Core\Traits
- */
 trait NavCommon
 {
     /**

@@ -4,11 +4,6 @@ namespace Lar\LteAdmin;
 
 use Lar\LteAdmin\Components\Vue\ModalCollection;
 
-/**
- * Class LteAdmin.
- *
- * @package Lar\CryptoApi
- */
 class LteAdmin
 {
     /**

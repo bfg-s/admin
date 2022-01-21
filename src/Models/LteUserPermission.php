@@ -2,11 +2,6 @@
 
 namespace Lar\LteAdmin\Models;
 
-/**
- * Trait LteUserPermission.
- *
- * @package Lar\LteAdmin\Models
- */
 trait LteUserPermission
 {
     /**

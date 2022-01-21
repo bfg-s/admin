@@ -6,12 +6,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Lar\Layout\Core\HTMLCustomCommand;
-use Lar\LteAdmin\Segments\Modal;
+use Lar\LteAdmin\Components\ModalComponent;
 
-/**
- * Class ModalController.
- * @package Lar\LteAdmin\Controllers
- */
 class ModalController extends HTMLCustomCommand
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -139,7 +135,7 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
-     * @return Modal
+     * @return ModalComponent
      */
     public function index()
     {
@@ -149,7 +145,7 @@ class ModalController extends HTMLCustomCommand
             $link = $this->create;
         }
 
-        return Modal::create($link);
+        return ModalComponent::create($link);
     }
 
     /**

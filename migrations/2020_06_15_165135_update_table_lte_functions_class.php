@@ -13,7 +13,7 @@ class UpdateTableLteFunctionsClass extends Migration
      */
     public function up()
     {
-        Schema::table('lte_functions', function (Blueprint $table) {
+        Schema::table('lte_functions', static function (Blueprint $table) {
             $table->string('class')->nullable()->after('slug');
             $table->dropUnique(['slug']);
         });
@@ -26,7 +26,7 @@ class UpdateTableLteFunctionsClass extends Migration
      */
     public function down()
     {
-        Schema::table('lte_functions', function (Blueprint $table) {
+        Schema::table('lte_functions', static function (Blueprint $table) {
             $table->dropColumn('class');
             $table->unique('slug');
         });

@@ -2,10 +2,6 @@
 
 namespace Lar\LteAdmin;
 
-/**
- * Class AppServiceProvider.
- * @package Lar\LteAdmin
- */
 class ApplicationServiceProvider extends ExtendProvider
 {
     /**

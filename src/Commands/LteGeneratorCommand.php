@@ -7,10 +7,6 @@ use Lar\Developer\Generator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MakePipeCommand.
- * @package Lar\Developer\Commands
- */
 class LteGeneratorCommand extends Command
 {
     /**

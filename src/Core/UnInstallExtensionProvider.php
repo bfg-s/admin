@@ -6,10 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Lar\LteAdmin\ExtendProvider;
 
-/**
- * Class InstallExtensionProvider.
- * @package Lar\LteAdmin\Core
- */
 class UnInstallExtensionProvider
 {
     /**
@@ -73,11 +69,11 @@ class UnInstallExtensionProvider
                 }
             }
         } elseif (is_dir($where) && is_dir($in)) {
-            $in_files = collect(\File::allFiles($in, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) {
+            $in_files = collect(\File::allFiles($in, true))->map(static function (\Symfony\Component\Finder\SplFileInfo $info) {
                 return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
             });
 
-            $where_files = collect(\File::allFiles($where, true))->map(function (\Symfony\Component\Finder\SplFileInfo $info) {
+            $where_files = collect(\File::allFiles($where, true))->map(static function (\Symfony\Component\Finder\SplFileInfo $info) {
                 return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
             });
 

@@ -4,8 +4,8 @@ namespace Lar\LteAdmin;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Traits\Conditionable;
+use Lar\LteAdmin\Components\FieldInputTypesMethods;
 use Lar\LteAdmin\Core\Delegate;
-use Lar\LteAdmin\Segments\Tagable\FieldInputTypesMethods;
 
 /**
  * @method Explanation name(string $name) Set the name of field (database column)

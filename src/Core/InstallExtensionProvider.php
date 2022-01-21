@@ -10,10 +10,6 @@ use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Class InstallExtensionProvider.
- * @package Lar\LteAdmin\Core
- */
 class InstallExtensionProvider
 {
     /**

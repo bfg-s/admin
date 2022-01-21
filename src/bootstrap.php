@@ -30,7 +30,7 @@ Collection::macro('nestable_pluck', function (string $value, string $key, $root 
     };
 
     /** @var Collection $return */
-    $return = $this->sortBy($order)->mapWithKeys(function ($item) use ($value, $key, $parent_field, $input, $nestable_count) {
+    $return = $this->sortBy($order)->mapWithKeys(static function ($item) use ($value, $key, $parent_field, $input, $nestable_count) {
         $inp_cnt = 0;
         if ($item->{$parent_field}) {
             $inp_cnt += $nestable_count($item->{$parent_field});

@@ -3,63 +3,38 @@
 namespace Lar\LteAdmin\Core;
 
 use Lar\Layout\Abstracts\Component;
-use Lar\LteAdmin\Segments\Tagable\Alert;
-use Lar\LteAdmin\Segments\Tagable\ButtonGroup;
-use Lar\LteAdmin\Segments\Tagable\Card;
-use Lar\LteAdmin\Segments\Tagable\ChartJs;
-use Lar\LteAdmin\Segments\Tagable\Col;
-use Lar\LteAdmin\Segments\Tagable\Divider;
-use Lar\LteAdmin\Segments\Tagable\Field;
-use Lar\LteAdmin\Segments\Tagable\Form;
-use Lar\LteAdmin\Segments\Tagable\FormFooter;
-use Lar\LteAdmin\Segments\Tagable\InfoBox;
-use Lar\LteAdmin\Segments\Tagable\Lang;
-use Lar\LteAdmin\Segments\Tagable\Live;
-use Lar\LteAdmin\Segments\Tagable\ModelInfoTable;
-use Lar\LteAdmin\Segments\Tagable\ModelLive;
-use Lar\LteAdmin\Segments\Tagable\ModelRelation;
-use Lar\LteAdmin\Segments\Tagable\ModelTable;
-use Lar\LteAdmin\Segments\Tagable\Nested;
-use Lar\LteAdmin\Segments\Tagable\Row;
-use Lar\LteAdmin\Segments\Tagable\SmallBox;
-use Lar\LteAdmin\Segments\Tagable\StatisticPeriods;
-use Lar\LteAdmin\Segments\Tagable\Table;
-use Lar\LteAdmin\Segments\Tagable\Tabs;
-use Lar\LteAdmin\Segments\Tagable\Timeline;
+use Lar\LteAdmin\Components\AlertComponent;
+use Lar\LteAdmin\Components\FormFooterComponent;
+use Lar\LteAdmin\Components\StatisticPeriodComponent;
+use Lar\LteAdmin\Components\TableComponent;
+use Lar\LteAdmin\Components\TimelineComponent;
+use Lar\LteAdmin\Components\DividerComponent;
+use Lar\LteAdmin\Components\FieldComponent;
+use Lar\LteAdmin\Components\InfoBoxComponent;
+use Lar\LteAdmin\Components\LangComponent;
+use Lar\LteAdmin\Components\ModelRelationComponent;
+use Lar\LteAdmin\Components\SmallBoxComponent;
+use Lar\LteAdmin\Components\TabsComponent;
+use Lar\LteAdmin\Controllers\Controller;
 
-/**
- * Class TagableComponent.
- * @package Lar\LteAdmin\Core
- */
 class TaggableComponent extends Component
 {
     /**
      * @var string[]
      */
-    public static $collection = [
-        'row' => Row::class,
-        'col' => Col::class,
-        'lang' => Lang::class,
-        'card' => Card::class,
-        'form' => Form::class,
-        'form_footer' => FormFooter::class,
-        'field' => Field::class,
-        'model_table' => ModelTable::class,
-        'model_info_table' => ModelInfoTable::class,
-        'table' => Table::class,
-        'button_group' => ButtonGroup::class,
-        'alert' => Alert::class,
-        'small_box' => SmallBox::class,
-        'info_box' => InfoBox::class,
-        'tabs' => Tabs::class,
-        'nested' => Nested::class,
-        'divider' => Divider::class,
-        'live' => Live::class,
-        'model_live' => ModelLive::class,
-        'model_relation' => ModelRelation::class,
-        'timeline' => Timeline::class,
-        'statistic_periods' => StatisticPeriods::class,
-        'chart_js' => ChartJs::class,
+    protected static $collection = [
+        'lang' => LangComponent::class,
+        'form_footer' => FormFooterComponent::class,
+        'field' => FieldComponent::class,
+        'table' => TableComponent::class,
+        'alert' => AlertComponent::class,
+        'small_box' => SmallBoxComponent::class,
+        'info_box' => InfoBoxComponent::class,
+        'tabs' => TabsComponent::class,
+        'divider' => DividerComponent::class,
+        'model_relation' => ModelRelationComponent::class,
+        'timeline' => TimelineComponent::class,
+        'statistic_periods' => StatisticPeriodComponent::class,
     ];
 
     /**
@@ -68,5 +43,6 @@ class TaggableComponent extends Component
     public function __construct()
     {
         static::injectCollection(static::$collection);
+        static::injectCollection(Controller::getExplanationList());
     }
 }

@@ -12,10 +12,6 @@ use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LtePermission;
 use Lar\LteAdmin\Models\LteRole;
 
-/**
- * Class LteDbDumpCommand.
- * @package Lar\LteAdmin\Commands
- */
 class LteDbDumpCommand extends Command
 {
     /**
@@ -73,7 +69,7 @@ class LteDbDumpCommand extends Command
         }
 
         $class = class_entity(static::$file_name);
-        $class->doc(function (DocumentorEntity $doc) {
+        $class->doc(static function (DocumentorEntity $doc) {
             $doc->description(static::$file_name.' Class');
             $doc->tagCustom('date', now()->toDateTimeString());
         });

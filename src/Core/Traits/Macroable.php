@@ -5,10 +5,6 @@ namespace Lar\LteAdmin\Core\Traits;
 use ReflectionClass;
 use ReflectionMethod;
 
-/**
- * Trait Macroable.
- * @package Lar\LteAdmin\Core\Traits
- */
 trait Macroable
 {
     /**

@@ -5,11 +5,6 @@ namespace Lar\LteAdmin\Models;
 use Illuminate\Database\Seeder;
 use Lar\LteAdmin\Commands\LteDbDumpCommand;
 
-/**
- * Class LteSeeder.
- *
- * @package Lar\LteAdmin\Models
- */
 class LteSeeder extends Seeder
 {
     /**

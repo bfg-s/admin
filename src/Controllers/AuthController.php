@@ -4,11 +4,6 @@ namespace Lar\LteAdmin\Controllers;
 
 use Illuminate\Http\Request;
 
-/**
- * Class AuthController.
- *
- * @package Lar\LteAdmin\Controllers
- */
 class AuthController
 {
     /**

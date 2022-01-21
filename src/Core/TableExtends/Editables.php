@@ -4,12 +4,8 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
-use Lar\LteAdmin\Segments\Tagable\Field;
+use Lar\LteAdmin\Components\FieldComponent;
 
-/**
- * Class Editables.
- * @package Lar\LteAdmin\Core\TableExtends
- */
 class Editables
 {
     /**
@@ -25,7 +21,7 @@ class Editables
             $now = lte_now();
 
             if (isset($now['link.update'])) {
-                return Field::switcher($field)
+                return FieldComponent::switcher($field)
                     ->only_input()
                     ->labels(...$props)
                     ->switchSize('mini')
@@ -35,7 +31,7 @@ class Editables
                     );
             }
 
-            return Field::switcher($field)
+            return FieldComponent::switcher($field)
                 ->only_input()
                 ->labels(...$props)
                 ->switchSize('mini')

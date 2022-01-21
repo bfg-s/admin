@@ -13,7 +13,7 @@ class CreateTableLtePermission extends Migration
      */
     public function up()
     {
-        Schema::create('lte_permission', function (Blueprint $table) {
+        Schema::create('lte_permission', static function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('path')->default('*');

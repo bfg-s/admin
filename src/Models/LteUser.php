@@ -11,11 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Lar\LteAdmin\Core\CheckUserFunction;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
-/**
- * Class LteUser.
- *
- * @package Lar\LteAdmin\Models
- */
 class LteUser extends Model implements AuthenticatableContract
 {
     use Authenticatable,

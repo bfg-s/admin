@@ -7,8 +7,6 @@ use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Navigate;
 
 /**
- * Class InstallExtensionProvider.
- * @package Lar\LteAdmin\Core
  * @mixin NavigatorMethods
  */
 class NavigatorExtensionProvider implements NavigateInterface

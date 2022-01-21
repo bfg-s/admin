@@ -13,13 +13,15 @@
     ],
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2.0",
+        "php": "^8.0",
+        "lar/ljs": "^v2.5.7",
+        "lar/layout": "^v2.5.0",
+        "bfg/emitter": "^1.1",
+        "bfg/embedded-call": "^0.0.5",
+        "maatwebsite/excel": "^3.1",
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
-        "lar/layout": "^v2.5.0",
-        "lar/ljs": "^v2.5.7",
-        "almasaeed2010/adminlte": "^3.0",
-        "maatwebsite/excel": "^3.1"
+        "almasaeed2010/adminlte": "^3.0"
     },
     "require-dev": {},
     "autoload": {

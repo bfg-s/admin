@@ -4,14 +4,9 @@ namespace Lar\LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Components\AccessDeniedComponent;
 use Lar\LteAdmin\Middlewares\Authenticate;
-use Lar\LteAdmin\Segments\AccessDenied;
 
-/**
- * Landing Class.
- *
- * @package App\Layouts
- */
 class LteLayout extends LteBase
 {
     /**
@@ -19,7 +14,7 @@ class LteLayout extends LteBase
      *
      * @var bool|string
      */
-    protected $pjax = 'lte-content-container';
+    protected $pjax = 'lte';
 
     /**
      * LteLayout constructor.
@@ -45,7 +40,7 @@ class LteLayout extends LteBase
                 $div->div(['content-wrapper'], function (DIV $div) {
                     $this->toComponent($div, 'prep_end_wrapper');
 
-                    $div->section(['content', 'id' => 'lte-content-container'])
+                    $div->section(['content', 'id' => 'lte'])
                         ->haveLink($this->container);
 
                     $this->toComponent($this->container, 'prep_end_content');
@@ -77,7 +72,7 @@ class LteLayout extends LteBase
 
                 $this->toComponent($this->container, 'app_end_content');
             } else {
-                $this->container->appEnd(AccessDenied::create());
+                $this->container->appEnd(AccessDeniedComponent::create());
             }
         } catch (\Exception $exception) {
             dd($exception);

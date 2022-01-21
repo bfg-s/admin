@@ -14,11 +14,6 @@ use Lar\LteAdmin\Core\UnInstallExtensionProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Models\LteFunction;
 
-/**
- * Class ServiceProvider.
- *
- * @package Lar\Layout
- */
 class ExtendProvider extends ServiceProviderIlluminate
 {
     /**

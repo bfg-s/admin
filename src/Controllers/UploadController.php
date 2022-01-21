@@ -4,11 +4,6 @@ namespace Lar\LteAdmin\Controllers;
 
 use Lar\LteAdmin\Models\LteFileStorage;
 
-/**
- * Class HomeController.
- *
- * @package Lar\LteAdmin\Controllers
- */
 class UploadController extends Controller
 {
     /**

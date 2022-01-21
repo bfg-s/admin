@@ -2,14 +2,10 @@
 
 namespace Lar\LteAdmin\Controllers;
 
-use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Models\LtePermission;
+use Lar\LteAdmin\Models\LteRole;
+use Lar\LteAdmin\Page;
 
-/**
- * Class HomeController.
- *
- * @package Lar\LteAdmin\Controllers
- */
 class PermissionController extends Controller
 {
     /**
@@ -31,55 +27,81 @@ class PermissionController extends Controller
         'OPTIONS' => 'dark',
     ];
 
-    public function explanation(): Explanation
+    /**
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelTableComponent|\Lar\LteAdmin\Components\SearchFormComponent|Page|\Lar\LteAdmin\PageMethods
+     */
+    public function index(Page $page)
     {
-        return Explanation::new(
-            $this->card()->defaultTools()
-        )->index(
-            $this->search()->id(),
-            $this->search()->input('path', 'lte.path'),
-            $this->search()->select('lte_role_id', 'lte.role')
-                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'))->nullable(),
-            $this->search()->at(),
-        )->index(
-            $this->table()->id(),
-            $this->table()->col('lte.description', 'description')->str_limit(50),
-            $this->table()->col('lte.path', 'path')->badge('success'),
-            $this->table()->col('lte.methods', [$this, 'show_methods'])->sort('method'),
-            $this->table()->col('lte.state', [$this, 'show_state'])->sort('state'),
-            $this->table()->col('lte.role', 'role.name')->sort('role_id'),
-            $this->table()->active_switcher(),
-            $this->table()->at(),
-        )->edit(
-            $this->form()->info_id(),
-        )->form(
-            $this->form()->input('path', 'lte.path')
-                ->required(),
-            $this->form()->multi_select('method[]', 'lte.methods')
-                ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(function ($i) {
-                    return [$i => $i];
-                })->toArray())
-                ->required(),
-            $this->form()->radios('state', 'lte.state')
-                ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
-                ->required(),
-            $this->form()->radios('lte_role_id', 'lte.role')
-                ->options(\Lar\LteAdmin\Models\LteRole::all()->pluck('name', 'id'), true)
-                ->required(),
-            $this->form()->input('description', 'lte.description'),
-            $this->form()->switcher('active', 'lte.active')->switchSize('mini')
-                ->default(1),
-        )->edit(
-            $this->form()->info_at(),
-        )->show(
-            $this->info()->id(),
-            $this->info()->row('lte.path', 'path')->badge('success'),
-            $this->info()->row('lte.methods', [$this, 'show_methods']),
-            $this->info()->row('lte.state', [$this, 'show_state']),
-            $this->info()->row('lte.role', 'role.name'),
-            $this->info()->row('lte.active', 'active')->yes_no(),
-            $this->info()->at(),
-        );
+        return $page
+            ->card()
+            ->search_form(
+                $this->search_form->id(),
+                $this->search_form->input('path', 'lte.path'),
+                $this->search_form->select('lte_role_id', 'lte.role')
+                    ->options(LteRole::all()->pluck('name', 'id'))->nullable(),
+                $this->search_form->at(),
+            )
+            ->model_table(
+                $this->model_table->id(),
+                $this->model_table->col('lte.description', 'description')->str_limit(50),
+                $this->model_table->col('lte.path', 'path')->badge('success'),
+                $this->model_table->col('lte.methods', [$this, 'show_methods'])->sort('method'),
+                $this->model_table->col('lte.state', [$this, 'show_state'])->sort('state'),
+                $this->model_table->col('lte.role', 'role.name')->sort('role_id'),
+                $this->model_table->active_switcher(),
+                $this->model_table->at(),
+            );
+    }
+
+    /**
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\FormComponent|Page|\Lar\LteAdmin\PageMethods
+     */
+    public function matrix(Page $page)
+    {
+        return $page
+            ->card()
+            ->form(
+                $this->form->info_id(),
+                $this->form->input('path', 'lte.path')
+                    ->required(),
+                $this->form->multi_select('method[]', 'lte.methods')
+                    ->options(collect(array_merge(['*'], \Illuminate\Routing\Router::$verbs))->mapWithKeys(static function ($i) {
+                        return [$i => $i];
+                    })->toArray())
+                    ->required(),
+                $this->form->radios('state', 'lte.state')
+                    ->options(['close' => __('lte.close'), 'open' => __('lte.open')], true)
+                    ->required(),
+                $this->form->radios('lte_role_id', 'lte.role')
+                    ->options(LteRole::all()->pluck('name', 'id'), true)
+                    ->required(),
+                $this->form->input('description', 'lte.description'),
+                $this->form->switcher('active', 'lte.active')->switchSize('mini')
+                    ->default(1),
+                $this->form->info_at(),
+            );
+    }
+
+    /**
+     * Display the specified resource.
+     * @param  Page  $page
+     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelInfoTableComponent|Page|\Lar\LteAdmin\PageMethods
+     */
+    public function show(Page $page)
+    {
+        return $page
+            ->card()
+            ->model_info_table(
+                $this->model_info_table->id(),
+                $this->model_info_table->row('lte.path', 'path')->badge('success'),
+                $this->model_info_table->row('lte.methods', [$this, 'show_methods']),
+                $this->model_info_table->row('lte.state', [$this, 'show_state']),
+                $this->model_info_table->row('lte.role', 'role.name'),
+                $this->model_info_table->row('lte.active', 'active')->yes_no(),
+                $this->model_info_table->at(),
+            );
     }
 
     /**

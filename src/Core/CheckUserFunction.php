@@ -3,8 +3,6 @@
 namespace Lar\LteAdmin\Core;
 
 /**
- * Class CheckUserFunction.
- * @package Lar\LteAdmin\Core
  * @mixin FunctionsDoc
  */
 class CheckUserFunction

@@ -4,10 +4,6 @@ namespace Lar\LteAdmin\Core\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 
-/**
- * Trait DumpedModel.
- * @package Lar\LteAdmin\Core\Traits
- */
 trait DumpedModel
 {
     /**
@@ -21,7 +17,7 @@ trait DumpedModel
         }
 
         if (method_exists($this, 'toDump')) {
-            return $q->get()->map(function ($model) {
+            return $q->get()->map(static function ($model) {
                 return $model->toDump();
             })->toArray();
         }

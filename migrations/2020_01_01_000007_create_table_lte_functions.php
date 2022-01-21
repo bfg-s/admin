@@ -13,7 +13,7 @@ class CreateTableLteFunctions extends Migration
      */
     public function up()
     {
-        Schema::create('lte_functions', function (Blueprint $table) {
+        Schema::create('lte_functions', static function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('slug')->unique();
@@ -25,7 +25,7 @@ class CreateTableLteFunctions extends Migration
             $table->timestamps();
         });
 
-        Schema::create('lte_role_function', function (Blueprint $table) {
+        Schema::create('lte_role_function', static function (Blueprint $table) {
             $table->unsignedBigInteger('lte_role_id');
 
             $table->unsignedBigInteger('lte_function_id');

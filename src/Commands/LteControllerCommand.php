@@ -4,16 +4,10 @@ namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Segments\LtePage;
+use Lar\LteAdmin\Page;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class LteUpdateAssets.
- *
- * @package Lar\LteAdmin\Commands
- */
 class LteControllerCommand extends Command
 {
     /**
@@ -83,7 +77,7 @@ class LteControllerCommand extends Command
             ->namespace($namespace);
 
         if ($resource) {
-            $class->use(LtePage::class);
+            $class->use(Page::class);
 
             $class->prop('static:model');
 
@@ -97,59 +91,50 @@ class LteControllerCommand extends Command
                 $class->prop('static:model', entity($model_namespace.'::class'));
             }
 
-            $class->method('explanation')
-                ->line('return Explanation::new(')
-                ->tab('$this->card()->defaultTools(),')
-                ->line(')->index(')
-                ->tab('$this->search()->id(),')
-                ->tab('$this->search()->at(),')
-                ->line(')->index(')
-                ->tab('$this->table()->id(),')
-                ->tab('$this->table()->at(),')
-                ->line(')->form(')
-                ->tab('$this->form()->info_id(),')
-                ->tab('$this->form()->info_at(),')
-                ->line(')->show(')
-                ->tab('$this->info()->id(),')
-                ->tab('$this->info()->at(),')
-                ->line(');')
-                ->doc(function ($doc) {
-                    /** @var DocumentorEntity $doc */
-                    $doc->tagReturn(Explanation::class);
-                })->returnType(Explanation::class);
-
             if (in_array('index', $only)) {
                 $class->method('index')
-                    ->param('page', null, 'LtePage')
+                    ->param('page', null, 'Page')
                     ->line('return $page')
                     ->tab('->card()')
-                    ->tab('->search()')
-                    ->tab('->table();')
-                    ->doc(function ($doc) {
+                    ->tab('->search_form(')
+                    ->tab('    $this->search_form->id(),')
+                    ->tab('    $this->search_form->at(),')
+                    ->tab(')')
+                    ->tab('->model_table(')
+                    ->tab('    $this->model_table->id(),')
+                    ->tab('    $this->model_table->at(),')
+                    ->tab(');')
+                    ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
                     });
             }
             if (in_array('matrix', $only)) {
                 $class->method('matrix')
-                    ->param('page', null, 'LtePage')
+                    ->param('page', null, 'Page')
                     ->line('return $page')
                     ->tab('->card()')
-                    ->tab('->form();')
-                    ->doc(function ($doc) {
+                    ->tab('->form(')
+                    ->tab('    $this->form->info_id(),')
+                    ->tab('    $this->form->info_at(),')
+                    ->tab(');')
+                    ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
                     });
             }
             if (in_array('show', $only)) {
                 $class->method('show')
-                    ->param('page', null, 'LtePage')
+                    ->param('page', null, 'Page')
                     ->line('return $page')
                     ->tab('->card()')
-                    ->tab('->info();')
-                    ->doc(function ($doc) {
+                    ->tab('->model_info_table(')
+                    ->tab('    $this->model_info_table->id(),')
+                    ->tab('    $this->model_info_table->at(),')
+                    ->tab(');')
+                    ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('LtePage', 'page')->tagReturn(LtePage::class);
+                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
                     });
             }
         }

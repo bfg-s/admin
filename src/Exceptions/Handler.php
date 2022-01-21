@@ -6,10 +6,6 @@ use Lar\LteAdmin\Layouts\LteAuthLayout;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
-/**
- * Class Handler.
- * @package Lar\LteAdmin\Exceptions
- */
 class Handler extends \App\Exceptions\Handler
 {
     /**

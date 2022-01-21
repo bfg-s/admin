@@ -13,7 +13,7 @@ class UpdateTableLteUsersDeletedAt extends Migration
      */
     public function up()
     {
-        Schema::table('lte_users', function (Blueprint $table) {
+        Schema::table('lte_users', static function (Blueprint $table) {
             $table->softDeletes()->after('updated_at');
         });
     }
@@ -25,7 +25,7 @@ class UpdateTableLteUsersDeletedAt extends Migration
      */
     public function down()
     {
-        Schema::table('lte_users', function (Blueprint $table) {
+        Schema::table('lte_users', static function (Blueprint $table) {
             $table->dropColumn(['deleted_at']);
         });
     }

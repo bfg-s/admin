@@ -7,11 +7,6 @@ use Lar\LteAdmin\Jax\LteAdminExecutor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MakeUser.
- *
- * @package Lar\Admin\Commands
- */
 class LteJaxCommand extends Command
 {
     /**

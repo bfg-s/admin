@@ -7,10 +7,6 @@ use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
 use Lar\Roads\Roads;
 
-/**
- * Class RoutesAdaptor.
- * @package Lar\LteAdmin\Core
- */
 class RoutesAdaptor
 {
     /**
@@ -81,7 +77,7 @@ class RoutesAdaptor
         if (isset($menu['items']) && isset($menu['route']) && count($menu['items'])) {
             $uri = $menu['route'].(isset($menu['uri']) ? ('/'.trim($menu['uri'], '/')) : '');
 
-            $roads->asx($uri)->middleware($menu['middleware'] ?? [])->group(function (Roads $roads) use ($menu) {
+            $roads->asx($uri)->middleware($menu['middleware'] ?? [])->group(static function (Roads $roads) use ($menu) {
                 foreach ($menu['items'] as $item) {
                     static::make_route($item, $roads);
 

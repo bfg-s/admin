@@ -6,11 +6,6 @@ use Lar\LteAdmin\Commands\BaseCommand\BaseLteExtension;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Class MakeUser.
- *
- * @package Lar\Admin\Commands
- */
 class LteExtensionCommand extends BaseLteExtension
 {
     /**

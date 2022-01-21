@@ -4,10 +4,6 @@ namespace Lar\LteAdmin\Components\Vue;
 
 use Lar\Tagable\Vue;
 
-/**
- * Class FormActionAfterSave.
- * @package Lar\LteAdmin\Components\Vue
- */
 class FormActionAfterSave extends Vue
 {
     /**

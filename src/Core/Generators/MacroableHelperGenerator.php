@@ -5,20 +5,18 @@ namespace Lar\LteAdmin\Core\Generators;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Page;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Class MacroableHelperGenerator.
- * @package Lar\LteAdmin\Core\Generators
- */
 class MacroableHelperGenerator implements DumpExecute
 {
     /**
      * @var string[]
      */
     public static $dirs = [
-        __DIR__.'/../../Segments',
+        __DIR__.'/../../Components',
     ];
 
     /**
@@ -44,14 +42,15 @@ class MacroableHelperGenerator implements DumpExecute
 
         foreach ($dirs as $dir) {
             $files = collect(\File::allFiles($dir))
-                ->map(function (SplFileInfo $file) {
+                ->map(static function (SplFileInfo $file) {
                     return $file->getPathname();
                 })
-                ->filter(function (string $file) {
+                ->filter(static function (string $file) {
                     return \Str::is('*.php', $file) && is_file($file);
                 })
                 ->map('class_in_file')
-                ->filter(function ($class) {
+                ->merge([Page::class, Controller::class])
+                ->filter(static function ($class) {
                     try {
                         return class_exists($class);
                     } catch (\Throwable $throwable) {
@@ -159,10 +158,14 @@ class MacroableHelperGenerator implements DumpExecute
                     }
                     if (! class_exists($class['methods'][2]) || ! property_exists($class['methods'][2], $class['methods'][3])) {
                         continue;
+                    } else if (method_exists($class['methods'][2], 'getHelpMethodList')) {
+                        $class['methods']['data'] = call_user_func([$class['methods'][2], 'getHelpMethodList']);
                     } else {
                         $c = $class['methods'][2];
                         $p = $class['methods'][3];
-                        $class['methods']['data'] = $c::$$p;
+                        $refProp = new \ReflectionProperty($c, $p);
+                        $refProp->setAccessible(true);
+                        $class['methods']['data'] = $refProp->getValue();
                     }
 
                     if (! isset($isset_classes[$namespace_name][$name])) {
@@ -219,6 +222,8 @@ class MacroableHelperGenerator implements DumpExecute
                     $params = '('.refl_params_entity($ref->getMethod('__construct')->getParameters()).')';
                 }
             }
+            $isProperty = $params === '(likeProperty)';
+            $isAny = $params === '(likeAny)';
 
             if ($ref->hasMethod('__construct')) {
                 $params = preg_replace("/\*\s*\)$/", refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
@@ -242,25 +247,35 @@ class MacroableHelperGenerator implements DumpExecute
                 return $condition;
             };
 
-            $type = 'self|static|\\'.trim($m[5] ? $m[5] : $method_class);
+            $type = 'self|static|\\'.trim($m[5] ?: $method_class);
 
-            $type = preg_replace_callback('/\{\{(.*)\}\}/', function ($m) use ($upd) {
+            $type = preg_replace_callback('/\{\{(.*)\}\}/', static function ($m) use ($upd) {
                 return $upd($m);
             }, $type);
 
-            $method = preg_replace_callback('/\{\{(.*)\}\}/', function ($m) use ($upd) {
+            $method = preg_replace_callback('/\{\{(.*)\}\}/', static function ($m) use ($upd) {
                 return $upd($m);
             }, $method);
 
-            $params = preg_replace_callback('/\{\{(.*)\}\}/', function ($m) use ($upd) {
+            $params = preg_replace_callback('/\{\{(.*)\}\}/', static function ($m) use ($upd) {
                 return $upd($m);
             }, $params);
 
-            $doc->tagMethod(
-                $type,
-                $method.$params,
-                "Method $method"
-            );
+            if (!$isProperty || $isAny) {
+                $doc->tagMethod(
+                    $type,
+                    $method.$params,
+                    "Method $method"
+                );
+            }
+
+            if ($isProperty || $isAny) {
+                $doc->tagPropertyRead(
+                    $type,
+                    $method,
+                    "Property $method"
+                );
+            }
         }
     }
 

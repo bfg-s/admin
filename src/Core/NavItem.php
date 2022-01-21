@@ -7,10 +7,6 @@ use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
 use Lar\LteAdmin\Navigate;
 
-/**
- * Class NavGroup.
- * @package Lar\LteAdmin\Core
- */
 class NavItem implements Arrayable
 {
     use FontAwesome, NavCommon;
