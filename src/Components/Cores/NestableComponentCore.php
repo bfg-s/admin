@@ -220,7 +220,8 @@ class NestableComponentCore extends DIV
                 if (is_callable($this->title_field)) {
                     $div->span(['text'])->text(call_user_func($this->title_field, $item));
                 } else {
-                    $div->span(['text'])->text(__(e(multi_dot_call($item, $this->title_field))));
+                    $ddd = multi_dot_call($item, $this->title_field);
+                    $div->span(['text'])->text(__(e($ddd)));
                 }
                 $cc_access = ($this->controls)($item);
                 $cc = $this->custom_controls;

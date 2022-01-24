@@ -44,6 +44,7 @@ return [
     'add'                           => 'Add',
     'administrator'                 => 'Administrator',
     'profile'                       => 'Profile',
+    'edit_profile'                  => 'Edit profile',
     'password_changed_success'      => 'Password changed successfully!',
     'profile_success_changed'       => 'Profile successfully changed!',
     'save'                          => 'Save',
@@ -167,4 +168,10 @@ return [
     'before_need_to_select'         => 'Choose at least one element',
     'show'                          => 'Show',
     'hide'                          => 'Hide',
+    'method_*'                      => 'All access',
+    'method_GET'                    => 'Show page',
+    'method_POST'                   => 'Create',
+    'method_PUT'                    => 'Update',
+    'method_DELETE'                 => 'Delete',
+    'user_statistics'               => 'User statistics',
 ];

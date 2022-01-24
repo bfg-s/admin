@@ -24,7 +24,7 @@ class LteBase extends LayoutComponent
      */
     protected $head_styles = [
         'ljs' => [
-            'fancy', 'select2',
+            'fancy',
         ],
 
         'lte-asset/plugins/fontawesome-free/css/all.min.css',
@@ -38,7 +38,10 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/icheck-bootstrap/icheck-bootstrap.min.css',
         'lte-asset/plugins/ion-rangeslider/css/ion.rangeSlider.min.css',
         'lte-asset/plugins/overlayScrollbars/css/OverlayScrollbars.min.css',
+
+        'lte-asset/plugins/select2/css/select2.min.css',
         'lte-asset/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css',
+
         'lte-asset/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
         'lte-asset/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'lte-asset/plugins/daterangepicker/daterangepicker.css',
@@ -61,7 +64,8 @@ class LteBase extends LayoutComponent
     /**
      * @var array
      */
-    protected $body_scripts = [
+    protected $head_scripts = [
+
         'lte-asset/plugins/jquery/jquery.min.js',
         'lte-asset/plugins/bootstrap/js/bootstrap.bundle.min.js',
         'lte-asset/js/adminlte.min.js',
@@ -85,6 +89,7 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
         'lte-asset/plugins/daterangepicker/daterangepicker.js',
         'lte-asset/plugins/sweetalert2/sweetalert2.min.js',
+//        'lte-asset/plugins/select2/js/select2.full.min.js',
 
         'lte-admin/plugins/jquery-validation/jquery.validate.min.js',
         'lte-admin/plugins/jquery-validation/localization/messages_ru.min.js',
@@ -120,11 +125,14 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/ptty.jquery.js',
 
         'ljs' => [
-            'jq', 'alert', 'nav', 'mask', 'select2', 'fancy',
+            'jq', 'alert', 'nav', 'mask', 'fancy', 'select2',
         ],
 
         'vendor/emitter/emitter.js',
         'lte-admin/js/app.js',
+    ];
+
+    protected $body_scripts = [
         'lte-admin/plugins/alpine.min.js',
     ];
 
@@ -134,18 +142,18 @@ class LteBase extends LayoutComponent
     public function __construct()
     {
         if (LteAdmin::$echo) {
-            $this->body_scripts['ljs'][] = 'echo';
+            $this->head_scripts['ljs'][] = 'echo';
         }
 
-        $this->body_scripts['ljs'][] = 'vue';
+        $this->head_scripts['ljs'][] = 'vue';
 
         foreach (\LteAdmin::extensions() as $extension) {
-            $this->body_scripts = array_merge_recursive($this->body_scripts, $extension->config()->getScripts());
+            $this->head_scripts = array_merge_recursive($this->head_scripts, $extension->config()->getScripts());
 
             $this->head_styles = array_merge_recursive($this->head_styles, $extension->config()->getStyles());
         }
 
-        $this->body_scripts = array_merge($this->body_scripts, config('lte.body_scripts', []));
+        $this->head_scripts = array_merge($this->head_scripts, config('lte.body_scripts', []));
 
         $this->js()->state('admin', \LteAdmin::user());
 

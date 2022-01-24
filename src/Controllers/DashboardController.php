@@ -4,6 +4,11 @@ namespace Lar\LteAdmin\Controllers;
 
 use Composer\Composer;
 use Lar\Layout\Abstracts\Component;
+use Lar\LteAdmin\Delegates\Card;
+use Lar\LteAdmin\Delegates\CardBody;
+use Lar\LteAdmin\Delegates\ChartJs;
+use Lar\LteAdmin\Delegates\SearchForm;
+use Lar\LteAdmin\Delegates\StatisticPeriod;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Page;
 
@@ -23,53 +28,65 @@ class DashboardController extends Controller
 
     /**
      * @param  Page  $page
-     * @return Component|\Lar\Layout\LarDoc|\Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\Contents\GridRowContent|\Lar\LteAdmin\Components\StatisticPeriodComponent|Page|\Lar\LteAdmin\PageMethods
+     * @param  Card  $card
+     * @param  CardBody  $cardBody
+     * @param  ChartJs  $chartJs
+     * @return Page|mixed
      */
-    public function index(Page $page)
+    public function index(Page $page, Card $card, CardBody $cardBody, StatisticPeriod $statisticPeriod, ChartJs $chartJs, SearchForm $searchForm)
     {
-        return $page
-            ->statistic_periods(
-                $this->statistic_periods
-                    ->model(config('auth.providers.users.model'))
-                    ->icon_users()
-                    ->forToday()
-                    ->perWeek()
-                    ->perYear()
-                    ->total()
-            )->card(
-                $this->card->title(__('lte.added_to_users'))->fullBody()->chart_js(
-                    $this->chart_js
-                        ->model(config('auth.providers.users.model'))
+        return $page->card(
+            $card->title(__('lte.user_statistics')),
+            $card->card_body(
+                $cardBody->statistic_period(
+                    $statisticPeriod->model(config('auth.providers.users.model'))
+                        ->title('lte.users')
+                        ->icon_users()
+                        ->forToday()
+                        ->perWeek()
+                        ->perYear()
+                        ->total()
+                ),
+                $cardBody->chart_js(
+                    $chartJs->model(config('auth.providers.users.model'))
+                        ->hasSearch(
+                            $searchForm->date_range('created_at', 'lte.created_at')
+                                ->default(implode(' - ', $this->defaultDateRange()))
+                        )
+                        ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                         ->groupDataByAt('created_at')
                         ->eachPointCount(__('lte.added_to_users'))
-                        ->miniChart()
+                        ->miniChart(),
                 )
-            )->when(admin()->isRoot(), function (Page $page) {
-                $page->next()->row(
-                    $this->cardTableCol('lte.environment', [$this, 'environmentInfo']),
-                    $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
-                    $this->cardTableCol('Composer', [$this, 'composerInfo']),
-                    $this->cardTableCol('lte.database', [$this, 'databaseInfo']),
-                );
-            });
+            )
+        )
+        ->when(admin()->isRoot(), function (Page $page) {
+            $page->next()->row(
+                $this->cardTableCol('lte.environment', [$this, 'environmentInfo']),
+                $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
+                $this->cardTableCol('Composer', [$this, 'composerInfo']),
+                $this->cardTableCol('lte.database', [$this, 'databaseInfo']),
+            );
+        });
     }
 
     /**
      * @param  string  $title
      * @param $rows
-     * @return \Lar\LteAdmin\Components\TableComponent
+     * @return \Lar\LteAdmin\Components\GridColumnComponent
      */
     public function cardTableCol(string $title, $rows)
     {
-        return $this->row->column()
-            ->num(6)
-            ->mb4()
-            ->card()
-            ->title($title)
-            ->h100()
-            ->fullBody(['table-responsive'])
-            ->table()
-            ->rows($rows);
+        return $this->row->pl2()->column(
+            $this->column->num(6)
+                ->mb4()
+                ->card()
+                ->title($title)
+                ->h100()
+                ->fullBody(['table-responsive'])
+                ->table()
+                ->rows($rows)
+        );
     }
 
     /**

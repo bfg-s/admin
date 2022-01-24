@@ -10,6 +10,7 @@ use Lar\LteAdmin\Core\NavigatorExtensionProvider;
 use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 use Lar\LteAdmin\Models\LteSeeder;
 use Lar\LteAdmin\Models\LteUser;
+use Lar\LteAdmin\Page;
 use Symfony\Component\Console\Input\InputOption;
 
 class LteInstallCommand extends Command
@@ -62,7 +63,7 @@ class LteInstallCommand extends Command
             ]);
         }
 
-        $base_dirs = ['/', '/Controllers', '/Extensions'];
+        $base_dirs = ['/', '/Controllers', '/Delegates'];
 
         foreach ($base_dirs as $base_dir) {
             if (! is_dir($dir = lte_app_path($base_dir))) {
@@ -139,15 +140,35 @@ class LteInstallCommand extends Command
             $this->info("File {$controller} created!");
         }
 
-        $this->call('vendor:publish', [
-            '--tag' => 'ljs-assets',
-            '--force' => $this->option('force'),
-        ]);
+        $delegates = lte_app_path('Delegates');
 
-        $this->call('vendor:publish', [
-            '--tag' => 'lte-assets',
-            '--force' => $this->option('force'),
-        ]);
+        $currentDelegates = \File::allFiles(__DIR__.'/../Delegates');
+
+        foreach ($currentDelegates as $currentDelegate) {
+            $file = $delegates.'/'.$currentDelegate->getFilename();
+            if (! is_file($file)) {
+                $parentClass = class_in_file($currentDelegate->getPathname());
+                $class = class_basename($parentClass);
+                $delegateClass = class_entity($class);
+                $delegateClass->namespace(lte_app_namespace('Delegates'));
+                $delegateClass->use("$parentClass as Lte$class");
+                $delegateClass->extend("Lte$class");
+                file_put_contents($file, $delegateClass->wrap('php')->render());
+                $this->info("Delegate {$class} created!");
+            }
+        }
+
+        if (! class_exists(\App\LteAdmin\Page::class)) {
+            $file = lte_app_path('Page.php');
+            $pageClass = class_entity('Page');
+            $pageClass->namespace(lte_app_namespace());
+            $pageClass->use(Page::class.' as LtePage');
+            $pageClass->extend('LtePage');
+            $pageClass->doc(function ($doc) {
+            });
+            file_put_contents($file, $pageClass->wrap('php')->render());
+            $this->info('Global page created!');
+        }
 
         $this->call('vendor:publish', [
             '--tag' => 'lte-lang',

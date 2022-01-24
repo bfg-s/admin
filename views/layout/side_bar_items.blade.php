@@ -15,7 +15,7 @@
 
         <li class="nav-item {{ $childs->count() && $selected ? 'menu-open' : '' }}">
 
-            <a href="{{$menu['link'] && !$childs->count() ? $menu['link'] : 'javascript:void(0)'}}" @if($menu['target']) target="_blank" @endif class="nav-link {{ !$childs->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $childs->count() ? 'has-treeview' : '' }}">
+            <a href="{{$menu['link'] && !$childs->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}" @if($menu['target']) target="_blank" @endif class="nav-link {{ !$childs->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $childs->count() ? 'has-treeview' : '' }}">
 
                 @if (isset($menu['icon']))
 
@@ -45,14 +45,6 @@
                     @elseif($childs->count())
 
                         @php
-                            /*$with_badges = $childs->where('badge')->map(function ($i) {
-                                if(isset($i['badge']['instructions']) && $i['badge']['instructions']) {
-                                    $return = eloquent_instruction($i['badge']['text'], $i['badge']['instructions'])->count();
-                                }else{
-                                    $return = isset($i['badge']['text']) ? __($i['badge']['text']) : 0;
-                                }
-                                return is_numeric($return) ? $return : 0;
-                            })->sum();*/
                             $with_badges = 0;
                         @endphp
 

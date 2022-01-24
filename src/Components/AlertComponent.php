@@ -2,19 +2,16 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Components\Traits\TypesTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 
 /**
  * Class AlertComponent.
  * @mixin AlertComponentMacroList
  */
-class AlertComponent extends DIV
+class AlertComponent extends Component
 {
-    use FontAwesome, TypesTrait, Macroable, Delegable;
+    use FontAwesome, TypesTrait;
 
     /**
      * @var string[]
@@ -42,30 +39,6 @@ class AlertComponent extends DIV
      * @var array
      */
     private $params;
-
-    /**
-     * Alert constructor.
-     * @param  string|null  $title
-     * @param  string|null  $icon
-     * @param $body
-     * @param  mixed  ...$params
-     */
-    public function __construct(string $title = null, $body = '', string $icon = null, ...$params)
-    {
-        parent::__construct();
-
-        $this->title = $title;
-
-        $this->icon = $icon;
-
-        $this->body = $body;
-
-        $this->params = $params;
-
-        $this->toExecute('_build');
-
-        $this->callConstructEvents();
-    }
 
     /**
      * @param  array  $title
@@ -100,13 +73,8 @@ class AlertComponent extends DIV
         return $this;
     }
 
-    /**
-     * Build alert.
-     */
-    protected function _build()
+    protected function mount()
     {
-        $this->callRenderEvents();
-
         if ($this->title) {
             $h4 = $this->h4(['alert-heading']);
 
@@ -123,8 +91,6 @@ class AlertComponent extends DIV
         if ($this->body) {
             $this->appEnd($this->body);
         }
-
-        $this->when($this->params);
 
         $this->addClass("alert-{$this->type}");
     }

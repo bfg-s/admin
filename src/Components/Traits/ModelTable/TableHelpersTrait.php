@@ -6,26 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\SearchFormComponent;
 use Lar\LteAdmin\Core\PrepareExport;
 
 trait TableHelpersTrait
 {
-    /**
-     * @param SearchFormComponent|\Closure|array|Builder|Relation $instruction
-     * @return $this|static
-     */
-    public function model($instruction)
-    {
-        if ($instruction instanceof SearchFormComponent) {
-            $this->search = $instruction;
-        }
-
-        $this->model_control[] = $instruction;
-
-        return $this;
-    }
-
     /**
      * @param  int  $per_page
      * @return $this|static

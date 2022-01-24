@@ -83,7 +83,7 @@ class FormFooterComponent extends DIV implements onRender
     /**
      * @return $this
      */
-    public function noRedirect()
+    public function withOutRedirectRadios()
     {
         $this->nav_redirect = false;
 

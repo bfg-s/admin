@@ -10,7 +10,7 @@ trait TypesTrait
     protected $type = 'info';
 
     /**
-     * @return $this
+     * @return static
      */
     public function primaryType()
     {
@@ -20,7 +20,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function secondaryType()
     {
@@ -30,7 +30,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function successType()
     {
@@ -40,7 +40,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function dangerType()
     {
@@ -50,7 +50,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function warningType()
     {
@@ -60,7 +60,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function infoType()
     {
@@ -70,7 +70,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function lightType()
     {
@@ -80,7 +80,7 @@ trait TypesTrait
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function darkType()
     {

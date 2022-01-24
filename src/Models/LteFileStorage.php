@@ -6,6 +6,40 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
+/**
+ * Lar\LteAdmin\Models\LteFileStorage.
+ *
+ * @property int $id
+ * @property string $original_name
+ * @property string $file_name
+ * @property string $mime_type
+ * @property string $size
+ * @property string|null $form
+ * @property string|null $field
+ * @property string $driver
+ * @property string $driver_path
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage active()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage makeDumpedModel()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereDriver($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereDriverPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereOriginalName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFileStorage whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class LteFileStorage extends Model
 {
     use DumpedModel;

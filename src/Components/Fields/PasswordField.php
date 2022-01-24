@@ -27,6 +27,8 @@ class PasswordField extends InputField
      */
     public function confirm(string $label = null)
     {
+        \Route::current()->controller::$crypt_fields[] = $this->name;
+
         $this->_front_rule_equal_to("#input_{$this->name}_confirmation")->confirmed()->crypt();
 
         $info = null;

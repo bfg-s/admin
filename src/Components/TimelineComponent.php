@@ -8,18 +8,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 
-/**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
- * @mixin TimelineComponentMacroList
- * @mixin TimelineComponentMethods
- */
 class TimelineComponent extends Component
 {
-    use Delegable, Macroable;
-
     /**
      * @var string
      */
@@ -74,16 +65,6 @@ class TimelineComponent extends Component
      * @var callable|string|null
      */
     protected $append = null;
-
-    /**
-     * @param ...$params
-     */
-    public function __construct(...$params)
-    {
-        parent::__construct(...$this->expectModel($params));
-
-        $this->addClass($this->class);
-    }
 
     /**
      * @param callable|string $icon

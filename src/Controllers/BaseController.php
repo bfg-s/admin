@@ -47,7 +47,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $this->model() ? ModelSaver::do($this->model(), $save) : false;
+        return $this->model() ? ModelSaver::do($this->model(), $save, $this) : false;
     }
 
     /**

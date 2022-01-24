@@ -11,7 +11,7 @@ use Lar\LteAdmin\Explanation;
 use Lar\Tagable\Events\onRender;
 
 /**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
+ * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
  * @mixin GridColumnComponentMacroList
  * @mixin GridColumnComponentMethods
  */
@@ -22,7 +22,7 @@ class GridColumnComponent extends DIV implements onRender
     /**
      * @var string
      */
-    protected $class = 'col-md';
+    protected $class = 'pl-0 col-md';
 
     /**
      * @param  array  $delegates

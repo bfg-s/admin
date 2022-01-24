@@ -11,6 +11,44 @@ use Illuminate\Notifications\Notifiable;
 use Lar\LteAdmin\Core\CheckUserFunction;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
+/**
+ * App\Models\LteUser.
+ *
+ * @property int $id
+ * @property string $login
+ * @property string $password
+ * @property string $email
+ * @property string|null $name
+ * @property string $avatar
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LteLog[] $logs
+ * @property-read int|null $logs_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LteRole[] $roles
+ * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser makeDumpedModel()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser newQuery()
+ * @method static \Illuminate\Database\Query\Builder|LteUser onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|LteUser withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|LteUser withoutTrashed()
+ * @mixin \Eloquent
+ */
 class LteUser extends Model implements AuthenticatableContract
 {
     use Authenticatable,

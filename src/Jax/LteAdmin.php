@@ -40,6 +40,7 @@ class LteAdmin extends LteAdminExecutor
                 }
             });
             static::$i = 0;
+            $this->put('alert::success', __('lte.saved_successfully'));
         }
     }
 
@@ -97,9 +98,9 @@ class LteAdmin extends LteAdminExecutor
                 $find->{$field_name} = $val;
 
                 if ($find->save()) {
-                    $this->toast_success(__('lte.saved_successfully'));
+                    $this->put('alert::success', __('lte.saved_successfully'));
                 } else {
-                    $this->toast_error(__('lte.unknown_error'));
+                    $this->put('alert::error', __('lte.unknown_error'));
                 }
             }
         }
@@ -128,12 +129,12 @@ class LteAdmin extends LteAdminExecutor
                 }
             }
             if ($success) {
-                $this->toast_success(__('lte.successfully_deleted'))->reload();
+                $this->put('alert::success', __('lte.successfully_deleted'))->reload();
             } else {
-                $this->toast_error(__('lte.unknown_error'));
+                $this->put('alert::error', __('lte.unknown_error'));
             }
         } else {
-            $this->toast_error(__('lte.unknown_error'));
+            $this->put('alert::error', __('lte.unknown_error'));
         }
     }
 
@@ -141,6 +142,8 @@ class LteAdmin extends LteAdminExecutor
      * @param  string  $handle
      * @param  array  $params
      * @return \Lar\LteAdmin\Components\ModalComponent|mixed
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function load_modal(string $handle, array $params = [])
     {

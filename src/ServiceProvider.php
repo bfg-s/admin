@@ -11,13 +11,11 @@ use Lar\LJS\JaxExecutor;
 use Lar\LteAdmin\Commands\LteControllerCommand;
 use Lar\LteAdmin\Commands\LteDbDumpCommand;
 use Lar\LteAdmin\Commands\LteExtensionCommand;
-use Lar\LteAdmin\Commands\LteGeneratorCommand;
 use Lar\LteAdmin\Commands\LteInstallCommand;
 use Lar\LteAdmin\Commands\LteJaxCommand;
-use Lar\LteAdmin\Commands\LteMixinCommand;
 use Lar\LteAdmin\Commands\LteModalCommand;
-use Lar\LteAdmin\Commands\LtePipeCommand;
 use Lar\LteAdmin\Commands\LteUserCommand;
+use Lar\LteAdmin\Core\BladeDirectiveAlpineStore;
 use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
@@ -34,9 +32,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteControllerCommand::class,
         LteUserCommand::class,
         LteExtensionCommand::class,
-        LtePipeCommand::class,
-        LteMixinCommand::class,
-        LteGeneratorCommand::class,
         LteModalCommand::class,
         LteJaxCommand::class,
         LteDbDumpCommand::class,
@@ -155,7 +150,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
             base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
             __DIR__.'/../assets' => public_path('/lte-admin'),
-        ], 'lte-assets');
+        ], ['lte-assets', 'laravel-assets']);
 
         /**
          * Register publishers adminlte assets.
@@ -163,14 +158,14 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->publishes([
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
             base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
-        ], 'lte-adminlte-assets');
+        ], ['lte-adminlte-assets', 'laravel-assets']);
 
         /**
          * Register publishers migrations.
          */
         $this->publishes([
             __DIR__.'/../migrations' => database_path('migrations'),
-        ], 'lte-migrations');
+        ], ['lte-migrations', 'laravel-assets']);
 
         /**
          * Register publishers html examples.
@@ -239,6 +234,11 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register Jax namespace.
          */
         \LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
+
+        /**
+         * Register AlpineJs Blade directive.
+         */
+        \Blade::directive('alpineStore', [BladeDirectiveAlpineStore::class, 'directive']);
     }
 
     /**
@@ -249,6 +249,12 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function register()
     {
+        $this->app->singleton(Page::class, function ($app) {
+            return class_exists(\App\LteAdmin\Page::class)
+                ? new \App\LteAdmin\Page($app->router)
+                : new Page($app->router);
+        });
+
         /**
          * App register provider.
          */

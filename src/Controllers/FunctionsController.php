@@ -2,6 +2,11 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Lar\LteAdmin\Delegates\Card;
+use Lar\LteAdmin\Delegates\Form;
+use Lar\LteAdmin\Delegates\ModelInfoTable;
+use Lar\LteAdmin\Delegates\ModelTable;
+use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
 use Lar\LteAdmin\Page;
@@ -18,56 +23,74 @@ class FunctionsController extends Controller
      */
     public static $roles = ['root'];
 
-    public function index(Page $page)
+    /**
+     * @param  Page  $page
+     * @param  Card  $card
+     * @param  SearchForm  $searchForm
+     * @param  ModelTable  $modelTable
+     * @return Page
+     */
+    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
     {
         return $page
-            ->card()
-            ->search_form(
-                $this->search_form->id(),
-                $this->search_form->input('slug', 'lte.slug'),
-                $this->search_form->input('class', 'Class', '%=%'),
-                $this->search_form->updated_at(),
-                $this->search_form->created_at(),
-            )
-            ->model_table(
-                $this->model_table->id(),
-                $this->model_table->col('lte.role', [$this, 'show_roles']),
-                $this->model_table->col('lte.slug', 'slug')->sort()->input_editable()
-                    ->copied()->to_prepend_link('fas fa-glasses', null, '{class}'),
-                $this->model_table->col('lte.description', 'description')->to_lang()
-                    ->has_lang()->str_limit(50)->textarea_editable()->sort(),
-                $this->model_table->active_switcher(),
-                $this->model_table->at(),
+            ->card(
+                $card->search_form(
+                    $searchForm->id(),
+                    $searchForm->input('slug', 'lte.slug'),
+                    $searchForm->input('class', 'Class', '%=%'),
+                    $searchForm->updated_at(),
+                    $searchForm->created_at(),
+                ),
+                $card->model_table(
+                    $modelTable->id(),
+                    $modelTable->col('lte.role', [$this, 'show_roles']),
+                    $modelTable->col('lte.slug', 'slug')->sort()->input_editable()
+                        ->copied()->to_prepend_link('fas fa-glasses', null, '{class}'),
+                    $modelTable->col('lte.description', 'description')->to_lang()
+                        ->has_lang()->str_limit(50)->textarea_editable()->sort(),
+                    $modelTable->active_switcher(),
+                    $modelTable->at(),
+                )
             );
     }
 
-    public function matrix(Page $page)
+    /**
+     * @param  Page  $page
+     * @param  Card  $card
+     * @param  Form  $form
+     * @return Page
+     */
+    public function matrix(Page $page, Card $card, Form $form)
     {
         return $page
-            ->card()
-            ->form(
-                $this->form->info_id(),
-                $this->form->input('slug', 'lte.slug')->required()
-                    ->slugable(),
-                $this->form->checks('roles', 'lte.roles')->required()
-                    ->options(LteRole::all()->pluck('name', 'id')),
-                $this->form->textarea('description', 'lte.description'),
-                $this->form->switcher('active', 'lte.active')->boolean(),
-                $this->form->info_at(),
+            ->card(
+                $card->form(
+                    $form->ifEdit()->info_id(),
+                    $form->input('slug', 'lte.slug')->required()
+                        ->slugable(),
+                    $form->checks('roles', 'lte.roles')->required()
+                        ->options(LteRole::all()->pluck('name', 'id')),
+                    $form->textarea('description', 'lte.description'),
+                    $form->switcher('active', 'lte.active')->boolean(),
+                    $form->ifEdit()->info_updated_at(),
+                    $form->ifEdit()->info_created_at(),
+                ),
+                $card->footer_form()
             );
     }
 
-    public function show(Page $page)
+    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable)
     {
         return $page
-            ->card()
-            ->model_info_table(
-                $this->model_info_table->id(),
-                $this->model_info_table->row('lte.role', [$this, 'show_roles']),
-                $this->model_info_table->row('lte.slug', 'slug')->copied(),
-                $this->model_info_table->row('lte.description', 'description')->to_lang()->has_lang()->str_limit(50),
-                $this->model_info_table->row('lte.active', 'active')->input_switcher(),
-                $this->model_info_table->at(),
+            ->card(
+                $card->model_info_table(
+                    $modelInfoTable->id(),
+                    $modelInfoTable->row('lte.role', [$this, 'show_roles']),
+                    $modelInfoTable->row('lte.slug', 'slug')->copied(),
+                    $modelInfoTable->row('lte.description', 'description')->to_lang()->has_lang()->str_limit(50),
+                    $modelInfoTable->row('lte.active', 'active')->input_switcher(),
+                    $modelInfoTable->at(),
+                )
             );
     }
 

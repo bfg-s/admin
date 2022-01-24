@@ -4,19 +4,17 @@ namespace Lar\LteAdmin\Components;
 
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Contents\CardContent;
 use Lar\LteAdmin\Components\Cores\NestableComponentCore;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
 use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
 
 /**
  * @mixin NestedComponentMacroList
  */
-class NestedComponent extends DIV implements onRender, ControllerContainerInterface
+class NestedComponent extends DIV implements onRender
 {
     use Macroable, Piplineble, Delegable;
 
@@ -189,17 +187,5 @@ class NestedComponent extends DIV implements onRender, ControllerContainerInterf
         $this->callRenderEvents();
 
         $this->nested->build();
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [], string $name = 'nested')
-    {
-        if ($name === 'nested') {
-            $page->getClass(CardContent::class)?->nestedTools();
-        }
-
-        $page->registerClass(
-            $page->getClass(CardContent::class)?->body()->nested($delegates)->model($page->getClass(SearchFormComponent::class))
-            ?? $page->getContent()->nested($delegates)->model($page->getClass(SearchFormComponent::class))
-        );
     }
 }

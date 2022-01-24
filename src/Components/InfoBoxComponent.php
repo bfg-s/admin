@@ -48,11 +48,10 @@ class InfoBoxComponent extends DIV
     private $params;
 
     /**
-     * Alert constructor.
      * @param  string|null  $title
-     * @param  string|null  $icon
      * @param $body
-     * @param  mixed  ...$params
+     * @param  string  $icon
+     * @param ...$params
      */
     public function __construct(string $title = null, $body = '', string $icon = 'fas fa-info-circle', ...$params)
     {

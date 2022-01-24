@@ -6,6 +6,31 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
+/**
+ * Lar\LteAdmin\Models\LteFunction.
+ *
+ * @property int $id
+ * @property string $slug
+ * @property string|null $class
+ * @property string|null $description
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection|\App\Models\LteRole[] $roles
+ * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction makeDumpedModel()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereClass($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class LteFunction extends Model
 {
     use DumpedModel;

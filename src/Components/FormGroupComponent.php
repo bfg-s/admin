@@ -12,6 +12,7 @@ use Lar\LteAdmin\Components\Traits\RulesBackTrait;
 use Lar\LteAdmin\Components\Traits\RulesFrontTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\LteAdmin\Page;
 
 /**
  * @mixin FormGroupComponentMacroList
@@ -131,6 +132,11 @@ abstract class FormGroupComponent extends DIV
     public static $construct_modify = [];
 
     /**
+     * @var Page
+     */
+    protected Page $page;
+
+    /**
      * FormGroup constructor.
      * @param  string  $name
      * @param  string|null  $title
@@ -138,6 +144,8 @@ abstract class FormGroupComponent extends DIV
      */
     public function __construct(string $name, string $title = null, ...$params)
     {
+        $this->page = app(Page::class);
+
         parent::__construct();
 
         $this->title = $title ? __($title) : $title;
@@ -155,7 +163,7 @@ abstract class FormGroupComponent extends DIV
         if (! $title) {
             $this->vertical();
         }
-        $this->model = FormComponent::$current_model;
+        $this->model = $this->page->model();
         $this->after_construct();
         $this->callConstructEvents();
         foreach (self::$construct_modify as $item) {
@@ -289,7 +297,9 @@ abstract class FormGroupComponent extends DIV
     {
         if ($this->model) {
             $this->value_to = function () use ($path) {
-                return e(multi_dot_call($this->model, $path));
+                $ddd = multi_dot_call($this->model, $path);
+
+                return is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
             };
         }
 
@@ -440,10 +450,10 @@ abstract class FormGroupComponent extends DIV
             $val = request($this->path) ?: null;
         }
         if (! $val && $this->model) {
-            $val = e(multi_dot_call($this->model, $this->path, false));
+            $val = multi_dot_call($this->model, $this->path, false);
         }
 
-        return $val !== null ? $val : $this->default;
+        return $val !== null && $val !== '' ? $val : $this->default;
     }
 
     /**

@@ -20,6 +20,46 @@ class Menu extends Getter
      */
     protected static $nested_counter = 0;
 
+    protected static $currentQueryField = null;
+    protected static $queries = [];
+
+    protected static function currentQueryField()
+    {
+        if (! static::$currentQueryField) {
+            static::$currentQueryField = \Route::currentRouteName();
+        }
+
+        return static::$currentQueryField;
+    }
+
+    public static function saveCurrentQuery()
+    {
+        $can = request()->pjax() || ! request()->ajax();
+        if (request()->isMethod('GET') && $can) {
+            $name = static::currentQueryField();
+            if (isset(static::$queries[$name]) && static::$queries[$name]) {
+                return;
+            }
+            $all = request()->query();
+            foreach ($all as $key => $item) {
+                if (str_starts_with($key, '_')) {
+                    unset($all[$key]);
+                }
+            }
+            static::$queries[$name] = $all;
+            session([$name => $all]);
+        }
+    }
+
+    public static function getQuery(string $name)
+    {
+        if (! isset(static::$queries[$name]) || ! static::$queries[$name]) {
+            static::$queries[$name] = session($name, []);
+        }
+
+        return static::$queries[$name];
+    }
+
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -357,12 +397,7 @@ class Menu extends Getter
 
                 $item['current.type'] = str_replace($item['route'].'.', '', \Route::currentRouteName());
 
-                $item['link'] = ((isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
-                    || (isset($item['resource_except']) && in_array('index', $item['resource_except'])))
-                    ? null
-                    : route($item['route'].'.index', $item['route_params'] ?? []);
-
-                $item['link.show'] = static function ($params) use ($item) {
+                $item['link.show'] = function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('show', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('show', $item['resource_except']))
@@ -372,10 +407,12 @@ class Menu extends Getter
                     if (! is_array($params) && isset($item['model.param'])) {
                         $params = [$item['model.param'] => $params];
                     }
+                    $name = $item['route'].'.show';
+                    $params = array_merge($params, static::getQuery($name));
 
-                    return route($item['route'].'.show', array_merge($params, ($item['route_params'] ?? [])));
+                    return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.update'] = static function ($params) use ($item) {
+                $item['link.update'] = function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('update', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('update', $item['resource_except']))
@@ -388,7 +425,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.update', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.destroy'] = static function ($params) use ($item) {
+                $item['link.destroy'] = function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('destroy', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('destroy', $item['resource_except']))
@@ -401,7 +438,7 @@ class Menu extends Getter
 
                     return route($item['route'].'.destroy', array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.edit'] = static function ($params) use ($item) {
+                $item['link.edit'] = function ($params) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('edit', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('edit', $item['resource_except']))
@@ -412,9 +449,12 @@ class Menu extends Getter
                         $params = [$item['model.param'] => $params];
                     }
 
-                    return route($item['route'].'.edit', array_merge($params, ($item['route_params'] ?? [])));
+                    $name = $item['route'].'.edit';
+                    $params = array_merge($params, static::getQuery($name));
+
+                    return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.index'] = static function (array $params = []) use ($item) {
+                $item['link.index'] = function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('index', $item['resource_except']))
@@ -422,28 +462,35 @@ class Menu extends Getter
                         return null;
                     }
 
-                    return route($item['route'].'.index', array_merge($params, ($item['route_params'] ?? [])));
+                    $name = $item['route'].'.index';
+                    $params = array_merge($params, static::getQuery($name));
+
+                    return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.store'] = static function (array $params = []) use ($item) {
+                $item['link.store'] = function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('store', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('store', $item['resource_except']))
                     ) {
                         return null;
                     }
+                    $name = $item['route'].'.store';
 
-                    return route($item['route'].'.store', array_merge($params, ($item['route_params'] ?? [])));
+                    return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
-                $item['link.create'] = static function (array $params = []) use ($item) {
+                $item['link.create'] = function (array $params = []) use ($item) {
                     if (
                         (isset($item['resource_only']) && ! in_array('create', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('create', $item['resource_except']))
                     ) {
                         return null;
                     }
+                    $name = $item['route'].'.create';
+                    $params = array_merge($params, static::getQuery($name));
 
-                    return route($item['route'].'.create', array_merge($params, ($item['route_params'] ?? [])));
+                    return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
+                $item['link'] = $item['link.index']();
             }
 
             if (! isset($item['selected'])) {

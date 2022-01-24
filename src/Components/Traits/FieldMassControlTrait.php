@@ -76,8 +76,8 @@ trait FieldMassControlTrait
      */
     protected function call_group($name, array $arguments)
     {
-        if (isset(FieldComponent::$form_components[$name])) {
-            $class = FieldComponent::$form_components[$name];
+        if (isset(static::$inputs[$name])) {
+            $class = static::$inputs[$name];
 
             $class = new $class(...$arguments);
 

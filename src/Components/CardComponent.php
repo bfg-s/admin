@@ -1,16 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Contents;
+namespace Lar\LteAdmin\Components;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Components\ButtonsComponent;
-use Lar\LteAdmin\Components\CardBodyComponent;
-use Lar\LteAdmin\Components\FormFooterComponent;
-use Lar\LteAdmin\Components\ModelTableComponent;
-use Lar\LteAdmin\Components\SearchFormComponent;
 use Lar\LteAdmin\Components\Traits\TypesTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
@@ -20,10 +15,7 @@ use Lar\LteAdmin\Interfaces\ControllerContentInterface;
 use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
 
-/**
- * @mixin CardContentMacroList
- */
-class CardContent extends DIV implements onRender, ControllerContainerInterface, ControllerContentInterface
+class CardComponent extends DIV implements onRender, ControllerContainerInterface, ControllerContentInterface
 {
     use TypesTrait, FontAwesome, Macroable, Delegable;
 
@@ -38,7 +30,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
      * @var array
      */
     protected $props = [
-        'card', 'card-outline',
+        'card', 'card-outline', 'w-100',
     ];
 
     /**
@@ -89,7 +81,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
     /**
      * @var string|array
      */
-    protected $title;
+    protected $title = null;
 
     /**
      * @var bool
@@ -113,21 +105,6 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
 
         parent::__construct();
 
-        if (! $this->title) {
-            $originTitle = $this->title;
-            $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
-            if (lte_model_type('index')) {
-                $this->title = $this->title ?: 'lte.list';
-            } elseif (lte_model_type('create')) {
-                $this->title = $this->title ?: 'lte.add';
-            } elseif (lte_model_type('edit')) {
-                $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
-                $this->title = $this->title ?: 'lte.id_edit';
-            } elseif (lte_model_type('show')) {
-                $this->title = $this->title ?: 'lte.information';
-            }
-        }
-
         $this->head_obj = $this->div(['card-header']);
 
         $this->title_obj = $this->head_obj->h3(['card-title']);
@@ -143,13 +120,14 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
         $this->callConstructEvents();
     }
 
-    public function tab(string $title, $icon = null, callable $contentCb = null, ?bool $active = null)
+    public function tab(...$delegates)
     {
         if (! $this->body) {
             $this->fullBody();
         }
 
-        $this->body->tab($title, $icon, $contentCb, $active);
+        array_unshift($delegates, TabContentComponent::new()->p3()->pr4());
+        $this->body->tab($delegates);
 
         return $this;
     }
@@ -177,10 +155,10 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
     }
 
     /**
-     * @param  string  $title
+     * @param  array|string  $title
      * @return $this
      */
-    public function title(string $title)
+    public function title(array|string $title)
     {
         $this->title = $title;
 
@@ -199,12 +177,12 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
     }
 
     /**
-     * @param  mixed  ...$params
-     * @return CardBodyComponent
+     * @param ...$delegations
+     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|CardBodyComponent
      */
-    public function body(...$params)
+    public function card_body(...$delegations)
     {
-        $body = CardBodyComponent::create()->haveLink($this->body)->when($params);
+        $body = CardBodyComponent::create($delegations)->haveLink($this->body);
         $this->appEnd($body);
 
         return $body;
@@ -224,16 +202,16 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
      */
     public function fullBody(...$params)
     {
-        return $this->body()->addClass('p-0')->when($params);
+        return $this->card_body()->addClass('p-0')->when($params);
     }
 
     /**
      * @return $this
      */
-    public function withSearchForm()
+    public function search_form(...$delegates)
     {
         if (! $this->search_form) {
-            $this->search_form = new SearchFormComponent();
+            $this->search_form = new SearchFormComponent(...$delegates);
 
             $this->div(['#table_search_form', 'collapse'])
                 ->div(['card-body'], $this->search_form);
@@ -246,27 +224,39 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
      * @param ...$delegates
      * @return ModelTableComponent
      */
-    public function bodyModelTable(...$delegates)
+    public function model_table(...$delegates)
     {
         $this->withSearchForm();
 
-        $this->table = $this->body()->attr(['p-0', 'table-responsive'])
+        $this->table = $this->card_body()->attr(['p-0', 'table-responsive'])
             ->model_table($delegates)->model($this->search_form);
 
         $this->table->rendered(function (ModelTableComponent $table) {
             $this->bottom_content->add($table->footer());
         });
 
+        $this->headerObj(function (DIV $div) {
+            $ad = $this->table->getActionData();
+            if ($ad['show']) {
+                $div->prepEnd()->view('lte::segment.model_table_actions', $ad);
+            }
+        });
+
         return $this->table;
     }
 
+    public function model_info_table(...$delegates)
+    {
+        return $this->fullBody()->model_info_table($delegates);
+    }
+
     /**
-     * @param ...$params
+     * @param ...$delegates
      * @return \Lar\LteAdmin\Components\FormComponent
      */
-    public function bodyForm(...$params)
+    public function form(...$delegates)
     {
-        return $this->body()->form(...$params);
+        return $this->card_body()->form(...$delegates);
     }
 
     /**
@@ -282,9 +272,9 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
      * @param ...$params
      * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|FormFooterComponent
      */
-    public function footerForm(...$params)
+    public function footer_form(...$delegates)
     {
-        $footer = FormFooterComponent::create(...$params)->createDefaultCRUDFooter();
+        $footer = FormFooterComponent::create(...$delegates)->createDefaultCRUDFooter();
         $this->div(['card-footer'])->appEnd($footer);
 
         return $footer;
@@ -348,6 +338,22 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
         $this->addClass("card-{$this->type}");
 
         $model = gets()->lte->menu->model;
+
+        $originTitle = $this->title;
+        $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
+        if (lte_model_type('index')) {
+            $this->title = $this->title !== null ? $this->title : 'lte.list';
+            if (request()->has('show_deleted') && request('show_deleted') == 1) {
+                $this->title = __($this->title).' <small><b>('.__('lte.deleted').')</b></small>';
+            }
+        } elseif (lte_model_type('create')) {
+            $this->title = $this->title !== null ? $this->title : 'lte.add';
+        } elseif (lte_model_type('edit')) {
+            $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
+            $this->title = $this->title !== null ? $this->title : 'lte.id_edit';
+        } elseif (lte_model_type('show')) {
+            $this->title = $this->title !== null ? $this->title : 'lte.information';
+        }
 
         if ($this->title_obj) {
             if ($this->icon) {
@@ -421,7 +427,7 @@ class CardContent extends DIV implements onRender, ControllerContainerInterface,
                 if ($model && property_exists($model, 'forceDeleting')) {
                     if (! request()->has('show_deleted')) {
                         $this->buttons()->dark('fas fa-trash')
-                            ->on_click('doc::location', urlWithGet(['show_deleted' => 1]));
+                            ->on_click('doc::location', urlWithGet(['show_deleted' => 1]))->setTitle(__('lte.deleted'));
                     } else {
                         $this->buttons()->resourceList(urlWithGet([], ['show_deleted']));
                     }

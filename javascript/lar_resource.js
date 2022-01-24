@@ -1,4 +1,5 @@
 import VueElementLoading from 'vue-element-loading'
+//window.Pusher = require('pusher-js');
 
 let tooltip_selector = '[title]:not([class^="select2"])';
 
@@ -31,8 +32,7 @@ document.addEventListener('ljs:nav:complete', (details) => {
 
     applyScripts($(ljs.config('pjax-container')));
     "timer::onetime".exec("tooltip", () => $(tooltip_selector).tooltip({placement: 'auto'}));
-    //window.Alpine && window.Alpine.flushAndStopDeferringMutations && window.Alpine.flushAndStopDeferringMutations();
-    window.Alpine.start();
+    window.Alpine && window.Alpine.flushAndStopDeferringMutations && window.Alpine.flushAndStopDeferringMutations();
 });
 
 let ins = require('./lar_instance.js');

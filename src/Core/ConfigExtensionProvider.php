@@ -3,7 +3,7 @@
 namespace Lar\LteAdmin\Core;
 
 use Lar\Developer\Core\Traits\Piplineble;
-use Lar\LteAdmin\Components\FieldComponent;
+use Lar\LteAdmin\Components\Component;
 use Lar\LteAdmin\Components\ModelTableComponent;
 use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
@@ -141,7 +141,7 @@ class ConfigExtensionProvider
      */
     public function formField(string $name, string $class)
     {
-        FieldComponent::registerFormComponent($name, $class);
+        Component::registerFormComponent($name, $class);
 
         return $this;
     }

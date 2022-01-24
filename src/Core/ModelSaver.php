@@ -90,14 +90,14 @@ class ModelSaver
      * @var callable[]
      */
     protected static $on_deleted = [];
+    protected ?object $eventsObject;
 
     /**
-     * ModelSaver constructor.
-     *
-     * @param Model|string $model
-     * @param array $data
+     * @param  Model|string  $model
+     * @param  array  $data
+     * @param  object|null  $eventsObject
      */
-    public function __construct($model, array $data)
+    public function __construct($model, array $data, object $eventsObject = null)
     {
         if (is_string($model)) {
             $model = new $model;
@@ -106,17 +106,20 @@ class ModelSaver
         $this->model = $model;
 
         $this->data = $data;
+
+        $this->eventsObject = $eventsObject;
     }
 
     /**
-     * @template T
-     * @param T $model
+     * @template SaveModel
+     * @param SaveModel $model
      * @param  array  $data
-     * @return T|Model|bool|mixed
+     * @param  object|null  $eventsObject
+     * @return SaveModel|bool|Model|mixed|string
      */
-    public static function do($model, array $data)
+    public static function do($model, array $data, object $eventsObject = null)
     {
-        return (new static($model, $data))->save();
+        return (new static($model, $data, $eventsObject))->save();
     }
 
     /**
@@ -634,17 +637,15 @@ class ModelSaver
             }
         }
 
-        $currentRoute = \Route::current();
-
         if (
-            $currentRoute
+            $this->eventsObject
             && $model
-            && $currentRoute->controller
-            && property_exists($currentRoute->controller, $name)
+            && method_exists($this->eventsObject, $name)
+            && property_exists($this->eventsObject, 'model')
         ) {
-            $controllerModel = get_class($currentRoute->controller->model());
+            $controllerModel = $this->eventsObject::$model;
             if ($controllerModel == $class) {
-                $r = call_user_func_array([$currentRoute->controller, $name], $params);
+                $r = call_user_func_array([$this->eventsObject, $name], $params);
                 if (is_array($r) && count($r)) {
                     $result = array_merge_recursive($result, $r);
                 }

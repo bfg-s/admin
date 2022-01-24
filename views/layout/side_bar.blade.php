@@ -5,13 +5,23 @@
     <div class="sidebar">
         <div class="sidebar-inner" @live('sidebar')>
             <!-- Sidebar user (optional) -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex" data-href="{{route('lte.profile')}}">
-                <div class="image">
+            <div class="user-panel mt-1 pb-1 mb-3 d-flex">
+                <a class="image" href="{{route('lte.profile')}}">
                     <img src="{{asset(lte_user()->avatar)}}" class="img-circle elevation-2" alt="{{lte_user()->name}}">
-                </div>
-                <div class="info"  title="{{__('lte.profile')}}">
-                    <a class="d-block">{{lte_user()->name}}</a>
-                    <small class="d-block"><span class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>, <span class="badge badge-success">') !!}</span></small>
+                </a>
+                <div class="info">
+                    <div class="d-block text-light">
+                        {{lte_user()->name}} &nbsp;
+                        <a href="{{route('lte.profile')}}" title="{{__('lte.edit_profile')}}">
+                            <i class="fas fa-edit" style="font-size: 12px;"></i>
+                        </a>
+                    </div>
+                    <small class="d-block text-light">
+                        {{ lte_user()->email }}
+                    </small>
+                    <small class="d-block text-light">
+                        <span class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>&nbsp;<span class="badge badge-success">') !!}</span>
+                    </small>
                 </div>
             </div>
 

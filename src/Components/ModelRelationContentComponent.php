@@ -2,21 +2,9 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Tagable\Events\onRender;
-
-/**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
- * @mixin ModelRelationContentComponentMacroList
- * @mixin ModelRelationContentComponentMethods
- */
-class ModelRelationContentComponent extends DIV implements onRender
+class ModelRelationContentComponent extends Component
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
+    protected $class = 'template_container';
 
     /**
      * @var \Closure|array|null
@@ -49,25 +37,26 @@ class ModelRelationContentComponent extends DIV implements onRender
     protected $controls = [];
 
     /**
-     * Row constructor.
      * @param  string  $relation
      * @param  string  $name
-     * @param  string|null  $class
-     * @param  mixed  ...$params
+     * @param ...$delegates
      */
-    public function __construct(string $relation, string $name, string $class = 'template_container', ...$params)
+    public function __construct(string $relation, string $name, ...$delegates)
     {
-        parent::__construct();
-
-        $this->when($params);
+        parent::__construct(...$delegates);
 
         $this->setDatas([
             "relation-{$relation}" => $name,
         ]);
+    }
 
-        $this->addClass($class);
+    public function fullControl()
+    {
+        $this->controlCreate(true);
+        $this->controlRestore(true);
+        $this->controlDelete(true);
 
-        $this->callConstructEvents();
+        return $this;
     }
 
     public function controls(callable $call)
@@ -133,30 +122,6 @@ class ModelRelationContentComponent extends DIV implements onRender
     }
 
     /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
-     */
-    public function __call($name, $arguments)
-    {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return parent::__call($name, $arguments);
-    }
-
-    /**
-     * @return mixed|void
-     * @throws \ReflectionException
-     */
-    public function onRender()
-    {
-        $this->callRenderEvents();
-    }
-
-    /**
      * @param  string  $var_name
      * @param $test
      */
@@ -203,5 +168,10 @@ class ModelRelationContentComponent extends DIV implements onRender
     public function hasControls()
     {
         return (bool) count($this->controls);
+    }
+
+    protected function mount()
+    {
+        //
     }
 }

@@ -5,33 +5,15 @@ namespace Lar\LteAdmin\Components;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Contents\CardContent;
 use Lar\LteAdmin\Components\Cores\ChartJsComponentCore;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
-use Lar\LteAdmin\Page;
-use Lar\Tagable\Events\onRender;
+use Lar\LteAdmin\Delegates\SearchForm;
 
-/**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
- * @mixin ChartJsComponentMacroList
- * @mixin ChartJsComponentMethods
- */
-class ChartJsComponent extends DIV implements onRender, ControllerContainerInterface
+class ChartJsComponent extends Component
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
-
     /**
      * @var ChartJsComponentCore
      */
     public $builder;
-
-    protected $model;
     protected $dataBuilder;
 
     protected static $count = 0;
@@ -41,11 +23,6 @@ class ChartJsComponent extends DIV implements onRender, ControllerContainerInter
     protected $datasets = [];
 
     /**
-     * @var Page
-     */
-    public $page;
-
-    /**
      * @param  array  $delegates
      * @throws \Throwable
      */
@@ -53,24 +30,17 @@ class ChartJsComponent extends DIV implements onRender, ControllerContainerInter
     {
         static::$count++;
 
-        parent::__construct();
-
-        $this->page = app(Page::class);
+        parent::__construct(...$delegates);
 
         $this->builder = new ChartJsComponentCore();
-
-        $this->model($this->page->model());
-
-        $this->explainForce(Explanation::new($delegates));
-
-        $this->callConstructEvents();
     }
 
-    public function model($model)
+    public function hasSearch(...$delegates)
     {
-        $this->model = is_string($model) ? new $model : $model;
+        /** @var SearchForm $form */
+        $form = $this->div()->search_form($delegates);
 
-        $this->builder->name(strtolower(str_replace('\\', '_', $this->model::class)).'_'.static::$count);
+        $this->model = $form->makeModel($this->model);
 
         return $this;
     }
@@ -89,26 +59,7 @@ class ChartJsComponent extends DIV implements onRender, ControllerContainerInter
         return $this;
     }
 
-    /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
-     */
-    public function __call($name, $arguments)
-    {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return parent::__call($name, $arguments);
-    }
-
-    /**
-     * @return mixed|void
-     * @throws \ReflectionException
-     */
-    public function onRender()
+    protected function mount()
     {
         $this->text(
             $this->builder->render()
@@ -140,6 +91,11 @@ class ChartJsComponent extends DIV implements onRender, ControllerContainerInter
         return $this->prepareData(static function ($model) use ($column, $from, $to) {
             return $model->whereBetween($column, [$from, $to]);
         });
+    }
+
+    public function setDefaultDataBetween(string $column, $from, $to)
+    {
+        return ! request()->has('q') ? $this->setDataBetween($column, $from, $to) : $this;
     }
 
     public function groupDataByAt(string $atColumn, string $format = 'Y.m.d')
@@ -224,18 +180,5 @@ class ChartJsComponent extends DIV implements onRender, ControllerContainerInter
     protected function renderColor($c, $opacity)
     {
         return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        if ($page->getContent() instanceof CardContent) {
-            $page->registerClass(
-                $page->getClass(CardContent::class)->fullBody()->chart_js($delegates)
-            );
-        } else {
-            $page->registerClass(
-                $page->getContent()->chart_js($delegates)
-            );
-        }
     }
 }

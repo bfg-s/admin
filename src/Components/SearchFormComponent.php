@@ -2,8 +2,6 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\LteAdmin\Components\Contents\CardContent;
-use Lar\LteAdmin\Components\Contents\GridRowContent;
 use Lar\LteAdmin\Components\SearchFields\AmountSearchField;
 use Lar\LteAdmin\Components\SearchFields\ChecksSearchField;
 use Lar\LteAdmin\Components\SearchFields\ColorSearchField;
@@ -35,7 +33,7 @@ use Lar\LteAdmin\Page;
  * @mixin SearchFormComponentMacroList
  * @mixin SearchFormComponentMethods
  */
-class SearchFormComponent extends \Lar\Layout\Tags\FORM implements ControllerContainerInterface
+class SearchFormComponent extends \Lar\Layout\Tags\FORM
 {
     use SearchFormConditionRulesTrait,
         SearchFormHelpersTrait,
@@ -101,7 +99,7 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM implements ControllerCon
      * Form constructor.
      * @param  array  $delegates
      */
-    public function __construct(array $delegates = [])
+    public function __construct(...$delegates)
     {
         parent::__construct();
 
@@ -128,7 +126,7 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM implements ControllerCon
         $chunks = collect($this->fields)->chunk(3);
 
         foreach ($chunks as $chunk) {
-            $this->row()->when(function (GridRowContent $row) use ($chunk) {
+            $this->row()->when(function (GridRowComponent $row) use ($chunk) {
                 foreach ($chunk as $field) {
                     $row->column()->pl3()->pr3()->appEnd($field['class']);
                 }
@@ -214,14 +212,5 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM implements ControllerCon
         }
 
         return parent::__call($name, $arguments);
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        if ($page->getContent() instanceof CardContent) {
-            $page->getClass(CardContent::class)->withSearchForm();
-            $page->registerClass($page->getClass(CardContent::class)->search_form)
-                ->explainForce(Explanation::new($delegates));
-        }
     }
 }

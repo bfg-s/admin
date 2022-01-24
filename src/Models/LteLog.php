@@ -5,6 +5,40 @@ namespace Lar\LteAdmin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
+/**
+ * Lar\LteAdmin\Models\LteLog.
+ *
+ * @property string $title
+ * @property string|null $detail
+ * @property string $ip
+ * @property string|null $url
+ * @property string|null $route
+ * @property string|null $method
+ * @property string $user_agent
+ * @property string $session_id
+ * @property int|null $lte_user_id
+ * @property int|null $web_id
+ * @property string|null $icon
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property-read \App\Models\LteUser|null $lte_user
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog makeDumpedModel()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereDetail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereLteUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereRoute($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereSessionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereUserAgent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereWebId($value)
+ * @mixin \Eloquent
+ */
 class LteLog extends Model
 {
     use DumpedModel;

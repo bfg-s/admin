@@ -2,7 +2,6 @@
 
 namespace Lar\LteAdmin;
 
-use Lar\LteAdmin\Components\FormComponent;
 use Lar\LteAdmin\Components\ModelTableComponent;
 use Lar\LteAdmin\Core\PageMixin;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
@@ -51,10 +50,9 @@ class LteBoot
             }
         }
 
-        static::formMacros();
-
         if (! app()->runningInConsole() && \Schema::hasTable('lte_functions')) {
             static::makeGates();
+            gets()->lte->menu->save_current_query();
         }
     }
 
@@ -69,29 +67,5 @@ class LteBoot
                 return $user->hasRoles($item->roles->pluck('slug')->toArray());
             });
         }
-    }
-
-    /**
-     * Make helper form.
-     */
-    protected static function formMacros()
-    {
-        FormComponent::macro('info_at', function ($condition = null) {
-            if ($condition === null) {
-                $condition = gets()->lte->menu->type === 'edit';
-            }
-            if ($condition) {
-                $this->hr();
-            }
-            $this->if($condition)->info('updated_at', 'lte.updated_at');
-            $this->if($condition)->info('created_at', 'lte.created_at');
-        });
-
-        FormComponent::macro('info_id', function ($condition = null) {
-            if ($condition === null) {
-                $condition = gets()->lte->menu->type === 'edit';
-            }
-            $this->if($condition)->info('id', 'lte.id');
-        });
     }
 }

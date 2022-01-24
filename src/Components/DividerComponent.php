@@ -37,6 +37,8 @@ class DividerComponent extends DIV implements onRender
             }
         }
 
+        $anyTitle = $left_title || $center_title || $right_title;
+
         if ($center_title) {
             $this->div(['col'])->hr();
 
@@ -46,9 +48,9 @@ class DividerComponent extends DIV implements onRender
                 $this->div(['col-auto'])->when($center_title);
             }
 
-            $this->div(['col'])->hr();
+            $this->div(['col'])->hr([! $anyTitle ? 'mt-0' : '']);
         } else {
-            $this->div(['col'])->hr();
+            $this->div(['col'])->hr([! $anyTitle ? 'mt-0' : '']);
         }
 
         if ($right_title) {

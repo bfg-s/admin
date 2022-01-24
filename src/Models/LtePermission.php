@@ -6,6 +6,34 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
+/**
+ * Lar\LteAdmin\Models\LtePermission.
+ *
+ * @property int $id
+ * @property string $path
+ * @property array $method
+ * @property string $state
+ * @property string|null $description
+ * @property int $lte_role_id
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\LteRole|null $role
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission makeDumpedModel()
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereLteRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LtePermission whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class LtePermission extends Model
 {
     use DumpedModel;

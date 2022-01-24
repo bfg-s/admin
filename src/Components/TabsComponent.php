@@ -68,41 +68,37 @@ class TabsComponent extends DIV implements onRender
         return $this;
     }
 
+    public function tab(...$delegates)
+    {
+        return $this->createNewTab(
+            TabContentComponent::create()->delegatesNow($delegates)
+        );
+    }
+
     /**
-     * @param  string  $title
-     * @param  string|mixed  $icon
-     * @param  callable|null  $contentCb
+     * @param  string|TabContentComponent  $title
+     * @param $icon
+     * @param  callable|array|null  $contentCb
      * @param  bool|null  $active
-     * @return Component
+     * @return Component|\Lar\Layout\LarDoc|TabContentComponent
      */
-    public function tab(string $title, $icon = null, callable $contentCb = null, ?bool $active = null)
+    public function createNewTab(string|TabContentComponent $title, $icon = null, callable | array $contentCb = null, ?bool $active = null)
     {
         if ($icon && ! is_string($icon)) {
             $contentCb = $icon;
             $icon = null;
         }
 
-        if (class_exists($title)) {
-            $content = new $title();
+        $left = true;
 
-            if ($content instanceof TabContentComponent) {
-                if ($content->getTitle()) {
-                    $title = $content->getTitle();
-                }
-                if ($content->getIcon()) {
-                    $icon = $content->getIcon();
-                }
-            } else {
-                if (isset($content->title) && $content->title) {
-                    $title = $content->title;
-                }
-                if (isset($content->icon) && $content->icon) {
-                    $icon = $content->icon;
-                }
-            }
+        if ($title instanceof TabContentComponent) {
+            $content = $title;
+            $title = $content->getTitle;
+            $icon = $content->getIcon;
+            $active = $content->getActiveCondition;
+            $left = $content->getLeft;
         }
-
-        $this->makeNav();
+        $this->makeNav($left);
         $id = 'tab-'.md5($title).'-'.static::$counter;
         $active = $active === null ? ! $this->nav->contentCount() : $active;
         $a = $this->nav->li(['nav-item'])->a([
@@ -127,13 +123,16 @@ class TabsComponent extends DIV implements onRender
             'id' => $id,
             'aria-labelledby' => $id.'-label',
         ])->when($this->tab_content_props)
-            ->when(static function (TabContentComponent $content) use ($contentCb) {
-                call_user_func($contentCb, $content);
-            })
             ->addClassIf($active, 'active show');
 
+        if (is_callable($contentCb)) {
+            call_user_func($contentCb, $content);
+        } elseif (is_array($contentCb)) {
+            $content->delegates(...$contentCb);
+        }
+
         $this->tab_contents
-            ->appEnd($content);
+            ->appEnd($content->render());
 
         static::$counter++;
 
@@ -154,11 +153,17 @@ class TabsComponent extends DIV implements onRender
     /**
      * @return $this
      */
-    protected function makeNav()
+    protected function makeNav($left)
     {
         if (! $this->nav) {
-            $this->nav = $this->ul(['nav nav-tabs', 'role' => 'tablist']);
-            $this->tab_contents = $this->div(['tab-content']);
+            $row = $this->div(['row']);
+            if ($left) {
+                $this->nav = $row->div(['col-md-2'])->ul(['nav flex-column nav-tabs h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical']);
+                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
+            } else {
+                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
+                $this->nav = $row->div(['col-md-2'])->ul(['nav flex-column nav-tabs nav-tabs-right h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical']);
+            }
         }
 
         return $this;

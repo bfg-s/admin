@@ -85,7 +85,8 @@ trait TableBuilderTrait
             $td = $tr->td();
 
             if (is_string($value)) {
-                $value = e(multi_dot_call($item, $value));
+                $ddd = multi_dot_call($item, $value);
+                $value = is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
             } elseif (is_embedded_call($value)) {
                 $value = call_user_func_array($value, [
                     $item, $column['label'], $td, $column['header'], $tr,
@@ -146,8 +147,6 @@ trait TableBuilderTrait
         $this->order_field = request()->get($this->model_name, $this->order_field);
 
         if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
-            $this->model = static::fire_pipes($this->model, $this->model_class);
-
             foreach ($this->model_control as $item) {
                 if ($item instanceof SearchFormComponent) {
                     $this->model = $item->makeModel($this->model);

@@ -9,7 +9,6 @@ use Lar\Layout\Components\TemplateArea;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\ButtonsComponent;
-use Lar\LteAdmin\Components\FormComponent;
 use Lar\LteAdmin\Components\FormGroupComponent;
 use Lar\LteAdmin\Components\GridColumnComponent;
 use Lar\LteAdmin\Components\ModelRelationComponent;
@@ -26,9 +25,7 @@ trait ModelRelationBuilderTrait
      */
     protected function _build()
     {
-        $this->relation = eloquent_instruction($this->relation, $this->model_instruction);
-
-        $old_model_form = FormComponent::$current_model;
+        $old_model_form = $this->page->model();
 
         FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group, Model $model) {
             $k = $model->{$model->getKeyName()};
@@ -43,7 +40,7 @@ trait ModelRelationBuilderTrait
 
         /** @var Model $item */
         foreach ($datas as $item) {
-            FormComponent::$current_model = $item;
+            $this->page->model($item);
             $container = ModelRelationContentComponent::create($this->relation_name, $item->{$item->getKeyName()});
             $container->appEnd(
                 INPUT::create()->setType('hidden')
@@ -102,7 +99,7 @@ trait ModelRelationBuilderTrait
             $this->appEnd($container);
         }
 
-        FormComponent::$current_model = $old_model_form;
+        $this->page->model($old_model_form);
 
         unset(FormGroupComponent::$construct_modify['build_relation']);
 
@@ -121,7 +118,7 @@ trait ModelRelationBuilderTrait
      */
     protected function _btn()
     {
-        $old_model_form = FormComponent::$current_model;
+        $old_model_form = $this->page->model();
 
         FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group) {
             $m = [];
@@ -130,13 +127,13 @@ trait ModelRelationBuilderTrait
             $group->set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
         };
 
-        FormComponent::$current_model = null;
+        $this->page->model(new ($this->page->model()));
         $container = ModelRelationContentComponent::create($this->relation_name, 'template_container');
         $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content', 'template_content');
         $container->appEnd($this->last_content);
-        FormComponent::$current_model = $this->relation->getQuery()->getModel();
+        $this->page->model($this->relation->getQuery()->getModel());
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
-        FormComponent::$current_model = null;
+        $this->page->model(new ($this->page->model()));
         if (! $this->last_content->get_test_var('control_create')) {
             return '';
         }
@@ -146,7 +143,7 @@ trait ModelRelationBuilderTrait
         });
         $container->hr(['style' => 'border-top: 0;']);
 
-        FormComponent::$current_model = $old_model_form;
+        $this->page->model($old_model_form);
         unset(FormGroupComponent::$construct_modify['build_relation']);
 
         $hr = $this->hr();

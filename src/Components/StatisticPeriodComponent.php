@@ -13,7 +13,7 @@ use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
 
 /**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
+ * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
  * @mixin StatisticPeriodComponentMacroList
  * @mixin StatisticPeriodComponentMethods
  */
@@ -35,9 +35,9 @@ class StatisticPeriodComponent extends DIV implements onRender
     public $page;
 
     /**
-     * @param  array  $delegates
+     * @param ...$delegates
      */
-    public function __construct(array $delegates = [])
+    public function __construct(...$delegates)
     {
         parent::__construct();
 
@@ -55,6 +55,13 @@ class StatisticPeriodComponent extends DIV implements onRender
     public function model($model)
     {
         $this->model = is_string($model) ? new $model : $model;
+
+        if ($this->page->hasClass(SearchFormComponent::class)) {
+            $this->model = eloquent_instruction(
+                $this->model,
+                $this->page->getClass(SearchFormComponent::class)
+            );
+        }
 
         $this->entity = \Str::plural(class_basename($this->model::class));
 
@@ -108,7 +115,7 @@ class StatisticPeriodComponent extends DIV implements onRender
     {
         $this->column()
             ->info_box(
-                __('lte.statistic_total', ['entity' => strtolower($this->entity)]),
+                __('lte.statistic_total', ['entity' => mb_strtolower($this->entity)]),
                 $this->model::count(),
                 $this->icon
             )->primaryType();

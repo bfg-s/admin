@@ -7,16 +7,21 @@ use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Components\ButtonsComponent;
 use Lar\LteAdmin\Components\CardBodyComponent;
+use Lar\LteAdmin\Components\CardComponent;
 use Lar\LteAdmin\Components\ChartJsComponent;
-use Lar\LteAdmin\Components\Contents\CardContent;
-use Lar\LteAdmin\Components\Contents\GridRowContent;
+use Lar\LteAdmin\Components\FieldComponent;
 use Lar\LteAdmin\Components\FormComponent;
 use Lar\LteAdmin\Components\GridColumnComponent;
+use Lar\LteAdmin\Components\GridRowComponent;
+use Lar\LteAdmin\Components\LiveComponent;
 use Lar\LteAdmin\Components\ModelInfoTableComponent;
+use Lar\LteAdmin\Components\ModelRelationComponent;
 use Lar\LteAdmin\Components\ModelTableComponent;
 use Lar\LteAdmin\Components\NestedComponent;
 use Lar\LteAdmin\Components\SearchFormComponent;
 use Lar\LteAdmin\Components\StatisticPeriodComponent;
+use Lar\LteAdmin\Components\TimelineComponent;
+use Lar\LteAdmin\Components\WatchComponent;
 use Lar\LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
 use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Core\Traits\Macroable;
@@ -37,6 +42,11 @@ class Controller extends BaseController
     /**
      * @var array
      */
+    public $menu = [];
+
+    /**
+     * @var array
+     */
     public static $rules = [];
 
     /**
@@ -47,15 +57,17 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public static $crypt_fields = [];
+    public static $crypt_fields = [
+        'password',
+    ];
 
     /**
      * @var string[]
      */
     protected static $explanation_list = [
-        'row' => GridRowContent::class,
+        'row' => GridRowComponent::class,
         'column' => GridColumnComponent::class,
-        'card' => CardContent::class,
+        'card' => CardComponent::class,
         'card_body' => CardBodyComponent::class,
         'search_form' => SearchFormComponent::class,
         'model_table' => ModelTableComponent::class,
@@ -65,7 +77,12 @@ class Controller extends BaseController
         'model_info_table' => ModelInfoTableComponent::class,
         'buttons' => ButtonsComponent::class,
         'chart_js' => ChartJsComponent::class,
-        'statistic_periods' => StatisticPeriodComponent::class,
+        'timeline' => TimelineComponent::class,
+        'statistic_period' => StatisticPeriodComponent::class,
+        'live' => LiveComponent::class,
+        'watch' => WatchComponent::class,
+        'field' => FieldComponent::class,
+        'model_relation' => ModelRelationComponent::class,
     ];
 
     public static function getHelpMethodList()
@@ -96,24 +113,12 @@ class Controller extends BaseController
         return isset(self::$explanation_list[$name]);
     }
 
-    public static function applyExtend(Page $page, string $name, array $delegates = [])
+    public function defaultDateRange()
     {
-        if (static::hasExtend($name)) {
-            $class = self::$explanation_list[$name];
-            if (method_exists($class, 'registrationInToContainer')) {
-                $class::registrationInToContainer($page, $delegates, $name);
-            } else {
-                if ($page->hasClass(CardContent::class)) {
-                    $page->registerClass(
-                        $page->getClass(CardContent::class)->body()->{$name}($delegates)
-                    );
-                } else {
-                    $page->registerClass(
-                        $page->getContent()->{$name}($delegates)
-                    );
-                }
-            }
-        }
+        return [
+            now()->subYear()->startOfDay()->toDateString(),
+            now()->endOfDay()->toDateString(),
+        ];
     }
 
     /**
@@ -122,6 +127,8 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->makeModelEvents();
+
+        $this->menu = gets()->lte->menu->now;
     }
 
     public function explanation(): Explanation
@@ -147,9 +154,7 @@ class Controller extends BaseController
         $_after = request()->get('_after', 'index');
 
         if ($_after === 'index' && $menu = gets()->lte->menu->now) {
-            $last = session()->pull('temp_lte_table_data', []);
-
-            return \redirect($menu['link'].(count($last) ? '?'.http_build_query($last) : ''))->with('_after', $_after);
+            return \redirect($menu['link.index']())->with('_after', $_after);
         }
 
         return back()->with('_after', $_after);
@@ -164,10 +169,6 @@ class Controller extends BaseController
      */
     public function __call($method, $parameters)
     {
-//        if (isset(static::$explanation_list[$method])) {
-//            return new Delegate(static::$explanation_list[$method]);
-//        }
-
         return app()->call([$this, "{$method}_default"]);
     }
 
@@ -200,7 +201,9 @@ class Controller extends BaseController
             $model = $this->model();
 
             if ($model && $model->exists && ! request()->has($path)) {
-                return e(multi_dot_call($model, $path) ?: request($path, $default));
+                $ddd = multi_dot_call($model, $path) ?: request($path, $default);
+
+                return is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
             }
 
             return request($path, $default);
@@ -209,20 +212,40 @@ class Controller extends BaseController
         return request()->all();
     }
 
+    public function input(string $path, $default = null)
+    {
+        $model = app(Page::class)->model();
+
+        if ($model && $model->exists && ! request()->has($path)) {
+            return multi_dot_call($model, $path) ?: $default;
+        }
+
+        return request($path, $default);
+    }
+
     /**
      * @param  string  $path
-     * @param $need_value
+     * @param  mixed  $need_value
      * @return bool
      */
-    public function isRequest(string $path, $need_value)
+    public function isInput(string $path, mixed $need_value = true)
     {
-        $model = FormComponent::$current_model;
+        $val = old($path, $this->input($path));
+        if (is_array($need_value)) {
+            return in_array($val, $need_value);
+        }
 
-        $request_value = multi_dot_call($this->form(), $path);
+        return $need_value == (is_bool($need_value) ? (bool) $val : $val);
+    }
 
-        $value = old($path, $request_value ?: ($model ? multi_dot_call($model, $path, false) : null));
-
-        return $value == $need_value;
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isNotInput(string $path, mixed $need_value = true)
+    {
+        return ! $this->isInput($path, $need_value);
     }
 
     private function makeModelEvents()

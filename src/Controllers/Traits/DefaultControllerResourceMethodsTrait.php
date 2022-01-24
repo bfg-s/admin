@@ -3,43 +3,67 @@
 namespace Lar\LteAdmin\Controllers\Traits;
 
 use Lar\Layout\Respond;
+use Lar\LteAdmin\Delegates\Card;
+use Lar\LteAdmin\Delegates\Form;
+use Lar\LteAdmin\Delegates\ModelInfoTable;
+use Lar\LteAdmin\Delegates\ModelTable;
+use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Page;
 
 trait DefaultControllerResourceMethodsTrait
 {
     /**
      * @param  Page  $page
-     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelTableComponent|\Lar\LteAdmin\Components\SearchFormComponent|Page|\Lar\LteAdmin\PageMethods
+     * @param  Card  $card
+     * @param  SearchForm  $searchForm
+     * @param  ModelTable  $modelTable
+     * @return Page
      */
-    public function index_default(Page $page)
+    public function index_default(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
     {
-        return $page
-            ->card()
-            ->search_form()
-            ->model_table();
+        return $page->card(
+            $card->search_form(
+                $searchForm->id(),
+                $searchForm->at(),
+            ),
+            $card->model_table(
+                $modelTable->id(),
+                $modelTable->at(),
+            )
+        );
     }
 
     /**
      * @param  Page  $page
-     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\FormComponent|Page|\Lar\LteAdmin\PageMethods
+     * @param  Card  $card
+     * @param  Form  $form
+     * @return Page
      */
-    public function matrix_default(Page $page)
+    public function matrix_default(Page $page, Card $card, Form $form)
     {
-        return $page
-            ->card()
-            ->form();
+        return $page->card(
+            $card->form(
+                $form->ifEdit()->info_id(),
+                $form->ifEdit()->info_updated_at(),
+                $form->ifEdit()->info_created_at(),
+            )
+        );
     }
 
     /**
-     * Display the specified resource.
      * @param  Page  $page
-     * @return \Lar\LteAdmin\Components\Contents\CardContent|\Lar\LteAdmin\Components\ModelInfoTableComponent|Page|\Lar\LteAdmin\PageMethods
+     * @param  Card  $card
+     * @param  ModelInfoTable  $modelInfoTable
+     * @return Page
      */
-    public function show_default(Page $page)
+    public function show_default(Page $page, Card $card, ModelInfoTable $modelInfoTable)
     {
-        return $page
-            ->card()
-            ->model_info_table();
+        return $page->card(
+            $card->model_info_table(
+                $modelInfoTable->id(),
+                $modelInfoTable->at(),
+            )
+        );
     }
 
     /**
@@ -78,8 +102,6 @@ trait DefaultControllerResourceMethodsTrait
 
         $save = $data ?? request()->all();
 
-        $save = static::fire_pipes($save, 'save');
-
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
             return $back;
         }
@@ -87,11 +109,9 @@ trait DefaultControllerResourceMethodsTrait
         $updated = $this->requestToModel($save);
 
         if ($updated) {
-            static::fire_pipes($updated, 'updated');
-
-            respond()->toast_success(__('lte.saved_successfully'));
+            respond()->put('alert::success', __('lte.saved_successfully'));
         } else {
-            respond()->toast_error(__('lte.unknown_error'));
+            respond()->put('alert::error', __('lte.unknown_error'));
         }
 
         return $this->returnTo();
@@ -115,8 +135,6 @@ trait DefaultControllerResourceMethodsTrait
 
         $save = $data ?? request()->all();
 
-        $save = static::fire_pipes($save, 'save');
-
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
             return $back;
         }
@@ -124,11 +142,9 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save);
 
         if ($stored) {
-            static::fire_pipes($stored, 'stored');
-
-            respond()->toast_success(__('lte.successfully_created'));
+            respond()->put('alert::success', __('lte.successfully_created'));
         } else {
-            respond()->toast_error(__('lte.unknown_error'));
+            respond()->put('alert::error', __('lte.unknown_error'));
         }
 
         return $this->returnTo();
@@ -157,31 +173,31 @@ trait DefaultControllerResourceMethodsTrait
         if ($model) {
             try {
                 if ($restore && $model->restore()) {
-                    respond()->toast_success(__('lte.successfully_restored'));
+                    respond()->put('alert::success', __('lte.successfully_restored'));
 
                     respond()->reload();
                 } elseif ($force && $model->forceDelete()) {
-                    respond()->toast_success(__('lte.successfully_deleted'));
+                    respond()->put('alert::success', __('lte.successfully_deleted'));
 
                     respond()->reload();
                 } elseif ($model->delete()) {
-                    respond()->toast_success(__('lte.successfully_deleted'));
+                    respond()->put('alert::success', __('lte.successfully_deleted'));
 
                     respond()->reload();
                 } else {
-                    respond()->toast_error(__('lte.unknown_error'));
+                    respond()->put('alert::error', __('lte.unknown_error'));
                 }
             } catch (\Exception $exception) {
                 if (! \App::isLocal()) {
-                    respond()->toast_error(__('lte.unknown_error'));
+                    respond()->put('alert::error', __('lte.unknown_error'));
                 } else {
-                    respond()->toast_error($exception->getMessage());
+                    respond()->put('alert::error', $exception->getMessage());
                 }
             }
         } else {
-            respond()->toast_error(__('lte.model_not_found'));
+            respond()->put('alert::error', __('lte.model_not_found'));
         }
 
-        return respond();
+        return respond()->put('ljs.$nav.goTo', $this->menu['link.index']());
     }
 }

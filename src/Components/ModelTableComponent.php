@@ -8,25 +8,19 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Lar\Developer\Core\Traits\Piplineble;
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Contents\CardContent;
 use Lar\LteAdmin\Components\Traits\ModelTable\TableBuilderTrait;
 use Lar\LteAdmin\Components\Traits\ModelTable\TableControlsTrait;
 use Lar\LteAdmin\Components\Traits\ModelTable\TableExtensionTrait;
 use Lar\LteAdmin\Components\Traits\ModelTable\TableHelpersTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
-use Lar\LteAdmin\Page;
 
 /**
- * @methods static::$extensions (...$params)
+ * @methods static::$extensions (...$params) static
  * @mixin ModelTableComponentMacroList
  * @mixin ModelTableComponentMethods
  */
-class ModelTableComponent extends Component implements ControllerContainerInterface
+class ModelTableComponent extends Component
 {
     use TableHelpersTrait,
         TableExtensionTrait,
@@ -116,24 +110,13 @@ class ModelTableComponent extends Component implements ControllerContainerInterf
     public $search;
 
     /**
-     * @var Page
-     */
-    public $page;
-
-    /**
-     * @param  array  $delegates
+     * @param ...$delegates
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(array $delegates = [])
+    public function __construct(...$delegates)
     {
         parent::__construct();
-
-        $this->page = app(Page::class);
-
-        $this->model = $this->page->model();
-
-        $this->model_name = $this->getModelName();
 
         if (request()->has($this->model_name)) {
             $this->order_field = request()->get($this->model_name);
@@ -144,22 +127,24 @@ class ModelTableComponent extends Component implements ControllerContainerInterf
             $this->order_type = $type === 'asc' || $type === 'desc' ? $type : 'asc';
         }
 
-        $this->explainForce(Explanation::new($delegates));
-
-        $this->callConstructEvents();
-
-        $this->toExecute('_create_controls', '_build');
+        $this->delegatesNow($delegates);
 
         $this->save_table_requests();
     }
 
-    public static function toContainer(DIV $div, $arguments)
+    /**
+     * @param SearchFormComponent|\Closure|array|Builder|Relation $instruction
+     * @return $this|static
+     */
+    public function model($model = null)
     {
-        if ($div instanceof CardContent) {
-            return $div->bodyModelTable(...$arguments);
+        if ($model instanceof SearchFormComponent) {
+            $this->search = $model;
+            $this->model_control[] = $model;
+            $model = null;
         }
 
-        return $div;
+        return parent::model($model);
     }
 
     /**
@@ -167,9 +152,12 @@ class ModelTableComponent extends Component implements ControllerContainerInterf
      */
     protected function save_table_requests()
     {
-        $all = request()->query();
-        unset($all['_pjax']);
-        session(['temp_lte_table_data' => $all]);
+    }
+
+    protected function mount()
+    {
+        $this->_create_controls();
+        $this->_build();
     }
 
     /**
@@ -187,25 +175,5 @@ class ModelTableComponent extends Component implements ControllerContainerInterf
         }
 
         return parent::__call($name, $arguments);
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        if ($page->getContent() instanceof CardContent) {
-            $page->registerClass(
-                $page->getClass(CardContent::class)->bodyModelTable($delegates)
-            );
-
-            $page->getClass(CardContent::class)->headerObj(function (DIV $div) use ($page) {
-                $ad = $page->getClass(self::class)->getActionData();
-                if ($ad['show']) {
-                    $div->prepEnd()->view('lte::segment.model_table_actions', $ad);
-                }
-            });
-        } else {
-            $page->registerClass(
-                $page->getContent()->model_table($delegates)
-            );
-        }
     }
 }

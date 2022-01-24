@@ -14,8 +14,8 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "lar/ljs": "^v2.5.7",
-        "lar/layout": "^v2.5.0",
+        "lar/ljs": "^2.6.0",
+        "lar/layout": "^2.6.1",
         "bfg/emitter": "^1.1",
         "bfg/embedded-call": "^0.0.5",
         "maatwebsite/excel": "^3.1",

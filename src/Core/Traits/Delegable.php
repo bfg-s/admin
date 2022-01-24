@@ -37,4 +37,14 @@ trait Delegable
 
         return $this;
     }
+
+    public function newExplainForce(...$delegates)
+    {
+        return $this->explainForce(Explanation::new($delegates));
+    }
+
+    public function newExplain(...$delegates)
+    {
+        return $this->explain(Explanation::new($delegates));
+    }
 }

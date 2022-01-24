@@ -10,7 +10,7 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
 
 /**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
+ * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
  * @mixin ModalBodyComponentMacroList
  * @mixin ModalBodyComponentMethods
  */

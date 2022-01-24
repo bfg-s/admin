@@ -4,6 +4,11 @@ namespace Lar\LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Lar\LteAdmin\Delegates\Card;
+use Lar\LteAdmin\Delegates\Form;
+use Lar\LteAdmin\Delegates\ModelInfoTable;
+use Lar\LteAdmin\Delegates\ModelTable;
+use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Page;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -77,7 +82,12 @@ class LteControllerCommand extends Command
             ->namespace($namespace);
 
         if ($resource) {
-            $class->use(Page::class);
+            $class->use(class_exists(\App\LteAdmin\Page::class) ? \App\LteAdmin\Page::class : Page::class);
+            $class->use(class_exists(\App\LteAdmin\Delegates\Card::class) ? \App\LteAdmin\Delegates\Card::class : Card::class);
+            $class->use(class_exists(\App\LteAdmin\Delegates\Form::class) ? \App\LteAdmin\Delegates\Form::class : Form::class);
+            $class->use(class_exists(\App\LteAdmin\Delegates\SearchForm::class) ? \App\LteAdmin\Delegates\SearchForm::class : SearchForm::class);
+            $class->use(class_exists(\App\LteAdmin\Delegates\ModelTable::class) ? \App\LteAdmin\Delegates\ModelTable::class : ModelTable::class);
+            $class->use(class_exists(\App\LteAdmin\Delegates\ModelInfoTable::class) ? \App\LteAdmin\Delegates\ModelInfoTable::class : ModelInfoTable::class);
 
             $class->prop('static:model');
 
@@ -94,48 +104,66 @@ class LteControllerCommand extends Command
             if (in_array('index', $only)) {
                 $class->method('index')
                     ->param('page', null, 'Page')
-                    ->line('return $page')
-                    ->tab('->card()')
-                    ->tab('->search_form(')
-                    ->tab('    $this->search_form->id(),')
-                    ->tab('    $this->search_form->at(),')
-                    ->tab(')')
-                    ->tab('->model_table(')
-                    ->tab('    $this->model_table->id(),')
-                    ->tab('    $this->model_table->at(),')
-                    ->tab(');')
+                    ->param('card', null, 'Card')
+                    ->param('searchForm', null, 'SearchForm')
+                    ->param('modelTable', null, 'ModelTable')
+                    ->line('return $page->card(')
+                    ->tab('$card->search_form(')
+                    ->tab('    $searchForm->id(),')
+                    ->tab('    $searchForm->at(),')
+                    ->tab('),')
+                    ->tab('$card->model_table(')
+                    ->tab('    $modelTable->id(),')
+                    ->tab('    $modelTable->at(),')
+                    ->tab('),')
+                    ->line(');')
                     ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
-                    });
+                        $doc->tagParam('Page', 'page');
+                        $doc->tagParam('Card', 'card');
+                        $doc->tagParam('SearchForm', 'searchForm');
+                        $doc->tagParam('ModelTable', 'modelTable');
+                        $doc->tagReturn('Page');
+                    })->returnType('Page');
             }
             if (in_array('matrix', $only)) {
                 $class->method('matrix')
                     ->param('page', null, 'Page')
-                    ->line('return $page')
-                    ->tab('->card()')
-                    ->tab('->form(')
-                    ->tab('    $this->form->info_id(),')
-                    ->tab('    $this->form->info_at(),')
-                    ->tab(');')
+                    ->param('card', null, 'Card')
+                    ->param('form', null, 'Form')
+                    ->line('return $page->card(')
+                    ->tab('$card->form(')
+                    ->tab('    $form->ifEdit()->info_id(),')
+                    ->tab('    $form->ifEdit()->info_updated_at(),')
+                    ->tab('    $form->ifEdit()->info_created_at(),')
+                    ->tab('),')
+                    ->line(');')
                     ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
-                    });
+                        $doc->tagParam('Page', 'page');
+                        $doc->tagParam('Card', 'card');
+                        $doc->tagParam('Form', 'form');
+                        $doc->tagReturn('Page');
+                    })->returnType('Page');
             }
             if (in_array('show', $only)) {
                 $class->method('show')
                     ->param('page', null, 'Page')
-                    ->line('return $page')
-                    ->tab('->card()')
-                    ->tab('->model_info_table(')
-                    ->tab('    $this->model_info_table->id(),')
-                    ->tab('    $this->model_info_table->at(),')
-                    ->tab(');')
+                    ->param('card', null, 'Card')
+                    ->param('modelInfoTable', null, 'ModelInfoTable')
+                    ->line('return $page->card(')
+                    ->tab('$card->model_info_table(')
+                    ->tab('    $modelInfoTable->id(),')
+                    ->tab('    $modelInfoTable->at(),')
+                    ->tab('),')
+                    ->line(');')
                     ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
-                        $doc->tagParam('Page', 'page')->tagReturn(Page::class);
-                    });
+                        $doc->tagParam('Page', 'page');
+                        $doc->tagParam('Card', 'card');
+                        $doc->tagParam('ModelInfoTable', 'modelInfoTable');
+                        $doc->tagReturn('Page');
+                    })->returnType('Page');
             }
         }
 

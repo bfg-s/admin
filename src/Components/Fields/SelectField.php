@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Lar\Developer\Core\Select2;
 use Lar\LteAdmin\Components\Cores\Select2FieldCore;
 use Lar\LteAdmin\Components\FormGroupComponent;
+use Lar\LteAdmin\Page;
 
 class SelectField extends FormGroupComponent
 {
@@ -29,6 +30,7 @@ class SelectField extends FormGroupComponent
      */
     protected $data = [
         'load' => 'select2',
+        'theme' => 'bootstrap4',
     ];
 
     /**
@@ -82,6 +84,8 @@ class SelectField extends FormGroupComponent
                 $this->options($vals, true);
             }
         }
+
+        app(Page::class)->toStore('live', [$this->path => $this->value]);
 
         return Select2FieldCore::create($this->options, [
             'name' => $this->name,

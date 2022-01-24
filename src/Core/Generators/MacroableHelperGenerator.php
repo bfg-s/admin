@@ -247,7 +247,7 @@ class MacroableHelperGenerator implements DumpExecute
                 return $condition;
             };
 
-            $type = 'self|static|\\'.trim($m[5] ?: $method_class);
+            $type = '\\'.trim($m[5] ?: $method_class);
 
             $type = preg_replace_callback('/\{\{(.*)\}\}/', static function ($m) use ($upd) {
                 return $upd($m);

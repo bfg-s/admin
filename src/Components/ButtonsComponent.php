@@ -4,22 +4,11 @@ namespace Lar\LteAdmin\Components;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\BUTTON;
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Contents\CardContent;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
 use Lar\LteAdmin\Page;
-use Lar\Tagable\Events\onRender;
 
-/**
- * @mixin ButtonsComponentMacroList
- */
-class ButtonsComponent extends DIV implements onRender, ControllerContainerInterface
+class ButtonsComponent extends Component implements ControllerContainerInterface
 {
-    use Macroable, Delegable;
-
     /**
      * @var array|null
      */
@@ -36,30 +25,17 @@ class ButtonsComponent extends DIV implements onRender, ControllerContainerInter
     protected $action;
 
     /**
-     * @var Page
-     */
-    public $page;
-
-    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
     {
-        $this->page = app(Page::class);
-
-        parent::__construct();
-
-        $this->explainForce(Explanation::new($delegates));
-
-        $this->addClass('btn-group btn-group-sm ml-1');
-
         $this->menu = gets()->lte->menu->now;
-
-        $this->model = $this->page->model();
 
         $this->action = \Str::before(\Route::currentRouteAction(), '@');
 
-        $this->callConstructEvents();
+        parent::__construct(...$delegates);
+
+        $this->addClass('btn-group btn-group-sm ml-1');
     }
 
     /**
@@ -213,7 +189,7 @@ class ButtonsComponent extends DIV implements onRender, ControllerContainerInter
     {
         if ($link || isset($this->menu['link'])) {
             $return = $this->primary(['fas fa-list-alt', $title ?? __('lte.list')]);
-            $return->dataClick()->location($link ?? $this->menu['link']);
+            $return->dataClick()->location($link ?? $this->menu['link.index']());
             $return->setTitleIf($title === '', __('lte.list'));
 
             return $return;
@@ -428,19 +404,15 @@ class ButtonsComponent extends DIV implements onRender, ControllerContainerInter
         return $this;
     }
 
-    /**
-     * @return mixed|void
-     * @throws \ReflectionException
-     */
-    public function onRender()
+    protected function mount()
     {
-        $this->callRenderEvents();
+        // TODO: Implement mount() method.
     }
 
     public static function registrationInToContainer(Page $page, array $delegates = [])
     {
-        if ($page->getContent() instanceof CardContent) {
-            $page->registerClass($page->getClass(CardContent::class)->buttons($delegates));
+        if ($page->getContent() instanceof CardComponent) {
+            $page->registerClass($page->getClass(CardComponent::class)->buttons($delegates));
         } else {
             $page->registerClass($page->getContent()->buttons($delegates));
         }

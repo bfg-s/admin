@@ -25,6 +25,8 @@
         "@ckeditor/ckeditor5-easy-image": "^18.0.0",
         "@ckeditor/ckeditor5-upload": "^18.0.0",
         "bootstrap-iconpicker": "^1.8.2",
+        "laravel-echo": "^1.11.3",
+        "pusher-js": "^7.0.3",
         "v-select2-component": "^0.4.1",
         "vue-command": "^21.0.1",
         "vue-element-loading": "^1.1.6",

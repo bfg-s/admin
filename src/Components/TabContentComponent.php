@@ -2,90 +2,64 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Tagable\Events\onRender;
+use Lar\Layout\Traits\FontAwesome;
 
-/**
- * @methods Lar\LteAdmin\Components\FieldComponent::$form_components (string $name, string $label = null, ...$params)
- * @mixin TabContentComponentMacroList
- * @mixin TabContentComponentMethods
- */
-class TabContentComponent extends DIV implements onRender
+class TabContentComponent extends Component
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
+    use FontAwesome;
 
     /**
      * @var string[]
      */
     protected $props = [
-        'tab-pane p-3',
+        'tab-pane',
         'role' => 'tabpanel',
     ];
 
     /**
      * @var string|null
      */
-    protected $title = null;
+    public $getTitle = null;
 
     /**
      * @var string
      */
-    protected $icon = null;
+    public $getIcon = null;
 
-    /**
-     * Row constructor.
-     * @param  mixed  ...$params
-     */
-    public function __construct(...$params)
+    public $getActiveCondition = null;
+
+    public $getLeft = true;
+
+    public function title(string $title)
     {
-        parent::__construct();
+        $this->getTitle = $title;
 
-        $this->when($params);
-
-        $this->callConstructEvents();
+        return $this;
     }
 
-    /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
-     */
-    public function __call($name, $arguments)
+    public function right()
     {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
-        }
+        $this->getLeft = false;
 
-        return parent::__call($name, $arguments);
+        return $this;
     }
 
-    /**
-     * @return mixed|void
-     * @throws \ReflectionException
-     */
-    public function onRender()
+    public function active($condition)
     {
-        $this->callRenderEvents();
+        $this->getActiveCondition = $condition;
+
+        return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getTitle()
+    public function icon($icon)
     {
-        return $this->title;
+        $this->getIcon = $icon;
+
+        return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIcon()
+    protected function mount()
     {
-        return $this->icon;
+        //
     }
 }

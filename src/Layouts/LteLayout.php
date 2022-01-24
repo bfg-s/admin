@@ -16,14 +16,10 @@ class LteLayout extends LteBase
      */
     protected $pjax = 'lte';
 
-    /**
-     * LteLayout constructor.
-     *
-     * @param string $body_class
-     * @throws \Exception
-     */
     public function __construct()
     {
+        //LteAdmin::$echo = true;
+
         parent::__construct();
 
         $this->body->addClass('hold-transition sidebar-mini text-sm layout-fixed layout-navbar-fixed');
@@ -33,9 +29,6 @@ class LteLayout extends LteBase
                 $div->view('lte::layout.nav');
 
                 $div->view('lte::layout.side_bar');
-//                $div->div(['main-sidebar sidebar-dark-primary elevation-4'])->appEnd(Navigator::create([
-//                    'items' => gets()->lte->menu->nested_collect
-//                ]));
 
                 $div->div(['content-wrapper'], function (DIV $div) {
                     $this->toComponent($div, 'prep_end_wrapper');

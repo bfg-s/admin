@@ -8,19 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Router;
 use Lar\Layout\Tags\DIV;
+use Lar\LteAdmin\Components\CardComponent;
 use Lar\LteAdmin\Components\Component;
-use Lar\LteAdmin\Components\Contents\CardContent;
+use Lar\LteAdmin\Components\SearchFormComponent;
 use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Container;
-use Lar\LteAdmin\Core\Delegate;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Interfaces\ControllerContentInterface;
 
 /**
  * @template CurrentModel
  * @macro_return Lar\LteAdmin\Page
- * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (...$delegates)
+ * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (...$delegates) Lar\LteAdmin\Page|\App\LteAdmin\Page
  * @mixin PageMacroList
  * @mixin PageMethods
  */
@@ -50,6 +49,20 @@ class Page extends Container
     protected $content;
 
     /**
+     * @var Model|null
+     */
+    protected $model = null;
+
+    /**
+     * Has models on process.
+     * @var array
+     */
+    protected static $models = [];
+
+    public ?Controller $controller = null;
+    public ?string $controllerClassName = null;
+
+    /**
      * Sheet constructor.
      * @param  Router  $router
      * @throws \Throwable
@@ -62,9 +75,10 @@ class Page extends Container
         $this->content = DIV::class;
         $this->registerClass($this->component);
         if ($this->router->current()) {
-            $controller = $this->router->current()->controller;
-            if ($controller && method_exists($controller, 'explanation')) {
-                $this->explanation([$controller, 'explanation']);
+            $this->controller = $this->router->current()->controller;
+            $this->controllerClassName = get_class($this->controller);
+            if ($this->controller && method_exists($this->controller, 'explanation')) {
+                $this->explanation([$this->controller, 'explanation']);
             }
         }
     }
@@ -72,16 +86,57 @@ class Page extends Container
     /**
      * @return CurrentModel|Builder|Model|Relation|mixed
      */
-    public function model()
+    public function model($model = null)
     {
-        return gets()->lte->menu->model;
+        if ($model instanceof SearchFormComponent) {
+            $model = $model->makeModel($this->model ?: gets()->lte->menu->model);
+        }
+        if ($model !== null) {
+            $this->model = is_callable($model)
+                ? call_user_func($model)
+                : (is_string($model) ? new $model : $model);
+        }
+
+        return $this->model ?: gets()->lte->menu->model;
+    }
+
+    /**
+     * @return false|mixed|string|null
+     */
+    public function getModelName()
+    {
+        $class = null;
+        if ($this->model() instanceof Model) {
+            $class = get_class($this->model());
+        } elseif ($this->model() instanceof Builder) {
+            $class = get_class($this->model()->getModel());
+        } elseif ($this->model() instanceof Relation) {
+            $class = get_class($this->model()->getModel());
+        } elseif (is_object($this->model())) {
+            $class = get_class($this->model());
+        } elseif (is_string($this->model())) {
+            $class = $this->model();
+        } elseif (is_array($this->model())) {
+            $class = substr(md5(json_encode($this->model())), 0, 10);
+        }
+        $this->model_class = $class;
+        $return = $class ? strtolower(class_basename($class)) : 'object_'.spl_object_id($this);
+        $prep = '';
+        if (isset(static::$models[$return])) {
+            $prep .= $this->model()?->id ?? static::$models[$return];
+            static::$models[$return]++;
+        } else {
+            static::$models[$return] = 1;
+        }
+
+        return $return.$prep;
     }
 
     public function next(...$delegates): static
     {
         $this->content = DIV::class;
 
-        $this->forgetClass(CardContent::class);
+        $this->forgetClass(CardComponent::class);
 
         $this->explanation(
             Explanation::new($delegates)
@@ -123,6 +178,7 @@ class Page extends Container
                 static::class => $this,
             ], $this->classes));
         }
+
         return null;
     }
 
@@ -135,9 +191,6 @@ class Page extends Container
     {
         $className = get_class($class);
         $this->classes[$className] = $class;
-        if ($class instanceof ControllerContentInterface) {
-            $this->content = $className;
-        }
         $this->applyExplanations($className, $class);
 
         return $class;
@@ -153,6 +206,7 @@ class Page extends Container
     public function getClass(string $class, mixed $default = null)
     {
         $class = $class === 'content' ? $this->content : $class;
+
         return $this->classes[$class] ?? $default;
     }
 
@@ -180,7 +234,6 @@ class Page extends Container
     public function forgetClass(string $class)
     {
         if ($this->hasClass($class)) {
-
             unset($this->classes[$class]);
         }
 
@@ -195,38 +248,21 @@ class Page extends Container
      */
     public function __call($name, $arguments)
     {
-        $args = function () use ($arguments) {
-            $callbacks = [];
-            $delegates = [];
-            foreach ($arguments as $argument) {
-                if (is_callable($argument)) {
-                    $callbacks[] = $argument;
-                } else if ($argument instanceof Delegate) {
-                    $delegates[] = $argument;
-                }
-            }
-            return [$callbacks, $delegates];
-        };
-
-        if (Controller::hasExtend($name) && !static::hasMacro($name)) {
-            list($callbacks, $delegates) = $args();
-            Controller::applyExtend($this, $name, $delegates);
-            array_map([$this, 'callCallBack'], $callbacks);
-        } else if (str_ends_with($name, "_by_default")) {
-            $name = str_replace("_by_default", "", $name);
-            if (!request()->has('method') || request('method') == $name) {
-                list($callbacks, $delegates) = $args();
+        if (Controller::hasExtend($name) && ! static::hasMacro($name)) {
+            $this->registerClass(
+                $this->getContent()->{$name}(...$arguments) //->addClass('col-12 p-0')
+            );
+        } elseif (str_ends_with($name, '_by_default')) {
+            $name = str_replace('_by_default', '', $name);
+            if (! request()->has('method') || request('method') == $name) {
                 $this->registerClass($this->{$name}());
-                $this->explainForClasses($delegates);
-                array_map([$this, 'callCallBack'], $callbacks);
+                $this->explainForClasses($arguments);
             }
-        } else if (str_ends_with($name, "_by_request")) {
-            $name = str_replace("_by_request", "", $name);
+        } elseif (str_ends_with($name, '_by_request')) {
+            $name = str_replace('_by_request', '', $name);
             if (request()->has('method') && request('method') == $name) {
-                list($callbacks, $delegates) = $args();
                 $this->registerClass($this->{$name}());
-                $this->explainForClasses($delegates);
-                array_map([$this, 'callCallBack'], $callbacks);
+                $this->explainForClasses($arguments);
             }
         } else {
             if (! static::hasMacro($name)) {
@@ -248,7 +284,6 @@ class Page extends Container
     protected function explainForClasses(array $delegates = [])
     {
         foreach ($this->classes as $className => $class) {
-
             Explanation::new($delegates)->applyFor($className, $class);
         }
 
