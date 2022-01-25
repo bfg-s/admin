@@ -252,11 +252,20 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
 
     /**
      * @param ...$delegates
-     * @return \Lar\LteAdmin\Components\FormComponent
+     * @return FormComponent
      */
     public function form(...$delegates)
     {
         return $this->card_body()->form(...$delegates);
+    }
+
+    /**
+     * @param ...$delegates
+     * @return NestedComponent
+     */
+    public function nested(...$delegates)
+    {
+        return $this->card_body()->nested(...$delegates);
     }
 
     /**
