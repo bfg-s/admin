@@ -212,6 +212,21 @@ class Controller extends BaseController
         return request()->all();
     }
 
+    public function isRequest(string $path, mixed $need_value = true)
+    {
+        $val = $this->request($path);
+        if (is_array($need_value)) {
+            return in_array($val, $need_value);
+        }
+
+        return $need_value == (is_bool($need_value) ? (bool) $val : $val);
+    }
+
+    public function isNotRequest(string $path, mixed $need_value = true)
+    {
+        return ! $this->isRequest($path, $need_value);
+    }
+
     public function input(string $path, $default = null)
     {
         $model = app(Page::class)->model();
