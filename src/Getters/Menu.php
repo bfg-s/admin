@@ -391,6 +391,7 @@ class Menu extends Getter
             }
 
             if ($item['route'] && \Route::has($item['route'])) {
+                $item['route_params'] = array_merge($item['route_params'] ?? [], static::getQuery($item['route']));
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
             } elseif (isset($item['resource']) && \Route::has($item['route'].'.index')) {
                 $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);

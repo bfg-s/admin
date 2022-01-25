@@ -22,7 +22,6 @@ class TaggableComponent extends Component
      */
     protected static $collection = [
         'lang' => LangComponent::class,
-        'form_footer' => FormFooterComponent::class,
         'table' => TableComponent::class,
         'alert' => AlertComponent::class,
         'small_box' => SmallBoxComponent::class,

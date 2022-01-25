@@ -144,6 +144,16 @@ class LteInstallCommand extends Command
 
         $currentDelegates = \File::allFiles(__DIR__.'/../Delegates');
 
+        if (! trait_exists(\App\LteAdmin\Delegates\CommonTrait::class)) {
+            $file = lte_app_path('Delegates/CommonTrait.php');
+            $pageClass = class_entity('CommonTrait')->traitObject();
+            $pageClass->namespace(lte_app_namespace('Delegates'));
+            $pageClass->doc(function ($doc) {
+            });
+            file_put_contents($file, $pageClass->wrap('php')->render());
+            $this->info('Common delegate created!');
+        }
+
         foreach ($currentDelegates as $currentDelegate) {
             $file = $delegates.'/'.$currentDelegate->getFilename();
             if (! is_file($file)) {
@@ -153,6 +163,7 @@ class LteInstallCommand extends Command
                 $delegateClass->namespace(lte_app_namespace('Delegates'));
                 $delegateClass->use("$parentClass as Lte$class");
                 $delegateClass->extend("Lte$class");
+                $delegateClass->addTrait(entity('CommonTrait'));
                 file_put_contents($file, $delegateClass->wrap('php')->render());
                 $this->info("Delegate {$class} created!");
             }

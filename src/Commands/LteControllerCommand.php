@@ -137,6 +137,7 @@ class LteControllerCommand extends Command
                     ->tab('    $form->ifEdit()->info_updated_at(),')
                     ->tab('    $form->ifEdit()->info_created_at(),')
                     ->tab('),')
+                    ->tab('$card->footer_form(),')
                     ->line(');')
                     ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */

@@ -114,7 +114,7 @@ class AdministratorsController extends Controller
                         $tab->ifEdit()->info_created_at(),
                     ),
                 ),
-                $card->footer_form()
+                $card->footer_form(),
             );
     }
 

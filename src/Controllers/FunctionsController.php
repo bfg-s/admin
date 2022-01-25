@@ -75,7 +75,7 @@ class FunctionsController extends Controller
                     $form->ifEdit()->info_updated_at(),
                     $form->ifEdit()->info_created_at(),
                 ),
-                $card->footer_form()
+                $card->footer_form(),
             );
     }
 

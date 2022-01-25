@@ -46,7 +46,8 @@ trait DefaultControllerResourceMethodsTrait
                 $form->ifEdit()->info_id(),
                 $form->ifEdit()->info_updated_at(),
                 $form->ifEdit()->info_created_at(),
-            )
+            ),
+            $card->footer_form(),
         );
     }
 

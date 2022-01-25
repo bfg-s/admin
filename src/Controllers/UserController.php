@@ -135,7 +135,7 @@ class UserController extends Controller
                                 })->miniChart(),
                         )
                     ),
-                    $card->footer_form()->withOutRedirectRadios()->setType('edit')
+                    $card->footer_form()->withOutRedirectRadios()->setType('edit'),
                 )
             );
     }
