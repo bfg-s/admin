@@ -30,6 +30,13 @@ abstract class Delegator
         return $this;
     }
 
+    public function ifNot($condition)
+    {
+        $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
+
+        return $this;
+    }
+
     public function ifIndex()
     {
         $router = app('router');
@@ -77,6 +84,30 @@ abstract class Delegator
     {
         $router = app('router');
         $this->if($router->currentRouteNamed('*.show'));
+
+        return $this;
+    }
+
+    public function ifQuery(string $path, mixed $need_value = true)
+    {
+        $val = request($path);
+        if (is_array($need_value)) {
+            return in_array($val, $need_value);
+        }
+
+        $this->if($need_value == (is_bool($need_value) ? (bool) $val : $val));
+
+        return $this;
+    }
+
+    public function ifNotQuery(string $path, mixed $need_value = true)
+    {
+        $val = request($path);
+        if (is_array($need_value)) {
+            return in_array($val, $need_value);
+        }
+
+        $this->ifNot($need_value == (is_bool($need_value) ? (bool) $val : $val));
 
         return $this;
     }
