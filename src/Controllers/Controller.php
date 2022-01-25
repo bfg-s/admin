@@ -72,7 +72,6 @@ class Controller extends BaseController
         'search_form' => SearchFormComponent::class,
         'model_table' => ModelTableComponent::class,
         'nested' => NestedComponent::class,
-        'ordered' => NestedComponent::class,
         'form' => FormComponent::class,
         'model_info_table' => ModelInfoTableComponent::class,
         'buttons' => ButtonsComponent::class,
