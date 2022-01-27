@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Tags\TABLE as TableParent;
 use Lar\LteAdmin\Components\Traits\TypesTrait;
@@ -39,12 +40,12 @@ class TableComponent extends TableParent
     protected $first_th = true;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $map;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $mapWithKeys;
 
@@ -87,10 +88,10 @@ class TableComponent extends TableParent
 
     /**
      * @param  string  $row
-     * @param  \Closure  $call
+     * @param  Closure  $call
      * @return $this
      */
-    public function map(\Closure $call)
+    public function map(Closure $call)
     {
         $this->map = $call;
 
@@ -98,10 +99,10 @@ class TableComponent extends TableParent
     }
 
     /**
-     * @param  \Closure  $call
+     * @param  Closure  $call
      * @return $this
      */
-    public function mapWithKeys(\Closure $call)
+    public function mapWithKeys(Closure $call)
     {
         $this->mapWithKeys = $call;
 
@@ -151,7 +152,7 @@ class TableComponent extends TableParent
             $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
         }
 
-        if (! $has_header && $this->type) {
+        if (!$has_header && $this->type) {
             $this->addClass("table-{$this->type}");
         }
 
@@ -161,9 +162,9 @@ class TableComponent extends TableParent
         $simple = false;
         foreach ($rows as $key => $row) {
             $tr = $body->tr();
-            if (is_array($row) && ! $simple) {
+            if (is_array($row) && !$simple) {
                 foreach (array_values($row) as $ki => $col) {
-                    if (! $ki && $this->first_th) {
+                    if (!$ki && $this->first_th) {
                         $tr->th(['scope' => 'row'])->when($col);
                     } else {
                         $tr->td()->when($col);

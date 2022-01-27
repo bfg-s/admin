@@ -3,10 +3,13 @@
 namespace Lar\LteAdmin;
 
 use BadMethodCallException;
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\CardComponent;
 use Lar\LteAdmin\Components\Component;
@@ -15,6 +18,7 @@ use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Container;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Throwable;
 
 /**
  * @template CurrentModel
@@ -28,44 +32,45 @@ class Page extends Container
     use Macroable, Delegable;
 
     /**
+     * Has models on process.
+     * @var array
+     */
+    protected static $models = [];
+    public ?array $menu;
+    public Collection $menus;
+    public ?Controller $controller = null;
+    public ?string $controllerClassName = null;
+    public ?string $resource_type = null;
+    /**
      * @var array
      */
     protected $classes = [];
-
     /**
      * @var Explanation[]
      */
     protected $explanations = [];
-
     /**
      * @var Router
      */
     protected $router;
-
     /**
      * The last content component.
      * @var string
      */
     protected $content;
-
     /**
      * @var Model|null
      */
     protected $model = null;
-
     /**
-     * Has models on process.
-     * @var array
+     * @var string|null
      */
-    protected static $models = [];
-
-    public ?Controller $controller = null;
-    public ?string $controllerClassName = null;
+    protected $model_class = null;
 
     /**
      * Sheet constructor.
      * @param  Router  $router
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __construct(
         Router $router
@@ -73,6 +78,10 @@ class Page extends Container
         parent::__construct(null);
         $this->router = $router;
         $this->content = DIV::class;
+        $this->menus = gets()->lte->menu->nested_collect;
+        $this->menu = gets()->lte->menu->now;
+        $this->resource_type = gets()->lte->menu->type;
+        $this->model(gets()->lte->menu->model);
         $this->registerClass($this->component);
         if ($this->router->current()) {
             $this->controller = $this->router->current()->controller;
@@ -97,33 +106,89 @@ class Page extends Container
                 : (is_string($model) ? new $model : $model);
         }
 
-        return $this->model ?: gets()->lte->menu->model;
+        return $this->model ?? $this->model = gets()->lte->menu->model;
+    }
+
+    /**
+     * @template RegisteredObject
+     * @param  object|RegisteredObject  $class
+     * @return object|RegisteredObject
+     */
+    public function registerClass(object $class)
+    {
+        $className = get_class($class);
+        $this->classes[$className] = $class;
+        $this->applyExplanations($className, $class);
+
+        return $class;
+    }
+
+    protected function applyExplanations(string $class, object $instance)
+    {
+        foreach ($this->explanations as $key => $explanation) {
+            $explanation->applyFor($class, $instance);
+            if ($explanation->isEmpty()) {
+                unset($this->explanations[$key]);
+            }
+        }
+    }
+
+    /**
+     * @param  Explanation|callable  $extend
+     * @return static
+     */
+    public function explanation($extend): self
+    {
+        if (is_callable($extend)) {
+            $extend = call_user_func($extend);
+        }
+        if ($extend instanceof Explanation) {
+            $this->explanations[] = $extend;
+        }
+
+        return $this;
+    }
+
+    public function menu()
+    {
+        $model = $this->menu['model_class'] ?? null;
+        if ($model && $this->model_class != $model) {
+            $this->menu = $this->menus->where('model_class', $this->model_class)->first();
+        }
+
+        return $this->menu;
+    }
+
+    public function findModelMenu(string $model)
+    {
+        return $this->menus->where('model_class', $model)->first();
     }
 
     /**
      * @return false|mixed|string|null
      */
-    public function getModelName()
+    public function getModelName($model = null)
     {
         $class = null;
-        if ($this->model() instanceof Model) {
-            $class = get_class($this->model());
-        } elseif ($this->model() instanceof Builder) {
-            $class = get_class($this->model()->getModel());
-        } elseif ($this->model() instanceof Relation) {
-            $class = get_class($this->model()->getModel());
-        } elseif (is_object($this->model())) {
-            $class = get_class($this->model());
-        } elseif (is_string($this->model())) {
-            $class = $this->model();
-        } elseif (is_array($this->model())) {
-            $class = substr(md5(json_encode($this->model())), 0, 10);
+        $model = $model ?: $this->model;
+        if ($model instanceof Model) {
+            $class = get_class($model);
+        } elseif ($model instanceof Builder) {
+            $class = get_class($model->getModel());
+        } elseif ($model instanceof Relation) {
+            $class = get_class($model->getModel());
+        } elseif (is_object($model)) {
+            $class = get_class($model);
+        } elseif (is_string($model)) {
+            $class = $model;
+        } elseif (is_array($model)) {
+            $class = substr(md5(json_encode($model)), 0, 10);
         }
         $this->model_class = $class;
         $return = $class ? strtolower(class_basename($class)) : 'object_'.spl_object_id($this);
         $prep = '';
         if (isset(static::$models[$return])) {
-            $prep .= $this->model()?->id ?? static::$models[$return];
+            $prep .= gets()->lte->menu->model?->id ?? static::$models[$return];
             static::$models[$return]++;
         } else {
             static::$models[$return] = 1;
@@ -148,19 +213,25 @@ class Page extends Container
     }
 
     /**
-     * @param Explanation|callable $extend
-     * @return static
+     * @param  string  $class
+     * @return $this
      */
-    public function explanation($extend): self
+    public function forgetClass(string $class)
     {
-        if (is_callable($extend)) {
-            $extend = call_user_func($extend);
-        }
-        if ($extend instanceof Explanation) {
-            $this->explanations[] = $extend;
+        if ($this->hasClass($class)) {
+            unset($this->classes[$class]);
         }
 
         return $this;
+    }
+
+    /**
+     * @param  string  $class
+     * @return bool
+     */
+    public function hasClass(string $class): bool
+    {
+        return isset($this->classes[$class]);
     }
 
     /**
@@ -183,31 +254,44 @@ class Page extends Container
     }
 
     /**
-     * @template RegisteredObject
-     * @param  object|RegisteredObject  $class
-     * @return object|RegisteredObject
+     * @param $name
+     * @param $arguments
+     * @return static
+     * @throws Exception|Throwable
      */
-    public function registerClass(object $class)
+    public function __call($name, $arguments)
     {
-        $className = get_class($class);
-        $this->classes[$className] = $class;
-        $this->applyExplanations($className, $class);
+        if (Controller::hasExtend($name) && !static::hasMacro($name)) {
+            $this->registerClass(
+                $this->getContent()->{$name}(...$arguments) //->addClass('col-12 p-0')
+            );
+        } elseif (str_ends_with($name, '_by_default')) {
+            $name = str_replace('_by_default', '', $name);
+            if (!request()->has('method') || request('method') == $name) {
+                $this->registerClass($this->{$name}());
+                $this->explainForClasses($arguments);
+            }
+        } elseif (str_ends_with($name, '_by_request')) {
+            $name = str_replace('_by_request', '', $name);
+            if (request()->has('method') && request('method') == $name) {
+                $this->registerClass($this->{$name}());
+                $this->explainForClasses($arguments);
+            }
+        } else {
+            if (!static::hasMacro($name)) {
+                throw new BadMethodCallException(sprintf(
+                    'Method %s::%s does not exist.', static::class, $name
+                ));
+            }
+            $macro = self::$macros[$name];
+            if ($macro instanceof Closure) {
+                return call_user_func_array($macro->bindTo($this, self::class), $arguments);
+            }
 
-        return $class;
-    }
+            $macro(...$arguments);
+        }
 
-    /**
-     * @template RegisteredObject
-     * @template RegisteredDefaultObject
-     * @param  RegisteredObject|string $class
-     * @param  RegisteredDefaultObject|null  $default
-     * @return mixed|null|RegisteredObject|RegisteredDefaultObject
-     */
-    public function getClass(string $class, mixed $default = null)
-    {
-        $class = $class === 'content' ? $this->content : $class;
-
-        return $this->classes[$class] ?? $default;
+        return $this;
     }
 
     /**
@@ -219,66 +303,17 @@ class Page extends Container
     }
 
     /**
-     * @param  string  $class
-     * @return bool
+     * @template RegisteredObject
+     * @template RegisteredDefaultObject
+     * @param  RegisteredObject|string  $class
+     * @param  RegisteredDefaultObject|null  $default
+     * @return mixed|null|RegisteredObject|RegisteredDefaultObject
      */
-    public function hasClass(string $class): bool
+    public function getClass(string $class, mixed $default = null)
     {
-        return isset($this->classes[$class]);
-    }
+        $class = $class === 'content' ? $this->content : $class;
 
-    /**
-     * @param  string  $class
-     * @return $this
-     */
-    public function forgetClass(string $class)
-    {
-        if ($this->hasClass($class)) {
-            unset($this->classes[$class]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return static
-     * @throws \Exception|\Throwable
-     */
-    public function __call($name, $arguments)
-    {
-        if (Controller::hasExtend($name) && ! static::hasMacro($name)) {
-            $this->registerClass(
-                $this->getContent()->{$name}(...$arguments) //->addClass('col-12 p-0')
-            );
-        } elseif (str_ends_with($name, '_by_default')) {
-            $name = str_replace('_by_default', '', $name);
-            if (! request()->has('method') || request('method') == $name) {
-                $this->registerClass($this->{$name}());
-                $this->explainForClasses($arguments);
-            }
-        } elseif (str_ends_with($name, '_by_request')) {
-            $name = str_replace('_by_request', '', $name);
-            if (request()->has('method') && request('method') == $name) {
-                $this->registerClass($this->{$name}());
-                $this->explainForClasses($arguments);
-            }
-        } else {
-            if (! static::hasMacro($name)) {
-                throw new BadMethodCallException(sprintf(
-                    'Method %s::%s does not exist.', static::class, $name
-                ));
-            }
-            $macro = self::$macros[$name];
-            if ($macro instanceof \Closure) {
-                return call_user_func_array($macro->bindTo($this, self::class), $arguments);
-            }
-
-            $macro(...$arguments);
-        }
-
-        return $this;
+        return $this->classes[$class] ?? $default;
     }
 
     protected function explainForClasses(array $delegates = [])
@@ -288,15 +323,5 @@ class Page extends Container
         }
 
         return $this;
-    }
-
-    protected function applyExplanations(string $class, object $instance)
-    {
-        foreach ($this->explanations as $key => $explanation) {
-            $explanation->applyFor($class, $instance);
-            if ($explanation->isEmpty()) {
-                unset($this->explanations[$key]);
-            }
-        }
     }
 }

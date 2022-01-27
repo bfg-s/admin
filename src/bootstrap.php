@@ -1,10 +1,11 @@
 <?php
 
+use Composer\InstalledVersions;
 use Illuminate\Support\Collection;
 
-if (! request()->ajax() || request()->is('*dashboard*')) {
-    if (class_exists(\Composer\InstalledVersions::class)) {
-        \Lar\LteAdmin\LteAdmin::$version = \Composer\InstalledVersions::getPrettyVersion('lar/lte-admin');
+if (!request()->ajax() || request()->is('*dashboard*')) {
+    if (class_exists(InstalledVersions::class)) {
+        \Lar\LteAdmin\LteAdmin::$version = InstalledVersions::getPrettyVersion('lar/lte-admin');
     } else {
         $lock_file = base_path('composer.lock');
         if (is_file($lock_file)) {
@@ -18,7 +19,14 @@ if (! request()->ajax() || request()->is('*dashboard*')) {
     }
 }
 
-Collection::macro('nestable_pluck', function (string $value, string $key, $root = 'Root', string $order = 'order', string $parent_field = 'parent_id', string $input = '&nbsp;&nbsp;&nbsp;') {
+Collection::macro('nestable_pluck', function (
+    string $value,
+    string $key,
+    $root = 'Root',
+    string $order = 'order',
+    string $parent_field = 'parent_id',
+    string $input = '&nbsp;&nbsp;&nbsp;'
+) {
     $nestable_count = function ($parent_id) use ($parent_field, &$nestable_count) {
         $int = 1;
         $parent = $this->where('id', $parent_id)->first();
@@ -30,7 +38,13 @@ Collection::macro('nestable_pluck', function (string $value, string $key, $root 
     };
 
     /** @var Collection $return */
-    $return = $this->sortBy($order)->mapWithKeys(static function ($item) use ($value, $key, $parent_field, $input, $nestable_count) {
+    $return = $this->sortBy($order)->mapWithKeys(static function ($item) use (
+        $value,
+        $key,
+        $parent_field,
+        $input,
+        $nestable_count
+    ) {
         $inp_cnt = 0;
         if ($item->{$parent_field}) {
             $inp_cnt += $nestable_count($item->{$parent_field});

@@ -2,9 +2,13 @@
 
 namespace Lar\LteAdmin\Core;
 
+use DB;
+use Exception;
+use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Lar\LteAdmin\ExtendProvider;
+use Symfony\Component\Finder\SplFileInfo;
 
 class UnInstallExtensionProvider
 {
@@ -36,6 +40,72 @@ class UnInstallExtensionProvider
     }
 
     /**
+     * @param  string  $path
+     * @param  bool  $drop_publish
+     * @return bool
+     */
+    public function migrateRollback(string $path, bool $drop_publish = true)
+    {
+        if (is_dir($path)) {
+            $files = File::files($path);
+
+            if (!count($files)) {
+                $this->command->info('Nothing to rollback.');
+
+                return false;
+            }
+
+            foreach ($files as $file) {
+                $class = class_in_file($file->getPathname());
+
+                if (!class_exists($class) && is_file(database_path('migrations/'.$file->getFilename()))) {
+                    include database_path('migrations/'.$file->getFilename());
+                }
+
+                if (!class_exists($class)) {
+                    include $file->getPathname();
+                }
+
+                $migration_name = str_replace('.php', '', $file->getFilename());
+
+                if (!class_exists($class)) {
+                    $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
+                    continue;
+                }
+
+                $migration = new $class;
+
+                if ($migration instanceof Migration) {
+                    if (method_exists($migration,
+                            'ignore') && ($migration->ignore() && !$this->command->option('force'))) {
+                        $this->command->line("<comment>Ignored-migration:</comment> {$migration_name}");
+                        continue;
+                    }
+                    if (method_exists($migration, 'down')) {
+                        $this->command->line("<comment>Rolling back:</comment> {$migration_name}");
+                        $startTime = microtime(true);
+                        $migration->down();
+                        DB::table('migrations')->where('migration', $migration_name)->delete();
+                        $runTime = round(microtime(true) - $startTime, 2);
+                        $this->command->line("<info>Rolled back:</info>  {$migration_name} ({$runTime} seconds)");
+                    } else {
+                        $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
+                    }
+                }
+            }
+
+            if ($drop_publish) {
+                $this->unpublish($path, database_path('migrations'));
+            }
+        } else {
+            $this->command->error("[{$path}] Is not directory");
+            exit;
+        }
+
+        return true;
+    }
+
+    /**
      * @param  string|array  $where
      * @param  string|bool  $in
      * @return int
@@ -61,7 +131,7 @@ class UnInstallExtensionProvider
                 try {
                     unlink($in);
                     $deleted++;
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
 
                 if ($deleted) {
@@ -69,11 +139,15 @@ class UnInstallExtensionProvider
                 }
             }
         } elseif (is_dir($where) && is_dir($in)) {
-            $in_files = collect(\File::allFiles($in, true))->map(static function (\Symfony\Component\Finder\SplFileInfo $info) {
+            $in_files = collect(File::allFiles($in, true))->map(static function (
+                SplFileInfo $info
+            ) {
                 return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
             });
 
-            $where_files = collect(\File::allFiles($where, true))->map(static function (\Symfony\Component\Finder\SplFileInfo $info) {
+            $where_files = collect(File::allFiles($where, true))->map(static function (
+                SplFileInfo $info
+            ) {
                 return ['relativePath' => $info->getRelativePathname(), 'pathname' => $info->getPathname()];
             });
 
@@ -82,7 +156,7 @@ class UnInstallExtensionProvider
                     try {
                         unlink($in_file['pathname']);
                         $deleted++;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                     }
                 }
             }
@@ -91,70 +165,5 @@ class UnInstallExtensionProvider
         }
 
         return $deleted;
-    }
-
-    /**
-     * @param  string  $path
-     * @param  bool  $drop_publish
-     * @return bool
-     */
-    public function migrateRollback(string $path, bool $drop_publish = true)
-    {
-        if (is_dir($path)) {
-            $files = \File::files($path);
-
-            if (! count($files)) {
-                $this->command->info('Nothing to rollback.');
-
-                return false;
-            }
-
-            foreach ($files as $file) {
-                $class = class_in_file($file->getPathname());
-
-                if (! class_exists($class) && is_file(database_path('migrations/'.$file->getFilename()))) {
-                    include database_path('migrations/'.$file->getFilename());
-                }
-
-                if (! class_exists($class)) {
-                    include $file->getPathname();
-                }
-
-                $migration_name = str_replace('.php', '', $file->getFilename());
-
-                if (! class_exists($class)) {
-                    $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
-                    continue;
-                }
-
-                $migration = new $class;
-
-                if ($migration instanceof Migration) {
-                    if (method_exists($migration, 'ignore') && ($migration->ignore() && ! $this->command->option('force'))) {
-                        $this->command->line("<comment>Ignored-migration:</comment> {$migration_name}");
-                        continue;
-                    }
-                    if (method_exists($migration, 'down')) {
-                        $this->command->line("<comment>Rolling back:</comment> {$migration_name}");
-                        $startTime = microtime(true);
-                        $migration->down();
-                        \DB::table('migrations')->where('migration', $migration_name)->delete();
-                        $runTime = round(microtime(true) - $startTime, 2);
-                        $this->command->line("<info>Rolled back:</info>  {$migration_name} ({$runTime} seconds)");
-                    } else {
-                        $this->command->line("<comment>Non-migration:</comment> {$migration_name}");
-                    }
-                }
-            }
-
-            if ($drop_publish) {
-                $this->unpublish($path, database_path('migrations'));
-            }
-        } else {
-            $this->command->error("[{$path}] Is not directory");
-            exit;
-        }
-
-        return true;
     }
 }

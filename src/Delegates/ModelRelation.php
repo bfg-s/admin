@@ -2,13 +2,13 @@
 
 namespace Lar\LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\ModelRelationComponent;
+use Lar\LteAdmin\Components\ModelRelationContentComponent;
 use Lar\LteAdmin\Core\Delegator;
 
 /**
- * @mixin ModelRelationComponent
+ * @mixin ModelRelationContentComponent
  */
 class ModelRelation extends Delegator
 {
-    protected $class = ModelRelationComponent::class;
+    protected $class = ModelRelationContentComponent::class;
 }

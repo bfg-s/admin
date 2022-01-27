@@ -15,7 +15,7 @@ class RatingField extends InputField
     protected $form_control = false;
 
     /**
-     * @var \string[][]
+     * @var string[][]
      */
     protected $params = [
         [
@@ -68,7 +68,7 @@ class RatingField extends InputField
     }
 
     /**
-     * @param int|float $step
+     * @param  int|float  $step
      * @return $this
      */
     public function step($step)

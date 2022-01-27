@@ -28,11 +28,31 @@ trait FieldMassControlTrait
     protected $label_width;
 
     /**
+     * @param $name
+     * @param  array  $arguments
+     * @return bool|FormGroupComponent|mixed
+     */
+    public static function static_call_group($name, array $arguments)
+    {
+        return (new FieldComponent())->{$name}(...$arguments);
+    }
+
+    /**
      * @return $this
      */
     public function vertical()
     {
         $this->vertical = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function horizontal()
+    {
+        $this->vertical = false;
 
         return $this;
     }
@@ -109,15 +129,5 @@ trait FieldMassControlTrait
         }
 
         return false;
-    }
-
-    /**
-     * @param $name
-     * @param  array  $arguments
-     * @return bool|FormGroupComponent|mixed
-     */
-    public static function static_call_group($name, array $arguments)
-    {
-        return (new FieldComponent())->{$name}(...$arguments);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Developer\Core\Select2;
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Cores\Select2FieldCore;
 use Lar\LteAdmin\Components\FormGroupComponent;
 use Lar\LteAdmin\Page;
@@ -44,7 +47,7 @@ class SelectField extends FormGroupComponent
     protected $load_format;
 
     /**
-     * @var \Closure|array
+     * @var Closure|array
      */
     protected $load_where;
 
@@ -54,7 +57,7 @@ class SelectField extends FormGroupComponent
     protected $nullable = false;
 
     /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
@@ -111,14 +114,14 @@ class SelectField extends FormGroupComponent
         }
 
         if ($this->options) {
-            foreach ($options as $k=>$option) {
+            foreach ($options as $k => $option) {
                 $this->options[$k] = $option;
             }
         } else {
             $this->options = $options;
         }
 
-        if ($first_default && ! $this->nullable) {
+        if ($first_default && !$this->nullable) {
             $this->default(array_key_first($this->options));
         }
 
@@ -128,7 +131,7 @@ class SelectField extends FormGroupComponent
     /**
      * @param $subject
      * @param  string  $format
-     * @param  \Closure|array|null  $where
+     * @param  Closure|array|null  $where
      * @return $this
      */
     public function load($subject, string $format = 'id:name', $where = null)
@@ -154,7 +157,7 @@ class SelectField extends FormGroupComponent
 
         if ($this->options) {
             $opts = ['' => 'none'];
-            foreach ($this->options as $k=>$option) {
+            foreach ($this->options as $k => $option) {
                 $opts[$k] = $option;
             }
             $this->options = $opts;

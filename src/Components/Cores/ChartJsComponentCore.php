@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Components\Cores;
 
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 
 class ChartJsComponentCore
 {
@@ -21,10 +22,10 @@ class ChartJsComponentCore
      */
     private $defaults = [
         'datasets' => [],
-        'labels'   => [],
-        'type'     => 'line',
-        'options'  => [],
-        'size'     => ['width' => null, 'height' => null],
+        'labels' => [],
+        'type' => 'line',
+        'options' => [],
+        'size' => ['width' => null, 'height' => null],
     ];
 
     /**
@@ -73,7 +74,20 @@ class ChartJsComponentCore
     }
 
     /**
-     * @param array $labels
+     * @param $key
+     * @param $value
+     *
+     * @return $this|ChartJsComponentCore
+     */
+    private function set($key, $value)
+    {
+        Arr::set(static::$charts[$this->name], $key, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param  array  $labels
      *
      * @return ChartJsComponentCore
      */
@@ -83,7 +97,7 @@ class ChartJsComponentCore
     }
 
     /**
-     * @param array $datasets
+     * @param  array  $datasets
      *
      * @return ChartJsComponentCore
      */
@@ -93,7 +107,7 @@ class ChartJsComponentCore
     }
 
     /**
-     * @param array $datasets
+     * @param  array  $datasets
      *
      * @return ChartJsComponentCore
      */
@@ -121,15 +135,15 @@ class ChartJsComponentCore
      */
     public function type($type)
     {
-        if (! in_array($type, $this->types)) {
-            throw new \InvalidArgumentException('Invalid Chart type.');
+        if (!in_array($type, $this->types)) {
+            throw new InvalidArgumentException('Invalid Chart type.');
         }
 
         return $this->set('type', $type);
     }
 
     /**
-     * @param array $size
+     * @param  array  $size
      *
      * @return ChartJsComponentCore
      */
@@ -139,7 +153,7 @@ class ChartJsComponentCore
     }
 
     /**
-     * @param array $options
+     * @param  array  $options
      *
      * @return $this|ChartJsComponentCore
      */
@@ -153,8 +167,8 @@ class ChartJsComponentCore
     }
 
     /**
-     * @param string|array $optionsRaw
-     * @return \self
+     * @param  string|array  $optionsRaw
+     * @return static
      */
     public function optionsRaw($optionsRaw)
     {
@@ -177,7 +191,7 @@ class ChartJsComponentCore
         $chart = static::$charts[$this->name];
 
         return view('lte::segment.chartjs')
-            ->with('isNotAjax', ! request()->ajax() && ! request()->pjax())
+            ->with('isNotAjax', !request()->ajax() && !request()->pjax())
             ->with('datasets', $chart['datasets'])
             ->with('element', $this->name)
             ->with('labels', $chart['labels'])
@@ -195,18 +209,5 @@ class ChartJsComponentCore
     private function get($key)
     {
         return Arr::get(static::$charts[$this->name], $key);
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @return $this|ChartJsComponentCore
-     */
-    private function set($key, $value)
-    {
-        Arr::set(static::$charts[$this->name], $key, $value);
-
-        return $this;
     }
 }

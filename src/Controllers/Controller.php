@@ -2,7 +2,10 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Components\ButtonsComponent;
@@ -29,6 +32,11 @@ use Lar\LteAdmin\Exceptions\NotFoundExplainForControllerException;
 use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Page;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+use function redirect;
+
 /**
  * @property-read Page $page
  * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (likeProperty)
@@ -42,25 +50,17 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public $menu = [];
-
-    /**
-     * @var array
-     */
     public static $rules = [];
-
     /**
      * @var array
      */
     public static $rule_messages = [];
-
     /**
      * @var array
      */
     public static $crypt_fields = [
         'password',
     ];
-
     /**
      * @var string[]
      */
@@ -83,6 +83,40 @@ class Controller extends BaseController
         'field' => FieldComponent::class,
         'model_relation' => ModelRelationComponent::class,
     ];
+    /**
+     * @var array
+     */
+    public $menu = [];
+
+    /**
+     * Controller constructor.
+     */
+    public function __construct()
+    {
+        $this->makeModelEvents();
+
+        $this->menu = gets()->lte->menu->now;
+    }
+
+    private function makeModelEvents()
+    {
+        if (
+            property_exists($this, 'model')
+            && class_exists(static::$model)
+        ) {
+            /** @var Model $model */
+            $model = static::$model;
+            $model::created(static function ($model) {
+                lte_log_info('Created model', get_class($model), 'fas fa-plus');
+            });
+            $model::updated(static function ($model) {
+                lte_log_info('Updated model', get_class($model), 'fas fa-highlighter');
+            });
+            $model::deleted(static function ($model) {
+                lte_log_danger('Deleted model', get_class($model), 'fas fa-trash');
+            });
+        }
+    }
 
     public static function getHelpMethodList()
     {
@@ -102,7 +136,7 @@ class Controller extends BaseController
 
     public static function extend(string $name, string $class)
     {
-        if (! static::hasExtend($name)) {
+        if (!static::hasExtend($name)) {
             self::$explanation_list[$name] = $class;
         }
     }
@@ -120,16 +154,6 @@ class Controller extends BaseController
         ];
     }
 
-    /**
-     * Controller constructor.
-     */
-    public function __construct()
-    {
-        $this->makeModelEvents();
-
-        $this->menu = gets()->lte->menu->now;
-    }
-
     public function explanation(): Explanation
     {
         return Explanation::new(
@@ -140,20 +164,20 @@ class Controller extends BaseController
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return Application|RedirectResponse|Redirector|Respond
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function returnTo()
     {
-        if (request()->ajax() && ! request()->pjax()) {
+        if (request()->ajax() && !request()->pjax()) {
             return respond()->reload();
         }
 
         $_after = request()->get('_after', 'index');
 
-        if ($_after === 'index' && $menu = gets()->lte->menu->now) {
-            return \redirect($menu['link.index']())->with('_after', $_after);
+        if ($_after === 'index' && $menu = $this->menu) {
+            return redirect($menu['link.index']())->with('_after', $_after);
         }
 
         return back()->with('_after', $_after);
@@ -162,8 +186,8 @@ class Controller extends BaseController
     /**
      * Trap for default methods.
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  array  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -189,26 +213,9 @@ class Controller extends BaseController
         throw new NotFoundExplainForControllerException($name);
     }
 
-    /**
-     * @param  string|null  $path
-     * @param  null  $default
-     * @return array|mixed|null
-     */
-    public function request(string $path = null, $default = null)
+    public function isNotRequest(string $path, mixed $need_value = true)
     {
-        if ($path) {
-            $model = $this->model();
-
-            if ($model && $model->exists && ! request()->has($path)) {
-                $ddd = multi_dot_call($model, $path) ?: request($path, $default);
-
-                return is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
-            }
-
-            return request($path, $default);
-        }
-
-        return request()->all();
+        return !$this->isRequest($path, $need_value);
     }
 
     public function isRequest(string $path, mixed $need_value = true)
@@ -221,20 +228,36 @@ class Controller extends BaseController
         return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
-    public function isNotRequest(string $path, mixed $need_value = true)
+    /**
+     * @param  string|null  $path
+     * @param  null  $default
+     * @return array|mixed|null
+     */
+    public function request(string $path = null, $default = null)
     {
-        return ! $this->isRequest($path, $need_value);
-    }
+        if ($path) {
+            $model = $this->model();
 
-    public function input(string $path, $default = null)
-    {
-        $model = app(Page::class)->model();
+            if ($model && $model->exists && !request()->has($path)) {
+                $ddd = multi_dot_call($model, $path) ?: request($path, $default);
 
-        if ($model && $model->exists && ! request()->has($path)) {
-            return multi_dot_call($model, $path) ?: $default;
+                return is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
+            }
+
+            return request($path, $default);
         }
 
-        return request($path, $default);
+        return request()->all();
+    }
+
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isNotInput(string $path, mixed $need_value = true)
+    {
+        return !$this->isInput($path, $need_value);
     }
 
     /**
@@ -252,33 +275,14 @@ class Controller extends BaseController
         return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
-    /**
-     * @param  string  $path
-     * @param  mixed  $need_value
-     * @return bool
-     */
-    public function isNotInput(string $path, mixed $need_value = true)
+    public function input(string $path, $default = null)
     {
-        return ! $this->isInput($path, $need_value);
-    }
+        $model = app(Page::class)->model();
 
-    private function makeModelEvents()
-    {
-        if (
-            property_exists($this, 'model')
-            && class_exists(static::$model)
-        ) {
-            /** @var Model $model */
-            $model = static::$model;
-            $model::created(static function ($model) {
-                lte_log_info('Created model', get_class($model), 'fas fa-plus');
-            });
-            $model::updated(static function ($model) {
-                lte_log_info('Updated model', get_class($model), 'fas fa-highlighter');
-            });
-            $model::deleted(static function ($model) {
-                lte_log_danger('Deleted model', get_class($model), 'fas fa-trash');
-            });
+        if ($model && $model->exists && !request()->has($path)) {
+            return multi_dot_call($model, $path) ?: $default;
         }
+
+        return request($path, $default);
     }
 }

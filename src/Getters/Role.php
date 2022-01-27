@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Getters;
 
+use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
 
 class Role extends Getter
@@ -16,7 +17,7 @@ class Role extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function default()
     {

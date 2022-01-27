@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
@@ -9,6 +10,7 @@ use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
 use Lar\Tagable\Events\onRender;
+use Lar\Tagable\Tag;
 
 /**
  * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
@@ -46,8 +48,8 @@ class GridColumnComponent extends DIV implements onRender
     /**
      * @param $name
      * @param $arguments
-     * @return bool|GridColumnComponent|\Lar\LteAdmin\Components\FormGroupComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
+     * @return bool|GridColumnComponent|FormGroupComponent|Tag|mixed|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {

@@ -3,6 +3,9 @@
     <button type="button" class="btn btn-outline-primary btn-sm" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-ellipsis-v"></i>
     </button>
+    @php
+        $prepareExport = \Lar\LteAdmin\Core\PrepareExport::$columns[$table_id] ?? null;
+    @endphp
     <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
         @if($hasHidden)
             @foreach($all_columns as $column)
@@ -12,11 +15,11 @@
                 </button>
                 @endif
             @endforeach
-                @if(count(\Lar\LteAdmin\Core\PrepareExport::$columns) || count($actions) || $hasDelete)
+                @if($prepareExport || count($actions) || $hasDelete)
                     <hr class="dropdown-divider" />
                 @endif
         @endif
-        @if(count(\Lar\LteAdmin\Core\PrepareExport::$columns))
+        @if($prepareExport)
             <button class="dropdown-item"
                     type="button"
                     data-table="{{$table_id}}"

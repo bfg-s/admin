@@ -28,7 +28,7 @@ class NumberField extends InputField
     ];
 
     /**
-     * @param int|float  $step
+     * @param  int|float  $step
      * @return $this
      */
     public function step($step)
@@ -50,7 +50,7 @@ class NumberField extends InputField
     {
         $this->params[]['min'] = $value;
 
-        return  $this->_rule(__FUNCTION__, [$value], $message);
+        return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
     /**
@@ -66,7 +66,7 @@ class NumberField extends InputField
     {
         $this->params[]['max'] = $value;
 
-        return  $this->_rule(__FUNCTION__, [$value], $message);
+        return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
     /**

@@ -2,13 +2,23 @@
 
 namespace Lar\LteAdmin\Core\Generators;
 
+use Closure;
+use File;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Controllers\Controller;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Page;
+use Log;
+use LteAdmin;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionFunction;
+use ReflectionProperty;
+use Str;
 use Symfony\Component\Finder\SplFileInfo;
+use Throwable;
 
 class MacroableHelperGenerator implements DumpExecute
 {
@@ -34,26 +44,26 @@ class MacroableHelperGenerator implements DumpExecute
 
         $dirs = array_merge([app_path()], static::$dirs);
 
-        foreach (array_keys(\LteAdmin::extensionProviders()) as $provider) {
-            $dirs[] = dirname((new \ReflectionClass($provider))->getFileName());
+        foreach (array_keys(LteAdmin::extensionProviders()) as $provider) {
+            $dirs[] = dirname((new ReflectionClass($provider))->getFileName());
         }
 
         $classes = [];
 
         foreach ($dirs as $dir) {
-            $files = collect(\File::allFiles($dir))
+            $files = collect(File::allFiles($dir))
                 ->map(static function (SplFileInfo $file) {
                     return $file->getPathname();
                 })
                 ->filter(static function (string $file) {
-                    return \Str::is('*.php', $file) && is_file($file);
+                    return Str::is('*.php', $file) && is_file($file);
                 })
                 ->map('class_in_file')
                 ->merge([Page::class, Controller::class])
                 ->filter(static function ($class) {
                     try {
                         return class_exists($class);
-                    } catch (\Throwable $throwable) {
+                    } catch (Throwable $throwable) {
                     }
 
                     return false;
@@ -66,14 +76,14 @@ class MacroableHelperGenerator implements DumpExecute
 
         foreach ($classes as $class) {
             try {
-                $refl = new \ReflectionClass($class);
+                $refl = new ReflectionClass($class);
 
                 if ($refl->isInterface()) {
                     continue;
                 }
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 $command->error($exception->getMessage());
-                \Log::error($exception);
+                Log::error($exception);
                 continue;
             }
 
@@ -123,13 +133,13 @@ class MacroableHelperGenerator implements DumpExecute
                     }
 
                     $name = get_doc_var($class['doc'], 'helper_name');
-                    if (! $name) {
+                    if (!$name) {
                         $name = "{$class['name']}MacroList";
                     } else {
                         $name = "{$name}MacroList";
                     }
 
-                    if (! isset($isset_classes[$namespace_name][$name])) {
+                    if (!isset($isset_classes[$namespace_name][$name])) {
                         $namespace->class($name, function ($class_obj) use ($class) {
                             $class_obj->doc(function ($doc) use ($class) {
                                 $this->macroMethods($doc, $class);
@@ -140,35 +150,37 @@ class MacroableHelperGenerator implements DumpExecute
                     }
                 } elseif ($type === 'methods') {
                     $name = get_doc_var($class['doc'], 'helper_name');
-                    if (! $name) {
+                    if (!$name) {
                         $name = "{$class['name']}Methods";
                     } else {
                         $name = "{$name}Methods";
                     }
-                    if (! strpos($class['methods'], '::')) {
+                    if (!strpos($class['methods'], '::')) {
                         $class['methods'] = $class['class'].'::'.$class['methods'];
                     }
                     $class['methods'] = str_replace(['static', 'self'], $class['class'], $class['methods']);
-                    if (! preg_match('/((.*)\:\:([\$a-zA-Z0-9\_]+))\s?(\(.*\))?\s?(.*)/m', $class['methods'], $class['methods'])) {
+                    if (!preg_match('/((.*)\:\:([\$a-zA-Z0-9\_]+))\s?(\(.*\))?\s?(.*)/m', $class['methods'],
+                        $class['methods'])) {
                         continue;
                     }
                     $class['methods'][3] = trim($class['methods'][3], '$');
-                    if (! isset($class['methods'][4]) || ! $class['methods'][4]) {
+                    if (!isset($class['methods'][4]) || !$class['methods'][4]) {
                         $class['methods'][4] = false;
                     }
-                    if (! class_exists($class['methods'][2]) || ! property_exists($class['methods'][2], $class['methods'][3])) {
+                    if (!class_exists($class['methods'][2]) || !property_exists($class['methods'][2],
+                            $class['methods'][3])) {
                         continue;
                     } elseif (method_exists($class['methods'][2], 'getHelpMethodList')) {
                         $class['methods']['data'] = call_user_func([$class['methods'][2], 'getHelpMethodList']);
                     } else {
                         $c = $class['methods'][2];
                         $p = $class['methods'][3];
-                        $refProp = new \ReflectionProperty($c, $p);
+                        $refProp = new ReflectionProperty($c, $p);
                         $refProp->setAccessible(true);
                         $class['methods']['data'] = $refProp->getValue();
                     }
 
-                    if (! isset($isset_classes[$namespace_name][$name])) {
+                    if (!isset($isset_classes[$namespace_name][$name])) {
                         $namespace->class($name, function ($class_obj) use ($class) {
                             $class_obj->doc(function ($doc) use ($class) {
                                 /** @var DocumentorEntity $doc */
@@ -184,6 +196,46 @@ class MacroableHelperGenerator implements DumpExecute
         }
 
         return $r_ns;
+    }
+
+    /**
+     * @param  string  $doc
+     * @param  string  $var_name
+     * @return array
+     */
+    public static function get_variables(string $doc, string $var_name)
+    {
+        $result = [];
+
+        foreach (explode("\n", $doc) as $line) {
+            if (preg_match('/@'.$var_name.'\s(.*)/m', $line, $matches)) {
+                $result[] = isset($matches[1]) ? trim($matches[1]) : null;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generate default methods.
+     *
+     * @param  DocumentorEntity  $doc
+     * @param  array  $class_data
+     * @throws ReflectionException
+     */
+    protected function macroMethods($doc, array $class_data)
+    {
+        $class = $class_data['class'];
+        /** @var Macroable $class */
+        foreach ($class::get_macro_names() as $macro_name) {
+            $ref = $class::get_macro_reflex($macro_name);
+
+            $doc->tagMethod(
+                $class_data['macro_return'],
+                $macro_name.'('.refl_params_entity($ref->getParameters()).')',
+                "Field Macro $macro_name"
+            );
+        }
     }
 
     /**
@@ -203,22 +255,22 @@ class MacroableHelperGenerator implements DumpExecute
             }
 
             try {
-                if ($method_class instanceof \Closure) {
-                    $ref = new \ReflectionFunction($method_class);
+                if ($method_class instanceof Closure) {
+                    $ref = new ReflectionFunction($method_class);
                 } else {
-                    $ref = new \ReflectionClass($method_class);
+                    $ref = new ReflectionClass($method_class);
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->command->error($e->getMessage());
-                \Log::error($e);
+                Log::error($e);
             }
             $params = $m[4];
-            if ($method_class instanceof \Closure) {
-                if (! $params) {
+            if ($method_class instanceof Closure) {
+                if (!$params) {
                     $params = '('.refl_params_entity($ref->getParameters()).')';
                 }
             } else {
-                if (! $params && $ref->hasMethod('__construct')) {
+                if (!$params && $ref->hasMethod('__construct')) {
                     $params = '('.refl_params_entity($ref->getMethod('__construct')->getParameters()).')';
                 }
             }
@@ -226,8 +278,10 @@ class MacroableHelperGenerator implements DumpExecute
             $isAny = $params === '(likeAny)';
 
             if ($ref->hasMethod('__construct')) {
-                $params = preg_replace("/\*\s*\)$/", refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
-                $params = preg_replace("/^\(\s*\*/", refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
+                $params = preg_replace("/\*\s*\)$/",
+                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
+                $params = preg_replace("/^\(\s*\*/",
+                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
             }
 
             $upd = function ($m) use ($class_data, $method_class) {
@@ -261,7 +315,7 @@ class MacroableHelperGenerator implements DumpExecute
                 return $upd($m);
             }, $params);
 
-            if (! $isProperty || $isAny) {
+            if (!$isProperty || $isAny) {
                 $doc->tagMethod(
                     $type,
                     $method.$params,
@@ -277,45 +331,5 @@ class MacroableHelperGenerator implements DumpExecute
                 );
             }
         }
-    }
-
-    /**
-     * Generate default methods.
-     *
-     * @param  DocumentorEntity  $doc
-     * @param  array  $class_data
-     * @throws \ReflectionException
-     */
-    protected function macroMethods($doc, array $class_data)
-    {
-        $class = $class_data['class'];
-        /** @var Macroable $class */
-        foreach ($class::get_macro_names() as $macro_name) {
-            $ref = $class::get_macro_reflex($macro_name);
-
-            $doc->tagMethod(
-                $class_data['macro_return'],
-                $macro_name.'('.refl_params_entity($ref->getParameters()).')',
-                "Field Macro $macro_name"
-            );
-        }
-    }
-
-    /**
-     * @param  string  $doc
-     * @param  string  $var_name
-     * @return array
-     */
-    public static function get_variables(string $doc, string $var_name)
-    {
-        $result = [];
-
-        foreach (explode("\n", $doc) as $line) {
-            if (preg_match('/@'.$var_name.'\s(.*)/m', $line, $matches)) {
-                $result[] = isset($matches[1]) ? trim($matches[1]) : null;
-            }
-        }
-
-        return $result;
     }
 }

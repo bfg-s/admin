@@ -174,4 +174,6 @@ return [
     'method_PUT'                    => 'Редактирование',
     'method_DELETE'                 => 'Удаление',
     'user_statistics'               => 'Статистика пользователей',
+    'reset_page'                    => 'Сбросить страницу',
+    'sort_result_report'            => 'Результат запроса по параметрам',
 ];

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Closure;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Navigate;
@@ -51,7 +52,7 @@ class NavigatorExtensionProvider implements NavigateInterface
     /**
      * @param  string|null  $title
      * @param  null  $route
-     * @param  \Closure|array|null  $cb
+     * @param  Closure|array|null  $cb
      * @return NavGroup
      */
     public function group(string $title = null, $route = null, $cb = null)

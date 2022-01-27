@@ -2,14 +2,16 @@
 
 namespace Lar\LteAdmin\Core\Traits;
 
+use Closure;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\LteAdmin;
 use Lar\LteAdmin\Navigate;
+use Str;
 
 trait NavCommon
 {
     /**
-     * @param  \Closure|array  $call
+     * @param  Closure|array  $call
      * @return $this
      */
     public function router($call)
@@ -33,7 +35,7 @@ trait NavCommon
     }
 
     /**
-     * @param string|array $roles
+     * @param  string|array  $roles
      * @return $this
      */
     public function role($roles)
@@ -55,12 +57,12 @@ trait NavCommon
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return $this
      */
     public function data(array $data)
     {
-        if (! isset($this->items['data'])) {
+        if (!isset($this->items['data'])) {
             $this->items['data'] = $data;
         } else {
             $this->items['data'] = array_merge($this->items['data'], $data);
@@ -151,31 +153,6 @@ trait NavCommon
     }
 
     /**
-     * @param  null  $data
-     * @param  string  $type
-     * @param  array|null  $instructions
-     * @return $this
-     */
-    public function badge($data = null, $type = 'info', array $instructions = null)
-    {
-        if (is_array($type)) {
-            $instructions = $type;
-            $type = 'info';
-        }
-
-        if ($data !== null) {
-            $this->items['badge'] = [
-                'id' => \Str::slug(($this->items['route'] ?? ($this->items['name'] ?? false)), '_'),
-                'text' => $data,
-                'type' => $type,
-                'instructions' => $instructions,
-            ];
-        }
-
-        return $this;
-    }
-
-    /**
      * @param  string  $title
      * @return $this
      */
@@ -196,6 +173,31 @@ trait NavCommon
     public function badge_danger($data = null, array $instructions = null)
     {
         return $this->badge($data, 'danger', $instructions);
+    }
+
+    /**
+     * @param  null  $data
+     * @param  string  $type
+     * @param  array|null  $instructions
+     * @return $this
+     */
+    public function badge($data = null, $type = 'info', array $instructions = null)
+    {
+        if (is_array($type)) {
+            $instructions = $type;
+            $type = 'info';
+        }
+
+        if ($data !== null) {
+            $this->items['badge'] = [
+                'id' => Str::slug(($this->items['route'] ?? ($this->items['name'] ?? false)), '_'),
+                'text' => $data,
+                'type' => $type,
+                'instructions' => $instructions,
+            ];
+        }
+
+        return $this;
     }
 
     /**

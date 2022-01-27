@@ -174,4 +174,6 @@ return [
     'method_PUT'                    => 'Редагування',
     'method_DELETE'                 => 'Видалення',
     'user_statistics'               => 'Статистика користувача',
+    'reset_page'                    => 'Скинути сторінку',
+    'sort_result_report'            => 'Результат запиту за параметрами',
 ];

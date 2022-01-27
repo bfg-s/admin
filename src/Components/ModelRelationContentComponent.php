@@ -2,27 +2,29 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
+
 class ModelRelationContentComponent extends Component
 {
     protected $class = 'template_container';
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_group = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_delete = false;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_create = false;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_restore = null;
 
@@ -35,6 +37,11 @@ class ModelRelationContentComponent extends Component
      * @var callable[]
      */
     protected $controls = [];
+
+    /**
+     * @var bool
+     */
+    protected $vertical = true;
 
     /**
      * @param  string  $relation
@@ -59,59 +66,8 @@ class ModelRelationContentComponent extends Component
         return $this;
     }
 
-    public function controls(callable $call)
-    {
-        $this->controls[] = $call;
-
-        return $this;
-    }
-
     /**
-     * @param  \Closure|array|mixed  $test
-     * @return $this
-     */
-    public function controlGroup($test = null)
-    {
-        $this->set_test_var('control_group', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  \Closure|array|mixed  $test
-     * @return $this
-     */
-    public function controlDelete($test = null)
-    {
-        $this->set_test_var('control_delete', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  \Closure|array|mixed  $test
-     * @return $this
-     */
-    public function controlRestore($test = null)
-    {
-        $this->set_test_var('control_restore', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $text
-     * @return $this
-     */
-    public function controlRestoreText(string $text)
-    {
-        $this->control_restore_text = $text;
-
-        return $this;
-    }
-
-    /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlCreate($test = null)
@@ -134,6 +90,57 @@ class ModelRelationContentComponent extends Component
                 return (bool) $test;
             };
         }
+    }
+
+    /**
+     * @param  Closure|array|mixed  $test
+     * @return $this
+     */
+    public function controlRestore($test = null)
+    {
+        $this->set_test_var('control_restore', $test);
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure|array|mixed  $test
+     * @return $this
+     */
+    public function controlDelete($test = null)
+    {
+        $this->set_test_var('control_delete', $test);
+
+        return $this;
+    }
+
+    public function controls(callable $call)
+    {
+        $this->controls[] = $call;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure|array|mixed  $test
+     * @return $this
+     */
+    public function controlGroup($test = null)
+    {
+        $this->set_test_var('control_group', $test);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $text
+     * @return $this
+     */
+    public function controlRestoreText(string $text)
+    {
+        $this->control_restore_text = $text;
+
+        return $this;
     }
 
     /**

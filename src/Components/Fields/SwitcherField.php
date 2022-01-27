@@ -27,32 +27,6 @@ class SwitcherField extends InputField
     ];
 
     /**
-     * On build.
-     */
-    protected function on_build()
-    {
-        if (! isset($this->data['on-text'])) {
-            $this->data['on-text'] = __('lte.on');
-        }
-
-        if (! isset($this->data['off-text'])) {
-            $this->data['off-text'] = __('lte.off');
-        }
-    }
-
-    /**
-     * @return int|mixed
-     */
-    protected function create_value()
-    {
-        if (parent::create_value()) {
-            $this->params[] = ['checked' => 'true'];
-        }
-
-        return 1;
-    }
-
-    /**
      * @param  string  $size
      * @return $this
      */
@@ -82,5 +56,31 @@ class SwitcherField extends InputField
         }
 
         return $this;
+    }
+
+    /**
+     * On build.
+     */
+    protected function on_build()
+    {
+        if (!isset($this->data['on-text'])) {
+            $this->data['on-text'] = __('lte.on');
+        }
+
+        if (!isset($this->data['off-text'])) {
+            $this->data['off-text'] = __('lte.off');
+        }
+    }
+
+    /**
+     * @return int|mixed
+     */
+    protected function create_value()
+    {
+        if (parent::create_value()) {
+            $this->params[] = ['checked' => 'true'];
+        }
+
+        return 1;
     }
 }

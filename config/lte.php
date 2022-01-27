@@ -1,5 +1,11 @@
 <?php
 
+use Lar\LteAdmin\Controllers\AuthController;
+use Lar\LteAdmin\Controllers\DashboardController;
+use Lar\LteAdmin\Controllers\UploadController;
+use Lar\LteAdmin\Controllers\UserController;
+use Lar\LteAdmin\Models\LteUser;
+
 return [
 
     /**
@@ -30,16 +36,16 @@ return [
      */
     'action' => [
         'auth' => [
-            'login_form_action' => '\Lar\LteAdmin\Controllers\AuthController@login',
-            'login_post_action' => '\Lar\LteAdmin\Controllers\AuthController@login_post',
+            'login_form_action' => [AuthController::class, 'login'],
+            'login_post_action' => [AuthController::class, 'login_post'],
         ],
         'profile' => [
-            'index' => '\Lar\LteAdmin\Controllers\UserController@index',
-            'update' => '\Lar\LteAdmin\Controllers\UserController@update',
-            'logout' => '\Lar\LteAdmin\Controllers\UserController@logout',
+            'index' => [UserController::class, 'index'],
+            'update' => [UserController::class, 'update'],
+            'logout' => [UserController::class, 'logout'],
         ],
-        'dashboard' => '\Lar\LteAdmin\Controllers\DashboardController@index',
-        'uploader' => '\Lar\LteAdmin\Controllers\UploadController@index',
+        'dashboard' => [DashboardController::class, 'index'],
+        'uploader' => [UploadController::class, 'index'],
     ],
 
     /**
@@ -58,7 +64,7 @@ return [
         'providers' => [
             'lte' => [
                 'driver' => 'eloquent',
-                'model'  => \Lar\LteAdmin\Models\LteUser::class,
+                'model'  => LteUser::class,
             ],
         ],
     ],

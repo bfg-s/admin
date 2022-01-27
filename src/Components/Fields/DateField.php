@@ -20,6 +20,12 @@ class DateField extends InputField
         'load' => 'picker::date',
         'toggle' => 'datetimepicker',
     ];
+    /**
+     * @var array
+     */
+    protected $params = [
+        ['autocomplete' => 'off'],
+    ];
 
     /**
      * On build.
@@ -28,11 +34,4 @@ class DateField extends InputField
     {
         $this->data['target'] = "#{$this->field_id}";
     }
-
-    /**
-     * @var array
-     */
-    protected $params = [
-        ['autocomplete' => 'off'],
-    ];
 }

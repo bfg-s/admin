@@ -1,5 +1,6 @@
 <?php
 
+use Lar\LteAdmin\Core\RoutesAdaptor;
 use Lar\Roads\Roads;
 
 /**
@@ -20,15 +21,15 @@ Road::layout(config('lte.route.layout'))->group(static function (Roads $roads) {
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
     $roads->post('uploader', config('lte.action.uploader'))->name('uploader');
 
-    $app_dashboard = '\\'.lte_app_namespace('Controllers\\DashboardController');
+    $app_dashboard = lte_app_namespace('Controllers\\DashboardController');
 
     Navigate::item('lte.dashboard', 'dashboard')
-        ->action(class_exists($app_dashboard) ? $app_dashboard.'@index' : config('lte.action.dashboard'))
+        ->action(class_exists($app_dashboard) ? [$app_dashboard, 'index'] : config('lte.action.dashboard'))
         ->icon_tachometer_alt();
 
     $roads->namespace(lte_app_namespace('Controllers'))->group(static function (Roads $roads) {
-        \Lar\LteAdmin\Core\RoutesAdaptor::create_by_menu($roads);
+        RoutesAdaptor::create_by_menu($roads);
     });
 });
 
-\Route::emitter('lte');
+Route::emitter('lte');

@@ -2,20 +2,21 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\H3;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Components\Traits\TypesTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
-use Lar\LteAdmin\Interfaces\ControllerContentInterface;
+use Lar\LteAdmin\Getters\Menu;
 use Lar\LteAdmin\Page;
-use Lar\Tagable\Events\onRender;
 
-class CardComponent extends DIV implements onRender, ControllerContainerInterface, ControllerContentInterface
+class CardComponent extends Component
 {
     use TypesTrait, FontAwesome, Macroable, Delegable;
 
@@ -34,7 +35,7 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     ];
 
     /**
-     * @var array|\Lar\LteAdmin\Getters\Menu|null
+     * @var array|Menu|null
      */
     protected $now;
 
@@ -44,7 +45,7 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     protected $head_obj;
 
     /**
-     * @var \Lar\Layout\Tags\H3
+     * @var H3
      */
     protected $title_obj;
 
@@ -101,8 +102,6 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     {
         $this->type = 'primary';
 
-        $this->page = app(Page::class);
-
         parent::__construct();
 
         $this->head_obj = $this->div(['card-header']);
@@ -111,18 +110,21 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
 
         $this->tools = $this->head_obj->div(['card-tools']);
 
-        $this->now = gets()->lte->menu->now;
+        $this->now = $this->menu;
 
         $this->group = new ButtonsComponent();
 
         $this->explainForce(Explanation::new($delegates));
+    }
 
-        $this->callConstructEvents();
+    public static function registrationInToContainer(Page $page, array $delegates = [])
+    {
+        $page->registerClass($page->next()->getContent()->card($delegates));
     }
 
     public function tab(...$delegates)
     {
-        if (! $this->body) {
+        if (!$this->body) {
             $this->fullBody();
         }
 
@@ -133,14 +135,24 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @param  callable  $call
-     * @return $this
+     * @param ...$params
+     * @return \Lar\Layout\Abstracts\Component|LarDoc|CardBodyComponent
      */
-    public function headerObj(callable $call)
+    public function fullBody(...$params)
     {
-        call_user_func($call, $this->head_obj);
+        return $this->card_body()->addClass('p-0')->when($params);
+    }
 
-        return $this;
+    /**
+     * @param ...$delegations
+     * @return \Lar\Layout\Abstracts\Component|LarDoc|CardBodyComponent
+     */
+    public function card_body(...$delegations)
+    {
+        $body = CardBodyComponent::create($delegations)->haveLink($this->body);
+        $this->appEnd($body);
+
+        return $body;
     }
 
     /**
@@ -177,18 +189,6 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @param ...$delegations
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|CardBodyComponent
-     */
-    public function card_body(...$delegations)
-    {
-        $body = CardBodyComponent::create($delegations)->haveLink($this->body);
-        $this->appEnd($body);
-
-        return $body;
-    }
-
-    /**
      * @return CardBodyComponent
      */
     public function getBody()
@@ -197,24 +197,19 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @param ...$params
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|CardBodyComponent
-     */
-    public function fullBody(...$params)
-    {
-        return $this->card_body()->addClass('p-0')->when($params);
-    }
-
-    /**
      * @return $this
      */
     public function search_form(...$delegates)
     {
-        if (! $this->search_form) {
+        if (!$this->search_form) {
             $this->search_form = new SearchFormComponent(...$delegates);
 
-            $this->div(['#table_search_form', 'collapse'])
+            $this->div(['.table_search_form', 'collapse'])
                 ->div(['card-body'], $this->search_form);
+            if (request()->has('q') && $component = $this->search_form->getSearchInfoComponent()) {
+                $this->div(['.table_search_form', 'collapse', 'show'])
+                    ->div(['card-body p-0'], $component);
+            }
         }
 
         return $this;
@@ -226,8 +221,6 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
      */
     public function model_table(...$delegates)
     {
-        $this->withSearchForm();
-
         $this->table = $this->card_body()->attr(['p-0', 'table-responsive'])
             ->model_table($delegates)->model($this->search_form);
 
@@ -243,6 +236,17 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
         });
 
         return $this->table;
+    }
+
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function headerObj(callable $call)
+    {
+        call_user_func($call, $this->head_obj);
+
+        return $this;
     }
 
     public function model_info_table(...$delegates)
@@ -265,7 +269,7 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
      */
     public function nested(...$delegates)
     {
-        return $this->card_body()->nested(...$delegates);
+        return $this->card_body()->nested(...$delegates)->model($this->search_form);
     }
 
     /**
@@ -279,7 +283,7 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
 
     /**
      * @param ...$params
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|FormFooterComponent
+     * @return \Lar\Layout\Abstracts\Component|LarDoc|FormFooterComponent
      */
     public function footer_form(...$delegates)
     {
@@ -290,7 +294,7 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @param  \Closure|array|null  $test
+     * @param  Closure|array|null  $test
      * @return $this
      */
     public function defaultTools($test = null)
@@ -313,14 +317,6 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @return ButtonsComponent
-     */
-    public function tools()
-    {
-        return $this->group;
-    }
-
-    /**
      * @param  mixed  ...$params
      * @return ButtonsComponent
      */
@@ -336,9 +332,25 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @return mixed|void
+     * @return ButtonsComponent
      */
-    public function onRender()
+    public function tools()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param  string  $icon
+     * @return $this
+     */
+    public function icon(string $icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    protected function mount()
     {
         $this->callRenderEvents();
 
@@ -380,37 +392,25 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
     }
 
     /**
-     * @param  string  $icon
-     * @return $this
-     */
-    public function icon(string $icon)
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    /**
      * Make default tools.
      */
     protected function make_default_tools()
     {
         if ($this->default_tools !== false) {
-
-            /** @var \Closure $test */
+            /** @var Closure $test */
             $test = $this->default_tools;
 
-            if ($test('search') && lte_controller_can('search')) {
+            if ($test('search')) {
                 $this->buttons(function (ButtonsComponent $group) {
                     $group->primary(['fas fa-search', __('lte.search')])
                         ->setDatas([
                             'toggle' => 'collapse',
-                            'target' => '#table_search_form',
+                            'target' => '.table_search_form',
                         ])->attr([
                             'aria-expanded' => 'true',
-                            'aria-controls' =>  'table_search_form',
+                            'aria-controls' => 'table_search_form',
                         ])->whenRender(function (BUTTON $button) {
-                            if (! $this->search_form || ! $this->search_form->fieldsCount()) {
+                            if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                 $button->attr(['d-none']);
                             }
                         });
@@ -418,9 +418,9 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
                     if ($this->search_form && request()->has('q')) {
                         $group->danger(['fas fa-window-close', __('lte.cancel')])
                             ->attr('id', 'cancel_search_params')
-                            ->on_click('doc::location', urlWithGet([], ['q', 'page']))
+                            ->location([], ['q', 'page'])
                             ->whenRender(function (BUTTON $button) {
-                                if (! $this->search_form || ! $this->search_form->fieldsCount()) {
+                                if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                     $button->attr(['d-none']);
                                 }
                             });
@@ -428,13 +428,12 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
                 });
             }
 
-            if ($this->has_search_form && $this->now['current.type'] && $this->now['current.type'] === 'index') {
-
+            if ($this->has_search_form && $this->now && $this->now['current.type'] && $this->now['current.type'] === 'index') {
                 /** @var Model $model */
                 $model = gets()->lte->menu->model;
 
                 if ($model && property_exists($model, 'forceDeleting')) {
-                    if (! request()->has('show_deleted')) {
+                    if (!request()->has('show_deleted')) {
                         $this->buttons()->dark('fas fa-trash')
                             ->on_click('doc::location', urlWithGet(['show_deleted' => 1]))->setTitle(__('lte.deleted'));
                     } else {
@@ -443,46 +442,41 @@ class CardComponent extends DIV implements onRender, ControllerContainerInterfac
                 }
             }
 
-            if ($this->now['current.type'] && ! request()->has('show_deleted')) {
+            if ($this->now && $this->now['current.type'] && !request()->has('show_deleted')) {
                 $type = $this->now['current.type'];
 
                 if ($type === 'create') {
-                    if ($test('list') && lte_controller_can('index')) {
+                    if ($test('list')) {
                         $this->group->resourceList();
                     }
                 } elseif ($type === 'edit' || $type === 'show') {
-                    if ($test('list') && lte_controller_can('index')) {
+                    if ($test('list')) {
                         $this->group->resourceList();
                     }
 
                     if ($type === 'show') {
-                        if ($test('edit') && lte_controller_can('edit')) {
+                        if ($test('edit')) {
                             $this->group->resourceEdit();
                         }
                     }
 
                     if ($type === 'edit') {
-                        if ($test('info') && lte_controller_can('show')) {
+                        if ($test('info')) {
                             $this->group->resourceInfo();
                         }
                     }
 
-                    if ($test('delete') && lte_controller_can('destroy')) {
+                    if ($test('delete')) {
                         $this->group->resourceDestroy();
                     }
                 }
 
                 if ($type !== 'create') {
-                    if ($test('add') && lte_controller_can('create')) {
+                    if ($test('add')) {
                         $this->group->resourceAdd();
                     }
                 }
             }
         }
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        $page->registerClass($page->next()->getContent()->card($delegates));
     }
 }

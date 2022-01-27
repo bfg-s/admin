@@ -14,6 +14,7 @@ use Lar\LteAdmin\Components\GridColumnComponent;
 use Lar\LteAdmin\Components\ModelRelationComponent;
 use Lar\LteAdmin\Components\ModelRelationContentComponent;
 use Lar\LteAdmin\Core\ModelSaver;
+use Lar\LteAdmin\Explanation;
 
 /**
  * @mixin Component
@@ -47,7 +48,8 @@ trait ModelRelationBuilderTrait
                     ->setName("{$this->relation_name}[".$item->{$item->getKeyName()}."][{$item->getKeyName()}]")
                     ->setValue($item->{$item->getKeyName()})
             );
-            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content', 'template_content');
+            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content',
+                'template_content');
             $container->appEnd($this->last_content);
             $this->_call_tpl($this->last_content, $item, $this);
             if ($this->last_content->get_test_var('control_group', [$item])) {
@@ -55,7 +57,8 @@ trait ModelRelationBuilderTrait
 
                 if ($del || $this->last_content->hasControls()) {
                     $container->column()->textRight()->m0()->p0()->when(function (GridColumnComponent $col) use (
-                        $item, $del
+                        $item,
+                        $del
                     ) {
                         $col->buttons()->when(function (ButtonsComponent $group) use ($item, $del) {
                             $this->last_content->callControls($group, $item);
@@ -91,9 +94,11 @@ trait ModelRelationBuilderTrait
             $this->appEnd($container);
         }
 
-        if (! $datas->count() && $this->on_empty) {
-            $container = ModelRelationContentComponent::create($this->relation_name, 'empty', 'template_empty_container');
-            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_empty_content', 'template_empty_content');
+        if (!$datas->count() && $this->on_empty) {
+            $container = ModelRelationContentComponent::create($this->relation_name, 'empty',
+                'template_empty_container');
+            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_empty_content',
+                'template_empty_content');
             $this->_call_empty_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
             $container->appEnd($this->last_content);
             $this->appEnd($container);
@@ -113,6 +118,29 @@ trait ModelRelationBuilderTrait
     }
 
     /**
+     * @param  mixed  ...$params
+     * @return mixed
+     */
+    protected function _call_tpl(...$params)
+    {
+        /**
+         * Required Force.
+         */
+        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
+    }
+
+    /**
+     * @param  mixed  ...$params
+     * @return mixed
+     */
+    protected function _call_empty_tpl(...$params)
+    {
+        $return = call_user_func($this->on_empty, ...$params);
+
+        return $return;
+    }
+
+    /**
      * Build relation template maker button.
      * @return string
      */
@@ -129,12 +157,13 @@ trait ModelRelationBuilderTrait
 
         $this->page->model(new ($this->page->model()));
         $container = ModelRelationContentComponent::create($this->relation_name, 'template_container');
-        $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content', 'template_content');
+        $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content',
+            'template_content');
         $container->appEnd($this->last_content);
         $this->page->model($this->relation->getQuery()->getModel());
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
         $this->page->model(new ($this->page->model()));
-        if (! $this->last_content->get_test_var('control_create')) {
+        if (!$this->last_content->get_test_var('control_create')) {
             return '';
         }
         $container->column()->textRight()->p0()->buttons()->when(static function (ButtonsComponent $group) {
@@ -155,27 +184,5 @@ trait ModelRelationBuilderTrait
                 );
         });
         $row->appEnd(Template::create("relation_{$this->relation_name}_template")->appEnd($container));
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return mixed
-     */
-    protected function _call_tpl(...$params)
-    {
-        $return = call_user_func($this->create_content, ...$params);
-
-        return $return;
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return mixed
-     */
-    protected function _call_empty_tpl(...$params)
-    {
-        $return = call_user_func($this->on_empty, ...$params);
-
-        return $return;
     }
 }

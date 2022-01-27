@@ -2,7 +2,13 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+
+use LteAdmin;
+
+use function respond;
 
 class AuthController
 {
@@ -11,7 +17,7 @@ class AuthController
      */
     public function login()
     {
-        if (! \LteAdmin::guest()) {
+        if (!LteAdmin::guest()) {
             return redirect()->route('lte.dashboard');
         }
 
@@ -19,8 +25,8 @@ class AuthController
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  Request  $request
+     * @return RedirectResponse
      */
     public function login_post(Request $request)
     {
@@ -31,24 +37,26 @@ class AuthController
 
         $login = false;
 
-        if (\Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password], $request->remember == 'on' ? true : false)) {
+        if (Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password],
+            $request->remember == 'on' ? true : false)) {
             $request->session()->regenerate();
 
-            \respond()->toast_success('Was authorized using login!');
+            respond()->toast_success('Was authorized using login!');
 
             lte_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
-        } elseif (\Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password], $request->remember == 'on' ? true : false)) {
+        } elseif (Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password],
+            $request->remember == 'on' ? true : false)) {
             $request->session()->regenerate();
 
-            \respond()->toast_success('Was authorized using E-Mail!');
+            respond()->toast_success('Was authorized using E-Mail!');
 
             lte_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
 
             $login = true;
         } else {
-            \respond()->toast_error('User not found!');
+            respond()->toast_error('User not found!');
         }
 
         if ($login && session()->has('return_authenticated_url')) {

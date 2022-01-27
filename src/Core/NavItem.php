@@ -2,10 +2,12 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
 use Lar\LteAdmin\Navigate;
+use Str;
 
 class NavItem implements Arrayable
 {
@@ -20,7 +22,7 @@ class NavItem implements Arrayable
      * NavItem constructor.
      * @param  string|null  $title
      * @param  string  $route
-     * @param  string|\Closure|array|null  $action
+     * @param  string|Closure|array|null  $action
      */
     public function __construct(string $title = null, string $route = null, $action = null)
     {
@@ -28,6 +30,19 @@ class NavItem implements Arrayable
             ->title($title)
             ->action($action)
             ->extension(Navigate::$extension);
+    }
+
+    /**
+     * @param  string|Closure|array  $action
+     * @return $this
+     */
+    public function action($action)
+    {
+        if ($action !== null) {
+            $this->items['action'] = $action;
+        }
+
+        return $this;
     }
 
     /**
@@ -44,6 +59,10 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Route methods.
+     */
+
+    /**
      * @param  string|null  $link
      * @return $this
      */
@@ -55,10 +74,6 @@ class NavItem implements Arrayable
 
         return $this;
     }
-
-    /**
-     * Route methods.
-     */
 
     /**
      * @param ...$methods
@@ -126,40 +141,22 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  string|\Closure|array  $action
-     * @return $this
-     */
-    public function action($action)
-    {
-        if ($action !== null) {
-            $this->items['action'] = $action;
-        }
-
-        return $this;
-    }
-
-    /**
      * @param  string  $name
      * @param  string  $resource
      * @param  array  $options
      * @return $this
      */
-    public function resource(string $name, string $resource = 'Controller', array $options = [])
+    public function resource(string $name, string $resource, array $options = [])
     {
-        $pos = strpos($resource, '\\');
-        if ($pos !== false && $pos != 0) {
-            $resource = '\\'.$resource;
-        }
+        $this->items['resource'] = ['name' => $name, 'action' => '\\'.$resource, 'options' => $options];
 
-        $this->items['resource'] = ['name' => $name, 'action' => $resource, 'options' => $options];
-
-        if (! isset($this->items['route']) || ! $this->items['route']) {
+        if (!isset($this->items['route']) || !$this->items['route']) {
             $this->items['route'] = $name;
         }
 
-        if (! isset($this->items['model.param'])) {
-            $this->items['model.param'] = \Str::singular(
-                \Str::contains($name, '/') ? last(explode('/', $name)) : $name
+        if (!isset($this->items['model.param'])) {
+            $this->items['model.param'] = Str::singular(
+                Str::contains($name, '/') ? last(explode('/', $name)) : $name
             );
         }
 

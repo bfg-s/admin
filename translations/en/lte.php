@@ -174,4 +174,6 @@ return [
     'method_PUT'                    => 'Update',
     'method_DELETE'                 => 'Delete',
     'user_statistics'               => 'User statistics',
+    'reset_page'                    => 'Reset page',
+    'sort_result_report'            => 'Result of the query by parameters',
 ];

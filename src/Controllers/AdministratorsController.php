@@ -32,15 +32,7 @@ class AdministratorsController extends Controller
 
     public function defaultTools($type)
     {
-        return ! ($type === 'delete' && $this->model()->id == 1);
-    }
-
-    public function defaultDateRange()
-    {
-        return [
-            now()->subDay()->startOfDay()->toDateString(),
-            now()->endOfDay()->toDateString(),
-        ];
+        return !($type === 'delete' && $this->model()->id == 1);
     }
 
     /**
@@ -155,7 +147,7 @@ class AdministratorsController extends Controller
                 $card->title('lte.activity')->warningType(),
                 $card->tab(
                     $tab->icon_clock()->title('lte.timeline'),
-                    $tab->with(fn ($content) => UserController::timelineComponent($content, $this->model()->logs(),
+                    $tab->with(fn($content) => UserController::timelineComponent($content, $this->model()->logs(),
                         $this)),
                 ),
                 $card->tab(
@@ -190,5 +182,13 @@ class AdministratorsController extends Controller
                     )
                 ),
             );
+    }
+
+    public function defaultDateRange()
+    {
+        return [
+            now()->subDay()->startOfDay()->toDateString(),
+            now()->endOfDay()->toDateString(),
+        ];
     }
 }

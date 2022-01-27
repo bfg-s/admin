@@ -25,15 +25,6 @@ class CheckUserFunction
      * @param $name
      * @return bool
      */
-    public function has($name)
-    {
-        return isset($this->list[$name]) && $this->list[$name];
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
     public function __get($name)
     {
         return $this->has($name);
@@ -46,5 +37,14 @@ class CheckUserFunction
     public function __set($name, $value)
     {
         $this->list[$name] = (bool) $value;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return isset($this->list[$name]) && $this->list[$name];
     }
 }

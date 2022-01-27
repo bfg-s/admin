@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
@@ -11,6 +12,9 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
+use Lar\Tagable\Tag;
+use ReflectionException;
+use Str;
 
 /**
  * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
@@ -22,17 +26,16 @@ class StatisticPeriodComponent extends DIV implements onRender
     use FieldMassControlTrait, Macroable, BuildHelperTrait, FontAwesome, Delegable;
 
     /**
+     * @var Page
+     */
+    public $page;
+    /**
      * @var string
      */
     protected $class = 'row';
     protected $model;
     protected $entity;
     protected $icon = 'fas fa-lightbulb';
-
-    /**
-     * @var Page
-     */
-    public $page;
 
     /**
      * @param ...$delegates
@@ -63,7 +66,7 @@ class StatisticPeriodComponent extends DIV implements onRender
             );
         }
 
-        $this->entity = \Str::plural(class_basename($this->model::class));
+        $this->entity = Str::plural(class_basename($this->model::class));
 
         return $this;
     }
@@ -92,7 +95,8 @@ class StatisticPeriodComponent extends DIV implements onRender
         $this->column()
             ->info_box(
                 __('lte.statistic_per_week', ['entity' => $this->entity]),
-                $this->model::whereBetween('created_at', [now()->subWeek()->startOfDay(), now()->endOfDay()])->count().' ',
+                $this->model::whereBetween('created_at',
+                    [now()->subWeek()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->infoType();
 
@@ -104,7 +108,8 @@ class StatisticPeriodComponent extends DIV implements onRender
         $this->column()
             ->info_box(
                 __('lte.statistic_per_year', ['entity' => $this->entity]),
-                $this->model::whereBetween('created_at', [now()->subYear()->startOfDay(), now()->endOfDay()])->count().' ',
+                $this->model::whereBetween('created_at',
+                    [now()->subYear()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->warningType();
 
@@ -137,8 +142,8 @@ class StatisticPeriodComponent extends DIV implements onRender
     /**
      * @param $name
      * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
+     * @return bool|FormComponent|Tag|mixed|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -151,7 +156,7 @@ class StatisticPeriodComponent extends DIV implements onRender
 
     /**
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function onRender()
     {

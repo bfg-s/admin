@@ -13,7 +13,11 @@
         <li class="nav-item">
             <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i class="fas fa-redo-alt"></i></a>
         </li>
-
+        @if(count(\Lar\LteAdmin\Getters\Menu::getCurrentQuery()))
+        <li class="nav-item">
+            <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}" title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
+        </li>
+        @endif
         @foreach(gets()->lte->menu->nested_collect->where('left_nav_bar_view') as $menu)
             @if(View::exists($menu['left_nav_bar_view']))
                 @include($menu['left_nav_bar_view'], $menu['params'])

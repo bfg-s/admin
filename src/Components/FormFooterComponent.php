@@ -2,20 +2,12 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\Layout\Tags\DIV;
+use Lar\Layout\LarDoc;
 use Lar\LteAdmin\Components\Vue\FormActionAfterSave;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
-use Lar\Tagable\Events\onRender;
 
-/**
- * @mixin FormFooterContentMacroList
- */
-class FormFooterComponent extends DIV implements onRender
+class FormFooterComponent extends Component
 {
-    use Macroable, Delegable;
-
     /**
      * @var string
      */
@@ -65,6 +57,17 @@ class FormFooterComponent extends DIV implements onRender
     }
 
     /**
+     * @param  string  $id
+     * @return $this
+     */
+    public function setFormId(string $id)
+    {
+        $this->form_id = $id;
+
+        return $this;
+    }
+
+    /**
      * @param  string  $text
      * @param  string|null  $icon
      * @return $this
@@ -91,19 +94,8 @@ class FormFooterComponent extends DIV implements onRender
     }
 
     /**
-     * @param  string  $id
-     * @return $this
-     */
-    public function setFormId(string $id)
-    {
-        $this->form_id = $id;
-
-        return $this;
-    }
-
-    /**
      * @param  string  $type
-     * @return $this|\Lar\Layout\Abstracts\Component|\Lar\Layout\LarDoc|FormFooterComponent
+     * @return $this|\Lar\Layout\Abstracts\Component|LarDoc|FormFooterComponent
      */
     public function setType(string $type)
     {
@@ -119,8 +111,8 @@ class FormFooterComponent extends DIV implements onRender
     {
         $group = new ButtonsComponent();
 
-        $type = $this->type ?? gets()->lte->menu->type;
-        $menu = gets()->lte->menu->now;
+        $type = $this->type ?? $this->page->resource_type;
+        $menu = $this->menu;
 
         if ($type === 'edit' || isset($menu['post'])) {
             $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'lte.save')])->setDatas([
@@ -154,11 +146,8 @@ class FormFooterComponent extends DIV implements onRender
         return $this;
     }
 
-    /**
-     * @return mixed|void
-     */
-    public function onRender()
+    protected function mount()
     {
-        $this->callRenderEvents();
+        //
     }
 }

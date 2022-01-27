@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Core\Traits\NavCommon;
@@ -35,7 +36,7 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
-     * @param  \Closure|array  ...$calls
+     * @param  Closure|array  ...$calls
      * @return $this
      */
     public function do(...$calls)
@@ -52,7 +53,7 @@ class NavGroup implements Arrayable, NavigateInterface
     /**
      * @param  string|null  $title
      * @param  string|null  $route
-     * @param  string|\Closure|null  $action
+     * @param  string|Closure|null  $action
      * @return NavItem
      */
     public function item(string $title = null, string $route = null, $action = null)
@@ -70,13 +71,13 @@ class NavGroup implements Arrayable, NavigateInterface
 
     /**
      * @param  string|null  $title
-     * @param  string|null|\Closure|array  $route
-     * @param  \Closure|array|null  $cb
+     * @param  string|null|Closure|array  $route
+     * @param  Closure|array|null  $cb
      * @return NavGroup
      */
     public function group(string $title = null, $route = null, $cb = null)
     {
-        if (is_embedded_call($route) && ! is_string($route)) {
+        if (is_embedded_call($route) && !is_string($route)) {
             $cb = $route;
             $route = null;
         }

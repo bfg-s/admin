@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components\Traits\ModelTable;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\SPAN;
 use Lar\LteAdmin\Components\ButtonsComponent;
@@ -10,37 +11,37 @@ use Lar\LteAdmin\Core\PrepareExport;
 trait TableControlsTrait
 {
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $controls = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_info = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_edit = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_delete = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_force_delete = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_restore = null;
 
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $control_selectable = null;
 
@@ -53,9 +54,13 @@ trait TableControlsTrait
      * @var bool
      */
     protected $check_delete = null;
+    /**
+     * @var array
+     */
+    protected $action = [];
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlGroup($test = null)
@@ -66,7 +71,22 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  string  $var_name
+     * @param $test
+     */
+    protected function set_test_var(string $var_name, $test)
+    {
+        if (is_embedded_call($test)) {
+            $this->{$var_name} = $test;
+        } else {
+            $this->{$var_name} = static function () use ($test) {
+                return (bool) $test;
+            };
+        }
+    }
+
+    /**
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlInfo($test = null)
@@ -77,7 +97,7 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlEdit($test = null)
@@ -88,7 +108,7 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlDelete($test = null)
@@ -99,7 +119,7 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlForceDelete($test = null)
@@ -110,7 +130,7 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlRestore($test = null)
@@ -121,7 +141,7 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  \Closure|array|mixed  $test
+     * @param  Closure|array|mixed  $test
      * @return $this
      */
     public function controlSelect($test = null)
@@ -153,11 +173,6 @@ trait TableControlsTrait
     }
 
     /**
-     * @var array
-     */
-    protected $action = [];
-
-    /**
      * @param $jax
      * @param $title
      * @param  null  $icon
@@ -180,7 +195,9 @@ trait TableControlsTrait
 
     public function getActionData()
     {
-        $hasDelete = $this->get_test_var('check_delete') && gets()->lte->menu->now['link.destroy'](0);
+        $this->getModelName();
+        $this->model_class = $this->realModel() ? get_class($this->realModel()) : null;
+        $hasDelete = $this->menu && $this->get_test_var('check_delete') && $this->menu['link.destroy'](0);
         $select_type = request()->get($this->model_name.'_type', $this->order_type);
         $this->order_field = request()->get($this->model_name, $this->order_field);
 
@@ -195,7 +212,7 @@ trait TableControlsTrait
             'select_type' => $select_type,
             'columns' => collect($this->columns)
                 ->filter(static function ($i) {
-                    return isset($i['field']) && is_string($i['field']) && ! $i['hide'];
+                    return isset($i['field']) && is_string($i['field']) && !$i['hide'];
                 })
                 ->pluck('field')
                 ->toArray(),
@@ -213,15 +230,29 @@ trait TableControlsTrait
     }
 
     /**
+     * @param  string  $var_name
+     * @param  array  $args
+     * @return bool
+     */
+    protected function get_test_var(string $var_name, array $args = [])
+    {
+        if ($this->{$var_name} !== null) {
+            return call_user_func_array($this->{$var_name}, $args);
+        }
+
+        return true;
+    }
+
+    /**
      * Create default controls.
      */
     protected function _create_controls()
     {
         if ($this->get_test_var('controls')) {
-            $hasDelete = gets()->lte->menu->now['link.destroy'](0);
+            $hasDelete = $this->menu && $this->menu['link.destroy'](0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
 
-            if ($this->checks && ! request()->has('show_deleted') && $show) {
+            if ($this->checks && !request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
                     $span->_addClass('fit');
                     $span->view('lte::segment.model_table_checkbox', [
@@ -238,7 +269,7 @@ trait TableControlsTrait
                     return view('lte::segment.model_table_checkbox', [
                         'id' => $model->id,
                         'table_id' => $this->model_name,
-                        'disabled' => ! $this->get_test_var('control_selectable', [$model]),
+                        'disabled' => !$this->get_test_var('control_selectable', [$model]),
                     ])->render();
                 });
             }
@@ -250,65 +281,39 @@ trait TableControlsTrait
             $this->column(static function (SPAN $span) {
                 $span->_addClass('fit');
             }, function (Model $model) {
-                return ButtonsComponent::create()->when(function (ButtonsComponent $group) use ($model) {
-                    $menu = gets()->lte->menu->now;
+                $menu = $this->menu;
 
+                return ButtonsComponent::create()->when(function (ButtonsComponent $group) use ($model, $menu) {
                     if ($menu) {
                         $key = $model->getRouteKey();
 
-                        if (! request()->has('show_deleted')) {
-                            if (isset($menu['link.edit']) && $this->get_test_var('control_edit', [$model]) && lte_controller_can('edit')) {
+                        if (!request()->has('show_deleted')) {
+                            if (isset($menu['link.edit']) && $this->get_test_var('control_edit', [$model])) {
                                 $group->resourceEdit($menu['link.edit']($key), '');
                             }
 
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_delete', [$model]) && lte_controller_can('destroy')) {
-                                $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            if (isset($menu['link.destroy']) && $this->get_test_var('control_delete', [$model])) {
+                                $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(),
+                                    $key);
                             }
 
-                            if (isset($menu['link.show']) && $this->get_test_var('control_info', [$model]) && lte_controller_can('show')) {
+                            if (isset($menu['link.show']) && $this->get_test_var('control_info', [$model])) {
                                 $group->resourceInfo($menu['link.show']($key), '');
                             }
                         } else {
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_restore', [$model]) && lte_controller_can('restore')) {
-                                $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            if (isset($menu['link.destroy']) && $this->get_test_var('control_restore', [$model])) {
+                                $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(),
+                                    $key);
                             }
 
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_force_delete', [$model]) && lte_controller_can('force_destroy')) {
-                                $group->resourceForceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(), $key);
+                            if (isset($menu['link.destroy']) && $this->get_test_var('control_force_delete', [$model])) {
+                                $group->resourceForceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(),
+                                    $key);
                             }
                         }
                     }
                 });
             });
         }
-    }
-
-    /**
-     * @param  string  $var_name
-     * @param $test
-     */
-    protected function set_test_var(string $var_name, $test)
-    {
-        if (is_embedded_call($test)) {
-            $this->{$var_name} = $test;
-        } else {
-            $this->{$var_name} = static function () use ($test) {
-                return (bool) $test;
-            };
-        }
-    }
-
-    /**
-     * @param  string  $var_name
-     * @param  array  $args
-     * @return bool
-     */
-    protected function get_test_var(string $var_name, array $args = [])
-    {
-        if ($this->{$var_name} !== null) {
-            return call_user_func_array($this->{$var_name}, $args);
-        }
-
-        return true;
     }
 }

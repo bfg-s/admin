@@ -115,7 +115,7 @@ class SmallBoxComponent extends DIV
 
         $content->span(['info-box-text'], $this->title);
 
-        if (! is_array($this->body)) {
+        if (!is_array($this->body)) {
             $this->body = [$this->body];
         }
 

@@ -23,24 +23,17 @@ abstract class Delegator
         return $result;
     }
 
-    public function if($condition)
-    {
-        $this->condition = is_callable($condition) ? call_user_func($condition) : $condition;
-
-        return $this;
-    }
-
-    public function ifNot($condition)
-    {
-        $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
-
-        return $this;
-    }
-
     public function ifIndex()
     {
         $router = app('router');
         $this->if($router->currentRouteNamed('*.index'));
+
+        return $this;
+    }
+
+    public function if($condition)
+    {
+        $this->condition = is_callable($condition) ? call_user_func($condition) : $condition;
 
         return $this;
     }
@@ -108,6 +101,13 @@ abstract class Delegator
         }
 
         $this->ifNot($need_value == (is_bool($need_value) ? (bool) $val : $val));
+
+        return $this;
+    }
+
+    public function ifNot($condition)
+    {
+        $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
 
         return $this;
     }

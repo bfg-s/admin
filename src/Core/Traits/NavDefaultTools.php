@@ -2,7 +2,13 @@
 
 namespace Lar\LteAdmin\Core\Traits;
 
+use Closure;
+use Lar\LteAdmin\Controllers\AdministratorsController;
+use Lar\LteAdmin\Controllers\FunctionsController;
+use Lar\LteAdmin\Controllers\PermissionController;
+use Lar\LteAdmin\Controllers\RolesController;
 use Lar\LteAdmin\Core\NavGroup;
+use Lar\LteAdmin\Core\NavItem;
 
 trait NavDefaultTools
 {
@@ -17,13 +23,6 @@ trait NavDefaultTools
             $group->lteRoles();
             $group->ltePermission();
             $group->lteFunctions();
-
-//            $group->lteAccessGroup(function (NavGroup $group) {
-//
-//                $group->lteRoles();
-//                $group->ltePermission();
-//                $group->lteFunctions();
-//            });
         });
 
         return $this;
@@ -31,8 +30,8 @@ trait NavDefaultTools
 
     /**
      * Make default administration group.
-     * @param  \Closure|array  $call
-     * @return \Lar\LteAdmin\Core\NavGroup
+     * @param  Closure|array  $call
+     * @return NavGroup
      */
     public function lteAdministrationGroup($call)
     {
@@ -46,19 +45,19 @@ trait NavDefaultTools
     /**
      * Make administrator list tool.
      * @param  string|null  $action
-     * @return \Lar\LteAdmin\Core\NavItem
+     * @return NavItem
      */
     public function lteAdministrators(string $action = null)
     {
         return $this->item('lte.administrators', 'administrators')
-            ->resource('lte_user', $action ?? '\Lar\LteAdmin\Controllers\AdministratorsController')
+            ->resource('lte_user', $action ?? AdministratorsController::class)
             ->icon_users_cog();
     }
 
     /**
      * Make default access group.
-     * @param  \Closure|array  $call
-     * @return \Lar\LteAdmin\Core\NavGroup
+     * @param  Closure|array  $call
+     * @return NavGroup
      */
     public function lteAccessGroup($call)
     {
@@ -72,36 +71,36 @@ trait NavDefaultTools
     /**
      * Make roles list tool.
      * @param  string|null  $action
-     * @return \Lar\LteAdmin\Core\NavItem
+     * @return NavItem
      */
     public function lteRoles(string $action = null)
     {
         return $this->item('lte.roles', 'roles')
-            ->resource('lte_role', $action ?? '\Lar\LteAdmin\Controllers\RolesController')
+            ->resource('lte_role', $action ?? RolesController::class)
             ->icon_user_secret();
     }
 
     /**
      * Make permissions list tool.
      * @param  string|null  $action
-     * @return \Lar\LteAdmin\Core\NavItem
+     * @return NavItem
      */
     public function ltePermission(string $action = null)
     {
         return $this->item('lte.permission', 'permission')
-            ->resource('lte_permission', $action ?? '\Lar\LteAdmin\Controllers\PermissionController')
+            ->resource('lte_permission', $action ?? PermissionController::class)
             ->icon_ban();
     }
 
     /**
      * Make functions/gates list tool.
      * @param  string|null  $action
-     * @return \Lar\LteAdmin\Core\NavItem
+     * @return NavItem
      */
     public function lteFunctions(string $action = null)
     {
         return $this->item('lte.functions', 'functions')
-            ->resource('lte_functions', $action ?? '\Lar\LteAdmin\Controllers\FunctionsController')
+            ->resource('lte_functions', $action ?? FunctionsController::class)
             ->icon_dungeon()->role('root');
     }
 }

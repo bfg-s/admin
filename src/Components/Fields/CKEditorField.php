@@ -2,6 +2,9 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
+use Lar\Layout\Tags\TEXTAREA;
 use Lar\LteAdmin\Components\FormGroupComponent;
 
 class CKEditorField extends FormGroupComponent
@@ -25,11 +28,11 @@ class CKEditorField extends FormGroupComponent
      * @param  null  $value
      * @param  bool  $has_bug
      * @param  null  $path
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
-        return \Lar\Layout\Tags\TEXTAREA::create([
+        return TEXTAREA::create([
             'id' => $this->field_id,
             'name' => $this->name,
             'placeholder' => $this->title,

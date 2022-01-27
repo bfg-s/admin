@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\FormGroupComponent;
 
 class HiddenField extends FormGroupComponent
@@ -22,11 +24,11 @@ class HiddenField extends FormGroupComponent
     protected $icon = null;
 
     /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
-        return \Lar\Layout\Tags\INPUT::create([
+        return INPUT::create([
             'type' => $this->type,
             'id' => $this->field_id,
             'name' => $this->name,

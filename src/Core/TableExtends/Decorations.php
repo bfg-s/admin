@@ -4,21 +4,25 @@ namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\SPAN;
 use Lar\LteAdmin\Components\FieldComponent;
+use Lar\LteAdmin\Components\FieldMethods;
+use Lar\LteAdmin\Components\Fields\RatingField;
 
 class Decorations
 {
     /**
      * @param $value
      * @param  array  $props
-     * @return FieldComponent|\Lar\LteAdmin\Components\FieldMethods|\Lar\LteAdmin\Components\Fields\RatingField
+     * @return FieldComponent|FieldMethods|RatingField
      */
-    public function rating($value, $props = [])
+    public function ratingStars($value, $props = [])
     {
         return FieldComponent::rating('rating')
             ->only_input()
             ->readonly()
-            ->value($value)
+            ->default($value)
             ->sizeXs();
     }
 
@@ -29,7 +33,7 @@ class Decorations
      */
     public function password_stars($value, $props = [])
     {
-        if (! $value) {
+        if (!$value) {
             return $this->true_data($value);
         }
         $star = $props[0] ?? '•';
@@ -42,22 +46,27 @@ class Decorations
     }
 
     /**
-     * @param $props
      * @param $value
-     * @return string
+     * @return Component|mixed|null
      */
-    public function avatar($value, $props = [])
+    public function true_data($value)
     {
-        $size = $props[0] ?? 30;
+        $return = SPAN::create(['badge']);
 
-        if ($value) {
-            if (! preg_match('/^http/', $value)) {
-                $value = '/'.trim($value, '/');
-            }
-
-            return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
+        if (is_null($value)) {
+            return $return->addClass('badge-dark')->text('NULL');
+        } elseif ($value === true) {
+            return $return->addClass('badge-success')->text('TRUE');
+        } elseif ($value === false) {
+            return $return->addClass('badge-danger')->text('FALSE');
+        } elseif (is_array($value)) {
+            return $return->addClass('badge-info')->text('Array('.count($value).')');
+        } elseif ($value instanceof Carbon) {
+            return $value->format('Y-m-d H:i:s');
+        } elseif ($value == '') {
+            return $return->addClass('badge-dark')->text('EMPTY');
         } else {
-            return '<span class="badge badge-dark">none</span>';
+            return $value;
         }
     }
 
@@ -80,6 +89,26 @@ class Decorations
     }
 
     /**
+     * @param $props
+     * @param $value
+     * @return string
+     */
+    public function avatar($value, $props = [])
+    {
+        $size = $props[0] ?? 30;
+
+        if ($value) {
+            if (!preg_match('/^http/', $value)) {
+                $value = '/'.trim($value, '/');
+            }
+
+            return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
+        } else {
+            return '<span class="badge badge-dark">none</span>';
+        }
+    }
+
+    /**
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
@@ -91,7 +120,7 @@ class Decorations
             $value_for_copy = call_user_func($props[0], $model);
         }
 
-        if (! $value) {
+        if (!$value) {
             return $this->true_data($value);
         }
 
@@ -110,7 +139,7 @@ class Decorations
             $value_for_copy = call_user_func($props[0], $model);
         }
 
-        if (! $value) {
+        if (!$value) {
             return $this->true_data($value);
         }
 
@@ -214,28 +243,5 @@ class Decorations
         $size = $props[0] ?? 22;
 
         return "<i class=\"fas fa-square\" title='{$value}' style=\"color: {$value}; font-size: {$size}px\"></i>";
-    }
-
-    /**
-     * @param $value
-     * @return \Lar\Layout\Abstracts\Component|mixed|null
-     */
-    public function true_data($value)
-    {
-        $return = \Lar\Layout\Tags\SPAN::create(['badge']);
-
-        if (is_null($value)) {
-            return $return->addClass('badge-dark')->text('NULL');
-        } elseif ($value === true) {
-            return $return->addClass('badge-success')->text('TRUE');
-        } elseif ($value === false) {
-            return $return->addClass('badge-danger')->text('FALSE');
-        } elseif (is_array($value)) {
-            return $return->addClass('badge-info')->text('Array('.count($value).')');
-        } elseif ($value instanceof Carbon) {
-            return $value->format('Y-m-d H:i:s');
-        } else {
-            return $value;
-        }
     }
 }

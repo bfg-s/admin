@@ -21,6 +21,6 @@ class LteAdminExecutor extends JaxExecutor
      */
     public function access()
     {
-        return ! \LteAdmin::guest();
+        return !\LteAdmin::guest();
     }
 }

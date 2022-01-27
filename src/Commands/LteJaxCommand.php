@@ -2,8 +2,10 @@
 
 namespace Lar\LteAdmin\Commands;
 
+use Arr;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\Jax\LteAdminExecutor;
+use Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -44,7 +46,7 @@ class LteJaxCommand extends Command
         $namespace = $this->namespace();
         $path = $this->rp();
 
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
@@ -61,7 +63,7 @@ class LteJaxCommand extends Command
      */
     protected function name()
     {
-        return ucfirst(\Str::camel(\Arr::last($this->segments())));
+        return ucfirst(Str::camel(Arr::last($this->segments())));
     }
 
     /**

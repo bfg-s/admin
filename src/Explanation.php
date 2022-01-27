@@ -41,6 +41,33 @@ final class Explanation
         return $field->with(...$delegates);
     }
 
+    /**
+     * @param  array|Delegate  $delegate
+     * @return $this
+     */
+    public function with($delegate = null)
+    {
+        if ($delegate) {
+            if (!is_array($delegate)) {
+                $delegate = func_get_args();
+            }
+            foreach ($delegate as $item) {
+                if (is_callable($item)) {
+                    $item = call_user_func($item);
+                }
+                if (is_array($item)) {
+                    $this->with($item);
+                } elseif ($item instanceof Delegate) {
+                    $this->delegates[] = $item;
+                } elseif ($item instanceof self) {
+                    $this->delegates = array_merge($this->delegates, $item->delegates);
+                }
+            }
+        }
+
+        return $this;
+    }
+
     public function index(...$delegates)
     {
         if ($this->router->currentRouteNamed('*.index')) {
@@ -48,6 +75,11 @@ final class Explanation
         }
 
         return $this;
+    }
+
+    public function form(...$delegates)
+    {
+        return $this->edit(...$delegates)->create(...$delegates);
     }
 
     public function create(...$delegates)
@@ -74,42 +106,10 @@ final class Explanation
         return $this;
     }
 
-    public function form(...$delegates)
-    {
-        return $this->edit(...$delegates)->create(...$delegates);
-    }
-
     public function show(...$delegates)
     {
         if ($this->router->currentRouteNamed('*.show')) {
             $this->with(...$delegates);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array|Delegate $delegate
-     * @return $this
-     */
-    public function with($delegate = null)
-    {
-        if ($delegate) {
-            if (! is_array($delegate)) {
-                $delegate = func_get_args();
-            }
-            foreach ($delegate as $item) {
-                if (is_callable($item)) {
-                    $item = call_user_func($item);
-                }
-                if (is_array($item)) {
-                    $this->with($item);
-                } elseif ($item instanceof Delegate) {
-                    $this->delegates[] = $item;
-                } elseif ($item instanceof self) {
-                    $this->delegates = array_merge($this->delegates, $item->delegates);
-                }
-            }
         }
 
         return $this;
@@ -127,15 +127,15 @@ final class Explanation
         return $this;
     }
 
-    public function isEmpty()
-    {
-        return ! count($this->delegates);
-    }
-
     protected function apply(Delegate $delegate, object $instance)
     {
         foreach ($delegate->methods as $method) {
             $instance = $instance->{$method[0]}(...$method[1]);
         }
+    }
+
+    public function isEmpty()
+    {
+        return !count($this->delegates);
     }
 }

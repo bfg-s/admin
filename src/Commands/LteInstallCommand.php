@@ -2,7 +2,9 @@
 
 namespace Lar\LteAdmin\Commands;
 
+use App\LteAdmin\Delegates\CommonTrait;
 use Composer\Json\JsonFormatter;
+use File;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\ApplicationServiceProvider;
 use Lar\LteAdmin\Core\ConfigExtensionProvider;
@@ -11,6 +13,7 @@ use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
 use Lar\LteAdmin\Models\LteSeeder;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Page;
+use Schema;
 use Symfony\Component\Console\Input\InputOption;
 
 class LteInstallCommand extends Command
@@ -51,9 +54,9 @@ class LteInstallCommand extends Command
 
         $make_seeds = false;
 
-        if (! \Schema::hasTable('lte_users')) {
+        if (!Schema::hasTable('lte_users')) {
             $make_seeds = true;
-        } elseif (! LteUser::count()) {
+        } elseif (!LteUser::count()) {
             $make_seeds = true;
         }
 
@@ -66,7 +69,7 @@ class LteInstallCommand extends Command
         $base_dirs = ['/', '/Controllers', '/Delegates'];
 
         foreach ($base_dirs as $base_dir) {
-            if (! is_dir($dir = lte_app_path($base_dir))) {
+            if (!is_dir($dir = lte_app_path($base_dir))) {
                 mkdir($dir, 0777, true);
 
                 $this->info("Directory {$dir} created!");
@@ -76,7 +79,7 @@ class LteInstallCommand extends Command
         $public_dirs = ['/uploads/images', 'uploads/files'];
 
         foreach ($public_dirs as $public_dir) {
-            if (! is_dir($dir = public_path($public_dir))) {
+            if (!is_dir($dir = public_path($public_dir))) {
                 mkdir($dir, 0777, true);
 
                 $this->info("Directory {$dir} created!");
@@ -87,7 +90,7 @@ class LteInstallCommand extends Command
 
         $extensions = storage_path('lte_extensions.php');
 
-        if (! is_file($extensions)) {
+        if (!is_file($extensions)) {
             file_put_contents(
                 $extensions,
                 "<?php\n\nreturn [\n\t\n];"
@@ -97,10 +100,12 @@ class LteInstallCommand extends Command
 
             $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
 
-            if (! isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump']) === false) {
+            if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump',
+                    $base_composer['scripts']['post-autoload-dump']) === false) {
                 $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
 
-                file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
+                file_put_contents(base_path('composer.json'),
+                    JsonFormatter::format(json_encode($base_composer), false, true));
 
                 $this->info('File composer.json updated!');
             }
@@ -131,7 +136,7 @@ class LteInstallCommand extends Command
 
         $controller = lte_app_path('Controllers/Controller.php');
 
-        if (! is_file($controller)) {
+        if (!is_file($controller)) {
             file_put_contents(
                 $controller,
                 "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\nclass Controller extends LteController\n{\n\t\n}"
@@ -142,9 +147,9 @@ class LteInstallCommand extends Command
 
         $delegates = lte_app_path('Delegates');
 
-        $currentDelegates = \File::allFiles(__DIR__.'/../Delegates');
+        $currentDelegates = File::allFiles(__DIR__.'/../Delegates');
 
-        if (! trait_exists(\App\LteAdmin\Delegates\CommonTrait::class)) {
+        if (!trait_exists(CommonTrait::class)) {
             $file = lte_app_path('Delegates/CommonTrait.php');
             $pageClass = class_entity('CommonTrait')->traitObject();
             $pageClass->namespace(lte_app_namespace('Delegates'));
@@ -156,7 +161,7 @@ class LteInstallCommand extends Command
 
         foreach ($currentDelegates as $currentDelegate) {
             $file = $delegates.'/'.$currentDelegate->getFilename();
-            if (! is_file($file)) {
+            if (!is_file($file)) {
                 $parentClass = class_in_file($currentDelegate->getPathname());
                 $class = class_basename($parentClass);
                 $delegateClass = class_entity($class);
@@ -169,7 +174,7 @@ class LteInstallCommand extends Command
             }
         }
 
-        if (! class_exists(\App\LteAdmin\Page::class)) {
+        if (!class_exists(\App\LteAdmin\Page::class)) {
             $file = lte_app_path('Page.php');
             $pageClass = class_entity('Page');
             $pageClass->namespace(lte_app_namespace());
@@ -186,13 +191,13 @@ class LteInstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
-        if (! is_file(config_path('layout.php'))) {
+        if (!is_file(config_path('layout.php'))) {
             $this->call('vendor:publish', [
                 '--tag' => 'lar-layout-config',
             ]);
         }
 
-        if (! is_file(config_path('lte.php'))) {
+        if (!is_file(config_path('lte.php'))) {
             $this->call('vendor:publish', [
                 '--tag' => 'lte-config',
             ]);
@@ -212,7 +217,7 @@ class LteInstallCommand extends Command
     {
         $nav = lte_app_path('Navigator.php');
 
-        if (! is_file($nav)) {
+        if (!is_file($nav)) {
             $class = class_entity('Navigator');
             $class->namespace(lte_app_namespace());
             $class->wrap('php');
@@ -231,7 +236,7 @@ class LteInstallCommand extends Command
 
         $config = lte_app_path('Config.php');
 
-        if (! is_file($config)) {
+        if (!is_file($config)) {
             $class = class_entity('Config');
             $class->namespace(lte_app_namespace());
             $class->wrap('php');
@@ -251,7 +256,7 @@ class LteInstallCommand extends Command
 
         $provider = app_path('Providers/LteServiceProvider.php');
 
-        if (! is_file($provider)) {
+        if (!is_file($provider)) {
             $class = class_entity('LteServiceProvider');
             $class->namespace('App\Providers');
             $class->wrap('php');

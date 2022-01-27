@@ -2,7 +2,11 @@
 
 namespace Lar\LteAdmin\Exceptions;
 
+use Exception;
+use Illuminate\Http\Request;
 use Lar\LteAdmin\Layouts\LteAuthLayout;
+use LteAdmin;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -11,10 +15,10 @@ class Handler extends \App\Exceptions\Handler
     /**
      * Report or log an exception.
      *
-     * @param  \Throwable  $exception
+     * @param  Throwable  $exception
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function report(Throwable $exception)
     {
@@ -24,11 +28,11 @@ class Handler extends \App\Exceptions\Handler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  Request  $request
+     * @param  Throwable  $exception
+     * @return Response
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render($request, Throwable $exception)
     {
@@ -40,7 +44,7 @@ class Handler extends \App\Exceptions\Handler
                 return response($layout->render());
             }
 
-            if (! \LteAdmin::guest()) {
+            if (!LteAdmin::guest()) {
                 ob_clean();
             }
         }

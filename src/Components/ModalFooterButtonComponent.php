@@ -81,6 +81,17 @@ class ModalFooterButtonComponent extends BUTTON
     }
 
     /**
+     * @param  string  $icon
+     * @return $this
+     */
+    public function icon(string $icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
      * Build button.
      */
     protected function _build()
@@ -94,16 +105,5 @@ class ModalFooterButtonComponent extends BUTTON
         if ($this->text) {
             $this->text($this->text);
         }
-    }
-
-    /**
-     * @param  string  $icon
-     * @return $this
-     */
-    public function icon(string $icon)
-    {
-        $this->icon = $icon;
-
-        return $this;
     }
 }

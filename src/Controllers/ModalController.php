@@ -203,6 +203,22 @@ class ModalController extends HTMLCustomCommand
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        return json_encode($this->toArray());
+    }
+
+    /**
      * @return array[]
      */
     public function toArray()
@@ -219,21 +235,5 @@ class ModalController extends HTMLCustomCommand
                 ],
             ],
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function render()
-    {
-        return json_encode($this->toArray());
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }

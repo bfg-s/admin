@@ -2,11 +2,16 @@
 
 namespace Lar\LteAdmin\Getters;
 
+use App;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
 use Lar\LteAdmin\Exceptions\ShouldBeModelInControllerException;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LtePermission;
+use Navigate;
+use Route;
+use Str;
 
 class Menu extends Getter
 {
@@ -23,18 +28,9 @@ class Menu extends Getter
     protected static $currentQueryField = null;
     protected static $queries = [];
 
-    protected static function currentQueryField()
-    {
-        if (! static::$currentQueryField) {
-            static::$currentQueryField = \Route::currentRouteName();
-        }
-
-        return static::$currentQueryField;
-    }
-
     public static function saveCurrentQuery()
     {
-        $can = request()->pjax() || ! request()->ajax();
+        $can = request()->pjax() || !request()->ajax();
         if (request()->isMethod('GET') && $can) {
             $name = static::currentQueryField();
             if (isset(static::$queries[$name]) && static::$queries[$name]) {
@@ -51,9 +47,23 @@ class Menu extends Getter
         }
     }
 
+    protected static function currentQueryField()
+    {
+        if (!static::$currentQueryField) {
+            static::$currentQueryField = Route::currentRouteName();
+        }
+
+        return static::$currentQueryField;
+    }
+
+    public static function getCurrentQuery()
+    {
+        return static::getQuery(static::currentQueryField());
+    }
+
     public static function getQuery(string $name)
     {
-        if (! isset(static::$queries[$name]) || ! static::$queries[$name]) {
+        if (!isset(static::$queries[$name]) || !static::$queries[$name]) {
             static::$queries[$name] = session($name, []);
         }
 
@@ -61,7 +71,7 @@ class Menu extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function all()
     {
@@ -73,9 +83,9 @@ class Menu extends Getter
      */
     public static function now()
     {
-        $return = gets()->lte->menu->nested_collect->where('route', '=', \Route::currentRouteName())->first();
-        if (! $return) {
-            $route = preg_replace('/\.[a-zA-Z0-9\_\-]+$/', '', \Route::currentRouteName());
+        $return = gets()->lte->menu->nested_collect->where('route', '=', static::currentQueryField())->first();
+        if (!$return) {
+            $route = preg_replace('/\.[a-zA-Z0-9\_\-]+$/', '', static::currentQueryField());
             $return = gets()->lte->menu->nested_collect->where('route', '=', $route)->first();
         }
 
@@ -133,15 +143,15 @@ class Menu extends Getter
     {
         $menu = gets()->lte->menu->now;
 
-        if (\Route::current() && isset($menu['model.param'])) {
-            return \Route::current()->parameter($menu['model.param']);
+        if (Route::current() && isset($menu['model.param'])) {
+            return Route::current()->parameter($menu['model.param']);
         }
 
         return null;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|string|null
+     * @return Model|string|null
      * @throws ShouldBeModelInControllerException
      */
     public static function model()
@@ -150,7 +160,7 @@ class Menu extends Getter
 
         $menu = gets()->lte->menu->now;
 
-        $current = \Route::current();
+        $current = Route::current();
 
         if ($current->controller) {
             if (method_exists($current->controller, 'getModel')) {
@@ -164,20 +174,19 @@ class Menu extends Getter
         }
 
         if (is_string($return) && class_exists($return)) {
-
             /** @var Model $return */
             $return = new $return;
         }
 
-        $pm = $menu['model.param'] ?? \Str::singular(\Str::snake(class_basename($return)));
+        $pm = $menu['model.param'] ?? Str::singular(Str::snake(class_basename($return)));
 
         if (
             $pm &&
             $return instanceof Model &&
-            ! $return->exists &&
-            \Route::current()->hasParameter($pm)
+            !$return->exists &&
+            Route::current()->hasParameter($pm)
         ) {
-            if ($find = $return->where($return->getRouteKeyName(), \Route::current()->parameter($pm))->first()) {
+            if ($find = $return->where($return->getRouteKeyName(), Route::current()->parameter($pm))->first()) {
                 $return = $find;
             }
         }
@@ -186,7 +195,7 @@ class Menu extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection|array
+     * @return Collection|array
      */
     public static function now_parents()
     {
@@ -194,8 +203,8 @@ class Menu extends Getter
     }
 
     /**
-     * @param array $subject
-     * @param array $result
+     * @param  array  $subject
+     * @param  array  $result
      * @return array
      */
     protected static function get_parents(array $subject, $result = [])
@@ -203,7 +212,8 @@ class Menu extends Getter
         $result[$subject['id']] = $subject;
 
         if ($subject['parent_id']) {
-            $parent = gets()->lte->menu->nested_collect->where('active', true)->where('id', $subject['parent_id'])->first();
+            $parent = gets()->lte->menu->nested_collect->where('active', true)->where('id',
+                $subject['parent_id'])->first();
 
             if ($parent) {
                 return static::get_parents($parent, $result);
@@ -216,7 +226,7 @@ class Menu extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function nested_collect()
     {
@@ -224,7 +234,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param array $params
+     * @param  array  $params
      * @return bool|string
      */
     public static function current_index_link(array $params = [])
@@ -239,7 +249,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param string|int|array $params
+     * @param  string|int|array  $params
      * @return bool|string
      */
     public static function current_show_link($params)
@@ -254,7 +264,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param string|int|array $params
+     * @param  string|int|array  $params
      * @return bool|string
      */
     public static function current_update_link($params)
@@ -269,7 +279,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param string|int|array $params
+     * @param  string|int|array  $params
      * @return bool|string
      */
     public static function current_destroy_link($params)
@@ -284,7 +294,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param string|int|array $params
+     * @param  string|int|array  $params
      * @return bool|string
      */
     public static function current_edit_link($params)
@@ -299,7 +309,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param array $params
+     * @param  array  $params
      * @return bool|string
      */
     public static function current_store_link(array $params = [])
@@ -314,7 +324,7 @@ class Menu extends Getter
     }
 
     /**
-     * @param array $params
+     * @param  array  $params
      * @return bool|string
      */
     public static function current_create_link(array $params = [])
@@ -335,10 +345,14 @@ class Menu extends Getter
      * @param  array|null  $__parent
      * @return array
      */
-    public static function nested($__route_items_ = false, int $__route_parent_id_ = 0, $__route_name_ = 'lte', array $__parent = null)
-    {
+    public static function nested(
+        $__route_items_ = false,
+        int $__route_parent_id_ = 0,
+        $__route_name_ = 'lte',
+        array $__parent = null
+    ) {
         if ($__route_items_ === false) {
-            $__route_items_ = \Navigate::getMaked();
+            $__route_items_ = Navigate::getMaked();
         }
 
         $return = [];
@@ -362,19 +376,20 @@ class Menu extends Getter
                 $item['roles'] = $__parent['roles'];
             }
 
-            if (! isset($item['route'])) {
+            if (!isset($item['route'])) {
                 $item['route'] = false;
             } elseif ($__route_name_) {
                 if (str_replace(['{', '?', '}'], '', $item['route']) !== $item['route']) {
                     $item['route'] = $__route_name_;
                 } else {
-                    $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace('/', '.', $item['resource']['name']) : $item['route']);
+                    $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace('/', '.',
+                            $item['resource']['name']) : $item['route']);
                 }
             }
 
             $item['target'] = false;
 
-            if (! isset($item['link'])) {
+            if (!isset($item['link'])) {
                 $item['link'] = false;
             } elseif (preg_match('/^http/', $item['link'])) {
                 $item['target'] = true;
@@ -382,30 +397,35 @@ class Menu extends Getter
 
             $item['current.type'] = null;
 
-            if (isset($item['model']) && ! isset($item['model.param'])) {
-                $item['model.param'] = \Str::singular(\Str::snake(class_basename($item['model'])));
+            if (isset($item['model']) && !isset($item['model.param'])) {
+                $item['model.param'] = Str::singular(Str::snake(class_basename($item['model'])));
             }
 
             if (isset($item['link_params'])) {
                 $item['route_params'] = array_merge($item['route_params'] ?? [], call_user_func($item['link_params']));
             }
 
-            if ($item['route'] && \Route::has($item['route'])) {
+            if (isset($item['action'])) {
                 $item['route_params'] = array_merge($item['route_params'] ?? [], static::getQuery($item['route']));
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
-            } elseif (isset($item['resource']) && \Route::has($item['route'].'.index')) {
+                $item['controller'] = ltrim(is_array($item['action']) ? $item['action'][0] : Str::parseCallback($item['action'])[0],
+                    '\\');
+                $item['current'] = $item['route'] == static::currentQueryField();
+            } elseif (isset($item['resource'])) {
                 $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);
 
-                $item['current.type'] = str_replace($item['route'].'.', '', \Route::currentRouteName());
+                $item['current.type'] = str_replace($item['route'].'.', '', static::currentQueryField());
+                $item['current'] = str_replace('.'.$item['current.type'], '',
+                        static::currentQueryField()) == $item['route'];
 
                 $item['link.show'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('show', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('show', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('show', $item['resource_except']))
                     ) {
                         return null;
                     }
-                    if (! is_array($params) && isset($item['model.param'])) {
+                    if (!is_array($params) && isset($item['model.param'])) {
                         $params = [$item['model.param'] => $params];
                     }
                     $name = $item['route'].'.show';
@@ -415,12 +435,12 @@ class Menu extends Getter
                 };
                 $item['link.update'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('update', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('update', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('update', $item['resource_except']))
                     ) {
                         return null;
                     }
-                    if (! is_array($params) && isset($item['model.param'])) {
+                    if (!is_array($params) && isset($item['model.param'])) {
                         $params = [$item['model.param'] => $params];
                     }
 
@@ -428,12 +448,12 @@ class Menu extends Getter
                 };
                 $item['link.destroy'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('destroy', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('destroy', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('destroy', $item['resource_except']))
                     ) {
                         return null;
                     }
-                    if (! is_array($params) && isset($item['model.param'])) {
+                    if (!is_array($params) && isset($item['model.param'])) {
                         $params = [$item['model.param'] => $params];
                     }
 
@@ -441,12 +461,12 @@ class Menu extends Getter
                 };
                 $item['link.edit'] = function ($params) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('edit', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('edit', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('edit', $item['resource_except']))
                     ) {
                         return null;
                     }
-                    if (! is_array($params) && isset($item['model.param'])) {
+                    if (!is_array($params) && isset($item['model.param'])) {
                         $params = [$item['model.param'] => $params];
                     }
 
@@ -457,7 +477,7 @@ class Menu extends Getter
                 };
                 $item['link.index'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('index', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('index', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('index', $item['resource_except']))
                     ) {
                         return null;
@@ -470,7 +490,7 @@ class Menu extends Getter
                 };
                 $item['link.store'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('store', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('store', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('store', $item['resource_except']))
                     ) {
                         return null;
@@ -481,7 +501,7 @@ class Menu extends Getter
                 };
                 $item['link.create'] = function (array $params = []) use ($item) {
                     if (
-                        (isset($item['resource_only']) && ! in_array('create', $item['resource_only']))
+                        (isset($item['resource_only']) && !in_array('create', $item['resource_only']))
                         || (isset($item['resource_except']) && in_array('create', $item['resource_except']))
                     ) {
                         return null;
@@ -492,41 +512,41 @@ class Menu extends Getter
                     return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
                 $item['link'] = $item['link.index']();
+                $item['controller'] = ltrim($item['resource']['action'], '\\');
             }
 
-            if (! isset($item['selected'])) {
+            /** @var string $model */
+            $item['model_class'] = ($item['controller'] ?? null) ? ($item['controller']::$model ?? null) : null;
+
+            if (!isset($item['selected'])) {
                 $item['selected'] = false;
             }
 
-            if (! $item['selected'] && $item['route']) {
-                $current_route = \Route::currentRouteName();
+            if (!$item['selected'] && $item['route']) {
+                $current_route = static::currentQueryField();
 
                 $item['selected'] = $item['route'] == $current_route
-                    || \Str::is($item['route'].'.*', $current_route);
-            } elseif (! $item['selected'] && $item['link'] && ! $item['target']) {
+                    || Str::is($item['route'].'.*', $current_route);
+            } elseif (!$item['selected'] && $item['link'] && !$item['target']) {
                 $link = trim($item['link'], '/');
-                $link = ltrim($link, \App::getLocale());
+                $link = ltrim($link, App::getLocale());
                 $link = trim($link, '/');
-                $path = ltrim(request()->decodedPath().'/', \App::getLocale());
+                $path = ltrim(request()->decodedPath().'/', App::getLocale());
                 $path = trim($path, '/');
 
-                $item['link'] = '/'.\App::getLocale().'/'.$link;
+                $item['link'] = '/'.App::getLocale().'/'.$link;
 
-                $item['selected'] = \Str::is($link.'*', $path);
+                $item['selected'] = Str::is($link.'*', $path);
             }
 
-            if (! isset($item['active'])) {
+            if (!isset($item['active'])) {
                 $item['active'] = isset($item['title']);
-            } elseif ($item['active'] && ! isset($item['title'])) {
+            } elseif ($item['active'] && !isset($item['title'])) {
                 $item['title'] = false;
             }
 
             if (isset($item['link']) && $item['link'] && isset($item['active']) && $item['active']) {
                 $item['active'] = LtePermission::checkUrl($item['link']);
-            }
-
-            if (isset($item['active']) && $item['active'] && isset($item['controller'])) {
-                $item['active'] = lte_controller_can('index', $item['controller']);
             }
 
             if (isset($item['extension']) && $item['extension'] && $item['active']) {
@@ -563,7 +583,7 @@ class Menu extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function default()
     {

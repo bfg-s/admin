@@ -9,26 +9,22 @@ class TabContentComponent extends Component
     use FontAwesome;
 
     /**
+     * @var string|null
+     */
+    public $getTitle = null;
+    /**
+     * @var string
+     */
+    public $getIcon = null;
+    public $getActiveCondition = null;
+    public $getLeft = true;
+    /**
      * @var string[]
      */
     protected $props = [
         'tab-pane',
         'role' => 'tabpanel',
     ];
-
-    /**
-     * @var string|null
-     */
-    public $getTitle = null;
-
-    /**
-     * @var string
-     */
-    public $getIcon = null;
-
-    public $getActiveCondition = null;
-
-    public $getLeft = true;
 
     public function title(string $title)
     {

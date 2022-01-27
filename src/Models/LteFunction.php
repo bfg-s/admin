@@ -2,8 +2,12 @@
 
 namespace Lar\LteAdmin\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
@@ -14,39 +18,41 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
  * @property string|null $class
  * @property string|null $description
  * @property int $active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read Collection|\App\Models\LteRole[] $roles
  * @property-read int|null $roles_count
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction makeDumpedModel()
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction query()
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereClass($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteFunction whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|LteFunction makeDumpedModel()
+ * @method static Builder|LteFunction newModelQuery()
+ * @method static Builder|LteFunction newQuery()
+ * @method static Builder|LteFunction query()
+ * @method static Builder|LteFunction whereActive($value)
+ * @method static Builder|LteFunction whereClass($value)
+ * @method static Builder|LteFunction whereCreatedAt($value)
+ * @method static Builder|LteFunction whereDescription($value)
+ * @method static Builder|LteFunction whereId($value)
+ * @method static Builder|LteFunction whereSlug($value)
+ * @method static Builder|LteFunction whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class LteFunction extends Model
 {
     use DumpedModel;
 
     /**
+     * @var Collection
+     */
+    public static $now;
+    /**
      * @var string
      */
     protected $table = 'lte_functions';
-
     /**
      * @var string[]
      */
     protected $fillable = [
         'slug', 'class', 'description', 'active',
     ];
-
     /**
      * @var array
      */
@@ -55,12 +61,7 @@ class LteFunction extends Model
     ];
 
     /**
-     * @var Collection
-     */
-    public static $now;
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function roles()
     {

@@ -4,8 +4,8 @@ namespace Lar\LteAdmin\Components;
 
 use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FormAutoMakeTrait;
 use Lar\LteAdmin\Page;
+use Route;
 
 class FormComponent extends Component
 {
@@ -13,22 +13,30 @@ class FormComponent extends Component
         BuildHelperTrait::tab as helpTab;
     }
 
+    /**
+     * @var string
+     */
+    public static $last_id;
     protected $element = 'form';
-
     /**
      * @var string
      */
     protected $method = 'post';
-
     /**
      * @var string|null
      */
     protected $action;
 
-    /**
-     * @var string
-     */
-    public static $last_id;
+    public static function registrationInToContainer(Page $page, array $delegates = [])
+    {
+        if ($page->getContent() instanceof CardComponent) {
+            $card = $page->getClass(CardComponent::class);
+            $page->registerClass($card->bodyForm($delegates));
+            $page->registerClass($card->footerForm());
+        } else {
+            $page->registerClass($page->getContent()->form($delegates));
+        }
+    }
 
     public function tab(...$delegates)
     {
@@ -59,6 +67,11 @@ class FormComponent extends Component
         return $this;
     }
 
+    protected function mount()
+    {
+        $this->buildForm();
+    }
+
     /**
      * Form builder.
      */
@@ -68,9 +81,9 @@ class FormComponent extends Component
 
         $this->setMethod($this->method);
 
-        $menu = gets()->lte->menu->now;
+        $menu = $this->menu;
 
-        $type = gets()->lte->menu->type;
+        $type = $this->page->resource_type;
 
         if (isset($menu['model.param'])) {
             $this->appEnd(
@@ -78,7 +91,7 @@ class FormComponent extends Component
             );
         }
 
-        if (! $this->action && $type && $this->model && $menu) {
+        if (!$this->action && $type && $this->model && $menu) {
             $key = $this->model->getOriginal($this->model->getRouteKeyName());
 
             if ($type === 'edit' && isset($menu['link.update'])) {
@@ -87,11 +100,11 @@ class FormComponent extends Component
             } elseif ($type === 'create' && isset($menu['link.store'])) {
                 $this->action = $menu['link.store']();
             }
-        } elseif (isset($menu['post']) && isset($menu['route']) && \Route::has($menu['route'].'.post')) {
+        } elseif (isset($menu['post']) && isset($menu['route']) && Route::has($menu['route'].'.post')) {
             $this->action = route($menu['route'].'.post', $menu['route_params'] ?? []);
         }
 
-        if (! $this->action) {
+        if (!$this->action) {
             $this->action = url()->current();
         }
 
@@ -104,21 +117,5 @@ class FormComponent extends Component
         $this->setId(static::$last_id);
 
         $this->attr('data-load', 'valid');
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        if ($page->getContent() instanceof CardComponent) {
-            $card = $page->getClass(CardComponent::class);
-            $page->registerClass($card->bodyForm($delegates));
-            $page->registerClass($card->footerForm());
-        } else {
-            $page->registerClass($page->getContent()->form($delegates));
-        }
-    }
-
-    protected function mount()
-    {
-        $this->buildForm();
     }
 }

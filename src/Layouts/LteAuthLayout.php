@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Layouts;
 
+use Exception;
+
 class LteAuthLayout extends LteBase
 {
     /**
@@ -19,7 +21,7 @@ class LteAuthLayout extends LteBase
     /**
      * LteAuthLayout constructor.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {

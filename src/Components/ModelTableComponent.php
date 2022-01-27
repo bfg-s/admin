@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -14,6 +16,9 @@ use Lar\LteAdmin\Components\Traits\ModelTable\TableExtensionTrait;
 use Lar\LteAdmin\Components\Traits\ModelTable\TableHelpersTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
+use Lar\Tagable\Tag;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @methods static::$extensions (...$params) static
@@ -31,88 +36,75 @@ class ModelTableComponent extends Component
         Delegable;
 
     /**
+     * @var SearchFormComponent
+     */
+    public $search;
+    /**
      * @var string
      */
     protected $element = 'table';
     protected $label = null;
     protected $hasHidden = false;
-
     /**
      * @var string[]
      */
     protected $props = [
         'table', 'table-sm', 'table-hover',
     ];
-
     /**
      * @var Model|Builder|Relation|Collection|array|null
      */
     protected $model;
-
     /**
      * @var LengthAwarePaginator
      */
     protected $paginate;
-
     /**
-     * @var \Closure|array|null
+     * @var Closure|array|null
      */
     protected $model_control = [];
-
     /**
      * @var string
      */
     protected $model_name;
-
     /**
      * @var string
      */
     protected $model_class;
-
     /**
      * @var int
      */
     protected $per_page = 15;
-
     /**
      * @var int[]
      */
     protected $per_pages = [10, 15, 20, 50, 100];
-
     /**
      * @var string
      */
     protected $order_field = 'id';
-
     /**
      * @var string
      */
     protected $order_type = 'desc';
-
     /**
      * @var array
      */
     protected $columns = [];
-
     /**
      * @var string|null
      */
     protected $last;
-
     /**
      * @var bool
      */
     protected $prepend = false;
-
-    /**
-     * @var SearchFormComponent
-     */
-    public $search;
+    protected $controlsObj;
 
     /**
      * @param ...$delegates
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct(...$delegates)
     {
@@ -133,7 +125,14 @@ class ModelTableComponent extends Component
     }
 
     /**
-     * @param SearchFormComponent|\Closure|array|Builder|Relation $instruction
+     * Save last table request for returns.
+     */
+    protected function save_table_requests()
+    {
+    }
+
+    /**
+     * @param  SearchFormComponent|Closure|array|Builder|Relation  $instruction
      * @return $this|static
      */
     public function model($model = null)
@@ -148,23 +147,10 @@ class ModelTableComponent extends Component
     }
 
     /**
-     * Save last table request for returns.
-     */
-    protected function save_table_requests()
-    {
-    }
-
-    protected function mount()
-    {
-        $this->_create_controls();
-        $this->_build();
-    }
-
-    /**
      * @param $name
      * @param $arguments
-     * @return bool|\Lar\Tagable\Tag|string
-     * @throws \Exception
+     * @return bool|Tag|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -175,5 +161,11 @@ class ModelTableComponent extends Component
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    protected function mount()
+    {
+        $this->_create_controls();
+        $this->_build();
     }
 }

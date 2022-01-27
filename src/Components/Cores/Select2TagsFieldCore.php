@@ -7,17 +7,15 @@ use Lar\Layout\Tags\SELECT;
 class Select2TagsFieldCore extends SELECT
 {
     /**
-     * @var mixed|null
-     */
-    private $value;
-
-    /**
      * @var string[]
      */
     protected $props = [
         'multiple' => 'multiple',
     ];
-
+    /**
+     * @var mixed|null
+     */
+    private $value;
     /**
      * @var array
      */
@@ -45,7 +43,7 @@ class Select2TagsFieldCore extends SELECT
      */
     public function setValues($value)
     {
-        if (! $this->hasAttribute('value')) {
+        if (!$this->hasAttribute('value')) {
             $this->value = $value;
         } else {
             $this->value = $this->getValue();

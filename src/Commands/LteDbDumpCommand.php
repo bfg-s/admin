@@ -11,6 +11,8 @@ use Lar\LteAdmin\Models\LteFileStorage;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LtePermission;
 use Lar\LteAdmin\Models\LteRole;
+use ReflectionClass;
+use ReflectionException;
 
 class LteDbDumpCommand extends Command
 {
@@ -57,10 +59,18 @@ class LteDbDumpCommand extends Command
     }
 
     /**
+     * @param  string  $model
+     */
+    public static function addModel(string $model)
+    {
+        static::$models[] = $model;
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function handle()
     {
@@ -117,18 +127,18 @@ class LteDbDumpCommand extends Command
 
     /**
      * @param  string  $class
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function class_exists(string $class)
     {
-        $ref = new \ReflectionClass($class);
+        $ref = new ReflectionClass($class);
 
         $date = get_doc_var($ref->getDocComment(), 'date');
 
         if ($date) {
             $name = str_replace(['-', ' ', ':'], '_', $date);
 
-            if (! is_dir(database_path('seeds/LteAdminDumps'))) {
+            if (!is_dir(database_path('seeds/LteAdminDumps'))) {
                 mkdir(database_path('seeds/LteAdminDumps'), 0777, true);
             }
 
@@ -137,13 +147,5 @@ class LteDbDumpCommand extends Command
                 file_get_contents($ref->getFileName())
             );
         }
-    }
-
-    /**
-     * @param  string  $model
-     */
-    public static function addModel(string $model)
-    {
-        static::$models[] = $model;
     }
 }

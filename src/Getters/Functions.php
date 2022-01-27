@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Getters;
 
+use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
 use Lar\LteAdmin\Models\LteFunction;
 
@@ -13,7 +14,7 @@ class Functions extends Getter
     public static $name = 'lte.functions';
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|\Lar\LteAdmin\Models\LteFunction[]
+     * @return \Illuminate\Database\Eloquent\Collection|Collection|LteFunction[]
      */
     public static function list()
     {
@@ -21,7 +22,7 @@ class Functions extends Getter
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function default()
     {

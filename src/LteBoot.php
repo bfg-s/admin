@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin;
 
+use Gate;
 use Lar\LteAdmin\Components\ModelTableComponent;
 use Lar\LteAdmin\Core\PageMixin;
 use Lar\LteAdmin\Core\TableExtends\Decorations;
@@ -11,6 +12,8 @@ use Lar\LteAdmin\Core\TableExtends\Formatter;
 use Lar\LteAdmin\Core\TaggableComponent;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteUser;
+use ReflectionException;
+use Schema;
 
 class LteBoot
 {
@@ -27,7 +30,7 @@ class LteBoot
 
     /**
      * Run boot Lte scripts.
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function run()
     {
@@ -50,7 +53,7 @@ class LteBoot
             }
         }
 
-        if (! app()->runningInConsole() && \Schema::hasTable('lte_functions')) {
+        if (!app()->runningInConsole() && Schema::hasTable('lte_functions')) {
             static::makeGates();
             gets()->lte->menu->save_current_query();
         }
@@ -63,7 +66,7 @@ class LteBoot
     {
         /** @var LteFunction $item */
         foreach (LteFunction::with('roles')->where('active', 1)->get() as $item) {
-            \Gate::define("{$item->class}@{$item->slug}", static function (LteUser $user) use ($item) {
+            Gate::define("{$item->class}@{$item->slug}", static function (LteUser $user) use ($item) {
                 return $user->hasRoles($item->roles->pluck('slug')->toArray());
             });
         }

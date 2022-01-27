@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
+use Throwable;
 
 class TimelineComponent extends Component
 {
@@ -67,7 +68,7 @@ class TimelineComponent extends Component
     protected $append = null;
 
     /**
-     * @param callable|string $icon
+     * @param  callable|string  $icon
      * @return $this
      */
     public function set_icon($icon)
@@ -80,7 +81,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @param callable|string $title
+     * @param  callable|string  $title
      * @return $this
      */
     public function set_title($title)
@@ -93,7 +94,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @param callable|string $body
+     * @param  callable|string  $body
      * @return $this
      */
     public function set_body($body)
@@ -106,7 +107,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @param callable|string $footer
+     * @param  callable|string  $footer
      * @return $this
      */
     public function set_footer($footer)
@@ -119,7 +120,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @param callable|string $per_page
+     * @param  callable|string  $per_page
      * @return $this
      */
     public function set_per_page($per_page)
@@ -132,7 +133,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @param callable|string $order_type
+     * @param  callable|string  $order_type
      * @return $this
      */
     public function set_order_type($order_type)
@@ -145,7 +146,7 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function mount()
     {
@@ -153,7 +154,8 @@ class TimelineComponent extends Component
 
         $this->order_type = $this->callCallableCurrent('order_type', $this);
 
-        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'), $this->per_pages)) {
+        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'),
+                $this->per_pages)) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 
@@ -227,31 +229,9 @@ class TimelineComponent extends Component
 
     /**
      * @param  string  $segment
-     * @param $model
-     * @param $area
-     * @param  null  $default
-     * @return mixed
-     * @throws \Throwable
-     */
-    protected function callCallableExtender(string $segment, $model, $area, $default = null)
-    {
-        $s = $this->{$segment};
-
-        return $s && is_string($s) ? ($model->{$s} ?: $default) : (
-            $s && is_embedded_call($s) ? embedded_call($s, [
-                get_class($area) => $area,
-                (is_object($model) ? get_class($model) : 'model') => $model,
-                'model' => $model,
-                static::class => $this,
-            ]) : $default
-        );
-    }
-
-    /**
-     * @param  string  $segment
      * @param $area
      * @return mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function callCallableCurrent(string $segment, $area)
     {
@@ -259,19 +239,19 @@ class TimelineComponent extends Component
         $value = $isProp ? $this->{$segment} : null;
 
         return $value && is_string($value) ? $value : (
-            $value && is_embedded_call($value) ? embedded_call($value, [
-                get_class($area) => $area,
-                static::class => $this,
-            ]) : $value
+        $value && is_embedded_call($value) ? embedded_call($value, [
+            get_class($area) => $area,
+            static::class => $this,
+        ]) : $value
         );
     }
 
     /**
-     * @return array|\Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator
+     * @return array|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator
      */
     protected function getPaginate()
     {
-        if (! $this->model) {
+        if (!$this->model) {
             return [];
         }
 
@@ -286,14 +266,36 @@ class TimelineComponent extends Component
         }
 
         return ($paginate instanceof Collection
-                    ? $paginate->sortByDesc($this->order_field, 'desc')
-                    : $paginate->orderBy($this->order_field, 'desc')
-                )->paginate($this->per_page, ['*'], $this->model_name.'_page');
+            ? $paginate->sortByDesc($this->order_field, 'desc')
+            : $paginate->orderBy($this->order_field, 'desc')
+        )->paginate($this->per_page, ['*'], $this->model_name.'_page');
+    }
+
+    /**
+     * @param  string  $segment
+     * @param $model
+     * @param $area
+     * @param  null  $default
+     * @return mixed
+     * @throws Throwable
+     */
+    protected function callCallableExtender(string $segment, $model, $area, $default = null)
+    {
+        $s = $this->{$segment};
+
+        return $s && is_string($s) ? ($model->{$s} ?: $default) : (
+        $s && is_embedded_call($s) ? embedded_call($s, [
+            get_class($area) => $area,
+            (is_object($model) ? get_class($model) : 'model') => $model,
+            'model' => $model,
+            static::class => $this,
+        ]) : $default
+        );
     }
 
     /**
      * @return DIV|string
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function paginateFooter($paginate)
     {
@@ -313,7 +315,7 @@ class TimelineComponent extends Component
     /**
      * Get the array of elements to pass to the view.
      *
-     * @param LengthAwarePaginator $page
+     * @param  LengthAwarePaginator  $page
      * @return array
      */
     protected function paginationElements(LengthAwarePaginator $page)

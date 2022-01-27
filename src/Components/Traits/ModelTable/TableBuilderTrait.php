@@ -2,19 +2,23 @@
 
 namespace Lar\LteAdmin\Components\Traits\ModelTable;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
+use Illuminate\Support\Collection;
 use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
 use Lar\LteAdmin\Components\SearchFormComponent;
+use Lar\LteAdmin\Getters\Menu;
+use ReflectionException;
 
 trait TableBuilderTrait
 {
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function _build()
     {
@@ -22,7 +26,8 @@ trait TableBuilderTrait
 
         $this->setId($this->model_name);
 
-        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'), $this->per_pages)) {
+        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'),
+                $this->per_pages)) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 
@@ -33,7 +38,7 @@ trait TableBuilderTrait
         $header_count = 0;
 
         foreach ($this->columns as $key => $column) {
-            if ((request()->has('show_deleted') && ! $column['trash']) || $column['hide']) {
+            if ((request()->has('show_deleted') && !$column['trash']) || $column['hide']) {
                 continue;
             }
 
@@ -42,7 +47,7 @@ trait TableBuilderTrait
             $header_count++;
         }
 
-        if (request()->has('q') && request()->ajax() && ! request()->pjax() && $this->search && $this->search->fieldsCount()) {
+        if (request()->has('q') && request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
             die($this->paginate->toJson());
         }
 
@@ -60,10 +65,13 @@ trait TableBuilderTrait
             $count = $this->paginate->count();
         }
 
-        if (! $count) {
+        if (!$count) {
             $body->tr()
                 ->td(['colspan' => $header_count])
-                ->div(['alert alert-warning mt-3 text-center text-justify', 'role' => 'alert', 'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'])
+                ->div([
+                    'alert alert-warning mt-3 text-center text-justify', 'role' => 'alert',
+                    'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'
+                ])
                 ->text(__('lte.empty'));
         }
     }
@@ -71,14 +79,14 @@ trait TableBuilderTrait
     /**
      * @param  TR  $tr
      * @param $item
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function makeBodyTR(TR $tr, $item)
     {
         foreach ($this->columns as $column) {
             $value = $column['field'];
 
-            if ((request()->has('show_deleted') && ! $column['trash']) || $column['hide']) {
+            if ((request()->has('show_deleted') && !$column['trash']) || $column['hide']) {
                 continue;
             }
 
@@ -120,7 +128,7 @@ trait TableBuilderTrait
                         $this->model_name.'_type' => $now ? ($select === 'desc' ? 'asc' : 'desc') : 'asc',
                     ]))->i(["fas fa-sort-amount-{$type} d-none d-sm-inline"], ':space')
                         ->_span($column['label'])
-                        ->addClassIf(! $now, 'text-body');
+                        ->addClassIf(!$now, 'text-body');
                 } else {
                     $th->span()->when([$column['label']]);
                 }
@@ -131,7 +139,7 @@ trait TableBuilderTrait
     }
 
     /**
-     * @return array|\Closure|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Model|Relation|\Lar\LteAdmin\Getters\Menu|string|null
+     * @return array|Closure|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Model|Relation|Menu|string|null
      */
     protected function createModel()
     {
@@ -160,8 +168,9 @@ trait TableBuilderTrait
                 }
             }
 
-            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate($this->per_page, ['*'], $this->model_name.'_page');
-        } elseif ($this->model instanceof \Illuminate\Support\Collection) {
+            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate($this->per_page,
+                ['*'], $this->model_name.'_page');
+        } elseif ($this->model instanceof Collection) {
             if (request()->has($this->model_name)) {
                 $model = $this->model
                     ->{strtolower($select_type) == 'asc' ? 'sortBy' : 'sortByDesc'}($this->order_field);
@@ -178,7 +187,7 @@ trait TableBuilderTrait
     /**
      * Get the array of elements to pass to the view.
      *
-     * @param LengthAwarePaginator $page
+     * @param  LengthAwarePaginator  $page
      * @return array
      */
     protected function paginationElements(LengthAwarePaginator $page)

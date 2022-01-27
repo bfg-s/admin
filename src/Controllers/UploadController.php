@@ -2,12 +2,13 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Lar\LteAdmin\Models\LteFileStorage;
 
 class UploadController extends Controller
 {
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {

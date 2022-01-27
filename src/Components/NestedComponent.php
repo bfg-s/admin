@@ -2,69 +2,100 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Lar\Developer\Core\Traits\Piplineble;
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Cores\NestableComponentCore;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Page;
-use Lar\Tagable\Events\onRender;
+use Lar\Layout\Tags\LI;
+use Lar\Layout\Tags\OL;
+use Lar\LteAdmin\Getters\Menu;
 
-/**
- * @mixin NestedComponentMacroList
- */
-class NestedComponent extends DIV implements onRender
+class NestedComponent extends Component
 {
-    use Macroable, Piplineble, Delegable;
-
     /**
-     * @var bool
+     * @var string[]
      */
-    protected $only_content = true;
+    protected $props = [
+        'dd',
+    ];
 
     /**
-     * @var NestableComponentCore
+     * @var Builder|Model|Relation|Menu|string|null
      */
-    protected $nested;
-    protected Page $page;
-    public $model = null;
+    protected $model;
 
     /**
-     * @param  array  $delegates
+     * @var string|callable
+     */
+    protected $title_field = 'name';
+
+    /**
+     * @var string
+     */
+    protected $parent_field = 'parent_id';
+
+    /**
+     * Shoe default controls.
+     *
+     * @var Closure|array
+     */
+    protected $controls;
+
+    /**
+     * Custom controls.
+     *
+     * @var callable
+     */
+    protected $custom_controls;
+
+    /**
+     * @var Closure|array
+     */
+    protected $info_control;
+
+    /**
+     * @var Closure|array
+     */
+    protected $delete_control;
+
+    /**
+     * @var Closure|array
+     */
+    protected $edit_control;
+
+    /**
+     * @var string
+     */
+    private $order_by_field = 'order';
+
+    /**
+     * @var string
+     */
+    private $order_by_type = 'asc';
+
+    /**
+     * @var int
+     */
+    private $maxDepth = 5;
+
+    /**
+     * Col constructor.
+     * @param  null  $model
      */
     public function __construct(...$delegates)
     {
-        parent::__construct();
+        $this->controls =
+        $this->info_control =
+        $this->delete_control =
+        $this->edit_control = static function () {
+            return true;
+        };
 
-        $this->page = app(Page::class);
+        parent::__construct(...$delegates);
 
-        $this->model = $this->page->model();
-
-        $this->nested = new NestableComponentCore($this->model);
-
-        $this->explainForce(Explanation::new($delegates));
-
-        $this->appEnd($this->nested);
-
-        $this->callConstructEvents();
-    }
-
-    /**
-     * @param  SearchFormComponent|callable|array|null  $callback
-     * @return $this
-     */
-    public function model($callback = null)
-    {
-        if ($callback) {
-            if ($callback instanceof SearchFormComponent) {
-                $callback = $callback->makeModel($this->model);
-            }
-
-            $this->nested->model($callback);
-        }
-
-        return $this;
+        $this->setDatas(['load' => 'nestable']);
     }
 
     /**
@@ -73,7 +104,11 @@ class NestedComponent extends DIV implements onRender
      */
     public function orderDesc(string $field = null)
     {
-        $this->nested->orderDesc($field);
+        $this->order_by_type = 'desc';
+
+        if ($field) {
+            $this->order_by_field = $field;
+        }
 
         return $this;
     }
@@ -85,7 +120,13 @@ class NestedComponent extends DIV implements onRender
      */
     public function orderBy(string $field = null, string $order = null)
     {
-        $this->nested->orderBy($field, $order);
+        if ($field) {
+            $this->order_by_field = $field;
+        }
+
+        if ($order) {
+            $this->order_by_type = $order;
+        }
 
         return $this;
     }
@@ -96,7 +137,7 @@ class NestedComponent extends DIV implements onRender
      */
     public function titleField($field)
     {
-        $this->nested->title_field($field);
+        $this->title_field = $field;
 
         return $this;
     }
@@ -107,7 +148,7 @@ class NestedComponent extends DIV implements onRender
      */
     public function parentField($field)
     {
-        $this->nested->parent_field($field);
+        $this->parent_field = $field;
 
         return $this;
     }
@@ -118,7 +159,7 @@ class NestedComponent extends DIV implements onRender
      */
     public function maxDepth(int $depth)
     {
-        $this->nested->maxDepth($depth);
+        $this->maxDepth = $depth;
 
         return $this;
     }
@@ -129,63 +170,164 @@ class NestedComponent extends DIV implements onRender
      */
     public function controls(callable $call)
     {
-        $this->nested->controls($call);
+        $this->custom_controls = $call;
 
         return $this;
     }
 
     /**
-     * @param  \Closure|array|null  $test
+     * @param  Closure|array|null  $test
      * @return $this
      */
     public function disableControls($test = null)
     {
-        $this->nested->disableControls($test);
+        $this->controls = is_embedded_call($test) ? $test : static function () {
+            return false;
+        };
 
         return $this;
     }
 
     /**
-     * @param  \Closure|array|null  $test
+     * @param  Closure|array|null  $test
      * @return $this
      */
     public function disableInfo($test = null)
     {
-        $this->nested->disableInfo($test);
+        $this->info_control = is_embedded_call($test) ? $test : static function () {
+            return false;
+        };
 
         return $this;
     }
 
     /**
-     * @param  \Closure|array|null  $test
+     * @param  Closure|array|null  $test
      * @return $this
      */
     public function disableEdit($test = null)
     {
-        $this->nested->disableEdit($test);
+        $this->edit_control = is_embedded_call($test) ? $test : static function () {
+            return false;
+        };
 
         return $this;
     }
 
     /**
-     * @param  \Closure|array|null  $test
+     * @param  Closure|array|null  $test
      * @return $this
      */
     public function disableDelete($test = null)
     {
-        $this->nested->disableDelete($test);
+        $this->delete_control = is_embedded_call($test) ? $test : static function () {
+            return false;
+        };
 
         return $this;
     }
 
-    /**
-     * @return mixed|void
-     * @throws \ReflectionException
-     */
-    public function onRender()
+    protected function mount()
     {
-        $this->callRenderEvents();
+        $model = null;
 
-        $this->nested->build();
+        if ($this->model instanceof Relation) {
+            $model = $this->model->getQuery()->getModel();
+        } elseif ($this->model instanceof Builder) {
+            $model = $this->model->getModel();
+        } elseif ($this->model instanceof Model) {
+            $model = $this->model;
+        }
+
+        if ($model) {
+            if (array_search($this->parent_field, $model->getFillable()) === false) {
+                $this->maxDepth = 1;
+            }
+            $this->setDatas(['model' => get_class($model)]);
+        } else {
+            $this->maxDepth = 1;
+        }
+
+        $this->setDatas(['max-depth' => $this->maxDepth, 'parent' => $this->parent_field]);
+
+        $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type)->get();
+
+        $this->makeList($this->maxDepth > 1 ? $this->model->whereNull($this->parent_field) : $this->model, $this);
+    }
+
+    /**
+     * @param  Collection|Model[]  $model
+     * @param  Component  $object
+     */
+    protected function makeList(Collection $model, \Lar\Layout\Abstracts\Component $object)
+    {
+        $this->attr('data-order-field', $this->order_by_field);
+
+        $object->ol(['dd-list'])->when(function (OL $ol) use ($model) {
+            foreach ($model as $item) {
+                $this->makeItem($ol, $item);
+            }
+        });
+    }
+
+    /**
+     * @param  Component  $object
+     * @param  Model  $item
+     */
+    protected function makeItem(\Lar\Layout\Abstracts\Component $object, Model $item)
+    {
+        $object->li(['dd-item dd3-item'])->setDatas(['id' => $item->id])->when(function (LI $li) use ($item) {
+            $li->div(['dd-handle dd3-handle'])->when(static function (DIV $div) use ($item) {
+                $div->i(['class' => 'fas fa-arrows-alt']);
+            });
+            $li->div(['dd3-content'])->when(function (DIV $div) use ($item) {
+                if (is_callable($this->title_field)) {
+                    $div->span(['text'])->text(call_user_func($this->title_field, $item));
+                } else {
+                    $ddd = multi_dot_call($item, $this->title_field);
+                    $div->span(['text'])->text(__(e($ddd)));
+                }
+                $cc_access = ($this->controls)($item);
+                $cc = $this->custom_controls;
+                if ($cc_access || $cc) {
+                    $div->div(['float-right'])
+                        ->appEndIf($this->menu,
+                            ButtonsComponent::create()->when(function (ButtonsComponent $group) use (
+                                $item,
+                                $cc_access,
+                                $cc
+                            ) {
+                                $model = $item;
+                                $key = $model->getRouteKey();
+
+                                if ($cc) {
+                                    call_user_func($cc, $group, $model);
+                                }
+
+                                if ($cc_access) {
+                                    if (($this->edit_control)($item)) {
+                                        $group->resourceEdit($this->menu['link.edit']($key), '');
+                                    }
+
+                                    if (($this->delete_control)($item)) {
+                                        $group->resourceDestroy($this->menu['link.destroy']($key), '',
+                                            $model->getRouteKeyName(), $key);
+                                    }
+
+                                    if (($this->info_control)($item)) {
+                                        $group->resourceInfo($this->menu['link.show']($key), '');
+                                    }
+                                }
+                            }));
+                }
+            });
+            if ($this->maxDepth > 1) {
+                $list = $this->model->where($this->parent_field, $item->id);
+                if ($list->count()) {
+                    /** @var Collection $list */
+                    $this->makeList($list, $li);
+                }
+            }
+        });
     }
 }

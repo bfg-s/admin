@@ -37,7 +37,7 @@ class Select2FieldCore extends SELECT
      */
     public function setValues($value)
     {
-        if (! $this->hasAttribute('value')) {
+        if (!$this->hasAttribute('value')) {
             $this->value = $value;
         } else {
             $this->value = $this->getValue();

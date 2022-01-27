@@ -3,10 +3,12 @@
 namespace Lar\LteAdmin\Components;
 
 use Lar\Layout\Abstracts\Component;
+use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
+use ReflectionException;
 
 /**
  * @mixin TabsComponentMacroList
@@ -80,11 +82,15 @@ class TabsComponent extends DIV implements onRender
      * @param $icon
      * @param  callable|array|null  $contentCb
      * @param  bool|null  $active
-     * @return Component|\Lar\Layout\LarDoc|TabContentComponent
+     * @return Component|LarDoc|TabContentComponent
      */
-    public function createNewTab(string|TabContentComponent $title, $icon = null, callable | array $contentCb = null, ?bool $active = null)
-    {
-        if ($icon && ! is_string($icon)) {
+    public function createNewTab(
+        string|TabContentComponent $title,
+        $icon = null,
+        callable|array $contentCb = null,
+        ?bool $active = null
+    ) {
+        if ($icon && !is_string($icon)) {
             $contentCb = $icon;
             $icon = null;
         }
@@ -100,7 +106,7 @@ class TabsComponent extends DIV implements onRender
         }
         $this->makeNav($left);
         $id = 'tab-'.md5($title).'-'.static::$counter;
-        $active = $active === null ? ! $this->nav->contentCount() : $active;
+        $active = $active === null ? !$this->nav->contentCount() : $active;
         $a = $this->nav->li(['nav-item'])->a([
             'nav-link',
             'id' => $id.'-label',
@@ -140,6 +146,30 @@ class TabsComponent extends DIV implements onRender
     }
 
     /**
+     * @return $this
+     */
+    protected function makeNav($left)
+    {
+        if (!$this->nav) {
+            $row = $this->div(['row']);
+            if ($left) {
+                $this->nav = $row->div(['col-md-2'])->ul([
+                    'nav flex-column nav-tabs h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical'
+                ]);
+                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
+            } else {
+                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
+                $this->nav = $row->div(['col-md-2'])->ul([
+                    'nav flex-column nav-tabs nav-tabs-right h-100', 'role' => 'tablist',
+                    'aria-orientation' => 'vertical'
+                ]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @param  mixed  ...$props
      * @return $this
      */
@@ -151,27 +181,8 @@ class TabsComponent extends DIV implements onRender
     }
 
     /**
-     * @return $this
-     */
-    protected function makeNav($left)
-    {
-        if (! $this->nav) {
-            $row = $this->div(['row']);
-            if ($left) {
-                $this->nav = $row->div(['col-md-2'])->ul(['nav flex-column nav-tabs h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical']);
-                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
-            } else {
-                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
-                $this->nav = $row->div(['col-md-2'])->ul(['nav flex-column nav-tabs nav-tabs-right h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical']);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function onRender()
     {

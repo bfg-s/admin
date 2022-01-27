@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use Auth;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
@@ -13,6 +15,7 @@ use Lar\LteAdmin\Delegates\Column;
 use Lar\LteAdmin\Delegates\Form;
 use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Delegates\Tab;
+use Lar\LteAdmin\Getters\Menu;
 use Lar\LteAdmin\Models\LteLog;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Page;
@@ -24,15 +27,6 @@ class UserController extends Controller
      * @var string
      */
     public static $model = LteUser::class;
-
-    public function defaultDateRange()
-    {
-        return [
-            now()->subDay()->startOfDay()->toDateString(),
-            now()->endOfDay()->toDateString(),
-        ];
-    }
-
     /**
      * @var LteUser
      */
@@ -80,7 +74,7 @@ class UserController extends Controller
                         ->successType(),
                     $card->tab(
                         $tab->right(),
-                        $tab->active(! $request->has('ltelog_per_page') && ! $request->has('ltelog_page') && ! $request->has('q')),
+                        $tab->active(!$request->has('ltelog_per_page') && !$request->has('ltelog_page') && !$request->has('q')),
                         $tab->icon_cogs()->title('lte.settings'),
                         $tab->form(
                             $form->vertical(),
@@ -101,7 +95,7 @@ class UserController extends Controller
                     $card->tab(
                         $tab->active(request()->has('ltelog_per_page') || request()->has('ltelog_page')),
                         $tab->icon_history()->title('lte.timeline'),
-                        $tab->with(fn (TabContentComponent $content) => static::timelineComponent($content,
+                        $tab->with(fn(TabContentComponent $content) => static::timelineComponent($content,
                             $this->model()->logs(), $this))
                     ),
                     $card->tab(
@@ -140,15 +134,6 @@ class UserController extends Controller
             );
     }
 
-    public function on_updated($form)
-    {
-        lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
-
-        if (isset($form['password']) && $form['password']) {
-            lte_log_success('Changed the password', get_class($this->model()), 'fas fa-key');
-        }
-    }
-
     public static function timelineComponent($content, $model, Controller $controller)
     {
         $content->div(['col-md-12'])->timeline(
@@ -170,8 +155,25 @@ class UserController extends Controller
         );
     }
 
+    public function defaultDateRange()
+    {
+        return [
+            now()->subDay()->startOfDay()->toDateString(),
+            now()->endOfDay()->toDateString(),
+        ];
+    }
+
+    public function on_updated($form)
+    {
+        lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
+
+        if (isset($form['password']) && $form['password']) {
+            lte_log_success('Changed the password', get_class($this->model()), 'fas fa-key');
+        }
+    }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|LteUser|string|null
+     * @return Model|Menu|LteUser|string|null
      */
     public function getModel()
     {
@@ -186,7 +188,7 @@ class UserController extends Controller
     {
         lte_log_success('Was logout', null, 'fas fa-sign-out-alt');
 
-        \Auth::guard('lte')->logout();
+        Auth::guard('lte')->logout();
 
         $respond->redirect(route('lte.login'));
 

@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
+use Lar\Layout\Tags\OL;
 use Lar\LteAdmin\Components\SearchFields\AmountSearchField;
 use Lar\LteAdmin\Components\SearchFields\ChecksSearchField;
 use Lar\LteAdmin\Components\SearchFields\ColorSearchField;
@@ -22,23 +24,17 @@ use Lar\LteAdmin\Components\SearchFields\SwitcherSearchField;
 use Lar\LteAdmin\Components\SearchFields\TimeFieldSearchField;
 use Lar\LteAdmin\Components\Traits\SearchFormConditionRulesTrait;
 use Lar\LteAdmin\Components\Traits\SearchFormHelpersTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
-use Lar\LteAdmin\Page;
+use Lar\Tagable\Tag;
 
 /**
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
- * @mixin SearchFormComponentMacroList
  * @mixin SearchFormComponentMethods
  */
-class SearchFormComponent extends \Lar\Layout\Tags\FORM
+class SearchFormComponent extends Component
 {
     use SearchFormConditionRulesTrait,
-        SearchFormHelpersTrait,
-        Macroable,
-        Delegable;
+        SearchFormHelpersTrait;
 
     /**
      * @var array
@@ -63,6 +59,8 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM
         'checks' => ChecksSearchField::class,
         'radios' => RadiosSearchField::class,
     ];
+
+    protected $element = 'form';
 
     /**
      * @var array
@@ -104,38 +102,6 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM
         parent::__construct();
 
         $this->explainForce(Explanation::new($delegates));
-
-        $this->toExecute('buildForm');
-
-        $this->callConstructEvents();
-    }
-
-    /**
-     * Form builder.
-     */
-    protected function buildForm()
-    {
-        $this->callRenderEvents();
-
-        $this->setMethod('get');
-
-        $action = urlWithGet([], ['q']);
-
-        $this->setAction($action);
-
-        $chunks = collect($this->fields)->chunk(3);
-
-        foreach ($chunks as $chunk) {
-            $this->row()->when(function (GridRowComponent $row) use ($chunk) {
-                foreach ($chunk as $field) {
-                    $row->column()->pl3()->pr3()->appEnd($field['class']);
-                }
-            });
-        }
-
-        $this->div()->textRight()->buttons()->when(static function (ButtonsComponent $group) use ($action) {
-            $group->success(['fas fa-search', __('lte.to_find')])->setType('submit');
-        });
     }
 
     /**
@@ -160,8 +126,8 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM
     /**
      * @param $name
      * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
+     * @return bool|FormComponent|Tag|mixed|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -212,5 +178,57 @@ class SearchFormComponent extends \Lar\Layout\Tags\FORM
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    public function getSearchInfoComponent()
+    {
+        $div = null;
+
+        foreach ($this->fields as $field) {
+            /** @var FormGroupComponent $formGroup */
+            $formGroup = $field['class'];
+            $val = request($formGroup->get_path());
+            $val = is_array($val) ? implode(' - ', $val) : $val;
+            if ($val) {
+                if (!$div) {
+                    $div = OL::create(['breadcrumb p-1 pl-2 ml-1 m-0 bg-white']);
+                    $div->li(['breadcrumb-item active'])
+                        ->i(['fas fa-search'])
+                        ->_text(' '.__('lte.sort_result_report'));
+                }
+
+                $div->li(['breadcrumb-item'])
+                    ->a([
+                        'href' => urlWithGet([], [$formGroup->get_path()])
+                    ])->setTitle(__('lte.cancel').': '.$formGroup->get_title())
+                    ->i(['fas fa-window-close text-danger'])
+                    ->__text(' '.$formGroup->get_title().': '.$val);
+            }
+        }
+
+        return $div;
+    }
+
+    protected function mount()
+    {
+        $this->setMethod('get');
+
+        $action = urlWithGet([], ['q', 'page']);
+
+        $this->setAction($action);
+
+        $chunks = collect($this->fields)->chunk(3);
+
+        foreach ($chunks as $chunk) {
+            $this->row()->when(function (GridRowComponent $row) use ($chunk) {
+                foreach ($chunk as $field) {
+                    $row->column()->pl3()->pr3()->appEnd($field['class']);
+                }
+            });
+        }
+
+        $this->div()->textRight()->buttons()->when(static function (ButtonsComponent $group) use ($action) {
+            $group->success(['fas fa-search', __('lte.to_find')])->setType('submit');
+        });
     }
 }

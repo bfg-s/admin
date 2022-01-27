@@ -2,6 +2,9 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\DIV;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\FormGroupComponent;
 
 class MDEditorField extends FormGroupComponent
@@ -19,11 +22,11 @@ class MDEditorField extends FormGroupComponent
     ];
 
     /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
-        return \Lar\Layout\Tags\DIV::create([
+        return DIV::create([
             'id' => $this->field_id,
             'data-name' => $this->name,
             'data-placeholder' => $this->title,

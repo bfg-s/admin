@@ -2,15 +2,18 @@
 
 namespace Lar\LteAdmin;
 
+use Broadcast;
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\LteAdmin\Core\NavGroup;
+use Lar\LteAdmin\Core\NavigatorExtensions;
 use Lar\LteAdmin\Core\NavItem;
 use Lar\LteAdmin\Core\Traits\NavDefaultTools;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\Roads\Roads;
 
 /**
- * @mixin \Lar\LteAdmin\Core\NavigatorExtensions
+ * @mixin NavigatorExtensions
  */
 class Navigate implements NavigateInterface
 {
@@ -32,7 +35,7 @@ class Navigate implements NavigateInterface
     public static $extension;
 
     /**
-     * @param  \Closure|array  ...$calls
+     * @param  Closure|array  ...$calls
      * @return $this
      */
     public static function do(...$calls)
@@ -82,13 +85,13 @@ class Navigate implements NavigateInterface
 
     /**
      * @param  string|null  $title
-     * @param  string|null|\Closure|array  $route
-     * @param  \Closure|array|null  $cb
-     * @return \Lar\LteAdmin\Core\NavGroup
+     * @param  string|null|Closure|array  $route
+     * @param  Closure|array|null  $cb
+     * @return NavGroup
      */
     public function group(string $title = null, $route = null, $cb = null)
     {
-        if (is_embedded_call($route) && ! is_string($route)) {
+        if (is_embedded_call($route) && !is_string($route)) {
             $cb = $route;
             $route = null;
         }
@@ -109,10 +112,31 @@ class Navigate implements NavigateInterface
     }
 
     /**
+     * @param $name
+     * @param $to
+     */
+    protected function includeAfterGroup($name)
+    {
+        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
+            foreach (LteAdmin::$nav_extensions[$name] as $item) {
+                if (!is_array($item)) {
+                    self::$extension = $item;
+
+                    $item->navigator($this);
+
+                    self::$extension = null;
+                }
+            }
+
+            unset(LteAdmin::$nav_extensions[$name]);
+        }
+    }
+
+    /**
      * @param  string|null  $title
      * @param  string|null  $route
-     * @param  string|\Closure|array|null  $action
-     * @return \Lar\LteAdmin\Core\NavItem
+     * @param  string|Closure|array|null  $action
+     * @return NavItem
      */
     public function item(string $title = null, string $route = null, $action = null)
     {
@@ -134,7 +158,7 @@ class Navigate implements NavigateInterface
     {
         foreach (self::$items as $key => $item) {
             /** @var Arrayable $item */
-            if (! is_array($item)) {
+            if (!is_array($item)) {
                 self::$items[$key] = $item->toArray();
             } else {
                 self::$items[$key] = $item;
@@ -162,7 +186,7 @@ class Navigate implements NavigateInterface
      */
     public function channel($channel, $callback, $options = [])
     {
-        \Broadcast::channel($channel, $callback, $options);
+        Broadcast::channel($channel, $callback, $options);
 
         return $this;
     }
@@ -187,27 +211,6 @@ class Navigate implements NavigateInterface
             LteAdmin::$nav_extensions[$name]->navigator($this);
 
             self::$extension = null;
-
-            unset(LteAdmin::$nav_extensions[$name]);
-        }
-    }
-
-    /**
-     * @param $name
-     * @param $to
-     */
-    protected function includeAfterGroup($name)
-    {
-        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
-            foreach (LteAdmin::$nav_extensions[$name] as $item) {
-                if (! is_array($item)) {
-                    self::$extension = $item;
-
-                    $item->navigator($this);
-
-                    self::$extension = null;
-                }
-            }
 
             unset(LteAdmin::$nav_extensions[$name]);
         }

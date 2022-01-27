@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -47,6 +48,7 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
+use Lar\Tagable\Tag;
 
 /**
  * @methods static::$inputs
@@ -127,6 +129,11 @@ abstract class Component extends DIV implements onRender
     protected Page $page;
 
     /**
+     * @var array|null
+     */
+    protected $menu;
+
+    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -147,31 +154,44 @@ abstract class Component extends DIV implements onRender
     }
 
     /**
-     * @param  callable  $callback
+     * @param $model
      * @return $this
      */
-    public function with(callable $callback)
+    public function model($model = null)
     {
-        $data = call_user_func($callback, $this);
+        if ($model || !$this->model) {
+            if (is_string($model) && class_exists($model)) {
+                $model = new $model;
+            }
 
-        if ($data && is_array($data)) {
-            $this->delegatesNow($data);
-        } elseif ($data && $data instanceof Delegate) {
-            $this->delegatesNow([$data]);
-        } elseif ($data && $data instanceof Explanation) {
-            $this->explainForce($data);
+            $search = false;
+            if ($model instanceof SearchFormComponent) {
+                $model = $model->makeModel($this->model ?: $this->page->model());
+                $search = true;
+            }
+
+            $this->model = $model ?? $this->page->model();
+            $this->model_name = $this->page->getModelName($model);
+            if (!$search) {
+                $c = $this->realModel();
+                $class = is_string($c) ? $this->model : get_class($c);
+                $this->menu = $this->page->findModelMenu($class);
+            }
         }
 
         return $this;
     }
 
-    public function withCollection($collection, callable $callback)
+    public function realModel()
     {
-        foreach ($collection as $key => $item) {
-            $this->with(fn () => call_user_func($callback, $item, $key));
+        if (
+            $this->model instanceof Builder
+            || $this->model instanceof Relation
+        ) {
+            return $this->model->getModel();
         }
 
-        return $this;
+        return $this->model;
     }
 
     /**
@@ -189,36 +209,10 @@ abstract class Component extends DIV implements onRender
     }
 
     /**
-     * @param ...$delegates
-     * @return $this
-     */
-    public function delegatesNow(...$delegates)
-    {
-        $this->newExplainForce($delegates);
-
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
-     */
-    public function __call($name, $arguments)
-    {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return parent::__call($name, $arguments);
-    }
-
-    /**
      * @param $name
      * @param $arguments
      * @return bool|FieldComponent|FormGroupComponent|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public static function __callStatic($name, $arguments)
     {
@@ -227,34 +221,6 @@ abstract class Component extends DIV implements onRender
         }
 
         return parent::__callStatic($name, $arguments);
-    }
-
-    /**
-     * @return mixed|void
-     */
-    public function onRender()
-    {
-        $this->newExplain($this->delegates);
-        $this->mount();
-        $this->callRenderEvents();
-    }
-
-    /**
-     * Component mount method.
-     * @return void
-     */
-    abstract protected function mount();
-
-    /**
-     * @param $model
-     * @return $this
-     */
-    public function model($model = null)
-    {
-        $this->model = $this->page->model($model);
-        $this->model_name = $this->page->getModelName();
-
-        return $this;
     }
 
     /**
@@ -282,4 +248,81 @@ abstract class Component extends DIV implements onRender
     {
         return isset(static::$inputs[$name]);
     }
+
+    public function realModelClass()
+    {
+        $model = $this->realModel();
+
+        return $model ? get_class($model) : null;
+    }
+
+    public function withCollection($collection, callable $callback)
+    {
+        foreach ($collection as $key => $item) {
+            $this->with(fn() => call_user_func($callback, $item, $key));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  callable  $callback
+     * @return $this
+     */
+    public function with(callable $callback)
+    {
+        $data = call_user_func($callback, $this);
+
+        if ($data && is_array($data)) {
+            $this->delegatesNow($data);
+        } elseif ($data && $data instanceof Delegate) {
+            $this->delegatesNow([$data]);
+        } elseif ($data && $data instanceof Explanation) {
+            $this->explainForce($data);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function delegatesNow(...$delegates)
+    {
+        $this->newExplain($delegates);
+
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     * @return bool|FormComponent|Tag|mixed|string
+     * @throws Exception
+     */
+    public function __call($name, $arguments)
+    {
+        if ($call = $this->call_group($name, $arguments)) {
+            return $call;
+        }
+
+        return parent::__call($name, $arguments);
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function onRender()
+    {
+        $this->newExplain($this->delegates);
+        $this->mount();
+        $this->callRenderEvents();
+    }
+
+    /**
+     * Component mount method.
+     * @return void
+     */
+    abstract protected function mount();
 }

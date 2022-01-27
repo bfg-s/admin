@@ -2,14 +2,22 @@
 
 namespace Lar\LteAdmin\Components\Traits\ModelTable;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\PrepareExport;
+use Str;
 
 trait TableHelpersTrait
 {
+    /**
+     * Has models on process.
+     * @var array
+     */
+    protected static $models = [];
+
     /**
      * @param  int  $per_page
      * @return $this|static
@@ -50,8 +58,8 @@ trait TableHelpersTrait
 
     /**
      * Alias of column.
-     * @param  string|\Closure|array|null  $label
-     * @param  string|\Closure|array|null  $field
+     * @param  string|Closure|array|null  $label
+     * @param  string|Closure|array|null  $field
      * @return $this|static
      */
     public function col($label, $field = null)
@@ -60,8 +68,8 @@ trait TableHelpersTrait
     }
 
     /**
-     * @param  string|\Closure|array|null  $label
-     * @param  string|\Closure|array|null  $field
+     * @param  string|Closure|array|null  $label
+     * @param  string|Closure|array|null  $field
      * @return $this|static
      */
     public function column($label, $field = null)
@@ -74,7 +82,7 @@ trait TableHelpersTrait
 
         $this->last = uniqid('column');
 
-        $key = \Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
+        $key = Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
 
         $col = [
             'field' => $field,
@@ -103,7 +111,7 @@ trait TableHelpersTrait
     public function to_export(callable $callback = null)
     {
         if (isset($this->columns[$this->last])) {
-            PrepareExport::$columns[$this->last] = [
+            PrepareExport::$columns[$this->model_name][$this->last] = [
                 'header' => $this->columns[$this->last]['label'],
                 'field' => $callback ?: $this->columns[$this->last]['field'],
             ];
@@ -171,9 +179,9 @@ trait TableHelpersTrait
                 $field ?
                     $field :
                     (
-                        is_string($this->columns[$this->last]['field']) ?
-                            $this->columns[$this->last]['field'] :
-                            false
+                    is_string($this->columns[$this->last]['field']) ?
+                        $this->columns[$this->last]['field'] :
+                        false
                     );
         }
 
@@ -187,10 +195,10 @@ trait TableHelpersTrait
     {
         if ($key) {
             $this->columns[$this->last]['key']
-                = $this->model_name.'_'.\Str::slug($key, '_');
+                = $this->model_name.'_'.Str::slug($key, '_');
         }
         if (
-            ! $this->columns[$this->last]['key']
+            !$this->columns[$this->last]['key']
             && $this->columns[$this->last]['sort']
         ) {
             $this->columns[$this->last]['key']
@@ -202,7 +210,7 @@ trait TableHelpersTrait
         ) {
             $this->hasHidden = true;
             $this->columns[$this->last]['hide']
-                = ! (request($this->columns[$this->last]['key']) == 1);
+                = !(request($this->columns[$this->last]['key']) == 1);
         }
 
         return $this;
@@ -267,12 +275,6 @@ trait TableHelpersTrait
 
         return $this;
     }
-
-    /**
-     * Has models on process.
-     * @var array
-     */
-    protected static $models = [];
 
     /**
      * @param $model

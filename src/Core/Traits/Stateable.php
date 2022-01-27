@@ -25,8 +25,8 @@ trait Stateable
     /**
      * State getter.
      *
-     * @param string $name
-     * @param null $default
+     * @param  string  $name
+     * @param  null  $default
      * @return mixed
      */
     public function state(string $name, $default = null)
@@ -37,8 +37,8 @@ trait Stateable
     /**
      * State getter.
      *
-     * @param string $name
-     * @param null $default
+     * @param  string  $name
+     * @param  null  $default
      * @return mixed
      */
     public function requestState(string $name, $default = null)
@@ -55,7 +55,7 @@ trait Stateable
     }
 
     /**
-     * @param array $default
+     * @param  array  $default
      * @return $this
      */
     public function createState(array $default = [])

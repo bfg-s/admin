@@ -3,9 +3,14 @@
 namespace Lar\LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
+use Lar\LteAdmin\Models\LtePermission;
+use Str;
 
 class Formatter
 {
@@ -18,7 +23,7 @@ class Formatter
     {
         $value = strip_tags($value);
         $limit = $props[0] ?? 20;
-        $str = \Str::limit($value, $limit);
+        $str = Str::limit($value, $limit);
 
         if ($value == $str) {
             return $str;
@@ -32,21 +37,21 @@ class Formatter
      * @param  array  $props
      * @param  Model|null  $model
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function admin_resource_route($value, array $props = [], Model $model = null)
     {
-        if (! isset($props[0]) || ! $props[0]) { // route name
+        if (!isset($props[0]) || !$props[0]) { // route name
 
-            throw new \Exception('Enter admin resource name!');
+            throw new Exception('Enter admin resource name!');
         }
-        if (! isset($props[1]) || ! $props[1]) { // url param name
+        if (!isset($props[1]) || !$props[1]) { // url param name
 
-            $props[1] = \Str::singular($props[0]);
+            $props[1] = Str::singular($props[0]);
         }
-        if (! isset($props[2]) || ! $props[2]) { // model param name
+        if (!isset($props[2]) || !$props[2]) { // model param name
 
-            $props[2] = \Str::singular($props[0]).'_id';
+            $props[2] = Str::singular($props[0]).'_id';
         }
 
         $urlIndex = route(
@@ -63,16 +68,16 @@ class Formatter
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlIndex = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlIndex) ?
+        $urlIndex = LtePermission::checkUrl($urlIndex) ?
             $urlIndex : false;
 
-        $urlEdit = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlEdit) ?
+        $urlEdit = LtePermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-        $urlShow = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlShow) ?
+        $urlShow = LtePermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
+        return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
             )->setTitle(__('lte.edit')) : '').$value.
 
@@ -90,21 +95,21 @@ class Formatter
      * @param  array  $props
      * @param  Model|null  $model
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function admin_resource_route_edit($value, array $props = [], Model $model = null)
     {
-        if (! isset($props[0]) || ! $props[0]) { // route name
+        if (!isset($props[0]) || !$props[0]) { // route name
 
-            throw new \Exception('Enter admin resource name!');
+            throw new Exception('Enter admin resource name!');
         }
-        if (! isset($props[1]) || ! $props[1]) { // url param name
+        if (!isset($props[1]) || !$props[1]) { // url param name
 
-            $props[1] = \Str::singular($props[0]);
+            $props[1] = Str::singular($props[0]);
         }
-        if (! isset($props[2]) || ! $props[2]) { // model param name
+        if (!isset($props[2]) || !$props[2]) { // model param name
 
-            $props[2] = \Str::singular($props[0]).'_id';
+            $props[2] = Str::singular($props[0]).'_id';
         }
 
         $urlEdit = route(
@@ -112,10 +117,10 @@ class Formatter
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlEdit = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlEdit) ?
+        $urlEdit = LtePermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-        return  ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
+        return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
             )->setTitle(__('lte.edit')) : '').$value;
     }
@@ -125,21 +130,21 @@ class Formatter
      * @param  array  $props
      * @param  Model|null  $model
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function admin_resource_route_show($value, array $props = [], Model $model = null)
     {
-        if (! isset($props[0]) || ! $props[0]) { // route name
+        if (!isset($props[0]) || !$props[0]) { // route name
 
-            throw new \Exception('Enter admin resource name!');
+            throw new Exception('Enter admin resource name!');
         }
-        if (! isset($props[1]) || ! $props[1]) { // url param name
+        if (!isset($props[1]) || !$props[1]) { // url param name
 
-            $props[1] = \Str::singular($props[0]);
+            $props[1] = Str::singular($props[0]);
         }
-        if (! isset($props[2]) || ! $props[2]) { // model param name
+        if (!isset($props[2]) || !$props[2]) { // model param name
 
-            $props[2] = \Str::singular($props[0]).'_id';
+            $props[2] = Str::singular($props[0]).'_id';
         }
 
         $urlShow = route(
@@ -147,10 +152,10 @@ class Formatter
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlShow = \Lar\LteAdmin\Models\LtePermission::checkUrl($urlShow) ?
+        $urlShow = LtePermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return  $value.
+        return $value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
@@ -201,13 +206,14 @@ class Formatter
      */
     public function to_append_link($value = null, $props = [], Model $model = null)
     {
-        if (! $value) {
+        if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
         }
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
-        $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
-        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $value;
+        $link = isset($props[1]) ? ($model ? tag_replace($props[1],
+            $model) : $props[1]) : ($value ?: 'javascript:void(0)');
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -216,7 +222,7 @@ class Formatter
             $link->attr(['title' => $title]);
         }
 
-        return urldecode($value).' '.$link;
+        return $value.' '.$link;
     }
 
     /**
@@ -227,13 +233,14 @@ class Formatter
      */
     public function to_prepend_link($value = null, $props = [], Model $model = null)
     {
-        if (! $value) {
+        if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
         }
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
-        $link = isset($props[1]) ? ($model ? tag_replace($props[1], $model) : $props[1]) : 'javascript:void(0)';
-        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : false;
+        $link = isset($props[1]) ? ($model ? tag_replace($props[1],
+            $model) : $props[1]) : ($value ?: 'javascript:void(0)');
+        $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
         $link = A::create()->setHref($link)
             ->i([$icon])->_();
@@ -242,7 +249,7 @@ class Formatter
             $link->attr(['title' => $title]);
         }
 
-        return  $link.' '.$value;
+        return $link.' '.$value;
     }
 
     /**
@@ -267,7 +274,7 @@ class Formatter
      */
     public function money($value = null, $props = [])
     {
-        if (! $value) {
+        if (!$value) {
             $value = 0;
         }
 
@@ -278,7 +285,7 @@ class Formatter
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     * @return array|Application|Translator|string|null
      */
     public function to_lang($value = null, $props = [], Model $model = null)
     {
@@ -288,12 +295,12 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     * @return array|Application|Translator|string|null
      */
     public function to_string($value = null, $props = [])
     {
         if (is_object($value)) {
-            return  get_class($value);
+            return get_class($value);
         } elseif (is_array($value)) {
             return json_encode($value);
         } elseif ($value === true) {
@@ -310,7 +317,7 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     * @return array|Application|Translator|string|null
      */
     public function has_lang($value = null, $props = [])
     {
@@ -320,7 +327,7 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     * @return array|Application|Translator|string|null
      */
     public function trim($value = null, $props = [])
     {

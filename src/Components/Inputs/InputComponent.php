@@ -31,10 +31,10 @@ abstract class InputComponent extends Component
         parent::__construct(...$delegates);
 
         $this->value = old($this->path);
-        if (! $this->value) {
+        if (!$this->value) {
             $this->value = request(str_replace('.', '_', $this->path));
         }
-        if (! $this->value) {
+        if (!$this->value) {
             $modelData = multi_dot_call($this->model, $this->path, false);
             $this->value = is_array($modelData) ? $modelData : e($modelData);
         }
@@ -47,7 +47,7 @@ abstract class InputComponent extends Component
 
     public function default($default = null)
     {
-        if (! $this->value) {
+        if (!$this->value) {
             $this->value = $default;
         }
 

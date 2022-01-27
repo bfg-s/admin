@@ -2,7 +2,11 @@
 
 namespace Lar\LteAdmin\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
@@ -19,25 +23,25 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
  * @property int|null $lte_user_id
  * @property int|null $web_id
  * @property string|null $icon
- * @property \Illuminate\Support\Carbon|null $created_at
+ * @property Carbon|null $created_at
  * @property-read \App\Models\LteUser|null $lte_user
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog makeDumpedModel()
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog query()
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereDetail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereIp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereLteUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereMethod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereRoute($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereSessionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereUserAgent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteLog whereWebId($value)
- * @mixin \Eloquent
+ * @method static Builder|LteLog makeDumpedModel()
+ * @method static Builder|LteLog newModelQuery()
+ * @method static Builder|LteLog newQuery()
+ * @method static Builder|LteLog query()
+ * @method static Builder|LteLog whereCreatedAt($value)
+ * @method static Builder|LteLog whereDetail($value)
+ * @method static Builder|LteLog whereIcon($value)
+ * @method static Builder|LteLog whereIp($value)
+ * @method static Builder|LteLog whereLteUserId($value)
+ * @method static Builder|LteLog whereMethod($value)
+ * @method static Builder|LteLog whereRoute($value)
+ * @method static Builder|LteLog whereSessionId($value)
+ * @method static Builder|LteLog whereTitle($value)
+ * @method static Builder|LteLog whereUrl($value)
+ * @method static Builder|LteLog whereUserAgent($value)
+ * @method static Builder|LteLog whereWebId($value)
+ * @mixin Eloquent
  */
 class LteLog extends Model
 {
@@ -75,7 +79,7 @@ class LteLog extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function lte_user()
     {

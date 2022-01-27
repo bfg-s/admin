@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Components\Traits\TypesTrait;
 
@@ -63,7 +64,7 @@ class AlertComponent extends Component
     }
 
     /**
-     * @param  string|array|\Closure  $body
+     * @param  string|array|Closure  $body
      * @return $this
      */
     public function body($body)

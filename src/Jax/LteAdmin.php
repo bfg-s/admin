@@ -2,11 +2,17 @@
 
 namespace Lar\LteAdmin\Jax;
 
+use DB;
+use Excel;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Lar\LteAdmin\Components\ModalComponent;
 use Lar\LteAdmin\Controllers\ModalController;
 use Lar\LteAdmin\Core\PrepareExport;
 use Lar\LteAdmin\LteBoot;
+use ReflectionException;
+use Throwable;
 
 class LteAdmin extends LteAdminExecutor
 {
@@ -22,16 +28,21 @@ class LteAdmin extends LteAdminExecutor
      * @param  string|null  $parent_field
      * @param  string  $order_field
      * @return array
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function nestable_save(string $model, int $depth = 1, $data = [], string $parent_field = null, string $order_field = 'order')
-    {
-        if (! check_referer('PUT')) {
+    public function nestable_save(
+        string $model,
+        int $depth = 1,
+        $data = [],
+        string $parent_field = null,
+        string $order_field = 'order'
+    ) {
+        if (!check_referer('PUT')) {
             return [];
         }
 
         if (class_exists($model)) {
-            \DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
+            DB::transaction(function () use ($model, $depth, $data, $parent_field, $order_field) {
                 foreach ($this->nestable_collapse($data, $depth, $parent_field, null, $order_field) as $item) {
                     /** @var Model $model */
                     if ($model = $model::where('id', $item['id'])->first()) {
@@ -40,7 +51,7 @@ class LteAdmin extends LteAdminExecutor
                 }
             });
             static::$i = 0;
-            $this->put('alert::success', __('lte.saved_successfully'));
+            $this->toast_success(__('lte.saved_successfully'));
         }
     }
 
@@ -52,8 +63,13 @@ class LteAdmin extends LteAdminExecutor
      * @param  string  $order_field
      * @return array
      */
-    private function nestable_collapse(array $data, int $depth, string $parent_field = null, $parent = null, string $order_field = 'order')
-    {
+    private function nestable_collapse(
+        array $data,
+        int $depth,
+        string $parent_field = null,
+        $parent = null,
+        string $order_field = 'order'
+    ) {
         $result = [];
 
         foreach ($data as $item) {
@@ -72,7 +88,8 @@ class LteAdmin extends LteAdminExecutor
             static::$i++;
 
             if (isset($item['children'])) {
-                $result = array_merge($result, $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field));
+                $result = array_merge($result,
+                    $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field));
             }
         }
 
@@ -88,7 +105,7 @@ class LteAdmin extends LteAdminExecutor
      */
     public function custom_save(string $model = null, int $id = null, string $field_name = null, bool $val = false)
     {
-        if (! check_referer('PUT')) {
+        if (!check_referer('PUT')) {
             return [];
         }
 
@@ -110,11 +127,11 @@ class LteAdmin extends LteAdminExecutor
      * @param  string  $class
      * @param  array  $ids
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function mass_delete(string $class, array $ids)
     {
-        if (! check_referer('DELETE')) {
+        if (!check_referer('DELETE')) {
             return [];
         }
 
@@ -141,9 +158,9 @@ class LteAdmin extends LteAdminExecutor
     /**
      * @param  string  $handle
      * @param  array  $params
-     * @return \Lar\LteAdmin\Components\ModalComponent|mixed
-     * @throws \ReflectionException
-     * @throws \Throwable
+     * @return ModalComponent|mixed
+     * @throws ReflectionException
+     * @throws Throwable
      */
     public function load_modal(string $handle, array $params = [])
     {
@@ -151,7 +168,7 @@ class LteAdmin extends LteAdminExecutor
 
         if (strpos($handle, '@') !== false) {
             $handle = Str::parseCallback($handle, 'index');
-            if (! class_exists($handle[0])) {
+            if (!class_exists($handle[0])) {
                 if (class_exists(lte_app_namespace("Modals\\{$handle[0]}"))) {
                     $handle[0] = lte_app_namespace("Modals\\{$handle[0]}");
                 } else {
@@ -162,7 +179,7 @@ class LteAdmin extends LteAdminExecutor
             return embedded_call($handle, $params);
         } elseif (strpos($handle, '::') !== false) {
             $handle = explode('::', $handle);
-            if (! class_exists($handle[0])) {
+            if (!class_exists($handle[0])) {
                 if (class_exists(lte_app_namespace($handle[0]))) {
                     $handle[0] = lte_app_namespace($handle[0]);
                 } else {
@@ -176,17 +193,17 @@ class LteAdmin extends LteAdminExecutor
         abort(404);
     }
 
-    public function export_excel(string $model, array $ids, string $order, string $order_type)
+    public function export_excel(string $model, array $ids, string $order, string $order_type, string $table)
     {
-        $prepared = new PrepareExport($model, $ids, $order, $order_type);
+        $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
 
-        return \Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.xlsx');
+        return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.xlsx');
     }
 
-    public function export_csv(string $model, array $ids, string $order, string $order_type)
+    public function export_csv(string $model, array $ids, string $order, string $order_type, string $table)
     {
-        $prepared = new PrepareExport($model, $ids, $order, $order_type);
+        $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
 
-        return \Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');
+        return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');
     }
 }

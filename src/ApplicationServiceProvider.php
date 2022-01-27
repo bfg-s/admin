@@ -2,6 +2,10 @@
 
 namespace Lar\LteAdmin;
 
+use Exception;
+
+use function config;
+
 class ApplicationServiceProvider extends ExtendProvider
 {
     /**
@@ -11,11 +15,11 @@ class ApplicationServiceProvider extends ExtendProvider
     public static $slug = 'application';
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function register()
     {
-        static::$name = \config('app.name');
+        static::$name = config('app.name');
 
         parent::register();
     }

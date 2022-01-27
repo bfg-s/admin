@@ -23,7 +23,7 @@ trait Delegable
     }
 
     /**
-     * @param Explanation|callable $explanation
+     * @param  Explanation|callable  $explanation
      * @return $this
      */
     public function explainForce($explanation)

@@ -2,12 +2,15 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
 use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
+use Lar\Tagable\Tag;
+use ReflectionException;
 
 /**
  * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
@@ -34,7 +37,7 @@ class ModalBodyComponent extends DIV implements onRender
      * ModalBody constructor.
      * @param  ModalComponent  $content_parent
      * @param  mixed  ...$params
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(ModalComponent $content_parent, ...$params)
     {
@@ -50,8 +53,8 @@ class ModalBodyComponent extends DIV implements onRender
     /**
      * @param $name
      * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
+     * @return bool|FormComponent|Tag|mixed|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -64,7 +67,7 @@ class ModalBodyComponent extends DIV implements onRender
 
     /**
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function onRender()
     {

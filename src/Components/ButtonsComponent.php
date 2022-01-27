@@ -2,120 +2,32 @@
 
 namespace Lar\LteAdmin\Components;
 
-use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\BUTTON;
-use Lar\LteAdmin\Interfaces\ControllerContainerInterface;
-use Lar\LteAdmin\Page;
+use Lar\LteAdmin\Delegates\Buttons;
+use Request;
 
-class ButtonsComponent extends Component implements ControllerContainerInterface
+class ButtonsComponent extends Component
 {
-    /**
-     * @var array|null
-     */
-    protected $menu;
-
-    /**
-     * @var Model
-     */
-    protected $model;
-
-    /**
-     * @var string
-     */
-    protected $action;
-
     /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
     {
-        $this->menu = gets()->lte->menu->now;
+        parent::__construct();
 
-        $this->action = \Str::before(\Route::currentRouteAction(), '@');
-
-        parent::__construct(...$delegates);
+        $this->delegatesNow(...$delegates);
 
         $this->addClass('btn-group btn-group-sm ml-1');
     }
 
     /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function info($ico, array $when = [])
-    {
-        return $this->btn('info', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function warning($ico, array $when = [])
-    {
-        return $this->btn('warning', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function danger($ico, array $when = [])
-    {
-        return $this->btn('danger', $ico, $when);
-    }
-
-    /**
-     * @param $ico
+     * @param  mixed  $ico
      * @param  array  $when
      * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
     public function dark($ico, array $when = [])
     {
         return $this->btn('dark', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function success($ico, array $when = [])
-    {
-        return $this->btn('success', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function secondary($ico, array $when = [])
-    {
-        return $this->btn('secondary', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function default($ico, array $when = [])
-    {
-        return $this->btn('default', $ico, $when);
-    }
-
-    /**
-     * @param $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
-     */
-    public function primary($ico, array $when = [])
-    {
-        return $this->btn('primary', $ico, $when);
     }
 
     /**
@@ -146,6 +58,16 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     }
 
     /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
+    public function default($ico, array $when = [])
+    {
+        return $this->btn('default', $ico, $when);
+    }
+
+    /**
      * Reload button.
      * @param  string|null  $link
      * @param  string|null  $title
@@ -154,15 +76,21 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     public function reload(string $link = null, string $title = null)
     {
         $return = $this->secondary(['fas fa-redo-alt', $title ?? __('lte.refresh')]);
-        $return->dataClick()->location($link ?? \Request::getRequestUri());
+        $return->dataClick()->location($link ?? Request::getRequestUri());
         $return->setTitleIf($title === '', __('lte.refresh'));
 
         return $return;
     }
 
     /**
-     * Nestable group.
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
+    public function secondary($ico, array $when = [])
+    {
+        return $this->btn('secondary', $ico, $when);
+    }
 
     /**
      * @return $this
@@ -176,8 +104,24 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     }
 
     /**
-     * Resource group.
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
+    public function info($ico, array $when = [])
+    {
+        return $this->btn('info', $ico, $when);
+    }
+
+    /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
+    public function primary($ico, array $when = [])
+    {
+        return $this->btn('primary', $ico, $when);
+    }
 
     /**
      * Resource list button.
@@ -202,13 +146,12 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
      * Resource edit button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent|Buttons
      */
     public function resourceEdit(string $link = null, string $title = null)
     {
-        if (! $link && $this->model && $this->model->exists) {
-            $key = $this->model->getRouteKey();
-
+        if (!$link && $this->model) {
+            $key = $this->realModel()->getRouteKey();
             if (
                 $key &&
                 isset($this->menu['link.edit'])
@@ -218,6 +161,9 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
         }
 
         if ($link) {
+            if (!$this->menu) {
+                return new Buttons();
+            }
             $return = $this->success(['fas fa-edit', $title ?? __('lte.edit')]);
             $return->dataClick()->location($link);
             $return->setTitleIf($title === '', __('lte.edit'));
@@ -229,15 +175,33 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     }
 
     /**
+     * Nestable group.
+     */
+
+    /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
+    public function success($ico, array $when = [])
+    {
+        return $this->btn('success', $ico, $when);
+    }
+
+    /**
+     * Resource group.
+     */
+
+    /**
      * Resource info button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent|Buttons
      */
     public function resourceInfo(string $link = null, string $title = null)
     {
-        if (! $link && $this->model && $this->model->exists) {
-            $key = $this->model->getRouteKey();
+        if (!$link && $this->model) {
+            $key = $this->realModel()->getRouteKey();
 
             if (
                 $key &&
@@ -248,6 +212,9 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
         }
 
         if ($link) {
+            if (!$this->menu) {
+                return new Buttons();
+            }
             $return = $this->info(['fas fa-info-circle', $title ?? __('lte.information')]);
             $return->dataClick()->location($link);
             $return->setTitleIf($title === '', __('lte.information'));
@@ -264,12 +231,12 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
-     * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonsComponent|Buttons
      */
     public function resourceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
     {
-        if (! $link && $this->model && $this->model->exists) {
-            $key = $this->model->getRouteKey();
+        if (!$link && $this->model) {
+            $key = $this->realModel()->getRouteKey();
 
             if (
                 $key &&
@@ -280,16 +247,33 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
         }
 
         if ($link) {
+            if (!$this->menu) {
+                return new Buttons();
+            }
+
+            $stay = !$this->menu['current'] ? (str_contains($link, '?') ? '&' : '?').'_after=stay' : '';
+
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
-                    $link.' >> $jax.del',
+                    __('lte.delete_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    $link.$stay.' >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.delete'));
         }
 
         return $this;
+    }
+
+    /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
+    public function danger($ico, array $when = [])
+    {
+        return $this->btn('danger', $ico, $when);
     }
 
     /**
@@ -302,8 +286,8 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
      */
     public function resourceForceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
     {
-        if (! $link && $this->model && $this->model->exists) {
-            $key = $this->model->getRouteKey();
+        if (!$link && $this->model) {
+            $key = $this->realModel()->getRouteKey();
 
             if (
                 $key &&
@@ -317,7 +301,8 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete_forever')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_forever_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    __('lte.delete_forever_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
                     $link.'?force=1 >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.delete_forever'));
@@ -336,8 +321,8 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
      */
     public function resourceRestore(string $link = null, string $title = null, string $message = null, $key = null)
     {
-        if (! $link && $this->model && $this->model->exists) {
-            $key = $this->model->getRouteKey();
+        if (!$link && $this->model) {
+            $key = $this->realModel()->getRouteKey();
 
             if (
                 $key &&
@@ -351,7 +336,8 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
             return $this->warning(['fas fa-trash-restore-alt', $title ?? __('lte.restore')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.restore_subject', ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    __('lte.restore_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
                     $link.'?restore=1 >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.restore'));
@@ -361,13 +347,23 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     }
 
     /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     */
+    public function warning($ico, array $when = [])
+    {
+        return $this->btn('warning', $ico, $when);
+    }
+
+    /**
      * @param  string|array|null  $icon
      * @param  string|null  $form
      * @return \Lar\Layout\Abstracts\Component|BUTTON
      */
     public function submit($icon = null, string $form = null)
     {
-        if (! $icon) {
+        if (!$icon) {
             $icon = ['fas fa-save', __('lte.submit')];
         }
 
@@ -384,12 +380,13 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
 
     /**
      * Resource add button.
-     * @param  string  $link
-     * @param  string  $title
+     * @param  string|null  $link
+     * @param  string|null  $title
+     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent
      */
     public function resourceAdd(string $link = null, string $title = null)
     {
-        if (! $link && isset($this->menu['link.create'])) {
+        if (!$link && isset($this->menu['link.create'])) {
             $link = $this->menu['link.create']();
         }
 
@@ -407,14 +404,5 @@ class ButtonsComponent extends Component implements ControllerContainerInterface
     protected function mount()
     {
         // TODO: Implement mount() method.
-    }
-
-    public static function registrationInToContainer(Page $page, array $delegates = [])
-    {
-        if ($page->getContent() instanceof CardComponent) {
-            $page->registerClass($page->getClass(CardComponent::class)->buttons($delegates));
-        } else {
-            $page->registerClass($page->getContent()->buttons($delegates));
-        }
     }
 }

@@ -1,6 +1,13 @@
 <?php
 
-if (! function_exists('lte_log')) {
+use App\Models\Admin;
+use Illuminate\Database\Eloquent\Model;
+use Lar\LteAdmin\Core\CheckUserFunction;
+use Lar\LteAdmin\Getters\Menu;
+use Lar\LteAdmin\Models\LtePermission;
+use Lar\LteAdmin\Models\LteUser;
+
+if (!function_exists('lte_log')) {
     /**
      * @param  string  $title
      * @param  string|null  $detail
@@ -15,9 +22,9 @@ if (! function_exists('lte_log')) {
         $params['detail'] = $detail;
         $params['ip'] = request()->ip();
         $params['url'] = url()->full();
-        $params['route'] = \Route::currentRouteName();
+        $params['route'] = Route::currentRouteName();
         $params['method'] = request()->method();
-        $params['web_id'] = \Auth::check() ? \Auth::id() : null;
+        $params['web_id'] = Auth::check() ? Auth::id() : null;
         $params['session_id'] = session()->getId();
         $params['user_agent'] = request()->userAgent();
 
@@ -60,8 +67,7 @@ if (! function_exists('lte_log')) {
     }
 }
 
-if (! function_exists('lte_relative_path')) {
-
+if (!function_exists('lte_relative_path')) {
     /**
      * @param  string  $path
      * @return string
@@ -69,11 +75,10 @@ if (! function_exists('lte_relative_path')) {
     function lte_relative_path(string $path = '')
     {
         return '/'.trim('/'.trim(str_replace(base_path(), '', config('lte.paths.app')), '/')
-            .'/'.trim($path, '/'), '/');
+                .'/'.trim($path, '/'), '/');
     }
 }
-if (! function_exists('lte_app_namespace')) {
-
+if (!function_exists('lte_app_namespace')) {
     /**
      * @param  string  $path
      * @return string
@@ -85,8 +90,7 @@ if (! function_exists('lte_app_namespace')) {
     }
 }
 
-if (! function_exists('lte_related_methods')) {
-
+if (!function_exists('lte_related_methods')) {
     /**
      * @param  string  $method
      * @return string[]
@@ -113,42 +117,13 @@ if (! function_exists('lte_related_methods')) {
     }
 }
 
-if (! function_exists('lte_controller_can')) {
-
-    /**
-     * @param  string|null  $check_method
-     * @param  string|null  $check_class
-     * @return string
-     */
-    function lte_controller_can(string $check_method = null, string $check_class = null)
-    {
-        list($class, $method) = \Str::parseCallback(\Route::currentRouteAction());
-
-        if ($check_method) {
-            $method = $check_method;
-        }
-        if ($check_class) {
-            $class = $check_class;
-        }
-        if (! $class) {
-            return true;
-        }
-
-        $class = trim($class, '\\');
-        $ability = "{$class}@{$method}";
-
-        return Gate::has($ability) ? Gate::forUser(admin())->allows($ability) : true;
-    }
-}
-
-if (! function_exists('lte_controller_model')) {
-
+if (!function_exists('lte_controller_model')) {
     /**
      * @return string
      */
     function lte_controller_model()
     {
-        $class = \Str::parseCallback(\Route::currentRouteAction())[0];
+        $class = Str::parseCallback(Route::currentRouteAction())[0];
 
         if (property_exists($class, 'model')) {
             return $class::$model;
@@ -158,10 +133,9 @@ if (! function_exists('lte_controller_model')) {
     }
 }
 
-if (! function_exists('lte_app_path')) {
-
+if (!function_exists('lte_app_path')) {
     /**
-     * @param string $path
+     * @param  string  $path
      * @return string
      */
     function lte_app_path(string $path = '')
@@ -170,15 +144,14 @@ if (! function_exists('lte_app_path')) {
     }
 }
 
-if (! function_exists('lte_uri')) {
-
+if (!function_exists('lte_uri')) {
     /**
-     * @param string $uri
+     * @param  string  $uri
      * @return string
      */
     function lte_uri(string $uri = '')
     {
-        if (! empty($uri)) {
+        if (!empty($uri)) {
             $uri = '/'.trim($uri, '/');
         }
 
@@ -186,10 +159,9 @@ if (! function_exists('lte_uri')) {
     }
 }
 
-if (! function_exists('lte_asset')) {
-
+if (!function_exists('lte_asset')) {
     /**
-     * @param string $link
+     * @param  string  $link
      * @return string
      */
     function lte_asset(string $link = null)
@@ -202,32 +174,29 @@ if (! function_exists('lte_asset')) {
     }
 }
 
-if (! function_exists('lte_user')) {
-
+if (!function_exists('lte_user')) {
     /**
-     * @return \Lar\LteAdmin\Models\LteUser|\App\Models\Admin
+     * @return LteUser|Admin
      */
     function lte_user()
     {
-        return LteAdmin::user() ?? new \Lar\LteAdmin\Models\LteUser();
+        return LteAdmin::user() ?? new LteUser();
     }
 }
 
-if (! function_exists('admin')) {
-
+if (!function_exists('admin')) {
     /**
-     * @return \Lar\LteAdmin\Models\LteUser|\App\Models\Admin
+     * @return LteUser|Admin
      */
     function admin()
     {
-        return LteAdmin::user() ?? new \Lar\LteAdmin\Models\LteUser();
+        return LteAdmin::user() ?? new LteUser();
     }
 }
 
-if (! function_exists('lte_func')) {
-
+if (!function_exists('lte_func')) {
     /**
-     * @return \Lar\LteAdmin\Core\CheckUserFunction
+     * @return CheckUserFunction
      */
     function lte_func()
     {
@@ -235,11 +204,10 @@ if (! function_exists('lte_func')) {
     }
 }
 
-if (! function_exists('versionString')) {
-
+if (!function_exists('versionString')) {
     /**
      * @param $version
-     * @param string $delimiter
+     * @param  string  $delimiter
      * @return string
      */
     function versionString($version, string $delimiter = '.')
@@ -258,20 +226,19 @@ if (! function_exists('versionString')) {
     }
 }
 
-if (! function_exists('resource_name')) {
-
+if (!function_exists('resource_name')) {
     /**
-     * @param string $append
+     * @param  string  $append
      * @return string
      */
     function resource_name(string $append = '')
     {
-        return preg_replace('/(.*)\.(store|index|create|show|update|destroy|edit)$/', '$1', Route::currentRouteName()).$append;
+        return preg_replace('/(.*)\.(store|index|create|show|update|destroy|edit)$/', '$1',
+                Route::currentRouteName()).$append;
     }
 }
 
-if (! function_exists('makeUrlWithParams')) {
-
+if (!function_exists('makeUrlWithParams')) {
     /**
      * @param  string  $url
      * @param  array  $params
@@ -286,8 +253,7 @@ if (! function_exists('makeUrlWithParams')) {
     }
 }
 
-if (! function_exists('urlWithGet')) {
-
+if (!function_exists('urlWithGet')) {
     /**
      * @param  array  $params
      * @param  array  $unset
@@ -297,10 +263,13 @@ if (! function_exists('urlWithGet')) {
     {
         $url = explode('?', url()->current())[0];
 
-        $params = array_merge(request()->query(), $params);
-
-        unset($params['_pjax']);
-
+        $params = Arr::dot(array_merge(request()->query(), $params));
+        foreach ($unset as $k => $item) {
+            if (isset($params[$item])) {
+                unset($params[$item], $unset[$k]);
+            }
+        }
+        $params = array_dots_uncollapse($params);
         foreach ($unset as $item) {
             if (isset($params[$item])) {
                 unset($params[$item]);
@@ -311,11 +280,10 @@ if (! function_exists('urlWithGet')) {
     }
 }
 
-if (! function_exists('lte_model_type')) {
-
+if (!function_exists('lte_model_type')) {
     /**
      * @param  string|null  $type
-     * @return bool|\Lar\LteAdmin\Getters\Menu|string|null
+     * @return bool|Menu|string|null
      */
     function lte_model_type(string $type = null)
     {
@@ -329,11 +297,10 @@ if (! function_exists('lte_model_type')) {
     }
 }
 
-if (! function_exists('lte_model')) {
-
+if (!function_exists('lte_model')) {
     /**
      * @param  string|null  $path
-     * @return \Illuminate\Database\Eloquent\Model|\Lar\LteAdmin\Getters\Menu|mixed|string|null
+     * @return Model|Menu|mixed|string|null
      */
     function lte_model(string $path = null)
     {
@@ -351,10 +318,9 @@ if (! function_exists('lte_model')) {
     }
 }
 
-if (! function_exists('lte_now')) {
-
+if (!function_exists('lte_now')) {
     /**
-     * @return array|\Lar\LteAdmin\Getters\Menu|array|null
+     * @return array|Menu|array|null
      */
     function lte_now()
     {
@@ -362,8 +328,7 @@ if (! function_exists('lte_now')) {
     }
 }
 
-if (! function_exists('array_callable_results')) {
-
+if (!function_exists('array_callable_results')) {
     /**
      * @param  array  $array
      * @param  mixed  ...$callable_params
@@ -381,8 +346,7 @@ if (! function_exists('array_callable_results')) {
     }
 }
 
-if (! function_exists('check_referer')) {
-
+if (!function_exists('check_referer')) {
     /**
      * @param  string  $method
      * @param  string|null  $url
@@ -395,10 +359,10 @@ if (! function_exists('check_referer')) {
         $result = false;
 
         if ($url || $referer) {
-            $result = \Lar\LteAdmin\Models\LtePermission::checkUrl($url ?: $referer, $method);
+            $result = LtePermission::checkUrl($url ?: $referer, $method);
         }
 
-        if (! $result) {
+        if (!$result) {
             respond()->toast_error([__('lte.access_denied'), __('lte.error')]);
         }
 

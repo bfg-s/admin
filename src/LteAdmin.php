@@ -2,7 +2,12 @@
 
 namespace Lar\LteAdmin;
 
+use App\Models\Admin;
+use Auth;
+use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Lar\LteAdmin\Components\Vue\ModalCollection;
+use Lar\LteAdmin\Models\LteUser;
 
 class LteAdmin
 {
@@ -50,11 +55,11 @@ class LteAdmin
     ];
 
     /**
-     * @return \Lar\LteAdmin\Models\LteUser|\Illuminate\Contracts\Auth\Authenticatable|\App\Models\Admin
+     * @return LteUser|Authenticatable|Admin
      */
     public function user()
     {
-        return \Auth::guard('lte')->user();
+        return Auth::guard('lte')->user();
     }
 
     /**
@@ -62,7 +67,7 @@ class LteAdmin
      */
     public function guest()
     {
-        return \Auth::guard('lte')->guest();
+        return Auth::guard('lte')->guest();
     }
 
     /**
@@ -71,6 +76,19 @@ class LteAdmin
     public function version()
     {
         return self::$version;
+    }
+
+    /**
+     * @param  string  $component
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function toWrapper(string $component, array $params = [], bool $prepend = false)
+    {
+        $segment = $prepend ? 'prep_end_wrapper' : 'app_end_wrapper';
+
+        return $this->toSegment($segment, $component, $params);
     }
 
     /**
@@ -86,19 +104,6 @@ class LteAdmin
         }
 
         return $this;
-    }
-
-    /**
-     * @param  string  $component
-     * @param  array  $params
-     * @param  bool  $prepend
-     * @return $this
-     */
-    public function toWrapper(string $component, array $params = [], bool $prepend = false)
-    {
-        $segment = $prepend ? 'prep_end_wrapper' : 'app_end_wrapper';
-
-        return $this->toSegment($segment, $component, $params);
     }
 
     /**
@@ -129,31 +134,31 @@ class LteAdmin
 
     /**
      * @param  ExtendProvider  $provider
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerExtension(ExtendProvider $provider)
     {
-        if (! $provider::$name) {
+        if (!$provider::$name) {
             return false;
         }
 
-        if (! self::$extensions) {
+        if (!self::$extensions) {
             self::$extensions = include storage_path('lte_extensions.php');
         }
 
         if (isset(self::$extensions[$provider::$name]) || $provider::$slug === 'application') {
-            if (! isset(self::$installed_extensions[$provider::$name])) {
+            if (!isset(self::$installed_extensions[$provider::$name])) {
                 self::$installed_extensions[$provider::$name] = $provider;
 
                 if ($provider->included()) {
-                    if (! $provider::$after) {
+                    if (!$provider::$after) {
                         self::$nav_extensions[$provider::$slug] = $provider;
                     } else {
                         self::$nav_extensions[$provider::$after][] = $provider;
                     }
                 }
             }
-        } elseif (! isset(self::$not_installed_extensions[$provider::$name])) {
+        } elseif (!isset(self::$not_installed_extensions[$provider::$name])) {
             self::$not_installed_extensions[$provider::$name] = $provider;
         }
 

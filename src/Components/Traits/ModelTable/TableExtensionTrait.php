@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components\Traits\ModelTable;
 
+use Closure;
+
 trait TableExtensionTrait
 {
     /**
@@ -27,7 +29,7 @@ trait TableExtensionTrait
     /**
      * Add macro.
      * @param  string  $name
-     * @param  \Closure|object $object
+     * @param  Closure|object  $object
      * @param  string|null  $method
      */
     public static function addExtension(string $name, $object, string $method = null)
@@ -35,7 +37,7 @@ trait TableExtensionTrait
         if (is_embedded_call($object)) {
             static::$extensions[$name] = $object;
         } else {
-            if (! $method) {
+            if (!$method) {
                 $method = $name;
             }
             static::$extensions[$name] = [$object, $method];
@@ -58,6 +60,16 @@ trait TableExtensionTrait
     }
 
     /**
+     * Check has extension.
+     * @param  string  $name
+     * @return bool
+     */
+    public static function hasExtension(string $name)
+    {
+        return isset(static::$extensions[$name]);
+    }
+
+    /**
      * Call extension.
      * @param  string  $name
      * @param  array  $arguments
@@ -70,16 +82,6 @@ trait TableExtensionTrait
         }
 
         return null;
-    }
-
-    /**
-     * Check has extension.
-     * @param  string  $name
-     * @return bool
-     */
-    public static function hasExtension(string $name)
-    {
-        return isset(static::$extensions[$name]);
     }
 
     /**

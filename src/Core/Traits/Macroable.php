@@ -3,6 +3,8 @@
 namespace Lar\LteAdmin\Core\Traits;
 
 use ReflectionClass;
+use ReflectionException;
+use ReflectionFunction;
 use ReflectionMethod;
 
 trait Macroable
@@ -15,25 +17,13 @@ trait Macroable
     protected static $macros = [];
 
     /**
-     * Register a custom macro.
-     *
-     * @param  string  $name
-     * @param  object|callable  $macro
-     * @return void
-     */
-    public static function macro($name, $macro)
-    {
-        static::$macros[$name] = $macro;
-    }
-
-    /**
      * Mix another object into the class.
      *
      * @param  object|string  $mixin
      * @param  bool  $replace
      * @return void
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function mixin($mixin, $replace = true)
     {
@@ -46,7 +36,7 @@ trait Macroable
         );
 
         foreach ($methods as $method) {
-            if ($replace || ! static::hasMacro($method->name)) {
+            if ($replace || !static::hasMacro($method->name)) {
                 $method->setAccessible(true);
                 static::macro($method->name, $method->invoke($mixin));
             }
@@ -65,14 +55,26 @@ trait Macroable
     }
 
     /**
+     * Register a custom macro.
+     *
      * @param  string  $name
-     * @return \ReflectionFunction|null
-     * @throws \ReflectionException
+     * @param  object|callable  $macro
+     * @return void
+     */
+    public static function macro($name, $macro)
+    {
+        static::$macros[$name] = $macro;
+    }
+
+    /**
+     * @param  string  $name
+     * @return ReflectionFunction|null
+     * @throws ReflectionException
      */
     public static function get_macro_reflex(string $name)
     {
         if (isset(static::$macros[$name])) {
-            return new \ReflectionFunction(static::$macros[$name]);
+            return new ReflectionFunction(static::$macros[$name]);
         }
 
         return null;

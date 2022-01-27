@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Models;
 
+use DB;
 use Illuminate\Database\Seeder;
 use Lar\LteAdmin\Commands\LteDbDumpCommand;
 
@@ -18,7 +19,7 @@ class LteSeeder extends Seeder
             return;
         }
 
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         /** @var LteUser $user_model */
         $user_model = config('lte.auth.providers.lte.model');
@@ -29,22 +30,22 @@ class LteSeeder extends Seeder
         $user_model::create([
             'login' => 'root',
             'password' => bcrypt('root'),
-            'name'     => 'Root',
-            'email'    => 'root@root.com',
+            'name' => 'Root',
+            'email' => 'root@root.com',
         ]);
 
         $user_model::create([
             'login' => 'admin',
             'password' => bcrypt('admin'),
-            'name'     => 'Admin',
-            'email'    => 'admin@admin.com',
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
         ]);
 
         $user_model::create([
             'login' => 'moderator',
             'password' => bcrypt('moderator'),
-            'name'     => 'Moderator',
-            'email'    => 'moderator@moderator.com',
+            'name' => 'Moderator',
+            'email' => 'moderator@moderator.com',
         ]);
 
         // create a role.
@@ -69,6 +70,6 @@ class LteSeeder extends Seeder
 
         LtePermission::create(['path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 3]);
 
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

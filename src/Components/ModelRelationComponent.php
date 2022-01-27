@@ -12,71 +12,66 @@ class ModelRelationComponent extends Component
         ModelRelationBuilderTrait;
 
     /**
+     * @var mixed
+     */
+    protected static $fm;
+    /**
      * @var Relation
      */
     protected $relation;
-
     /**
      * @var string
      */
     protected $relation_name;
-
     /**
      * @var string
      */
     protected $path_name;
-
-    /**
-     * @var \Closure|array
-     */
-    protected $create_content;
-
     /**
      * @var ModelRelationContentComponent
      */
     protected $last_content;
-
     /**
      * @var callable
      */
     protected $on_empty;
+    protected $fm_old;
+    protected $innerDelegates = [];
 
     /**
-     * @var mixed
+     * @param  array|string  $relationName
+     * @param  mixed  ...$delegates
      */
-    protected static $fm;
-    protected $fm_old;
-    protected $innerDelegates;
-
-    public function __construct(...$delegates)
+    public function __construct($relationName, ...$delegates)
     {
         parent::__construct();
 
-        $this->innerDelegates = $delegates;
+        if (is_array($relationName)) {
+            $this->relation_name = $relationName[0];
+            $this->relation = $this->model->{$relationName[1]}();
+        } else {
+            $this->relation_name = $relationName;
+            $this->relation = $this->model->{$relationName}();
+        }
+
+        $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
     }
 
-    public function relation(array|string $relation)
+    public function template(...$delegates)
     {
-        if (is_array($relation)) {
-            $this->relation_name = $relation[0];
-            $this->relation = $this->model->{$relation[1]}();
-        } else {
-            $this->relation_name = $relation;
-            $this->relation = $relation;
-        }
+        $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
 
         return $this;
     }
 
     protected function mount()
     {
-        if (! ($this->relation instanceof Relation)) {
-            $this->alert('Danger!', 'Relation not found!')->danger();
+        if (!($this->relation instanceof Relation)) {
+            $this->alert()->title('Danger!')->body("Relation [$this->relation_name] not found!")->dangerType();
         } else {
             $this->fm_old = self::$fm;
             self::$fm = $this->relation;
-            $this->create_content = $this->innerDelegates;
-            $this->toExecute('_build');
+            $this->_build();
             $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->relation_name]);
         }
     }

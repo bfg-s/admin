@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Route;
+
 class PasswordField extends InputField
 {
     /**
@@ -27,13 +29,13 @@ class PasswordField extends InputField
      */
     public function confirm(string $label = null)
     {
-        \Route::current()->controller::$crypt_fields[] = $this->name;
+        Route::current()->controller::$crypt_fields[] = $this->name;
 
         $this->_front_rule_equal_to("#input_{$this->name}_confirmation")->confirmed()->crypt();
 
         $info = null;
 
-        if (! $label && $this->title) {
+        if (!$label && $this->title) {
             $label = $this->title;
 
             $info = __('lte.confirmation');
@@ -41,7 +43,7 @@ class PasswordField extends InputField
 
         $p = $this->parent_field;
 
-        if (! $p) {
+        if (!$p) {
             $p = $this->_();
         }
 

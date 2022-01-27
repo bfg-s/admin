@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
@@ -13,6 +14,7 @@ use Lar\LteAdmin\Core\PermissionsExtensionProvider;
 use Lar\LteAdmin\Core\UnInstallExtensionProvider;
 use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\LteAdmin\Models\LteFunction;
+use ReflectionClass;
 
 class ExtendProvider extends ServiceProviderIlluminate
 {
@@ -99,7 +101,7 @@ class ExtendProvider extends ServiceProviderIlluminate
      * Bootstrap services.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function boot()
     {
@@ -132,13 +134,12 @@ class ExtendProvider extends ServiceProviderIlluminate
     /**
      * Register services.
      *
-     * @param  null  $dir
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function register()
     {
-        if (! static::$name) {
+        if (!static::$name) {
             $this->getNameAndDescription();
         }
         $this->generateSlug();
@@ -148,11 +149,37 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * @return bool
+     * Get name and description from composer.json.
      */
-    public function included()
+    protected function getNameAndDescription()
     {
-        return isset(LteAdmin::$extensions[static::$name]) && LteAdmin::$extensions[static::$name];
+        $dir = dirname((new ReflectionClass(static::class))->getFileName());
+
+        $file = $dir.'/../composer.json';
+
+        if (is_file($file)) {
+            $data = json_decode(file_get_contents($file), 1);
+
+            if (isset($data['name'])) {
+                static::$name = $data['name'];
+            }
+
+            if (isset($data['description'])) {
+                static::$description = $data['description'];
+            }
+        }
+    }
+
+    /**
+     * Generate extension slug.
+     */
+    protected function generateSlug()
+    {
+        if (!static::$slug) {
+            static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$name);
+        }
+
+        static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$slug);
     }
 
     /**
@@ -169,37 +196,11 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Generate extension slug.
+     * @return bool
      */
-    protected function generateSlug()
+    public function included()
     {
-        if (! static::$slug) {
-            static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$name);
-        }
-
-        static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$slug);
-    }
-
-    /**
-     * Get name and description from composer.json.
-     */
-    protected function getNameAndDescription()
-    {
-        $dir = dirname((new \ReflectionClass(static::class))->getFileName());
-
-        $file = $dir.'/../composer.json';
-
-        if (is_file($file)) {
-            $data = json_decode(file_get_contents($file), 1);
-
-            if (isset($data['name'])) {
-                static::$name = $data['name'];
-            }
-
-            if (isset($data['description'])) {
-                static::$description = $data['description'];
-            }
-        }
+        return isset(LteAdmin::$extensions[static::$name]) && LteAdmin::$extensions[static::$name];
     }
 
     /**

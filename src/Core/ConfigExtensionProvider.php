@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Closure;
+use Event;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\LteAdmin\Components\Component;
 use Lar\LteAdmin\Components\ModelTableComponent;
@@ -102,21 +104,21 @@ class ConfigExtensionProvider
 
         foreach ($this->listen as $event => $listeners) {
             foreach (array_unique($listeners) as $listener) {
-                \Event::listen($event, $listener);
+                Event::listen($event, $listener);
             }
         }
 
         foreach ($this->subscribe as $subscriber) {
-            \Event::subscribe($subscriber);
+            Event::subscribe($subscriber);
         }
     }
 
     /**
      * @param  string  $name
-     * @param  \Closure  $call
+     * @param  Closure  $call
      * @return $this
      */
-    public function tableExtension(string $name, \Closure $call)
+    public function tableExtension(string $name, Closure $call)
     {
         ModelTableComponent::addExtension($name, $call);
 

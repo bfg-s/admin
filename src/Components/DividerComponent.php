@@ -5,6 +5,7 @@ namespace Lar\LteAdmin\Components;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Events\onRender;
+use ReflectionException;
 
 class DividerComponent extends DIV implements onRender
 {
@@ -48,9 +49,9 @@ class DividerComponent extends DIV implements onRender
                 $this->div(['col-auto'])->when($center_title);
             }
 
-            $this->div(['col'])->hr([! $anyTitle ? 'mt-0' : '']);
+            $this->div(['col'])->hr([!$anyTitle ? 'mt-0' : '']);
         } else {
-            $this->div(['col'])->hr([! $anyTitle ? 'mt-0' : '']);
+            $this->div(['col'])->hr([!$anyTitle ? 'mt-0' : '']);
         }
 
         if ($right_title) {
@@ -70,7 +71,7 @@ class DividerComponent extends DIV implements onRender
 
     /**
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function onRender()
     {

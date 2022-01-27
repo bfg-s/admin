@@ -7,24 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lar\LteAdmin\Components\Cores\ChartJsComponentCore;
 use Lar\LteAdmin\Delegates\SearchForm;
+use Throwable;
 
 class ChartJsComponent extends Component
 {
+    protected static $count = 0;
     /**
      * @var ChartJsComponentCore
      */
     public $builder;
     protected $dataBuilder;
-
-    protected static $count = 0;
-
     protected $size = 100;
     protected $type = 'line';
     protected $datasets = [];
 
     /**
      * @param  array  $delegates
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __construct(...$delegates)
     {
@@ -59,12 +58,16 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    protected function mount()
+    public function setDefaultDataBetween(string $column, $from, $to)
     {
-        $this->text(
-            $this->builder->render()
-        );
-        $this->callRenderEvents();
+        return !request()->has('q') ? $this->setDataBetween($column, $from, $to) : $this;
+    }
+
+    public function setDataBetween(string $column, $from, $to)
+    {
+        return $this->prepareData(static function ($model) use ($column, $from, $to) {
+            return $model->whereBetween($column, [$from, $to]);
+        });
     }
 
     /**
@@ -73,7 +76,7 @@ class ChartJsComponent extends Component
      */
     public function prepareData(callable $callback = null): self
     {
-        if (! $this->dataBuilder) {
+        if (!$this->dataBuilder) {
             $this->dataBuilder = $this->model;
         }
         if ($callback) {
@@ -84,18 +87,6 @@ class ChartJsComponent extends Component
         }
 
         return $this;
-    }
-
-    public function setDataBetween(string $column, $from, $to)
-    {
-        return $this->prepareData(static function ($model) use ($column, $from, $to) {
-            return $model->whereBetween($column, [$from, $to]);
-        });
-    }
-
-    public function setDefaultDataBetween(string $column, $from, $to)
-    {
-        return ! request()->has('q') ? $this->setDataBetween($column, $from, $to) : $this;
     }
 
     public function groupDataByAt(string $atColumn, string $format = 'Y.m.d')
@@ -123,13 +114,6 @@ class ChartJsComponent extends Component
         });
     }
 
-    public function eachPointSum(string $title, $callback = null)
-    {
-        return $this->eachPoint($title, static function (Collection $collection) use ($callback) {
-            return $collection->sum($callback);
-        });
-    }
-
     public function eachPoint(string $title, $callback = null, $default = 0)
     {
         $this->datasets[] = [
@@ -140,6 +124,13 @@ class ChartJsComponent extends Component
         ];
 
         return $this;
+    }
+
+    public function eachPointSum(string $title, $callback = null)
+    {
+        return $this->eachPoint($title, static function (Collection $collection) use ($callback) {
+            return $collection->sum($callback);
+        });
     }
 
     public function miniChart()
@@ -180,5 +171,13 @@ class ChartJsComponent extends Component
     protected function renderColor($c, $opacity)
     {
         return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
+    }
+
+    protected function mount()
+    {
+        $this->text(
+            $this->builder->render()
+        );
+        $this->callRenderEvents();
     }
 }

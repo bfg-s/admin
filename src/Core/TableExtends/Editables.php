@@ -3,6 +3,7 @@
 namespace Lar\LteAdmin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
+use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\A;
 use Lar\LteAdmin\Components\FieldComponent;
 
@@ -13,7 +14,7 @@ class Editables
      * @param  array  $props
      * @param  Model|null  $model
      * @param  null  $field
-     * @return \Lar\Layout\Abstracts\Component
+     * @return Component
      */
     public function input_switcher($value, array $props = [], Model $model = null, $field = null)
     {
@@ -66,24 +67,6 @@ class Editables
 
     /**
      * @param $value
-     * @param  array  $props
-     * @param  Model|null  $model
-     * @param  null  $field
-     * @param  null  $title
-     * @return string
-     */
-    public function textarea_editable(
-        $value,
-        array $props = [],
-        Model $model = null,
-        $field = null,
-        $title = null
-    ) {
-        return $this->editable($value, $model, $title, $field, 'textarea');
-    }
-
-    /**
-     * @param $value
      * @param  Model  $model
      * @param $title
      * @param $field
@@ -108,5 +91,23 @@ class Editables
         }
 
         return $value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @param  null  $field
+     * @param  null  $title
+     * @return string
+     */
+    public function textarea_editable(
+        $value,
+        array $props = [],
+        Model $model = null,
+        $field = null,
+        $title = null
+    ) {
+        return $this->editable($value, $model, $title, $field, 'textarea');
     }
 }

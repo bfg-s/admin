@@ -16,7 +16,7 @@ class PermissionController extends Controller
     /**
      * @var string
      */
-    public static $model = \Lar\LteAdmin\Models\LtePermission::class;
+    public static $model = LtePermission::class;
 
     /**
      * @var string[]

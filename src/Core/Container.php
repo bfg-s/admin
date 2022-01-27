@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Lar\Developer\Core\Traits\Eventable;
@@ -10,49 +11,44 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
 use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
+use Throwable;
 
 abstract class Container implements SegmentContainerInterface
 {
     use FontAwesome, Eventable, Piplineble, Conditionable;
 
     /**
-     * @var string
-     */
-    protected $layout;
-
-    /**
-     * @var string
-     */
-    protected $content_yield = 'content';
-
-    /**
      * @var Component
      */
     public $component;
-
-    /**
-     * @var null
-     */
-    protected $page_title = [];
-
-    /**
-     * @var array
-     */
-    protected $breadcrumb = [];
-
-    /**
-     * @var \Closure
-     */
-    private $warp;
-
     /**
      * @var array
      */
     public array $storeList = [];
+    /**
+     * @var string
+     */
+    protected $layout;
+    /**
+     * @var string
+     */
+    protected $content_yield = 'content';
+    /**
+     * @var null
+     */
+    protected $page_title = [];
+    /**
+     * @var array
+     */
+    protected $breadcrumb = [];
+    /**
+     * @var Closure
+     */
+    private $warp;
 
     /**
      * @param $warp
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __construct($warp)
     {
@@ -69,9 +65,18 @@ abstract class Container implements SegmentContainerInterface
         $this->warp = $warp;
     }
 
+    /**
+     * @param  mixed  ...$params
+     * @return static
+     */
+    public static function create(...$params)
+    {
+        return new static(...$params);
+    }
+
     public function toStore(string $store, $data)
     {
-        if (! isset($this->storeList[$store])) {
+        if (!isset($this->storeList[$store])) {
             $this->storeList[$store] = [];
         }
 
@@ -105,7 +110,7 @@ abstract class Container implements SegmentContainerInterface
      */
     public function title(string $title, string $icon = null)
     {
-        if (! $this->page_title) {
+        if (!$this->page_title) {
             $this->page_title = ['title' => $title];
         } else {
             $this->page_title['title'] = $title;
@@ -125,7 +130,7 @@ abstract class Container implements SegmentContainerInterface
      */
     public function icon(string $icon, string $title = null)
     {
-        if (! $this->page_title) {
+        if (!$this->page_title) {
             $this->page_title = ['icon' => $icon];
         } else {
             $this->page_title['icon'] = $icon;
@@ -151,14 +156,5 @@ abstract class Container implements SegmentContainerInterface
             'breadcrumb' => $this->breadcrumb,
             'storeList' => $this->storeList,
         ]);
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return static
-     */
-    public static function create(...$params)
-    {
-        return new static(...$params);
     }
 }

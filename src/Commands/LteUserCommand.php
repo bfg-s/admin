@@ -50,7 +50,7 @@ class LteUserCommand extends Command
 
         $password2 = null;
 
-        if (! $email) {
+        if (!$email) {
             $email = $this->ask('Enter a admin E-Mail');
 
             if ($user_model::where('email', $email)->first()) {
@@ -63,7 +63,7 @@ class LteUserCommand extends Command
             }
         }
 
-        if (! $name) {
+        if (!$name) {
             $name = $this->ask('Enter a admin Login', explode('@', $email)[0]);
 
             if ($user_model::where('username', $name)->first()) {
@@ -76,11 +76,11 @@ class LteUserCommand extends Command
             }
         }
 
-        if (! $password) {
+        if (!$password) {
             $password = $this->ask('Enter a password');
         }
 
-        if (! $password2) {
+        if (!$password2) {
             $password2 = $this->ask('Enter a confirmation password');
         }
 
@@ -100,7 +100,8 @@ class LteUserCommand extends Command
             'name' => $name,
         ])) {
             $roles = LteRole::all();
-            $role = $this->choice('Select role for new lte user', $roles->pluck('name', 'id')->toArray(), $roles->first()->id);
+            $role = $this->choice('Select role for new lte user', $roles->pluck('name', 'id')->toArray(),
+                $roles->first()->id);
             $user->roles()->sync([$role]);
 
             $this->info('User success created.');

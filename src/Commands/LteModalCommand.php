@@ -2,10 +2,12 @@
 
 namespace Lar\LteAdmin\Commands;
 
+use Arr;
 use Illuminate\Console\Command;
 use Lar\LteAdmin\Components\ModalBodyComponent;
 use Lar\LteAdmin\Components\ModalComponent;
 use Lar\LteAdmin\Controllers\ModalController;
+use Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -46,7 +48,7 @@ class LteModalCommand extends Command
         $namespace = $this->namespace();
         $path = $this->rp();
 
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
@@ -72,9 +74,9 @@ class LteModalCommand extends Command
      */
     protected function name()
     {
-        $return = ucfirst(\Str::camel(\Arr::last($this->segments())));
+        $return = ucfirst(Str::camel(Arr::last($this->segments())));
 
-        if (! preg_match('/Modal$/', $return)) {
+        if (!preg_match('/Modal$/', $return)) {
             $return .= 'Modal';
         }
 

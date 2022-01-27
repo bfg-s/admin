@@ -30,7 +30,7 @@ class CheckBoxFieldCore extends DIV implements onRender
 
     /**
      * Col constructor.
-     * @param array|Arrayable $values
+     * @param  array|Arrayable  $values
      * @param  mixed  ...$params
      */
     public function __construct($values, ...$params)
@@ -43,7 +43,7 @@ class CheckBoxFieldCore extends DIV implements onRender
             $values = $values->toArray();
         }
 
-        if (! is_array($values)) {
+        if (!is_array($values)) {
             $values = [$values];
         }
 

@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Middlewares;
 
+use Cache;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,38 +13,39 @@ use Lar\Layout\Core\LConfigs;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\LteBoot;
 use Lar\LteAdmin\Models\LtePermission;
+use ReflectionException;
+use Route;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Authenticate
 {
+    /**
+     * @var bool
+     */
+    public static $access = true;
     /**
      * @var Collection
      */
     protected static $menu;
 
     /**
-     * @var bool
-     */
-    public static $access = true;
-
-    /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function handle($request, Closure $next)
     {
-        if (! Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
+        if (!Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
             return redirect()->route('lte.dashboard');
         }
 
-        if (Auth::guard('lte')->guest() && ! $this->shouldPassThrough($request)) {
+        if (Auth::guard('lte')->guest() && !$this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
             $this->unauthenticated($request);
@@ -54,8 +56,8 @@ class Authenticate
         LConfigs::add('home', route('lte.home'));
         LConfigs::add('uploader', route('lte.uploader'));
 
-        if (! $this->access()) {
-            if ($request->ajax() && ! $request->pjax()) {
+        if (!$this->access()) {
+            if ($request->ajax() && !$request->pjax()) {
                 lte_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
                 $respond = ['0:toast::error' => [__('lte.access_denied'), __('lte.error')]];
 
@@ -65,7 +67,7 @@ class Authenticate
 
                 return response()->json($respond);
             } else {
-                if (! $request->isMethod('get')) {
+                if (!$request->isMethod('get')) {
                     lte_log_danger('Pattern go to the forbidden zone', 'Blocked GET request', 'fas fa-shield-alt');
                     session()->flash('respond',
                         respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
@@ -77,7 +79,7 @@ class Authenticate
             static::$access = false;
         }
 
-        lte_log_primary('Loaded page', trim(\Route::currentRouteAction(), '\\'));
+        lte_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
 
         /** @var Response $res */
         $res = $next($request);
@@ -86,7 +88,7 @@ class Authenticate
             $_areas = $request->get('_areas');
 
             if ($_areas) {
-                $hashes = \Cache::get('admin_areas_hashes', []);
+                $hashes = Cache::get('admin_areas_hashes', []);
 
                 $html = new Crawler($res->getContent());
 
@@ -106,13 +108,13 @@ class Authenticate
                     }
                 }
 
-                \Cache::forever('admin_areas_hashes', $hashes);
+                Cache::forever('admin_areas_hashes', $hashes);
 
                 return $res->setContent($result_areas);
             }
         } else {
-            if (\Cache::has('admin_areas_hashes')) {
-                \Cache::forget('admin_areas_hashes');
+            if (Cache::has('admin_areas_hashes')) {
+                Cache::forget('admin_areas_hashes');
             }
         }
 
@@ -120,34 +122,9 @@ class Authenticate
     }
 
     /**
-     * @return bool
-     */
-    protected function access()
-    {
-        $now = lte_now();
-
-        list($class, $method) = \Str::parseCallback(\Route::currentRouteAction(), 'index');
-        $classes = [trim($class, '\\')];
-
-        if ($now && isset($now['extension']) && $now['extension']) {
-            $classes[] = get_class($now['extension']);
-        }
-
-        if (! lte_controller_can()) {
-            return false;
-        }
-
-        if (isset($now['roles']) && ! lte_user()->hasRoles($now['roles'])) {
-            return false;
-        }
-
-        return LtePermission::check();
-    }
-
-    /**
      * Determine if the request has a URI that should pass through verification.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      *
      * @return bool
      */
@@ -187,5 +164,19 @@ class Authenticate
         throw new AuthenticationException(
             'Unauthenticated.', ['lte'], route('lte.login')
         );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function access()
+    {
+        $now = lte_now();
+
+        if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {
+            return false;
+        }
+
+        return LtePermission::check();
     }
 }

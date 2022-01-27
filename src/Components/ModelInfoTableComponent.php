@@ -2,8 +2,11 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\SPAN;
+use Lar\Tagable\Tag;
 
 /**
  * @methods Lar\LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
@@ -33,20 +36,6 @@ class ModelInfoTableComponent extends Component
     protected $last;
 
     /**
-     * @param  string|\Closure|array  $field
-     * @param  string  $label
-     * @return $this
-     */
-    public function row(string $label, $field)
-    {
-        $this->last = uniqid('row');
-
-        $this->rows[$this->last] = ['field' => $field, 'label' => $label, 'info' => false, 'macros' => []];
-
-        return $this;
-    }
-
-    /**
      * @param  string  $info
      * @return $this
      */
@@ -70,21 +59,15 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * @param  string|Closure|array  $field
+     * @param  string  $label
      * @return $this
      */
-    public function created_at()
+    public function row(string $label, $field)
     {
-        $this->row('lte.created_at', 'created_at')->true_data();
+        $this->last = uniqid('row');
 
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function updated_at()
-    {
-        $this->row('lte.updated_at', 'updated_at')->true_data();
+        $this->rows[$this->last] = ['field' => $field, 'label' => $label, 'info' => false, 'macros' => []];
 
         return $this;
     }
@@ -112,6 +95,26 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
+    public function created_at()
+    {
+        $this->row('lte.created_at', 'created_at')->true_data();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updated_at()
+    {
+        $this->row('lte.updated_at', 'updated_at')->true_data();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function active_switcher()
     {
         $this->row('lte.active', 'active')->yes_no();
@@ -122,8 +125,8 @@ class ModelInfoTableComponent extends Component
     /**
      * @param $name
      * @param $arguments
-     * @return $this|bool|ModelInfoTableComponent|\Lar\Tagable\Tag|string
-     * @throws \Exception
+     * @return $this|bool|ModelInfoTableComponent|Tag|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -147,7 +150,7 @@ class ModelInfoTableComponent extends Component
                 $macros = $row['macros'];
                 if (is_string($field)) {
                     $ddd = multi_dot_call($this->model, $field);
-                    $field = is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
+                    $field = is_array($ddd) || is_object($ddd) || is_null($ddd) || is_bool($ddd) ? $ddd : e($ddd);
                 } elseif (is_array($field) || is_embedded_call($field)) {
                     $field = embedded_call($field, [
                         is_object($this->model) ? get_class($this->model) : 'model' => $this->model,
@@ -156,7 +159,7 @@ class ModelInfoTableComponent extends Component
                 }
                 foreach ($macros as $macro) {
                     $field = ModelTableComponent::callExtension($macro[0], [
-                        'model' => ! is_array($this->model) ? $this->model : null,
+                        'model' => !is_array($this->model) ? $this->model : null,
                         'value' => $field,
                         'field' => $row['field'],
                         'title' => $row['label'],

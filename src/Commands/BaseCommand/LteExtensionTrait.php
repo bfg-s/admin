@@ -4,6 +4,7 @@ namespace Lar\LteAdmin\Commands\BaseCommand;
 
 use Composer\Json\JsonFormatter;
 use Lar\LteAdmin\LteAdmin;
+use Str;
 
 trait LteExtensionTrait
 {
@@ -17,13 +18,14 @@ trait LteExtensionTrait
     {
         $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
 
-        if (! isset($base_composer['repositories'])) {
+        if (!isset($base_composer['repositories'])) {
             $base_composer['repositories'] = [];
         }
 
-        if (! collect($base_composer['repositories'])->where('url', $path)->first()) {
+        if (!collect($base_composer['repositories'])->where('url', $path)->first()) {
             $base_composer['repositories'][] = ['type' => 'path', 'url' => $path];
-            file_put_contents(base_path('composer.json'), JsonFormatter::format(json_encode($base_composer), false, true));
+            file_put_contents(base_path('composer.json'),
+                JsonFormatter::format(json_encode($base_composer), false, true));
             $this->info("> Add PATH [{$path}] to repository!");
 
             return true;
@@ -90,8 +92,8 @@ trait LteExtensionTrait
      */
     protected function enterDescription()
     {
-        if (! static::$desc) {
-            while (! static::$desc) {
+        if (!static::$desc) {
+            while (!static::$desc) {
                 static::$desc = $this->ask('Enter description of extension');
             }
         }
@@ -109,7 +111,7 @@ trait LteExtensionTrait
 
         list($folder, $extension) = explode('/', $name);
 
-        $namespace = 'Lar\\LteAdmin\\'.ucfirst(\Str::camel($folder !== 'lar' ? $folder : 'extend')).'\\'.ucfirst(\Str::camel($extension));
+        $namespace = 'Lar\\LteAdmin\\'.ucfirst(Str::camel($folder !== 'lar' ? $folder : 'extend')).'\\'.ucfirst(Str::camel($extension));
 
         $data = str_replace([
             '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{LTE_VERSION}',
@@ -117,7 +119,7 @@ trait LteExtensionTrait
         ], [
             $name, static::$desc, $folder, $extension, \LteAdmin::version(),
             str_replace('\\', '\\\\', $namespace), $namespace,
-            \Str::slug(str_replace('/', '_', $name), '_'),
+            Str::slug(str_replace('/', '_', $name), '_'),
         ], $data);
 
         return $data;

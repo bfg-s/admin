@@ -5,7 +5,6 @@ namespace Lar\LteAdmin\Core;
 use Lar\Layout\Abstracts\Component;
 use Lar\LteAdmin\Components\AlertComponent;
 use Lar\LteAdmin\Components\DividerComponent;
-use Lar\LteAdmin\Components\FormFooterComponent;
 use Lar\LteAdmin\Components\InfoBoxComponent;
 use Lar\LteAdmin\Components\LangComponent;
 use Lar\LteAdmin\Components\SmallBoxComponent;

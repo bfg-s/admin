@@ -96,19 +96,9 @@ class RoutesAdaptor
 
             $r = null;
 
-            if (! isset($menu['ignored'])) {
+            if (!isset($menu['ignored'])) {
                 $r = $roads->resource($name, $action, $menu['resource']['options'])
                     ->middleware($menu['middleware'] ?? []);
-
-                $ns = collect(app('router')->getGroupStack())->reverse()->implode('namespace', '\\');
-
-                if (strpos($r->get_controller(), '\\') === false) {
-                    $controller = trim($ns, '\\').'\\'.$r->get_controller();
-                } else {
-                    $controller = trim($r->get_controller(), '\\');
-                }
-
-                $menu['controller'] = $controller;
             }
 
             if (isset($menu['router']) && is_array($menu['router'])) {
@@ -138,20 +128,9 @@ class RoutesAdaptor
                 unset($action['uri']);
             }
 
-            if (! isset($menu['ignored'])) {
+            if (!isset($menu['ignored'])) {
                 $r = $roads->{$method}($uri, $action)->name($menu['route'])
                     ->middleware($menu['middleware'] ?? []);
-
-                $ns = collect(app('router')->getGroupStack())->reverse()->implode('namespace', '\\');
-                $controller = \Str::parseCallback($r->getAction('controller'))[0];
-
-                if (strpos($controller, '\\') === false) {
-                    $controller = trim($ns, '\\').'\\'.$controller;
-                } else {
-                    $controller = trim($controller, '\\');
-                }
-
-                $menu['controller'] = $controller;
             }
 
             if (isset($menu['router']) && is_array($menu['router'])) {

@@ -2,10 +2,13 @@
 
 namespace Lar\LteAdmin\Core\Generators;
 
+use Exception;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Lar\LteAdmin\Models\LteFunction;
+use ReflectionException;
+use Schema;
 
 class FunctionsHelperGenerator implements DumpExecute
 {
@@ -21,7 +24,6 @@ class FunctionsHelperGenerator implements DumpExecute
 
         $namespace->class('FunctionsDoc', function ($class) {
             $class->doc(function ($doc) {
-
                 /** @var DocumentorEntity $doc */
                 $this->generateDefaultMethods($doc);
             });
@@ -33,18 +35,19 @@ class FunctionsHelperGenerator implements DumpExecute
     /**
      * Generate default methods.
      *
-     * @param DocumentorEntity $doc
-     * @throws \ReflectionException
+     * @param  DocumentorEntity  $doc
+     * @throws ReflectionException
      */
     protected function generateDefaultMethods($doc)
     {
         try {
-            if (\Schema::hasTable((new LteFunction)->getTable())) {
+            if (Schema::hasTable((new LteFunction)->getTable())) {
                 foreach (LteFunction::all() as $func) {
-                    $doc->tagPropertyRead('bool', $func->slug, "Check if the user has access to the function ({$func->description})");
+                    $doc->tagPropertyRead('bool', $func->slug,
+                        "Check if the user has access to the function ({$func->description})");
                 }
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
         }
     }
 }

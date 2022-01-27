@@ -2,6 +2,9 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Cores\Select2TagsFieldCore;
 
 class SelectTagsField extends SelectField
@@ -12,7 +15,7 @@ class SelectTagsField extends SelectField
     protected $icon = 'fas fa-tags';
 
     /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
@@ -29,7 +32,7 @@ class SelectTagsField extends SelectField
     }
 
     /**
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
+     * @param  array|Arrayable  $options
      * @param  bool  $first_default
      * @return SelectTagsField
      */

@@ -2,10 +2,13 @@
 
 namespace Lar\LteAdmin\Layouts;
 
+use Exception;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\AccessDeniedComponent;
 use Lar\LteAdmin\Middlewares\Authenticate;
+use LteAdmin;
+use View;
 
 class LteLayout extends LteBase
 {
@@ -45,8 +48,23 @@ class LteLayout extends LteBase
 
                 $div->view('lte::layout.control_sidebar');
             });
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             dd($exception);
+        }
+    }
+
+    /**
+     * @param  Component  $component
+     * @param  string  $segment
+     */
+    private function toComponent(Component $component, string $segment)
+    {
+        foreach (LteAdmin::getSegments($segment) as $segment) {
+            if (View::exists($segment['component'])) {
+                $component->view($segment['component'], $segment['params']);
+            } else {
+                $component->appEnd(new $segment['component'](...$segment['params']));
+            }
         }
     }
 
@@ -55,7 +73,7 @@ class LteLayout extends LteBase
      *
      * @param $data
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function setInContent($data)
     {
@@ -67,23 +85,8 @@ class LteLayout extends LteBase
             } else {
                 $this->container->appEnd(AccessDeniedComponent::create());
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             dd($exception);
-        }
-    }
-
-    /**
-     * @param  Component  $component
-     * @param  string  $segment
-     */
-    private function toComponent(Component $component, string $segment)
-    {
-        foreach (\LteAdmin::getSegments($segment) as $segment) {
-            if (\View::exists($segment['component'])) {
-                $component->view($segment['component'], $segment['params']);
-            } else {
-                $component->appEnd(new $segment['component'](...$segment['params']));
-            }
         }
     }
 }

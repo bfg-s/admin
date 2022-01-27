@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 class MultiSelectField extends SelectField
 {
     /**
@@ -17,7 +19,7 @@ class MultiSelectField extends SelectField
     protected $icon = null;
 
     /**
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
+     * @param  array|Arrayable  $options
      * @param  bool  $first_default
      * @return MultiSelectField
      */

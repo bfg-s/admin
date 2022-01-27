@@ -27,7 +27,7 @@ class FileField extends InputField
      */
     public function exts(...$exts)
     {
-        if (! isset($this->data['exts'])) {
+        if (!isset($this->data['exts'])) {
             $this->data['exts'] = implode('|', $exts);
         } else {
             $this->data['exts'] .= implode('|', $exts);

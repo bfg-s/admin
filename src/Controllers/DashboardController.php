@@ -2,8 +2,12 @@
 
 namespace Lar\LteAdmin\Controllers;
 
+use App;
+use Arr;
 use Composer\Composer;
+use DB;
 use Lar\Layout\Abstracts\Component;
+use Lar\LteAdmin\Components\GridColumnComponent;
 use Lar\LteAdmin\Delegates\Card;
 use Lar\LteAdmin\Delegates\CardBody;
 use Lar\LteAdmin\Delegates\ChartJs;
@@ -11,6 +15,8 @@ use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Delegates\StatisticPeriod;
 use Lar\LteAdmin\Models\LteUser;
 use Lar\LteAdmin\Page;
+use LteAdmin;
+use PDO;
 
 class DashboardController extends Controller
 {
@@ -23,7 +29,8 @@ class DashboardController extends Controller
      * @var array
      */
     protected $required = [
-        'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql', 'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif',
+        'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql',
+        'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif',
     ];
 
     /**
@@ -33,8 +40,14 @@ class DashboardController extends Controller
      * @param  ChartJs  $chartJs
      * @return Page|mixed
      */
-    public function index(Page $page, Card $card, CardBody $cardBody, StatisticPeriod $statisticPeriod, ChartJs $chartJs, SearchForm $searchForm)
-    {
+    public function index(
+        Page $page,
+        Card $card,
+        CardBody $cardBody,
+        StatisticPeriod $statisticPeriod,
+        ChartJs $chartJs,
+        SearchForm $searchForm
+    ) {
         return $page->card(
             $card->title(__('lte.user_statistics')),
             $card->card_body(
@@ -60,20 +73,20 @@ class DashboardController extends Controller
                 )
             )
         )
-        ->when(admin()->isRoot(), function (Page $page) {
-            $page->next()->row(
-                $this->cardTableCol('lte.environment', [$this, 'environmentInfo']),
-                $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
-                $this->cardTableCol('Composer', [$this, 'composerInfo']),
-                $this->cardTableCol('lte.database', [$this, 'databaseInfo']),
-            );
-        });
+            ->when(admin()->isRoot(), function (Page $page) {
+                $page->next()->row(
+                    $this->cardTableCol('lte.environment', [$this, 'environmentInfo']),
+                    $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
+                    $this->cardTableCol('Composer', [$this, 'composerInfo']),
+                    $this->cardTableCol('lte.database', [$this, 'databaseInfo']),
+                );
+            });
     }
 
     /**
      * @param  string  $title
      * @param $rows
-     * @return \Lar\LteAdmin\Components\GridColumnComponent
+     * @return GridColumnComponent
      */
     public function cardTableCol(string $title, $rows)
     {
@@ -105,12 +118,12 @@ class DashboardController extends Controller
         }
 
         return [
-            __('lte.php_version') =>  '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
+            __('lte.php_version') => '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
             __('lte.php_modules') => implode(', ', $mods),
             __('lte.cgi') => php_sapi_name(),
             __('lte.os') => php_uname(),
-            __('lte.server') => \Arr::get($_SERVER, 'SERVER_SOFTWARE'),
-            __('lte.root') => \Arr::get($_SERVER, 'DOCUMENT_ROOT'),
+            __('lte.server') => Arr::get($_SERVER, 'SERVER_SOFTWARE'),
+            __('lte.root') => Arr::get($_SERVER, 'DOCUMENT_ROOT'),
             'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0,
         ];
     }
@@ -124,8 +137,8 @@ class DashboardController extends Controller
         $lte_user_model = config('lte.auth.providers.lte.model');
 
         return [
-            __('lte.laravel_version') =>  '<span class="badge badge-dark">v'.versionString(\App::version()).'</span>',
-            __('lte.lte_version') =>   '<span class="badge badge-dark">v'.versionString(\LteAdmin::version()).'</span>',
+            __('lte.laravel_version') => '<span class="badge badge-dark">v'.versionString(App::version()).'</span>',
+            __('lte.lte_version') => '<span class="badge badge-dark">v'.versionString(LteAdmin::version()).'</span>',
             __('lte.timezone') => config('app.timezone'),
             __('lte.language') => config('app.locale'),
             __('lte.languages_involved') => implode(', ', config('layout.languages')),
@@ -153,7 +166,7 @@ class DashboardController extends Controller
     public function composerInfo()
     {
         $return = [
-            __('lte.composer_version') =>  '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
+            __('lte.composer_version') => '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
             '' => static function (Component $component) {
                 $component->_addClass(['table-secondary']);
                 $component->_find('th')->h6(['m-0'], __('lte.required'));
@@ -176,15 +189,15 @@ class DashboardController extends Controller
      */
     public function databaseInfo()
     {
-        /** @var \PDO $pdo */
-        $pdo = \DB::query('SHOW VARIABLES')->getConnection()->getPdo();
+        /** @var PDO $pdo */
+        $pdo = DB::query('SHOW VARIABLES')->getConnection()->getPdo();
 
         return [
-            __('lte.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION)).'</span>',
-            __('lte.client_version') => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
-            __('lte.server_info') => $pdo->getAttribute(\PDO::ATTR_SERVER_INFO),
-            __('lte.connection_status') => $pdo->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
-            __('lte.mysql_driver') => $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME),
+            __('lte.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
+            __('lte.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION),
+            __('lte.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO),
+            __('lte.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
+            __('lte.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
             '' => static function (Component $component) {
                 $component->_addClass(['table-secondary']);
                 $component->_find('th')->h6(['m-0'], __('lte.connection_info'));

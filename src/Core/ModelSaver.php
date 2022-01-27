@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Core;
 
+use DB;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Lar\Developer\Core\Traits\Eventable;
 use Lar\LteAdmin\Models\LteFileStorage;
 
@@ -21,75 +23,62 @@ class ModelSaver
     use Eventable;
 
     const DELETE_FIELD = '__DELETE__';
-
+    /**
+     * @var callable[]
+     */
+    protected static $on_save = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_saved = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_finish = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_create = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_created = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_update = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_updated = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_delete = [];
+    /**
+     * @var callable[]
+     */
+    protected static $on_deleted = [];
     /**
      * Save model.
      *
      * @var Model
      */
     protected $model;
-
     /**
      * Save data.
      *
      * @var array
      */
     protected $data;
-
     /**
      * @var bool
      */
     protected $has_delete = false;
-
     /**
      * @var mixed
      */
     protected $src = null;
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_save = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_saved = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_finish = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_create = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_created = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_update = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_updated = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_delete = [];
-
-    /**
-     * @var callable[]
-     */
-    protected static $on_deleted = [];
     protected ?object $eventsObject;
 
     /**
@@ -112,7 +101,7 @@ class ModelSaver
 
     /**
      * @template SaveModel
-     * @param SaveModel $model
+     * @param  SaveModel  $model
      * @param  array  $data
      * @param  object|null  $eventsObject
      * @return SaveModel|bool|Model|mixed|string
@@ -120,28 +109,6 @@ class ModelSaver
     public static function do($model, array $data, object $eventsObject = null)
     {
         return (new static($model, $data, $eventsObject))->save();
-    }
-
-    /**
-     * @param $model
-     * @param  array|Arrayable  $data
-     * @return \Illuminate\Support\Collection
-     */
-    public static function doMany($model, $data)
-    {
-        $results = collect();
-
-        foreach ($data as $datum) {
-            if ($datum instanceof Arrayable) {
-                $datum = $datum->toArray();
-            }
-
-            if (is_array($datum) && count($datum)) {
-                $results->push((new static($model, $datum))->save());
-            }
-        }
-
-        return $results;
     }
 
     /**
@@ -169,14 +136,131 @@ class ModelSaver
     }
 
     /**
-     * @param $src
-     * @return $this
+     * @return array[]
      */
-    public function setSrc($src)
+    protected function getDatas()
     {
-        $this->src = $src;
+        $data = [];
+        foreach ($this->data as $key => $datum) {
+            if (is_object($datum) && $datum instanceof UploadedFile) {
+                $data[$key] = LteFileStorage::makeFile($datum);
+            } else {
+                $data[$key] = $datum;
+            }
+        }
+        $key = $this->getModelKeyName();
+        if (
+            isset($data[static::DELETE_FIELD]) &&
+            isset($data[$key]) &&
+            $data[static::DELETE_FIELD] == $data[$key]
+        ) {
+            $this->has_delete = true;
 
-        return $this;
+            return [[], []];
+        }
+        $nullable = $this->getNullableFields();
+        $result = [[]];
+        foreach ($this->getFields() as $field) {
+            if (array_key_exists($field, $data)) {
+                if ($data[$field] !== '') {
+                    $result[0][$field] = $data[$field];
+                } elseif (isset($nullable[$field]) && $nullable[$field]) {
+                    $result[0][$field] = null;
+                } else {
+                    $result[0][$field] = $data[$field];
+                }
+                unset($data[$field]);
+            }
+        }
+        $result[1] = $data;
+
+        return $result;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModelKeyName()
+    {
+        $key = null;
+        $model = $this->getModel();
+        if ($model) {
+            $key = $model->getKeyName();
+        }
+
+        return $key;
+    }
+
+    /**
+     * @return Model|null
+     */
+    public function getModel()
+    {
+        $model = null;
+
+        if ($this->model instanceof Relation) {
+            $model = $this->model->getModel();
+        } elseif ($this->model instanceof Model) {
+            $model = $this->model;
+        } elseif ($this->model instanceof Builder) {
+            $model = $this->model->getModel();
+        }
+
+        return $model;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNullableFields()
+    {
+        $table = $this->getModelTable();
+
+        if (!$table) {
+            return [];
+        }
+
+        $fields = DB::select(
+            "SELECT COL.COLUMN_NAME, COL.IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS COL WHERE COL.TABLE_NAME = '{$table}'"
+        );
+
+        $clear_fields = [];
+
+        foreach ($fields as $field) {
+            $clear_fields[$field->COLUMN_NAME] = $field->IS_NULLABLE === 'YES';
+        }
+
+        return $clear_fields;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModelTable()
+    {
+        $table = null;
+        $model = $this->getModel();
+        if ($model) {
+            $table = $model->getTable();
+        }
+
+        return $table;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFields()
+    {
+        $table = $this->getModelTable();
+
+        if (!$table) {
+            return [];
+        }
+
+        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($table);
+
+        return $fields;
     }
 
     /**
@@ -227,7 +311,7 @@ class ModelSaver
 
                         if (is_array($fv)) {
                             $param = collect($param)->filter(static function ($i) {
-                                return ! isset($i[static::DELETE_FIELD]);
+                                return !isset($i[static::DELETE_FIELD]);
                             })->map(static function ($i) {
                                 $lk = array_key_last($i);
 
@@ -265,6 +349,57 @@ class ModelSaver
         }
 
         return $result;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  mixed  ...$params
+     * @return array
+     */
+    protected function call_on(string $name, ...$params)
+    {
+        $events = static::$$name;
+        $model = $this->getModel();
+        $class = $model ? get_class($model) : false;
+
+        $result = [];
+
+        if ($class && isset($events[$class])) {
+            foreach ($events[$class] as $item) {
+                $r = call_user_func_array($item, $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        if (
+            $this->eventsObject
+            && $model
+            && method_exists($this->eventsObject, $name)
+            && property_exists($this->eventsObject, 'model')
+        ) {
+            $controllerModel = $this->eventsObject::$model;
+            if ($controllerModel == $class) {
+                $r = call_user_func_array([$this->eventsObject, $name], $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $src
+     * @return $this
+     */
+    public function setSrc($src)
+    {
+        $this->src = $src;
+
+        return $this;
     }
 
     /**
@@ -322,7 +457,7 @@ class ModelSaver
 
                         if (is_array($fv)) {
                             $param = collect($param)->filter(static function ($i) {
-                                return ! isset($i[static::DELETE_FIELD]);
+                                return !isset($i[static::DELETE_FIELD]);
                             })->map(static function ($i) {
                                 $lk = array_key_last($i);
 
@@ -370,146 +505,25 @@ class ModelSaver
     }
 
     /**
-     * Insert relations when model creating.
-     * @param  array  $data
-     * @return array
+     * @param $model
+     * @param  array|Arrayable  $data
+     * @return Collection
      */
-    protected function insert_relations(array $data)
+    public static function doMany($model, $data)
     {
+        $results = collect();
 
-//        foreach ($data as $key => $datum) {
-//
-//        }
+        foreach ($data as $datum) {
+            if ($datum instanceof Arrayable) {
+                $datum = $datum->toArray();
+            }
 
-        return $data;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFields()
-    {
-        $table = $this->getModelTable();
-
-        if (! $table) {
-            return [];
-        }
-
-        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($table);
-
-        return $fields;
-    }
-
-    /**
-     * @return array[]
-     */
-    protected function getDatas()
-    {
-        $data = [];
-        foreach ($this->data as $key => $datum) {
-            if (is_object($datum) && $datum instanceof UploadedFile) {
-                $data[$key] = LteFileStorage::makeFile($datum);
-            } else {
-                $data[$key] = $datum;
+            if (is_array($datum) && count($datum)) {
+                $results->push((new static($model, $datum))->save());
             }
         }
-        $key = $this->getModelKeyName();
-        if (
-            isset($data[static::DELETE_FIELD]) &&
-            isset($data[$key]) &&
-            $data[static::DELETE_FIELD] == $data[$key]
-        ) {
-            $this->has_delete = true;
 
-            return [[], []];
-        }
-        $nullable = $this->getNullableFields();
-        $result = [[]];
-        foreach ($this->getFields() as $field) {
-            if (array_key_exists($field, $data)) {
-                if ($data[$field] !== '') {
-                    $result[0][$field] = $data[$field];
-                } elseif (isset($nullable[$field]) && $nullable[$field]) {
-                    $result[0][$field] = null;
-                } else {
-                    $result[0][$field] = $data[$field];
-                }
-                unset($data[$field]);
-            }
-        }
-        $result[1] = $data;
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getNullableFields()
-    {
-        $table = $this->getModelTable();
-
-        if (! $table) {
-            return [];
-        }
-
-        $fields = \DB::select(
-            "SELECT COL.COLUMN_NAME, COL.IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS COL WHERE COL.TABLE_NAME = '{$table}'"
-        );
-
-        $clear_fields = [];
-
-        foreach ($fields as $field) {
-            $clear_fields[$field->COLUMN_NAME] = $field->IS_NULLABLE === 'YES';
-        }
-
-        return $clear_fields;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModelKeyName()
-    {
-        $key = null;
-        $model = $this->getModel();
-        if ($model) {
-            $key = $model->getKeyName();
-        }
-
-        return $key;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModelTable()
-    {
-        $table = null;
-        $model = $this->getModel();
-        if ($model) {
-            $table = $model->getTable();
-        }
-
-        return $table;
-    }
-
-    /**
-     * @return Model|null
-     */
-    public function getModel()
-    {
-        $model = null;
-
-        if ($this->model instanceof Relation) {
-            $model = $this->model->getModel();
-        } elseif ($this->model instanceof Model) {
-            $model = $this->model;
-        } elseif ($this->model instanceof Builder) {
-            $model = $this->model->getModel();
-        }
-
-        return $model;
+        return $results;
     }
 
     /**
@@ -519,6 +533,28 @@ class ModelSaver
     public static function on_save($model, callable $call = null)
     {
         static::on('save', $model, $call);
+    }
+
+    /**
+     * @param  string  $event
+     * @param $model
+     * @param  callable|null  $call
+     */
+    public static function on(string $event, $model, callable $call = null)
+    {
+        if (!$call && is_callable($model)) {
+            $call = $model;
+
+            $model = lte_controller_model();
+        }
+
+        $event = "on_$event";
+
+        if ($model && property_exists(static::class, $event) && is_callable($call)) {
+            $events = static::$$event;
+            $events[$model][] = $call;
+            static::$$event = $events;
+        }
     }
 
     /**
@@ -594,64 +630,16 @@ class ModelSaver
     }
 
     /**
-     * @param  string  $event
-     * @param $model
-     * @param  callable|null  $call
-     */
-    public static function on(string $event, $model, callable $call = null)
-    {
-        if (! $call && is_callable($model)) {
-            $call = $model;
-
-            $model = lte_controller_model();
-        }
-
-        $event = "on_$event";
-
-        if ($model && property_exists(static::class, $event) && is_callable($call)) {
-            $events = static::$$event;
-            $events[$model][] = $call;
-            static::$$event = $events;
-        }
-    }
-
-    /**
-     * @param  string  $name
-     * @param  mixed  ...$params
+     * Insert relations when model creating.
+     * @param  array  $data
      * @return array
      */
-    protected function call_on(string $name, ...$params)
+    protected function insert_relations(array $data)
     {
-        $events = static::$$name;
-        $model = $this->getModel();
-        $class = $model ? get_class($model) : false;
+//        foreach ($data as $key => $datum) {
+//
+//        }
 
-        $result = [];
-
-        if ($class && isset($events[$class])) {
-            foreach ($events[$class] as $item) {
-                $r = call_user_func_array($item, $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        if (
-            $this->eventsObject
-            && $model
-            && method_exists($this->eventsObject, $name)
-            && property_exists($this->eventsObject, 'model')
-        ) {
-            $controllerModel = $this->eventsObject::$model;
-            if ($controllerModel == $class) {
-                $r = call_user_func_array([$this->eventsObject, $name], $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        return $result;
+        return $data;
     }
 }

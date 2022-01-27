@@ -2,7 +2,12 @@
 
 namespace Lar\LteAdmin\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
 /**
@@ -11,22 +16,22 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
  * @property int $id
  * @property string $name
  * @property string $slug
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LteFunction[] $functions
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection|\App\Models\LteFunction[] $functions
  * @property-read int|null $functions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Lar\LteAdmin\Models\LteUser[] $users
+ * @property-read Collection|LteUser[] $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole makeDumpedModel()
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole query()
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|LteRole whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|LteRole makeDumpedModel()
+ * @method static Builder|LteRole newModelQuery()
+ * @method static Builder|LteRole newQuery()
+ * @method static Builder|LteRole query()
+ * @method static Builder|LteRole whereCreatedAt($value)
+ * @method static Builder|LteRole whereId($value)
+ * @method static Builder|LteRole whereName($value)
+ * @method static Builder|LteRole whereSlug($value)
+ * @method static Builder|LteRole whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class LteRole extends Model
 {
@@ -45,15 +50,16 @@ class LteRole extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
-        return $this->belongsToMany(config('lte.auth.providers.lte.model'), 'lte_role_user', 'lte_role_id', 'lte_user_id');
+        return $this->belongsToMany(config('lte.auth.providers.lte.model'), 'lte_role_user', 'lte_role_id',
+            'lte_user_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function functions()
     {

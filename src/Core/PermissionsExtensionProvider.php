@@ -2,7 +2,9 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Exception;
 use Illuminate\Console\Command;
+use Lang;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LteFunction;
 use Lar\LteAdmin\Models\LteRole;
@@ -43,15 +45,44 @@ class PermissionsExtensionProvider
                 }
             }
         }
-        $pushed = ModelSaver::doMany(LteFunction::class, array_merge([$this->makeFunction('access')], $this->functions()));
+        $pushed = ModelSaver::doMany(LteFunction::class,
+            array_merge([$this->makeFunction('access')], $this->functions()));
         if ($pushed->count()) {
             $this->command->info('Created '.$pushed->count().' permission functions.');
         }
     }
 
     /**
+     * @param  array  $roles
+     * @param  string|null  $slug
+     * @param  string|null  $description
+     * @return array
+     */
+    public function makeFunction(string $slug, array $roles = ['*'], string $description = null): array
+    {
+        return [
+            'slug' => $slug,
+            'class' => get_class($this->provider),
+            'description' => $this->provider::$description.($description ? " [$description]" : (Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]" : " [{$slug}]")),
+            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(static function (
+                $item
+            ) {
+                return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
+            })->filter()->values()->toArray(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function functions(): array
+    {
+        return [];
+    }
+
+    /**
      * Drop all extension permissions.
-     * @throws \Exception
+     * @throws Exception
      */
     public function down()
     {
@@ -83,31 +114,5 @@ class PermissionsExtensionProvider
         if ($functions_count) {
             $this->command->info('Deleted '.$functions_count.' permission functions.');
         }
-    }
-
-    /**
-     * @param  array  $roles
-     * @param  string|null  $slug
-     * @param  string|null  $description
-     * @return array
-     */
-    public function makeFunction(string $slug, array $roles = ['*'], string $description = null): array
-    {
-        return [
-            'slug' => $slug,
-            'class' => get_class($this->provider),
-            'description' => $this->provider::$description.($description ? " [$description]" : (\Lang::has("lte.about_method.{$slug}") ? " [@lte.about_method.{$slug}]" : " [{$slug}]")),
-            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(static function ($item) {
-                return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
-            })->filter()->values()->toArray(),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function functions(): array
-    {
-        return [];
     }
 }

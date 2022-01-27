@@ -10,6 +10,7 @@ use Lar\LteAdmin\Delegates\ModelInfoTable;
 use Lar\LteAdmin\Delegates\ModelTable;
 use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Page;
+use Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -40,7 +41,7 @@ class LteControllerCommand extends Command
 
         $model = $this->option('model') ?
             $this->option('model') :
-            \Str::singular(
+            Str::singular(
                 preg_replace('/(.*)Controller$/', '$1', $name)
             );
 
@@ -54,7 +55,7 @@ class LteControllerCommand extends Command
             $resource = true;
         }
 
-        if (! preg_match('/Controller$/', $name)) {
+        if (!preg_match('/Controller$/', $name)) {
             $name .= 'Controller';
         }
 
@@ -92,7 +93,7 @@ class LteControllerCommand extends Command
             $class->prop('static:model');
 
             if ($model) {
-                if (! class_exists("App\\{$model}")) {
+                if (!class_exists("App\\{$model}")) {
                     $model_namespace = "App\\Models\\{$model}";
                 } else {
                     $model_namespace = "App\\{$model}";
@@ -170,7 +171,7 @@ class LteControllerCommand extends Command
 
         $file = $dir.'/'.$name.'.php';
 
-        if (is_file($file) && ! $this->option('force')) {
+        if (is_file($file) && !$this->option('force')) {
             $this->error("Controller [{$namespace}\\{$name}] exists!");
 
             return;
@@ -180,7 +181,7 @@ class LteControllerCommand extends Command
 
         $this->info('Controller ['.$dir.'/'.$name.'.php] created!');
 
-        if ($resource && isset($model_namespace) && ! class_exists($model_namespace)) {
+        if ($resource && isset($model_namespace) && !class_exists($model_namespace)) {
             $this->warn("Model [$model] not found!");
             if ($this->confirm("Create a new model [$model]?")) {
                 $this->call('make:model', [

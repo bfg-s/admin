@@ -2,6 +2,11 @@
 
 namespace Lar\LteAdmin;
 
+use Arr;
+use Blade;
+use Exception;
+use Get;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
@@ -20,7 +25,15 @@ use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
 use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
 use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
 use Lar\LteAdmin\Exceptions\Handler;
+use Lar\LteAdmin\Getters\Functions;
+use Lar\LteAdmin\Getters\Menu;
+use Lar\LteAdmin\Getters\Role;
+use Lar\LteAdmin\Layouts\LteAuthLayout;
+use Lar\LteAdmin\Layouts\LteLayout;
 use Lar\LteAdmin\Middlewares\Authenticate;
+use LJS;
+use Road;
+use Str;
 
 class ServiceProvider extends ServiceProviderIlluminate
 {
@@ -72,7 +85,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * Bootstrap services.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function boot()
     {
@@ -89,13 +102,12 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register app routes.
          */
         if (is_file(lte_app_path('routes.php'))) {
-            \Road::domain(config('lte.route.domain', ''))
+            Road::domain(config('lte.route.domain', ''))
                 ->web()
                 ->middleware(['lte-auth'])
                 ->lang(config('layout.lang_mode', true))
                 ->gets('lte')
                 ->layout(config('lte.route.layout'))
-                ->namespace(lte_app_namespace('Controllers'))
                 ->prefix(config('lte.route.prefix'))
                 ->name(config('lte.route.name'))
                 ->group(lte_app_path('routes.php'));
@@ -105,13 +117,12 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
-            \Road::domain(config('lte.route.domain', ''))
+            Road::domain(config('lte.route.domain', ''))
                 ->web()
                 ->middleware(['lte-auth'])
                 ->lang(config('layout.lang_mode', true))
                 ->gets('lte')
                 ->layout(config('lte.route.layout'))
-                ->namespace(lte_app_namespace('Controllers'))
                 ->prefix(config('lte.route.prefix'))
                 ->name(config('lte.route.name'))
                 ->group(base_path('routes/admin.php'));
@@ -120,7 +131,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Lte Admin basic routes.
          */
-        \Road::domain(config('lte.route.domain', ''))
+        Road::domain(config('lte.route.domain', ''))
             ->web()
             ->lang(config('layout.lang_mode', true))
             ->gets('lte')
@@ -183,7 +194,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             /**
              * Register lte admin getter for console.
              */
-            \Get::create('lte');
+            Get::create('lte');
 
             /**
              * Run lte boots.
@@ -206,9 +217,9 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register getters.
          */
-        \Get::register(\Lar\LteAdmin\Getters\Menu::class);
-        \Get::register(\Lar\LteAdmin\Getters\Role::class);
-        \Get::register(\Lar\LteAdmin\Getters\Functions::class);
+        Get::register(Menu::class);
+        Get::register(Role::class);
+        Get::register(Functions::class);
 
         /**
          * Simple bind in service container.
@@ -225,7 +236,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         JaxController::on_start(static function () {
             $ref = request()->server->get('HTTP_REFERER');
-            if ($ref && \Str::is(url(config('lte.route.prefix').'*'), $ref)) {
+            if ($ref && Str::is(url(config('lte.route.prefix').'*'), $ref)) {
                 LteBoot::run();
             }
         });
@@ -233,19 +244,30 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Jax namespace.
          */
-        \LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
+        LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
 
         /**
          * Register AlpineJs Blade directive.
          */
-        \Blade::directive('alpineStore', [BladeDirectiveAlpineStore::class, 'directive']);
+        Blade::directive('alpineStore', [BladeDirectiveAlpineStore::class, 'directive']);
+    }
+
+    /**
+     * Make lte view variables.
+     */
+    private function viewVariables()
+    {
+        app('view')->share([
+            'lte' => config('lte'),
+            'default_page' => config('lte.paths.view', 'admin').'.page',
+        ]);
     }
 
     /**
      * Register services.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function register()
     {
@@ -266,7 +288,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Override errors.
          */
         $this->app->singleton(
-            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            ExceptionHandler::class,
             Handler::class
         );
 
@@ -295,25 +317,17 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Lte layout.
          */
-        Layout::registerComponent('lte_layout', \Lar\LteAdmin\Layouts\LteLayout::class);
+        Layout::registerComponent('lte_layout', LteLayout::class);
 
         /**
          * Register Lte Login layout.
          */
-        Layout::registerComponent('lte_auth_layout', \Lar\LteAdmin\Layouts\LteAuthLayout::class);
+        Layout::registerComponent('lte_auth_layout', LteAuthLayout::class);
 
         /**
          * Register lte jax executors.
          */
         $this->registerJax();
-    }
-
-    /**
-     * Register jax executors.
-     */
-    protected function registerJax()
-    {
-        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Lar\\LteAdmin\\Jax');
     }
 
     /**
@@ -335,18 +349,15 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     private function loadAuthAndDiscConfig()
     {
-        config(\Arr::dot(config('lte.auth', []), 'auth.'));
-        config(\Arr::dot(config('lte.disks', []), 'filesystems.disks.'));
+        config(Arr::dot(config('lte.auth', []), 'auth.'));
+        config(Arr::dot(config('lte.disks', []), 'filesystems.disks.'));
     }
 
     /**
-     * Make lte view variables.
+     * Register jax executors.
      */
-    private function viewVariables()
+    protected function registerJax()
     {
-        app('view')->share([
-            'lte' => config('lte'),
-            'default_page' => config('lte.paths.view', 'admin').'.page',
-        ]);
+        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Lar\\LteAdmin\\Jax');
     }
 }

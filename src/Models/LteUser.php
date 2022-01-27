@@ -2,12 +2,20 @@
 
 namespace Lar\LteAdmin\Models;
 
+use Eloquent;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Lar\LteAdmin\Core\CheckUserFunction;
 use Lar\LteAdmin\Core\Traits\DumpedModel;
 
@@ -21,19 +29,19 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
  * @property string|null $name
  * @property string $avatar
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LteLog[] $logs
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Collection|\App\Models\LteLog[] $logs
  * @property-read int|null $logs_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LteRole[] $roles
+ * @property-read Collection|\App\Models\LteRole[] $roles
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser makeDumpedModel()
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser newQuery()
- * @method static \Illuminate\Database\Query\Builder|LteUser onlyTrashed()
+ * @method static Builder|LteUser onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser query()
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereCreatedAt($value)
@@ -45,9 +53,9 @@ use Lar\LteAdmin\Core\Traits\DumpedModel;
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteUser whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|LteUser withTrashed()
- * @method static \Illuminate\Database\Query\Builder|LteUser withoutTrashed()
- * @mixin \Eloquent
+ * @method static Builder|LteUser withTrashed()
+ * @method static Builder|LteUser withoutTrashed()
+ * @mixin Eloquent
  */
 class LteUser extends Model implements AuthenticatableContract
 {
@@ -59,38 +67,33 @@ class LteUser extends Model implements AuthenticatableContract
         DumpedModel;
 
     /**
+     * @var string[][]
+     */
+    protected static $functions = [];
+    /**
+     * @var CheckUserFunction[]
+     */
+    protected static $check_user_func_instances = [];
+    /**
      * @var string
      */
     protected $table = 'lte_users';
-
     /**
      * @var array
      */
     protected $fillable = [
         'login', 'email', 'name', 'avatar', 'password',
     ];
-
     /**
      * @var array
      */
     protected $guarded = [
         'password', 'remember_token',
     ];
-
     protected $casts = [];
 
     /**
-     * @var string[][]
-     */
-    protected static $functions = [];
-
-    /**
-     * @var CheckUserFunction[]
-     */
-    protected static $check_user_func_instances = [];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function roles()
     {
@@ -98,28 +101,11 @@ class LteUser extends Model implements AuthenticatableContract
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function logs()
     {
         return $this->hasMany(LteLog::class, 'lte_user_id', 'id');
-    }
-
-    /**
-     * @return string[]
-     */
-    public function functions()
-    {
-        if (! isset(static::$functions[$this->id])) {
-            static::$functions[$this->id] = LteFunction::withCount(['roles' => function ($many) {
-                $many->whereIn('lte_role_id', $this->roles->pluck('id')->toArray());
-            }])->where('active', 1)
-                ->get('slug')
-                ->where('roles_count', '!=', 0)
-                ->pluck('slug', 'slug')->toArray();
-        }
-
-        return static::$functions[$this->id];
     }
 
     /**
@@ -136,11 +122,30 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function func()
     {
-        if (! isset(static::$check_user_func_instances[$this->id])) {
+        if (!isset(static::$check_user_func_instances[$this->id])) {
             static::$check_user_func_instances[$this->id] = new CheckUserFunction($this->functions());
         }
 
         return static::$check_user_func_instances[$this->id];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function functions()
+    {
+        if (!isset(static::$functions[$this->id])) {
+            static::$functions[$this->id] = LteFunction::withCount([
+                'roles' => function ($many) {
+                    $many->whereIn('lte_role_id', $this->roles->pluck('id')->toArray());
+                }
+            ])->where('active', 1)
+                ->get('slug')
+                ->where('roles_count', '!=', 0)
+                ->pluck('slug', 'slug')->toArray();
+        }
+
+        return static::$functions[$this->id];
     }
 
     /**

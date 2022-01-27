@@ -2,6 +2,7 @@
 
 namespace Lar\LteAdmin\Components;
 
+use Exception;
 use Lar\Layout\Tags\DIV;
 use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
 use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
@@ -9,6 +10,8 @@ use Lar\LteAdmin\Core\Traits\Delegable;
 use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Core\Extension\Content;
 use Lar\Tagable\Events\onRender;
+use Lar\Tagable\Tag;
+use ReflectionException;
 
 /**
  * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
@@ -45,8 +48,8 @@ class LangComponent extends DIV implements onRender
     /**
      * @param $name
      * @param $arguments
-     * @return bool|FormComponent|\Lar\Tagable\Tag|mixed|string
-     * @throws \Exception
+     * @return bool|FormComponent|Tag|mixed|string
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -90,7 +93,7 @@ class LangComponent extends DIV implements onRender
 
     /**
      * @return mixed|void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function onRender()
     {

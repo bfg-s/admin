@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Components\Fields;
 
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\FormGroupComponent;
 
 class InfoField extends FormGroupComponent
@@ -12,11 +14,11 @@ class InfoField extends FormGroupComponent
     protected $icon = 'fas fa-quote-right';
 
     /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
-        return \Lar\Layout\Tags\INPUT::create([
+        return INPUT::create([
             'type' => 'text',
             'id' => $this->field_id,
             'disabled' => 'true',

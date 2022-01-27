@@ -2,6 +2,11 @@
 
 namespace Lar\LteAdmin\Controllers\Traits;
 
+use App;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Lar\Layout\Respond;
 use Lar\LteAdmin\Delegates\Card;
 use Lar\LteAdmin\Delegates\Form;
@@ -9,6 +14,9 @@ use Lar\LteAdmin\Delegates\ModelInfoTable;
 use Lar\LteAdmin\Delegates\ModelTable;
 use Lar\LteAdmin\Delegates\SearchForm;
 use Lar\LteAdmin\Page;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 trait DefaultControllerResourceMethodsTrait
 {
@@ -88,10 +96,10 @@ trait DefaultControllerResourceMethodsTrait
     /**
      * Update the specified resource in storage.
      * @param  array|null  $data
-     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @return bool|Application|RedirectResponse|Redirector|Respond
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function update_default(array $data = null)
     {
@@ -121,10 +129,10 @@ trait DefaultControllerResourceMethodsTrait
     /**
      * Store a newly created resource in storage.
      * @param  array|null  $data
-     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @return bool|Application|RedirectResponse|Redirector|Respond
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function store_default(array $data = null)
     {
@@ -154,8 +162,8 @@ trait DefaultControllerResourceMethodsTrait
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|Respond
-     * @throws \Exception
+     * @return Application|RedirectResponse|Redirector|Respond
+     * @throws Exception
      */
     public function destroy_default()
     {
@@ -188,8 +196,8 @@ trait DefaultControllerResourceMethodsTrait
                 } else {
                     respond()->put('alert::error', __('lte.unknown_error'));
                 }
-            } catch (\Exception $exception) {
-                if (! \App::isLocal()) {
+            } catch (Exception $exception) {
+                if (!App::isLocal()) {
                     respond()->put('alert::error', __('lte.unknown_error'));
                 } else {
                     respond()->put('alert::error', $exception->getMessage());
@@ -199,6 +207,8 @@ trait DefaultControllerResourceMethodsTrait
             respond()->put('alert::error', __('lte.model_not_found'));
         }
 
-        return respond()->put('ljs.$nav.goTo', $this->menu['link.index']());
+        return request('_after', 'index') == 'index'
+            ? respond()->put('ljs.$nav.goTo', $this->menu['link.index']())
+            : respond()->reload();
     }
 }

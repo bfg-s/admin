@@ -3,6 +3,8 @@
 namespace Lar\LteAdmin\Components\Fields;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Lar\Layout\Abstracts\Component;
+use Lar\Layout\Tags\INPUT;
 use Lar\LteAdmin\Components\Cores\CheckBoxFieldCore;
 use Lar\LteAdmin\Components\FormGroupComponent;
 
@@ -28,7 +30,7 @@ class ChecksField extends FormGroupComponent
     {
         parent::__construct($name, $title, $params);
 
-        if (! request()->has($this->path) && ! request()->has('__only_has')) {
+        if (!request()->has($this->path) && !request()->has('__only_has')) {
             request()->request->add(
                 array_dots_uncollapse(
                     [$this->path => []],
@@ -39,15 +41,7 @@ class ChecksField extends FormGroupComponent
     }
 
     /**
-     * Make wrapper for input.
-     */
-    protected function makeWrapper()
-    {
-        parent::makeWrapper();
-    }
-
-    /**
-     * @return \Lar\Layout\Abstracts\Component|\Lar\Layout\Tags\INPUT|mixed
+     * @return Component|INPUT|mixed
      */
     public function field()
     {
@@ -87,5 +81,13 @@ class ChecksField extends FormGroupComponent
         $this->rules[] = 'any-checked';
 
         return $this;
+    }
+
+    /**
+     * Make wrapper for input.
+     */
+    protected function makeWrapper()
+    {
+        parent::makeWrapper();
     }
 }

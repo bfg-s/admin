@@ -4,17 +4,14 @@ namespace Lar\LteAdmin\Core;
 
 class BladeDirectiveAlpineStore
 {
-    public static function generator(string $name = null, array $attributes = [])
+    public static function oneGenerator($name = null, array $attributes = [], bool $needleEventListener = true)
     {
-        if (! $name) {
-            return '';
+        if (is_array($name)) {
+            return static::manyGenerator($name);
         }
+        $data = static::generator($name, $attributes);
 
-        $json = json_encode($attributes);
-
-        return <<<JS
-Alpine.store("$name", $json);
-JS;
+        return $needleEventListener ? "document.addEventListener('alpine:init', function () {".$data.'})' : $data;
     }
 
     public static function manyGenerator(array $stores = [], bool $needleEventListener = true)
@@ -27,14 +24,17 @@ JS;
         return $needleEventListener ? "document.addEventListener('alpine:init', function () {".$data.'})' : $data;
     }
 
-    public static function oneGenerator($name = null, array $attributes = [], bool $needleEventListener = true)
+    public static function generator(string $name = null, array $attributes = [])
     {
-        if (is_array($name)) {
-            return static::manyGenerator($name);
+        if (!$name) {
+            return '';
         }
-        $data = static::generator($name, $attributes);
 
-        return $needleEventListener ? "document.addEventListener('alpine:init', function () {".$data.'})' : $data;
+        $json = json_encode($attributes);
+
+        return <<<JS
+Alpine.store("$name", $json)
+JS;
     }
 
     public static function directive($expression)
