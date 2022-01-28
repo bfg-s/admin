@@ -2,25 +2,30 @@
 
 class TableList extends Executor {
 
-    checkChildCheckboxes () {
+    static __name() {
+
+        return "table_list";
+    }
+
+    checkChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i,o) => {
+        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
             o.checked = true;
             $(o).trigger('change');
         });
     }
 
-    uncheckChildCheckboxes () {
+    uncheckChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i,o) => {
+        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
             o.checked = false;
             $(o).trigger('change');
         });
     }
 
-    invertChildCheckboxes () {
+    invertChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i,o) => {
+        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
             o.checked = !o.checked;
             if (o.name !== obj.name) {
                 $(o).trigger('change');
@@ -28,9 +33,9 @@ class TableList extends Executor {
         });
     }
 
-    invertByCheckChildCheckboxes () {
+    invertByCheckChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i,o) => {
+        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
             if (o.name !== obj.name) {
                 o.checked = !o.checked;
                 $(o).trigger('change');
@@ -38,10 +43,10 @@ class TableList extends Executor {
         });
     }
 
-    primaryChange () {
+    primaryChange() {
         let obj = this.storage.object;
         let has = false;
-        $(`.select_${obj.dataset.table}`).each((i,o) => {
+        $(`.select_${obj.dataset.table}`).each((i, o) => {
             if (this.storage.object !== o && o.checked) {
                 has = o.checked;
             }
@@ -51,11 +56,6 @@ class TableList extends Executor {
                 o.checked = false;
             });
         }
-    }
-
-    static __name () {
-
-        return "table_list";
     }
 }
 

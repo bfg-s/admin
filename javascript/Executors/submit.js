@@ -1,6 +1,11 @@
 module.exports = class extends Executor {
 
-    __invoke ($text = 'Saving...') {
+    static __name() {
+
+        return "submit";
+    }
+
+    __invoke($text = 'Saving...') {
 
         if (!this.target) {
 
@@ -45,10 +50,5 @@ module.exports = class extends Executor {
 
             $(parent).submit();
         }
-    }
-
-    static __name () {
-    
-        return "submit";
     }
 };

@@ -6,7 +6,7 @@
  * CDN: https://cdnjs.cloudflare.com/ajax/libs/octicons/3.x.x/octicons.min.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'octicon',
@@ -5172,7 +5172,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_octicon = data;
 

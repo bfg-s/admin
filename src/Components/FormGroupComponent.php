@@ -302,12 +302,12 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  mixed  ...$values
+     * @param  mixed  $value
      * @return $this
      */
-    public function value(...$values)
+    public function value($value)
     {
-        $this->value = implode(' ', $values);
+        $this->value = $value;
 
         return $this;
     }
@@ -466,7 +466,6 @@ abstract class FormGroupComponent extends DIV
 
         if ($this->only_input) {
             $this->value = $this->create_value();
-
             $this->appEnd(
                 $this->field()
             )->appEnd(
@@ -534,6 +533,9 @@ abstract class FormGroupComponent extends DIV
      */
     protected function create_value()
     {
+        if ($this->value !== null) {
+            return $this->value;
+        }
         $val = old($this->path);
         if (!$val) {
             $val = request($this->path) ?: null;

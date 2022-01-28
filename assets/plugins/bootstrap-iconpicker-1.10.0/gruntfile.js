@@ -1,6 +1,4 @@
-
-
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     var banner = require('./banner.js');
 
@@ -26,17 +24,17 @@ module.exports = function(grunt) {
             },
             iconset: {
                 files: {
-                    'temp/js/iconset/iconset-elusiveicon-all.min.js':       ['src/js/iconset/iconset-elusiveicon-all.js'],
-                    'temp/js/iconset/iconset-flagicon-all.min.js':          ['src/js/iconset/iconset-flagicon-all.js'],
-                    'temp/js/iconset/iconset-fontawesome-4-all.min.js':     ['src/js/iconset/iconset-fontawesome-4-all.js'],
-                    'temp/js/iconset/iconset-fontawesome-5-all.min.js':     ['src/js/iconset/iconset-fontawesome-5-all.js'],
-                    'temp/js/iconset/iconset-glyphicon-all.min.js':         ['src/js/iconset/iconset-glyphicon-all.js'],
-                    'temp/js/iconset/iconset-ionicon-all.min.js':           ['src/js/iconset/iconset-ionicon-all.js'],
-                    'temp/js/iconset/iconset-mapicon-all.min.js':           ['src/js/iconset/iconset-mapicon-all.js'],
-                    'temp/js/iconset/iconset-materialdesign-all.min.js':    ['src/js/iconset/iconset-materialdesign-all.js'],
-                    'temp/js/iconset/iconset-octicon-all.min.js':           ['src/js/iconset/iconset-octicon-all.js'],
-                    'temp/js/iconset/iconset-typicon-all.min.js':           ['src/js/iconset/iconset-typicon-all.js'],
-                    'temp/js/iconset/iconset-weathericon-all.min.js':       ['src/js/iconset/iconset-weathericon-all.js']
+                    'temp/js/iconset/iconset-elusiveicon-all.min.js': ['src/js/iconset/iconset-elusiveicon-all.js'],
+                    'temp/js/iconset/iconset-flagicon-all.min.js': ['src/js/iconset/iconset-flagicon-all.js'],
+                    'temp/js/iconset/iconset-fontawesome-4-all.min.js': ['src/js/iconset/iconset-fontawesome-4-all.js'],
+                    'temp/js/iconset/iconset-fontawesome-5-all.min.js': ['src/js/iconset/iconset-fontawesome-5-all.js'],
+                    'temp/js/iconset/iconset-glyphicon-all.min.js': ['src/js/iconset/iconset-glyphicon-all.js'],
+                    'temp/js/iconset/iconset-ionicon-all.min.js': ['src/js/iconset/iconset-ionicon-all.js'],
+                    'temp/js/iconset/iconset-mapicon-all.min.js': ['src/js/iconset/iconset-mapicon-all.js'],
+                    'temp/js/iconset/iconset-materialdesign-all.min.js': ['src/js/iconset/iconset-materialdesign-all.js'],
+                    'temp/js/iconset/iconset-octicon-all.min.js': ['src/js/iconset/iconset-octicon-all.js'],
+                    'temp/js/iconset/iconset-typicon-all.min.js': ['src/js/iconset/iconset-typicon-all.js'],
+                    'temp/js/iconset/iconset-weathericon-all.min.js': ['src/js/iconset/iconset-weathericon-all.js']
                 }
             }
         },

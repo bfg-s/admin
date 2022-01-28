@@ -9,6 +9,11 @@ trait RulesBackTrait
 {
     protected $print_front = true;
 
+    public function accepted_if($condition, string $message = null)
+    {
+        return $condition ? $this->accepted($message) : $this;
+    }
+
     /**
      * The field under validation must be yes, on, 1, or true.
      * This is useful for validating "Terms of Service" acceptance.
@@ -21,9 +26,28 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function accepted_if($condition, string $message = null)
+    /**
+     * @param  Closure|string|object  $rule
+     * @param  string|null  $message
+     * @return $this
+     */
+    public function rule($rule, string $message = null)
     {
-        return $condition ? $this->accepted($message) : $this;
+        if ($this->admin_controller) {
+            /** @var Controller $controller */
+            $controller = $this->controller;
+            $controller::$rules[$this->path][] = $rule;
+            if ($message && is_string($rule)) {
+                $controller::$rule_messages["{$this->path}.{$rule}"] = $message;
+            }
+        }
+
+        return $this;
+    }
+
+    public function active_url_if($condition, string $message = null)
+    {
+        return $condition ? $this->active_url($message) : $this;
     }
 
     /**
@@ -40,9 +64,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function active_url_if($condition, string $message = null)
+    public function after_if($condition, string $date, string $message = null)
     {
-        return $condition ? $this->active_url($message) : $this;
+        return $condition ? $this->after($date, $message) : $this;
     }
 
     /**
@@ -61,9 +85,25 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    public function after_if($condition, string $date, string $message = null)
+    /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _rule(string $rule, array $params = [], string $message = null)
     {
-        return $condition ? $this->after($date, $message) : $this;
+        $params = trim(implode(',', $params), ',');
+        if ($params) {
+            $rule .= ":{$params}";
+        }
+
+        return $this->rule($rule, $message);
+    }
+
+    public function after_or_equal_if($condition, string $date, string $message = null)
+    {
+        return $condition ? $this->after_or_equal($date, $message) : $this;
     }
 
     /**
@@ -79,9 +119,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    public function after_or_equal_if($condition, string $date, string $message = null)
+    public function alpha_if($condition, string $message = null)
     {
-        return $condition ? $this->after_or_equal($date, $message) : $this;
+        return $condition ? $this->alpha($message) : $this;
     }
 
     /**
@@ -95,9 +135,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function alpha_if($condition, string $message = null)
+    public function alpha_dash_if($condition, string $message = null)
     {
-        return $condition ? $this->alpha($message) : $this;
+        return $condition ? $this->alpha_dash($message) : $this;
     }
 
     /**
@@ -112,9 +152,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function alpha_dash_if($condition, string $message = null)
+    public function alpha_num_if($condition, string $message = null)
     {
-        return $condition ? $this->alpha_dash($message) : $this;
+        return $condition ? $this->alpha_num($message) : $this;
     }
 
     /**
@@ -128,9 +168,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function alpha_num_if($condition, string $message = null)
+    public function array_if($condition, string $message = null)
     {
-        return $condition ? $this->alpha_num($message) : $this;
+        return $condition ? $this->array($message) : $this;
     }
 
     /**
@@ -144,9 +184,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function array_if($condition, string $message = null)
+    public function bail_if($condition)
     {
-        return $condition ? $this->array($message) : $this;
+        return $condition ? $this->bail() : $this;
     }
 
     /**
@@ -159,9 +199,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__);
     }
 
-    public function bail_if($condition)
+    public function before_if($condition, string $date, string $message = null)
     {
-        return $condition ? $this->bail() : $this;
+        return $condition ? $this->before($date, $message) : $this;
     }
 
     /**
@@ -179,9 +219,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    public function before_if($condition, string $date, string $message = null)
+    public function before_or_equal_if($condition, string $date, string $message = null)
     {
-        return $condition ? $this->before($date, $message) : $this;
+        return $condition ? $this->before_or_equal($date, $message) : $this;
     }
 
     /**
@@ -199,9 +239,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    public function before_or_equal_if($condition, string $date, string $message = null)
+    public function between_if($condition, $min, $max, string $message = null)
     {
-        return $condition ? $this->before_or_equal($date, $message) : $this;
+        return $condition ? $this->between($min, $max, $message) : $this;
     }
 
     /**
@@ -219,9 +259,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$min, $max], $message);
     }
 
-    public function between_if($condition, $min, $max, string $message = null)
+    public function boolean_if($condition, string $message = null)
     {
-        return $condition ? $this->between($min, $max, $message) : $this;
+        return $condition ? $this->boolean($message) : $this;
     }
 
     /**
@@ -236,9 +276,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function boolean_if($condition, string $message = null)
+    public function confirmed_if($condition, string $message = null)
     {
-        return $condition ? $this->boolean($message) : $this;
+        return $condition ? $this->confirmed($message) : $this;
     }
 
     /**
@@ -254,9 +294,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function confirmed_if($condition, string $message = null)
+    public function date_if($condition, string $message = null)
     {
-        return $condition ? $this->confirmed($message) : $this;
+        return $condition ? $this->date($message) : $this;
     }
 
     /**
@@ -271,9 +311,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function date_if($condition, string $message = null)
+    public function date_equals_if($condition, string $date, string $message = null)
     {
-        return $condition ? $this->date($message) : $this;
+        return $condition ? $this->date_equals($date, $message) : $this;
     }
 
     /**
@@ -289,9 +329,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    public function date_equals_if($condition, string $date, string $message = null)
+    public function date_format_if($condition, string $format, string $message = null)
     {
-        return $condition ? $this->date_equals($date, $message) : $this;
+        return $condition ? $this->date_format($format, $message) : $this;
     }
 
     /**
@@ -308,9 +348,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$format], $message);
     }
 
-    public function date_format_if($condition, string $format, string $message = null)
+    public function different_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->date_format($format, $message) : $this;
+        return $condition ? $this->different($field, $message) : $this;
     }
 
     /**
@@ -325,9 +365,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function different_if($condition, string $field, string $message = null)
+    public function digits_if($condition, string $value, string $message = null)
     {
-        return $condition ? $this->different($field, $message) : $this;
+        return $condition ? $this->digits($value, $message) : $this;
     }
 
     /**
@@ -343,9 +383,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
-    public function digits_if($condition, string $value, string $message = null)
+    public function digits_between_if($condition, $min, $max, string $message = null)
     {
-        return $condition ? $this->digits($value, $message) : $this;
+        return $condition ? $this->digits_between($min, $max, $message) : $this;
     }
 
     /**
@@ -362,9 +402,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$min, $max], $message);
     }
 
-    public function digits_between_if($condition, $min, $max, string $message = null)
+    public function dimensions_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->digits_between($min, $max, $message) : $this;
+        return $condition ? $this->dimensions($params, $message) : $this;
     }
 
     /**
@@ -386,9 +426,26 @@ trait RulesBackTrait
         return $this->_n_rule(__FUNCTION__, $params, $message);
     }
 
-    public function dimensions_if($condition, array $params, string $message = null)
+    /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _n_rule(string $rule, array $params = [], string $message = null)
     {
-        return $condition ? $this->dimensions($params, $message) : $this;
+        $new_params = [];
+
+        foreach ($params as $key => $param) {
+            $new_params[] = "{$key}={$param}";
+        }
+
+        return $this->_rule($rule, $new_params, $message);
+    }
+
+    public function distinct_if($condition, string $message = null)
+    {
+        return $condition ? $this->distinct($message) : $this;
     }
 
     /**
@@ -403,9 +460,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function distinct_if($condition, string $message = null)
+    public function email_if($condition, string $message = null)
     {
-        return $condition ? $this->distinct($message) : $this;
+        return $condition ? $this->email($message) : $this;
     }
 
     /**
@@ -423,9 +480,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function email_if($condition, string $message = null)
+    public function ends_with_if($condition, array $values, string $message = null)
     {
-        return $condition ? $this->email($message) : $this;
+        return $condition ? $this->ends_with($values, $message) : $this;
     }
 
     /**
@@ -440,9 +497,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $values, $message);
     }
 
-    public function ends_with_if($condition, array $values, string $message = null)
+    public function exists_if($condition, string $table, string $column = null, string $message = null)
     {
-        return $condition ? $this->ends_with($values, $message) : $this;
+        return $condition ? $this->exists($table, $column, $message) : $this;
     }
 
     /**
@@ -458,9 +515,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$table, $column], $message);
     }
 
-    public function exists_if($condition, string $table, string $column = null, string $message = null)
+    public function file_if($condition, string $message = null)
     {
-        return $condition ? $this->exists($table, $column, $message) : $this;
+        return $condition ? $this->file($message) : $this;
     }
 
     /**
@@ -474,9 +531,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function file_if($condition, string $message = null)
+    public function filled_if($condition, string $message = null)
     {
-        return $condition ? $this->file($message) : $this;
+        return $condition ? $this->filled($message) : $this;
     }
 
     /**
@@ -490,9 +547,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function filled_if($condition, string $message = null)
+    public function gt_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->filled($message) : $this;
+        return $condition ? $this->gt($field, $message) : $this;
     }
 
     /**
@@ -509,9 +566,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function gt_if($condition, string $field, string $message = null)
+    public function gte_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->gt($field, $message) : $this;
+        return $condition ? $this->gte($field, $message) : $this;
     }
 
     /**
@@ -529,9 +586,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function gte_if($condition, string $field, string $message = null)
+    public function image_if($condition, string $message = null)
     {
-        return $condition ? $this->gte($field, $message) : $this;
+        return $condition ? $this->image($message) : $this;
     }
 
     /**
@@ -546,9 +603,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function image_if($condition, string $message = null)
+    public function in_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->image($message) : $this;
+        return $condition ? $this->in($params, $message) : $this;
     }
 
     /**
@@ -564,9 +621,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function in_if($condition, array $params, string $message = null)
+    public function in_array_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->in($params, $message) : $this;
+        return $condition ? $this->in_array($field, $message) : $this;
     }
 
     /**
@@ -581,9 +638,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function in_array_if($condition, string $field, string $message = null)
+    public function ip_if($condition, string $message = null)
     {
-        return $condition ? $this->in_array($field, $message) : $this;
+        return $condition ? $this->ip($message) : $this;
     }
 
     /**
@@ -597,9 +654,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function ip_if($condition, string $message = null)
+    public function ipv4_if($condition, string $message = null)
     {
-        return $condition ? $this->ip($message) : $this;
+        return $condition ? $this->ipv4($message) : $this;
     }
 
     /**
@@ -613,9 +670,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function ipv4_if($condition, string $message = null)
+    public function ipv6_if($condition, string $message = null)
     {
-        return $condition ? $this->ipv4($message) : $this;
+        return $condition ? $this->ipv6($message) : $this;
     }
 
     /**
@@ -629,9 +686,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function ipv6_if($condition, string $message = null)
+    public function json_if($condition, string $message = null)
     {
-        return $condition ? $this->ipv6($message) : $this;
+        return $condition ? $this->json($message) : $this;
     }
 
     /**
@@ -645,9 +702,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function json_if($condition, string $message = null)
+    public function lt_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->json($message) : $this;
+        return $condition ? $this->lt($field, $message) : $this;
     }
 
     /**
@@ -664,9 +721,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function lt_if($condition, string $field, string $message = null)
+    public function lte_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->lt($field, $message) : $this;
+        return $condition ? $this->lte($field, $message) : $this;
     }
 
     /**
@@ -683,9 +740,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function lte_if($condition, string $field, string $message = null)
+    public function max_if($condition, int $value, string $message = null)
     {
-        return $condition ? $this->lte($field, $message) : $this;
+        return $condition ? $this->max($value, $message) : $this;
     }
 
     /**
@@ -702,9 +759,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
-    public function max_if($condition, int $value, string $message = null)
+    public function mimetypes_if($condition, array $mimetypes, string $message = null)
     {
-        return $condition ? $this->max($value, $message) : $this;
+        return $condition ? $this->mimetypes($mimetypes, $message) : $this;
     }
 
     /**
@@ -719,9 +776,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $mimetypes, $message);
     }
 
-    public function mimetypes_if($condition, array $mimetypes, string $message = null)
+    public function mimes_if($condition, array $mimes, string $message = null)
     {
-        return $condition ? $this->mimetypes($mimetypes, $message) : $this;
+        return $condition ? $this->mimes($mimes, $message) : $this;
     }
 
     /**
@@ -745,9 +802,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $mimes, $message);
     }
 
-    public function mimes_if($condition, array $mimes, string $message = null)
+    public function min_if($condition, int $value, string $message = null)
     {
-        return $condition ? $this->mimes($mimes, $message) : $this;
+        return $condition ? $this->min($value, $message) : $this;
     }
 
     /**
@@ -763,9 +820,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
-    public function min_if($condition, int $value, string $message = null)
+    public function integer_if($condition, string $message = null)
     {
-        return $condition ? $this->min($value, $message) : $this;
+        return $condition ? $this->integer($message) : $this;
     }
 
     /**
@@ -779,9 +836,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function integer_if($condition, string $message = null)
+    public function not_in_if($condition, array $values, string $message = null)
     {
-        return $condition ? $this->integer($message) : $this;
+        return $condition ? $this->not_in($values, $message) : $this;
     }
 
     /**
@@ -796,9 +853,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $values, $message);
     }
 
-    public function not_in_if($condition, array $values, string $message = null)
+    public function not_regex_if($condition, string $pattern, string $message = null)
     {
-        return $condition ? $this->not_in($values, $message) : $this;
+        return $condition ? $this->not_regex($pattern, $message) : $this;
     }
 
     /**
@@ -821,9 +878,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$pattern], $message);
     }
 
-    public function not_regex_if($condition, string $pattern, string $message = null)
+    public function nullable_if($condition, string $message = null)
     {
-        return $condition ? $this->not_regex($pattern, $message) : $this;
+        return $condition ? $this->nullable($message) : $this;
     }
 
     /**
@@ -838,9 +895,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function nullable_if($condition, string $message = null)
+    public function numeric_if($condition, string $message = null)
     {
-        return $condition ? $this->nullable($message) : $this;
+        return $condition ? $this->numeric($message) : $this;
     }
 
     /**
@@ -858,9 +915,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function numeric_if($condition, string $message = null)
+    public function password_if($condition, string $guard, string $message = null)
     {
-        return $condition ? $this->numeric($message) : $this;
+        return $condition ? $this->password($guard, $message) : $this;
     }
 
     /**
@@ -876,9 +933,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$guard], $message);
     }
 
-    public function password_if($condition, string $guard, string $message = null)
+    public function present_if($condition, string $message = null)
     {
-        return $condition ? $this->password($guard, $message) : $this;
+        return $condition ? $this->present($message) : $this;
     }
 
     /**
@@ -892,9 +949,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function present_if($condition, string $message = null)
+    public function regex_if($condition, string $pattern, string $message = null)
     {
-        return $condition ? $this->present($message) : $this;
+        return $condition ? $this->regex($pattern, $message) : $this;
     }
 
     /**
@@ -917,9 +974,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$pattern], $message);
     }
 
-    public function regex_if($condition, string $pattern, string $message = null)
+    public function required_condition($condition, string $message = null)
     {
-        return $condition ? $this->regex($pattern, $message) : $this;
+        return $condition ? $this->required($message) : $this;
     }
 
     /**
@@ -938,9 +995,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function required_condition($condition, string $message = null)
+    public function required_if_condition($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required($message) : $this;
+        return $condition ? $this->required_if($params, $message) : $this;
     }
 
     /**
@@ -956,9 +1013,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_if_condition($condition, array $params, string $message = null)
+    public function required_unless_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required_if($params, $message) : $this;
+        return $condition ? $this->required_unless($params, $message) : $this;
     }
 
     /**
@@ -974,9 +1031,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_unless_if($condition, array $params, string $message = null)
+    public function required_with_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required_unless($params, $message) : $this;
+        return $condition ? $this->required_with($params, $message) : $this;
     }
 
     /**
@@ -992,9 +1049,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_with_if($condition, array $params, string $message = null)
+    public function required_with_all_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required_with($params, $message) : $this;
+        return $condition ? $this->required_with_all($params, $message) : $this;
     }
 
     /**
@@ -1010,9 +1067,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_with_all_if($condition, array $params, string $message = null)
+    public function required_without_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required_with_all($params, $message) : $this;
+        return $condition ? $this->required_without($params, $message) : $this;
     }
 
     /**
@@ -1028,9 +1085,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_without_if($condition, array $params, string $message = null)
+    public function required_without_all_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->required_without($params, $message) : $this;
+        return $condition ? $this->required_without_all($params, $message) : $this;
     }
 
     /**
@@ -1046,9 +1103,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function required_without_all_if($condition, array $params, string $message = null)
+    public function same_if($condition, string $field, string $message = null)
     {
-        return $condition ? $this->required_without_all($params, $message) : $this;
+        return $condition ? $this->same($field, $message) : $this;
     }
 
     /**
@@ -1063,9 +1120,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$field], $message);
     }
 
-    public function same_if($condition, string $field, string $message = null)
+    public function size_if($condition, int $value, string $message = null)
     {
-        return $condition ? $this->same($field, $message) : $this;
+        return $condition ? $this->size($value, $message) : $this;
     }
 
     /**
@@ -1084,9 +1141,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$value], $message);
     }
 
-    public function size_if($condition, int $value, string $message = null)
+    public function starts_with_if($condition, array $params, string $message = null)
     {
-        return $condition ? $this->size($value, $message) : $this;
+        return $condition ? $this->starts_with($params, $message) : $this;
     }
 
     /**
@@ -1101,9 +1158,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, $params, $message);
     }
 
-    public function starts_with_if($condition, array $params, string $message = null)
+    public function string_if($condition, string $message = null)
     {
-        return $condition ? $this->starts_with($params, $message) : $this;
+        return $condition ? $this->string($message) : $this;
     }
 
     /**
@@ -1118,9 +1175,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function string_if($condition, string $message = null)
+    public function timezone_if($condition, string $message = null)
     {
-        return $condition ? $this->string($message) : $this;
+        return $condition ? $this->timezone($message) : $this;
     }
 
     /**
@@ -1135,9 +1192,15 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function timezone_if($condition, string $message = null)
-    {
-        return $condition ? $this->timezone($message) : $this;
+    public function unique_if(
+        $condition,
+        string $table,
+        string $column = null,
+        $except = null,
+        $idColumn = null,
+        string $message = null
+    ) {
+        return $condition ? $this->unique($table, $column, $except, $idColumn, $message) : $this;
     }
 
     /**
@@ -1160,15 +1223,9 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$table, $column, $except, $idColumn], $message);
     }
 
-    public function unique_if(
-        $condition,
-        string $table,
-        string $column = null,
-        $except = null,
-        $idColumn = null,
-        string $message = null
-    ) {
-        return $condition ? $this->unique($table, $column, $except, $idColumn, $message) : $this;
+    public function url_if($condition, string $message = null)
+    {
+        return $condition ? $this->url($message) : $this;
     }
 
     /**
@@ -1186,9 +1243,9 @@ trait RulesBackTrait
         return $this->rule(__FUNCTION__, $message);
     }
 
-    public function url_if($condition, string $message = null)
+    public function uuid_if($condition, string $message = null)
     {
-        return $condition ? $this->url($message) : $this;
+        return $condition ? $this->uuid($message) : $this;
     }
 
     /**
@@ -1201,62 +1258,5 @@ trait RulesBackTrait
     public function uuid(string $message = null)
     {
         return $this->rule(__FUNCTION__, $message);
-    }
-
-    public function uuid_if($condition, string $message = null)
-    {
-        return $condition ? $this->uuid($message) : $this;
-    }
-
-    /**
-     * @param  Closure|string|object  $rule
-     * @param  string|null  $message
-     * @return $this
-     */
-    public function rule($rule, string $message = null)
-    {
-        if ($this->admin_controller) {
-            /** @var Controller $controller */
-            $controller = $this->controller;
-            $controller::$rules[$this->path][] = $rule;
-            if ($message && is_string($rule)) {
-                $controller::$rule_messages["{$this->path}.{$rule}"] = $message;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _rule(string $rule, array $params = [], string $message = null)
-    {
-        $params = trim(implode(',', $params), ',');
-        if ($params) {
-            $rule .= ":{$params}";
-        }
-
-        return $this->rule($rule, $message);
-    }
-
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _n_rule(string $rule, array $params = [], string $message = null)
-    {
-        $new_params = [];
-
-        foreach ($params as $key => $param) {
-            $new_params[] = "{$key}={$param}";
-        }
-
-        return $this->_rule($rule, $new_params, $message);
     }
 }

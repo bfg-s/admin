@@ -3,7 +3,12 @@ const unescape = require('lodash/unescape');
 
 module.exports = class extends Executor {
 
-    simple ($options = {}) {
+    static __name() {
+
+        return "md";
+    }
+
+    simple($options = {}) {
 
         if (!this.target.id) {
 
@@ -29,15 +34,10 @@ module.exports = class extends Executor {
                     /*'goto-line', 'clear',*/ 'search', 'preview', 'watch']
             },
             watch: false,
-            htmlDecode : "style,script,iframe|on*",
+            htmlDecode: "style,script,iframe|on*",
             imageUpload: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
             imageUploadURL: ljs.cfg('uploader') + '?_token=' + ljs.token
         }, $options, this.target.dataset));
-    }
-
-    static __name () {
-
-        return "md";
     }
 };

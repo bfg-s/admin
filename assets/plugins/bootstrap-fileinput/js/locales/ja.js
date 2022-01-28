@@ -83,7 +83,7 @@
         msgAjaxError: '{operation}実行中にエラーが発生しました。時間をおいてもう一度お試しください。',
         msgAjaxProgressError: '{operation} failed',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -94,7 +94,7 @@
         },
         dropZoneTitle: 'ファイルをドラッグ&ドロップ&hellip;',
         dropZoneClickTitle: '<br>(または クリックして{files}を選択 )',
-        slugCallback: function(text) {
+        slugCallback: function (text) {
             return text ? text.split(/(\\|\/)/g).pop().replace(/[^\w\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\u31f0-\u31ff\u3200-\u32ff\uff00-\uffef\-.\\\/ ]+/g, '') : '';
         },
         fileActionSettings: {
@@ -107,7 +107,7 @@
             indicatorSuccessTitle: 'アップロード済み',
             indicatorErrorTitle: 'アップロード失敗',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'アップロード中...'
+            indicatorLoadingTitle: 'アップロード中...'
         },
         previewZoomButtonTitles: {
             prev: '前のファイルを表示',

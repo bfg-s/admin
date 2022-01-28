@@ -2,6 +2,8 @@
 
 namespace Lar\LteAdmin\Core;
 
+use Lar\LteAdmin\Page;
+
 /**
  * @template DelegatedClass
  * @mixin DelegatedClass
@@ -110,5 +112,41 @@ abstract class Delegator
         $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
 
         return $this;
+    }
+
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isNotModelInput(string $path, mixed $need_value = true)
+    {
+        return !$this->isModelInput($path, $need_value);
+    }
+
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isModelInput(string $path, mixed $need_value = true)
+    {
+        $val = old($path, $this->modelInput($path));
+        if (is_array($need_value)) {
+            return in_array($val, $need_value);
+        }
+
+        return $need_value == (is_bool($need_value) ? (bool) $val : $val);
+    }
+
+    public function modelInput(string $path, $default = null)
+    {
+        $model = app(Page::class)->model();
+
+        if ($model && $model->exists && !request()->has($path)) {
+            return multi_dot_call($model, $path) ?: $default;
+        }
+
+        return request($path, $default);
     }
 }

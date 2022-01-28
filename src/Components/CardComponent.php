@@ -238,6 +238,12 @@ class CardComponent extends Component
         return $this->table;
     }
 
+    public function chart_js(...$delegates)
+    {
+        return $this->card_body()->chart_js(...$delegates)
+            ->model($this->search_form);
+    }
+
     /**
      * @param  callable  $call
      * @return $this

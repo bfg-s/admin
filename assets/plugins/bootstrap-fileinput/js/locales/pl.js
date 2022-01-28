@@ -66,7 +66,7 @@
         msgAjaxError: 'Coś poczło nie tak podczas {operation}. Spróbuj ponownie!',
         msgAjaxProgressError: '{operation} nie powiodło się',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -88,7 +88,7 @@
             indicatorSuccessTitle: 'Dodane',
             indicatorErrorTitle: 'Błąd',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'Przesyłanie ...'
+            indicatorLoadingTitle: 'Przesyłanie ...'
         },
         previewZoomButtonTitles: {
             prev: 'Pokaż poprzedni plik',

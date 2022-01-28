@@ -39,7 +39,7 @@ class Decorations
         $star = $props[0] ?? '•';
         $id = uniqid('password_');
         $id_showed = "showed_{$id}";
-        $stars = str_repeat($star, strlen(strip_tags($value)));
+        $stars = str_repeat($star, strlen(strip_tags(html_entity_decode($value))));
 
         return "<span id='{$id}'><i data-click='0> $::hide 1> $::show' data-params='#{$id} && #{$id_showed}' class='fas fa-eye' style='cursor:pointer'></i> {$stars}</span>".
             "<span id='{$id_showed}' style='display:none'><i data-click='0> $::hide 1> $::show' data-params='#{$id_showed} && #{$id}' class='fas fa-eye-slash' style='cursor:pointer'></i> {$value}</span>";
@@ -53,7 +53,7 @@ class Decorations
     {
         $return = SPAN::create(['badge']);
 
-        if (is_null($value)) {
+        if (is_null($value) || $value === '') {
             return $return->addClass('badge-dark')->text('NULL');
         } elseif ($value === true) {
             return $return->addClass('badge-success')->text('TRUE');
@@ -63,8 +63,6 @@ class Decorations
             return $return->addClass('badge-info')->text('Array('.count($value).')');
         } elseif ($value instanceof Carbon) {
             return $value->format('Y-m-d H:i:s');
-        } elseif ($value == '') {
-            return $return->addClass('badge-dark')->text('EMPTY');
         } else {
             return $value;
         }
@@ -124,7 +122,7 @@ class Decorations
             return $this->true_data($value);
         }
 
-        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a> ".$value;
+        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags(html_entity_decode($value_for_copy ?? $value))."'><i class='fas fa-copy'></i></a> ".$value;
     }
 
     /**
@@ -143,7 +141,7 @@ class Decorations
             return $this->true_data($value);
         }
 
-        return $value." <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags($value_for_copy ?? $value)."'><i class='fas fa-copy'></i></a>";
+        return $value." <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags(html_entity_decode($value_for_copy ?? $value))."'><i class='fas fa-copy'></i></a>";
     }
 
     /**

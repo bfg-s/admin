@@ -77,7 +77,7 @@
         msgAjaxError: 'დაფიქსირდა შეცდომა ოპერაციის {operation} შესრულებისას. ცადეთ მოგვიანებით!',
         msgAjaxProgressError: 'ვერ მოხერხდა ოპერაციის {operation} შესრულება',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -99,7 +99,7 @@
             indicatorSuccessTitle: 'ატვირთულია',
             indicatorErrorTitle: 'ატვირთვის შეცდომა',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'ატვირთვა ...'
+            indicatorLoadingTitle: 'ატვირთვა ...'
         },
         previewZoomButtonTitles: {
             prev: 'წინა ფაილის ნახვა',

@@ -77,7 +77,7 @@
         msgAjaxError: '{operation} amaliyotida xatolik yuz berdi. Iltimos keyinroq qayta urinib ko‘ring!',
         msgAjaxProgressError: '{operation} bajarilmadi',
         msgDuplicateFile: '"{name}" nomli "{size} KB" hajmdagi fayl oldin tanlangan. Boshqa faylni tanlashga urinib ko‘ring.',
-        msgResumableUploadRetriesExceeded:  '<b>{file}</b> faylini yuklash uchun <b>{max}</b> marta urinish bekor qilindi! Xato tafsilotlari: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: '<b>{file}</b> faylini yuklash uchun <b>{max}</b> marta urinish bekor qilindi! Xato tafsilotlari: <pre>{error}</pre>',
         msgPendingTime: '{time} qolgan',
         msgCalculatingTime: 'qolgan vaqtni hisoblash',
         ajaxOperations: {
@@ -99,7 +99,7 @@
             indicatorSuccessTitle: 'Yuklandi',
             indicatorErrorTitle: 'Yuklashda xato',
             indicatorPausedTitle: 'Yuklash to‘xtatildi',
-            indicatorLoadingTitle:  'Yuklanmoqda ...'
+            indicatorLoadingTitle: 'Yuklanmoqda ...'
         },
         previewZoomButtonTitles: {
             prev: 'Oldingi faylni ko‘rish',

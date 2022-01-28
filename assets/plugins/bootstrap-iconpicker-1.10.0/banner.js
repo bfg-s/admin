@@ -1,6 +1,6 @@
 module.exports = {
 
-    get: function(filename) {
+    get: function (filename) {
         return [
             '/*!========================================================================',
             '* File: ' + filename + ' v<%= pkg.version %> by @victor-valencia',

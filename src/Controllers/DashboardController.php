@@ -21,11 +21,6 @@ use PDO;
 class DashboardController extends Controller
 {
     /**
-     * @var string
-     */
-    public static $model = LteUser::class;
-
-    /**
      * @var array
      */
     protected $required = [
@@ -37,7 +32,9 @@ class DashboardController extends Controller
      * @param  Page  $page
      * @param  Card  $card
      * @param  CardBody  $cardBody
+     * @param  StatisticPeriod  $statisticPeriod
      * @param  ChartJs  $chartJs
+     * @param  SearchForm  $searchForm
      * @return Page|mixed
      */
     public function index(
@@ -207,5 +204,13 @@ class DashboardController extends Controller
             __('lte.user') => env('DB_USERNAME'),
             __('lte.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public static function getModel(): string
+    {
+        return LteUser::class;
     }
 }

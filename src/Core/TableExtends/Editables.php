@@ -19,24 +19,11 @@ class Editables
     public function input_switcher($value, array $props = [], Model $model = null, $field = null)
     {
         if ($model) {
-            $now = lte_now();
-
-            if (isset($now['link.update'])) {
-                return FieldComponent::switcher($field)
-                    ->only_input()
-                    ->labels(...$props)
-                    ->switchSize('mini')
-                    ->default($value)->on_mouseup_put(
-                        $now['link.update']($model->getRouteKey()),
-                        json_encode(['__only_has' => true, $field => ($value ? 0 : 1)])
-                    );
-            }
-
             return FieldComponent::switcher($field)
                 ->only_input()
                 ->labels(...$props)
                 ->switchSize('mini')
-                ->default($value)->on_mouseup_jax('lte_admin.custom_save', [
+                ->value($value)->on_mouseup('jax.lte_admin.custom_save', [
                     get_class($model),
                     $model->id,
                     $field,

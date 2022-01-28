@@ -12,7 +12,7 @@ class WatchComponent extends LiveComponent
     {
         parent::__construct();
         if ($condition) {
-            $this->delegates = $delegates;
+            $this->force_delegates = $delegates;
         }
     }
 }

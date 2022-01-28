@@ -1,8 +1,13 @@
 module.exports = class extends Executor {
 
-    to_slug (str, separator = '_') {
+    static __name() {
 
-        if(typeof separator == 'undefined') separator = '-';
+        return "str";
+    }
+
+    to_slug(str, separator = '_') {
+
+        if (typeof separator == 'undefined') separator = '-';
 
         let flip = separator === '-' ? '_' : '-';
         str = str.replace(flip, separator);
@@ -10,15 +15,15 @@ module.exports = class extends Executor {
         return str.toLowerCase()
             .replace(new RegExp('\\s', 'g'), separator)
             .replace(new RegExp('\\s\\s', 'g'), separator)
-            .replace(new RegExp('['+separator+separator+']+', 'g'), separator)
+            .replace(new RegExp('[' + separator + separator + ']+', 'g'), separator)
             .replace(new RegExp('[^a-z0-9' + separator + '\\s]', 'g'), '');
     }
 
-    to_st (str, separator = '_') {
+    to_st(str, separator = '_') {
         return this.to_translit(this.to_slug(str, separator));
     }
 
-    slug (set_to = null, separator = '_') {
+    slug(set_to = null, separator = '_') {
 
         let str = this.translit();
         let result = this.to_slug(str);
@@ -26,9 +31,7 @@ module.exports = class extends Executor {
         if (set_to) {
 
             $(set_to).val(result);
-        }
-
-        else {
+        } else {
 
             $(this.target).val(result);
         }
@@ -36,7 +39,7 @@ module.exports = class extends Executor {
         return result;
     }
 
-    to_translit (str) {
+    to_translit(str) {
 
         let ru = {
             'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
@@ -49,18 +52,20 @@ module.exports = class extends Executor {
 
         str = str.replace(/[ъь]+/g, '').replace(/й/g, 'i');
 
-        for ( var i = 0; i < str.length; ++i ) {
+        for (var i = 0; i < str.length; ++i) {
             n_str.push(
-                ru[ str[i] ]
-                || ru[ str[i].toLowerCase() ] === undefined && str[i]
-                || ru[ str[i].toLowerCase() ].replace(/^(.)/, ( match ) => { return match.toUpperCase() })
+                ru[str[i]]
+                || ru[str[i].toLowerCase()] === undefined && str[i]
+                || ru[str[i].toLowerCase()].replace(/^(.)/, (match) => {
+                    return match.toUpperCase()
+                })
             );
         }
 
         return n_str.join('');
     }
 
-    translit (set_to = null) {
+    translit(set_to = null) {
 
         let str = this.target.value;
         let result = this.to_translit(str);
@@ -71,10 +76,5 @@ module.exports = class extends Executor {
         }
 
         return result;
-    }
-
-    static __name () {
-    
-        return "str";
     }
 };

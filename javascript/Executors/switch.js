@@ -1,16 +1,19 @@
 module.exports = class extends Executor {
 
-    __invoke ($options = {}) {
+    static __name() {
+
+        return "switch";
+    }
+
+    __invoke($options = {}) {
 
         if (!this.target) {
 
             ljs._error("Target not fount for Bootstrap Switch!");
-            return ;
+            return;
         }
 
-        return $(this.target).bootstrapSwitch({
-
-        }).on('switchChange.bootstrapSwitch', function(event, state) {
+        return $(this.target).bootstrapSwitch({}).on('switchChange.bootstrapSwitch', function (event, state) {
 
             $(event.currentTarget).trigger('change');
             $(event.currentTarget).trigger('mouseup');
@@ -21,18 +24,11 @@ module.exports = class extends Executor {
                 empty.setAttribute('name', event.currentTarget.name);
                 empty.setAttribute('value', '0');
                 event.currentTarget.parentNode.append(empty);
-            }
-
-            else {
+            } else {
                 $(`[type="hidden"][name="${event.currentTarget.name}"]`).remove();
             }
 
             "lte::flash_document".exec();
         });
-    }
-
-    static __name () {
-
-        return "switch";
     }
 };

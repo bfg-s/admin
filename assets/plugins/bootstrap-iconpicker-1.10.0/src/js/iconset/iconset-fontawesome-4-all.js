@@ -5,7 +5,7 @@
  * CDN: https://maxcdn.bootstrapcdn.com/font-awesome/[VERSION]/css/font-awesome.min.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'fa',
@@ -917,7 +917,7 @@
                     'youtube',
                     'youtube-play',
                     'youtube-square'
-                    ]
+                ]
             },
             {
                 version: '4.2.0',
@@ -6315,7 +6315,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_fontawesome_4 = data;
 

@@ -76,7 +76,7 @@
         msgAjaxError: 'Hiba történt a művelet közben ({operation}). Kérjük, próbálja később!',
         msgAjaxProgressError: 'Hiba! ({operation})',
         msgDuplicateFile: 'A (z) {name} "azonos méretű" {size} KB "fájlt már korábban kiválasztották. Az ismétlődő kiválasztás kihagyása.',
-        msgResumableUploadRetriesExceeded:  'Feltöltés megszakítva a <b> {fájl} </b> fájl <b> {max} </b> próbálkozásain túl! Hiba részletei: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Feltöltés megszakítva a <b> {fájl} </b> fájl <b> {max} </b> próbálkozásain túl! Hiba részletei: <pre>{error}</pre>',
         msgPendingTime: '{time} többi',
         msgCalculatingTime: 'a hátralévő idő kiszámítása',
         ajaxOperations: {
@@ -98,7 +98,7 @@
             indicatorSuccessTitle: 'Feltöltött',
             indicatorErrorTitle: 'Feltöltés hiba',
             indicatorPausedTitle: 'Feltöltés szüneteltetve',
-            indicatorLoadingTitle:  'Feltöltés ...'
+            indicatorLoadingTitle: 'Feltöltés ...'
         },
         previewZoomButtonTitles: {
             prev: 'Elöző fájl megnézése',

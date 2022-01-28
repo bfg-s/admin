@@ -5,7 +5,7 @@
  * CDN: https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/[VERSION]/css/material-design-iconic-font.min.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'zmdi',
@@ -5149,7 +5149,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_materialdesign = data;
 

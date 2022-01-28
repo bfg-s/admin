@@ -5,7 +5,7 @@
  * CDN: https://cdnjs.cloudflare.com/ajax/libs/typicons/[VERSION]/typicons.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'typcn',
@@ -3032,7 +3032,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_typicon = data;
 

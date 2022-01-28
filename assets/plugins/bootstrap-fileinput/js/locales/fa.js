@@ -77,7 +77,7 @@
         msgAjaxError: 'به نظر مشکلی در حین {operation} روی داده است. لطفا دوباره تلاش کنید!',
         msgAjaxProgressError: '{operation} لغو شد',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -99,7 +99,7 @@
             indicatorSuccessTitle: 'آپلود شده',
             indicatorErrorTitle: 'بارگذاری خطا',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'آپلود ...'
+            indicatorLoadingTitle: 'آپلود ...'
         },
         previewZoomButtonTitles: {
             prev: 'مشاهده فایل قبلی',

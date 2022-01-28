@@ -2,12 +2,17 @@ const merge = require('lodash/merge');
 
 module.exports = class extends Executor {
 
-    __invoke ($options = {}) {
+    static __name() {
+
+        return "file";
+    }
+
+    __invoke($options = {}) {
 
         if (!this.target) {
 
             ljs._error("Target not fount for Bootstrap Switch!");
-            return ;
+            return;
         }
 
         let $add = {};
@@ -36,10 +41,5 @@ module.exports = class extends Executor {
         }).on('input', (a) => {
             $(`[type="hidden"][name="${a.target.name}"]`).remove();
         });
-    }
-
-    static __name () {
-    
-        return "file";
     }
 };

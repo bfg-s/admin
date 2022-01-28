@@ -15,11 +15,9 @@ trait Delegable
         return new Delegate(static::class);
     }
 
-    public function explain(Explanation $explanation)
+    public function newExplainForce(...$delegates)
     {
-        $explanation->applyFor(static::class, $this);
-
-        return $this;
+        return $this->explainForce(Explanation::new($delegates));
     }
 
     /**
@@ -38,13 +36,15 @@ trait Delegable
         return $this;
     }
 
-    public function newExplainForce(...$delegates)
-    {
-        return $this->explainForce(Explanation::new($delegates));
-    }
-
     public function newExplain(...$delegates)
     {
         return $this->explain(Explanation::new($delegates));
+    }
+
+    public function explain(Explanation $explanation)
+    {
+        $explanation->applyFor(static::class, $this);
+
+        return $this;
     }
 }

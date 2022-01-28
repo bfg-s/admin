@@ -1,5 +1,10 @@
 module.exports = class extends Executor {
 
+    static __name() {
+
+        return "cookie";
+    }
+
     get_cookie(name) {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -29,10 +34,5 @@ module.exports = class extends Executor {
         }
 
         document.cookie = updatedCookie;
-    }
-
-    static __name () {
-
-        return "cookie";
     }
 };

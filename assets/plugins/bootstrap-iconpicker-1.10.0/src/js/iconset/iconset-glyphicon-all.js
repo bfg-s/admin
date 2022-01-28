@@ -3,7 +3,7 @@
  * Versions: 3.3.7
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'glyphicon',
@@ -220,7 +220,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_glyphicon = data;
 

@@ -2,7 +2,12 @@ const merge = require('lodash/merge');
 
 module.exports = class extends Executor {
 
-    html ($options = {}) {
+    static __name() {
+
+        return "codemirror";
+    }
+
+    html($options = {}) {
 
         return window.cm = CodeMirror.fromTextArea(this.currentTarget, merge({
             mode: {
@@ -25,29 +30,24 @@ module.exports = class extends Executor {
         });
     }
 
-    js () {
+    js() {
 
         return this.html({
             mode: {name: "javascript", globalVars: true}
         });
     }
 
-    css () {
+    css() {
 
         return this.html({
             mode: 'css'
         });
     }
 
-    md () {
+    md() {
 
         return this.html({
             mode: 'text/x-markdown'
         });
-    }
-
-    static __name () {
-    
-        return "codemirror";
     }
 };

@@ -4,7 +4,7 @@
  * http://erikflowers.github.io/weather-icons/
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'wi',
@@ -371,7 +371,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_weathericon = data;
 

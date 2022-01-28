@@ -99,7 +99,7 @@
             indicatorSuccessTitle: 'Загружен',
             indicatorErrorTitle: 'Ошибка загрузки',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'Загрузка ...'
+            indicatorLoadingTitle: 'Загрузка ...'
         },
         previewZoomButtonTitles: {
             prev: 'Посмотреть предыдущий файл',

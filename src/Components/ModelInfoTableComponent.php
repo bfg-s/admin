@@ -154,6 +154,7 @@ class ModelInfoTableComponent extends Component
                 } elseif (is_array($field) || is_embedded_call($field)) {
                     $field = embedded_call($field, [
                         is_object($this->model) ? get_class($this->model) : 'model' => $this->model,
+                        Model::class => $this->model,
                         self::class => $this,
                     ]);
                 }

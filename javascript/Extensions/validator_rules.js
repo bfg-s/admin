@@ -1,5 +1,4 @@
-
-$.validator.addMethod( "any-checked", ( value, element, param ) => {
+$.validator.addMethod("any-checked", (value, element, param) => {
 
     // console.log(element);
 
@@ -20,13 +19,13 @@ $.validator.addMethod( "any-checked", ( value, element, param ) => {
     return `You must select at least ${param} items.`;
 });
 
-$.validator.addMethod( "confirmation", ( value, element, params ) => {
+$.validator.addMethod("confirmation", (value, element, params) => {
 
     let name = element.name,
         confirm_name = name.replace('_confirmation', '')
-        confirm_element = document.querySelector(`[name="${confirm_name}"]`);
+    confirm_element = document.querySelector(`[name="${confirm_name}"]`);
 
-    if(confirm_name === name) {
+    if (confirm_name === name) {
         confirm_name = `${name}_confirmation`;
         confirm_element = document.querySelector(`[name="${confirm_name}"]`);
     }
@@ -43,7 +42,7 @@ $.validator.addMethod( "confirmation", ( value, element, params ) => {
         confirm_name = name.replace('_confirmation', '')
     confirm_element = document.querySelector(`[name="${confirm_name}"]`);
 
-    if(confirm_name === name) {
+    if (confirm_name === name) {
         confirm_name = `${name}_confirmation`;
         confirm_element = document.querySelector(`[name="${confirm_name}"]`);
     }

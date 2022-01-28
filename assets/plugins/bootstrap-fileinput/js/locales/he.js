@@ -73,7 +73,7 @@
         msgAjaxError: 'משהו השתבש עם {operation} המערכת. יש לנסות מאוחר יותר!',
         msgAjaxProgressError: '{operation} נכשל',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -93,7 +93,7 @@
             indicatorSuccessTitle: 'הועלה',
             indicatorErrorTitle: 'שגיאת העלאה',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  'מעלה...'
+            indicatorLoadingTitle: 'מעלה...'
         },
         previewZoomButtonTitles: {
             prev: 'הצגת את הקובץ הקודם',

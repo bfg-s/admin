@@ -124,6 +124,11 @@ abstract class Component extends DIV implements onRender
     protected array $delegates = [];
 
     /**
+     * @var array
+     */
+    protected array $force_delegates = [];
+
+    /**
      * @var Page
      */
     protected Page $page;
@@ -132,6 +137,8 @@ abstract class Component extends DIV implements onRender
      * @var array|null
      */
     protected $menu;
+
+    protected $iSelectModel = false;
 
     /**
      * @param ...$delegates
@@ -143,6 +150,7 @@ abstract class Component extends DIV implements onRender
         parent::__construct();
 
         $this->model();
+        $this->iSelectModel = false;
 
         $this->delegates(...$delegates);
 
@@ -160,6 +168,14 @@ abstract class Component extends DIV implements onRender
     public function model($model = null)
     {
         if ($model || !$this->model) {
+            if (is_callable($model)) {
+                $model = call_user_func($model, $this->model ?: $this->page->model());
+            }
+
+            if (is_array($model)) {
+                $model = eloquent_instruction($this->model ?: $this->page->model(), $model);
+            }
+
             if (is_string($model) && class_exists($model)) {
                 $model = new $model;
             }
@@ -177,6 +193,7 @@ abstract class Component extends DIV implements onRender
                 $class = is_string($c) ? $this->model : get_class($c);
                 $this->menu = $this->page->findModelMenu($class);
             }
+            $this->iSelectModel = true;
         }
 
         return $this;
@@ -202,6 +219,20 @@ abstract class Component extends DIV implements onRender
     {
         $this->delegates = [
             ...$this->delegates,
+            ...$delegates,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function forceDelegates(...$delegates)
+    {
+        $this->force_delegates = [
+            ...$this->force_delegates,
             ...$delegates,
         ];
 
@@ -316,6 +347,10 @@ abstract class Component extends DIV implements onRender
     public function onRender()
     {
         $this->newExplain($this->delegates);
+        $this->newExplainForce($this->force_delegates);
+        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
+            $this->model($this->parent->model);
+        }
         $this->mount();
         $this->callRenderEvents();
     }

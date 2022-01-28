@@ -1,6 +1,11 @@
 module.exports = class extends Executor {
 
-    __invoke () {
+    static __name() {
+
+        return "editable";
+    }
+
+    __invoke() {
 
         return $(this.currentTarget).editable({
             highlight: false,
@@ -15,10 +20,5 @@ module.exports = class extends Executor {
                 ljs.exec(resource.response, null, this.storage);
             }
         });
-    }
-
-    static __name () {
-
-        return "editable";
     }
 };

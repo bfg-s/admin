@@ -7,16 +7,19 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::back" title="@lang('lte.back')" href="javascript:void(0)"><i class="fas fa-arrow-left"></i></a>
+            <a class="nav-link" data-click="doc::back" title="@lang('lte.back')" href="javascript:void(0)"><i
+                    class="fas fa-arrow-left"></i></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i class="fas fa-redo-alt"></i></a>
+            <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i
+                    class="fas fa-redo-alt"></i></a>
         </li>
         @if(count(\Lar\LteAdmin\Getters\Menu::getCurrentQuery()))
-        <li class="nav-item">
-            <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}" title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}"
+                   title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
+            </li>
         @endif
         @foreach(gets()->lte->menu->nested_collect->where('left_nav_bar_view') as $menu)
             @if(View::exists($menu['left_nav_bar_view']))
@@ -28,10 +31,10 @@
     </ul>
 
     <!-- SEARCH FORM -->
-    {!! \Lar\LteAdmin\Components\Vue\GlobalSearch::create() !!}
-    {!! \Lar\LteAdmin\Components\Vue\LiveReloader::create() !!}
+{!! \Lar\LteAdmin\Components\Vue\GlobalSearch::create() !!}
+{!! \Lar\LteAdmin\Components\Vue\LiveReloader::create() !!}
 
-    <!-- Right navbar links -->
+<!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         @foreach(gets()->lte->menu->nested_collect->where('badge')->where('link') as $menu)
             @php
@@ -44,7 +47,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{$link}}" title="{{__($menu['badge']['title'] ?? $menu['title'])}}">
                         <i class="{{$menu['icon']}}"></i>
-                        <span class="badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}} navbar-badge">{{$counter}}</span>
+                        <span
+                            class="badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}} navbar-badge">{{$counter}}</span>
                     </a>
                 </li>
             @endif
@@ -58,10 +62,13 @@
             @endif
         @endforeach
         <li>
-            <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i class="fas fa-external-link-square-alt"></i></a>
+            <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i
+                    class="fas fa-external-link-square-alt"></i></a>
         </li>
         <li>
-            <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm" data-params="{{__('lte.logout')}}, {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get" title="{{__('lte.logout')}}"><i class="fas fa-sign-out-alt"></i></a>
+            <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm"
+               data-params="{{__('lte.logout')}}, {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get"
+               title="{{__('lte.logout')}}"><i class="fas fa-sign-out-alt"></i></a>
         </li>
         @if(config('layout.lang_mode'))
         <!-- Messages Dropdown Menu -->
@@ -71,7 +78,8 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     @foreach(config('layout.languages') as $lang)
-                        <a class="dropdown-item {{App::getLocale() == $lang ? 'active' : ''}}" href="{{remake_lang_url($lang)}}">
+                        <a class="dropdown-item {{App::getLocale() == $lang ? 'active' : ''}}"
+                           href="{{remake_lang_url($lang)}}">
                             <i class="{{isset(config('lte.lang_flags')[$lang]) ? config('lte.lang_flags')[$lang] : ''}}"></i> {{strtoupper($lang)}}
                         </a>
                     @endforeach

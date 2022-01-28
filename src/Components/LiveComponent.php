@@ -14,7 +14,9 @@ class LiveComponent extends Component
      */
     public function __construct(...$delegates)
     {
-        parent::__construct(...$delegates);
+        parent::__construct();
+
+        $this->forceDelegates(...$delegates);
 
         $this->addClass('__live__')
             ->setId('live-'.static::$counter);

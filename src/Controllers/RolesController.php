@@ -59,7 +59,8 @@ class RolesController extends Controller
                 $form->input('slug', 'lte.slug')->required()->slugable(),
                 $form->ifEdit()->info_updated_at(),
                 $form->ifEdit()->info_created_at(),
-            )
+            ),
+            $card->footer_form(),
         );
     }
 

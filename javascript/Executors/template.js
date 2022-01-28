@@ -1,21 +1,24 @@
 module.exports = class extends Executor {
 
-    clearArea ($to) {
+    static __name() {
+
+        return "tpl";
+    }
+
+    clearArea($to) {
 
         let area = document.querySelector(`span[data-tpl="${$to}"]`);
 
         if (area) {
 
             area.innerHTML = '';
-        }
-
-        else {
+        } else {
 
             "toast:error".exec(`Template area [${$to}] undefined!`);
         }
     }
 
-    replaceTo ($tpl, $to = $tpl) {
+    replaceTo($tpl, $to = $tpl) {
 
         let template = document.querySelector(`template[data-tpl="${$tpl}"]`);
 
@@ -29,21 +32,17 @@ module.exports = class extends Executor {
 
                 area.innerHTML = '';
                 area.appendChild(cloned);
-            }
-
-            else {
+            } else {
 
                 "toast:error".exec(`Template area [${$to}] undefined!`);
             }
-        }
-
-        else {
+        } else {
 
             "toast:error".exec(`Template [${$tpl}] undefined!`);
         }
     }
 
-    copyTo ($tpl, $to = $tpl) {
+    copyTo($tpl, $to = $tpl) {
 
         let template = document.querySelector(`template[data-tpl="${$tpl}"]`);
 
@@ -56,22 +55,13 @@ module.exports = class extends Executor {
                 let cloned = template.content.cloneNode(true);
 
                 area.appendChild(cloned);
-            }
-
-            else {
+            } else {
 
                 "toast:error".exec(`Template area [${$to}] undefined!`);
             }
-        }
-
-        else {
+        } else {
 
             "toast:error".exec(`Template [${$tpl}] undefined!`);
         }
-    }
-
-    static __name () {
-    
-        return "tpl";
     }
 };

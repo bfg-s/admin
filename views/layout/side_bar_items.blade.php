@@ -10,12 +10,14 @@
     @if($menu['active'] && $access && $on)
 
         @php
-            $selected = $menu['selected'] || $childs->where('selected', true)->count();
+            $selected = $menu['selected'] || $childs->where('selected', true)->count()
         @endphp
 
         <li class="nav-item {{ $childs->count() && $selected ? 'menu-open' : '' }}">
 
-            <a href="{{$menu['link'] && !$childs->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}" @if($menu['target']) target="_blank" @endif class="nav-link {{ !$childs->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $childs->count() ? 'has-treeview' : '' }}">
+            <a href="{{$menu['link'] && !$childs->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}"
+               @if($menu['target']) target="_blank"
+               @endif class="nav-link {{ !$childs->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $childs->count() ? 'has-treeview' : '' }}">
 
                 @if (isset($menu['icon']))
 
@@ -28,7 +30,9 @@
 
                     @if (isset($menu['badge']) && is_array($menu['badge']))
 
-                        <span id="nav_badge_{{isset($menu['badge']['id']) && $menu['badge']['id'] ? $menu['badge']['id'] : $menu['id']}}" class="right badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}}" {!! isset($menu['badge']['title']) ? "title='{$menu['badge']['title']}'" : "" !!}>
+                        <span
+                            id="nav_badge_{{isset($menu['badge']['id']) && $menu['badge']['id'] ? $menu['badge']['id'] : $menu['id']}}"
+                            class="right badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}}" {!! isset($menu['badge']['title']) ? "title='{$menu['badge']['title']}'" : "" !!}>
                             @if(isset($menu['badge']['instructions']) && $menu['badge']['instructions'])
                                 {{eloquent_instruction($menu['badge']['text'], $menu['badge']['instructions'])->count()}}
                             @else
@@ -45,7 +49,7 @@
                     @elseif($childs->count())
 
                         @php
-                            $with_badges = 0;
+                            $with_badges = 0
                         @endphp
 
                         @if($with_badges)

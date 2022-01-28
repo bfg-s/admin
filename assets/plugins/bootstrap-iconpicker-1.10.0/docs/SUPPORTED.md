@@ -8,14 +8,17 @@
 [![Issues](http://img.shields.io/badge/license-MIT-red.svg)](https://github.com/victor-valencia/bootstrap-iconpicker/blob/master/LICENSE)
 
 # [Bootstrap-Iconpicker v1.10.0](http://victor-valencia.github.io/bootstrap-iconpicker)
+
 ![Iconpicker](../bootstrap-iconpicker_4x.png)
 
 A simple iconpicker for Bootstrap 3.x and 4.x.
 
 ## Table of contents
+
 - [Supported iconset](#supported-iconset)
 
 ## Supported Iconset
+
 | Iconset | Versions |
 | --- | --- |
 | [Elusive Icons](http://press.codes/downloads/elusive-icons-webfont/) | v2.0.0 (lastest) |

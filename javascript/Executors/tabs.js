@@ -1,6 +1,15 @@
 module.exports = class extends Executor {
 
-    __invoke (h = null) {
+    get tab_regexp() {
+        return /^#tab-[a-z0-9]{32}-[0-9]+$/;
+    }
+
+    static __name() {
+
+        return "tabs";
+    }
+
+    __invoke(h = null) {
 
         let hash = h ? h : location.hash;
 
@@ -10,17 +19,8 @@ module.exports = class extends Executor {
         }
     }
 
-    tab_button (e) {
+    tab_button(e) {
         // this.event.preventDefault();
         // history.pushState("", document.title, this.target.href)
-    }
-
-    get tab_regexp () {
-        return /^#tab-[a-z0-9]{32}-[0-9]+$/;
-    }
-
-    static __name () {
-
-        return "tabs";
     }
 };

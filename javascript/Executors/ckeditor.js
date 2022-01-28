@@ -1,12 +1,17 @@
 module.exports = class extends Executor {
 
-    __invoke ($options = {}) {
+    static __name() {
+
+        return "ckeditor";
+    }
+
+    __invoke($options = {}) {
 
         if (!this.target) {
 
             ljs._error("Target not fount for CKEditor!");
 
-            return ;
+            return;
         }
 
         if (this.target.dataset.toolbar) {
@@ -32,7 +37,7 @@ module.exports = class extends Executor {
 
         $options.image = {
             // You need to configure the image toolbar, too, so it uses the new style buttons.
-            toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight' ],
+            toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
             styles: [
                 // This option is equal to a situation where no style is applied.
                 'full',
@@ -45,7 +50,7 @@ module.exports = class extends Executor {
             ]
         }
 
-        return ClassicEditor.create( this.target,  $options).then((editor) => {
+        return ClassicEditor.create(this.target, $options).then((editor) => {
 
 
             editor.editing.view.document.on('blur', () => {
@@ -59,10 +64,5 @@ module.exports = class extends Executor {
             //     editor.changed = true;
             // });
         });
-    }
-
-    static __name () {
-
-        return "ckeditor";
     }
 };

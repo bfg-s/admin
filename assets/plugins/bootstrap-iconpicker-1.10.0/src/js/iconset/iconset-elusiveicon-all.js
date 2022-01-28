@@ -4,7 +4,7 @@
  * http://elusiveicons.com/
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: '',
@@ -320,7 +320,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_elusiveicon = data;
 

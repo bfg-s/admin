@@ -5,7 +5,12 @@ module.exports = class extends Executor {
         this.collapsed = false;
     }
 
-    __invoke () {
+    static __name() {
+
+        return "nestable";
+    }
+
+    __invoke() {
 
         let result = $(this.target).nestable({
             maxDepth: this.target.dataset.maxDepth ? this.target.dataset.maxDepth : 15
@@ -28,20 +33,15 @@ module.exports = class extends Executor {
         return result;
     }
 
-    expand () {
+    expand() {
 
         this.collapsed = false;
         return $(this.target.dataset.target ? this.target.dataset.target : '.dd').nestable('expandAll');
     }
 
-    collapse () {
+    collapse() {
 
         this.collapsed = true;
         return $(this.target.dataset.target ? this.target.dataset.target : '.dd').nestable('collapseAll');
-    }
-
-    static __name () {
-
-        return "nestable";
     }
 }

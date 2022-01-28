@@ -10,7 +10,7 @@
             <form action="{{route('lte.login.post')}}" method="post" target>
                 @csrf
                 <div class="input-group mb-3">
-                    <input type="text" name="login" autofocus class="form-control" placeholder="{{__('lte.email')}}" />
+                    <input type="text" name="login" autofocus class="form-control" placeholder="{{__('lte.email')}}"/>
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="{{__('lte.password')}}" />
+                    <input type="password" name="password" class="form-control" placeholder="{{__('lte.password')}}"/>
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>

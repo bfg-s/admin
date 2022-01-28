@@ -76,7 +76,7 @@
         msgAjaxError: '{operation} 실행 도중 실패했습니다. 잠시 후 다시 시도해 주세요!',
         msgAjaxProgressError: '{operation} failed',
         msgDuplicateFile: 'File "{name}" of same size "{size} KB" has already been selected earlier. Skipping duplicate selection.',
-        msgResumableUploadRetriesExceeded:  'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Upload aborted beyond <b>{max}</b> retries for file <b>{file}</b>! Error Details: <pre>{error}</pre>',
         msgPendingTime: '{time} remaining',
         msgCalculatingTime: 'calculating time remaining',
         ajaxOperations: {
@@ -98,7 +98,7 @@
             indicatorSuccessTitle: '업로드 성공',
             indicatorErrorTitle: '업로드 중 에러 발생',
             indicatorPausedTitle: 'Upload Paused',
-            indicatorLoadingTitle:  '업로드 중 ...'
+            indicatorLoadingTitle: '업로드 중 ...'
         },
         previewZoomButtonTitles: {
             prev: '이전 파일',

@@ -56,7 +56,7 @@ return [
 
         'guards' => [
             'lte' => [
-                'driver'   => 'session',
+                'driver' => 'session',
                 'provider' => 'lte',
             ],
         ],
@@ -64,7 +64,7 @@ return [
         'providers' => [
             'lte' => [
                 'driver' => 'eloquent',
-                'model'  => LteUser::class,
+                'model' => LteUser::class,
             ],
         ],
     ],
@@ -84,7 +84,7 @@ return [
          */
         'directory' => [
             'image' => 'images',
-            'file'  => 'files',
+            'file' => 'files',
         ],
     ],
 

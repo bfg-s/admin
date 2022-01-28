@@ -1,14 +1,14 @@
 var assert = chai.assert;
 
-describe('Bootstrp-IconPicker v1.10.0', function() {
+describe('Bootstrp-IconPicker v1.10.0', function () {
 
-    it('should match current version of plugin', function() {
+    it('should match current version of plugin', function () {
 
         assert.equal($.fn.iconpicker.Constructor.VERSION, '1.10.0');
 
     });
 
-    it('should init with "button" tag and attributes[ role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ role="iconpicker" ]', function () {
 
         var obj = $('#demo_101');
 
@@ -42,7 +42,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ role="iconpicker" ]', function () {
 
         var obj = $('#demo_102');
 
@@ -76,7 +76,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="ionicon" data-icon="ion-ionic" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="ionicon" data-icon="ion-ionic" role="iconpicker" ]', function () {
 
         var obj = $('#demo_201');
 
@@ -110,7 +110,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="fontawesome5" data-icon="fas fa-wifi" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="fontawesome5" data-icon="fas fa-wifi" role="iconpicker" ]', function () {
 
         var obj = $('#demo_202');
 
@@ -144,7 +144,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="weathericon" data-icon="wi-day-rain" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="weathericon" data-icon="wi-day-rain" role="iconpicker" ]', function () {
 
         var obj = $('#demo_203');
 
@@ -178,7 +178,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="mapicon" data-icon="map-icon-walking" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="mapicon" data-icon="map-icon-walking" role="iconpicker" ]', function () {
 
         var obj = $('#demo_204');
 
@@ -212,7 +212,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="octicon" data-icon="octicon-bug" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="octicon" data-icon="octicon-bug" role="iconpicker" ]', function () {
 
         var obj = $('#demo_205');
 
@@ -246,7 +246,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="typicon" data-icon="typcn-anchor" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="typicon" data-icon="typcn-anchor" role="iconpicker" ]', function () {
 
         var obj = $('#demo_206');
 
@@ -280,7 +280,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="elusiveicon" data-icon="el-icon-female" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="elusiveicon" data-icon="el-icon-female" role="iconpicker" ]', function () {
 
         var obj = $('#demo_207');
 
@@ -314,7 +314,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="materialdesign" data-icon="zmdi-card-sd" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="materialdesign" data-icon="zmdi-card-sd" role="iconpicker" ]', function () {
 
         var obj = $('#demo_208');
 
@@ -348,7 +348,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="flagicon" data-icon="flag-icon-mx" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="flagicon" data-icon="flag-icon-mx" role="iconpicker" ]', function () {
 
         var obj = $('#demo_209');
 
@@ -382,7 +382,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="weathericon" data-iconset-version="2.0.10" data-icon="wi-day-rain" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-iconset="weathericon" data-iconset-version="2.0.10" data-icon="wi-day-rain" role="iconpicker" ]', function () {
 
         var obj = $('#demo_210');
 
@@ -416,7 +416,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-search="true" data-search-text="Search..." role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-search="true" data-search-text="Search..." role="iconpicker" ]', function () {
 
         var obj = $('#demo_301');
 
@@ -450,7 +450,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-search="false" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-search="false" role="iconpicker" ]', function () {
 
         var obj = $('#demo_302');
 
@@ -484,7 +484,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-label-header="{0} - {1} pages" data-label-footer="{0} - {1} of {2} icons" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-label-header="{0} - {1} pages" data-label-footer="{0} - {1} of {2} icons" role="iconpicker" ]', function () {
 
         var obj = $('#demo_401');
 
@@ -518,7 +518,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-header="false" data-footer="false" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-header="false" data-footer="false" role="iconpicker" ]', function () {
 
         var obj = $('#demo_402');
 
@@ -552,7 +552,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-rows="3" data-cols="6" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-rows="3" data-cols="6" role="iconpicker" ]', function () {
 
         var obj = $('#demo_501');
 
@@ -586,7 +586,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-align="left" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-align="left" role="iconpicker" ]', function () {
 
         var obj = $('#demo_601');
 
@@ -620,7 +620,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-align="center" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-align="center" role="iconpicker" ]', function () {
 
         var obj = $('#demo_602');
 
@@ -654,7 +654,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-align="right" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-align="right" role="iconpicker" ]', function () {
 
         var obj = $('#demo_603');
 
@@ -688,7 +688,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="left" data-icon="fas fa-arrow-left" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="left" data-icon="fas fa-arrow-left" role="iconpicker" ]', function () {
 
         var obj = $('#demo_701');
 
@@ -722,7 +722,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="top" data-icon="fas fa-arrow-up" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="top" data-icon="fas fa-arrow-up" role="iconpicker" ]', function () {
 
         var obj = $('#demo_702');
 
@@ -756,7 +756,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="bottom" data-icon="fas fa-arrow-down" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="bottom" data-icon="fas fa-arrow-down" role="iconpicker" ]', function () {
 
         var obj = $('#demo_703');
 
@@ -790,7 +790,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="right" data-icon="fas fa-arrow-right" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-secondary" data-placement="right" data-icon="fas fa-arrow-right" role="iconpicker" ]', function () {
 
         var obj = $('#demo_704');
 
@@ -824,7 +824,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-arrow-class="btn-success" data-arrow-prev-icon-class="fas fa-angle-left" data-arrow-next-icon-class="fas fa-angle-right" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-arrow-class="btn-success" data-arrow-prev-icon-class="fas fa-angle-left" data-arrow-next-icon-class="fas fa-angle-right" role="iconpicker" ]', function () {
 
         var obj = $('#demo_801');
 
@@ -858,7 +858,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag and attributes[ data-selected-class="btn-danger" data-unselected-class="btn-info" role="iconpicker" ]', function() {
+    it('should init with "div" tag and attributes[ data-selected-class="btn-danger" data-unselected-class="btn-info" role="iconpicker" ]', function () {
 
         var obj = $('#demo_802');
 
@@ -892,7 +892,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-default" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-default" role="iconpicker" ]', function () {
 
         var obj = $('#demo_901');
 
@@ -926,7 +926,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-primary" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-primary" role="iconpicker" ]', function () {
 
         var obj = $('#demo_902');
 
@@ -960,7 +960,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-success" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-success" role="iconpicker" ]', function () {
 
         var obj = $('#demo_903');
 
@@ -994,7 +994,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-warning" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-warning" role="iconpicker" ]', function () {
 
         var obj = $('#demo_904');
 
@@ -1028,7 +1028,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-danger" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-danger" role="iconpicker" ]', function () {
 
         var obj = $('#demo_905');
 
@@ -1062,7 +1062,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "button" tag and attributes[ class="btn btn-info" role="iconpicker" ]', function() {
+    it('should init with "button" tag and attributes[ class="btn btn-info" role="iconpicker" ]', function () {
 
         var obj = $('#demo_906');
 
@@ -1096,7 +1096,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag via javascript and "default" options', function() {
+    it('should init with "div" tag via javascript and "default" options', function () {
 
         var obj = $('<div></div>')
             .iconpicker()
@@ -1131,7 +1131,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag via javascript and "custom" options', function() {
+    it('should init with "div" tag via javascript and "custom" options', function () {
 
         var obj = $('<div></div>')
             .iconpicker({
@@ -1184,7 +1184,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init with "div" tag via javascript and "custom" options (another way)', function() {
+    it('should init with "div" tag via javascript and "custom" options (another way)', function () {
 
         var obj = $('<div></div>')
             .iconpicker()
@@ -1250,7 +1250,7 @@ describe('Bootstrp-IconPicker v1.10.0', function() {
 
     });
 
-    it('should init and emit event "change"', function(done) {
+    it('should init and emit event "change"', function (done) {
 
         var eventSpy = sinon.spy()
 

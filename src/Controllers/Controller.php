@@ -31,7 +31,6 @@ use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\LteAdmin\Exceptions\NotFoundExplainForControllerException;
 use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Page;
-
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -149,8 +148,8 @@ class Controller extends BaseController
     public function defaultDateRange()
     {
         return [
-            now()->subYear()->startOfDay()->toDateString(),
-            now()->endOfDay()->toDateString(),
+            now()->subYear()->toDateString(),
+            now()->addDay()->toDateString(),
         ];
     }
 
@@ -255,9 +254,9 @@ class Controller extends BaseController
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isNotInput(string $path, mixed $need_value = true)
+    public function isNotModelInput(string $path, mixed $need_value = true)
     {
-        return !$this->isInput($path, $need_value);
+        return !$this->isModelInput($path, $need_value);
     }
 
     /**
@@ -265,9 +264,9 @@ class Controller extends BaseController
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isInput(string $path, mixed $need_value = true)
+    public function isModelInput(string $path, mixed $need_value = true)
     {
-        $val = old($path, $this->input($path));
+        $val = old($path, $this->modelInput($path));
         if (is_array($need_value)) {
             return in_array($val, $need_value);
         }
@@ -275,7 +274,7 @@ class Controller extends BaseController
         return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
-    public function input(string $path, $default = null)
+    public function modelInput(string $path, $default = null)
     {
         $model = app(Page::class)->model();
 

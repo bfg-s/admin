@@ -5,7 +5,7 @@
  * CDN: http://code.ionicframework.com/ionicons/[VERSION]/css/ionicons.min.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: '',
@@ -1363,7 +1363,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_ionicon = data;
 

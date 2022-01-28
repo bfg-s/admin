@@ -1,4 +1,5 @@
 ## Scope
+
 This pull request includes a
 
 - [ ] Bug fix
@@ -6,6 +7,7 @@ This pull request includes a
 - [ ] Translation
 
 ## Changes
+
 The following changes were made
 
 -
@@ -13,4 +15,5 @@ The following changes were made
 -
 
 ## Related Issues
+
 If this is related to an existing ticket, include a link to it as well.

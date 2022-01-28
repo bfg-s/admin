@@ -1,5 +1,5 @@
 module.exports = {
-    data () {
+    data() {
         return {
             user_admin: window.state.admin
         }

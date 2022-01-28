@@ -1,6 +1,11 @@
 module.exports = class extends Executor {
 
-    __invoke ($options = {}) {
+    static __name() {
+
+        return "valid";
+    }
+
+    __invoke($options = {}) {
 
         if (!this.target) {
 
@@ -66,7 +71,7 @@ module.exports = class extends Executor {
                 let area = element.closest('.form-group'),
                     lw = area[0] && area[0].dataset.labelWidth !== undefined ? area[0].dataset.labelWidth : 2,
                     label = $('<div></div>').addClass(`col-sm-${lw}`),
-                    errWrap = $('<div></div>').addClass(area[0] && !area[0].dataset.vertical ? `col-sm-${12-lw}` : 'error-wrap')
+                    errWrap = $('<div></div>').addClass(area[0] && !area[0].dataset.vertical ? `col-sm-${12 - lw}` : 'error-wrap')
                         .append(error.addClass('invalid-feedback')).prepend('<small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small> ');
                 if (area[0] && !area[0].dataset.vertical) {
                     area.append(label);
@@ -115,10 +120,5 @@ module.exports = class extends Executor {
                 }
             }
         })
-    }
-
-    static __name () {
-    
-        return "valid";
     }
 };

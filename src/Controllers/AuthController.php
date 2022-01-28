@@ -5,7 +5,6 @@ namespace Lar\LteAdmin\Controllers;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 use LteAdmin;
 
 use function respond;

@@ -6,6 +6,7 @@ use App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
+use Lar\LteAdmin\Exceptions\ResourceControllerExistsException;
 use Lar\LteAdmin\Exceptions\ShouldBeModelInControllerException;
 use Lar\LteAdmin\ExtendProvider;
 use Lar\LteAdmin\Models\LtePermission;
@@ -27,6 +28,8 @@ class Menu extends Getter
 
     protected static $currentQueryField = null;
     protected static $queries = [];
+
+    static array $models = [];
 
     public static function saveCurrentQuery()
     {
@@ -517,6 +520,12 @@ class Menu extends Getter
 
             /** @var string $model */
             $item['model_class'] = ($item['controller'] ?? null) ? ($item['controller']::$model ?? null) : null;
+
+            if ($item['model_class'] && in_array($item['model_class'], static::$models)) {
+                throw new ResourceControllerExistsException($item['model_class']);
+            } else {
+                static::$models[] = $item['model_class'];
+            }
 
             if (!isset($item['selected'])) {
                 $item['selected'] = false;

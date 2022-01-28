@@ -8,7 +8,7 @@ module.exports = ($methods) => {
 
     require('./Extensions/validator_rules');
 
-    ljs.progress.configure({ parent: ljs.config('pjax-container') });
+    ljs.progress.configure({parent: ljs.config('pjax-container')});
     ljs.regExec(require('./Executors/AdminLte'));
     ljs.regExec(require('./Executors/table_list'));
 

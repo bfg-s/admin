@@ -19,9 +19,9 @@
  * ========================================================================
  */
 
-(function ( $ ) {
+(function ($) {
 
-    $.fn.bootstrapNumber = function( options ) {
+    $.fn.bootstrapNumber = function (options) {
 
         var settings = $.extend({
             upClass: 'default',
@@ -29,9 +29,9 @@
             upText: '+',
             downText: '-',
             center: true
-        }, options );
+        }, options);
 
-        return this.each(function(e, obj) {
+        return this.each(function (e, obj) {
             var self = $(this);
             var clone = self.clone(false, false);
 
@@ -50,21 +50,21 @@
             }
 
             var group = $("<div class='input-group'></div>");
-            var down = $("<button type='button'>" + settings.downText + "</button>").attr('class', 'btn btn-' + settings.downClass).click(function() {
+            var down = $("<button type='button'>" + settings.downText + "</button>").attr('class', 'btn btn-' + settings.downClass).click(function () {
                 setText(parseInt(clone.val() || clone.attr('value')) - step);
             });
-            var up = $("<button type='button'>" + settings.upText + "</button>").attr('class', 'btn btn-' + settings.upClass).click(function() {
+            var up = $("<button type='button'>" + settings.upText + "</button>").attr('class', 'btn btn-' + settings.upClass).click(function () {
                 setText(parseInt(clone.val() || clone.attr('value')) + step);
             });
             $("<span class='input-group-prepend'></span>").append(down).appendTo(group);
             clone.appendTo(group);
-            if(clone && settings.center) {
+            if (clone && settings.center) {
                 clone.css('text-align', 'center');
             }
             $("<span class='input-group-append'></span>").append(up).appendTo(group);
 
             // remove spins from original
-            clone.prop('type', 'text').keydown(function(e) {
+            clone.prop('type', 'text').keydown(function (e) {
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
@@ -85,4 +85,4 @@
             self.replaceWith(group);
         });
     };
-} ( jQuery ));
+}(jQuery));

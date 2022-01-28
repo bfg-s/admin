@@ -1,10 +1,13 @@
 @import "layout/main-header";
-input:focus, textarea:focus, select:focus{
+
+input:focus, textarea:focus, select:focus {
     outline: none !important;
 }
+
 .select2-container--bootstrap4.select2-container--focus .select2-selection {
     box-shadow: none;
 }
+
 .lte-sortable-card {
 
     .pagination {
@@ -20,11 +23,11 @@ input:focus, textarea:focus, select:focus{
 }
 
 .input-group-prepend {
-     .input-group-text {
-         min-width: 45px;
-         align-items: center;
-         justify-content: center;
-     }
+    .input-group-text {
+        min-width: 45px;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 //.select2-selection, .select2-search {
@@ -62,13 +65,14 @@ input:focus, textarea:focus, select:focus{
     margin: 0 !important;
     padding: 0 !important;
 }
+
 @media screen and (max-width: 575px) {
     .form-info-text {
         position: relative !important;
     }
 }
 
-.card-header>.card-tools .btn-group {
+.card-header > .card-tools .btn-group {
     margin-bottom: -.3rem !important;
     margin-top: -.3rem !important;
 }
@@ -128,4 +132,7 @@ input:focus, textarea:focus, select:focus{
 .input-group .select2 {
     flex-grow: 1 !important;
 }
-[x-cloak] { display: none !important; }
+
+[x-cloak] {
+    display: none !important;
+}

@@ -14,9 +14,11 @@ Change Log: `bootstrap-fileinput`
 - (enh #1514): Enhancements to duplicate file selection.
     - New event `fileduplicateerror` will be triggered after every duplicate file detected.
     - Duplicate error container can be closed by clicking the `close` icon.
-    - New property `fadeDelay` used in fade out / fade in animations of error containers.    
-- (enh #1513): New `filebeforeload` event (only for ajax uploads). Can be used to abort loading of specific files at runtime.
-*Usage:*
+    - New property `fadeDelay` used in fade out / fade in animations of error containers.
+- (enh #1513): New `filebeforeload` event (only for ajax uploads). Can be used to abort loading of specific files at
+  runtime.
+  *Usage:*
+
 ```
     $('#input').on('filebeforeload', function(event, file, index, reader) {
         // perform your validations based on the 'file' or other parameters
@@ -25,6 +27,7 @@ Change Log: `bootstrap-fileinput`
         }
     });
 ```    
+
 - (enh #1512): Include parameter to include initial preview files in `getFilesCount` method.
 - (bug #1510): Lock browse button correctly when disable method is called.
 - (bug #1509): Correct zoom slideshow to show only files with zoom enabled via `showZoom`.
@@ -34,7 +37,7 @@ Change Log: `bootstrap-fileinput`
 - (enh #1497): Better validation of progress display when `showPreview` is `false`.
 - (bug #1482): Validate `initialPreviewShowDelete` setting correctly.
 - (bug #1480): Correct preview content setting after validation error.
- 
+
 ## version 5.0.7
 
 **Date:** 17-Nov-2019
@@ -42,9 +45,9 @@ Change Log: `bootstrap-fileinput`
 - (enh #1496): Correct isEmpty check for functions.
 - (enh #1485): Update Portugese Brazilian Translations.
 - (enh #1479): Methods updated:
-   - Include `addToStack` method.
-   - Remove `updateStack` method
-   - Rename `clearStack` to `clearFileStack` method
+    - Include `addToStack` method.
+    - Remove `updateStack` method
+    - Rename `clearStack` to `clearFileStack` method
 - (enh #1478): Update Slovak Translations.
 - (enh #1477): Update Czech Translations.
 - (enh #1476): Update Hungarian Translations.
@@ -59,7 +62,7 @@ Change Log: `bootstrap-fileinput`
     - `maxFileCount` and `msgFilesTooMany` for files being selected before upload
     - `maxTotalFileCount` and `msgTotalFilesTooMany` for total files selected and files included in initial preview
 - (enh #1448): New boolean properties `focusCaptionOnBrowse` and `focusCaptionOnClear` which default to `true`.
-  
+
 ## version 5.0.6
 
 **Date:** 11-Sep-2019
@@ -67,7 +70,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #1464): Correct preview frame float styling issues.
 - (bug #1463): Correct file input unlock after file validation errors (for non-ajax mode).
 - (bug #1460): Correct `filebatchselected` event trigger.
-- (bug #1459): Upload Async does not recognize initialPreview correctly for ajax response immediately sent with uploadUrl.
+- (bug #1459): Upload Async does not recognize initialPreview correctly for ajax response immediately sent with
+  uploadUrl.
 - (bug #1457): Correct `removeFromPreviewOnError` validation.
 - (enh #1455): Default preview template to `other` when invalid file type is passed.
 
@@ -127,7 +131,7 @@ Change Log: `bootstrap-fileinput`
 - (bug #1390): Correct remove button display validation set via `fileActionSettings`.
 - (bug #1385): Correct resize image error.
 - (bug #1383): Validate for undefined zoom data.
-    
+
 ## version 5.0.1
 
 **Date:** 26-Mar-2019
@@ -135,7 +139,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #1382):  Better defaults for `resumableUploadOptions.chunkSize` and `progressDelay`.
     - Set defaults for `progressDelay` to `0` and `resumableUploadOptions.chunkSize` to `2048 KB` i.e. (`2 MB`)
 - (bug #1381): Fix `uploadExtraData` to be submitted correctly with ajax responses.
-- (enh #1379): Add ability to sanitize zoom cache. New property `sanitizeZoomCache` which is a function callback and defaults to:
+- (enh #1379): Add ability to sanitize zoom cache. New property `sanitizeZoomCache` which is a function callback and
+  defaults to:
     ```js
     function(content) {
         var $container = $(document.createElement('div')).append(content);
@@ -143,8 +148,9 @@ Change Log: `bootstrap-fileinput`
         return $container.html();
     }
     ```
-- (enh #276): Add ability to change ajax submission URL dynamically e.g. `uploadUrl`, `deleteUrl`, `resumableUploadOptions.testUrl`. 
-  These can now be also setup as a function callback that will be executed at runtime.
+- (enh #276): Add ability to change ajax submission URL dynamically e.g. `uploadUrl`, `deleteUrl`
+  , `resumableUploadOptions.testUrl`. These can now be also setup as a function callback that will be executed at
+  runtime.
 
 ## version 5.0.0
 
@@ -153,9 +159,13 @@ Change Log: `bootstrap-fileinput`
 **Date:** 24-Mar-2019
 
 - (enh #1378): Allow throttling / delaying xhr progress updates.
-    - New property `uploadProgressDelay` in microseconds - will default to `100`  - this will control how frequent the xhr upload progress will be checked. If set to null or 0 - will do it every microsecond.
-    - New property `maxAjaxThreads` (will default to `5`) that will allow to spawn only this limit of ajax requests in parallel.
-    - The above is complemented by `resumableUploadOptions['maxThreads']` (defaults to 4) which is applicable for spawning number of ajax chunk requests for resumable uploads. The `resumableUploadOptions['maxThreads']` property must be less than or equal to `maxThreads` - else it will be over-ridden by `maxThreads` global setting.
+    - New property `uploadProgressDelay` in microseconds - will default to `100`  - this will control how frequent the
+      xhr upload progress will be checked. If set to null or 0 - will do it every microsecond.
+    - New property `maxAjaxThreads` (will default to `5`) that will allow to spawn only this limit of ajax requests in
+      parallel.
+    - The above is complemented by `resumableUploadOptions['maxThreads']` (defaults to 4) which is applicable for
+      spawning number of ajax chunk requests for resumable uploads. The `resumableUploadOptions['maxThreads']` property
+      must be less than or equal to `maxThreads` - else it will be over-ridden by `maxThreads` global setting.
 - (enh #1377): Display extended upload statistics like bitrate and pending time.
     - add `layoutTemplates['stats']` for displaying stats
     ```js
@@ -171,21 +181,22 @@ Change Log: `bootstrap-fileinput`
 - (enh #1374): Allow exif data of images to be read from server.
     - `initialPreviewConfig` sent from the server can contain the `exif` property as an object.
     - allows auto orientation of JPEG image files based on exif orientation
-    - `autoOrientImageInitial` is a new boolean property that controls whether images need to be auto-oriented based on exif orientation.
-- (enh #1373): Selectively disable file selection and preview for certain file extensions.
-        - `allowedPreviewTypes` (existing)
-        - `allowedPreviewMimeTypes` (existing)
-        - `allowedPreviewExtensions` (new)
-        - `disabledPreviewTypes` (new)
-        - `disabledPreviewExtensions` (new) - defaults to `['msi', 'exe', 'com', 'zip', 'rar', 'app', 'vb', 'scr']`
-        - `disabledPreviewMimeTypes` (new) - defaults to `['application/octet-stream']`
+    - `autoOrientImageInitial` is a new boolean property that controls whether images need to be auto-oriented based on
+      exif orientation.
+- (enh #1373): Selectively disable file selection and preview for certain file extensions. - `allowedPreviewTypes` (
+  existing)
+  - `allowedPreviewMimeTypes` (existing)
+  - `allowedPreviewExtensions` (new)
+  - `disabledPreviewTypes` (new)
+  - `disabledPreviewExtensions` (new) - defaults to `['msi', 'exe', 'com', 'zip', 'rar', 'app', 'vb', 'scr']`
+  - `disabledPreviewMimeTypes` (new) - defaults to `['application/octet-stream']`
 - (enh #1370): Add ability for pausing and resuming uploads
-- (enh #1368): Better enhanced file management and queuing. 
-    - New `fileManager` and `resumableManager` internal objects. 
+- (enh #1368): Better enhanced file management and queuing.
+    - New `fileManager` and `resumableManager` internal objects.
     - `filestack` property has been removed
     - `addToFileStack` and `updateFileStack` methods have been removed
-- (enh #1321): Add ability to define separate thumbnail and zoom images / file data. 
-- (enh #1264, #1145): Allow configurable file actions as a callback. 
+- (enh #1321): Add ability to define separate thumbnail and zoom images / file data.
+- (enh #1264, #1145): Allow configurable file actions as a callback.
     - The `showXXX` properties in `fileActionSettings` ca3n now be setup as a callback.
     - Can read any property from the `initialPreviewConfig` for initial preview thumbnails
 - (enh #1249, #290): Add capability for resumable and chunk uploads.
@@ -214,7 +225,7 @@ Change Log: `bootstrap-fileinput`
 - (enh #1322): Add Uzbek Translations.
 - (enh #1320): New events for files dragged and dropped.
 - (enh #1319): Enhance mimeType parsing via `mimeTypeAliases`.
-   - allows quicktime `.mov` files to be previewed in non Apple browsers like Chrome/Firefox/IE.
+    - allows quicktime `.mov` files to be previewed in non Apple browsers like Chrome/Firefox/IE.
 - (enh #1318): Configure PDFjs viewer for IE11 pdf preview.
 - (enh #1314): Update Hebrew Translations.
 - (enh #1313): Correct file type function validation.
@@ -319,8 +330,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #1106): Update Portuguese BR Translations.
 - (enh #1105): Update Russian Translations.
 - (enh #1103): Update German Translations.
-- (enh #1099): Enhance mime type parsing for IE 11. 
-- (enh #1097): Add support for previewing Office file formats (e.g. docx, xlsx, pptx). 
+- (enh #1099): Enhance mime type parsing for IE 11.
+- (enh #1097): Add support for previewing Office file formats (e.g. docx, xlsx, pptx).
     - Supports all common formats that google docs can view.
     - Available only for initial preview content (where the document is accessible via a public web link).
 - Update README to include updated cover images for bootstrap-fileinput themes (with Bootstrap 4.x support).
@@ -351,7 +362,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #1080): Enhance styling of zoom modal header and buttons.
 - (bug #1079): Correct initial preview rendering when no `initialPreviewConfig` supplied.
 - (enh #1078): Correct markup during file validation errors (non-ajax mode).
-- (enh #1075): Enhance initial preview delete behavior (ensure `previewCache` splices deleted initial preview content items).
+- (enh #1075): Enhance initial preview delete behavior (ensure `previewCache` splices deleted initial preview content
+  items).
 - (enh #1073): Enhance `refresh` method to overwrite options.
 - (enh #1072): Enhance preview thumb templates to allow setting CSS styles (BC Breaking).
 - (enh #1071): Auto detect small screen width and auto style/auto fit preview thumbnails.
@@ -372,13 +384,16 @@ Change Log: `bootstrap-fileinput`
 - (enh #1049): New property `uploadUrlThumb`.
 - (enh #1048): Add ability to retry errored file uploads.
     - New plugin properties added:
-        - `retryErrorUploads`: _boolean_, will determine if errored out thumbnails can be retried for upload and submitted again.
+        - `retryErrorUploads`: _boolean_, will determine if errored out thumbnails can be retried for upload and
+          submitted again.
         - `fileActionSettings.uploadRetryIcon`: Will change the icon of the upload button to retry icon specified here.
-        - `fileActionSettings.uploadRetryTitle`: Will change the title of the upload button to retry title specified here.
+        - `fileActionSettings.uploadRetryTitle`: Will change the title of the upload button to retry title specified
+          here.
         - `msgUploadError`: will be displayed within the progress bar on the errored out thumbnails.
     - Other enhancements include:
         - resetting progress bar correctly
-        - enhancing upload validation behavior so that if `retryErrorUploads` is `false`, then no upload button is shown on the errored out thumbnails.
+        - enhancing upload validation behavior so that if `retryErrorUploads` is `false`, then no upload button is shown
+          on the errored out thumbnails.
 - (enh #1044): Add Slovak Translations.
 - (enh #1043): Add Czech Translations.
 - (enh #1042, #830): Fixes to initial preview delete (related to #1034).
@@ -406,7 +421,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #986): Image width parsing and styling enhancements.
 - (enh #985): Do not reset input when upload fails (single-upload mode).
 - (enh #981): Update Hungarian Translations.
-- (enh #977): Add RTL capability (new property `rtl` to be set) - includes new `fileinput-rtl.css` (to be loaded after `fileinput.css` for RTL styling).
+- (enh #977): Add RTL capability (new property `rtl` to be set) - includes new `fileinput-rtl.css` (to be loaded
+  after `fileinput.css` for RTL styling).
 - (enh #973): Add SCSS image path variable and file-image alt style updates.
 
 ## version 4.4.1
@@ -415,7 +431,8 @@ Change Log: `bootstrap-fileinput`
 
 - (enh #980): Add new method `getFrames` to get all thumbnail frames as jQuery objects.
 - (enh #979): Add new method `getExif` to retrieve exif data for a selected jpeg image.
-- (enh #978, #974): Implement exif restoration for resized images via [`piexif` plugin](https://github.com/hMatoba/piexifjs).
+- (enh #978, #974): Implement exif restoration for resized images
+  via [`piexif` plugin](https://github.com/hMatoba/piexifjs).
 - (enh #968): Update Turkish Translations.
 - (enh #967): Correct file caption display for ajax upload mode when `showPreview` is `false`.
 
@@ -465,20 +482,23 @@ Change Log: `bootstrap-fileinput`
 - (enh #906): Add Swedish Translations.
 - (enh #905): Prevent duplicate files to be dragged and dropped.
 - (enh #902): Enhance zoom preview styling for large height images.
-- (bug #900): Correct `overwriteInitial` validation for async batch uploads returning dynamic initial preview post upload.
+- (bug #900): Correct `overwriteInitial` validation for async batch uploads returning dynamic initial preview post
+  upload.
 - (enh #898): New plugin method to get files in preview and config.
 - (enh #894, #895): Correct file size validation for empty files.
 - (bug #893): Correct `file-success-remove` event handling.
 - (bug #890): Fix doubling of images for async bulk uploads when initial preview is returned via ajax response.
 - Enhance uploaded thumb frames to not reset or change the frame identifier after successful upload.
-- (enh #887): New properties `msgUploadBegin` and `msgUploadEnd` to display a better progress status. The `layoutTemplates.progress` will support a new token `{status}`.
+- (enh #887): New properties `msgUploadBegin` and `msgUploadEnd` to display a better progress status.
+  The `layoutTemplates.progress` will support a new token `{status}`.
 - Enhance events like `fileclear` and `filepreajax` to be aborted via `event.preventDefault()`.
-- (enh #886): Append zoom modal dialog to `body` element if available to avoid multiple BS modals conflict. 
-- (bug #885): Correct validation for `allowedFileTypes`. 
+- (enh #886): Append zoom modal dialog to `body` element if available to avoid multiple BS modals conflict.
+- (bug #885): Correct validation for `allowedFileTypes`.
 - (enh #875): Reset form based events more correctly to allow multiple bootstrap file inputs within forms.
 - (bug #882): Correct image resize validation.
 - (enh #881): Update Spanish Translations.
-- (enh #863): New plugin method `zoom` with parameter `frameId` to allow custom triggering of zoomed preview for each thumbnail frame.
+- (enh #863): New plugin method `zoom` with parameter `frameId` to allow custom triggering of zoomed preview for each
+  thumbnail frame.
 
 ## version 4.3.8
 
@@ -501,10 +521,10 @@ Change Log: `bootstrap-fileinput`
 - (enh #858): Thumb Frame CSS class as configurable property.
 - (enh #857): Default error handling for unknown ajax errors.
 - (enh #854): Better file size calculation and display.
-- (bug #852): Ensure `frameClass` setting in `initialPreviewConfig` is considered. 
-- (enh #851): Create Kazakh Translations. 
-- (enh #847): Update German Translations. 
-- (enh #662, #725): Enhance preview modal to be appended to body before each zoom action (if `body` tag exists). 
+- (bug #852): Ensure `frameClass` setting in `initialPreviewConfig` is considered.
+- (enh #851): Create Kazakh Translations.
+- (enh #847): Update German Translations.
+- (enh #662, #725): Enhance preview modal to be appended to body before each zoom action (if `body` tag exists).
 - (enh #844): Display zoom preview navigation buttons only when multiple files exist.
 - (bug #839): Correct `initialPreview` generation and sortable behavior for async uploads.
 - (enh #837): Update Czech Translations.
@@ -521,8 +541,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #820): Prevent resize if image is smaller than allowed dimensions.
 - (bug #819): Correct init preview auto replace post `uploadSingle` action in thumbnails.
 - (enh #816): New property `msgFileTypes` to control descriptions/localizations of file types displayed.
-- (enh #815): Enhance parsing of thumbnails that are visible in preview (will allow plugin to be 
-   initialized in hidden containers like tabs).
+- (enh #815): Enhance parsing of thumbnails that are visible in preview (will allow plugin to be initialized in hidden
+  containers like tabs).
 - (enh #812): Update Greek Translations.
 
 ## version 4.3.6
@@ -531,8 +551,10 @@ Change Log: `bootstrap-fileinput`
 
 - (enh #809): Various enhancements for preview control and iconic thumbnails.
     - add ability to control and render different previews for file thumbnails and zoomed preview content
-    - new property `preferIconicPreview` will try to parse the `previewFileIconSettings` and `previewFileExtSettings` to automatically force iconic previews for file thumbnails.
-    - new property `preferIconicZoomPreview` will try to parse the `previewFileIconSettings` and `previewFileExtSettings` to automatically force iconic previews in the zoomed content.
+    - new property `preferIconicPreview` will try to parse the `previewFileIconSettings` and `previewFileExtSettings` to
+      automatically force iconic previews for file thumbnails.
+    - new property `preferIconicZoomPreview` will try to parse the `previewFileIconSettings`
+      and `previewFileExtSettings` to automatically force iconic previews in the zoomed content.
     - the above properties will be applied and parsed for `initialPreview` content as well.
 - (enh #804): Add Slovenian Translations.
 - (enh #803): Update Hungarian Translations.
@@ -541,13 +563,12 @@ Change Log: `bootstrap-fileinput`
 - (enh #799): Fix IE memory issue on image load.
 - (enh #791): Auto orientation of images based on EXIF data.
 - (enh #788): New validation for minimum file size:
-   - new property `minFileSize` which validates the minimum file size in KB for upload, else throws
-     a validation error using `msgSizeTooSmall`. This defaults to `0`.
-   - if `minFileSize` is set to `null`, then above validation is skipped and no minimum file size 
-     check is performed.
+    - new property `minFileSize` which validates the minimum file size in KB for upload, else throws a validation error
+      using `msgSizeTooSmall`. This defaults to `0`.
+    - if `minFileSize` is set to `null`, then above validation is skipped and no minimum file size check is performed.
 - (enh #782): New validation for invalid slug file name (caption):
-   - if slug callback returns an empty string, then an error will be thrown using `msgInvalidFileName`.
-   - if slug callback returns `false` then the next file will be read and current file skipped.
+    - if slug callback returns an empty string, then an error will be thrown using `msgInvalidFileName`.
+    - if slug callback returns `false` then the next file will be read and current file skipped.
 - (enh #779, #789): More correct thumbnail identification post rearrange.
 - (enh #769, #785, #786, #787): Better image resized event handling.
 - (enh #771): Update Chinese Translations.
@@ -604,15 +625,18 @@ Change Log: `bootstrap-fileinput`
 - (enh #650, #676): Ability to configure browse button display and file select via zone click.
     - New boolean property `showBrowse` that allows you to control the display of the browse button
     - New boolean property `browseOnZoneClick` that allows you to select a file:
-         - **for ajax uploads** - by clicking on the preview drag/drop zone 
-         - **for form based/non-ajax uploads** - by setting `defaultPreviewContent` and that will be clickable to browse files
-    - New string message property `dropZoneClickTitle` that will be appended to the `dragZoneTitle` for ajax uploads when `browseOnZoneClick` is `true`.
+        - **for ajax uploads** - by clicking on the preview drag/drop zone
+        - **for form based/non-ajax uploads** - by setting `defaultPreviewContent` and that will be clickable to browse
+          files
+    - New string message property `dropZoneClickTitle` that will be appended to the `dragZoneTitle` for ajax uploads
+      when `browseOnZoneClick` is `true`.
     - New template `actionDrag` will be available within `layoutTemplates` to configure your drag indicator markup.
 - (enh #647): Display file size in previews and templates.
 - Enhancements to file preview icons (`other` template).
 - Simpler naming for files in locales and themes folders.
-- (enh #643):Implement rearranging / sorting functionality for initial preview. 
-    - Add ability to rearrange and sort thumbnails by drag & drop. This feature will use the [Sortable plugin](https://github.com/RubaXa/Sortable) which will be included in the `js/plugins` folder.
+- (enh #643):Implement rearranging / sorting functionality for initial preview.
+    - Add ability to rearrange and sort thumbnails by drag & drop. This feature will use
+      the [Sortable plugin](https://github.com/RubaXa/Sortable) which will be included in the `js/plugins` folder.
     - This feature will be available only for **initial preview thumbnails** for both ajax and form uploads.
     - New property for drag indicator and drag behavior configurations will be included in `fileActionSettings`:
         - `showDrag`
@@ -629,37 +653,57 @@ Change Log: `bootstrap-fileinput`
 - (enh #639): Add ability to just require package in nodejs
 - (enh #636): File action enhancements.
     - Zoom and Drag buttons will be shown as an additional file action buttons in addition to `upload` and `remove`
-    - New boolean properties `showZoom`, `showDrag`, `showRemove`, `showUpload` are now added to `fileActionSettings` to control display of these buttons
-    - New properties `zoomIcon`, `zoomClass`, `zoomTitle` are available within `fileActionSettings` for controlling the zoom button styles and display.
-    - New properties `dragIcon`, `dragClass`, `dragTitle` are available within `fileActionSettings` for controlling the drag indicator styles and display.
-    - New properties `actionZoom` and `actionDrag` are available within `layoutTemplates` to configure the markup of the zoom and drag buttons.
+    - New boolean properties `showZoom`, `showDrag`, `showRemove`, `showUpload` are now added to `fileActionSettings` to
+      control display of these buttons
+    - New properties `zoomIcon`, `zoomClass`, `zoomTitle` are available within `fileActionSettings` for controlling the
+      zoom button styles and display.
+    - New properties `dragIcon`, `dragClass`, `dragTitle` are available within `fileActionSettings` for controlling the
+      drag indicator styles and display.
+    - New properties `actionZoom` and `actionDrag` are available within `layoutTemplates` to configure the markup of the
+      zoom and drag buttons.
 - (enh #635): Various preview enhancements. Previews will be revamped with various functionality:
-    - Add ability to zoom every thumbnail to a modal preview. So all types of files (images, videos, pdf, text etc) can be previewed in a larger zoom dialog window.
-    - Automatic slideshow like interface for zoom preview modal. One can navigate left or right to view previous or next content in the preview. In addition to button navigation, keyboard navigation (via left/right arrow keys) is also available.
+    - Add ability to zoom every thumbnail to a modal preview. So all types of files (images, videos, pdf, text etc) can
+      be previewed in a larger zoom dialog window.
+    - Automatic slideshow like interface for zoom preview modal. One can navigate left or right to view previous or next
+      content in the preview. In addition to button navigation, keyboard navigation (via left/right arrow keys) is also
+      available.
     - Borderless maximized mode and Full Screen mode available for preview.
     - Auto disable the previous or next button when the first or last file/image is reached.
-    - Now `initialPreview` can be setup MORE easier without writing or returning entire markup. Thus the new functionality will enable to use built in `previewTemplates`.  
-    - A new boolean property `initialPreviewAsData` is available to control the above. If set to `true`, it will allow developers to now pass just the data within `initialPreview` (instead of complete markup) and the markup will be auto generated using `previewTemplates`.
-    - New property `initialPreviewFileType` to set the default file type for initial preview. Defaults to `image`. Must be on of the keys in `fileTypeSettings`.
-    - All the other settings can be controlled via `initialPreviewConfig`. The new properties available within `initialPreviewConfig` are:
-       - `type`: Override `initialPreviewFileType` at global level and set a separate type for each file in the initial preview.
-       - `previewAsData`: boolean property to override the `initialPreviewAsData` setting at global level
+    - Now `initialPreview` can be setup MORE easier without writing or returning entire markup. Thus the new
+      functionality will enable to use built in `previewTemplates`.
+    - A new boolean property `initialPreviewAsData` is available to control the above. If set to `true`, it will allow
+      developers to now pass just the data within `initialPreview` (instead of complete markup) and the markup will be
+      auto generated using `previewTemplates`.
+    - New property `initialPreviewFileType` to set the default file type for initial preview. Defaults to `image`. Must
+      be on of the keys in `fileTypeSettings`.
+    - All the other settings can be controlled via `initialPreviewConfig`. The new properties available
+      within `initialPreviewConfig` are:
+        - `type`: Override `initialPreviewFileType` at global level and set a separate type for each file in the initial
+          preview.
+        - `previewAsData`: boolean property to override the `initialPreviewAsData` setting at global level
     - New zoom preview control buttons:
-       - `prev`
-       - `next`
-       - `fullscreen`
-       - `borderless`
-       - `toggleheader`
-       - `close`
+        - `prev`
+        - `next`
+        - `fullscreen`
+        - `borderless`
+        - `toggleheader`
+        - `close`
     - The other new settings to control zoomed preview:
-        - `previewZoomSettings`: Will allow to set the CSS style (e.g. width, height and other CSS style settings) for each zoomed content type (i.e. `image`, `pdf`, `video` etc.).
-        - `previewZoomButtonIcons`: Ability to set the labels for previous, next, fullscreen, borderless, and close buttons.
-        - `previewZoomButtonTitles`: Ability to set the titles for previous, next,  fullscreen, borderless, and close buttons.
-        - `previewZoomButtonClasses`:  Ability to set the CSS classes for previous, next,  fullscreen, borderless, and close buttons.
+        - `previewZoomSettings`: Will allow to set the CSS style (e.g. width, height and other CSS style settings) for
+          each zoomed content type (i.e. `image`, `pdf`, `video` etc.).
+        - `previewZoomButtonIcons`: Ability to set the labels for previous, next, fullscreen, borderless, and close
+          buttons.
+        - `previewZoomButtonTitles`: Ability to set the titles for previous, next, fullscreen, borderless, and close
+          buttons.
+        - `previewZoomButtonClasses`:  Ability to set the CSS classes for previous, next, fullscreen, borderless, and
+          close buttons.
     - Modifications to all language locales JS for accomodating new translations
 - (enh #634): Enhance ability for PDF and HTML preview.
-    - Enhanced PDF support as PDF embedding is now possible for `initialPreview`. In addition a new template for PDF is available within `previewTemplates`.
-    - HTML Preview is enhanced with a better template. The plugin also now includes support for `DOMPurify` plugin (and available in plugins folder). This processes and cleans the HTML from XSS before previewing. This behavior can be controlled via `purifyHtml` property that defaults to `true`.
+    - Enhanced PDF support as PDF embedding is now possible for `initialPreview`. In addition a new template for PDF is
+      available within `previewTemplates`.
+    - HTML Preview is enhanced with a better template. The plugin also now includes support for `DOMPurify` plugin (and
+      available in plugins folder). This processes and cleans the HTML from XSS before previewing. This behavior can be
+      controlled via `purifyHtml` property that defaults to `true`.
 - (enh #633): New property `maxFilePreviewSize` to control preview of large size files.
 - (enh #632): Find correct filename in IE9.
 - (enh #618): Update German Translations.
@@ -676,7 +720,8 @@ Change Log: `bootstrap-fileinput`
 - (bug #577): Better label spacing for default browse icon.
 - (bug #576): Correct previewCache initialization.
 - (enh #575): Implement public method chaining and update docs for methods.
-- (enh #574): Change naming convention for private / internal methods. Prepend internal plugin methods with underscore `_`.
+- (enh #574): Change naming convention for private / internal methods. Prepend internal plugin methods with
+  underscore `_`.
 - (enh #573): Update package.json to include `peerDependencies`.
 - (enh #572): Add Finnish Translations.
 - (enh #567): New properties and improved messages.
@@ -719,7 +764,7 @@ Change Log: `bootstrap-fileinput`
 - (enh #481): Universal Module Definition for use with CommonJS, AMD or browser globals.
 - (enh #474): Upload via button within each preview thumbnail skips last file for async uploads.
 - (enh #477): Fix IE10 specific styling bug for file input block button.
-- (enh #465): Add CatalĂ  translations.
+- (enh #465): Add CatalĂ translations.
 - (enh #462): Responsive buttons and new property `buttonLabelClass`.
 - (enh #460): Update CSS selectors prefix to start with `file`.
 - (enh #454): Update Turkish Translations.
@@ -832,10 +877,12 @@ Change Log: `bootstrap-fileinput`
 - (enh #303): Validate only files to be dragged and dropped.
 - (enh #302): Add Greek (el) translations.
 - (enh #299): Enhancements for displaying uploaded file thumbnails.
-    - New property `showUploadedThumbs` that will display uploaded thumbnails until the remove/clear button is explicitly pressed.
-    - New event `filesuccessremove`. This will be triggered on removing the uploaded thumbnail using the thumbnail delete button. The event shares the following parameters:
-        - `id`: the HTML id attribute of the thumbnail container 
-      The `event` can be set to return `false` to abort the thumbnail removal.
+    - New property `showUploadedThumbs` that will display uploaded thumbnails until the remove/clear button is
+      explicitly pressed.
+    - New event `filesuccessremove`. This will be triggered on removing the uploaded thumbnail using the thumbnail
+      delete button. The event shares the following parameters:
+        - `id`: the HTML id attribute of the thumbnail container The `event` can be set to return `false` to abort the
+          thumbnail removal.
 - (enh #297): Add Romanian translations.
 - (enh #296): Fixed license identifiers in bower.json and composer.json.
 - (bug #295): Validate `overwriteInitial` correctly for ajax uploads.
@@ -887,7 +934,8 @@ Change Log: `bootstrap-fileinput`
 - (enh #227): Created Ukranian translations and updated Russian translations.
 - (enh #226): Create Spanish (Latin American) translations.
 - (enh #225): Create Russian translations.
-- (enh #222): Enhance to include dynamically replaceable thumbnail tags. Two new properties `previewThumbTags` and `initialPreviewThumbTags` will be available for configuration.
+- (enh #222): Enhance to include dynamically replaceable thumbnail tags. Two new properties `previewThumbTags`
+  and `initialPreviewThumbTags` will be available for configuration.
 - (enh #218): Do not clear preview for ajaxuploads until remove button clicked.
 - (enh #217): Ensure `filebatchselected` event is triggered after FileReader completes reading files selected.
 - (enh #216): Add Hungarian Translations.
@@ -895,17 +943,28 @@ Change Log: `bootstrap-fileinput`
 - (enh #213): Code cleanup, eliminate change event on clear and properly reset preview cache after ajax deletes.
 - (enh #212): Revamp preview to use a new preview caching object.
 - (enh #211): Add ability to show detailed server error stack via `showAjaxErrorDetails`.
-- (enh #209): Better validation for folder drag and drop and auto-skip any dropped folders. New property `msgFoldersNotAllowed` added to the plugin to allow configuring the message shown. The event `filefoldererror` is triggered when a folder is dragged.
+- (enh #209): Better validation for folder drag and drop and auto-skip any dropped folders. New
+  property `msgFoldersNotAllowed` added to the plugin to allow configuring the message shown. The
+  event `filefoldererror` is triggered when a folder is dragged.
 - (enh #206): Ability to add custom validation and trigger custom error to abort upload.
-    - This enhancement will enable you to add your additional custom validations to enhance the fileinput to be used for innumerous scenarios. It will allow an ability to return an associative object with any of the fileinput events (except the error events and the `filebatchuploadsuccess` or `filebatchuploadcomplete`) e.g. `change`, `fileselect`, `filepreupload`, `filebatchpreupload` etc. The object can return the following keys:
-        - `message`: _string_, the validation error message to be displayed before upload. If this is set the plugin will automatically abort the upload whenever called and display this as an error message. You can use this property for example to read a file and perform your own custom validation.
-        - `data`: _object_, an optional associative array of additional data that you can pass for usage later. 
-    - You can get this data by reading `abortData` in the parameters for the new `filecustomerror` event. This new event will be triggered during upload, when  you have triggered an abort from any of the other events.
+    - This enhancement will enable you to add your additional custom validations to enhance the fileinput to be used for
+      innumerous scenarios. It will allow an ability to return an associative object with any of the fileinput events (
+      except the error events and the `filebatchuploadsuccess` or `filebatchuploadcomplete`) e.g. `change`, `fileselect`
+      , `filepreupload`, `filebatchpreupload` etc. The object can return the following keys:
+        - `message`: _string_, the validation error message to be displayed before upload. If this is set the plugin
+          will automatically abort the upload whenever called and display this as an error message. You can use this
+          property for example to read a file and perform your own custom validation.
+        - `data`: _object_, an optional associative array of additional data that you can pass for usage later.
+    - You can get this data by reading `abortData` in the parameters for the new `filecustomerror` event. This new event
+      will be triggered during upload, when you have triggered an abort from any of the other events.
 - (enh #205): Allow to auto set initialPreview within `filebatchuploadcomplete` & `filebatchuploadsuccess`.
-    - Allows you to auto define the `initialPreview` and  `initialPreviewConfig` after an ajax upload by returning these within the data object from your ajax response on `fileuploaded` & `filebatchuploadsuccess`.  
+    - Allows you to auto define the `initialPreview` and  `initialPreviewConfig` after an ajax upload by returning these
+      within the data object from your ajax response on `fileuploaded` & `filebatchuploadsuccess`.
 - (enh #204): New properties `fileMinCount` and `msgFilesTooLess` (useful to make file input mandatory).
-    - The `fileMinCount` property will allow to set the minimum file count needed before triggering upload. It will work for both `ajax` uploads and `normal form based submission`.
-    - This will enable you to set the file input to be a mandatory / required input. (e.g. `fileMinCount` = `1`). The `msgFilesTooLess` will be displayed and error raised.
+    - The `fileMinCount` property will allow to set the minimum file count needed before triggering upload. It will work
+      for both `ajax` uploads and `normal form based submission`.
+    - This will enable you to set the file input to be a mandatory / required input. (e.g. `fileMinCount` = `1`).
+      The `msgFilesTooLess` will be displayed and error raised.
     - If `fileMinCount` is set to `0` it will be treated as files are optional and no error will be triggered.
 - (enh #203): Enhancements and revamp of all error events.
     - fileerror
@@ -915,12 +974,13 @@ Change Log: `bootstrap-fileinput`
     - filefoldererror (new event - see #209)
     - filecustomerror (new event - see #206)
 - (enh #202): Ability to add Translations / Locales.
-    - Identify and group all messages that need to be translated configurable via `$.fn.fileinput.locales['<lang-code>']`
+    - Identify and group all messages that need to be translated configurable
+      via `$.fn.fileinput.locales['<lang-code>']`
     - Set default english messages configuration `$.fn.fileinput.locales['en']` within the plugin core code
     - Individual locale files need to be created as separate js files e.g. `<lang>.js`
 - (bug #193): Better validation for triggering `filebatchuploadcomplete` on async batch upload completion.
 - (enh #192): Ability to extend and add one's own ajax settings.
-    - New property `ajaxDeleteSettings` to help extend and add to delete ajax settings. 
+    - New property `ajaxDeleteSettings` to help extend and add to delete ajax settings.
     - `ajaxSettings` to help extend and add upload ajax settings
 - (enh #189): Reinitialize initial preview delete events correctly on file selection.
 - (enh #188): Clear fileinput more correctly for all browsers when initialPreview is set enhancement
@@ -941,23 +1001,26 @@ Change Log: `bootstrap-fileinput`
 
 **Date**: 13-Feb-2015
 
-- Relocate sample files from examples directory to [bootstrap-fileinput-samples](https://github.com/kartik-v/bootstrap-fileinput-samples) repo.
+- Relocate sample files from examples directory
+  to [bootstrap-fileinput-samples](https://github.com/kartik-v/bootstrap-fileinput-samples) repo.
 - Set copyright year to current.
 - (enh #162): New property ajaxSettings to allow configuring ajax params.
 - (bug #160): Correct documentation typo for usage.
 - (bug #159): Ensure filestack is passed correctly with `outData` for events.
 - (enh #157): Upload progress bar styling enhancements.
-    - Allow upload progress bar css class to be configurable 
+    - Allow upload progress bar css class to be configurable
     - Create and allow two different styles/css classes for progress bar
-       - `progressClass`: styling for progress bar when upload is in process
-       - `progressCompleteClass`: styling for progress bar when upload is complete
+        - `progressClass`: styling for progress bar when upload is in process
+        - `progressCompleteClass`: styling for progress bar when upload is complete
 - (enh #156): Fix reset of file stack for various upload modes (single, batch async and batch sync).
 - (enh #155): Allow display of long file names without spaces/word breaks.
 - (enh #154): Code cleanup and restructure for JS lint changes (using JSHint Code cleanup library).
-- (enh #153): Improve error handler for trapping FileReader security exceptions and new property `msgFileSecured` will display the security exception message.
+- (enh #153): Improve error handler for trapping FileReader security exceptions and new property `msgFileSecured` will
+  display the security exception message.
 - (enh #152): New faster `replaceAll` method instead of regexp parsing to replace tags in templates.
 - (enh #151): New `filebatchselected` event triggered after every batch of files are selected.
-- (enh #149): Custom tags support for layoutTemplates and previewTemplates (new properties `customLayoutTags` and `customPreviewTags` included).
+- (enh #149): Custom tags support for layoutTemplates and previewTemplates (new properties `customLayoutTags`
+  and `customPreviewTags` included).
 
 ## version 4.1.6
 
@@ -1012,7 +1075,7 @@ Change Log: `bootstrap-fileinput`
     - `filebatchuploadsuccess`
     - `filebatchuploadcomplete`
 - (enh #86): Disable thumbnail action buttons when upload is in progress.
-- (enh #85): Combine output data as a single object, that is sent for various file upload events. 
+- (enh #85): Combine output data as a single object, that is sent for various file upload events.
 
 ## version 4.1.2
 
@@ -1020,7 +1083,7 @@ Change Log: `bootstrap-fileinput`
 
 - (enh #81): Add new events:
     - `filebatchuploadsuccess`
-    - `filebatchuploadcomplete` 
+    - `filebatchuploadcomplete`
 - (enh #80): Allow access to `uploadExtraData` and `responseData` to following events
     - `filepreupload`
     - `fileuploaded`
@@ -1059,9 +1122,11 @@ Change Log: `bootstrap-fileinput`
 
 ### Version 4.0 Features
 
-- Add functionality for AJAX based UPLOAD using HTML5 FormData (most modern browsers support it). Will degrade to normal Form Based File submission if this is not supported.
+- Add functionality for AJAX based UPLOAD using HTML5 FormData (most modern browsers support it). Will degrade to normal
+  Form Based File submission if this is not supported.
 - To use AJAX Upload, the `uploadUrl` property is MANDATORY and must be set.
-- Enhance plugin to now allow files to be added, appended, removed (based on FEEDBACK from many). Thus one can append files to preview.
+- Enhance plugin to now allow files to be added, appended, removed (based on FEEDBACK from many). Thus one can append
+  files to preview.
 - New DRAG & DROP zone available in preview to drag and drop files and append.
 - Delete or upload files one by one OR in batch.
 - If `showPreview` is set to false, or uploadUrl is not supported plugin will degrade to normal form based upload.
@@ -1070,7 +1135,8 @@ Change Log: `bootstrap-fileinput`
 - Upload progress bar and individual thumbnail upload indicators.
 - Ability to cancel and abort ongoing AJAX uploads.
 - Templates have been revamped and enhanced for each file type.
-- Ensure plugin is still lean in size and optimized for performance inspite of the above features by optimally utilizing HTML5 & jquery features only.
+- Ensure plugin is still lean in size and optimized for performance inspite of the above features by optimally utilizing
+  HTML5 & jquery features only.
 
 ### New properties added
 
@@ -1090,10 +1156,12 @@ Change Log: `bootstrap-fileinput`
     - `width`: The CSS width of the image/content displayed.
     - `url`: The URL for deleting the image/content via AJAX (shown only for `initialPreviewContent`).
     - `key`: The key that will be passed to the URL via POST (shown only for `initialPreviewContent`).
-- `dropZoneEnabled`: Enable a drag and drop zone for dragging files and is available only for ajax based uploads (defaults to `true`). 
-- `dropZoneTitle`: Title to be displayed in the drag & drop zone. 
+- `dropZoneEnabled`: Enable a drag and drop zone for dragging files and is available only for ajax based uploads (
+  defaults to `true`).
+- `dropZoneTitle`: Title to be displayed in the drag & drop zone.
 - `dropZoneTitleClass`: CSS class for the drag & drop zone title.
-- `fileActionSettings`: configuration for setting up actions for newly selected file thumbnails in the preview (associative array/object)
+- `fileActionSettings`: configuration for setting up actions for newly selected file thumbnails in the preview (
+  associative array/object)
     - `removeIcon`: icon for remove button to be displayed in each file thumbnail.
     - `removeClass`: CSS class for the remove button in each file thumbnail.
     - `removeTitle`: title for remove button in each file thumbnail.
@@ -1116,7 +1184,8 @@ Change Log: `bootstrap-fileinput`
 - (bug #68): Fix refresh method of the fileinput to trigger change correctly.
 - (enh #67): Enhance support for IE browsers
     - Add specific validations for parsing IE versions rightly
-    - Enhance plugin to extend styling support to IE 9 (with the limitation that IE 9 does not support HTML 5 features like multiple file upload)
+    - Enhance plugin to extend styling support to IE 9 (with the limitation that IE 9 does not support HTML 5 features
+      like multiple file upload)
     - Fix clearing of file input rightly for IE 9 & IE 10
     - Degrade plugin automatically to a native file input for older IE versions
     - Prevent change method firing twice when file is cleared after error is encountered in IE 11.
@@ -1139,9 +1208,10 @@ Change Log: `bootstrap-fileinput`
 
 - (enh #52): Raise new `fileimageloaded` event.
 - (enh #51): Autosize preview images when they exceed the size of the preview container.
-- (enh #50): Dynamically auto size file captions for long file names exceeding container width. New property `autoFitCaption` 
-   is added which defaults to `true`. When this is `true` the plugin will auto fit caption text within the container dynamically
-   and responsively based on window size.
+- (enh #50): Dynamically auto size file captions for long file names exceeding container width. New
+  property `autoFitCaption`
+  is added which defaults to `true`. When this is `true` the plugin will auto fit caption text within the container
+  dynamically and responsively based on window size.
 
 ## version 2.7.0
 
@@ -1182,32 +1252,38 @@ Change Log: `bootstrap-fileinput`
 
 > **Note:** There are BC Breaking Changes with release v2.4.0.
 
-With release v2.4.0, the plugin has been revamped to support and configure a wide variety of file formats for preview. This may break some
-backward compatibility (BC) for older versions that use custom templates. 
+With release v2.4.0, the plugin has been revamped to support and configure a wide variety of file formats for preview.
+This may break some backward compatibility (BC) for older versions that use custom templates.
 
 The following are the major changes with release v2.4.0:
 
-- Plugin has been revamped to build preview intelligence based on various file preview types. The inbuilt file support types are categorized as 
+- Plugin has been revamped to build preview intelligence based on various file preview types. The inbuilt file support
+  types are categorized as
   `image`, `text`, `html`, `video`,  `audio`, `flash`, `object`, and `other`.
-- `allowedPreviewTypes`: You can now configure which all file types are allowed to be shown as a preview. This defaults to `['image', 'html', 'text', 'video', 'audio', 'flash', 'object']`.
-   Thus all file types are treated as an object to preview by default. For exampleTo preview only `image` and `video`, you can set this to `['image', 'video']`.
-- `allowedPreviewMimeTypes`: In addition to `allowedPreviewTypes`, you can also control which all mime types can be displayed for preview. This defaults to null,
-   meaning all mime types are supported.
-- `layoutTemplates`: Allows you to configure all layout template settings within one property. The layout objects that can be configured are: `main1`, `main2`,
-   `preview`, `caption`, and `modal`.
-- `previewTemplates`: All preview templates for **each preview type** have been combined into one property, instead of separate templates for image, text etc. 
-   The keys are the formats as set in `allowedPreviewTypes` and values are the templates used for previewing. There are default prebuilt templates for each 
-   preview file type (`generic`, `image`, `text`, `html`, `video`,  `audio`, `flash`, `object`, and `other`). The `generic` template is used only for displaying
-   `initialPreview` content using direct markup.
-- `previewSettings`: Allows you to configure width and height for each preview image type. The plugin has default widths and heights predefined for each type i.e
-   `image`, `text`, `html`, `video`,  `audio`, `flash`, and `object`.
-- `fileTypeSettings`: Allows you to configure and identify each preview file type using a callback. The plugin has default callbacks predefined to identify each type i.e
-   `image`, `text`, `html`, `video`,  `audio`, `flash`, and `object`.
-- Replacing tags within templates has been enhanced. With this release it will automatically check for multiple occurrences of each tag to replace within a template string.
+- `allowedPreviewTypes`: You can now configure which all file types are allowed to be shown as a preview. This defaults
+  to `['image', 'html', 'text', 'video', 'audio', 'flash', 'object']`. Thus all file types are treated as an object to
+  preview by default. For exampleTo preview only `image` and `video`, you can set this to `['image', 'video']`.
+- `allowedPreviewMimeTypes`: In addition to `allowedPreviewTypes`, you can also control which all mime types can be
+  displayed for preview. This defaults to null, meaning all mime types are supported.
+- `layoutTemplates`: Allows you to configure all layout template settings within one property. The layout objects that
+  can be configured are: `main1`, `main2`,
+  `preview`, `caption`, and `modal`.
+- `previewTemplates`: All preview templates for **each preview type** have been combined into one property, instead of
+  separate templates for image, text etc. The keys are the formats as set in `allowedPreviewTypes` and values are the
+  templates used for previewing. There are default prebuilt templates for each preview file type (`generic`, `image`
+  , `text`, `html`, `video`,  `audio`, `flash`, `object`, and `other`). The `generic` template is used only for
+  displaying
+  `initialPreview` content using direct markup.
+- `previewSettings`: Allows you to configure width and height for each preview image type. The plugin has default widths
+  and heights predefined for each type i.e
+  `image`, `text`, `html`, `video`,  `audio`, `flash`, and `object`.
+- `fileTypeSettings`: Allows you to configure and identify each preview file type using a callback. The plugin has
+  default callbacks predefined to identify each type i.e
+  `image`, `text`, `html`, `video`,  `audio`, `flash`, and `object`.
+- Replacing tags within templates has been enhanced. With this release it will automatically check for multiple
+  occurrences of each tag to replace within a template string.
 
-> NOTE: Flash preview will require Shockwave flash to be installed and supported by the client browser. The flash preview currently works successfully with webkit browsers only. Video & Audio formats are however supported by all modern browsers 
-that support the HTML5 `video`/`audio` tags. Note that browsers have limited number of video/audio formats supported by the HTML5 video element (e.g. mp4, webm, ogg, mp3, wav). The size of video files are recommended to be small (to be controlled 
-through `maxFileSize` property) so that it does not affect the preview performance. You can copy a few files from the `examples` directory of this plugin repo, to test a few examples of flash and video files.
+> NOTE: Flash preview will require Shockwave flash to be installed and supported by the client browser. The flash preview currently works successfully with webkit browsers only. Video & Audio formats are however supported by all modern browsers that support the HTML5 `video`/`audio` tags. Note that browsers have limited number of video/audio formats supported by the HTML5 video element (e.g. mp4, webm, ogg, mp3, wav). The size of video files are recommended to be small (to be controlled through `maxFileSize` property) so that it does not affect the preview performance. You can copy a few files from the `examples` directory of this plugin repo, to test a few examples of flash and video files.
 
 ## version 2.3.0
 
@@ -1235,7 +1311,8 @@ through `maxFileSize` property) so that it does not affect the preview performan
 - (enh #19): Synchronize preview with file browse dialog behavior, when cancel button is pressed in file dialog window.
 - (enh #18): Better validation for older browsers (not supporting HTML5) to degrade to normal file input.
 - Enhanced plugin to improve browser performance when loading and previewing multiple image files.
-- New configurable error messages added: `msgFilesTooMany`, `msgFileNotFound`, `msgFileNotReadable`, `msgFilePreviewAborted`, and `msgFilePreviewError`.
+- New configurable error messages added: `msgFilesTooMany`, `msgFileNotFound`, `msgFileNotReadable`
+  , `msgFilePreviewAborted`, and `msgFilePreviewError`.
 - New configuration property added: `maxFilesCount`. Defaults to `0` which means unlimited.
 - (enh #16, #17): Added exception handling for trapping FileReader API errors
 
@@ -1258,35 +1335,39 @@ through `maxFileSize` property) so that it does not affect the preview performan
 **Date:** 21-Jul-2014
 
 - (enh #10): Ability to display initial caption, when initialPreview is false.
-- (enh #9): Enhanced caption template and styling for captions to prevent overflow of long file names out of the caption container.
+- (enh #9): Enhanced caption template and styling for captions to prevent overflow of long file names out of the caption
+  container.
 
 ## version 1.8.0
 
 **Date:** 15-Jul-2014
 
-- (enh #9): Enhanced caption template and styling for captions to prevent overflow of long file names out of the caption container.
+- (enh #9): Enhanced caption template and styling for captions to prevent overflow of long file names out of the caption
+  container.
 
 ## version 1.7.0
 
 **Date:** 02-Jul-2014
 
-- The plugin now offers an additional `overwriteInitial` option. This is by default set to `true`, whereby, any `initialPreview`
-   content set will be overwritten, when new file is uploaded or when files are cleared. Setting it to `false` will help displaying 
-   a saved image or file from database always - useful especially when using the `multiple` file upload feature.
+- The plugin now offers an additional `overwriteInitial` option. This is by default set to `true`, whereby,
+  any `initialPreview`
+  content set will be overwritten, when new file is uploaded or when files are cleared. Setting it to `false` will help
+  displaying a saved image or file from database always - useful especially when using the `multiple` file upload
+  feature.
 
 ## version 1.6.0
 
 **Date:** 03-Jun-2014
 
-- The plugin now offers an additional `refresh` method. This enables you to dynamically change element attributes or plugin options
-   at runtime and refresh the widget.
+- The plugin now offers an additional `refresh` method. This enables you to dynamically change element attributes or
+  plugin options at runtime and refresh the widget.
 
 ## version 1.5.0
 
 **Date:** 23-May-2014
 
-- The plugin now offers an option to display initial preview of images/text/other files. This is useful
-   for record update scenarios. This can be a single image/file or an array of images/files.
+- The plugin now offers an option to display initial preview of images/text/other files. This is useful for record
+  update scenarios. This can be a single image/file or an array of images/files.
 - Extending to the above feature, the plugin also allows you to set a preview caption for the initial preview field.
 - The following element identifiers need to be passed as a string like '#id' instead of a JQuery object:
     - elCaptionContainer
@@ -1297,25 +1378,31 @@ through `maxFileSize` property) so that it does not affect the preview performan
 
 ## version 1.0.0
 
-**Date:** 01-Jan-2014 
+**Date:** 01-Jan-2014
 
 Initial release. The following features are included in this release:
 
-- The plugin will convert a simple HTML file input to an advanced file picker control. Will help fallback to a file input for browsers not supporting JQuery or Javascript.
+- The plugin will convert a simple HTML file input to an advanced file picker control. Will help fallback to a file
+  input for browsers not supporting JQuery or Javascript.
 - The file input consists of the following three sections with options and templates to control the display:
-   - file caption section: to display a brief information of the file(s) selected
-   - file action buttons section: to browse, remove, and upload files.
-   - file preview section: to display the selected files on client for preview (supports images and text file types). Other file types will be displayed as normal thumbnails.
-- The plugin automatically converts an input with `type = file` to an advanced file picker input if you set its `class = file`. All options to the input can be passed as HTML5 `data` attributes.
-- Ability to select and preview multiple files. Uses HTML 5 File reader API to read and preview files. Displays the progress of files being being loaded onto the preview zone, in case many files are chosen.
+    - file caption section: to display a brief information of the file(s) selected
+    - file action buttons section: to browse, remove, and upload files.
+    - file preview section: to display the selected files on client for preview (supports images and text file types).
+      Other file types will be displayed as normal thumbnails.
+- The plugin automatically converts an input with `type = file` to an advanced file picker input if you set
+  its `class = file`. All options to the input can be passed as HTML5 `data` attributes.
+- Ability to select and preview multiple files. Uses HTML 5 File reader API to read and preview files. Displays the
+  progress of files being being loaded onto the preview zone, in case many files are chosen.
 - Offers predefined templates and CSS classes which can be changed to style your file-input display as per your needs.
 - Option to show/hide any or all of the following:
-   - caption section
-   - preview section
-   - upload button
-   - remove button
-- Customise the location of the target container elements to display the entire plugin, the caption container, the caption text, the preview container, preview image, and preview status.
-- For text file previews, autowrap the text to the thumbnail width, and show a wrap indicator link to display complete text on hover. You can customize the wrap indicator (which defaults to &hellip;).
+    - caption section
+    - preview section
+    - upload button
+    - remove button
+- Customise the location of the target container elements to display the entire plugin, the caption container, the
+  caption text, the preview container, preview image, and preview status.
+- For text file previews, autowrap the text to the thumbnail width, and show a wrap indicator link to display complete
+  text on hover. You can customize the wrap indicator (which defaults to &hellip;).
 - Customise the messages for preview, progress, and files selected.
 - Upload action defaults to form submit. Supports an upload route/server action parameter for custom ajax based upload.
 - Triggers JQuery events for advanced development. Events currently available are `filereset` and `fileclear`.

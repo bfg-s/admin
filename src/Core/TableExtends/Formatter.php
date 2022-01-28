@@ -21,7 +21,7 @@ class Formatter
      */
     public function str_limit($value = null, $props = [])
     {
-        $value = strip_tags($value);
+        $value = $this->strip_tags($value, []);
         $limit = $props[0] ?? 20;
         $str = Str::limit($value, $limit);
 
@@ -312,6 +312,26 @@ class Formatter
         }
 
         return (string) $value;
+    }
+
+    public function strip_tags($value = null, $props = [])
+    {
+        if ($value) {
+            $value = strip_tags(
+                $this->to_html($value)
+            );
+        }
+
+        return $value;
+    }
+
+    public function to_html($value = null, $props = [])
+    {
+        if ($value) {
+            $value = html_entity_decode($value);
+        }
+
+        return $value;
     }
 
     /**

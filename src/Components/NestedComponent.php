@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\LI;
 use Lar\Layout\Tags\OL;
+use Lar\LteAdmin\Explanation;
 use Lar\LteAdmin\Getters\Menu;
 
 class NestedComponent extends Component
@@ -135,9 +136,16 @@ class NestedComponent extends Component
      * @param  string|callable  $field
      * @return $this
      */
-    public function titleField($field)
+    public function titleField(string|callable $field)
     {
         $this->title_field = $field;
+
+        return $this;
+    }
+
+    public function template(...$delegates)
+    {
+        $this->title_field = $delegates;
 
         return $this;
     }
@@ -146,7 +154,7 @@ class NestedComponent extends Component
      * @param  string|callable  $field
      * @return $this
      */
-    public function parentField($field)
+    public function parentField(string|callable $field)
     {
         $this->parent_field = $field;
 
@@ -239,9 +247,15 @@ class NestedComponent extends Component
             $model = $this->model;
         }
 
+        $hasOrder = false;
+
         if ($model) {
-            if (array_search($this->parent_field, $model->getFillable()) === false) {
+            $fillable = $model->getFillable();
+            if (!in_array($this->parent_field, $fillable)) {
                 $this->maxDepth = 1;
+            }
+            if (in_array($this->order_by_field, $fillable)) {
+                $hasOrder = true;
             }
             $this->setDatas(['model' => get_class($model)]);
         } else {
@@ -250,13 +264,17 @@ class NestedComponent extends Component
 
         $this->setDatas(['max-depth' => $this->maxDepth, 'parent' => $this->parent_field]);
 
-        $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type)->get();
+        if ($hasOrder) {
+            $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type);
+        }
+
+        $this->model = $this->model->get();
 
         $this->makeList($this->maxDepth > 1 ? $this->model->whereNull($this->parent_field) : $this->model, $this);
     }
 
     /**
-     * @param  Collection|Model[]  $model
+     * @param  Collection  $model
      * @param  Component  $object
      */
     protected function makeList(Collection $model, \Lar\Layout\Abstracts\Component $object)
@@ -280,45 +298,50 @@ class NestedComponent extends Component
             $li->div(['dd-handle dd3-handle'])->when(static function (DIV $div) use ($item) {
                 $div->i(['class' => 'fas fa-arrows-alt']);
             });
-            $li->div(['dd3-content'])->when(function (DIV $div) use ($item) {
-                if (is_callable($this->title_field)) {
+            $cc_access = ($this->controls)($item);
+            $cc = $this->custom_controls;
+            if ($cc_access || $cc) {
+                $li->div(['float-right m-1'])
+                    ->appEndIf($this->menu,
+                        ButtonsComponent::create()->when(function (ButtonsComponent $group) use (
+                            $item,
+                            $cc_access,
+                            $cc
+                        ) {
+                            $model = $item;
+                            $key = $model->getRouteKey();
+
+                            if ($cc) {
+                                call_user_func($cc, $group, $model);
+                            }
+
+                            if ($cc_access) {
+                                if (($this->edit_control)($item)) {
+                                    $group->resourceEdit($this->menu['link.edit']($key), '');
+                                }
+
+                                if (($this->delete_control)($item)) {
+                                    $group->resourceDestroy($this->menu['link.destroy']($key), '',
+                                        $model->getRouteKeyName(), $key);
+                                }
+
+                                if (($this->info_control)($item)) {
+                                    $group->resourceInfo($this->menu['link.show']($key), '');
+                                }
+                            }
+                        }));
+            }
+            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use ($item) {
+                if (is_array($this->title_field)) {
+                    //dd($this->model);
+                    $tag = Tag::create()->addClass('text')
+                        ->newExplainForce($this->title_field)->model($item);
+                    $div->appEnd($tag);
+                } else if (is_callable($this->title_field)) {
                     $div->span(['text'])->text(call_user_func($this->title_field, $item));
                 } else {
                     $ddd = multi_dot_call($item, $this->title_field);
                     $div->span(['text'])->text(__(e($ddd)));
-                }
-                $cc_access = ($this->controls)($item);
-                $cc = $this->custom_controls;
-                if ($cc_access || $cc) {
-                    $div->div(['float-right'])
-                        ->appEndIf($this->menu,
-                            ButtonsComponent::create()->when(function (ButtonsComponent $group) use (
-                                $item,
-                                $cc_access,
-                                $cc
-                            ) {
-                                $model = $item;
-                                $key = $model->getRouteKey();
-
-                                if ($cc) {
-                                    call_user_func($cc, $group, $model);
-                                }
-
-                                if ($cc_access) {
-                                    if (($this->edit_control)($item)) {
-                                        $group->resourceEdit($this->menu['link.edit']($key), '');
-                                    }
-
-                                    if (($this->delete_control)($item)) {
-                                        $group->resourceDestroy($this->menu['link.destroy']($key), '',
-                                            $model->getRouteKeyName(), $key);
-                                    }
-
-                                    if (($this->info_control)($item)) {
-                                        $group->resourceInfo($this->menu['link.show']($key), '');
-                                    }
-                                }
-                            }));
                 }
             });
             if ($this->maxDepth > 1) {

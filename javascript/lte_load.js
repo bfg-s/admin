@@ -1,7 +1,7 @@
 module.exports = (tooltip_selector) => {
 
     $(tooltip_selector).tooltip({placement: 'auto'});
-    $(document).on('pjax:start', function(event) {
+    $(document).on('pjax:start', function (event) {
         $(tooltip_selector).tooltip('dispose');
     });
     document.addEventListener('ljs:nav:error', ({detail}) => {

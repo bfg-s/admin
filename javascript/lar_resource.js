@@ -36,5 +36,16 @@ document.addEventListener('ljs:nav:complete', (details) => {
 });
 
 let ins = require('./lar_instance.js');
-if (window.ljs === undefined) { document.addEventListener("ljs:load", () => {ljs.lte = methods; load(); ins(methods);applyScripts();}); }
-else {ljs.lte = methods; load();ins(methods);applyScripts(); }
+if (window.ljs === undefined) {
+    document.addEventListener("ljs:load", () => {
+        ljs.lte = methods;
+        load();
+        ins(methods);
+        applyScripts();
+    });
+} else {
+    ljs.lte = methods;
+    load();
+    ins(methods);
+    applyScripts();
+}

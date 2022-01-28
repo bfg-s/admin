@@ -2,7 +2,12 @@
 
 class AdminLte extends Executor {
 
-    flash_document (changed_name = null, changed_value = null) {
+    static __name() {
+
+        return "lte";
+    }
+
+    flash_document(changed_name = null, changed_value = null) {
         let data = $(":input").serializeArray();
         let lives = $('.__live__');
         if (lives[0]) {
@@ -20,13 +25,13 @@ class AdminLte extends Executor {
         }
     }
 
-    add_relation_tpl (path) {
+    add_relation_tpl(path) {
 
         let area = `relation_${path}_template`,
             // id = (new Date).getTime(),
             tpl = "tpl::get_tpl".exec(area),
             zone = document.querySelector(`span[data-tpl="${area}"]`),
-            id = zone ? `new_` + (zone.childElementCount+1) : (new Date).getTime();
+            id = zone ? `new_` + (zone.childElementCount + 1) : (new Date).getTime();
 
         tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_id\_\_\}/g, id);
 
@@ -35,9 +40,9 @@ class AdminLte extends Executor {
         container.find('.template_empty_container').hide();
     }
 
-    drop_relation_tpl () {
+    drop_relation_tpl() {
 
-        if ((this.jq.parents('[data-relation-path]').find('.template_container').length-1) <= 0) {
+        if ((this.jq.parents('[data-relation-path]').find('.template_container').length - 1) <= 0) {
             let container = this.jq.parents('[data-relation-path]');
             container.find('.template_empty_container').show();
         }
@@ -45,7 +50,7 @@ class AdminLte extends Executor {
         this.jq.parents('.template_container').remove();
     }
 
-    drop_relation (field_name) {
+    drop_relation(field_name) {
         let container = this.jq.parents('.template_container');
         container.find('.control_relation').hide();
         container.find('.template_content').hide();
@@ -53,17 +58,12 @@ class AdminLte extends Executor {
         container.prepend(field_name);
     }
 
-    return_relation () {
+    return_relation() {
         let container = this.jq.parents('.template_container');
         container.find('.control_relation').show();
         container.find('.template_content').show();
         container.find('.return_relation').hide();
         container.find('.delete_field').remove();
-    }
-
-    static __name () {
-
-        return "lte";
     }
 }
 

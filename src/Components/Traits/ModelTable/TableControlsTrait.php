@@ -71,21 +71,6 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  string  $var_name
-     * @param $test
-     */
-    protected function set_test_var(string $var_name, $test)
-    {
-        if (is_embedded_call($test)) {
-            $this->{$var_name} = $test;
-        } else {
-            $this->{$var_name} = static function () use ($test) {
-                return (bool) $test;
-            };
-        }
-    }
-
-    /**
      * @param  Closure|array|mixed  $test
      * @return $this
      */
@@ -197,7 +182,7 @@ trait TableControlsTrait
     {
         $this->getModelName();
         $this->model_class = $this->realModel() ? get_class($this->realModel()) : null;
-        $hasDelete = $this->menu && $this->get_test_var('check_delete') && $this->menu['link.destroy'](0);
+        $hasDelete = $this->menu && $this->get_test_var('check_delete') && isset($this->menu['link.destroy']) && $this->menu['link.destroy'](0);
         $select_type = request()->get($this->model_name.'_type', $this->order_type);
         $this->order_field = request()->get($this->model_name, $this->order_field);
 
@@ -231,6 +216,21 @@ trait TableControlsTrait
 
     /**
      * @param  string  $var_name
+     * @param $test
+     */
+    protected function set_test_var(string $var_name, $test)
+    {
+        if (is_embedded_call($test)) {
+            $this->{$var_name} = $test;
+        } else {
+            $this->{$var_name} = static function () use ($test) {
+                return (bool) $test;
+            };
+        }
+    }
+
+    /**
+     * @param  string  $var_name
      * @param  array  $args
      * @return bool
      */
@@ -249,7 +249,7 @@ trait TableControlsTrait
     protected function _create_controls()
     {
         if ($this->get_test_var('controls')) {
-            $hasDelete = $this->menu && $this->menu['link.destroy'](0);
+            $hasDelete = $this->menu && isset($this->menu['link.destroy']) && $this->menu['link.destroy'](0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
 
             if ($this->checks && !request()->has('show_deleted') && $show) {

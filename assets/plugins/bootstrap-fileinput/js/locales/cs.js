@@ -76,7 +76,7 @@
         msgAjaxError: 'Došlo k chybě v {operation}. Prosím zkuste to znovu později!',
         msgAjaxProgressError: '{operation} - neúspěšné',
         msgDuplicateFile: 'Soubor "{name}" stejné velikosti "{size} KB" už byl vybrán dříve. Přeskočení duplicitního výběru.',
-        msgResumableUploadRetriesExceeded:  'Nahrávání bylo přerušeno po <b>{max}</b> opakováních souboru <b>{file}</b>! Detaily chyby: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Nahrávání bylo přerušeno po <b>{max}</b> opakováních souboru <b>{file}</b>! Detaily chyby: <pre>{error}</pre>',
         msgPendingTime: '{time} zůstává',
         msgCalculatingTime: 'výpočet zbývajícího času',
         ajaxOperations: {
@@ -98,7 +98,7 @@
             indicatorSuccessTitle: 'Nahraný',
             indicatorErrorTitle: 'Chyba nahrávání',
             indicatorPausedTitle: 'Nahrávání bylo pozastaveno',
-            indicatorLoadingTitle:  'Nahrávání ...'
+            indicatorLoadingTitle: 'Nahrávání ...'
         },
         previewZoomButtonTitles: {
             prev: 'Zobrazit předchozí soubor',

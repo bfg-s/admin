@@ -4,7 +4,7 @@
  * https://github.com/scottdejonge/Map-Icons
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: '',
@@ -196,7 +196,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_mapicon = data;
 

@@ -10,7 +10,7 @@
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @author Freeman
  */
- (function ($) {
+(function ($) {
     "use strict";
     $.fn.ratingLocales['zh'] = {
         defaultCaption: '{rating} 星',

@@ -5,7 +5,7 @@
  * CDN: https://use.fontawesome.com/releases/[VERSION]/css/all.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: '',

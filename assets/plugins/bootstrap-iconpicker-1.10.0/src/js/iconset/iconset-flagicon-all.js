@@ -5,7 +5,7 @@
  * CDN: https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/[VERSION]/css/flag-icon.min.css
  * ======================================================================== */
 
-;(function($){
+;(function ($) {
 
     var data = {
         iconClass: 'flag-icon',
@@ -273,7 +273,7 @@
     };
 
     var l = data.allVersions.length;
-    data.icons = data.allVersions[l-1].icons;
+    data.icons = data.allVersions[l - 1].icons;
 
     $.iconset_flagicon = data;
 

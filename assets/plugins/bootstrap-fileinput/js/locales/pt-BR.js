@@ -76,7 +76,7 @@
         msgAjaxError: 'Algo deu errado com a operação {operation}. Por favor tente novamente mais tarde!',
         msgAjaxProgressError: '{operation} falhou',
         msgDuplicateFile: 'O arquivo "{name}" do mesmo tamanho "{size} KB" já foi selecionado. Ignorando a seleção duplicada.',
-        msgResumableUploadRetriesExceeded:  'Envio abortado, excedido <b>{max}</b> tentativas para o arquivo <b>{file}</b>! Detalhes do erro: <pre>{error}</pre>',
+        msgResumableUploadRetriesExceeded: 'Envio abortado, excedido <b>{max}</b> tentativas para o arquivo <b>{file}</b>! Detalhes do erro: <pre>{error}</pre>',
         msgPendingTime: '{time} restante',
         msgCalculatingTime: 'calculando o tempo restante',
         ajaxOperations: {
@@ -98,7 +98,7 @@
             indicatorSuccessTitle: 'Enviado',
             indicatorErrorTitle: 'Erro',
             indicatorPausedTitle: 'Envio pausado',
-            indicatorLoadingTitle:  'Enviando...'
+            indicatorLoadingTitle: 'Enviando...'
         },
         previewZoomButtonTitles: {
             prev: 'Visualizar arquivo anterior',

@@ -20,14 +20,16 @@
                         {{ lte_user()->email }}
                     </small>
                     <small class="d-block text-light">
-                        <span class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>&nbsp;<span class="badge badge-success">') !!}</span>
+                        <span
+                            class="badge badge-success">{!! LteAdmin::user()->roles->pluck('name')->implode('</span>&nbsp;<span class="badge badge-success">') !!}</span>
                     </small>
                 </div>
             </div>
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                <ul class="nav nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu"
+                    data-accordion="true">
                     @include('lte::layout.side_bar_items')
                 </ul>
             </nav>

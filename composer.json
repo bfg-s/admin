@@ -2,7 +2,12 @@
     "name": "lar/lte-admin",
     "description": "Laravel Admin Lte",
     "type": "lar-library",
-    "keywords": ["laravel", "admin", "lte", "lar"],
+    "keywords": [
+        "laravel",
+        "admin",
+        "lte",
+        "lar"
+    ],
     "homepage": "https://bitbucket.org/lar-repo/lte-admin",
     "license": "MIT",
     "authors": [
@@ -14,6 +19,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
+        "ext-pdo": "*",
         "lar/ljs": "^2.6.0",
         "lar/layout": "^2.6.1",
         "bfg/emitter": "^1.1",

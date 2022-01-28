@@ -2,7 +2,12 @@ const merge = require('lodash/merge');
 
 module.exports = class extends Executor {
 
-    color () {
+    static __name() {
+
+        return "picker";
+    }
+
+    color() {
 
         return $(this.target).colorpicker({
             format: this.target.dataset.format ? this.target.dataset.format : 'auto'
@@ -11,7 +16,7 @@ module.exports = class extends Executor {
         });
     }
 
-    icon () {
+    icon() {
 
         return $(this.target).iconpicker({
             cols: this.target.dataset.cols ? this.target.dataset.cols : 10,
@@ -31,7 +36,7 @@ module.exports = class extends Executor {
         });
     }
 
-    date () {
+    date() {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
@@ -45,7 +50,7 @@ module.exports = class extends Executor {
         });
     }
 
-    time () {
+    time() {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
@@ -59,7 +64,7 @@ module.exports = class extends Executor {
         });
     }
 
-    datetime () {
+    datetime() {
 
         return $(this.target).datetimepicker({
             locale: ljs.cfg('locale'),
@@ -73,7 +78,7 @@ module.exports = class extends Executor {
         });
     }
 
-    datetimerange () {
+    datetimerange() {
 
         return $(this.target).daterangepicker({
             autoUpdateInput: false,
@@ -94,7 +99,7 @@ module.exports = class extends Executor {
         });
     }
 
-    daterange () {
+    daterange() {
 
         return $(this.target).daterangepicker({
             autoUpdateInput: false,
@@ -112,10 +117,5 @@ module.exports = class extends Executor {
             );
             $(this).trigger('change');
         });
-    }
-
-    static __name () {
-    
-        return "picker";
     }
 };

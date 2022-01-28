@@ -115,7 +115,7 @@ class LteAdmin extends LteAdminExecutor
                 $find->{$field_name} = $val;
 
                 if ($find->save()) {
-                    $this->put('alert::success', __('lte.saved_successfully'));
+                    $this->put('alert::success', __('lte.saved_successfully'))->reload();
                 } else {
                     $this->put('alert::error', __('lte.unknown_error'));
                 }
