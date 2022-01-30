@@ -18,20 +18,24 @@ module.exports = class Select2 extends Executor {
          * Create simple select2 alias
          * @private
          */
-        __invoke(...args) {
+        __invoke(args = {}) {
 
-            return this.init(...args);
+            return this.init(args);
         }
 
         /**
          * Create simple select2
          * @param args
          */
-        init(...args) {
+        init(args = {}) {
 
             if (this.target) {
 
-                return $(this.target).select2(...args);
+                let target = this.target;
+
+                return $(this.target).select2(merge({
+                    theme: target.dataset.theme ? target.dataset.theme : 'default',
+                }, args));
             }
 
             return undefined;
@@ -42,7 +46,6 @@ module.exports = class Select2 extends Executor {
             let target = this.target;
 
             return this.init(merge({
-                theme: target.dataset.theme ? target.dataset.theme : 'default',
                 ajax: {
                     transport: (params, success, failure) => {
 

@@ -12,7 +12,6 @@ use LteAdmin\Core\NavigatorExtensionProvider;
 use LteAdmin\Interfaces\ActionWorkExtensionInterface;
 use LteAdmin\Models\LteSeeder;
 use LteAdmin\Models\LteUser;
-use LteAdmin\Page;
 use Schema;
 use Symfony\Component\Console\Input\InputOption;
 

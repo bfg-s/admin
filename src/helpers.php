@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use LteAdmin\Getters\Menu;
 use LteAdmin\Models\LtePermission;
 use LteAdmin\Models\LteUser;
+use LteAdmin\Page;
 
 if (!function_exists('lte_log')) {
     /**
@@ -323,7 +324,7 @@ if (!function_exists('lte_page')) {
      */
     function lte_page()
     {
-        return app(\LteAdmin\Page::class);
+        return app(Page::class);
     }
 }
 

@@ -32,7 +32,7 @@ class SelectField extends FormGroupComponent
      * @var string[]
      */
     protected $data = [
-        'load' => 'select2',
+        'load' => 'select2::init',
         'theme' => 'bootstrap4',
     ];
 
@@ -58,6 +58,7 @@ class SelectField extends FormGroupComponent
 
     /**
      * @return Component|INPUT|mixed
+     * @throws \ReflectionException
      */
     public function field()
     {
