@@ -66,7 +66,7 @@ class StatisticPeriodComponent extends Component
         $this->column()
             ->info_box(
                 __('lte.statistic_total', ['entity' => mb_strtolower($this->entity)]),
-                $this->model->count(),
+                $this->model->count().' ',
                 $this->icon
             )->primaryType();
 
