@@ -1,15 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Getters;
+namespace LteAdmin\Getters;
 
 use App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
-use Lar\LteAdmin\Exceptions\ResourceControllerExistsException;
-use Lar\LteAdmin\Exceptions\ShouldBeModelInControllerException;
-use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Models\LtePermission;
+use LteAdmin\Exceptions\ResourceControllerExistsException;
+use LteAdmin\Exceptions\ShouldBeModelInControllerException;
+use LteAdmin\Models\LtePermission;
 use Navigate;
 use Route;
 use Str;
@@ -20,16 +19,14 @@ class Menu extends Getter
      * @var string
      */
     public static $name = 'lte.menu';
-
+    public static $currentQueryField = null;
+    public static $currentController = null;
+    static array $models = [];
     /**
      * @var int
      */
     protected static $nested_counter = 0;
-
-    protected static $currentQueryField = null;
     protected static $queries = [];
-
-    static array $models = [];
 
     public static function saveCurrentQuery()
     {
@@ -163,13 +160,11 @@ class Menu extends Getter
 
         $menu = gets()->lte->menu->now;
 
-        $current = Route::current();
-
-        if ($current->controller) {
-            if (method_exists($current->controller, 'getModel')) {
-                $return = call_user_func([$current->controller, 'getModel']);
-            } elseif (property_exists($current->controller, 'model')) {
-                $controller = $current->controller;
+        if (static::currentController()) {
+            $controller = static::currentController();
+            if (method_exists($controller, 'getModel')) {
+                $return = call_user_func([$controller, 'getModel']);
+            } elseif (property_exists($controller, 'model')) {
                 $return = $controller::$model;
             } else {
                 throw new ShouldBeModelInControllerException();
@@ -195,6 +190,15 @@ class Menu extends Getter
         }
 
         return $return;
+    }
+
+    public static function currentController()
+    {
+        if (!static::$currentController) {
+            static::$currentController = Route::current()?->controller;
+        }
+
+        return static::$currentController;
     }
 
     /**
@@ -554,17 +558,8 @@ class Menu extends Getter
                 $item['title'] = false;
             }
 
-            if (isset($item['link']) && $item['link'] && isset($item['active']) && $item['active']) {
+            if (isset($item['link']) && $item['link'] && $item['active']) {
                 $item['active'] = LtePermission::checkUrl($item['link']);
-            }
-
-            if (isset($item['extension']) && $item['extension'] && $item['active']) {
-                /** @var ExtendProvider $extension */
-                $extension = $item['extension'];
-                if ($extension::$roles && $extension::$roles->count()) {
-                    $roles = $extension::$roles->pluck('slug')->toArray();
-                    $item['active'] = lte_user()->hasRoles($roles);
-                }
             }
 
             $result = array_merge($add, $item);

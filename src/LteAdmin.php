@@ -1,13 +1,13 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use App\Models\Admin;
 use Auth;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Lar\LteAdmin\Components\Vue\ModalCollection;
-use Lar\LteAdmin\Models\LteUser;
+use LteAdmin\Components\Vue\ModalCollection;
+use LteAdmin\Models\LteUser;
 
 class LteAdmin
 {

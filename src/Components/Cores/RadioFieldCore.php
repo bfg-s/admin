@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Cores;
+namespace LteAdmin\Components\Cores;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Tags\DIV;

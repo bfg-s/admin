@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\FormComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\FormComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin FormComponent

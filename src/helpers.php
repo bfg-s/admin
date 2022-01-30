@@ -2,10 +2,9 @@
 
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
-use Lar\LteAdmin\Core\CheckUserFunction;
-use Lar\LteAdmin\Getters\Menu;
-use Lar\LteAdmin\Models\LtePermission;
-use Lar\LteAdmin\Models\LteUser;
+use LteAdmin\Getters\Menu;
+use LteAdmin\Models\LtePermission;
+use LteAdmin\Models\LteUser;
 
 if (!function_exists('lte_log')) {
     /**
@@ -194,16 +193,6 @@ if (!function_exists('admin')) {
     }
 }
 
-if (!function_exists('lte_func')) {
-    /**
-     * @return CheckUserFunction
-     */
-    function lte_func()
-    {
-        return lte_user()->func();
-    }
-}
-
 if (!function_exists('versionString')) {
     /**
      * @param $version
@@ -325,6 +314,16 @@ if (!function_exists('lte_now')) {
     function lte_now()
     {
         return gets()->lte->menu->now;
+    }
+}
+
+if (!function_exists('lte_page')) {
+    /**
+     * @return array|Menu|array|null
+     */
+    function lte_page()
+    {
+        return app(\LteAdmin\Page::class);
     }
 }
 

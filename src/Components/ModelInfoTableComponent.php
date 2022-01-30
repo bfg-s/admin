@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Exception;
@@ -9,7 +9,7 @@ use Lar\Layout\Tags\SPAN;
 use Lar\Tagable\Tag;
 
 /**
- * @methods Lar\LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
+ * @methods LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
  * @mixin ModelInfoTableComponentMacroList
  * @mixin ModelInfoTableComponentMethods
  */

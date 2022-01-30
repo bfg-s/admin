@@ -2,8 +2,8 @@
 
 namespace {NAMESPACE};
 
-use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use LteAdmin\ExtendProvider;
+use LteAdmin\Core\ConfigExtensionProvider;
 use {NAMESPACE}\Extension\Config;
 use {NAMESPACE}\Extension\Install;
 use {NAMESPACE}\Extension\Navigator;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\StatisticPeriodComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\StatisticPeriodComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin StatisticPeriodComponent

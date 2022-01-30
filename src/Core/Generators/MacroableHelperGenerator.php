@@ -1,17 +1,17 @@
 <?php
 
-namespace Lar\LteAdmin\Core\Generators;
+namespace LteAdmin\Core\Generators;
 
 use Closure;
 use File;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Controllers\Controller;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Page;
 use Log;
 use LteAdmin;
+use LteAdmin\Controllers\Controller;
+use LteAdmin\Page;
+use LteAdmin\Traits\Macroable;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -87,7 +87,7 @@ class MacroableHelperGenerator implements DumpExecute
                 continue;
             }
 
-            $coreTrait = 'Lar\\LteAdmin\\Core\\Traits\\Macroable';
+            $coreTrait = 'LteAdmin\\Core\\Traits\\Macroable';
 
             $traits = array_keys($refl->getTraits());
 

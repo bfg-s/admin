@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
-use Lar\LteAdmin\Components\Fields\MultiSelectField;
+use LteAdmin\Components\Fields\MultiSelectField;
 
 class MultiSelectSearchField extends MultiSelectField
 {

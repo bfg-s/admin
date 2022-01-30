@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use Exception;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Traits\Conditionable;
-use Lar\LteAdmin\Components\FieldInputTypesMethods;
-use Lar\LteAdmin\Core\Delegate;
+use LteAdmin\Components\FieldInputTypesMethods;
+use LteAdmin\Core\Delegate;
 
 /**
  * @method Explanation name(string $name) Set the name of field (database column)

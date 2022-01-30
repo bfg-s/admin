@@ -1,21 +1,20 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use App;
 use Arr;
 use Composer\Composer;
 use DB;
 use Lar\Layout\Abstracts\Component;
-use Lar\LteAdmin\Components\GridColumnComponent;
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\CardBody;
-use Lar\LteAdmin\Delegates\ChartJs;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Delegates\StatisticPeriod;
-use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Page;
 use LteAdmin;
+use LteAdmin\Components\GridColumnComponent;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\CardBody;
+use LteAdmin\Delegates\ChartJs;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Delegates\StatisticPeriod;
+use LteAdmin\Page;
 use PDO;
 
 class DashboardController extends Controller
@@ -204,13 +203,5 @@ class DashboardController extends Controller
             __('lte.user') => env('DB_USERNAME'),
             __('lte.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public static function getModel(): string
-    {
-        return LteUser::class;
     }
 }

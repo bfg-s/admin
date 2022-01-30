@@ -1,20 +1,20 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Exception;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Core\Extension\Content;
 use Lar\Tagable\Events\onRender;
 use Lar\Tagable\Tag;
+use LteAdmin\Traits\BuildHelperTrait;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\FieldMassControlTrait;
+use LteAdmin\Traits\Macroable;
 use ReflectionException;
 
 /**
- * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
+ * @methods LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
  * @mixin LangComponentMacroList
  * @mixin LangComponentMethods
  */

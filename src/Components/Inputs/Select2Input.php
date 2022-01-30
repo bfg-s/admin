@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Inputs;
+namespace LteAdmin\Components\Inputs;
 
 use Illuminate\Support\Collection;
 

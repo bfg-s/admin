@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use BadMethodCallException;
 use Closure;
@@ -11,19 +11,19 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\CardComponent;
-use Lar\LteAdmin\Components\Component;
-use Lar\LteAdmin\Components\SearchFormComponent;
-use Lar\LteAdmin\Controllers\Controller;
-use Lar\LteAdmin\Core\Container;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
+use LteAdmin\Components\CardComponent;
+use LteAdmin\Components\Component;
+use LteAdmin\Components\SearchFormComponent;
+use LteAdmin\Controllers\Controller;
+use LteAdmin\Core\Container;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\Macroable;
 use Throwable;
 
 /**
  * @template CurrentModel
- * @macro_return Lar\LteAdmin\Page
- * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (...$delegates) Lar\LteAdmin\Page|\App\LteAdmin\Page
+ * @macro_return LteAdmin\Page
+ * @methods LteAdmin\Controllers\Controller::$explanation_list (...$delegates) LteAdmin\Page
  * @mixin PageMacroList
  * @mixin PageMethods
  */
@@ -37,7 +37,7 @@ class Page extends Container
      */
     protected static $models = [];
     public ?array $menu;
-    public Collection $menus;
+    public ?Collection $menus = null;
     public ?Controller $controller = null;
     public ?string $controllerClassName = null;
     public ?string $resource_type = null;

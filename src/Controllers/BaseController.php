@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use App\Models\Product;
 use App\Models\User;
@@ -10,11 +10,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 use Lang;
-use Lar\LteAdmin\Core\ModelSaver;
-use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Getters\Menu;
-use Lar\LteAdmin\Models\LteRole;
 use LteAdmin;
+use LteAdmin\Core\ModelSaver;
+use LteAdmin\ExtendProvider;
+use LteAdmin\Getters\Menu;
+use LteAdmin\Models\LteRole;
 
 /**
  * @template CurrentModel
@@ -189,16 +189,6 @@ abstract class BaseController extends Controller
         }
 
         return gets()->lte->menu->data($name, $default);
-    }
-
-    /**
-     * @param  string  $method
-     * @param  array  $params
-     * @return ModalController
-     */
-    public function new_modal(string $method, array $params = [])
-    {
-        return (new ModalController($params))->setHandle(static::class.'::'.$method);
     }
 
     /**

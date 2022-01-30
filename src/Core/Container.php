@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
@@ -10,7 +10,7 @@ use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Interfaces\SegmentContainerInterface;
+use LteAdmin\Interfaces\SegmentContainerInterface;
 use Throwable;
 
 abstract class Container implements SegmentContainerInterface

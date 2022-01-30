@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Interfaces;
+namespace LteAdmin\Interfaces;
 
 interface ControllerContentInterface
 {

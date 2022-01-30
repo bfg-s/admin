@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,17 +8,16 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
-use Lar\LteAdmin\Core\Traits\DumpedModel;
+use LteAdmin\Traits\DumpedModel;
 
 /**
- * Lar\LteAdmin\Models\LteRole.
+ * LteAdmin\Models\LteRole.
  *
  * @property int $id
  * @property string $name
  * @property string $slug
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\LteFunction[] $functions
  * @property-read int|null $functions_count
  * @property-read Collection|LteUser[] $users
  * @property-read int|null $users_count
@@ -56,13 +55,5 @@ class LteRole extends Model
     {
         return $this->belongsToMany(config('lte.auth.providers.lte.model'), 'lte_role_user', 'lte_role_id',
             'lte_user_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function functions()
-    {
-        return $this->belongsToMany(LteFunction::class, 'lte_role_function', 'lte_role_id', 'lte_function_id');
     }
 }

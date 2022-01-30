@@ -1,20 +1,19 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\LarDoc;
-use Lar\Layout\Tags\BUTTON;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Components\Traits\TypesTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Getters\Menu;
-use Lar\LteAdmin\Page;
+use LteAdmin\Explanation;
+use LteAdmin\Getters\Menu;
+use LteAdmin\Page;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\Macroable;
+use LteAdmin\Traits\TypesTrait;
 
 class CardComponent extends Component
 {
@@ -238,12 +237,6 @@ class CardComponent extends Component
         return $this->table;
     }
 
-    public function chart_js(...$delegates)
-    {
-        return $this->card_body()->chart_js(...$delegates)
-            ->model($this->search_form);
-    }
-
     /**
      * @param  callable  $call
      * @return $this
@@ -253,6 +246,12 @@ class CardComponent extends Component
         call_user_func($call, $this->head_obj);
 
         return $this;
+    }
+
+    public function chart_js(...$delegates)
+    {
+        return $this->card_body()->chart_js(...$delegates)
+            ->model($this->search_form);
     }
 
     public function model_info_table(...$delegates)
@@ -323,12 +322,12 @@ class CardComponent extends Component
     }
 
     /**
-     * @param  mixed  ...$params
+     * @param  mixed  ...$delegates
      * @return ButtonsComponent
      */
-    public function buttons(...$params)
+    public function buttons(...$delegates)
     {
-        $group = ButtonsComponent::create()->when($params);
+        $group = ButtonsComponent::create(...$delegates);
 
         if ($this->tools) {
             $this->tools->appEnd($group);
@@ -407,7 +406,7 @@ class CardComponent extends Component
             $test = $this->default_tools;
 
             if ($test('search')) {
-                $this->buttons(function (ButtonsComponent $group) {
+                $this->buttons()->when(function (ButtonsComponent $group) {
                     $group->primary(['fas fa-search', __('lte.search')])
                         ->setDatas([
                             'toggle' => 'collapse',
@@ -415,7 +414,7 @@ class CardComponent extends Component
                         ])->attr([
                             'aria-expanded' => 'true',
                             'aria-controls' => 'table_search_form',
-                        ])->whenRender(function (BUTTON $button) {
+                        ])->whenRender(function (ButtonComponent $button) {
                             if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                 $button->attr(['d-none']);
                             }
@@ -425,7 +424,7 @@ class CardComponent extends Component
                         $group->danger(['fas fa-window-close', __('lte.cancel')])
                             ->attr('id', 'cancel_search_params')
                             ->location([], ['q', 'page'])
-                            ->whenRender(function (BUTTON $button) {
+                            ->whenRender(function (ButtonComponent $button) {
                                 if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                     $button->attr(['d-none']);
                                 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\ModelInfoTable;
-use Lar\LteAdmin\Delegates\ModelTable;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Page;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\ModelInfoTable;
+use LteAdmin\Delegates\ModelTable;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Page;
 use Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -83,12 +83,12 @@ class LteControllerCommand extends Command
             ->namespace($namespace);
 
         if ($resource) {
-            $class->use(class_exists(\App\LteAdmin\Page::class) ? \App\LteAdmin\Page::class : Page::class);
-            $class->use(class_exists(\App\LteAdmin\Delegates\Card::class) ? \App\LteAdmin\Delegates\Card::class : Card::class);
-            $class->use(class_exists(\App\LteAdmin\Delegates\Form::class) ? \App\LteAdmin\Delegates\Form::class : Form::class);
-            $class->use(class_exists(\App\LteAdmin\Delegates\SearchForm::class) ? \App\LteAdmin\Delegates\SearchForm::class : SearchForm::class);
-            $class->use(class_exists(\App\LteAdmin\Delegates\ModelTable::class) ? \App\LteAdmin\Delegates\ModelTable::class : ModelTable::class);
-            $class->use(class_exists(\App\LteAdmin\Delegates\ModelInfoTable::class) ? \App\LteAdmin\Delegates\ModelInfoTable::class : ModelInfoTable::class);
+            $class->use(Page::class);
+            $class->use(class_exists(\App\Admin\Delegates\Card::class) ? \App\Admin\Delegates\Card::class : Card::class);
+            $class->use(class_exists(\App\Admin\Delegates\Form::class) ? \App\Admin\Delegates\Form::class : Form::class);
+            $class->use(class_exists(\App\Admin\Delegates\SearchForm::class) ? \App\Admin\Delegates\SearchForm::class : SearchForm::class);
+            $class->use(class_exists(\App\Admin\Delegates\ModelTable::class) ? \App\Admin\Delegates\ModelTable::class : ModelTable::class);
+            $class->use(class_exists(\App\Admin\Delegates\ModelInfoTable::class) ? \App\Admin\Delegates\ModelInfoTable::class : ModelInfoTable::class);
 
             $class->prop('static:model');
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Core\TableExtends;
+namespace LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Exception;
@@ -9,7 +9,7 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
-use Lar\LteAdmin\Models\LtePermission;
+use LteAdmin\Models\LtePermission;
 use Str;
 
 class Formatter
@@ -30,6 +30,26 @@ class Formatter
         }
 
         return "<span title='{$value}'>".$str.'</span>';
+    }
+
+    public function strip_tags($value = null, $props = [])
+    {
+        if ($value) {
+            $value = strip_tags(
+                $this->to_html($value)
+            );
+        }
+
+        return $value;
+    }
+
+    public function to_html($value = null, $props = [])
+    {
+        if ($value) {
+            $value = html_entity_decode($value);
+        }
+
+        return $value;
     }
 
     /**
@@ -312,26 +332,6 @@ class Formatter
         }
 
         return (string) $value;
-    }
-
-    public function strip_tags($value = null, $props = [])
-    {
-        if ($value) {
-            $value = strip_tags(
-                $this->to_html($value)
-            );
-        }
-
-        return $value;
-    }
-
-    public function to_html($value = null, $props = [])
-    {
-        if ($value) {
-            $value = html_entity_decode($value);
-        }
-
-        return $value;
     }
 
     /**

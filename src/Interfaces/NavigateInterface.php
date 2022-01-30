@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Interfaces;
+namespace LteAdmin\Interfaces;
 
 use Closure;
-use Lar\LteAdmin\Core\NavGroup;
-use Lar\LteAdmin\Core\NavItem;
-use Lar\LteAdmin\Navigate;
+use LteAdmin\Core\NavGroup;
+use LteAdmin\Core\NavItem;
+use LteAdmin\Navigate;
 
 interface NavigateInterface
 {

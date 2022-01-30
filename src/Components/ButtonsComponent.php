@@ -1,9 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
-use Lar\Layout\Tags\BUTTON;
-use Lar\LteAdmin\Delegates\Buttons;
+use LteAdmin\Delegates\Buttons;
 use Request;
 
 class ButtonsComponent extends Component
@@ -23,46 +22,45 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function dark($ico, array $when = [])
+    public function dark($ico = null, array $when = [])
     {
         return $this->btn('dark', $ico, $when);
     }
 
     /**
      * @param  string  $type
-     * @param  string|array  $ico
+     * @param  string|array|null  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function btn($type, $ico, array $when = [])
+    public function btn($type, $ico = null, array $when = [])
     {
-        return $this->button(['btn btn-xs btn-'.$type])->when(static function (BUTTON $button) use ($ico) {
-            $button->setType('button');
-            if (is_array($ico)) {
-                $ico = array_values($ico);
-                if (isset($ico[0]) && $ico[0]) {
-                    $button->i([$ico[0]]);
-                }
-                if (isset($ico[0]) && $ico[0] && isset($ico[1]) && $ico[1]) {
-                    $button->text(':space');
-                }
-                if (isset($ico[1]) && $ico[1]) {
-                    $button->text("<span class='d-none d-sm-inline'>{$ico[1]}</span>");
-                }
-            } elseif ($ico) {
-                $button->i([$ico]);
+        $btn = ButtonComponent::create()
+            ->wisibleType($type);
+
+        if ($ico && is_string($ico)) {
+            $btn->icon($ico);
+        } else {
+            if ($ico && is_array($ico)) {
+                $btn->iconTitle($ico);
             }
-        })->attr($when);
+        }
+
+        $btn->attr($when);
+
+        $this->appEnd($btn);
+
+        return $btn;
     }
 
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function default($ico, array $when = [])
+    public function default($ico = null, array $when = [])
     {
         return $this->btn('default', $ico, $when);
     }
@@ -71,7 +69,7 @@ class ButtonsComponent extends Component
      * Reload button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
     public function reload(string $link = null, string $title = null)
     {
@@ -85,9 +83,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function secondary($ico, array $when = [])
+    public function secondary($ico = null, array $when = [])
     {
         return $this->btn('secondary', $ico, $when);
     }
@@ -106,9 +104,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function info($ico, array $when = [])
+    public function info($ico = null, array $when = [])
     {
         return $this->btn('info', $ico, $when);
     }
@@ -116,9 +114,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function primary($ico, array $when = [])
+    public function primary($ico = null, array $when = [])
     {
         return $this->btn('primary', $ico, $when);
     }
@@ -127,7 +125,7 @@ class ButtonsComponent extends Component
      * Resource list button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return $this|\Lar\Layout\Abstracts\Component|BUTTON
+     * @return $this|\Lar\Layout\Abstracts\Component|ButtonComponent
      */
     public function resourceList(string $link = null, string $title = null)
     {
@@ -146,7 +144,7 @@ class ButtonsComponent extends Component
      * Resource edit button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent|Buttons
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent|Buttons
      */
     public function resourceEdit(string $link = null, string $title = null)
     {
@@ -181,9 +179,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function success($ico, array $when = [])
+    public function success($ico = null, array $when = [])
     {
         return $this->btn('success', $ico, $when);
     }
@@ -196,7 +194,7 @@ class ButtonsComponent extends Component
      * Resource info button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent|Buttons
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent|Buttons
      */
     public function resourceInfo(string $link = null, string $title = null)
     {
@@ -269,9 +267,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function danger($ico, array $when = [])
+    public function danger($ico = null, array $when = [])
     {
         return $this->btn('danger', $ico, $when);
     }
@@ -282,7 +280,7 @@ class ButtonsComponent extends Component
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
-     * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
+     * @return \Lar\Layout\Abstracts\Component|static|self||ButtonComponent
      */
     public function resourceForceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
     {
@@ -317,7 +315,7 @@ class ButtonsComponent extends Component
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
-     * @return \Lar\Layout\Abstracts\Component|static|self||BUTTON
+     * @return \Lar\Layout\Abstracts\Component|static|self||ButtonComponent
      */
     public function resourceRestore(string $link = null, string $title = null, string $message = null, $key = null)
     {
@@ -349,9 +347,9 @@ class ButtonsComponent extends Component
     /**
      * @param  mixed  $ico
      * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function warning($ico, array $when = [])
+    public function warning($ico = null, array $when = [])
     {
         return $this->btn('warning', $ico, $when);
     }
@@ -359,7 +357,7 @@ class ButtonsComponent extends Component
     /**
      * @param  string|array|null  $icon
      * @param  string|null  $form
-     * @return \Lar\Layout\Abstracts\Component|BUTTON
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
     public function submit($icon = null, string $form = null)
     {
@@ -382,7 +380,7 @@ class ButtonsComponent extends Component
      * Resource add button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|BUTTON|ButtonsComponent
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent
      */
     public function resourceAdd(string $link = null, string $title = null)
     {

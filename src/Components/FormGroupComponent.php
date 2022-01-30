@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
@@ -10,11 +10,11 @@ use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\Layout\Tags\INPUT;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Components\Traits\RulesBackTrait;
-use Lar\LteAdmin\Components\Traits\RulesFrontTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Page;
+use LteAdmin\Page;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\Macroable;
+use LteAdmin\Traits\RulesBackTrait;
+use LteAdmin\Traits\RulesFrontTrait;
 use Route;
 use Str;
 
@@ -177,6 +177,27 @@ abstract class FormGroupComponent extends DIV
     {
     }
 
+    public function queryable()
+    {
+        $request = request();
+        if ($request->has($this->path)) {
+            $this->value($request->get($this->path));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function value($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
     /**
      * @param  Component  $parent
      * @return $this
@@ -297,17 +318,6 @@ abstract class FormGroupComponent extends DIV
                 return is_array($ddd) || is_object($ddd) || is_null($ddd) || is_bool($ddd) ? $ddd : e($ddd);
             };
         }
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function value($value)
-    {
-        $this->value = $value;
 
         return $this;
     }

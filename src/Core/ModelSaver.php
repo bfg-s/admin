@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use DB;
 use Illuminate\Contracts\Support\Arrayable;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Lar\Developer\Core\Traits\Eventable;
-use Lar\LteAdmin\Models\LteFileStorage;
+use LteAdmin\Models\LteFileStorage;
 
 class ModelSaver
 {

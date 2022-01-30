@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\CardComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\CardComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin CardComponent

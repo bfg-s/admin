@@ -1,13 +1,13 @@
 <?php
 
-namespace Lar\LteAdmin\Layouts;
+namespace LteAdmin\Layouts;
 
 use Exception;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\AccessDeniedComponent;
-use Lar\LteAdmin\Middlewares\Authenticate;
 use LteAdmin;
+use LteAdmin\Components\AccessDeniedComponent;
+use LteAdmin\Middlewares\Authenticate;
 use View;
 
 class LteLayout extends LteBase

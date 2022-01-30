@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use Arr;
 use Blade;
@@ -13,25 +13,23 @@ use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
-use Lar\LteAdmin\Commands\LteControllerCommand;
-use Lar\LteAdmin\Commands\LteDbDumpCommand;
-use Lar\LteAdmin\Commands\LteExtensionCommand;
-use Lar\LteAdmin\Commands\LteInstallCommand;
-use Lar\LteAdmin\Commands\LteJaxCommand;
-use Lar\LteAdmin\Commands\LteModalCommand;
-use Lar\LteAdmin\Commands\LteUserCommand;
-use Lar\LteAdmin\Core\BladeDirectiveAlpineStore;
-use Lar\LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
-use Lar\LteAdmin\Core\Generators\FunctionsHelperGenerator;
-use Lar\LteAdmin\Core\Generators\MacroableHelperGenerator;
-use Lar\LteAdmin\Exceptions\Handler;
-use Lar\LteAdmin\Getters\Functions;
-use Lar\LteAdmin\Getters\Menu;
-use Lar\LteAdmin\Getters\Role;
-use Lar\LteAdmin\Layouts\LteAuthLayout;
-use Lar\LteAdmin\Layouts\LteLayout;
-use Lar\LteAdmin\Middlewares\Authenticate;
 use LJS;
+use LteAdmin\Commands\LteControllerCommand;
+use LteAdmin\Commands\LteDbDumpCommand;
+use LteAdmin\Commands\LteExtensionCommand;
+use LteAdmin\Commands\LteInstallCommand;
+use LteAdmin\Commands\LteJaxCommand;
+use LteAdmin\Commands\LteUserCommand;
+use LteAdmin\Core\BladeDirectiveAlpineStore;
+use LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
+use LteAdmin\Core\Generators\MacroableHelperGenerator;
+use LteAdmin\Exceptions\Handler;
+use LteAdmin\Getters\Functions;
+use LteAdmin\Getters\Menu;
+use LteAdmin\Getters\Role;
+use LteAdmin\Layouts\LteAuthLayout;
+use LteAdmin\Layouts\LteLayout;
+use LteAdmin\Middlewares\Authenticate;
 use Road;
 use Str;
 
@@ -45,7 +43,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteControllerCommand::class,
         LteUserCommand::class,
         LteExtensionCommand::class,
-        LteModalCommand::class,
         LteJaxCommand::class,
         LteDbDumpCommand::class,
     ];
@@ -204,7 +201,6 @@ class ServiceProvider extends ServiceProviderIlluminate
             /**
              * Helper registration.
              */
-            DumpAutoload::addToExecute(FunctionsHelperGenerator::class);
             DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
             DumpAutoload::addToExecute(MacroableHelperGenerator::class);
         }
@@ -272,16 +268,14 @@ class ServiceProvider extends ServiceProviderIlluminate
     public function register()
     {
         $this->app->singleton(Page::class, function ($app) {
-            return class_exists(\App\LteAdmin\Page::class)
-                ? new \App\LteAdmin\Page($app->router)
-                : new Page($app->router);
+            return new Page($app->router);
         });
 
         /**
          * App register provider.
          */
-        if (class_exists('App\Providers\LteServiceProvider')) {
-            $this->app->register('App\Providers\LteServiceProvider');
+        if (class_exists('App\Providers\AdminServiceProvider')) {
+            $this->app->register('App\Providers\AdminServiceProvider');
         }
 
         /**
@@ -358,6 +352,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerJax()
     {
-        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Lar\\LteAdmin\\Jax');
+        JaxExecutor::addNamespace(__DIR__.'/Jax', 'LteAdmin\\Jax');
     }
 }

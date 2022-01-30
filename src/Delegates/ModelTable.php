@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\ModelTableComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\ModelTableComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin ModelTableComponent

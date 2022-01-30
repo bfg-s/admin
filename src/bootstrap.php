@@ -5,7 +5,7 @@ use Illuminate\Support\Collection;
 
 if (!request()->ajax() || request()->is('*dashboard*')) {
     if (class_exists(InstalledVersions::class)) {
-        \Lar\LteAdmin\LteAdmin::$version = InstalledVersions::getPrettyVersion('lar/lte-admin');
+        \LteAdmin\LteAdmin::$version = InstalledVersions::getPrettyVersion('lar/lte-admin');
     } else {
         $lock_file = base_path('composer.lock');
         if (is_file($lock_file)) {
@@ -13,7 +13,7 @@ if (!request()->ajax() || request()->is('*dashboard*')) {
             $json = json_decode($lock, 1);
             $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
             if ($admin && isset($admin['version'])) {
-                \Lar\LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
+                \LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
             }
         }
     }

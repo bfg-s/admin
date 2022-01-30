@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Inputs;
+namespace LteAdmin\Components\Inputs;
 
-use Lar\LteAdmin\Components\Component;
-use Lar\LteAdmin\Core\Traits\Stateable;
+use LteAdmin\Components\Component;
+use LteAdmin\Traits\Stateable;
 
 /**
  * @property string|array|null $value

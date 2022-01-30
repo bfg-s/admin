@@ -1,14 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\ModelInfoTable;
-use Lar\LteAdmin\Delegates\ModelTable;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Page;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\ModelInfoTable;
+use LteAdmin\Delegates\ModelTable;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Models\LteRole;
+use LteAdmin\Page;
 
 class RolesController extends Controller
 {

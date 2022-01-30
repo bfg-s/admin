@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Illuminate\Routing\PendingResourceRegistration;
-use Lar\LteAdmin\LteAdmin;
-use Lar\LteAdmin\Navigate;
 use Lar\Roads\Roads;
+use LteAdmin\LteAdmin;
+use LteAdmin\Navigate;
 
 class RoutesAdaptor
 {

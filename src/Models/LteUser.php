@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Eloquent;
 use Illuminate\Auth\Authenticatable;
@@ -16,8 +16,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Lar\LteAdmin\Core\CheckUserFunction;
-use Lar\LteAdmin\Core\Traits\DumpedModel;
+use LteAdmin\Traits\DumpedModel;
 
 /**
  * App\Models\LteUser.
@@ -67,14 +66,6 @@ class LteUser extends Model implements AuthenticatableContract
         DumpedModel;
 
     /**
-     * @var string[][]
-     */
-    protected static $functions = [];
-    /**
-     * @var CheckUserFunction[]
-     */
-    protected static $check_user_func_instances = [];
-    /**
      * @var string
      */
     protected $table = 'lte_users';
@@ -115,37 +106,6 @@ class LteUser extends Model implements AuthenticatableContract
     public function getAvatarAttribute($avatar)
     {
         return $avatar ? $avatar : 'lte-admin/img/user.jpg';
-    }
-
-    /**
-     * @return CheckUserFunction
-     */
-    public function func()
-    {
-        if (!isset(static::$check_user_func_instances[$this->id])) {
-            static::$check_user_func_instances[$this->id] = new CheckUserFunction($this->functions());
-        }
-
-        return static::$check_user_func_instances[$this->id];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function functions()
-    {
-        if (!isset(static::$functions[$this->id])) {
-            static::$functions[$this->id] = LteFunction::withCount([
-                'roles' => function ($many) {
-                    $many->whereIn('lte_role_id', $this->roles->pluck('id')->toArray());
-                }
-            ])->where('active', 1)
-                ->get('slug')
-                ->where('roles_count', '!=', 0)
-                ->pluck('slug', 'slug')->toArray();
-        }
-
-        return static::$functions[$this->id];
     }
 
     /**

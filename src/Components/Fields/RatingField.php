@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 class RatingField extends InputField
 {
@@ -37,7 +37,7 @@ class RatingField extends InputField
     /**
      * @var int
      */
-    protected $value = 0;
+    protected $default = 0;
 
     /**
      * @param  int  $value

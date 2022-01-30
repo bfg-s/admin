@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
 use Arr;
 use Illuminate\Console\Command;
-use Lar\LteAdmin\Jax\LteAdminExecutor;
+use LteAdmin\Jax\LteAdminExecutor;
 use Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

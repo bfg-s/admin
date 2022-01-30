@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
-use Lar\LteAdmin\Components\Fields\ColorField;
+use LteAdmin\Components\Fields\ColorField;
 
 class ColorSearchField extends ColorField
 {

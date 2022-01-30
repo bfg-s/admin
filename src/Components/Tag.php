@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 class Tag extends Component
 {

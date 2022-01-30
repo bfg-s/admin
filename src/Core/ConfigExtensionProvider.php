@@ -1,15 +1,15 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Closure;
 use Event;
 use Lar\Developer\Core\Traits\Piplineble;
-use Lar\LteAdmin\Components\Component;
-use Lar\LteAdmin\Components\ModelTableComponent;
-use Lar\LteAdmin\Controllers\Controller;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\ExtendProvider;
+use LteAdmin\Components\Component;
+use LteAdmin\Components\ModelTableComponent;
+use LteAdmin\Controllers\Controller;
+use LteAdmin\ExtendProvider;
+use LteAdmin\Traits\Macroable;
 
 class ConfigExtensionProvider
 {

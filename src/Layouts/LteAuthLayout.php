@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Layouts;
+namespace LteAdmin\Layouts;
 
 use Exception;
 

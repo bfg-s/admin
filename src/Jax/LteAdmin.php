@@ -1,17 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Jax;
+namespace LteAdmin\Jax;
 
 use DB;
 use Excel;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use Lar\LteAdmin\Components\ModalComponent;
-use Lar\LteAdmin\Controllers\ModalController;
-use Lar\LteAdmin\Core\PrepareExport;
-use Lar\LteAdmin\LteBoot;
-use ReflectionException;
+use LteAdmin\Components\LiveComponent;
+use LteAdmin\Components\ModalComponent;
+use LteAdmin\Core\PrepareExport;
 use Throwable;
 
 class LteAdmin extends LteAdminExecutor
@@ -155,39 +152,47 @@ class LteAdmin extends LteAdminExecutor
         }
     }
 
-    /**
-     * @param  string  $handle
-     * @param  array  $params
-     * @return ModalComponent|mixed
-     * @throws ReflectionException
-     * @throws Throwable
-     */
-    public function load_modal(string $handle, array $params = [])
+    public function load_lives()
     {
-        LteBoot::run();
+        $this->refererEmit();
 
-        if (strpos($handle, '@') !== false) {
-            $handle = Str::parseCallback($handle, 'index');
-            if (!class_exists($handle[0])) {
-                if (class_exists(lte_app_namespace("Modals\\{$handle[0]}"))) {
-                    $handle[0] = lte_app_namespace("Modals\\{$handle[0]}");
-                } else {
-                    abort(404);
-                }
+        $result_areas = [];
+
+        foreach (LiveComponent::$list as $area => $item) {
+            $content = $item->getRenderContent();
+            $result_areas[$area] = [
+                'hash' => sha1($content),
+                'content' => $content,
+            ];
+        }
+
+        return $result_areas;
+    }
+
+    /**
+     * @return array|void
+     */
+    public function load_modal()
+    {
+        if (!check_referer()) {
+            return [];
+        }
+
+        $this->refererEmit();
+
+        $modal = ModalComponent::$list[request('_modal')] ?? null;
+
+        if ($modal) {
+            if (request()->has('_modal_submit')) {
+                return $modal->submitEvent ? app()->call($modal->submitEvent) : [];
             }
 
-            return embedded_call($handle, $params);
-        } elseif (strpos($handle, '::') !== false) {
-            $handle = explode('::', $handle);
-            if (!class_exists($handle[0])) {
-                if (class_exists(lte_app_namespace($handle[0]))) {
-                    $handle[0] = lte_app_namespace($handle[0]);
-                } else {
-                    abort(404);
-                }
-            }
-
-            return (new ModalController())->setCreate($handle)->index();
+            return [
+                'size' => $modal->size,
+                'backdrop' => $modal->backdrop,
+                'temporary' => $modal->temporary,
+                'content' => $modal->getRendered(),
+            ];
         }
 
         abort(404);
@@ -195,6 +200,12 @@ class LteAdmin extends LteAdminExecutor
 
     public function export_excel(string $model, array $ids, string $order, string $order_type, string $table)
     {
+        if (!check_referer()) {
+            return [];
+        }
+
+        $this->refererEmit();
+
         $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
 
         return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.xlsx');
@@ -202,6 +213,12 @@ class LteAdmin extends LteAdminExecutor
 
     public function export_csv(string $model, array $ids, string $order, string $order_type, string $table)
     {
+        if (!check_referer()) {
+            return [];
+        }
+
+        $this->refererEmit();
+
         $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
 
         return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');

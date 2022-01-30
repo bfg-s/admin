@@ -1,16 +1,15 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Core\ModelSaver;
-use Lar\LteAdmin\Models\LteFileStorage;
-use Lar\LteAdmin\Models\LteFunction;
-use Lar\LteAdmin\Models\LtePermission;
-use Lar\LteAdmin\Models\LteRole;
+use LteAdmin\Core\ModelSaver;
+use LteAdmin\Models\LteFileStorage;
+use LteAdmin\Models\LtePermission;
+use LteAdmin\Models\LteRole;
 use ReflectionClass;
 use ReflectionException;
 
@@ -54,7 +53,6 @@ class LteDbDumpCommand extends Command
             LtePermission::class,
             config('lte.auth.providers.lte.model'),
             LteFileStorage::class,
-            LteFunction::class,
         ], static::$models);
     }
 

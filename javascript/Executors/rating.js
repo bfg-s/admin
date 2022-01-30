@@ -1,5 +1,3 @@
-const merge = require('lodash/merge');
-
 module.exports = class extends Executor {
 
     static __name() {
@@ -7,8 +5,7 @@ module.exports = class extends Executor {
         return "rating";
     }
 
-    __invoke($options = {}) {
-
+    __invoke() {
         return $(this.currentTarget).rating({
             theme: 'krajee-fas',
             emptyStar: '<i class="far fa-star"></i>',

@@ -1,16 +1,16 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use Broadcast;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Lar\LteAdmin\Core\NavGroup;
-use Lar\LteAdmin\Core\NavigatorExtensions;
-use Lar\LteAdmin\Core\NavItem;
-use Lar\LteAdmin\Core\Traits\NavDefaultTools;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
 use Lar\Roads\Roads;
+use LteAdmin\Core\NavGroup;
+use LteAdmin\Core\NavigatorExtensions;
+use LteAdmin\Core\NavItem;
+use LteAdmin\Interfaces\NavigateInterface;
+use LteAdmin\Traits\NavDefaultTools;
 
 /**
  * @mixin NavigatorExtensions

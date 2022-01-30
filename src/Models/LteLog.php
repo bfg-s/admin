@@ -1,16 +1,16 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
-use Lar\LteAdmin\Core\Traits\DumpedModel;
+use LteAdmin\Traits\DumpedModel;
 
 /**
- * Lar\LteAdmin\Models\LteLog.
+ * LteAdmin\Models\LteLog.
  *
  * @property string $title
  * @property string|null $detail

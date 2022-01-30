@@ -1,13 +1,13 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use DB;
 use Exception;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
-use Lar\LteAdmin\ExtendProvider;
+use LteAdmin\ExtendProvider;
 use Symfony\Component\Finder\SplFileInfo;
 
 class UnInstallExtensionProvider

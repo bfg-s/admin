@@ -1,12 +1,12 @@
 <?php
 
-namespace Lar\LteAdmin\Core\Generators;
+namespace LteAdmin\Core\Generators;
 
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
-use Lar\LteAdmin\Navigate;
 use LteAdmin;
+use LteAdmin\Navigate;
 use ReflectionClass;
 use ReflectionException;
 
@@ -18,7 +18,7 @@ class ExtensionNavigatorHelperGenerator implements DumpExecute
      */
     public function handle(Command $command)
     {
-        $namespace = namespace_entity("Lar\LteAdmin\Core");
+        $namespace = namespace_entity("LteAdmin\Core");
 
         $namespace->class('NavigatorExtensions', function ($class) {
             $class->doc(function ($doc) {

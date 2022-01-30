@@ -12,16 +12,25 @@ class AdminLte extends Executor {
         let lives = $('.__live__');
         if (lives[0]) {
             lives.each((i, o) => data.push({name: '_areas[]', value: o.getAttribute('id')}));
-            data.map(({name}, key) => {
-                if (changed_name && name === changed_name) data[key] = {name, value: changed_value};
+            data.push({name: '_changed_field', value: changed_name});
+            data.push({name: '_changed_value', value: changed_value});
+            const j = jax;
+            data.map(({name, value}, key) => {
+                if (name.indexOf("q[") !== 0)
+                    j.param(name, value);
             });
-            $.get(location.href + "", data, (content) => {
+            j.lte_admin.load_lives().then(((content) => {
                 if (typeof content === 'object') {
                     Object.keys(content).map((key) => {
-                        $(`#${key}`).html(content[key]);
+                        const q = $(`#${key}`);
+                        const live = content[key];
+                        if (q[0].dataset.hash !== live.hash) {
+                            q.html(live.content);
+                            q[0].dataset.hash = live.hash;
+                        }
                     });
                 }
-            })
+            }));
         }
     }
 

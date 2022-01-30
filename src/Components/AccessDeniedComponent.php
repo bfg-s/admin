@@ -1,26 +1,22 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Core\Container;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Explanation;
-
-class AccessDeniedComponent extends Container
+class AccessDeniedComponent extends Component
 {
-    use Delegable;
+    protected $element = "section";
 
-    public function __construct(...$delegates)
+    protected $class = 'content-header';
+
+    protected function mount()
     {
-        parent::__construct(static function (DIV $div) {
-            $div->alert(
-                'lte.error',
-                __('lte.access_denied'),
-                'fas fa-exclamation-triangle'
-            )->dangerType();
-        });
-
-        $this->explainForce(Explanation::new($delegates));
+        $this->alert(
+            AlertComponent::new()
+                ->title('lte.error')
+                ->body('lte.access_denied')
+                ->dangerType()
+                ->icon_exclamation_triangle()
+                ->mt3()
+        );
     }
 }

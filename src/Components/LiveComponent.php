@@ -1,9 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 class LiveComponent extends Component
 {
+    /**
+     * @var array|LiveComponent[]
+     */
+    public static array $list = [];
+
     /**
      * @var int
      */
@@ -16,10 +21,15 @@ class LiveComponent extends Component
     {
         parent::__construct();
 
+        $id = 'live-'.static::$counter;
+
+        LiveComponent::$list[$id] = $this;
+
         $this->forceDelegates(...$delegates);
 
         $this->addClass('__live__')
-            ->setId('live-'.static::$counter);
+            ->setId($id);
+
 
         static::$counter++;
     }

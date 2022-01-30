@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

@@ -1,18 +1,18 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
-use App\LteAdmin\Delegates\CommonTrait;
+use App\Admin\Delegates\CommonTrait;
 use Composer\Json\JsonFormatter;
 use File;
 use Illuminate\Console\Command;
-use Lar\LteAdmin\ApplicationServiceProvider;
-use Lar\LteAdmin\Core\ConfigExtensionProvider;
-use Lar\LteAdmin\Core\NavigatorExtensionProvider;
-use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
-use Lar\LteAdmin\Models\LteSeeder;
-use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Page;
+use LteAdmin\ApplicationServiceProvider;
+use LteAdmin\Core\ConfigExtensionProvider;
+use LteAdmin\Core\NavigatorExtensionProvider;
+use LteAdmin\Interfaces\ActionWorkExtensionInterface;
+use LteAdmin\Models\LteSeeder;
+use LteAdmin\Models\LteUser;
+use LteAdmin\Page;
 use Schema;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -139,7 +139,7 @@ class LteInstallCommand extends Command
         if (!is_file($controller)) {
             file_put_contents(
                 $controller,
-                "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse Lar\LteAdmin\Controllers\Controller as LteController;\n\nclass Controller extends LteController\n{\n\t\n}"
+                "<?php\n\nnamespace ".lte_app_namespace('Controllers').";\n\nuse LteAdmin\Controllers\Controller as LteController;\n\nclass Controller extends LteController\n{\n\t\n}"
             );
 
             $this->info("File {$controller} created!");
@@ -172,18 +172,6 @@ class LteInstallCommand extends Command
                 file_put_contents($file, $delegateClass->wrap('php')->render());
                 $this->info("Delegate {$class} created!");
             }
-        }
-
-        if (!class_exists(\App\LteAdmin\Page::class)) {
-            $file = lte_app_path('Page.php');
-            $pageClass = class_entity('Page');
-            $pageClass->namespace(lte_app_namespace());
-            $pageClass->use(Page::class.' as LtePage');
-            $pageClass->extend('LtePage');
-            $pageClass->doc(function ($doc) {
-            });
-            file_put_contents($file, $pageClass->wrap('php')->render());
-            $this->info('Global page created!');
         }
 
         $this->call('vendor:publish', [
@@ -254,10 +242,10 @@ class LteInstallCommand extends Command
             $this->info("Config {$config} created!");
         }
 
-        $provider = app_path('Providers/LteServiceProvider.php');
+        $provider = app_path('Providers/AdminServiceProvider.php');
 
         if (!is_file($provider)) {
-            $class = class_entity('LteServiceProvider');
+            $class = class_entity('AdminServiceProvider');
             $class->namespace('App\Providers');
             $class->wrap('php');
             $class->use(lte_app_namespace('Config'));

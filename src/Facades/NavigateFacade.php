@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Facades;
+namespace LteAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade as FacadeIlluminate;
-use Lar\LteAdmin\Navigate;
+use LteAdmin\Navigate;
 
 class NavigateFacade extends FacadeIlluminate
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\ButtonsComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\ButtonsComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin ButtonsComponent

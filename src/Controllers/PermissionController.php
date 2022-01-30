@@ -1,15 +1,16 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\ModelInfoTable;
-use Lar\LteAdmin\Delegates\ModelTable;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Models\LtePermission;
-use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Page;
+use Lang;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\ModelInfoTable;
+use LteAdmin\Delegates\ModelTable;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Models\LtePermission;
+use LteAdmin\Models\LteRole;
+use LteAdmin\Page;
 
 class PermissionController extends Controller
 {
@@ -22,9 +23,9 @@ class PermissionController extends Controller
      * @var string[]
      */
     public $method_colors = [
-        '*' => 'primary',
+        '*' => 'dark',
         'GET' => 'info',
-        'POST' => 'success',
+        'POST' => 'primary',
         'PUT' => 'warning',
         'DELETE' => 'danger',
     ];
@@ -76,8 +77,8 @@ class PermissionController extends Controller
                     $form->input('path', 'lte.path')
                         ->required(),
                     $form->multi_select('method[]', 'lte.methods')
-                        ->options(collect($this->method_colors)->mapWithKeys(static function ($i, $k) {
-                            return [$k => __("lte.method_$k")];
+                        ->options(collect($this->method_colors)->map(function ($i, $k) {
+                            return __("lte.method_$k");
                         })->toArray())
                         ->required(),
                     $form->radios('state', 'lte.state')
@@ -125,7 +126,8 @@ class PermissionController extends Controller
     public function show_methods(LtePermission $permission)
     {
         return collect($permission->method)->map(function ($i) {
-            return "<span class=\"badge badge-{$this->method_colors[$i]}\">".__("lte.method_$i").'</span>';
+            return "<span class=\"badge badge-".($this->method_colors[$i] ?? 'light')."\">".
+                (Lang::has("lte.method_$i") ? __("lte.method_$i") : $i).'</span>';
         })->implode(' ');
     }
 

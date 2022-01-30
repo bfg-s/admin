@@ -1,18 +1,18 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use Illuminate\Http\Request;
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\ChartJs;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\ModelInfoTable;
-use Lar\LteAdmin\Delegates\ModelTable;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Delegates\Tab;
-use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Page;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\ChartJs;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\ModelInfoTable;
+use LteAdmin\Delegates\ModelTable;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Delegates\Tab;
+use LteAdmin\Models\LteRole;
+use LteAdmin\Models\LteUser;
+use LteAdmin\Page;
 
 class AdministratorsController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Getters;
+namespace LteAdmin\Getters;
 
 use Illuminate\Support\Collection;
 use Lar\Developer\Getter;
@@ -11,10 +11,6 @@ class Role extends Getter
      * @var string
      */
     public static $name = 'lte.role';
-
-    public static function functions()
-    {
-    }
 
     /**
      * @return Collection

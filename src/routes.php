@@ -1,7 +1,7 @@
 <?php
 
-use Lar\LteAdmin\Core\RoutesAdaptor;
 use Lar\Roads\Roads;
+use LteAdmin\Core\RoutesAdaptor;
 
 /**
  * Lte Auth routes.

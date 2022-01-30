@@ -173,6 +173,8 @@ return [
     'method_POST' => 'Добавление',
     'method_PUT' => 'Редактирование',
     'method_DELETE' => 'Удаление',
+    'method_EXPORT' => 'Экспорт',
+    'method_MODAL' => 'Модальные окна',
     'user_statistics' => 'Статистика пользователей',
     'reset_page' => 'Сбросить страницу',
     'sort_result_report' => 'Результат запроса по параметрам',

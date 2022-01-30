@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
@@ -8,29 +8,30 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Components\ButtonsComponent;
-use Lar\LteAdmin\Components\CardBodyComponent;
-use Lar\LteAdmin\Components\CardComponent;
-use Lar\LteAdmin\Components\ChartJsComponent;
-use Lar\LteAdmin\Components\FieldComponent;
-use Lar\LteAdmin\Components\FormComponent;
-use Lar\LteAdmin\Components\GridColumnComponent;
-use Lar\LteAdmin\Components\GridRowComponent;
-use Lar\LteAdmin\Components\LiveComponent;
-use Lar\LteAdmin\Components\ModelInfoTableComponent;
-use Lar\LteAdmin\Components\ModelRelationComponent;
-use Lar\LteAdmin\Components\ModelTableComponent;
-use Lar\LteAdmin\Components\NestedComponent;
-use Lar\LteAdmin\Components\SearchFormComponent;
-use Lar\LteAdmin\Components\StatisticPeriodComponent;
-use Lar\LteAdmin\Components\TimelineComponent;
-use Lar\LteAdmin\Components\WatchComponent;
-use Lar\LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
-use Lar\LteAdmin\Core\Delegate;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Exceptions\NotFoundExplainForControllerException;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Page;
+use LteAdmin\Components\ButtonsComponent;
+use LteAdmin\Components\CardBodyComponent;
+use LteAdmin\Components\CardComponent;
+use LteAdmin\Components\ChartJsComponent;
+use LteAdmin\Components\FieldComponent;
+use LteAdmin\Components\FormComponent;
+use LteAdmin\Components\GridColumnComponent;
+use LteAdmin\Components\GridRowComponent;
+use LteAdmin\Components\LiveComponent;
+use LteAdmin\Components\ModalComponent;
+use LteAdmin\Components\ModelInfoTableComponent;
+use LteAdmin\Components\ModelRelationComponent;
+use LteAdmin\Components\ModelTableComponent;
+use LteAdmin\Components\NestedComponent;
+use LteAdmin\Components\SearchFormComponent;
+use LteAdmin\Components\StatisticPeriodComponent;
+use LteAdmin\Components\TimelineComponent;
+use LteAdmin\Components\WatchComponent;
+use LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
+use LteAdmin\Core\Delegate;
+use LteAdmin\Exceptions\NotFoundExplainForControllerException;
+use LteAdmin\Explanation;
+use LteAdmin\Page;
+use LteAdmin\Traits\Macroable;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -38,7 +39,7 @@ use function redirect;
 
 /**
  * @property-read Page $page
- * @methods Lar\LteAdmin\Controllers\Controller::$explanation_list (likeProperty)
+ * @methods LteAdmin\Controllers\Controller::$explanation_list (likeProperty)
  * @mixin ControllerMethods
  * @mixin ControllerMacroList
  */
@@ -81,7 +82,9 @@ class Controller extends BaseController
         'watch' => WatchComponent::class,
         'field' => FieldComponent::class,
         'model_relation' => ModelRelationComponent::class,
+        'modal' => ModalComponent::class,
     ];
+    protected static $started = false;
     /**
      * @var array
      */
@@ -94,7 +97,11 @@ class Controller extends BaseController
     {
         $this->makeModelEvents();
 
-        $this->menu = gets()->lte->menu->now;
+        if (static::$started) {
+            $this->menu = gets()->lte->menu->now;
+        } else {
+            static::$started = true;
+        }
     }
 
     private function makeModelEvents()
@@ -175,7 +182,7 @@ class Controller extends BaseController
 
         $_after = request()->get('_after', 'index');
 
-        if ($_after === 'index' && $menu = $this->menu) {
+        if ($_after === 'index' && $menu = gets()->lte->menu->now) {
             return redirect($menu['link.index']())->with('_after', $_after);
         }
 

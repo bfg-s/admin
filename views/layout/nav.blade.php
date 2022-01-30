@@ -15,7 +15,7 @@
             <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i
                     class="fas fa-redo-alt"></i></a>
         </li>
-        @if(count(\Lar\LteAdmin\Getters\Menu::getCurrentQuery()))
+        @if(count(\LteAdmin\Getters\Menu::getCurrentQuery()))
             <li class="nav-item">
                 <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}"
                    title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
@@ -31,8 +31,8 @@
     </ul>
 
     <!-- SEARCH FORM -->
-{!! \Lar\LteAdmin\Components\Vue\GlobalSearch::create() !!}
-{!! \Lar\LteAdmin\Components\Vue\LiveReloader::create() !!}
+{!! \LteAdmin\Components\Vue\GlobalSearch::create() !!}
+{!! \LteAdmin\Components\Vue\LiveReloader::create() !!}
 
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

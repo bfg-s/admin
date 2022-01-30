@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use Auth;
 use Illuminate\Http\RedirectResponse;

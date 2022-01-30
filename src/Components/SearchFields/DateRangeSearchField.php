@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
 use Carbon\Carbon;
-use Lar\LteAdmin\Components\Fields\DateRangeField;
+use LteAdmin\Components\Fields\DateRangeField;
 
 class DateRangeSearchField extends DateRangeField
 {

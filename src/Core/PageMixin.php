@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
-use Lar\LteAdmin\Components\CardComponent;
-use Lar\LteAdmin\Page;
+use LteAdmin\Components\CardComponent;
+use LteAdmin\Page;
 
 /**
  * @mixin Page

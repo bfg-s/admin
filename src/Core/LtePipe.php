@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 class LtePipe
 {

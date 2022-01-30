@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
-use Lar\LteAdmin\Components\Traits\DateControlTrait;
+use LteAdmin\Traits\DateControlTrait;
 
 class DateTimeRangeField extends DateRangeField
 {

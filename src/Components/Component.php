@@ -1,54 +1,54 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Fields\AmountField;
-use Lar\LteAdmin\Components\Fields\AutocompleteField;
-use Lar\LteAdmin\Components\Fields\ChecksField;
-use Lar\LteAdmin\Components\Fields\CKEditorField;
-use Lar\LteAdmin\Components\Fields\CodeMirrorField;
-use Lar\LteAdmin\Components\Fields\ColorField;
-use Lar\LteAdmin\Components\Fields\DateField;
-use Lar\LteAdmin\Components\Fields\DateRangeField;
-use Lar\LteAdmin\Components\Fields\DateTimeField;
-use Lar\LteAdmin\Components\Fields\DateTimeRangeField;
-use Lar\LteAdmin\Components\Fields\DualSelectField;
-use Lar\LteAdmin\Components\Fields\EmailField;
-use Lar\LteAdmin\Components\Fields\FileField;
-use Lar\LteAdmin\Components\Fields\HiddenField;
-use Lar\LteAdmin\Components\Fields\IconField;
-use Lar\LteAdmin\Components\Fields\ImageField;
-use Lar\LteAdmin\Components\Fields\InfoCreatedAtField;
-use Lar\LteAdmin\Components\Fields\InfoField;
-use Lar\LteAdmin\Components\Fields\InfoIdField;
-use Lar\LteAdmin\Components\Fields\InfoUpdatedAtField;
-use Lar\LteAdmin\Components\Fields\InputField;
-use Lar\LteAdmin\Components\Fields\MDEditorField;
-use Lar\LteAdmin\Components\Fields\MultiSelectField;
-use Lar\LteAdmin\Components\Fields\NumberField;
-use Lar\LteAdmin\Components\Fields\NumericField;
-use Lar\LteAdmin\Components\Fields\PasswordField;
-use Lar\LteAdmin\Components\Fields\RadiosField;
-use Lar\LteAdmin\Components\Fields\RatingField;
-use Lar\LteAdmin\Components\Fields\SelectField;
-use Lar\LteAdmin\Components\Fields\SelectTagsField;
-use Lar\LteAdmin\Components\Fields\SwitcherField;
-use Lar\LteAdmin\Components\Fields\TextareaField;
-use Lar\LteAdmin\Components\Fields\TimeField;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Delegate;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Page;
 use Lar\Tagable\Events\onRender;
 use Lar\Tagable\Tag;
+use LteAdmin\Components\Fields\AmountField;
+use LteAdmin\Components\Fields\AutocompleteField;
+use LteAdmin\Components\Fields\ChecksField;
+use LteAdmin\Components\Fields\CKEditorField;
+use LteAdmin\Components\Fields\CodeMirrorField;
+use LteAdmin\Components\Fields\ColorField;
+use LteAdmin\Components\Fields\DateField;
+use LteAdmin\Components\Fields\DateRangeField;
+use LteAdmin\Components\Fields\DateTimeField;
+use LteAdmin\Components\Fields\DateTimeRangeField;
+use LteAdmin\Components\Fields\DualSelectField;
+use LteAdmin\Components\Fields\EmailField;
+use LteAdmin\Components\Fields\FileField;
+use LteAdmin\Components\Fields\HiddenField;
+use LteAdmin\Components\Fields\IconField;
+use LteAdmin\Components\Fields\ImageField;
+use LteAdmin\Components\Fields\InfoCreatedAtField;
+use LteAdmin\Components\Fields\InfoField;
+use LteAdmin\Components\Fields\InfoIdField;
+use LteAdmin\Components\Fields\InfoUpdatedAtField;
+use LteAdmin\Components\Fields\InputField;
+use LteAdmin\Components\Fields\MDEditorField;
+use LteAdmin\Components\Fields\MultiSelectField;
+use LteAdmin\Components\Fields\NumberField;
+use LteAdmin\Components\Fields\NumericField;
+use LteAdmin\Components\Fields\PasswordField;
+use LteAdmin\Components\Fields\RadiosField;
+use LteAdmin\Components\Fields\RatingField;
+use LteAdmin\Components\Fields\SelectField;
+use LteAdmin\Components\Fields\SelectTagsField;
+use LteAdmin\Components\Fields\SwitcherField;
+use LteAdmin\Components\Fields\TextareaField;
+use LteAdmin\Components\Fields\TimeField;
+use LteAdmin\Core\Delegate;
+use LteAdmin\Explanation;
+use LteAdmin\Page;
+use LteAdmin\Traits\BuildHelperTrait;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\FieldMassControlTrait;
+use LteAdmin\Traits\Macroable;
 
 /**
  * @methods static::$inputs
@@ -190,8 +190,10 @@ abstract class Component extends DIV implements onRender
             $this->model_name = $this->page->getModelName($model);
             if (!$search) {
                 $c = $this->realModel();
-                $class = is_string($c) ? $this->model : get_class($c);
-                $this->menu = $this->page->findModelMenu($class);
+                if ($c) {
+                    $class = is_string($c) ? $this->model : get_class($c);
+                    $this->menu = $this->page->findModelMenu($class);
+                }
             }
             $this->iSelectModel = true;
         }
@@ -219,20 +221,6 @@ abstract class Component extends DIV implements onRender
     {
         $this->delegates = [
             ...$this->delegates,
-            ...$delegates,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param ...$delegates
-     * @return $this
-     */
-    public function forceDelegates(...$delegates)
-    {
-        $this->force_delegates = [
-            ...$this->force_delegates,
             ...$delegates,
         ];
 
@@ -278,6 +266,31 @@ abstract class Component extends DIV implements onRender
     public static function has(string $name)
     {
         return isset(static::$inputs[$name]);
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function forceDelegates(...$delegates)
+    {
+        $this->force_delegates = [
+            ...$this->force_delegates,
+            ...$delegates,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function forceDelegateNow(...$delegates)
+    {
+        $this->newExplainForce($delegates);
+
+        return $this;
     }
 
     public function realModelClass()

@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use Lar\LteAdmin\Components\FormGroupComponent;
+use LteAdmin\Components\FormGroupComponent;
 
 class InputField extends FormGroupComponent
 {

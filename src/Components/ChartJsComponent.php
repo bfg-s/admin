@@ -1,12 +1,12 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Lar\LteAdmin\Components\Cores\ChartJsComponentCore;
-use Lar\LteAdmin\Delegates\SearchForm;
+use LteAdmin\Components\Cores\ChartJsComponentCore;
+use LteAdmin\Delegates\SearchForm;
 use Throwable;
 
 class ChartJsComponent extends Component

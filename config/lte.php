@@ -1,23 +1,23 @@
 <?php
 
-use Lar\LteAdmin\Controllers\AuthController;
-use Lar\LteAdmin\Controllers\DashboardController;
-use Lar\LteAdmin\Controllers\UploadController;
-use Lar\LteAdmin\Controllers\UserController;
-use Lar\LteAdmin\Models\LteUser;
+use LteAdmin\Controllers\AuthController;
+use LteAdmin\Controllers\DashboardController;
+use LteAdmin\Controllers\UploadController;
+use LteAdmin\Controllers\UserController;
+use LteAdmin\Models\LteUser;
 
 return [
 
     /**
      * Admin application namespace.
      */
-    'app_namespace' => 'App\\LteAdmin',
+    'app_namespace' => 'App\\Admin',
 
     /**
      * Package work dirs.
      */
     'paths' => [
-        'app' => app_path('LteAdmin'),
+        'app' => app_path('Admin'),
         'view' => 'admin',
     ],
 

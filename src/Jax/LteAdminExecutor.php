@@ -1,9 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Jax;
+namespace LteAdmin\Jax;
 
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
+use Request;
+use Route;
 
 class LteAdminExecutor extends JaxExecutor
 {
@@ -22,5 +24,14 @@ class LteAdminExecutor extends JaxExecutor
     public function access()
     {
         return !\LteAdmin::guest();
+    }
+
+    public function refererEmit()
+    {
+        Route::dispatch(
+            Request::create(
+                Request::server('HTTP_REFERER')
+            )
+        )->getContent();
     }
 }

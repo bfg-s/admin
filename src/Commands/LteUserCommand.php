@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\LteAdmin\Models\LteRole;
-use Lar\LteAdmin\Models\LteUser as User;
+use LteAdmin\Models\LteRole;
+use LteAdmin\Models\LteUser as User;
 
 class LteUserCommand extends Command
 {

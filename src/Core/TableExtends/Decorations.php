@@ -1,14 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Core\TableExtends;
+namespace LteAdmin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\SPAN;
-use Lar\LteAdmin\Components\FieldComponent;
-use Lar\LteAdmin\Components\FieldMethods;
-use Lar\LteAdmin\Components\Fields\RatingField;
+use LteAdmin\Components\FieldComponent;
+use LteAdmin\Components\FieldMethods;
+use LteAdmin\Components\Fields\RatingField;
 
 class Decorations
 {
@@ -22,7 +22,7 @@ class Decorations
         return FieldComponent::rating('rating')
             ->only_input()
             ->readonly()
-            ->default($value)
+            ->value($value)
             ->sizeXs();
     }
 

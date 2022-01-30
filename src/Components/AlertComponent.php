@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Components\Traits\TypesTrait;
+use LteAdmin\Traits\TypesTrait;
 
 /**
  * Class AlertComponent.
@@ -24,25 +24,25 @@ class AlertComponent extends Component
     /**
      * @var string|null
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string|null
      */
-    private $icon;
+    protected $icon;
 
     /**
      * @var string|mixed
      */
-    private $body;
+    protected $body;
 
     /**
      * @var array
      */
-    private $params;
+    protected $params;
 
     /**
-     * @param  array  $title
+     * @param  string  $title
      * @return $this
      */
     public function title($title)
@@ -90,7 +90,7 @@ class AlertComponent extends Component
         }
 
         if ($this->body) {
-            $this->appEnd($this->body);
+            $this->appEnd(is_string($this->body) ? __($this->body) : $this->body);
         }
 
         $this->addClass("alert-{$this->type}");

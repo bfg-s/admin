@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use DB;
 use Illuminate\Database\Seeder;
-use Lar\LteAdmin\Commands\LteDbDumpCommand;
+use LteAdmin\Commands\LteDbDumpCommand;
 
 class LteSeeder extends Seeder
 {

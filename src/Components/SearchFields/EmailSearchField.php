@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
-use Lar\LteAdmin\Components\Fields\EmailField;
+use LteAdmin\Components\Fields\EmailField;
 
 class EmailSearchField extends EmailField
 {

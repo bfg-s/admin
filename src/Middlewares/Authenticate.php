@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Middlewares;
+namespace LteAdmin\Middlewares;
 
 use Cache;
 use Closure;
@@ -11,8 +11,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Lar\Layout\Core\LConfigs;
 use Lar\Layout\Respond;
-use Lar\LteAdmin\LteBoot;
-use Lar\LteAdmin\Models\LtePermission;
+use LteAdmin\LteBoot;
+use LteAdmin\Models\LtePermission;
 use ReflectionException;
 use Route;
 use Symfony\Component\DomCrawler\Crawler;
@@ -35,7 +35,7 @@ class Authenticate
      * @param  Closure  $next
      *
      * @return mixed
-     * @throws ReflectionException
+     * @throws ReflectionException|AuthenticationException
      */
     public function handle($request, Closure $next)
     {
@@ -68,7 +68,7 @@ class Authenticate
                 return response()->json($respond);
             } else {
                 if (!$request->isMethod('get')) {
-                    lte_log_danger('Pattern go to the forbidden zone', 'Blocked GET request', 'fas fa-shield-alt');
+                    lte_log_danger('Pattern go to the forbidden zone', 'Blocked POST request', 'fas fa-shield-alt');
                     session()->flash('respond',
                         respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
 
@@ -81,44 +81,19 @@ class Authenticate
 
         lte_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
 
-        /** @var Response $res */
-        $res = $next($request);
+        /** @var Response $response */
+        $response = $next($request);
 
-        if ($request->has('_areas') && $request->ajax()) {
-            $_areas = $request->get('_areas');
+//        if ($response instanceof Response) {
+//
+//            if ($areaResponse = $this->watchAreas($request, $response)) {
+//                $response = $areaResponse;
+//            } else if ($modalResponse = $this->watchModal($request, $response)) {
+//                $response = $modalResponse;
+//            }
+//        }
 
-            if ($_areas) {
-                $hashes = Cache::get('admin_areas_hashes', []);
-
-                $html = new Crawler($res->getContent());
-
-                $result_areas = [];
-
-                foreach ($_areas as $area) {
-                    $html_text = $html->filter("#{$area}")->eq(0)->html();
-                    $html_hash = md5($html_text);
-                    if (isset($hashes[$area])) {
-                        if ($hashes[$area] != $html_hash) {
-                            $result_areas[$area] = $html_text;
-                            $hashes[$area] = $html_hash;
-                        }
-                    } else {
-                        $result_areas[$area] = $html_text;
-                        $hashes[$area] = $html_hash;
-                    }
-                }
-
-                Cache::forever('admin_areas_hashes', $hashes);
-
-                return $res->setContent($result_areas);
-            }
-        } else {
-            if (Cache::has('admin_areas_hashes')) {
-                Cache::forget('admin_areas_hashes');
-            }
-        }
-
-        return $res;
+        return $response;
     }
 
     /**
@@ -178,5 +153,69 @@ class Authenticate
         }
 
         return LtePermission::check();
+    }
+
+    protected function watchModal(Request $request, Response $response)
+    {
+        if ($request->has('_modal') && $request->ajax()) {
+            $controller = Route::current()?->controller;
+
+            $method = $request->get('_handle');
+            if (
+                $method
+                && $controller
+                && method_exists($controller, $method)
+            ) {
+                return $response->setContent(
+                    app()->call([$controller, $method], [
+                        'detail' => $request->has('_detail')
+                    ])
+                );
+            }
+        }
+
+        return null;
+    }
+
+    protected function watchAreas(Request $request, Response $response)
+    {
+        if ($request->has('_areas') && $request->ajax()) {
+            $_areas = $request->get('_areas');
+
+            if ($_areas) {
+                $hashes = Cache::get('admin_areas_hashes', []);
+
+                $html = new Crawler($response->getContent());
+
+                $result_areas = [];
+
+                foreach ($_areas as $area) {
+                    $ht = $html->filter("#{$area}");
+                    if ($ht->count()) {
+                        $html_text = $ht->eq(0)->html();
+                        $html_hash = md5($html_text);
+                        if (isset($hashes[$area])) {
+                            if ($hashes[$area] != $html_hash) {
+                                $result_areas[$area] = $html_text;
+                                $hashes[$area] = $html_hash;
+                            }
+                        } else {
+                            $result_areas[$area] = $html_text;
+                            $hashes[$area] = $html_hash;
+                        }
+                    }
+                }
+
+                Cache::forever('admin_areas_hashes', $hashes);
+
+                return $response->setContent($result_areas);
+            }
+        } else {
+            if (Cache::has('admin_areas_hashes')) {
+                Cache::forget('admin_areas_hashes');
+            }
+        }
+
+        return null;
     }
 }

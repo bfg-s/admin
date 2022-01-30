@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use Lar\LteAdmin\Components\Cores\RadioFieldCore;
+use LteAdmin\Components\Cores\RadioFieldCore;
 
 class RadiosField extends ChecksField
 {

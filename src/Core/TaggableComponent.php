@@ -1,18 +1,18 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Lar\Layout\Abstracts\Component;
-use Lar\LteAdmin\Components\AlertComponent;
-use Lar\LteAdmin\Components\DividerComponent;
-use Lar\LteAdmin\Components\InfoBoxComponent;
-use Lar\LteAdmin\Components\LangComponent;
-use Lar\LteAdmin\Components\SmallBoxComponent;
-use Lar\LteAdmin\Components\StatisticPeriodComponent;
-use Lar\LteAdmin\Components\TableComponent;
-use Lar\LteAdmin\Components\TabsComponent;
-use Lar\LteAdmin\Components\TimelineComponent;
-use Lar\LteAdmin\Controllers\Controller;
+use LteAdmin\Components\AlertComponent;
+use LteAdmin\Components\DividerComponent;
+use LteAdmin\Components\InfoBoxComponent;
+use LteAdmin\Components\LangComponent;
+use LteAdmin\Components\SmallBoxComponent;
+use LteAdmin\Components\StatisticPeriodComponent;
+use LteAdmin\Components\TableComponent;
+use LteAdmin\Components\TabsComponent;
+use LteAdmin\Components\TimelineComponent;
+use LteAdmin\Controllers\Controller;
 
 class TaggableComponent extends Component
 {

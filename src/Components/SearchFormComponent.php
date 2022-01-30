@@ -1,31 +1,31 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Exception;
 use Lar\Layout\Tags\OL;
-use Lar\LteAdmin\Components\SearchFields\AmountSearchField;
-use Lar\LteAdmin\Components\SearchFields\ChecksSearchField;
-use Lar\LteAdmin\Components\SearchFields\ColorSearchField;
-use Lar\LteAdmin\Components\SearchFields\DateRangeSearchField;
-use Lar\LteAdmin\Components\SearchFields\DateSearchField;
-use Lar\LteAdmin\Components\SearchFields\DateTimeRangeSearchField;
-use Lar\LteAdmin\Components\SearchFields\DateTimeSearchField;
-use Lar\LteAdmin\Components\SearchFields\EmailSearchField;
-use Lar\LteAdmin\Components\SearchFields\IconSearchField;
-use Lar\LteAdmin\Components\SearchFields\InputSearchField;
-use Lar\LteAdmin\Components\SearchFields\MultiSelectSearchField;
-use Lar\LteAdmin\Components\SearchFields\NumberSearchField;
-use Lar\LteAdmin\Components\SearchFields\NumericSearchField;
-use Lar\LteAdmin\Components\SearchFields\RadiosSearchField;
-use Lar\LteAdmin\Components\SearchFields\SelectSearchField;
-use Lar\LteAdmin\Components\SearchFields\SelectTagsSearchField;
-use Lar\LteAdmin\Components\SearchFields\SwitcherSearchField;
-use Lar\LteAdmin\Components\SearchFields\TimeFieldSearchField;
-use Lar\LteAdmin\Components\Traits\SearchFormConditionRulesTrait;
-use Lar\LteAdmin\Components\Traits\SearchFormHelpersTrait;
-use Lar\LteAdmin\Explanation;
 use Lar\Tagable\Tag;
+use LteAdmin\Components\SearchFields\AmountSearchField;
+use LteAdmin\Components\SearchFields\ChecksSearchField;
+use LteAdmin\Components\SearchFields\ColorSearchField;
+use LteAdmin\Components\SearchFields\DateRangeSearchField;
+use LteAdmin\Components\SearchFields\DateSearchField;
+use LteAdmin\Components\SearchFields\DateTimeRangeSearchField;
+use LteAdmin\Components\SearchFields\DateTimeSearchField;
+use LteAdmin\Components\SearchFields\EmailSearchField;
+use LteAdmin\Components\SearchFields\IconSearchField;
+use LteAdmin\Components\SearchFields\InputSearchField;
+use LteAdmin\Components\SearchFields\MultiSelectSearchField;
+use LteAdmin\Components\SearchFields\NumberSearchField;
+use LteAdmin\Components\SearchFields\NumericSearchField;
+use LteAdmin\Components\SearchFields\RadiosSearchField;
+use LteAdmin\Components\SearchFields\SelectSearchField;
+use LteAdmin\Components\SearchFields\SelectTagsSearchField;
+use LteAdmin\Components\SearchFields\SwitcherSearchField;
+use LteAdmin\Components\SearchFields\TimeFieldSearchField;
+use LteAdmin\Explanation;
+use LteAdmin\Traits\SearchFormConditionRulesTrait;
+use LteAdmin\Traits\SearchFormHelpersTrait;
 
 /**
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')

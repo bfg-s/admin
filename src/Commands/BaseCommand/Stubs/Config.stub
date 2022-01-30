@@ -2,7 +2,7 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Lar\LteAdmin\Core\ConfigExtensionProvider;
+use LteAdmin\Core\ConfigExtensionProvider;
 
 /**
  * Class Config

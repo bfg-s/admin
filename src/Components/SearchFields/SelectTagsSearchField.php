@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
-use Lar\LteAdmin\Components\Fields\SelectTagsField;
+use LteAdmin\Components\Fields\SelectTagsField;
 
 class SelectTagsSearchField extends SelectTagsField
 {

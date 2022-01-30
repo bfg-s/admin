@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Components\SearchFields;
+namespace LteAdmin\Components\SearchFields;
 
-use Lar\LteAdmin\Components\Fields\NumericField;
+use LteAdmin\Components\Fields\NumericField;
 
 class NumericSearchField extends NumericField
 {

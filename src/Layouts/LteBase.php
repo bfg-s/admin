@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Layouts;
+namespace LteAdmin\Layouts;
 
 use Lar\Layout\Abstracts\LayoutComponent;
-use Lar\LteAdmin\LteAdmin;
+use LteAdmin\LteAdmin;
 
 class LteBase extends LayoutComponent
 {
@@ -89,7 +89,7 @@ class LteBase extends LayoutComponent
         'lte-asset/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
         'lte-asset/plugins/daterangepicker/daterangepicker.js',
         'lte-asset/plugins/sweetalert2/sweetalert2.min.js',
-//        'lte-asset/plugins/select2/js/select2.full.min.js',
+        'lte-asset/plugins/select2/js/select2.full.min.js',
 
         'lte-admin/plugins/jquery-validation/jquery.validate.min.js',
         'lte-admin/plugins/jquery-validation/localization/messages_ru.min.js',
@@ -125,7 +125,7 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/ptty.jquery.js',
 
         'ljs' => [
-            'jq', 'alert', 'nav', 'mask', 'fancy', 'select2',
+            'jq', 'alert', 'nav', 'mask', 'fancy',
         ],
 
         'vendor/emitter/emitter.js',

@@ -1,24 +1,24 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\ModelInfoTableComponent;
-use Lar\LteAdmin\Components\TabContentComponent;
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\ChartJs;
-use Lar\LteAdmin\Delegates\Column;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Delegates\Tab;
-use Lar\LteAdmin\Getters\Menu;
-use Lar\LteAdmin\Models\LteLog;
-use Lar\LteAdmin\Models\LteUser;
-use Lar\LteAdmin\Page;
+use LteAdmin\Components\ModelInfoTableComponent;
+use LteAdmin\Components\TabContentComponent;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\ChartJs;
+use LteAdmin\Delegates\Column;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Delegates\Tab;
+use LteAdmin\Getters\Menu;
+use LteAdmin\Models\LteLog;
+use LteAdmin\Models\LteUser;
+use LteAdmin\Page;
 
 class UserController extends Controller
 {

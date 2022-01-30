@@ -18,7 +18,7 @@ class CreateTableLtePermission extends Migration
 
             $table->string('path')->default('*');
 
-            $table->string('method')->default('["*"]');
+            $table->string('method', 1000)->default('["*"]');
 
             $table->enum('state', ['close', 'open'])->default('open');
 

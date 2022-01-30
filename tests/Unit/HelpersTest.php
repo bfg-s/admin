@@ -1,12 +1,12 @@
 <?php
 
-namespace Lar\LteAdmin\Tests\Unit;
+namespace LteAdmin\Tests\Unit;
 
 use Tests\TestCase;
 
 /**
  * Class HelpersTest.
- * @package Lar\LteAdmin\Tests\Unit
+ * @package LteAdmin\Tests\Unit
  */
 class HelpersTest extends TestCase
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Traits\FontAwesome;
-use Lar\LteAdmin\Core\Traits\NavCommon;
-use Lar\LteAdmin\Core\Traits\NavDefaultTools;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
-use Lar\LteAdmin\LteAdmin;
-use Lar\LteAdmin\Navigate;
+use LteAdmin\Interfaces\NavigateInterface;
+use LteAdmin\LteAdmin;
+use LteAdmin\Navigate;
+use LteAdmin\Traits\NavCommon;
+use LteAdmin\Traits\NavDefaultTools;
 
 /**
  * @mixin NavigatorExtensions

@@ -1,16 +1,16 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
-use Lar\LteAdmin\Core\Traits\DumpedModel;
+use LteAdmin\Traits\DumpedModel;
 
 /**
- * Lar\LteAdmin\Models\LteFileStorage.
+ * LteAdmin\Models\LteFileStorage.
  *
  * @property int $id
  * @property string $original_name

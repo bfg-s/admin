@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,8 +10,7 @@ use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\LI;
 use Lar\Layout\Tags\OL;
-use Lar\LteAdmin\Explanation;
-use Lar\LteAdmin\Getters\Menu;
+use LteAdmin\Getters\Menu;
 
 class NestedComponent extends Component
 {
@@ -331,17 +330,20 @@ class NestedComponent extends Component
                             }
                         }));
             }
-            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use ($item) {
+            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use ($item
+            ) {
                 if (is_array($this->title_field)) {
                     //dd($this->model);
                     $tag = Tag::create()->addClass('text')
                         ->newExplainForce($this->title_field)->model($item);
                     $div->appEnd($tag);
-                } else if (is_callable($this->title_field)) {
-                    $div->span(['text'])->text(call_user_func($this->title_field, $item));
                 } else {
-                    $ddd = multi_dot_call($item, $this->title_field);
-                    $div->span(['text'])->text(__(e($ddd)));
+                    if (is_callable($this->title_field)) {
+                        $div->span(['text'])->text(call_user_func($this->title_field, $item));
+                    } else {
+                        $ddd = multi_dot_call($item, $this->title_field);
+                        $div->span(['text'])->text(__(e($ddd)));
+                    }
                 }
             });
             if ($this->maxDepth > 1) {

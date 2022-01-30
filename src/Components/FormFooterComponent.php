@@ -1,10 +1,10 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Lar\Layout\LarDoc;
-use Lar\LteAdmin\Components\Vue\FormActionAfterSave;
-use Lar\LteAdmin\Explanation;
+use LteAdmin\Components\Vue\FormActionAfterSave;
+use LteAdmin\Explanation;
 
 class FormFooterComponent extends Component
 {

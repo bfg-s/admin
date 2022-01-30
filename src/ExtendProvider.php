@@ -1,19 +1,18 @@
 <?php
 
-namespace Lar\LteAdmin;
+namespace LteAdmin;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
-use Lar\LteAdmin\Core\ConfigExtensionProvider;
-use Lar\LteAdmin\Core\InstallExtensionProvider;
-use Lar\LteAdmin\Core\NavGroup;
-use Lar\LteAdmin\Core\NavigatorExtensionProvider;
-use Lar\LteAdmin\Core\PermissionsExtensionProvider;
-use Lar\LteAdmin\Core\UnInstallExtensionProvider;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
-use Lar\LteAdmin\Models\LteFunction;
+use LteAdmin\Core\ConfigExtensionProvider;
+use LteAdmin\Core\InstallExtensionProvider;
+use LteAdmin\Core\NavGroup;
+use LteAdmin\Core\NavigatorExtensionProvider;
+use LteAdmin\Core\PermissionsExtensionProvider;
+use LteAdmin\Core\UnInstallExtensionProvider;
+use LteAdmin\Interfaces\NavigateInterface;
+use LteAdmin\Models\LteFunction;
 use ReflectionClass;
 
 class ExtendProvider extends ServiceProviderIlluminate
@@ -35,12 +34,6 @@ class ExtendProvider extends ServiceProviderIlluminate
      * @var string
      */
     public static $description = '';
-
-    /**
-     * Role list access on extension.
-     * @var Collection|LteFunction[]|null
-     */
-    public static $roles;
 
     /**
      * After route to set.
@@ -105,24 +98,6 @@ class ExtendProvider extends ServiceProviderIlluminate
      */
     public function boot()
     {
-        /** @var LteFunction $func */
-        $func = gets()
-            ->lte;
-
-        if ($func) {
-            $func = $func->functions->list;
-
-            if ($func) {
-                $func = $func->where('class', static::class)
-                    ->where('slug', 'access')
-                    ->first();
-            }
-        }
-
-        if ($func) {
-            static::$roles = $func->roles;
-        }
-
         foreach ($this->bind as $key => $item) {
             if (is_numeric($key)) {
                 $key = $item;

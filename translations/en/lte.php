@@ -173,6 +173,8 @@ return [
     'method_POST' => 'Create',
     'method_PUT' => 'Update',
     'method_DELETE' => 'Delete',
+    'method_EXPORT' => 'Export',
+    'method_MODAL' => 'Modal',
     'user_statistics' => 'User statistics',
     'reset_page' => 'Reset page',
     'sort_result_report' => 'Result of the query by parameters',

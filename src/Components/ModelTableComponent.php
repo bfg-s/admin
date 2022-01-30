@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
 use Closure;
 use Exception;
@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Lar\Developer\Core\Traits\Piplineble;
-use Lar\LteAdmin\Components\Traits\ModelTable\TableBuilderTrait;
-use Lar\LteAdmin\Components\Traits\ModelTable\TableControlsTrait;
-use Lar\LteAdmin\Components\Traits\ModelTable\TableExtensionTrait;
-use Lar\LteAdmin\Components\Traits\ModelTable\TableHelpersTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
 use Lar\Tagable\Tag;
+use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\Macroable;
+use LteAdmin\Traits\ModelTable\TableBuilderTrait;
+use LteAdmin\Traits\ModelTable\TableControlsTrait;
+use LteAdmin\Traits\ModelTable\TableExtensionTrait;
+use LteAdmin\Traits\ModelTable\TableHelpersTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

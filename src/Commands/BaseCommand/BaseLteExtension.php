@@ -1,14 +1,14 @@
 <?php
 
-namespace Lar\LteAdmin\Commands\BaseCommand;
+namespace LteAdmin\Commands\BaseCommand;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Lar\Layout\CfgFile;
-use Lar\LteAdmin\LteAdmin;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
+use LteAdmin\LteAdmin;
 
 class BaseLteExtension extends Command
 {

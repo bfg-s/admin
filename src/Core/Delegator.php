@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
-use Lar\LteAdmin\Page;
+use LteAdmin\Page;
 
 /**
  * @template DelegatedClass

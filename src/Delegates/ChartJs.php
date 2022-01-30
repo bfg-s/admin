@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\ChartJsComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\ChartJsComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin ChartJsComponent

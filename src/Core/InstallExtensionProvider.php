@@ -1,16 +1,16 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use DB;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
-use Lar\LteAdmin\ExtendProvider;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
+use LteAdmin\ExtendProvider;
 use Symfony\Component\Finder\Finder;
 
 class InstallExtensionProvider

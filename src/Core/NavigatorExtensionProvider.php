@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Closure;
-use Lar\LteAdmin\ExtendProvider;
-use Lar\LteAdmin\Interfaces\NavigateInterface;
-use Lar\LteAdmin\Navigate;
+use LteAdmin\ExtendProvider;
+use LteAdmin\Interfaces\NavigateInterface;
+use LteAdmin\Navigate;
 
 /**
  * @mixin NavigatorMethods

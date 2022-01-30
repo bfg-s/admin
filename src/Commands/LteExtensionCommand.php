@@ -1,8 +1,8 @@
 <?php
 
-namespace Lar\LteAdmin\Commands;
+namespace LteAdmin\Commands;
 
-use Lar\LteAdmin\Commands\BaseCommand\BaseLteExtension;
+use LteAdmin\Commands\BaseCommand\BaseLteExtension;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

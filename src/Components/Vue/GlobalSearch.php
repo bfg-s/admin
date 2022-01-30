@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Vue;
+namespace LteAdmin\Components\Vue;
 
 use Lar\Tagable\Vue;
 

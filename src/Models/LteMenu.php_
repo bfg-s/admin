@@ -1,13 +1,13 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class LteMenu
  *
- * @package Lar\LteAdmin\Models
+ * @package LteAdmin\Models
  */
 class LteMenu extends Model
 {

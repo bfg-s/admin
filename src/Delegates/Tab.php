@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\TabContentComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\TabContentComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin TabContentComponent

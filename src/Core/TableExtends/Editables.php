@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Core\TableExtends;
+namespace LteAdmin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\A;
-use Lar\LteAdmin\Components\FieldComponent;
+use LteAdmin\Components\FieldComponent;
 
 class Editables
 {

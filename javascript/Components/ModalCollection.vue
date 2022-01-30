@@ -23,7 +23,7 @@ import merge from 'lodash/merge';
 
 export default {
     name: 'modal',
-    $exec: ['put', 'hide', 'toggle', 'destroy'],
+    $exec: ['put', 'hide', 'toggle', 'destroy', 'submit'],
     $remember: ['modals'],
     data() {
         return {
@@ -97,22 +97,61 @@ export default {
                 this.die(this.$refs[key][0]);
             }
         },
+        submit(key, after = "destroy") {
+            if (key in this.$refs) {
+                const form = $(this.$refs[key][0]).find("form[method=get]");
+                const data = $(this.$refs[key][0]).find(".modal-content :input").serializeArray();
+                const params = {};
+                data.map((i) => {
+                    if (i.name.indexOf('_') !== 0) {
+                        params[i.name] = i.value;
+                    }
+                })
+
+                if (form[0]) {
+                    "doc::location".exec(params);
+                    this[after](key);
+                } else {
+                    this.loading = true;
+
+                    let modal = this.$refs[key][0].modal;
+                    console.log(this.$refs[key], after, data);
+                    jax.param('_modal', modal.handle)
+                        .param('_modal_id', modal.key)
+                        .param('_modal_submit', 'true')
+                        .params(typeof modal.params === 'object' && !Array.isArray(modal.params) ? modal.params : {})
+                        .params(params)
+                        .lte_admin
+                        .load_modal()
+                        .then(data => {
+                            ljs.exec(data);
+                            this.loading = false;
+                            this[after](key);
+                        });
+                }
+            }
+        },
         load(obj) {
             if (obj.modal) {
                 let modal = obj.modal;
                 let key = modal.key;
-                jax.param('modal', modal.key)
+                jax.param('_modal', modal.handle)
+                    .param('_modal_id', modal.key)
                     .params(typeof modal.params === 'object' && !Array.isArray(modal.params) ? modal.params : {})
                     .lte_admin
-                    .load_modal(modal.handle, typeof modal.params === 'object' && Array.isArray(modal.params) ? modal.params : [])
+                    .load_modal()
                     .then(data => {
 
-                        modal.content = data[0];
+                        modal.content = data.content;
+                        modal.options.size = data.size;
                         this.modal_cmd(obj, 'show');
+                        $(obj).data('bs.modal')._config.backdrop = !data.backdrop ? 'static' : true;
+                        $(obj).data('bs.modal')._config.keyboard = data.backdrop;
+
                         this.loading = false;
 
                         $(obj).on('hidden.bs.modal', () => {
-                            if (obj.querySelector('[data-temporary]')) {
+                            if (data.temporary) {
                                 this.die(obj);
                             }
                         });
@@ -150,7 +189,6 @@ export default {
                         let o = this.modal_cmd(obj, merge({
                             focus: true,
                             show: false,
-                            backdrop: 'static'
                         }, modal.options));
                         this.load(obj);
                     }

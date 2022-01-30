@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Exceptions;
+namespace LteAdmin\Exceptions;
 
 use Exception;
 use Illuminate\Http\Request;
-use Lar\LteAdmin\Layouts\LteAuthLayout;
 use LteAdmin;
+use LteAdmin\Layouts\LteAuthLayout;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;

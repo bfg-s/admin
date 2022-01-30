@@ -5,7 +5,7 @@
             <i class="fas fa-ellipsis-v"></i>
         </button>
         @php
-            $prepareExport = \Lar\LteAdmin\Core\PrepareExport::$columns[$table_id] ?? null
+            $prepareExport = \LteAdmin\Core\PrepareExport::$columns[$table_id] ?? null
         @endphp
         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
             @if($hasHidden)

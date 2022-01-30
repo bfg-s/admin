@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Delegates;
+namespace LteAdmin\Delegates;
 
-use Lar\LteAdmin\Components\SearchFormComponent;
-use Lar\LteAdmin\Core\Delegator;
+use LteAdmin\Components\SearchFormComponent;
+use LteAdmin\Core\Delegator;
 
 /**
  * @mixin SearchFormComponent

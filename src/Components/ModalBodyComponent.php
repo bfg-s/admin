@@ -1,26 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Components;
+namespace LteAdmin\Components;
 
-use Exception;
-use Lar\Layout\Tags\DIV;
-use Lar\LteAdmin\Components\Traits\BuildHelperTrait;
-use Lar\LteAdmin\Components\Traits\FieldMassControlTrait;
-use Lar\LteAdmin\Core\Traits\Delegable;
-use Lar\LteAdmin\Core\Traits\Macroable;
-use Lar\Tagable\Events\onRender;
-use Lar\Tagable\Tag;
-use ReflectionException;
-
-/**
- * @methods Lar\LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
- * @mixin ModalBodyComponentMacroList
- * @mixin ModalBodyComponentMethods
- */
-class ModalBodyComponent extends DIV implements onRender
+class ModalBodyComponent extends Component
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
-
     /**
      * @var string[]
      */
@@ -28,49 +11,24 @@ class ModalBodyComponent extends DIV implements onRender
         'modal-body',
     ];
 
-    /**
-     * @var ModalContent
-     */
-    protected $content_parent;
-
-    /**
-     * ModalBody constructor.
-     * @param  ModalComponent  $content_parent
-     * @param  mixed  ...$params
-     * @throws ReflectionException
-     */
-    public function __construct(ModalComponent $content_parent, ...$params)
+    public function form(...$delegates)
     {
-        parent::__construct();
+        $form = FormComponent::create(...$delegates);
 
-        $this->when($params);
-
-        $this->content_parent = $content_parent;
-
-        $this->callConstructEvents();
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|Tag|mixed|string
-     * @throws Exception
-     */
-    public function __call($name, $arguments)
-    {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
+        $form->vertical()->attr('target');
+        if (request()->has('_modal_id')) {
+            $form->onSubmit("event.preventDefault();'modal:submit'.exec('".request()->get('_modal_id')."');return false;");
+        } else {
+            $form->onSubmit("event.preventDefault();return false;");
         }
 
-        return parent::__call($name, $arguments);
+        $this->appEnd($form);
+
+        return $form;
     }
 
-    /**
-     * @return mixed|void
-     * @throws ReflectionException
-     */
-    public function onRender()
+    protected function mount()
     {
-        $this->callRenderEvents();
+        // TODO: Implement mount() method.
     }
 }

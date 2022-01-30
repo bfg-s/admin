@@ -1,11 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Core;
+namespace LteAdmin\Core;
 
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Request;
-use Route;
 
 class PrepareExport implements FromCollection
 {
@@ -50,11 +48,6 @@ class PrepareExport implements FromCollection
         $this->order = $order;
         $this->order_type = $order_type;
         $this->table = $table;
-        Route::dispatch(
-            Request::create(
-                Request::server('HTTP_REFERER')
-            )
-        )->getContent();
     }
 
     public function collection()

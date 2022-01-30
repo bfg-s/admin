@@ -1,11 +1,11 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\Layout\Tags\TEXTAREA;
-use Lar\LteAdmin\Components\FormGroupComponent;
+use LteAdmin\Components\FormGroupComponent;
 
 class TextareaField extends FormGroupComponent
 {

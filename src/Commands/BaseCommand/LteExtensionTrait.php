@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Commands\BaseCommand;
+namespace LteAdmin\Commands\BaseCommand;
 
 use Composer\Json\JsonFormatter;
-use Lar\LteAdmin\LteAdmin;
+use LteAdmin\LteAdmin;
 use Str;
 
 trait LteExtensionTrait
@@ -111,7 +111,7 @@ trait LteExtensionTrait
 
         list($folder, $extension) = explode('/', $name);
 
-        $namespace = 'Lar\\LteAdmin\\'.ucfirst(Str::camel($folder !== 'lar' ? $folder : 'extend')).'\\'.ucfirst(Str::camel($extension));
+        $namespace = 'LteAdmin\\'.ucfirst(Str::camel($folder !== 'lar' ? $folder : 'extend')).'\\'.ucfirst(Str::camel($extension));
 
         $data = str_replace([
             '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{LTE_VERSION}',

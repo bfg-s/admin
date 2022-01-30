@@ -2,7 +2,7 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Lar\LteAdmin\Core\PermissionsExtensionProvider;
+use LteAdmin\Core\PermissionsExtensionProvider;
 
 /**
  * Class Permissions
@@ -10,13 +10,4 @@ use Lar\LteAdmin\Core\PermissionsExtensionProvider;
  */
 class Permissions extends PermissionsExtensionProvider {
 
-    /**
-     * Has function permission in extension
-     * Fields: ["slug" => "", "description" => "", "roles" => []]
-     * @return array
-     */
-    public function functions(): array
-    {
-        return [];
-    }
 }

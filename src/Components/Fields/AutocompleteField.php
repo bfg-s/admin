@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 class AutocompleteField extends SelectField
 {

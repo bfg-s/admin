@@ -25,6 +25,7 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/editable'));
     ljs.regExec(require('./Executors/codemirror'));
     ljs.regExec(require('./Executors/rating'));
+    ljs.regExec(require('./Executors/select2'));
 
     ljs.regExec(require('./Executors/str'));
     ljs.regExec(require('./Executors/table_action'));

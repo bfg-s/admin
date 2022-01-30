@@ -1,9 +1,9 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers;
+namespace LteAdmin\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Lar\LteAdmin\Models\LteFileStorage;
+use LteAdmin\Models\LteFileStorage;
 
 class UploadController extends Controller
 {

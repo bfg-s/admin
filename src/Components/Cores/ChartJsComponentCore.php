@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Cores;
+namespace LteAdmin\Components\Cores;
 
 use Illuminate\Support\Arr;
 use InvalidArgumentException;

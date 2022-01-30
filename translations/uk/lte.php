@@ -173,6 +173,8 @@ return [
     'method_POST' => 'Додавання',
     'method_PUT' => 'Редагування',
     'method_DELETE' => 'Видалення',
+    'method_EXPORT' => 'Експорт',
+    'method_MODAL' => 'Модальні вікна',
     'user_statistics' => 'Статистика користувача',
     'reset_page' => 'Скинути сторінку',
     'sort_result_report' => 'Результат запиту за параметрами',

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Controllers\Traits;
+namespace LteAdmin\Controllers\Traits;
 
 use App;
 use Exception;
@@ -8,12 +8,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Lar\Layout\Respond;
-use Lar\LteAdmin\Delegates\Card;
-use Lar\LteAdmin\Delegates\Form;
-use Lar\LteAdmin\Delegates\ModelInfoTable;
-use Lar\LteAdmin\Delegates\ModelTable;
-use Lar\LteAdmin\Delegates\SearchForm;
-use Lar\LteAdmin\Page;
+use LteAdmin\Delegates\Card;
+use LteAdmin\Delegates\Form;
+use LteAdmin\Delegates\ModelInfoTable;
+use LteAdmin\Delegates\ModelTable;
+use LteAdmin\Delegates\SearchForm;
+use LteAdmin\Page;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;

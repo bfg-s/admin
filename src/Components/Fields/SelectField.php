@@ -1,15 +1,15 @@
 <?php
 
-namespace Lar\LteAdmin\Components\Fields;
+namespace LteAdmin\Components\Fields;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Developer\Core\Select2;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use Lar\LteAdmin\Components\Cores\Select2FieldCore;
-use Lar\LteAdmin\Components\FormGroupComponent;
-use Lar\LteAdmin\Page;
+use LteAdmin\Components\Cores\Select2FieldCore;
+use LteAdmin\Components\FormGroupComponent;
+use LteAdmin\Page;
 
 class SelectField extends FormGroupComponent
 {

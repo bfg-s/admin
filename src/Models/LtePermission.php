@@ -1,6 +1,6 @@
 <?php
 
-namespace Lar\LteAdmin\Models;
+namespace LteAdmin\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
-use Lar\LteAdmin\Core\Traits\DumpedModel;
+use LteAdmin;
+use LteAdmin\Traits\DumpedModel;
 use Str;
 
 /**
- * Lar\LteAdmin\Models\LtePermission.
+ * LteAdmin\Models\LtePermission.
  *
  * @property int $id
  * @property string $path
@@ -77,7 +78,7 @@ class LtePermission extends Model
         foreach (static::now()->where('state', 'close') as $close) {
             $path = static::makeCheckedPath($close->path);
 
-            if (($close->method[0] === '*' || array_search($method, $close->method) !== false) && Str::is(url($path),
+            if (($close->method[0] === '*' || in_array($method, $close->method)) && Str::is(url($path),
                     $url)) {
                 $result = false;
                 break;
@@ -89,7 +90,7 @@ class LtePermission extends Model
             foreach (static::now()->where('state', 'open') as $open) {
                 $path = static::makeCheckedPath($open->path);
 
-                if (($open->method[0] === '*' || array_search($method, $open->method) !== false) && Str::is(url($path),
+                if (($open->method[0] === '*' || in_array($method, $open->method)) && Str::is(url($path),
                         $url)) {
                     $result = true;
                     break;
@@ -109,9 +110,11 @@ class LtePermission extends Model
             return static::$now;
         }
 
-        $roles = lte_user() ? lte_user()->roles->pluck('id')->toArray() : [1];
+        $roles = LteAdmin::user()?->roles->pluck('id') ?? [];
 
-        return static::$now = static::whereIn('lte_role_id', $roles)->where('active', 1)->get();
+        return static::$now = static::whereIn('lte_role_id', $roles)
+            ->where('active', 1)
+            ->get();
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace {NAMESPACE}\Extension;
 
-use Lar\LteAdmin\Core\NavigatorExtensionProvider;
-use Lar\LteAdmin\Interfaces\ActionWorkExtensionInterface;
+use LteAdmin\Core\NavigatorExtensionProvider;
+use LteAdmin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Navigator
