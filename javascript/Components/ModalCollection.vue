@@ -113,9 +113,7 @@ export default {
                     this[after](key);
                 } else {
                     this.loading = true;
-
                     let modal = this.$refs[key][0].modal;
-                    console.log(this.$refs[key], after, data);
                     jax.param('_modal', modal.handle)
                         .param('_modal_id', modal.key)
                         .param('_modal_submit', 'true')

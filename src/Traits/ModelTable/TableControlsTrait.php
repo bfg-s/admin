@@ -251,6 +251,7 @@ trait TableControlsTrait
         if ($this->get_test_var('controls')) {
             $hasDelete = $this->menu && isset($this->menu['link.destroy']) && $this->menu['link.destroy'](0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
+            $modelName = $this->model_name;
 
             if ($this->checks && !request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
@@ -265,10 +266,10 @@ trait TableControlsTrait
                             return isset($i['field']) && is_string($i['field']);
                         })->pluck('field')->toArray(),
                     ])->render();
-                }, function (Model $model) {
+                }, function (Model $model) use ($modelName) {
                     return view('lte::segment.model_table_checkbox', [
                         'id' => $model->id,
-                        'table_id' => $this->model_name,
+                        'table_id' => $modelName,
                         'disabled' => !$this->get_test_var('control_selectable', [$model]),
                     ])->render();
                 });

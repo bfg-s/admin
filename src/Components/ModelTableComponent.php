@@ -121,14 +121,7 @@ class ModelTableComponent extends Component
 
         $this->delegatesNow($delegates);
 
-        $this->save_table_requests();
-    }
-
-    /**
-     * Save last table request for returns.
-     */
-    protected function save_table_requests()
-    {
+        $this->_create_controls();
     }
 
     /**
@@ -165,7 +158,6 @@ class ModelTableComponent extends Component
 
     protected function mount()
     {
-        $this->_create_controls();
         $this->_build();
     }
 }

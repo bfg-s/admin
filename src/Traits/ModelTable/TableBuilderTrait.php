@@ -126,6 +126,8 @@ trait TableBuilderTrait
      * @param  TR  $tr
      * @param  array  $column
      * @param  string  $key
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function makeHeadTH(TR $tr, array $column, string $key)
     {
