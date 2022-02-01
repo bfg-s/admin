@@ -28,7 +28,7 @@
         "laravel/framework": "^8.0",
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
-        "almasaeed2010/adminlte": "^3.0"
+        "almasaeed2010/adminlte": "^3.1.0"
     },
     "require-dev": {},
     "autoload": {
