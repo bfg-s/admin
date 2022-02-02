@@ -3,7 +3,7 @@
 namespace LteAdmin\Components;
 
 use Closure;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\TypesTrait;
 
 /**

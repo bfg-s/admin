@@ -3,7 +3,7 @@
 namespace LteAdmin\Components;
 
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;
 use LteAdmin\Traits\TypesTrait;

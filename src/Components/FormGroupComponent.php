@@ -9,7 +9,7 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\Layout\Tags\INPUT;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Page;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;

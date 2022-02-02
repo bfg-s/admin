@@ -2,7 +2,7 @@
 
 namespace LteAdmin\Components;
 
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 
 class StatisticPeriodComponent extends Component
 {

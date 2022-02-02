@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Explanation;
 use LteAdmin\Getters\Menu;
 use LteAdmin\Page;

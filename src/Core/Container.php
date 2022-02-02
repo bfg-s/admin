@@ -9,7 +9,7 @@ use Lar\Developer\Core\Traits\Eventable;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Interfaces\SegmentContainerInterface;
 use Throwable;
 

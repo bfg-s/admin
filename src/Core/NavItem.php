@@ -4,7 +4,7 @@ namespace LteAdmin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Lar\Layout\Traits\FontAwesome;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Navigate;
 use LteAdmin\Traits\NavCommon;
 use Str;
