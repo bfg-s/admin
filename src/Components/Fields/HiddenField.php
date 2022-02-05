@@ -24,6 +24,11 @@ class HiddenField extends FormGroupComponent
     protected $icon = null;
 
     /**
+     * @var bool
+     */
+    protected $only_input = true;
+
+    /**
      * @return Component|INPUT|mixed
      */
     public function field()
