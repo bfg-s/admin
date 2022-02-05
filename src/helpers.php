@@ -237,7 +237,7 @@ if (!function_exists('makeUrlWithParams')) {
     function makeUrlWithParams(string $url, array $params)
     {
         $params = http_build_query($params);
-        $d = strpos($url, '?') === false ? '?' : '&';
+        $d = !str_contains($url, '?') ? '?' : '&';
 
         return $url.$d.$params;
     }
