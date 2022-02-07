@@ -124,7 +124,7 @@ class CardComponent extends Component
     public function tab(...$delegates)
     {
         if (!$this->body) {
-            $this->fullBody();
+            $this->full_body();
         }
 
         array_unshift($delegates, TabContentComponent::new()->p3()->pr4());
@@ -137,7 +137,7 @@ class CardComponent extends Component
      * @param ...$params
      * @return \Lar\Layout\Abstracts\Component|LarDoc|CardBodyComponent
      */
-    public function fullBody(...$params)
+    public function full_body(...$params)
     {
         return $this->card_body()->addClass('p-0')->when($params);
     }
@@ -256,7 +256,7 @@ class CardComponent extends Component
 
     public function model_info_table(...$delegates)
     {
-        return $this->fullBody()->model_info_table($delegates);
+        return $this->full_body()->model_info_table($delegates);
     }
 
     /**

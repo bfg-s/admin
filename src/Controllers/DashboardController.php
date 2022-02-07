@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 ->card()
                 ->title($title)
                 ->h100()
-                ->fullBody(['table-responsive'])
+                ->full_body(['table-responsive'])
                 ->table()
                 ->rows($rows)
         );
