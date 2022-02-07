@@ -526,7 +526,7 @@ class Menu extends Getter
             $item['model_class'] = ($item['controller'] ?? null) ? ($item['controller']::$model ?? null) : null;
 
             if ($item['model_class'] && in_array($item['model_class'], static::$models)) {
-                throw new ResourceControllerExistsException($item['model_class']);
+                throw new ResourceControllerExistsException($item['model_class'], $item['controller']);
             } else {
                 static::$models[] = $item['model_class'];
             }
