@@ -86,7 +86,7 @@ class LteUser extends Model implements AuthenticatableContract
     /**
      * @return BelongsToMany
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(LteRole::class, 'lte_role_user', 'lte_user_id', 'lte_role_id');
     }
@@ -94,7 +94,7 @@ class LteUser extends Model implements AuthenticatableContract
     /**
      * @return HasMany
      */
-    public function logs()
+    public function logs(): HasMany
     {
         return $this->hasMany(LteLog::class, 'lte_user_id', 'id');
     }
@@ -105,7 +105,7 @@ class LteUser extends Model implements AuthenticatableContract
      */
     public function getAvatarAttribute($avatar)
     {
-        return $avatar ? $avatar : 'lte-admin/img/user.jpg';
+        return $avatar ?: 'lte-admin/img/user.jpg';
     }
 
     /**

@@ -51,7 +51,7 @@ class LteRole extends Model
     /**
      * @return BelongsToMany
      */
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(config('lte.auth.providers.lte.model'), 'lte_role_user', 'lte_role_id',
             'lte_user_id');

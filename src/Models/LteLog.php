@@ -81,7 +81,7 @@ class LteLog extends Model
     /**
      * @return HasOne
      */
-    public function lte_user()
+    public function lte_user(): HasOne
     {
         return $this->hasOne(LteUser::class, 'id', 'lte_user_id');
     }

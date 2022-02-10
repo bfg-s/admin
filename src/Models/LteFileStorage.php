@@ -87,8 +87,8 @@ class LteFileStorage extends Model
 
     /**
      * @param  UploadedFile|null  $file
-     * @param  string  $storage
-     * @param  string  $storage_path
+     * @param  string|null  $storage
+     * @param  string|null  $storage_path
      * @param  string|null  $field
      * @param  string|null  $form
      * @return string
@@ -162,12 +162,12 @@ class LteFileStorage extends Model
     }
 
     /**
-     * @param  UploadedFile|string|null  $file
-     * @param  string  $storage
-     * @param  string  $storage_path
+     * @param  null  $file
+     * @param  string|null  $storage
+     * @param  string|null  $storage_path
      * @param  string|null  $field
      * @param  string|null  $form
-     * @return string
+     * @return string|null
      */
     public static function makeFile(
         $file = null,
@@ -190,7 +190,7 @@ class LteFileStorage extends Model
     /**
      * @return $this
      */
-    public function returnModel()
+    public function returnModel(): static
     {
         $this->return_model = true;
 
