@@ -79,9 +79,12 @@ class LteJaxCommand extends Command
      */
     protected function namespace()
     {
-        return $this->option('dir') ? implode('\\',
-            array_map('ucfirst',
-                array_map('Str::camel',
+        return $this->option('dir') ? implode(
+            '\\',
+            array_map(
+                'ucfirst',
+                array_map(
+                    'Str::camel',
                     explode('/', $this->option('dir'))
                 )
             )

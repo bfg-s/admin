@@ -8,8 +8,8 @@ use LteAdmin\Traits\ModelRelation\ModelRelationHelpersTrait;
 
 class ModelRelationComponent extends Component
 {
-    use ModelRelationHelpersTrait,
-        ModelRelationBuilderTrait;
+    use ModelRelationHelpersTrait;
+    use ModelRelationBuilderTrait;
 
     /**
      * @var mixed

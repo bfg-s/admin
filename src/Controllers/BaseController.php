@@ -21,7 +21,9 @@ use LteAdmin\Models\LteRole;
  */
 abstract class BaseController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     /**
      * @var ExtendProvider|null

@@ -15,7 +15,8 @@ use ReflectionException;
  */
 class TabsComponent extends DIV implements onRender
 {
-    use Macroable, Delegable;
+    use Macroable;
+    use Delegable;
 
     /**
      * Count of tabs.

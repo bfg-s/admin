@@ -3,8 +3,8 @@
 namespace LteAdmin\Components;
 
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\Macroable;
 use LteAdmin\Traits\TypesTrait;
 
@@ -13,7 +13,10 @@ use LteAdmin\Traits\TypesTrait;
  */
 class InfoBoxComponent extends DIV
 {
-    use FontAwesome, TypesTrait, Macroable, Delegable;
+    use FontAwesome;
+    use TypesTrait;
+    use Macroable;
+    use Delegable;
 
     /**
      * @var string[]

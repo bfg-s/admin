@@ -24,8 +24,10 @@ trait LteExtensionTrait
 
         if (!collect($base_composer['repositories'])->where('url', $path)->first()) {
             $base_composer['repositories'][] = ['type' => 'path', 'url' => $path];
-            file_put_contents(base_path('composer.json'),
-                JsonFormatter::format(json_encode($base_composer), false, true));
+            file_put_contents(
+                base_path('composer.json'),
+                JsonFormatter::format(json_encode($base_composer), false, true)
+            );
             $this->info("> Add PATH [{$path}] to repository!");
 
             return true;

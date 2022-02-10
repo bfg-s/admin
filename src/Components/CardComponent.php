@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
-use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Explanation;
 use LteAdmin\Getters\Menu;
 use LteAdmin\Page;
 use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\Macroable;
 use LteAdmin\Traits\TypesTrait;
 
 class CardComponent extends Component
 {
-    use TypesTrait, FontAwesome, Macroable, Delegable;
+    use TypesTrait;
+    use FontAwesome;
+    use Macroable;
+    use Delegable;
 
     public static $isContainer = true;
 

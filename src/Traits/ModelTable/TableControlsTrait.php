@@ -294,8 +294,12 @@ trait TableControlsTrait
                             }
 
                             if (isset($menu['link.destroy']) && $this->get_test_var('control_delete', [$model])) {
-                                $group->resourceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(),
-                                    $key);
+                                $group->resourceDestroy(
+                                    $menu['link.destroy']($key),
+                                    '',
+                                    $model->getRouteKeyName(),
+                                    $key
+                                );
                             }
 
                             if (isset($menu['link.show']) && $this->get_test_var('control_info', [$model])) {
@@ -303,13 +307,21 @@ trait TableControlsTrait
                             }
                         } else {
                             if (isset($menu['link.destroy']) && $this->get_test_var('control_restore', [$model])) {
-                                $group->resourceRestore($menu['link.destroy']($key), '', $model->getRouteKeyName(),
-                                    $key);
+                                $group->resourceRestore(
+                                    $menu['link.destroy']($key),
+                                    '',
+                                    $model->getRouteKeyName(),
+                                    $key
+                                );
                             }
 
                             if (isset($menu['link.destroy']) && $this->get_test_var('control_force_delete', [$model])) {
-                                $group->resourceForceDestroy($menu['link.destroy']($key), '', $model->getRouteKeyName(),
-                                    $key);
+                                $group->resourceForceDestroy(
+                                    $menu['link.destroy']($key),
+                                    '',
+                                    $model->getRouteKeyName(),
+                                    $key
+                                );
                             }
                         }
                     }

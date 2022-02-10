@@ -99,12 +99,16 @@ class LteInstallCommand extends Command
 
             $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
 
-            if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search('@php artisan lar:dump',
-                    $base_composer['scripts']['post-autoload-dump']) === false) {
+            if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search(
+                '@php artisan lar:dump',
+                $base_composer['scripts']['post-autoload-dump']
+            ) === false) {
                 $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
 
-                file_put_contents(base_path('composer.json'),
-                    JsonFormatter::format(json_encode($base_composer), false, true));
+                file_put_contents(
+                    base_path('composer.json'),
+                    JsonFormatter::format(json_encode($base_composer), false, true)
+                );
 
                 $this->info('File composer.json updated!');
             }

@@ -2,7 +2,6 @@
 
 namespace LteAdmin\Delegates;
 
-use LteAdmin\Components\AlertComponent;
 use LteAdmin\Components\TableComponent;
 use LteAdmin\Core\Delegator;
 

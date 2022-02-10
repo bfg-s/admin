@@ -159,16 +159,21 @@ class MacroableHelperGenerator implements DumpExecute
                         $class['methods'] = $class['class'].'::'.$class['methods'];
                     }
                     $class['methods'] = str_replace(['static', 'self'], $class['class'], $class['methods']);
-                    if (!preg_match('/((.*)\:\:([\$a-zA-Z0-9\_]+))\s?(\(.*\))?\s?(.*)/m', $class['methods'],
-                        $class['methods'])) {
+                    if (!preg_match(
+                        '/((.*)\:\:([\$a-zA-Z0-9\_]+))\s?(\(.*\))?\s?(.*)/m',
+                        $class['methods'],
+                        $class['methods']
+                    )) {
                         continue;
                     }
                     $class['methods'][3] = trim($class['methods'][3], '$');
                     if (!isset($class['methods'][4]) || !$class['methods'][4]) {
                         $class['methods'][4] = false;
                     }
-                    if (!class_exists($class['methods'][2]) || !property_exists($class['methods'][2],
-                            $class['methods'][3])) {
+                    if (!class_exists($class['methods'][2]) || !property_exists(
+                        $class['methods'][2],
+                        $class['methods'][3]
+                    )) {
                         continue;
                     } elseif (method_exists($class['methods'][2], 'getHelpMethodList')) {
                         $class['methods']['data'] = call_user_func([$class['methods'][2], 'getHelpMethodList']);
@@ -278,10 +283,16 @@ class MacroableHelperGenerator implements DumpExecute
             $isAny = $params === '(likeAny)';
 
             if ($ref->hasMethod('__construct')) {
-                $params = preg_replace("/\*\s*\)$/",
-                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
-                $params = preg_replace("/^\(\s*\*/",
-                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')', $params);
+                $params = preg_replace(
+                    "/\*\s*\)$/",
+                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')',
+                    $params
+                );
+                $params = preg_replace(
+                    "/^\(\s*\*/",
+                    refl_params_entity($ref->getMethod('__construct')->getParameters()).')',
+                    $params
+                );
             }
 
             $upd = function ($m) use ($class_data, $method_class) {

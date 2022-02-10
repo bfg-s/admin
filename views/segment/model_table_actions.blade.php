@@ -5,7 +5,7 @@
             <i class="fas fa-ellipsis-v"></i>
         </button>
         @php
-            $prepareExport = \LteAdmin\Core\PrepareExport::$columns[$table_id] ?? null
+            use LteAdmin\Core\PrepareExport;$prepareExport = PrepareExport::$columns[$table_id] ?? null
         @endphp
         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
             @if($hasHidden)
@@ -85,15 +85,18 @@
                 <hr class="dropdown-divider"/>
             @endif
             @if($hasDelete || count($actions))
-                <button class="dropdown-item" type="button" data-table="{{$table_id}}" data-click="table_list::invertChildCheckboxes"
+                <button class="dropdown-item" type="button" data-table="{{$table_id}}"
+                        data-click="table_list::invertChildCheckboxes"
                         name="select_{{$table_id}}">
                     <i class="fas fa-vote-yea"></i> Invert selections
                 </button>
-                <button class="dropdown-item" type="button" data-table="{{$table_id}}" data-click="table_list::checkChildCheckboxes"
+                <button class="dropdown-item" type="button" data-table="{{$table_id}}"
+                        data-click="table_list::checkChildCheckboxes"
                         name="select_{{$table_id}}">
                     <i class="far fa-check-square icon"></i> Select all
                 </button>
-                <button class="dropdown-item" type="button" data-table="{{$table_id}}" data-click="table_list::uncheckChildCheckboxes"
+                <button class="dropdown-item" type="button" data-table="{{$table_id}}"
+                        data-click="table_list::uncheckChildCheckboxes"
                         name="select_{{$table_id}}">
                     <i class="far fa-square"></i> Unselect all
                 </button>

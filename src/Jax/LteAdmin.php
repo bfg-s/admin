@@ -85,8 +85,10 @@ class LteAdmin extends LteAdminExecutor
             static::$i++;
 
             if (isset($item['children'])) {
-                $result = array_merge($result,
-                    $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field));
+                $result = array_merge(
+                    $result,
+                    $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field)
+                );
             }
         }
 

@@ -179,7 +179,7 @@ trait TableHelpersTrait
                 $field ?
                     $field :
                     (
-                    is_string($this->columns[$this->last]['field']) ?
+                        is_string($this->columns[$this->last]['field']) ?
                         $this->columns[$this->last]['field'] :
                         false
                     );

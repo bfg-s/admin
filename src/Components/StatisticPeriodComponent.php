@@ -40,8 +40,10 @@ class StatisticPeriodComponent extends Component
         $this->column()
             ->info_box(
                 __('lte.statistic_per_week', ['entity' => $this->entity]),
-                $this->model->whereBetween('created_at',
-                    [now()->subWeek()->startOfDay(), now()->endOfDay()])->count().' ',
+                $this->model->whereBetween(
+                    'created_at',
+                    [now()->subWeek()->startOfDay(), now()->endOfDay()]
+                )->count().' ',
                 $this->icon
             )->infoType();
 
@@ -53,8 +55,10 @@ class StatisticPeriodComponent extends Component
         $this->column()
             ->info_box(
                 __('lte.statistic_per_year', ['entity' => $this->entity]),
-                $this->model->whereBetween('created_at',
-                    [now()->subYear()->startOfDay(), now()->endOfDay()])->count().' ',
+                $this->model->whereBetween(
+                    'created_at',
+                    [now()->subYear()->startOfDay(), now()->endOfDay()]
+                )->count().' ',
                 $this->icon
             )->warningType();
 

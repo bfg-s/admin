@@ -48,7 +48,7 @@ class LteBoot
 
         TaggableComponent::create();
 
-        Page::mixin(new PageMixin);
+        Page::mixin(new PageMixin());
 
         include __DIR__.'/bootstrap.php';
 

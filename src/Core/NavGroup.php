@@ -4,10 +4,10 @@ namespace LteAdmin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Interfaces\NavigateInterface;
 use LteAdmin\LteAdmin;
 use LteAdmin\Navigate;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\NavCommon;
 use LteAdmin\Traits\NavDefaultTools;
 
@@ -16,7 +16,9 @@ use LteAdmin\Traits\NavDefaultTools;
  */
 class NavGroup implements Arrayable, NavigateInterface
 {
-    use FontAwesome, NavCommon, NavDefaultTools;
+    use FontAwesome;
+    use NavCommon;
+    use NavDefaultTools;
 
     /**
      * @var array

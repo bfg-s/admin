@@ -13,6 +13,8 @@ use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
 use LteAdmin\Components\SearchFormComponent;
 use LteAdmin\Getters\Menu;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 
 trait TableBuilderTrait
@@ -26,8 +28,10 @@ trait TableBuilderTrait
 
         $this->setId($this->model_name);
 
-        if (request()->has($this->model_name.'_per_page') && in_array(request()->get($this->model_name.'_per_page'),
-                $this->per_pages)) {
+        if (request()->has($this->model_name.'_per_page') && in_array(
+            request()->get($this->model_name.'_per_page'),
+            $this->per_pages
+        )) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 
@@ -106,8 +110,11 @@ trait TableBuilderTrait
                 }
             }
 
-            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate($this->per_page,
-                ['*'], $this->model_name.'_page');
+            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate(
+                $this->per_page,
+                ['*'],
+                $this->model_name.'_page'
+            );
         } elseif ($this->model instanceof Collection) {
             if (request()->has($this->model_name)) {
                 $model = $this->model
@@ -126,8 +133,8 @@ trait TableBuilderTrait
      * @param  TR  $tr
      * @param  array  $column
      * @param  string  $key
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function makeHeadTH(TR $tr, array $column, string $key)
     {

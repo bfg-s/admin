@@ -47,7 +47,7 @@ class LteLog extends Model
 {
     use DumpedModel;
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     /**
      * @var string

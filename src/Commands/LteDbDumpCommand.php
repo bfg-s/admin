@@ -89,7 +89,7 @@ class LteDbDumpCommand extends Command
 
         /** @var Model $model */
         foreach (static::$models as $key => $model) {
-            $model = new $model;
+            $model = new $model();
             static::$models[$key] = $model;
             if (method_exists($model, 'scopeMakeDumpedModel')) {
                 $data = $model::makeDumpedModel();

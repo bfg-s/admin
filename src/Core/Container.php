@@ -9,13 +9,16 @@ use Lar\Developer\Core\Traits\Eventable;
 use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Interfaces\SegmentContainerInterface;
+use LteAdmin\Traits\FontAwesome;
 use Throwable;
 
 abstract class Container implements SegmentContainerInterface
 {
-    use FontAwesome, Eventable, Piplineble, Conditionable;
+    use FontAwesome;
+    use Eventable;
+    use Piplineble;
+    use Conditionable;
 
     /**
      * @var Component

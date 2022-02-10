@@ -92,7 +92,7 @@ class InstallExtensionProvider
                     continue;
                 }
 
-                $migration = new $class;
+                $migration = new $class();
 
                 if ($migration instanceof Migration) {
                     if (method_exists($migration, 'up')) {

@@ -301,7 +301,8 @@ class NestedComponent extends Component
             $cc = $this->custom_controls;
             if ($cc_access || $cc) {
                 $li->div(['float-right m-1'])
-                    ->appEndIf($this->menu,
+                    ->appEndIf(
+                        $this->menu,
                         ButtonsComponent::create()->when(function (ButtonsComponent $group) use (
                             $item,
                             $cc_access,
@@ -320,17 +321,23 @@ class NestedComponent extends Component
                                 }
 
                                 if (($this->delete_control)($item)) {
-                                    $group->resourceDestroy($this->menu['link.destroy']($key), '',
-                                        $model->getRouteKeyName(), $key);
+                                    $group->resourceDestroy(
+                                        $this->menu['link.destroy']($key),
+                                        '',
+                                        $model->getRouteKeyName(),
+                                        $key
+                                    );
                                 }
 
                                 if (($this->info_control)($item)) {
                                     $group->resourceInfo($this->menu['link.show']($key), '');
                                 }
                             }
-                        }));
+                        })
+                    );
             }
-            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use ($item
+            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use (
+                $item
             ) {
                 if (is_array($this->title_field)) {
                     //dd($this->model);

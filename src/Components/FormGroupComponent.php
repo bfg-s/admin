@@ -9,9 +9,9 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Page;
 use LteAdmin\Traits\Delegable;
+use LteAdmin\Traits\FontAwesome;
 use LteAdmin\Traits\Macroable;
 use LteAdmin\Traits\RulesBackTrait;
 use LteAdmin\Traits\RulesFrontTrait;
@@ -23,7 +23,11 @@ use Str;
  */
 abstract class FormGroupComponent extends DIV
 {
-    use RulesFrontTrait, RulesBackTrait, FontAwesome, Macroable, Delegable;
+    use RulesFrontTrait;
+    use RulesBackTrait;
+    use FontAwesome;
+    use Macroable;
+    use Delegable;
 
     /**
      * @var array
@@ -140,7 +144,7 @@ abstract class FormGroupComponent extends DIV
         $this->params = array_merge($this->params, $params);
         $this->field_id = 'input_'.Str::slug($this->name, '_');
         $this->path = trim(str_replace(['[', ']'], '.', str_replace('[]', '', $name)), '.');
-        $this->errors = request()->session()->get('errors') ?: new ViewErrorBag;
+        $this->errors = request()->session()->get('errors') ?: new ViewErrorBag();
         $this->has_bug = $this->errors->getBag('default')->has($name);
         if (Route::current()) {
             list($this->controller, $this->method) = Str::parseCallback(Route::currentRouteAction());

@@ -21,7 +21,7 @@ class Menu extends Getter
     public static $name = 'lte.menu';
     public static $currentQueryField = null;
     public static $currentController = null;
-    static array $models = [];
+    public static array $models = [];
     /**
      * @var int
      */
@@ -173,7 +173,7 @@ class Menu extends Getter
 
         if (is_string($return) && class_exists($return)) {
             /** @var Model $return */
-            $return = new $return;
+            $return = new $return();
         }
 
         $pm = $menu['model.param'] ?? Str::singular(Str::snake(class_basename($return)));
@@ -219,8 +219,10 @@ class Menu extends Getter
         $result[$subject['id']] = $subject;
 
         if ($subject['parent_id']) {
-            $parent = gets()->lte->menu->nested_collect->where('active', true)->where('id',
-                $subject['parent_id'])->first();
+            $parent = gets()->lte->menu->nested_collect->where('active', true)->where(
+                'id',
+                $subject['parent_id']
+            )->first();
 
             if ($parent) {
                 return static::get_parents($parent, $result);
@@ -389,8 +391,11 @@ class Menu extends Getter
                 if (str_replace(['{', '?', '}'], '', $item['route']) !== $item['route']) {
                     $item['route'] = $__route_name_;
                 } else {
-                    $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace('/', '.',
-                            $item['resource']['name']) : $item['route']);
+                    $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace(
+                        '/',
+                        '.',
+                        $item['resource']['name']
+                    ) : $item['route']);
                 }
             }
 
@@ -415,15 +420,20 @@ class Menu extends Getter
             if (isset($item['action'])) {
                 $item['route_params'] = array_merge($item['route_params'] ?? [], static::getQuery($item['route']));
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
-                $item['controller'] = ltrim(is_array($item['action']) ? $item['action'][0] : Str::parseCallback($item['action'])[0],
-                    '\\');
+                $item['controller'] = ltrim(
+                    is_array($item['action']) ? $item['action'][0] : Str::parseCallback($item['action'])[0],
+                    '\\'
+                );
                 $item['current'] = $item['route'] == static::currentQueryField();
             } elseif (isset($item['resource'])) {
                 $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);
 
                 $item['current.type'] = str_replace($item['route'].'.', '', static::currentQueryField());
-                $item['current'] = str_replace('.'.$item['current.type'], '',
-                        static::currentQueryField()) == $item['route'];
+                $item['current'] = str_replace(
+                    '.'.$item['current.type'],
+                    '',
+                    static::currentQueryField()
+                ) == $item['route'];
 
                 $item['link.show'] = function ($params) use ($item) {
                     if (

@@ -58,7 +58,9 @@ trait SearchFormConditionRulesTrait
                                     }
                                 } else {
                                     $model = $this->{$field['method']}(
-                                        $model, $val, $key
+                                        $model,
+                                        $val,
+                                        $key
                                     );
                                 }
                             }

@@ -58,12 +58,12 @@ use LteAdmin\Traits\DumpedModel;
  */
 class LteUser extends Model implements AuthenticatableContract
 {
-    use Authenticatable,
-        Authorizable,
-        LteUserPermission,
-        Notifiable,
-        SoftDeletes,
-        DumpedModel;
+    use Authenticatable;
+    use Authorizable;
+    use LteUserPermission;
+    use Notifiable;
+    use SoftDeletes;
+    use DumpedModel;
 
     /**
      * @var string

@@ -57,7 +57,10 @@ use LteAdmin\Traits\Macroable;
  */
 abstract class Component extends DIV implements onRender
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
+    use FieldMassControlTrait;
+    use Macroable;
+    use BuildHelperTrait;
+    use Delegable;
 
     /**
      * @var array
@@ -177,7 +180,7 @@ abstract class Component extends DIV implements onRender
             }
 
             if (is_string($model) && class_exists($model)) {
-                $model = new $model;
+                $model = new $model();
             }
 
             $search = false;
@@ -303,7 +306,7 @@ abstract class Component extends DIV implements onRender
     public function withCollection($collection, callable $callback)
     {
         foreach ($collection as $key => $item) {
-            $this->with(fn() => call_user_func($callback, $item, $key));
+            $this->with(fn () => call_user_func($callback, $item, $key));
         }
 
         return $this;

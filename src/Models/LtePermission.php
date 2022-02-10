@@ -78,8 +78,10 @@ class LtePermission extends Model
         foreach (static::now()->where('state', 'close') as $close) {
             $path = static::makeCheckedPath($close->path);
 
-            if (($close->method[0] === '*' || in_array($method, $close->method)) && Str::is(url($path),
-                    $url)) {
+            if (($close->method[0] === '*' || in_array($method, $close->method)) && Str::is(
+                url($path),
+                $url
+            )) {
                 $result = false;
                 break;
             }
@@ -90,8 +92,10 @@ class LtePermission extends Model
             foreach (static::now()->where('state', 'open') as $open) {
                 $path = static::makeCheckedPath($open->path);
 
-                if (($open->method[0] === '*' || in_array($method, $open->method)) && Str::is(url($path),
-                        $url)) {
+                if (($open->method[0] === '*' || in_array($method, $open->method)) && Str::is(
+                    url($path),
+                    $url
+                )) {
                     $result = true;
                     break;
                 }
@@ -149,8 +153,10 @@ class LtePermission extends Model
         foreach (static::now()->where('state', 'close') as $close) {
             $path = static::makeCheckedPath($close->path);
 
-            if (($close->method[0] === '*' || array_search($method,
-                        $close->method) !== false) && request()->is($path)) {
+            if (($close->method[0] === '*' || array_search(
+                $method,
+                $close->method
+            ) !== false) && request()->is($path)) {
                 $result = false;
                 break;
             }
@@ -161,8 +167,10 @@ class LtePermission extends Model
             foreach (static::now()->where('state', 'open') as $open) {
                 $path = static::makeCheckedPath($open->path);
 
-                if (($open->method[0] === '*' || array_search($method,
-                            $open->method) !== false) && request()->is($path)) {
+                if (($open->method[0] === '*' || array_search(
+                    $method,
+                    $open->method
+                ) !== false) && request()->is($path)) {
                     $result = true;
                     break;
                 }

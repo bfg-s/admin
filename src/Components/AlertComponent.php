@@ -12,7 +12,8 @@ use LteAdmin\Traits\TypesTrait;
  */
 class AlertComponent extends Component
 {
-    use FontAwesome, TypesTrait;
+    use FontAwesome;
+    use TypesTrait;
 
     /**
      * @var string[]

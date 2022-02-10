@@ -48,8 +48,11 @@ trait ModelRelationBuilderTrait
                     ->setName("{$this->relation_name}[".$item->{$item->getKeyName()}."][{$item->getKeyName()}]")
                     ->setValue($item->{$item->getKeyName()})
             );
-            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content',
-                'template_content');
+            $this->last_content = ModelRelationContentComponent::create(
+                $this->relation_name,
+                'template_content',
+                'template_content'
+            );
             $container->appEnd($this->last_content);
             $this->_call_tpl($this->last_content, $item, $this);
             if ($this->last_content->get_test_var('control_group', [$item])) {
@@ -95,10 +98,16 @@ trait ModelRelationBuilderTrait
         }
 
         if (!$datas->count() && $this->on_empty) {
-            $container = ModelRelationContentComponent::create($this->relation_name, 'empty',
-                'template_empty_container');
-            $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_empty_content',
-                'template_empty_content');
+            $container = ModelRelationContentComponent::create(
+                $this->relation_name,
+                'empty',
+                'template_empty_container'
+            );
+            $this->last_content = ModelRelationContentComponent::create(
+                $this->relation_name,
+                'template_empty_content',
+                'template_empty_content'
+            );
             $this->_call_empty_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
             $container->appEnd($this->last_content);
             $this->appEnd($container);
@@ -157,8 +166,11 @@ trait ModelRelationBuilderTrait
 
         $this->page->model(new ($this->page->model()));
         $container = ModelRelationContentComponent::create($this->relation_name, 'template_container');
-        $this->last_content = ModelRelationContentComponent::create($this->relation_name, 'template_content',
-            'template_content');
+        $this->last_content = ModelRelationContentComponent::create(
+            $this->relation_name,
+            'template_content',
+            'template_content'
+        );
         $container->appEnd($this->last_content);
         $this->page->model($this->relation->getQuery()->getModel());
         $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
@@ -179,7 +191,8 @@ trait ModelRelationBuilderTrait
         $row = $hr->row();
         $row->column()->textRight()->buttons()->when(function (ButtonsComponent $group) {
             $group->success(['fas fa-plus', __('lte.add')])
-                ->on_click('lte::add_relation_tpl',
+                ->on_click(
+                    'lte::add_relation_tpl',
                     $this->relation_name
                 );
         });

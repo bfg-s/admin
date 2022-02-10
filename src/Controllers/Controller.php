@@ -45,7 +45,9 @@ use function redirect;
  */
 class Controller extends BaseController
 {
-    use Piplineble, DefaultControllerResourceMethodsTrait, Macroable;
+    use Piplineble;
+    use DefaultControllerResourceMethodsTrait;
+    use Macroable;
 
     /**
      * @var array

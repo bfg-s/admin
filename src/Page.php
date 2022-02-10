@@ -29,7 +29,8 @@ use Throwable;
  */
 class Page extends Container
 {
-    use Macroable, Delegable;
+    use Macroable;
+    use Delegable;
 
     /**
      * Has models on process.
@@ -103,7 +104,7 @@ class Page extends Container
         if ($model !== null) {
             $this->model = is_callable($model)
                 ? call_user_func($model)
-                : (is_string($model) ? new $model : $model);
+                : (is_string($model) ? new $model() : $model);
         }
 
         return $this->model ?? $this->model = gets()->lte->menu->model;
@@ -280,7 +281,9 @@ class Page extends Container
         } else {
             if (!static::hasMacro($name)) {
                 throw new BadMethodCallException(sprintf(
-                    'Method %s::%s does not exist.', static::class, $name
+                    'Method %s::%s does not exist.',
+                    static::class,
+                    $name
                 ));
             }
             $macro = self::$macros[$name];

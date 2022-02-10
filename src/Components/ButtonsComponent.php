@@ -254,8 +254,10 @@ class ButtonsComponent extends Component
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    __(
+                        'lte.delete_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                    ),
                     $link.$stay.' >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.delete'));
@@ -299,8 +301,10 @@ class ButtonsComponent extends Component
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete_forever')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.delete_forever_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    __(
+                        'lte.delete_forever_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                    ),
                     $link.'?force=1 >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.delete_forever'));
@@ -334,8 +338,10 @@ class ButtonsComponent extends Component
             return $this->warning(['fas fa-trash-restore-alt', $title ?? __('lte.restore')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
-                    __('lte.restore_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]),
+                    __(
+                        'lte.restore_subject',
+                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                    ),
                     $link.'?restore=1 >> $jax.del',
                 ],
             ])->setTitleIf($title === '', __('lte.restore'));

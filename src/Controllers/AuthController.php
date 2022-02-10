@@ -36,8 +36,10 @@ class AuthController
 
         $login = false;
 
-        if (Auth::guard('lte')->attempt(['login' => $request->login, 'password' => $request->password],
-            $request->remember == 'on' ? true : false)) {
+        if (Auth::guard('lte')->attempt(
+            ['login' => $request->login, 'password' => $request->password],
+            $request->remember == 'on' ? true : false
+        )) {
             $request->session()->regenerate();
 
             respond()->toast_success('Was authorized using login!');
@@ -45,8 +47,10 @@ class AuthController
             lte_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
-        } elseif (Auth::guard('lte')->attempt(['email' => $request->login, 'password' => $request->password],
-            $request->remember == 'on' ? true : false)) {
+        } elseif (Auth::guard('lte')->attempt(
+            ['email' => $request->login, 'password' => $request->password],
+            $request->remember == 'on' ? true : false
+        )) {
             $request->session()->regenerate();
 
             respond()->toast_success('Was authorized using E-Mail!');

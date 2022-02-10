@@ -19,7 +19,10 @@ use LteAdmin\Traits\Macroable;
  */
 class GridColumnComponent extends DIV implements onRender
 {
-    use FieldMassControlTrait, Macroable, BuildHelperTrait, Delegable;
+    use FieldMassControlTrait;
+    use Macroable;
+    use BuildHelperTrait;
+    use Delegable;
 
     /**
      * @var string

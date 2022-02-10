@@ -15,7 +15,9 @@ use LteAdmin\Traits\TypesTrait;
  */
 class TableComponent extends TableParent
 {
-    use TypesTrait, Macroable, Delegable;
+    use TypesTrait;
+    use Macroable;
+    use Delegable;
 
     /**
      * @var array

@@ -69,8 +69,10 @@ class Authenticate
             } else {
                 if (!$request->isMethod('get')) {
                     lte_log_danger('Pattern go to the forbidden zone', 'Blocked POST request', 'fas fa-shield-alt');
-                    session()->flash('respond',
-                        respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson());
+                    session()->flash(
+                        'respond',
+                        respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson()
+                    );
 
                     return back();
                 }
@@ -137,7 +139,9 @@ class Authenticate
         session(['return_authenticated_url' => $url]);
 
         throw new AuthenticationException(
-            'Unauthenticated.', ['lte'], route('lte.login')
+            'Unauthenticated.',
+            ['lte'],
+            route('lte.login')
         );
     }
 

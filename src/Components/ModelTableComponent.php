@@ -27,13 +27,13 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class ModelTableComponent extends Component
 {
-    use TableHelpersTrait,
-        TableExtensionTrait,
-        TableBuilderTrait,
-        TableControlsTrait,
-        Macroable,
-        Piplineble,
-        Delegable;
+    use TableHelpersTrait;
+    use TableExtensionTrait;
+    use TableBuilderTrait;
+    use TableControlsTrait;
+    use Macroable;
+    use Piplineble;
+    use Delegable;
 
     /**
      * @var SearchFormComponent

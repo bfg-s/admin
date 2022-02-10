@@ -290,7 +290,8 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Merge config from having by default.
          */
         $this->mergeConfigFrom(
-            __DIR__.'/../config/lte.php', 'lte'
+            __DIR__.'/../config/lte.php',
+            'lte'
         );
 
         /**

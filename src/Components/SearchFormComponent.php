@@ -33,8 +33,8 @@ use LteAdmin\Traits\SearchFormHelpersTrait;
  */
 class SearchFormComponent extends Component
 {
-    use SearchFormConditionRulesTrait,
-        SearchFormHelpersTrait;
+    use SearchFormConditionRulesTrait;
+    use SearchFormHelpersTrait;
 
     /**
      * @var array

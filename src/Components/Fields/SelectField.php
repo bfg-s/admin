@@ -10,6 +10,7 @@ use Lar\Layout\Tags\INPUT;
 use LteAdmin\Components\Cores\Select2FieldCore;
 use LteAdmin\Components\FormGroupComponent;
 use LteAdmin\Page;
+use ReflectionException;
 
 class SelectField extends FormGroupComponent
 {
@@ -58,7 +59,7 @@ class SelectField extends FormGroupComponent
 
     /**
      * @return Component|INPUT|mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function field()
     {

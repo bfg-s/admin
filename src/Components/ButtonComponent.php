@@ -7,7 +7,8 @@ use LteAdmin\Traits\TypesTrait;
 
 class ButtonComponent extends Component
 {
-    use TypesTrait, FontAwesome;
+    use TypesTrait;
+    use FontAwesome;
 
     protected $icon;
     protected $title;

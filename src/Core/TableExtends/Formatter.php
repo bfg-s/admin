@@ -98,8 +98,8 @@ class Formatter
             $urlShow : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : '').$value.
+            I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+        )->setTitle(__('lte.edit')) : '').$value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
@@ -141,8 +141,8 @@ class Formatter
             $urlEdit : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : '').$value;
+            I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+        )->setTitle(__('lte.edit')) : '').$value;
     }
 
     /**
@@ -231,8 +231,10 @@ class Formatter
         }
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
-        $link = isset($props[1]) ? ($model ? tag_replace($props[1],
-            $model) : $props[1]) : ($value ?: 'javascript:void(0)');
+        $link = isset($props[1]) ? ($model ? tag_replace(
+            $props[1],
+            $model
+        ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
         $link = A::create()->setHref($link)
@@ -258,8 +260,10 @@ class Formatter
         }
 
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
-        $link = isset($props[1]) ? ($model ? tag_replace($props[1],
-            $model) : $props[1]) : ($value ?: 'javascript:void(0)');
+        $link = isset($props[1]) ? ($model ? tag_replace(
+            $props[1],
+            $model
+        ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
         $link = A::create()->setHref($link)

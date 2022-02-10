@@ -22,7 +22,7 @@ class ModelSaver
 {
     use Eventable;
 
-    const DELETE_FIELD = '__DELETE__';
+    public const DELETE_FIELD = '__DELETE__';
     /**
      * @var callable[]
      */
@@ -89,7 +89,7 @@ class ModelSaver
     public function __construct($model, array $data, object $eventsObject = null)
     {
         if (is_string($model)) {
-            $model = new $model;
+            $model = new $model();
         }
 
         $this->model = $model;

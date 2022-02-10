@@ -100,8 +100,11 @@ class LteUserCommand extends Command
             'name' => $name,
         ])) {
             $roles = LteRole::all();
-            $role = $this->choice('Select role for new lte user', $roles->pluck('name', 'id')->toArray(),
-                $roles->first()->id);
+            $role = $this->choice(
+                'Select role for new lte user',
+                $roles->pluck('name', 'id')->toArray(),
+                $roles->first()->id
+            );
             $user->roles()->sync([$role]);
 
             $this->info('User success created.');
