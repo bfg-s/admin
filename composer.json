@@ -26,6 +26,7 @@
         "bfg/embedded-call": "^1.0",
         "maatwebsite/excel": "^3.1",
         "laravel/framework": "^8.0|^9.0",
+        "composer/composer": "^1.9|^2.0",
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
         "almasaeed2010/adminlte": "^3.1.0"
