@@ -1,3 +1,6 @@
+@php
+    use LteAdmin\Core\PrepareExport;
+@endphp
 @if(!request()->has('show_deleted'))
     <div class="card-title dropdown dropdown-inline" style="margin: -5px 10px -4px -.625rem;">
         <button type="button" class="btn btn-outline-primary btn-sm" id="dropdownMenuButton" data-toggle="dropdown"
@@ -5,7 +8,7 @@
             <i class="fas fa-ellipsis-v"></i>
         </button>
         @php
-            use LteAdmin\Core\PrepareExport;$prepareExport = PrepareExport::$columns[$table_id] ?? null
+            $prepareExport = PrepareExport::$columns[$table_id] ?? null
         @endphp
         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
             @if($hasHidden)
