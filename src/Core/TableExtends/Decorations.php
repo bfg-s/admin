@@ -17,7 +17,7 @@ class Decorations
      * @param  array  $props
      * @return FieldComponent|FieldMethods|RatingField
      */
-    public function ratingStars($value, $props = [])
+    public function rating_stars($value, $props = [])
     {
         return FieldComponent::rating('rating')
             ->only_input()
