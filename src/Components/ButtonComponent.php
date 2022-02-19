@@ -11,6 +11,7 @@ class ButtonComponent extends Component
     use FontAwesome;
 
     protected $icon;
+
     protected $title;
 
     protected $class = 'btn btn-xs';
@@ -21,6 +22,13 @@ class ButtonComponent extends Component
      * @var string
      */
     protected $element = 'button';
+
+    public function __construct(...$delegates)
+    {
+        parent::__construct($delegates);
+
+        $this->attr('type', 'button');
+    }
 
     /**
      * @param  string  $modalName
@@ -82,9 +90,9 @@ class ButtonComponent extends Component
     public function queryMethod(string $method = null)
     {
         if ($method) {
-            $this->location(['method' => $method]);
+            $this->query(['method' => $method]);
         } else {
-            $this->location([], ['method']);
+            $this->query([], ['method']);
         }
 
         return $this;
@@ -95,11 +103,21 @@ class ButtonComponent extends Component
      * @param  array  $unset
      * @return $this
      */
-    public function location(array $params = [], array $unset = [])
+    public function query(array $params = [], array $unset = [])
     {
         $this->on_click('doc::location', urlWithGet($params, $unset));
 
         return $this;
+    }
+
+    /**
+     * @param  array  $unset
+     * @param  array  $params
+     * @return $this|m.\LteAdmin\Components\ButtonComponent.query
+     */
+    public function unsetQuery(array $unset = [], array $params = [])
+    {
+        return $this->query($params, $unset);
     }
 
     /**
@@ -110,9 +128,9 @@ class ButtonComponent extends Component
     public function switchQuery(string|array $name, $value = 1)
     {
         if (request()->has($name)) {
-            $this->location([], (array) $name);
+            $this->query([], (array) $name);
         } else {
-            $this->location(array_fill_keys((array) $name, $value));
+            $this->query(array_fill_keys((array) $name, $value));
         }
 
         return $this;
@@ -120,13 +138,13 @@ class ButtonComponent extends Component
 
     public function setQuery(string|array $name, $value = 1)
     {
-        $this->location(array_fill_keys((array) $name, $value));
+        $this->query(array_fill_keys((array) $name, $value));
         return $this;
     }
 
     public function forgetQuery(string|array $name)
     {
-        $this->location([], (array) $name);
+        $this->query([], (array) $name);
         return $this;
     }
 

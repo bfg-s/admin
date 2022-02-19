@@ -392,10 +392,10 @@ class Menu extends Getter
                     $item['route'] = $__route_name_;
                 } else {
                     $item['route'] = $__route_name_.'.'.(isset($item['resource']['name']) ? str_replace(
-                        '/',
-                        '.',
-                        $item['resource']['name']
-                    ) : $item['route']);
+                            '/',
+                            '.',
+                            $item['resource']['name']
+                        ) : $item['route']);
                 }
             }
 
@@ -430,10 +430,10 @@ class Menu extends Getter
 
                 $item['current.type'] = str_replace($item['route'].'.', '', static::currentQueryField());
                 $item['current'] = str_replace(
-                    '.'.$item['current.type'],
-                    '',
-                    static::currentQueryField()
-                ) == $item['route'];
+                        '.'.$item['current.type'],
+                        '',
+                        static::currentQueryField()
+                    ) == $item['route'];
 
                 $item['link.show'] = function ($params) use ($item) {
                     if (

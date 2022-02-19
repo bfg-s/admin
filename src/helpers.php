@@ -224,10 +224,10 @@ if (!function_exists('resource_name')) {
     function resource_name(string $append = '')
     {
         return preg_replace(
-            '/(.*)\.(store|index|create|show|update|destroy|edit)$/',
-            '$1',
-            Route::currentRouteName()
-        ).$append;
+                '/(.*)\.(store|index|create|show|update|destroy|edit)$/',
+                '$1',
+                Route::currentRouteName()
+            ).$append;
     }
 }
 

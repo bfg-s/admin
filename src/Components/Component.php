@@ -44,6 +44,7 @@ use LteAdmin\Components\Fields\TextareaField;
 use LteAdmin\Components\Fields\TimeField;
 use LteAdmin\Core\Delegate;
 use LteAdmin\Explanation;
+use LteAdmin\Jax\LteAdmin;
 use LteAdmin\Page;
 use LteAdmin\Traits\BuildHelperTrait;
 use LteAdmin\Traits\Delegable;
@@ -306,7 +307,7 @@ abstract class Component extends DIV implements onRender
     public function withCollection($collection, callable $callback)
     {
         foreach ($collection as $key => $item) {
-            $this->with(fn () => call_user_func($callback, $item, $key));
+            $this->with(fn() => call_user_func($callback, $item, $key));
         }
 
         return $this;
@@ -376,4 +377,56 @@ abstract class Component extends DIV implements onRender
      * @return void
      */
     abstract protected function mount();
+
+    public function click(callable $callback, array $parameters = []): static
+    {
+        $this->on_click(
+            static::registerCallBack($callback, $parameters, $this->model)
+        );
+
+        return $this;
+    }
+
+    public static function registerCallBack(callable $callback, array $parameters = [], $model = null)
+    {
+        LteAdmin::$callbacks[] = $callback;
+
+        if ($model) {
+            foreach ($parameters as $key => $parameter) {
+                if (is_int($key) && is_string($parameter)) {
+                    $parameters[$parameter] = multi_dot_call($model, $parameter);
+                    unset($parameters[$key]);
+                } else {
+                    if (is_callable($parameter)) {
+                        $parameters[$key] = call_user_func($parameter, $model);
+                    }
+                }
+            }
+        }
+
+        return [
+            'jax.lte_admin.call_callback' => [
+                array_key_last(LteAdmin::$callbacks),
+                $parameters
+            ]
+        ];
+    }
+
+    public function dblclick(callable $callback, array $parameters = []): static
+    {
+        $this->on_dblclick(
+            static::registerCallBack($callback, $parameters, $this->model)
+        );
+
+        return $this;
+    }
+
+    public function hover(callable $callback, array $parameters = []): static
+    {
+        $this->on_hover(
+            static::registerCallBack($callback, $parameters, $this->model)
+        );
+
+        return $this;
+    }
 }

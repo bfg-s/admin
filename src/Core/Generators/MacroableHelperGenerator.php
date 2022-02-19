@@ -171,9 +171,9 @@ class MacroableHelperGenerator implements DumpExecute
                         $class['methods'][4] = false;
                     }
                     if (!class_exists($class['methods'][2]) || !property_exists(
-                        $class['methods'][2],
-                        $class['methods'][3]
-                    )) {
+                            $class['methods'][2],
+                            $class['methods'][3]
+                        )) {
                         continue;
                     } elseif (method_exists($class['methods'][2], 'getHelpMethodList')) {
                         $class['methods']['data'] = call_user_func([$class['methods'][2], 'getHelpMethodList']);

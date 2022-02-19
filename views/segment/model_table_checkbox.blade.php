@@ -11,7 +11,7 @@
 @else
     <div class="icheck-primary d-inline" style="margin-left: -14px;">
         <input type="checkbox"
-               class="select_{{$table_id}}"
+               class="select_{{$table_id}} action-selector"
                name="select_{{$table_id}}[{{$id}}]"
                value="{{$id}}"
                data-table="{{$table_id}}"

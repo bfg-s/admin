@@ -77,9 +77,9 @@ class UnInstallExtensionProvider
 
                 if ($migration instanceof Migration) {
                     if (method_exists(
-                        $migration,
-                        'ignore'
-                    ) && ($migration->ignore() && !$this->command->option('force'))) {
+                            $migration,
+                            'ignore'
+                        ) && ($migration->ignore() && !$this->command->option('force'))) {
                         $this->command->line("<comment>Ignored-migration:</comment> {$migration_name}");
                         continue;
                     }

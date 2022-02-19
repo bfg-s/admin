@@ -155,9 +155,9 @@ class TimelineComponent extends Component
         $this->order_type = $this->callCallableCurrent('order_type', $this);
 
         if (request()->has($this->model_name.'_per_page') && in_array(
-            request()->get($this->model_name.'_per_page'),
-            $this->per_pages
-        )) {
+                request()->get($this->model_name.'_per_page'),
+                $this->per_pages
+            )) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 
@@ -241,7 +241,7 @@ class TimelineComponent extends Component
         $value = $isProp ? $this->{$segment} : null;
 
         return $value && is_string($value) ? $value : (
-            $value && is_embedded_call($value) ? embedded_call($value, [
+        $value && is_embedded_call($value) ? embedded_call($value, [
             get_class($area) => $area,
             static::class => $this,
         ]) : $value
@@ -286,7 +286,7 @@ class TimelineComponent extends Component
         $s = $this->{$segment};
 
         return $s && is_string($s) ? ($model->{$s} ?: $default) : (
-            $s && is_embedded_call($s) ? embedded_call($s, [
+        $s && is_embedded_call($s) ? embedded_call($s, [
             get_class($area) => $area,
             (is_object($model) ? get_class($model) : 'model') => $model,
             'model' => $model,

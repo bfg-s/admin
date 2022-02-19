@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\SPAN;
 use LteAdmin\Components\ButtonsComponent;
+use LteAdmin\Core\ModelTableAction;
 use LteAdmin\Core\PrepareExport;
 
 trait TableControlsTrait
@@ -68,6 +69,21 @@ trait TableControlsTrait
         $this->set_test_var('controls', $test);
 
         return $this;
+    }
+
+    /**
+     * @param  string  $var_name
+     * @param $test
+     */
+    protected function set_test_var(string $var_name, $test)
+    {
+        if (is_embedded_call($test)) {
+            $this->{$var_name} = $test;
+        } else {
+            $this->{$var_name} = static function () use ($test) {
+                return (bool) $test;
+            };
+        }
     }
 
     /**
@@ -157,25 +173,21 @@ trait TableControlsTrait
         return $this;
     }
 
-    /**
-     * @param $jax
-     * @param $title
-     * @param  null  $icon
-     * @param  null  $confirm
-     * @param  string|null  $warning
-     * @return $this
-     */
-    public function action($jax, $title, $icon = null, $confirm = null, ?string $warning = 'lte.before_need_to_select')
+    public function action(callable $callback, array $parameter = []): ModelTableAction
     {
-        $this->action[] = [
-            'jax' => $jax,
-            'title' => $title,
-            'icon' => $icon,
-            'confirm' => $confirm,
-            'warning' => $warning,
-        ];
+//        $this->action[] = [
+//            'jax' => $this->registerCallBack($callback),
+//            'title' => $title,
+//            'icon' => $icon,
+//            'confirm' => $confirm,
+//            'warning' => $warning,
+//        ];
 
-        return $this;
+        return $this->action[] = new ModelTableAction(
+            $this->model,
+            $callback,
+            $parameter
+        );
     }
 
     public function getActionData()
@@ -192,7 +204,7 @@ trait TableControlsTrait
             'hasHidden' => $this->hasHidden,
             'hasDelete' => $hasDelete,
             'show' => (count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden) && $this->checks,
-            'actions' => $this->action,
+            'actions' => array_map(fn(ModelTableAction $action) => $action->toArray(), $this->action),
             'order_field' => $this->order_field,
             'select_type' => $select_type,
             'columns' => collect($this->columns)
@@ -212,21 +224,6 @@ trait TableControlsTrait
                 })
                 ->toArray(),
         ];
-    }
-
-    /**
-     * @param  string  $var_name
-     * @param $test
-     */
-    protected function set_test_var(string $var_name, $test)
-    {
-        if (is_embedded_call($test)) {
-            $this->{$var_name} = $test;
-        } else {
-            $this->{$var_name} = static function () use ($test) {
-                return (bool) $test;
-            };
-        }
     }
 
     /**

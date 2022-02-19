@@ -24,9 +24,9 @@ class ButtonsComponent extends Component
      * @param  array  $when
      * @return \Lar\Layout\Abstracts\Component|ButtonComponent
      */
-    public function dark($ico = null, array $when = [])
+    public function default($ico = null, array $when = [])
     {
-        return $this->btn('dark', $ico, $when);
+        return $this->btn('default', $ico, $when);
     }
 
     /**
@@ -37,8 +37,10 @@ class ButtonsComponent extends Component
      */
     public function btn($type, $ico = null, array $when = [])
     {
+        $this->model();
+
         $btn = ButtonComponent::create()
-            ->wisibleType($type);
+            ->wisibleType($type)->model($this->model);
 
         if ($ico && is_string($ico)) {
             $btn->icon($ico);
@@ -53,16 +55,6 @@ class ButtonsComponent extends Component
         $this->appEnd($btn);
 
         return $btn;
-    }
-
-    /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
-     */
-    public function default($ico = null, array $when = [])
-    {
-        return $this->btn('default', $ico, $when);
     }
 
     /**
@@ -119,6 +111,16 @@ class ButtonsComponent extends Component
     public function primary($ico = null, array $when = [])
     {
         return $this->btn('primary', $ico, $when);
+    }
+
+    /**
+     * @param  mixed  $ico
+     * @param  array  $when
+     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     */
+    public function dark($ico = null, array $when = [])
+    {
+        return $this->btn('dark', $ico, $when);
     }
 
     /**

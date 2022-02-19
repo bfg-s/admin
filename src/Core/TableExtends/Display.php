@@ -20,7 +20,7 @@ class Display
      * @param  TR|null  $tr
      * @return mixed
      */
-    public function hide_om_mobile(
+    public function hide_on_mobile(
         $value,
         array $props = [],
         Model $model = null,

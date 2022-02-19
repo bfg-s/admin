@@ -9,7 +9,7 @@ class TableList extends Executor {
 
     checkChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
+        $(obj).parents('.card').find('.action-selector').each((i, o) => {
             o.checked = true;
             $(o).trigger('change');
         });
@@ -17,7 +17,7 @@ class TableList extends Executor {
 
     uncheckChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
+        $(obj).parents('.card').find('.action-selector').each((i, o) => {
             o.checked = false;
             $(o).trigger('change');
         });
@@ -25,7 +25,7 @@ class TableList extends Executor {
 
     invertChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
+        $(obj).parents('.card').find('.action-selector').each((i, o) => {
             o.checked = !o.checked;
             if (o.name !== obj.name) {
                 $(o).trigger('change');
@@ -35,11 +35,9 @@ class TableList extends Executor {
 
     invertByCheckChildCheckboxes() {
         let obj = this.storage.object;
-        $(`[name^="${obj.name}"], .global_${obj.name}`).each((i, o) => {
-            if (o.name !== obj.name) {
-                o.checked = !o.checked;
-                $(o).trigger('change');
-            }
+        $(obj).parents('.card').find('.action-selector').each((i, o) => {
+            o.checked = !o.checked;
+            $(o).trigger('change');
         });
     }
 

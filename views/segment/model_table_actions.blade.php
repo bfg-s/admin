@@ -63,7 +63,7 @@
                             @endif
                             @if(isset($action['confirm']) && $action['confirm']) data-confirm="@lang($action['confirm'])"
                             @endif
-                            data-jax="{{$action['jax']}}"
+                            data-command-json="{{$action['jax']}}"
                             type="button"
                     >
                         @if(isset($action['icon']) && $action['icon']) <i class="{{$action['icon']}}"></i>&nbsp;@endif

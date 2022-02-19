@@ -29,9 +29,9 @@ trait TableBuilderTrait
         $this->setId($this->model_name);
 
         if (request()->has($this->model_name.'_per_page') && in_array(
-            request()->get($this->model_name.'_per_page'),
-            $this->per_pages
-        )) {
+                request()->get($this->model_name.'_per_page'),
+                $this->per_pages
+            )) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
         }
 

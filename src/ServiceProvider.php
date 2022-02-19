@@ -149,7 +149,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->publishes([
             __DIR__.'/../translations' => resource_path('lang'),
-        ], 'lte-lang');
+        ], ['lte-lang', 'laravel-assets']);
 
         /**
          * Register publishers assets.

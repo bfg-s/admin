@@ -98,8 +98,8 @@ class Formatter
             $urlShow : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-            I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-        )->setTitle(__('lte.edit')) : '').$value.
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+            )->setTitle(__('lte.edit')) : '').$value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
@@ -141,8 +141,8 @@ class Formatter
             $urlEdit : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-            I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-        )->setTitle(__('lte.edit')) : '').$value;
+                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+            )->setTitle(__('lte.edit')) : '').$value;
     }
 
     /**

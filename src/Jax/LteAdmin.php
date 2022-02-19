@@ -14,6 +14,12 @@ use Throwable;
 class LteAdmin extends LteAdminExecutor
 {
     /**
+     * @var array
+     */
+    public static array $callbacks = [
+
+    ];
+    /**
      * @var int
      */
     protected static $i = 0;
@@ -224,5 +230,20 @@ class LteAdmin extends LteAdminExecutor
         $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
 
         return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');
+    }
+
+    public function call_callback(int $key, array $parameters)
+    {
+        if (!check_referer()) {
+            return [];
+        }
+
+        $this->refererEmit();
+
+        if (isset(static::$callbacks[$key])) {
+            app()->call(static::$callbacks[$key], $parameters);
+        } else {
+            $this->toast_error(__('lte.callback_not_found'));
+        }
     }
 }

@@ -75,6 +75,8 @@ class AdminLte extends Executor {
         container.find('.return_relation').hide();
         container.find('.delete_field').remove();
     }
+
+
 }
 
 module.exports = AdminLte;

@@ -95,7 +95,7 @@ class UserController extends Controller
                     $card->tab(
                         $tab->active(request()->has('ltelog_per_page') || request()->has('ltelog_page')),
                         $tab->icon_history()->title('lte.timeline'),
-                        $tab->with(fn (TabContentComponent $content) => static::timelineComponent(
+                        $tab->with(fn(TabContentComponent $content) => static::timelineComponent(
                             $content,
                             $this->model()->logs(),
                             $this

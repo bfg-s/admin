@@ -426,7 +426,7 @@ class CardComponent extends Component
                     if ($this->search_form && request()->has('q')) {
                         $group->danger(['fas fa-window-close', __('lte.cancel')])
                             ->attr('id', 'cancel_search_params')
-                            ->location([], ['q', 'page'])
+                            ->query([], ['q', 'page'])
                             ->whenRender(function (ButtonComponent $button) {
                                 if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                     $button->attr(['d-none']);

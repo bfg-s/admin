@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Layout\Tags\DIV;
+use LteAdmin\Components\ButtonsComponent;
 use LteAdmin\Core\PrepareExport;
 use Str;
 
@@ -52,6 +53,17 @@ trait TableHelpersTrait
         $this->order_field = $field;
 
         $this->order_type = $type;
+
+        return $this;
+    }
+
+    public function buttons(...$delegates)
+    {
+        $this->col(
+            fn($model) => ButtonsComponent::create()
+                ->model($model)
+                ->delegatesNow($delegates)
+        );
 
         return $this;
     }
@@ -179,7 +191,7 @@ trait TableHelpersTrait
                 $field ?
                     $field :
                     (
-                        is_string($this->columns[$this->last]['field']) ?
+                    is_string($this->columns[$this->last]['field']) ?
                         $this->columns[$this->last]['field'] :
                         false
                     );
@@ -221,7 +233,7 @@ trait TableHelpersTrait
      */
     public function id()
     {
-        $this->column('lte.id', 'id')->true_data()->hide_om_mobile()->sort();
+        $this->column('lte.id', 'id')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -231,7 +243,7 @@ trait TableHelpersTrait
      */
     public function created_at()
     {
-        $this->column('lte.created_at', 'created_at')->true_data()->hide_om_mobile()->sort();
+        $this->column('lte.created_at', 'created_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -241,7 +253,7 @@ trait TableHelpersTrait
      */
     public function updated_at()
     {
-        $this->column('lte.updated_at', 'updated_at')->true_data()->hide_om_mobile()->sort();
+        $this->column('lte.updated_at', 'updated_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -261,7 +273,7 @@ trait TableHelpersTrait
      */
     public function deleted_at()
     {
-        $this->column('lte.deleted_at', 'deleted_at')->true_data()->hide_om_mobile()->sort();
+        $this->column('lte.deleted_at', 'deleted_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -271,7 +283,7 @@ trait TableHelpersTrait
      */
     public function active_switcher()
     {
-        $this->column('lte.active', 'active')->input_switcher()->hide_om_mobile()->sort();
+        $this->column('lte.active', 'active')->input_switcher()->hide_on_mobile()->sort();
 
         return $this;
     }

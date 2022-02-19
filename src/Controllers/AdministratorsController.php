@@ -147,7 +147,7 @@ class AdministratorsController extends Controller
                 $card->title('lte.activity')->warningType(),
                 $card->tab(
                     $tab->icon_clock()->title('lte.timeline'),
-                    $tab->with(fn ($content) => UserController::timelineComponent(
+                    $tab->with(fn($content) => UserController::timelineComponent(
                         $content,
                         $this->model()->logs(),
                         $this
