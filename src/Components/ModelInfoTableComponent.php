@@ -63,7 +63,7 @@ class ModelInfoTableComponent extends Component
      * @param  string  $label
      * @return $this
      */
-    public function row(string $label, $field)
+    public function row(string $label, string|Closure|array $field)
     {
         $this->last = uniqid('row');
 
