@@ -48,7 +48,7 @@ class LteInstallCommand extends Command
         ]));
 
         if ($this->option('migrate')) {
-            return;
+            return 0;
         }
 
         $make_seeds = false;
@@ -99,10 +99,10 @@ class LteInstallCommand extends Command
 
             $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
 
-            if (!isset($base_composer['scripts']['post-autoload-dump']) || array_search(
-                    '@php artisan lar:dump',
-                    $base_composer['scripts']['post-autoload-dump']
-                ) === false) {
+            if (
+                !isset($base_composer['scripts']['post-autoload-dump'])
+                || !in_array('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump'])
+            ) {
                 $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
 
                 file_put_contents(
@@ -117,17 +117,17 @@ class LteInstallCommand extends Command
 
             $add_to_ignore = '';
 
-            if (strpos($gitignore, 'public/lte-asset') === false) {
+            if (!str_contains($gitignore, 'public/lte-asset')) {
                 $add_to_ignore .= "public/lte-asset\n";
                 $this->info('Add folder [public/lte-asset] to .gitignore');
             }
 
-            if (strpos($gitignore, 'public/lte-admin') === false) {
+            if (!str_contains($gitignore, 'public/lte-admin')) {
                 $add_to_ignore .= "public/lte-admin\n";
                 $this->info('Add folder [public/lte-admin] to .gitignore');
             }
 
-            if (strpos($gitignore, 'public/ljs') === false) {
+            if (!str_contains($gitignore, 'public/ljs')) {
                 $add_to_ignore .= "public/ljs\n";
                 $this->info('Add folder [public/ljs] to .gitignore');
             }
@@ -182,6 +182,16 @@ class LteInstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-assets',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag' => 'lte-adminlte-assets',
+            '--force' => $this->option('force'),
+        ]);
+
         if (!is_file(config_path('layout.php'))) {
             $this->call('vendor:publish', [
                 '--tag' => 'lar-layout-config',
@@ -199,6 +209,8 @@ class LteInstallCommand extends Command
         }
 
         $this->info('Lar Admin LTE Installed');
+
+        return 0;
     }
 
     /**

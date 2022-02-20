@@ -13,7 +13,11 @@ class LteUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lte:user {email?: Email of user} {name?: Login of user}';
+    protected $signature = 'lte:user
+        {email?: Email of user}
+        {name?: Login of user}
+        {password?: Password of user}
+    ';
 
     /**
      * The console command description.
@@ -46,20 +50,16 @@ class LteUserCommand extends Command
 
         $name = $this->argument('name');
 
-        $password = null;
+        $password = $this->argument('password');
 
-        $password2 = null;
+        $password2 = $this->argument('password');
 
         if (!$email) {
             $email = $this->ask('Enter a admin E-Mail');
 
             if ($user_model::where('email', $email)->first()) {
                 $this->error("Admin with email [$email] is isset!");
-
-                return $this->call('lte:make-user', array_filter([
-                    'email' => $email,
-                    'name' => $name ? $name : false,
-                ]));
+                return 11;
             }
         }
 
@@ -68,11 +68,7 @@ class LteUserCommand extends Command
 
             if ($user_model::where('username', $name)->first()) {
                 $this->error("Admin with name [$name] is isset!");
-
-                return $this->call('lte:make-user', [
-                    'email' => $email,
-                    'name' => $name,
-                ]);
+                return 10;
             }
         }
 
@@ -86,11 +82,7 @@ class LteUserCommand extends Command
 
         if ($password !== $password2) {
             $this->error('Admin passwords not match!');
-
-            return $this->call('lte:make-user', [
-                'email' => $email,
-                'name' => $name,
-            ]);
+            return 9;
         }
 
         if ($user = $user_model::create([
@@ -110,6 +102,8 @@ class LteUserCommand extends Command
             $this->info('User success created.');
         } else {
             $this->error('Error on user create!');
+            return 8;
         }
+        return 0;
     }
 }

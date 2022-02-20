@@ -43,8 +43,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteControllerCommand::class,
         LteUserCommand::class,
         LteExtensionCommand::class,
-        LteJaxCommand::class,
-        LteDbDumpCommand::class,
+        //LteJaxCommand::class,
+        //LteDbDumpCommand::class,
     ];
 
     /**
