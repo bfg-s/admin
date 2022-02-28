@@ -24,7 +24,7 @@
         "lar/layout": "^2.6.4",
         "bfg/emitter": "^1.2",
         "bfg/embedded-call": "^1.0",
-        "maatwebsite/excel": "^3.1",
+        "maatwebsite/excel": "^3.1.37",
         "laravel/framework": "^8.0|^9.0",
         "composer/composer": "^1.9|^2.0",
         "symfony/dom-crawler": "^v6.0.1",
