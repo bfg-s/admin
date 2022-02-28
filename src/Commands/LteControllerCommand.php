@@ -93,16 +93,27 @@ class LteControllerCommand extends Command
             $class->prop('static:model');
 
             if ($model) {
-                if (!class_exists("App\\{$model}")) {
-                    $model_namespace = "App\\Models\\{$model}";
+                if (class_exists($model)) {
+                    $model_namespace = $model;
+                    $model = class_basename($model);
                 } else {
-                    $model_namespace = "App\\{$model}";
+                    if (class_exists("App\\{$model}")) {
+                        $model_namespace = "App\\{$model}";
+                    } else {
+                        if (class_exists("App\\Models\\{$model}")) {
+                            $model_namespace = "App\\Models\\{$model}";
+                        } else {
+                            $model = null;
+                        }
+                    }
                 }
 
-                $class->prop('static:model', entity($model_namespace.'::class'));
+                if ($model && isset($model_namespace)) {
+                    $class->prop('static:model', entity($model_namespace.'::class'));
+                }
             }
 
-            if (in_array('index', $only)) {
+            if (in_array('index', $only) && $model) {
                 $class->method('index')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')
@@ -127,7 +138,7 @@ class LteControllerCommand extends Command
                         $doc->tagReturn('Page');
                     })->returnType('Page');
             }
-            if (in_array('matrix', $only)) {
+            if (in_array('matrix', $only) && $model) {
                 $class->method('matrix')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')
@@ -148,7 +159,7 @@ class LteControllerCommand extends Command
                         $doc->tagReturn('Page');
                     })->returnType('Page');
             }
-            if (in_array('show', $only)) {
+            if (in_array('show', $only) && $model) {
                 $class->method('show')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')

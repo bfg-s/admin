@@ -59,7 +59,12 @@ trait TableHelpersTrait
 
     public function buttons(...$delegates)
     {
+        $title = isset($delegates[0]) && is_string($delegates[0])
+            ? $delegates[0]
+            : null;
+
         $this->col(
+            $title,
             fn($model) => ButtonsComponent::create()
                 ->model($model)
                 ->delegatesNow($delegates)
@@ -120,13 +125,11 @@ trait TableHelpersTrait
     /**
      * @return $this|static
      */
-    public function to_export(callable $callback = null)
+    public function only_export(callable $callback = null)
     {
         if (isset($this->columns[$this->last])) {
-            PrepareExport::$columns[$this->model_name][$this->last] = [
-                'header' => $this->columns[$this->last]['label'],
-                'field' => $callback ?: $this->columns[$this->last]['field'],
-            ];
+            $this->to_export($callback);
+            unset($this->columns[$this->last]);
         }
 
         return $this;
@@ -135,11 +138,13 @@ trait TableHelpersTrait
     /**
      * @return $this|static
      */
-    public function only_export(callable $callback = null)
+    public function to_export(callable $callback = null)
     {
         if (isset($this->columns[$this->last])) {
-            $this->to_export($callback);
-            unset($this->columns[$this->last]);
+            PrepareExport::$columns[$this->model_name][$this->last] = [
+                'header' => $this->columns[$this->last]['label'],
+                'field' => $callback ?: $this->columns[$this->last]['field'],
+            ];
         }
 
         return $this;
@@ -175,26 +180,6 @@ trait TableHelpersTrait
     {
         if (isset($this->columns[$this->last])) {
             $this->columns[$this->last]['info'] = $info;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string|null  $field
-     * @return static
-     */
-    public function sort(string $field = null)
-    {
-        if (isset($this->columns[$this->last])) {
-            $this->columns[$this->last]['sort'] =
-                $field ?
-                    $field :
-                    (
-                    is_string($this->columns[$this->last]['field']) ?
-                        $this->columns[$this->last]['field'] :
-                        false
-                    );
         }
 
         return $this;
@@ -239,6 +224,36 @@ trait TableHelpersTrait
     }
 
     /**
+     * @param  string|null  $field
+     * @return static
+     */
+    public function sort(string $field = null)
+    {
+        if (isset($this->columns[$this->last])) {
+            $this->columns[$this->last]['sort'] =
+                $field ?
+                    $field :
+                    (
+                    is_string($this->columns[$this->last]['field']) ?
+                        $this->columns[$this->last]['field'] :
+                        false
+                    );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this|static
+     */
+    public function at()
+    {
+        $this->updated_at()->created_at();
+
+        return $this;
+    }
+
+    /**
      * @return $this|static
      */
     public function created_at()
@@ -254,16 +269,6 @@ trait TableHelpersTrait
     public function updated_at()
     {
         $this->column('lte.updated_at', 'updated_at')->true_data()->hide_on_mobile()->sort();
-
-        return $this;
-    }
-
-    /**
-     * @return $this|static
-     */
-    public function at()
-    {
-        $this->updated_at()->created_at();
 
         return $this;
     }

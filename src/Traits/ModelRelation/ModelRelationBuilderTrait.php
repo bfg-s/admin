@@ -161,7 +161,7 @@ trait ModelRelationBuilderTrait
             $m = [];
             preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $group->get_name(), $m);
             $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2] ?? ''));
-            $group->set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
+            $group->force_set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
         };
 
         $this->page->model(new ($this->page->model()));

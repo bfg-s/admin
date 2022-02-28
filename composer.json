@@ -32,7 +32,7 @@
         "almasaeed2010/adminlte": "^3.1.0"
     },
     "require-dev": {
-        "laravel/browser-kit-testing": "^6.3",
+        "laravel/dusk": "^6.22",
         "phpunit/phpunit": "^9.5",
         "laravel/laravel": "^8.0|^9.0"
     },

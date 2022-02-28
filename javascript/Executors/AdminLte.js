@@ -44,8 +44,9 @@ class AdminLte extends Executor {
 
         tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_id\_\_\}/g, id);
 
-        zone.appendChild(tpl);
-        ljs.$nav.readyObject(zone);
+        //zone.appendChild(tpl);
+        //ljs.$nav.readyObject(tpl);
+        $(zone).append(tpl.children);
         let container = $(`[data-relation-path='${path}']`);
         container.find('.template_empty_container').hide();
     }

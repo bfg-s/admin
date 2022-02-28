@@ -3,6 +3,7 @@
 namespace LteAdmin\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use LteAdmin\Models\LteRole;
 use LteAdmin\Models\LteUser as User;
 
@@ -13,11 +14,7 @@ class LteUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lte:user
-        {email?: Email of user}
-        {name?: Login of user}
-        {password?: Password of user}
-    ';
+    protected $signature = 'lte:user {email?} {name?} {password?} {role_id?}';
 
     /**
      * The console command description.
@@ -85,24 +82,36 @@ class LteUserCommand extends Command
             return 9;
         }
 
+        if ($user_model::where([
+            'email' => $email
+        ])->exists()) {
+            $this->error("User with email [{$email}] is exists!");
+            return 8;
+        }
+
         if ($user = $user_model::create([
             'username' => $name,
             'password' => bcrypt($password),
             'email' => $email,
             'name' => $name,
+            'login' => Str::slug($name, '_'),
         ])) {
             $roles = LteRole::all();
-            $role = $this->choice(
-                'Select role for new lte user',
-                $roles->pluck('name', 'id')->toArray(),
-                $roles->first()->id
-            );
+            $role = $this->argument('role_id');
+            if (!$role) {
+                $role = $this->choice(
+                    'Select role for new lte user',
+                    $roles->pluck('name', 'id')->toArray(),
+                    'Root'
+                );
+                $role = $roles->where('name', $role)->first()->id;
+            }
             $user->roles()->sync([$role]);
 
             $this->info('User success created.');
         } else {
             $this->error('Error on user create!');
-            return 8;
+            return 7;
         }
         return 0;
     }

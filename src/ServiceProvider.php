@@ -15,10 +15,8 @@ use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use LJS;
 use LteAdmin\Commands\LteControllerCommand;
-use LteAdmin\Commands\LteDbDumpCommand;
 use LteAdmin\Commands\LteExtensionCommand;
 use LteAdmin\Commands\LteInstallCommand;
-use LteAdmin\Commands\LteJaxCommand;
 use LteAdmin\Commands\LteUserCommand;
 use LteAdmin\Core\BladeDirectiveAlpineStore;
 use LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
@@ -274,8 +272,12 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * App register provider.
          */
-        if (class_exists('App\Providers\AdminServiceProvider')) {
-            $this->app->register('App\Providers\AdminServiceProvider');
+        if (!$this->app->runningUnitTests()) {
+            if (class_exists('App\Providers\AdminServiceProvider')) {
+                $this->app->register('App\Providers\AdminServiceProvider');
+            }
+        } else {
+            $this->app->register('LteAdmin\Tests\Providers\AdminServiceProvider');
         }
 
         /**

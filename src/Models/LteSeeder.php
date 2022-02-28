@@ -27,21 +27,21 @@ class LteSeeder extends Seeder
         // create a user.
         $user_model::truncate();
 
-        $user_model::create([
+        $rootUser = $user_model::create([
             'login' => 'root',
             'password' => bcrypt('root'),
             'name' => 'Root',
             'email' => 'root@root.com',
         ]);
 
-        $user_model::create([
+        $adminUser = $user_model::create([
             'login' => 'admin',
             'password' => bcrypt('admin'),
             'name' => 'Admin',
             'email' => 'admin@admin.com',
         ]);
 
-        $user_model::create([
+        $moderatorUser = $user_model::create([
             'login' => 'moderator',
             'password' => bcrypt('moderator'),
             'name' => 'Moderator',
@@ -51,24 +51,26 @@ class LteSeeder extends Seeder
         // create a role.
         LteRole::truncate();
 
-        LteRole::create([
+        $rootRole = LteRole::create([
             'name' => 'Root',
             'slug' => 'root',
         ]);
-        LteRole::create([
+        $adminRole = LteRole::create([
             'name' => 'Administrator',
             'slug' => 'admin',
         ]);
-        LteRole::create([
+        $moderatorRole = LteRole::create([
             'name' => 'Moderator',
             'slug' => 'moderator',
         ]);
 
-        $user_model::find(1)->roles()->save(LteRole::find(1));
-        $user_model::find(2)->roles()->save(LteRole::find(2));
-        $user_model::find(3)->roles()->save(LteRole::find(3));
+        $rootUser->roles()->save($rootRole);
+        $adminUser->roles()->save($adminRole);
+        $moderatorUser->roles()->save($moderatorRole);
 
-        LtePermission::create(['path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => 3]);
+        LtePermission::create([
+            'path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => $moderatorRole->id
+        ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -2,9 +2,7 @@
 
 namespace LteAdmin\Tests;
 
-use Tests\TestCase;
-
-class LteTest extends TestCase
+class ALteSystemTest extends TestCase
 {
     public function test_has_guard()
     {

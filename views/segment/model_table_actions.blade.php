@@ -1,5 +1,5 @@
 @php
-    use LteAdmin\Core\PrepareExport;
+    use LteAdmin\Core\PrepareExport
 @endphp
 @if(!request()->has('show_deleted'))
     <div class="card-title dropdown dropdown-inline" style="margin: -5px 10px -4px -.625rem;">

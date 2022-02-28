@@ -413,6 +413,17 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function force_set_id($id)
+    {
+        $this->field_id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function get_name()
