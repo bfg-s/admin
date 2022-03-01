@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use LteAdmin\Traits\DumpedModel;
 
 /**
@@ -86,12 +87,21 @@ class LteFileStorage extends Model
     }
 
     /**
+     * @param $value
+     * @return string|null
+     */
+    public function getFileNameAttribute($value): ?string
+    {
+        return $value ? Storage::disk($this->driver)->url($value) : null;
+    }
+
+    /**
      * @param  UploadedFile|null  $file
      * @param  string|null  $storage
      * @param  string|null  $storage_path
      * @param  string|null  $field
      * @param  string|null  $form
-     * @return string
+     * @return LteFileStorage|string|null
      */
     public function createFile(
         UploadedFile $file = null,
@@ -99,7 +109,7 @@ class LteFileStorage extends Model
         string $storage_path = null,
         string $field = null,
         string $form = null
-    ) {
+    ): LteFileStorage|string|null {
         if (!$file) {
             return null;
         }
@@ -121,20 +131,11 @@ class LteFileStorage extends Model
             ->first();
 
         if (!$test) {
-            $result = $file->store($storage_path, $storage);
-
-            $path = trim(str_replace(env('APP_URL').'/', '', config("filesystems.disks.{$storage}.url")), '/');
-
-            $root = trim(config("filesystems.disks.{$storage}.url"), '/').'/'.trim($storage_path, '/');
-
-            if (!is_dir($root)) {
-                mkdir($root, 0777, true);
-            }
 
             /** @var LteFileStorage $result */
             $result = $this->create([
                 'original_name' => $file->getClientOriginalName(),
-                'file_name' => $path.'/'.$result,
+                'file_name' => $file->store($storage_path, $storage),
                 'mime_type' => $file->getMimeType(),
                 'size' => $file->getSize(),
                 'form' => $form,

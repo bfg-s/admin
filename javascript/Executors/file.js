@@ -24,7 +24,9 @@ module.exports = class extends Executor {
 
         if (this.target.getAttribute('value')) {
 
-            $add.initialPreview = `<img src="/${this.target.getAttribute('value')}" class="file-preview-image kv-preview-data" style="width:auto;height:auto;max-width:100%;max-height:100%;" />`;
+            let img = this.target.getAttribute('value');
+            img = String(img).indexOf('http') === 0 ? img : `/${img}`;
+            $add.initialPreview = `<img src="${img}" class="file-preview-image kv-preview-data" style="width:auto;height:auto;max-width:100%;max-height:100%;" />`;
             $add.initialCaption = this.target.getAttribute('value');
         }
 
