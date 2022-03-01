@@ -15,10 +15,9 @@ use ReflectionException;
 
 /**
  * @methods LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
- * @mixin LangComponentMacroList
  * @mixin LangComponentMethods
  */
-class LangComponent extends DIV implements onRender
+class LangComponent extends Component
 {
     use FieldMassControlTrait;
     use Macroable;
@@ -33,40 +32,15 @@ class LangComponent extends DIV implements onRender
     /**
      * Lang constructor.
      * @param  array|null  $lang_list
-     * @param ...$params
      */
-    public function __construct(array $lang_list = null, ...$params)
+    public function __construct(array $lang_list = null)
     {
         $this->lang_list = $lang_list;
 
-        $this->toExecute('make_lang');
-
         parent::__construct();
-
-        $this->when($params);
-
-        $this->callConstructEvents();
     }
 
-    /**
-     * @param $name
-     * @param $arguments
-     * @return bool|FormComponent|Tag|mixed|string
-     * @throws Exception
-     */
-    public function __call($name, $arguments)
-    {
-        if ($call = $this->call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return parent::__call($name, $arguments);
-    }
-
-    /**
-     * Make languages inputs.
-     */
-    public function make_lang()
+    protected function mount()
     {
         $inner = [];
 
@@ -92,14 +66,5 @@ class LangComponent extends DIV implements onRender
         }
 
         $this->content->setItems($inner);
-    }
-
-    /**
-     * @return mixed|void
-     * @throws ReflectionException
-     */
-    public function onRender()
-    {
-        $this->callRenderEvents();
     }
 }
