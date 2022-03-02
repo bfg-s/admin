@@ -115,12 +115,18 @@ class SelectField extends FormGroupComponent
             $options = $options->toArray();
         }
 
-        if ($this->options) {
-            foreach ($options as $k => $option) {
+        $lang = \App::getLocale();
+
+        foreach ($options as $k => $option) {
+            $this->options[$k] = $option;
+        }
+
+        foreach ($this->options as $k => $option) {
+            if ($option && is_array($option)) {
+                $this->options[$k] = $option[$lang] ?? implode(', ', $option);
+            } else {
                 $this->options[$k] = $option;
             }
-        } else {
-            $this->options = $options;
         }
 
         if ($first_default && !$this->nullable) {
