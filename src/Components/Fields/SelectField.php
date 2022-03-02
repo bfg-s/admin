@@ -4,11 +4,11 @@ namespace LteAdmin\Components\Fields;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Lar\Developer\Core\Select2;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use LteAdmin\Components\Cores\Select2FieldCore;
 use LteAdmin\Components\FormGroupComponent;
+use LteAdmin\Core\Select2;
 use LteAdmin\Page;
 use ReflectionException;
 

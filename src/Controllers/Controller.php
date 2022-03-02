@@ -6,7 +6,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Respond;
 use LteAdmin\Components\ButtonsComponent;
 use LteAdmin\Components\CardBodyComponent;
@@ -32,6 +31,7 @@ use LteAdmin\Exceptions\NotFoundExplainForControllerException;
 use LteAdmin\Explanation;
 use LteAdmin\Page;
 use LteAdmin\Traits\Macroable;
+use LteAdmin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

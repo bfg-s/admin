@@ -5,12 +5,12 @@ namespace LteAdmin\Core;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
-use Lar\Developer\Core\Traits\Eventable;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use LteAdmin\Interfaces\SegmentContainerInterface;
+use LteAdmin\Traits\Eventable;
 use LteAdmin\Traits\FontAwesome;
+use LteAdmin\Traits\Piplineble;
 use Throwable;
 
 abstract class Container implements SegmentContainerInterface

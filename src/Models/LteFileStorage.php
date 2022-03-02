@@ -87,15 +87,6 @@ class LteFileStorage extends Model
     }
 
     /**
-     * @param $value
-     * @return string|null
-     */
-    public function getFileNameAttribute($value): ?string
-    {
-        return $value ? Storage::disk($this->driver)->url($value) : null;
-    }
-
-    /**
      * @param  UploadedFile|null  $file
      * @param  string|null  $storage
      * @param  string|null  $storage_path
@@ -131,7 +122,6 @@ class LteFileStorage extends Model
             ->first();
 
         if (!$test) {
-
             /** @var LteFileStorage $result */
             $result = $this->create([
                 'original_name' => $file->getClientOriginalName(),
@@ -186,6 +176,15 @@ class LteFileStorage extends Model
         }
 
         return (new static())->createFile($file, $storage, $storage_path, $field, $form);
+    }
+
+    /**
+     * @param $value
+     * @return string|null
+     */
+    public function getFileNameAttribute($value): ?string
+    {
+        return $value ? Storage::disk($this->driver)->url($value) : null;
     }
 
     /**

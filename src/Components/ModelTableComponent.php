@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Lar\Developer\Core\Traits\Piplineble;
 use Lar\Tagable\Tag;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;
@@ -17,6 +16,7 @@ use LteAdmin\Traits\ModelTable\TableBuilderTrait;
 use LteAdmin\Traits\ModelTable\TableControlsTrait;
 use LteAdmin\Traits\ModelTable\TableExtensionTrait;
 use LteAdmin\Traits\ModelTable\TableHelpersTrait;
+use LteAdmin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

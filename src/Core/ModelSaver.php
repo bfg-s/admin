@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
-use Lar\Developer\Core\Traits\Eventable;
 use LteAdmin\Models\LteFileStorage;
+use LteAdmin\Traits\Eventable;
 
 class ModelSaver
 {

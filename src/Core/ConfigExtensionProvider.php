@@ -4,12 +4,12 @@ namespace LteAdmin\Core;
 
 use Closure;
 use Event;
-use Lar\Developer\Core\Traits\Piplineble;
 use LteAdmin\Components\Component;
 use LteAdmin\Components\ModelTableComponent;
 use LteAdmin\Controllers\Controller;
 use LteAdmin\ExtendProvider;
 use LteAdmin\Traits\Macroable;
+use LteAdmin\Traits\Piplineble;
 
 class ConfigExtensionProvider
 {
