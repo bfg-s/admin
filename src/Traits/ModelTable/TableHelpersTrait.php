@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\App;
 use Lar\Layout\Tags\DIV;
 use LteAdmin\Components\ButtonsComponent;
 use LteAdmin\Core\PrepareExport;
@@ -180,6 +181,24 @@ trait TableHelpersTrait
     {
         if (isset($this->columns[$this->last])) {
             $this->columns[$this->last]['info'] = $info;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string|null  $showLanguageCode
+     * @return $this|static
+     */
+    public function lang(string $showLanguageCode = null)
+    {
+        $showLanguageCode = $showLanguageCode ?: App::getLocale();
+
+        if (
+            isset($this->columns[$this->last])
+            && is_string($this->columns[$this->last]['field'])
+        ) {
+            $this->columns[$this->last]['field'] .= ".{$showLanguageCode}";
         }
 
         return $this;
