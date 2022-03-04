@@ -29,17 +29,14 @@ trait SearchFormConditionRulesTrait
                         }
                     }
                 } else {
-                    collect($this->fields)
-                        ->pluck('field_name')
-                        ->map(static function ($field, $k) use (&$model, $r) {
-                            if (!isset($field['method']) || !is_embedded_call($field['method'])) {
-                                if ($k) {
-                                    $model = $model->orWhere($field, 'like', "%{$r}%");
-                                } else {
-                                    $model = $model->where($field, 'like', "%{$r}%");
-                                }
+                    $model = $model->orWhere(function ($q) use ($r) {
+                        foreach ($this->fields as $field) {
+                            if (!str_ends_with($field['field_name'], '_at')) {
+                                $q = $q->orWhere($field['field_name'], 'like', "%{$r}%");
                             }
-                        });
+                        }
+                        return $q;
+                    });
                 }
             } elseif (is_array($r)) {
                 foreach ($r as $key => $val) {
