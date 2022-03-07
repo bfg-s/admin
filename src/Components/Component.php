@@ -44,6 +44,7 @@ use LteAdmin\Components\Fields\SelectTagsField;
 use LteAdmin\Components\Fields\SwitcherField;
 use LteAdmin\Components\Fields\TextareaField;
 use LteAdmin\Components\Fields\TimeField;
+use LteAdmin\Controllers\Controller;
 use LteAdmin\Core\Delegate;
 use LteAdmin\Explanation;
 use LteAdmin\Jax\LteAdmin;
@@ -361,7 +362,11 @@ abstract class Component extends DIV implements onRender
             $inputs = Component::$regInputs;
         }
 
-        if (preg_match("/^($inputs)_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^($inputs)_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
 
             $field = $matches[1];
             $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
@@ -385,7 +390,11 @@ abstract class Component extends DIV implements onRender
             $inputs = Component::$regInputs;
         }
 
-        if (preg_match("/^($inputs)_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^($inputs)_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
 
             $field = $matches[1];
             $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));

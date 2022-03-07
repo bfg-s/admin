@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Lar\Tagable\Tag;
+use LteAdmin\Controllers\Controller;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;
 use LteAdmin\Traits\ModelTable\TableBuilderTrait;
@@ -150,7 +151,11 @@ class ModelTableComponent extends Component
      */
     public function __call($name, $arguments)
     {
-        if (preg_match("/^col_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^col_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
             $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
@@ -167,7 +172,11 @@ class ModelTableComponent extends Component
 
     public function __get(string $name)
     {
-        if (preg_match("/^col_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^col_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
             $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 

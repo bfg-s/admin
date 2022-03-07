@@ -20,15 +20,7 @@ class TaggableComponent extends Component
      * @var string[]
      */
     protected static $collection = [
-        'lang' => LangComponent::class,
-        'table' => TableComponent::class,
-        'alert' => AlertComponent::class,
-        'small_box' => SmallBoxComponent::class,
-        'info_box' => InfoBoxComponent::class,
-        'tabs' => TabsComponent::class,
-        'divider' => DividerComponent::class,
-        'timeline' => TimelineComponent::class,
-        'statistic_period' => StatisticPeriodComponent::class,
+
     ];
 
     /**

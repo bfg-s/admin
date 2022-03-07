@@ -7,14 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Lar\Layout\Respond;
+use LteAdmin\Components\AlertComponent;
 use LteAdmin\Components\ButtonsComponent;
 use LteAdmin\Components\CardBodyComponent;
 use LteAdmin\Components\CardComponent;
 use LteAdmin\Components\ChartJsComponent;
+use LteAdmin\Components\DividerComponent;
 use LteAdmin\Components\FieldComponent;
 use LteAdmin\Components\FormComponent;
 use LteAdmin\Components\GridColumnComponent;
 use LteAdmin\Components\GridRowComponent;
+use LteAdmin\Components\InfoBoxComponent;
+use LteAdmin\Components\LangComponent;
 use LteAdmin\Components\LiveComponent;
 use LteAdmin\Components\ModalComponent;
 use LteAdmin\Components\ModelInfoTableComponent;
@@ -22,7 +26,10 @@ use LteAdmin\Components\ModelRelationComponent;
 use LteAdmin\Components\ModelTableComponent;
 use LteAdmin\Components\NestedComponent;
 use LteAdmin\Components\SearchFormComponent;
+use LteAdmin\Components\SmallBoxComponent;
 use LteAdmin\Components\StatisticPeriodComponent;
+use LteAdmin\Components\TableComponent;
+use LteAdmin\Components\TabsComponent;
 use LteAdmin\Components\TimelineComponent;
 use LteAdmin\Components\WatchComponent;
 use LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
@@ -85,6 +92,14 @@ class Controller extends BaseController
         'field' => FieldComponent::class,
         'model_relation' => ModelRelationComponent::class,
         'modal' => ModalComponent::class,
+
+        'lang' => LangComponent::class,
+        'table' => TableComponent::class,
+        'alert' => AlertComponent::class,
+        'small_box' => SmallBoxComponent::class,
+        'info_box' => InfoBoxComponent::class,
+        'tabs' => TabsComponent::class,
+        'divider' => DividerComponent::class,
     ];
     protected static $started = false;
     /**
@@ -140,6 +155,11 @@ class Controller extends BaseController
     public static function getExplanationList()
     {
         return self::$explanation_list;
+    }
+
+    public static function hasExplanation(string $name)
+    {
+        return isset(self::$explanation_list[$name]);
     }
 
     public static function extend(string $name, string $class)

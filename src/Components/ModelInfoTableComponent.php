@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Lar\Layout\Tags\SPAN;
 use Lar\Tagable\Tag;
+use LteAdmin\Controllers\Controller;
 
 /**
  * @methods LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
@@ -133,7 +134,11 @@ class ModelInfoTableComponent extends Component
      */
     public function __call($name, $arguments)
     {
-        if (preg_match("/^row_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^row_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
 
             $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
@@ -151,7 +156,11 @@ class ModelInfoTableComponent extends Component
 
     public function __get(string $name)
     {
-        if (preg_match("/^row_(.+)$/", $name, $matches)) {
+        if (
+            preg_match("/^row_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
             $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
