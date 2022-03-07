@@ -2,9 +2,13 @@
 
 namespace LteAdmin\Core;
 
+use Illuminate\Support\Str;
+use LteAdmin\Components\Component;
+use LteAdmin\Components\LangComponent;
 use LteAdmin\Page;
 
 /**
+ * @property-read LangComponent|static $lang
  * @template DelegatedClass
  * @mixin DelegatedClass
  */
@@ -20,6 +24,14 @@ abstract class Delegator
     public function __call(string $name, array $arguments)
     {
         $result = (new Delegate($this->class, $this->condition))->__call($name, $arguments);
+        $this->condition = true;
+
+        return $result;
+    }
+
+    public function __get(string $name)
+    {
+        $result = (new Delegate($this->class, $this->condition))->__call($name, []);
         $this->condition = true;
 
         return $result;

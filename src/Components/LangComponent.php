@@ -8,17 +8,8 @@ use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\FieldMassControlTrait;
 use LteAdmin\Traits\Macroable;
 
-/**
- * @methods LteAdmin\Components\FieldComponent::$inputs (string $name, string $label = null, ...$params)
- * @mixin LangComponentMethods
- */
 class LangComponent extends Component
 {
-    use FieldMassControlTrait;
-    use Macroable;
-    use BuildHelperTrait;
-    use Delegable;
-
     /**
      * @var array|null
      */

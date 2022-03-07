@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
 use Lar\Tagable\Tag;
@@ -143,6 +145,8 @@ abstract class Component extends DIV implements onRender
     protected $menu;
 
     protected $iSelectModel = false;
+
+    protected static $regInputs = null;
 
     /**
      * @param ...$delegates
@@ -351,11 +355,46 @@ abstract class Component extends DIV implements onRender
      */
     public function __call($name, $arguments)
     {
-        if ($call = $this->call_group($name, $arguments)) {
+        if (!Component::$regInputs) {
+            $inputs = Component::$regInputs = implode('|',array_keys(Component::$inputs));
+        } else {
+            $inputs = Component::$regInputs;
+        }
+
+        if (preg_match("/^($inputs)_(.+)$/", $name, $matches)) {
+
+            $field = $matches[1];
+            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
+
+        } else if ($call = $this->call_group($name, $arguments)) {
+
             return $call;
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    public function __get(string $name)
+    {
+        if (!Component::$regInputs) {
+            $inputs = Component::$regInputs = implode('|',array_keys(Component::$inputs));
+        } else {
+            $inputs = Component::$regInputs;
+        }
+
+        if (preg_match("/^($inputs)_(.+)$/", $name, $matches)) {
+
+            $field = $matches[1];
+            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $label = ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
+        }
+
+        return $this;
     }
 
     /**

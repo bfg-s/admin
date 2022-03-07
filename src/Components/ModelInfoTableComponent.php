@@ -5,12 +5,15 @@ namespace LteAdmin\Components;
 use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Lar\Layout\Tags\SPAN;
 use Lar\Tagable\Tag;
 
 /**
  * @methods LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
  * @mixin ModelInfoTableComponentMacroList
+ * @mixin ModelInfoTableComponentFields
  * @mixin ModelInfoTableComponentMethods
  */
 class ModelInfoTableComponent extends Component
@@ -130,13 +133,33 @@ class ModelInfoTableComponent extends Component
      */
     public function __call($name, $arguments)
     {
-        if (ModelTableComponent::hasExtension($name) && $this->last) {
+        if (preg_match("/^row_(.+)$/", $name, $matches)) {
+
+            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->row(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+
+        } else if (ModelTableComponent::hasExtension($name) && $this->last) {
             $this->rows[$this->last]['macros'][] = [$name, $arguments];
 
             return $this;
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    public function __get(string $name)
+    {
+        if (preg_match("/^row_(.+)$/", $name, $matches)) {
+            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $label = ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->row(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+
+        }
+
+        return parent::__get($name);
     }
 
     protected function mount()

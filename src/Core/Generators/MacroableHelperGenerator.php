@@ -2,9 +2,12 @@
 
 namespace LteAdmin\Core\Generators;
 
+use App\Admin\Delegates\ModelInfoTable;
+use App\Admin\Delegates\ModelTable;
 use Closure;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Log;
@@ -28,6 +31,8 @@ class MacroableHelperGenerator implements DumpExecute
     public static $dirs = [
         __DIR__.'/../../Components',
     ];
+
+    public static $fields = [];
 
     /**
      * @var Command
@@ -200,7 +205,62 @@ class MacroableHelperGenerator implements DumpExecute
             $r_ns .= $namespace->render();
         }
 
+        $r_ns .= "\n" . $this->createColAndRowFields();
+
         return $r_ns;
+    }
+
+    public function createColAndRowFields()
+    {
+        $namespace = namespace_entity("LteAdmin\Components");
+
+        $class = $namespace->class('ModelTableComponentFields');
+
+        $class->doc(function ($doc) {
+            /** @var DocumentorEntity $doc */
+            foreach ($this->getModelFields() as $field) {
+
+                $camelField = Str::snake($field);
+
+                $method = 'col';
+
+                $doc->tagMethod(
+                    "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                    $method.'_'.$camelField."(callable|string \$label = null)",
+                    "Method {$method}_{$camelField}"
+                );
+                $doc->tagPropertyRead(
+                    "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                    $method.'_'.$camelField,
+                    "Property {$method}_{$camelField}"
+                );
+            }
+        });
+
+        $class = $namespace->class('ModelInfoTableComponentFields');
+
+        $class->doc(function ($doc) {
+            /** @var DocumentorEntity $doc */
+            foreach ($this->getModelFields() as $field) {
+
+                $camelField = Str::snake($field);
+
+                $method = 'row';
+
+                $doc->tagMethod(
+                    "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                    $method.'_'.$camelField."(callable|string \$label = null)",
+                    "Method {$method}_{$camelField}"
+                );
+                $doc->tagPropertyRead(
+                    "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                    $method.'_'.$camelField,
+                    "Property {$method}_{$camelField}"
+                );
+            }
+        });
+
+        return $namespace->render();
     }
 
     /**
@@ -341,6 +401,54 @@ class MacroableHelperGenerator implements DumpExecute
                     "Property $method"
                 );
             }
+
+            if (in_array($method, array_keys(LteAdmin\Components\Component::$inputs))) {
+                foreach ($this->getModelFields() as $field) {
+
+                    $camelField = Str::snake($field);
+
+                    $doc->tagMethod(
+                        $type,
+                        $method.'_'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        $type,
+                        $method.'_'.$camelField,
+                        "Property {$method}_{$camelField}"
+                    );
+                }
+            }
         }
+    }
+
+    protected function getModelFields()
+    {
+        if (static::$fields) {
+            return static::$fields;
+        }
+
+        $files = collect(File::allFiles(app_path()))
+            ->map(static function (SplFileInfo $file) {
+                return $file->getPathname();
+            })
+            ->filter(static function (string $file) {
+                return Str::is('*.php', $file) && is_file($file);
+            })
+            ->map('class_in_file')
+            ->filter(static function ($class) {
+                try {
+                    return class_exists($class) && method_exists($class, 'getFillable');
+                } catch (Throwable $throwable) {
+                }
+
+                return false;
+            });
+
+        $fields = $files->map(function ($class) {
+            return (new $class)->getFillable();
+        })->collapse()->unique()->toArray();
+
+        return static::$fields = $fields;
     }
 }

@@ -2,6 +2,14 @@
 
 namespace LteAdmin\Core;
 
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
+use LteAdmin\Components\Component;
+use LteAdmin\Components\LangComponent;
+
+/**
+ * @property-read LangComponent|static $lang
+ */
 class Delegate
 {
     public $class;
@@ -14,6 +22,16 @@ class Delegate
     {
         $this->class = $class;
         $this->condition = $condition;
+    }
+
+    public function __get(string $name)
+    {
+        if ($this->condition) {
+
+            $this->methods[] = [$name, []];
+        }
+
+        return $this;
     }
 
     public function __call($name, $arguments)

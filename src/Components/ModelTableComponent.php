@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Lar\Tagable\Tag;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;
@@ -23,6 +25,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * @methods static::$extensions (...$params) static
  * @mixin ModelTableComponentMacroList
+ * @mixin ModelTableComponentFields
  * @mixin ModelTableComponentMethods
  */
 class ModelTableComponent extends Component
@@ -147,13 +150,32 @@ class ModelTableComponent extends Component
      */
     public function __call($name, $arguments)
     {
-        if (static::hasExtension($name) && isset($this->columns[$this->last])) {
+        if (preg_match("/^col_(.+)$/", $name, $matches)) {
+            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->col(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+
+        } else if (static::hasExtension($name) && isset($this->columns[$this->last])) {
             $this->columns[$this->last]['macros'][] = [$name, $arguments];
 
             return $this;
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    public function __get(string $name)
+    {
+        if (preg_match("/^col_(.+)$/", $name, $matches)) {
+            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $label = ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->col(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+
+        }
+
+        return parent::__get($name);
     }
 
     protected function mount()
