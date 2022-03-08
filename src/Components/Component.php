@@ -104,50 +104,40 @@ abstract class Component extends DIV implements onRender
         'hidden' => HiddenField::class,
         'autocomplete' => AutocompleteField::class,
     ];
-
+    protected static $regInputs = null;
     /**
      * @var string
      */
     protected $class = null;
-
     /**
      * @var Builder|Model|Relation|null
      */
     protected $model = null;
-
     /**
      * @var string|null
      */
     protected $model_name = null;
-
     /**
      * @var string|null
      */
     protected $model_class = null;
-
     /**
      * @var array
      */
     protected array $delegates = [];
-
     /**
      * @var array
      */
     protected array $force_delegates = [];
-
     /**
      * @var Page
      */
     protected Page $page;
-
     /**
      * @var array|null
      */
     protected $menu;
-
     protected $iSelectModel = false;
-
-    protected static $regInputs = null;
 
     /**
      * @param ...$delegates
@@ -162,6 +152,10 @@ abstract class Component extends DIV implements onRender
         $this->iSelectModel = false;
 
         $this->delegates(...$delegates);
+
+        if ($this->class) {
+            $this->addClass($this->class);
+        }
 
         $this->callConstructEvents();
     }
@@ -353,7 +347,7 @@ abstract class Component extends DIV implements onRender
     public function __call($name, $arguments)
     {
         if (!Component::$regInputs) {
-            $inputs = Component::$regInputs = implode('|',array_keys(Component::$inputs));
+            $inputs = Component::$regInputs = implode('|', array_keys(Component::$inputs));
         } else {
             $inputs = Component::$regInputs;
         }
@@ -363,16 +357,15 @@ abstract class Component extends DIV implements onRender
             && !isset(Component::$inputs[$name])
             && !Controller::hasExplanation($name)
         ) {
-
             $field = $matches[1];
             $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
-
-        } else if ($call = $this->call_group($name, $arguments)) {
-
-            return $call;
+        } else {
+            if ($call = $this->call_group($name, $arguments)) {
+                return $call;
+            }
         }
 
         return parent::__call($name, $arguments);
@@ -381,7 +374,7 @@ abstract class Component extends DIV implements onRender
     public function __get(string $name)
     {
         if (!Component::$regInputs) {
-            $inputs = Component::$regInputs = implode('|',array_keys(Component::$inputs));
+            $inputs = Component::$regInputs = implode('|', array_keys(Component::$inputs));
         } else {
             $inputs = Component::$regInputs;
         }
@@ -391,12 +384,11 @@ abstract class Component extends DIV implements onRender
             && !isset(Component::$inputs[$name])
             && !Controller::hasExplanation($name)
         ) {
-
             $field = $matches[1];
             $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
-            return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
+            return $this->{$field}($name, Lang::has("admin.$name") ? __("admin.$name") : $label);
         }
 
         return $this;
@@ -407,9 +399,6 @@ abstract class Component extends DIV implements onRender
      */
     public function onRender()
     {
-        if ($this->class) {
-            $this->addClass($this->class);
-        }
         $this->newExplain($this->delegates);
         $this->newExplainForce($this->force_delegates);
         if (!$this->iSelectModel && ($this->parent?->model ?? null)) {

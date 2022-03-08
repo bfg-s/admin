@@ -139,16 +139,16 @@ class ModelInfoTableComponent extends Component
             && !isset(Component::$inputs[$name])
             && !Controller::hasExplanation($name)
         ) {
-
             $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
-            return $this->row(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+            return $this->row(Lang::has("admin.$label") ? __("admin.$label") : $label, $name);
+        } else {
+            if (ModelTableComponent::hasExtension($name) && $this->last) {
+                $this->rows[$this->last]['macros'][] = [$name, $arguments];
 
-        } else if (ModelTableComponent::hasExtension($name) && $this->last) {
-            $this->rows[$this->last]['macros'][] = [$name, $arguments];
-
-            return $this;
+                return $this;
+            }
         }
 
         return parent::__call($name, $arguments);
@@ -165,7 +165,6 @@ class ModelInfoTableComponent extends Component
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->row(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
-
         }
 
         return parent::__get($name);

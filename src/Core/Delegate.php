@@ -2,9 +2,6 @@
 
 namespace LteAdmin\Core;
 
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
-use LteAdmin\Components\Component;
 use LteAdmin\Components\LangComponent;
 
 /**
@@ -27,7 +24,6 @@ class Delegate
     public function __get(string $name)
     {
         if ($this->condition) {
-
             $this->methods[] = [$name, []];
         }
 

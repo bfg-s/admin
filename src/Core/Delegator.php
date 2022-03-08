@@ -2,8 +2,6 @@
 
 namespace LteAdmin\Core;
 
-use Illuminate\Support\Str;
-use LteAdmin\Components\Component;
 use LteAdmin\Components\LangComponent;
 use LteAdmin\Page;
 

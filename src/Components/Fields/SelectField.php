@@ -2,6 +2,7 @@
 
 namespace LteAdmin\Components\Fields;
 
+use App;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Abstracts\Component;
@@ -115,7 +116,7 @@ class SelectField extends FormGroupComponent
             $options = $options->toArray();
         }
 
-        $lang = \App::getLocale();
+        $lang = App::getLocale();
 
         foreach ($options as $k => $option) {
             $this->options[$k] = $option;

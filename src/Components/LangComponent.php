@@ -3,10 +3,6 @@
 namespace LteAdmin\Components;
 
 use Lar\Tagable\Core\Extension\Content;
-use LteAdmin\Traits\BuildHelperTrait;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FieldMassControlTrait;
-use LteAdmin\Traits\Macroable;
 
 class LangComponent extends Component
 {

@@ -3,6 +3,8 @@
 namespace LteAdmin\Components;
 
 use Exception;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Lar\Layout\Tags\OL;
 use Lar\Tagable\Tag;
 use LteAdmin\Components\SearchFields\AmountSearchField;
@@ -23,6 +25,7 @@ use LteAdmin\Components\SearchFields\SelectSearchField;
 use LteAdmin\Components\SearchFields\SelectTagsSearchField;
 use LteAdmin\Components\SearchFields\SwitcherSearchField;
 use LteAdmin\Components\SearchFields\TimeFieldSearchField;
+use LteAdmin\Controllers\Controller;
 use LteAdmin\Explanation;
 use LteAdmin\Traits\SearchFormConditionRulesTrait;
 use LteAdmin\Traits\SearchFormHelpersTrait;
@@ -30,6 +33,7 @@ use LteAdmin\Traits\SearchFormHelpersTrait;
 /**
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
  * @mixin SearchFormComponentMethods
+ * @mixin SearchFormComponentFields
  */
 class SearchFormComponent extends Component
 {
@@ -59,14 +63,12 @@ class SearchFormComponent extends Component
         'checks' => ChecksSearchField::class,
         'radios' => RadiosSearchField::class,
     ];
-
+    protected static $regInputs = null;
     protected $element = 'form';
-
     /**
      * @var array
      */
     protected $fields = [];
-
     /**
      * @var string[]
      */
@@ -87,7 +89,6 @@ class SearchFormComponent extends Component
         'between' => 'where_between',
         'not_between' => 'where_not_between',
     ];
-
     /**
      * @var array
      */
@@ -131,53 +132,102 @@ class SearchFormComponent extends Component
      */
     public function __call($name, $arguments)
     {
-        if (isset(static::$field_components[$name])) {
-            $class = static::$field_components[$name];
+        if (!SearchFormComponent::$regInputs) {
+            $inputs = SearchFormComponent::$regInputs = implode('|',
+                array_keys(SearchFormComponent::$field_components));
+        } else {
+            $inputs = SearchFormComponent::$regInputs;
+        }
 
-            $field_name = $arguments[0] ?? null;
-            $label = $arguments[1] ?? null;
-            $condition = $arguments[2] ?? null;
+        if (
+            preg_match("/^in_($inputs)_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+            && !isset(static::$field_components[$name])
+        ) {
+            $field = $matches[1];
+            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
+            $condition = $arguments[1] ?? null;
 
-            $class = new $class("q[{$field_name}]", $label);
-
-            if ($class instanceof FormGroupComponent) {
-                $class->set_parent($this);
-
-                $class->vertical();
-
-                $class->value(request("q.{$field_name}"));
+            if ($condition) {
+                return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label, $condition);
             }
+            return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
+        } else {
+            if (isset(static::$field_components[$name])) {
+                $class = static::$field_components[$name];
 
-            $method = null;
+                $field_name = $arguments[0] ?? null;
+                $label = $arguments[1] ?? null;
+                $condition = $arguments[2] ?? null;
 
-            if (is_embedded_call($condition)) {
-                $method = $condition;
-            } elseif (is_string($condition) && isset($this->conditions[$condition])) {
-                $method = $this->conditions[$condition];
-            } else {
-                if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
-                    $condition = $class::$condition;
-                } else {
-                    $condition = '%=%';
+                $class = new $class("q[{$field_name}]", $label);
+
+                if ($class instanceof FormGroupComponent) {
+                    $class->set_parent($this);
+
+                    $class->vertical();
+
+                    $class->value(request("q.{$field_name}"));
                 }
 
-                if (is_string($condition) && isset($this->conditions[$condition])) {
+                $method = null;
+
+                if (is_embedded_call($condition)) {
+                    $method = $condition;
+                } elseif (is_string($condition) && isset($this->conditions[$condition])) {
                     $method = $this->conditions[$condition];
+                } else {
+                    if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
+                        $condition = $class::$condition;
+                    } else {
+                        $condition = '%=%';
+                    }
+
+                    if (is_string($condition) && isset($this->conditions[$condition])) {
+                        $method = $this->conditions[$condition];
+                    }
                 }
+
+                $this->fields[] = [
+                    'field' => $name,
+                    'condition' => $condition,
+                    'field_name' => $field_name,
+                    'method' => $method,
+                    'class' => $class,
+                ];
+
+                return $class;
             }
-
-            $this->fields[] = [
-                'field' => $name,
-                'condition' => $condition,
-                'field_name' => $field_name,
-                'method' => $method,
-                'class' => $class,
-            ];
-
-            return $class;
         }
 
         return parent::__call($name, $arguments);
+    }
+
+    public function __get(string $name)
+    {
+        if (!SearchFormComponent::$regInputs) {
+            $inputs = SearchFormComponent::$regInputs = implode('|',
+                array_keys(SearchFormComponent::$field_components));
+        } else {
+            $inputs = SearchFormComponent::$regInputs;
+        }
+
+        if (
+            preg_match("/^in_($inputs)_(.+)$/", $name, $matches)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+            && !isset(static::$field_components[$name])
+        ) {
+            $field = $matches[1];
+            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $label = ucfirst(str_replace(['.', '_'], ' ', $name));
+
+            return $this->{$field}($name, Lang::has("admin.$name") ? __("admin.$name") : $label);
+        }
+
+        return parent::__get($name);
     }
 
     public function getSearchInfoComponent()
