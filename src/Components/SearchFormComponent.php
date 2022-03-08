@@ -146,7 +146,7 @@ class SearchFormComponent extends Component
             && !isset(static::$field_components[$name])
         ) {
             $field = $matches[1];
-            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[2], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
             $condition = $arguments[1] ?? null;
 
@@ -221,7 +221,7 @@ class SearchFormComponent extends Component
             && !isset(static::$field_components[$name])
         ) {
             $field = $matches[1];
-            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[2], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$name") ? __("admin.$name") : $label);

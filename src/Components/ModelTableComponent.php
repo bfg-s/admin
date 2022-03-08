@@ -156,7 +156,7 @@ class ModelTableComponent extends Component
             && !isset(Component::$inputs[$name])
             && !Controller::hasExplanation($name)
         ) {
-            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->col(Lang::has("admin.$label") ? __("admin.$label") : $label, $name);
@@ -178,7 +178,7 @@ class ModelTableComponent extends Component
             && !isset(Component::$inputs[$name])
             && !Controller::hasExplanation($name)
         ) {
-            $name = str_replace('_dot_', '.', Str::snake($matches[1], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->col(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);

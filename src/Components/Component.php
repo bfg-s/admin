@@ -358,7 +358,7 @@ abstract class Component extends DIV implements onRender
             && !Controller::hasExplanation($name)
         ) {
             $field = $matches[1];
-            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[2], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
@@ -385,7 +385,7 @@ abstract class Component extends DIV implements onRender
             && !Controller::hasExplanation($name)
         ) {
             $field = $matches[1];
-            $name = str_replace('_dot_', '.', Str::snake($matches[2], '_'));
+            $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[2], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$name") ? __("admin.$name") : $label);

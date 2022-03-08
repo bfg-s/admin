@@ -8,6 +8,7 @@ use App\Admin\Delegates\SearchForm;
 use Closure;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use Log;
@@ -38,6 +39,21 @@ class MacroableHelperGenerator implements DumpExecute
      * @var Command
      */
     private $command;
+
+    /**
+     * @var string[]
+     */
+    protected $types = [
+        'hasMany', 'hasManyThrough', 'hasOneThrough', 'belongsToMany', 'hasOne',
+        'belongsTo', 'morphOne', 'morphTo', 'morphMany', 'morphToMany', 'morphedByMany',
+    ];
+
+    protected $relations = [];
+
+    /**
+     * @var array
+     */
+    protected array $model_lines = [];
 
     /**
      * @param  Command  $command
@@ -398,6 +414,20 @@ class MacroableHelperGenerator implements DumpExecute
 
         $fields[] = 'id';
 
+        $this->relations = $files->map(function ($class) {
+            $ref = new ReflectionClass($class);
+            $relations = $this->getAllRelations($ref);
+            $result = [];
+            /** @var Relation $relation */
+            foreach ($relations as $n => $relation) {
+                $result[] = [
+                    'name' => $n,
+                    'fillable' => $relation->getModel()->getFillable(),
+                ];
+            }
+            return $result;
+        })->filter()->collapse();
+
         return static::$fields = $fields;
     }
 
@@ -408,11 +438,10 @@ class MacroableHelperGenerator implements DumpExecute
         $class = $namespace->class('ModelTableComponentFields');
 
         $class->doc(function ($doc) {
+            $method = 'col';
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
-
-                $method = 'col';
 
                 $doc->tagMethod(
                     "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
@@ -425,17 +454,33 @@ class MacroableHelperGenerator implements DumpExecute
                     "Property {$method}_{$camelField}"
                 );
             }
+
+            foreach ($this->relations as $relation) {
+                foreach ($relation['fillable'] as $field) {
+
+                    $camelField = Str::snake($field);
+
+                    $doc->tagMethod(
+                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$relation['name']}__{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $method.'_'.$relation['name'].'__'.$camelField,
+                        "Property {$method}_{$relation['name']}__{$camelField}"
+                    );
+                }
+            }
         });
 
         $class = $namespace->class('ModelInfoTableComponentFields');
 
         $class->doc(function ($doc) {
+            $method = 'row';
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
-
-                $method = 'row';
-
                 $doc->tagMethod(
                     "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
                     $method.'_'.$camelField."(callable|string \$label = null)",
@@ -446,6 +491,24 @@ class MacroableHelperGenerator implements DumpExecute
                     $method.'_'.$camelField,
                     "Property {$method}_{$camelField}"
                 );
+            }
+
+            foreach ($this->relations as $relation) {
+                foreach ($relation['fillable'] as $field) {
+
+                    $camelField = Str::snake($field);
+
+                    $doc->tagMethod(
+                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$relation['name']}__{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $method.'_'.$relation['name'].'__'.$camelField,
+                        "Property {$method}_{$relation['name']}__{$camelField}"
+                    );
+                }
             }
         });
 
@@ -474,5 +537,59 @@ class MacroableHelperGenerator implements DumpExecute
         });
 
         return $namespace->render();
+    }
+
+
+
+    protected function getAllRelations(ReflectionClass $ref): array
+    {
+        $this->model_lines = explode("\n", file_get_contents($ref->getFileName()));
+        $traits = $ref->getTraits();
+        $traitMethodNames = [];
+        foreach ($traits as $trait) {
+            $traitMethods = $trait->getMethods();
+            foreach ($traitMethods as $traitMethod) {
+                $traitMethodNames[] = $traitMethod->getName();
+            }
+        }
+
+        $currentMethod = collect(explode('::', __METHOD__))->last();
+        $methods = $ref->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        $model_class_name = $ref->getName();
+
+        return collect($methods)->filter(function ($method) use ($model_class_name, $traitMethodNames, $currentMethod) {
+            $methodName = $method->getName();
+            if (!in_array($methodName, $traitMethodNames)
+                && !str_starts_with($methodName, '__')
+                && $method->class === $model_class_name
+                && !$method->isStatic()
+                && $methodName != $currentMethod
+            ) {
+                $r = new \ReflectionMethod($model_class_name, $methodName);
+                $parameters = $r->getParameters();
+                return collect($parameters)->filter(function ($parameter) {
+                    return !$parameter->isOptional();
+                })->isEmpty();
+            }
+            return false;
+        })->mapWithKeys(function (\ReflectionMethod $method) use ($ref) {
+            $methodName = $method->getName();
+            $model_content = $this->getMethodByLines($method->getStartLine(), $method->getEndLine());
+            if (
+                preg_match('/return \$this->('.implode('|', $this->types).')\s*\(.*\)\s*;/', $model_content)
+            ) {
+                $relation = $ref->newInstance()->$methodName();
+                if (is_subclass_of($relation, \Illuminate\Database\Eloquent\Relations\Relation::class)) {
+                    return [$methodName => $relation];
+                }
+            }
+            return [];
+        })->toArray();
+    }
+
+    protected function getMethodByLines(int $start, int $end)
+    {
+        return implode("\n", array_slice($this->model_lines, $start-1, ($end-$start)+1));
     }
 }
