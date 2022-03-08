@@ -59,6 +59,11 @@ class SelectField extends FormGroupComponent
     protected $nullable = false;
 
     /**
+     * @var bool
+     */
+    protected $separator = ' ';
+
+    /**
      * @return Component|INPUT|mixed
      * @throws ReflectionException
      */
@@ -71,7 +76,8 @@ class SelectField extends FormGroupComponent
                 $this->value,
                 $this->nullable ? $this->title : null,
                 $this->field_id.'_',
-                $this->load_where
+                $this->load_where,
+                $this->separator
             );
 
             $r_name = $selector->getName();
@@ -103,6 +109,13 @@ class SelectField extends FormGroupComponent
             ->setDatas($this->data)
             ->addClassIf($this->has_bug, 'is-invalid')
             ->addClass($this->class);
+    }
+
+    public function separator(string $separator)
+    {
+        $this->separator = $separator;
+
+        return $this;
     }
 
     /**

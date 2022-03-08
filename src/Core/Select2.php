@@ -52,6 +52,8 @@ class Select2 extends Collection
      */
     protected $data;
 
+    protected string $separator = " ";
+
     /**
      * @var int
      */
@@ -95,12 +97,13 @@ class Select2 extends Collection
     /**
      * Select2 constructor.
      *
-     * @param $data
+     * @param  null  $data
      * @param  string|null  $format
      * @param  null  $value
-     * @param  string  $no_select
+     * @param  string|null  $no_select
      * @param  string|null  $prefix
-     * @param  Closure|array|null  $where
+     * @param  null  $where
+     * @param  string  $separator
      * @throws ReflectionException
      */
     public function __construct(
@@ -109,8 +112,11 @@ class Select2 extends Collection
         $value = null,
         string $no_select = null,
         string $prefix = null,
-        $where = null
+        $where = null,
+        string $separator = ' ',
     ) {
+        $this->separator = $separator;
+
         parent::__construct([]);
 
         if (is_embedded_call($where)) {
@@ -399,8 +405,11 @@ class Select2 extends Collection
                     if (!($data instanceof Arrayable)) {
                         $data = $data->get($this->columns);
                     }
-
-                    $this->value_data = $data->pluck($text, $key);
+                    $result = [];
+                    foreach ($data as $d) {
+                        $result[$d[$key]] = collect($d)->only(array_slice($this->columns, 1))->implode($this->separator);
+                    }
+                    $this->value_data = $result;
                 } else {
                     $this->value_data = collect();
                 }
@@ -479,14 +488,14 @@ class Select2 extends Collection
                 $text = multi_dot_call($datum, $field_text);
                 if (is_array($text)) {
                     $lang = App::getLocale();
-                    $text = $text[$lang] ?? implode(', ', $text);
+                    $text = $text[$lang] ?? implode($this->separator, $text);
                 }
                 $text = $text === null ? (string) multi_dot_call($datum, '0') : (string) $text;
 
                 foreach (array_slice($this->columns, 2) as $part) {
                     $t = multi_dot_call($datum, $part);
                     if ($t) {
-                        $text .= ' '.$t;
+                        $text .= $this->separator.$t;
                     }
                 }
 
