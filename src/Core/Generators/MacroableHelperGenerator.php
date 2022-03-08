@@ -350,16 +350,17 @@ class MacroableHelperGenerator implements DumpExecute
             }
 
             if (in_array($method, array_keys(LteAdmin\Components\Component::$inputs))) {
+                $class_res = LteAdmin\Components\Component::$inputs[$method];
                 foreach ($this->getModelFields() as $field) {
                     $camelField = Str::snake($field);
 
                     $doc->tagMethod(
-                        $type,
+                        "\\".$class_res."|".$type,
                         $method.'_'.$camelField."(callable|string \$label = null)",
                         "Method {$method}_{$camelField}"
                     );
                     $doc->tagPropertyRead(
-                        $type,
+                        "\\".$class_res."|".$type,
                         $method.'_'.$camelField,
                         "Property {$method}_{$camelField}"
                     );
@@ -451,7 +452,7 @@ class MacroableHelperGenerator implements DumpExecute
         $class = $namespace->class('SearchFormComponentFields');
 
         $class->doc(function ($doc) {
-            foreach (array_keys(LteAdmin\Components\SearchFormComponent::$field_components) as $input) {
+            foreach (LteAdmin\Components\SearchFormComponent::$field_components as $input => $class) {
                 /** @var DocumentorEntity $doc */
                 foreach ($this->getModelFields() as $field) {
                     $camelField = Str::snake($field);
@@ -459,12 +460,12 @@ class MacroableHelperGenerator implements DumpExecute
                     $method = 'in';
 
                     $doc->tagMethod(
-                        "\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                        "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
                         $method.'_'.$input.'_'.$camelField."(callable|string \$label = null, callable|string \$condition = null)",
                         "Method {$method}_{$input}_{$camelField}"
                     );
                     $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                        "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
                         $method.'_'.$input.'_'.$camelField,
                         "Property {$method}_{$input}_{$camelField}"
                     );
