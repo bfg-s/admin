@@ -19,6 +19,16 @@ class GridColumnComponent extends Component
      */
     protected $class = 'pl-0 col-md';
 
+    /**
+     * @param  array  $delegates
+     */
+    public function __construct(...$delegates)
+    {
+        parent::__construct();
+
+        $this->explainForce(Explanation::new($delegates));
+    }
+
     public function num(int $num)
     {
         $this->class .= "-{$num}";
