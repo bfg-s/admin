@@ -357,7 +357,12 @@ class MacroableHelperGenerator implements DumpExecute
                 );
             }
 
-            if ($isProperty || $isAny) {
+            if (
+                $isProperty
+                || $isAny
+                || $type == '\LteAdmin\Components\ModelTableComponent'
+                || $type == '\LteAdmin\Components\ModelInfoTableComponent'
+            ) {
                 $doc->tagPropertyRead(
                     $type,
                     $method,
@@ -374,12 +379,12 @@ class MacroableHelperGenerator implements DumpExecute
                         if ($camelField) {
 
                             $doc->tagMethod(
-                                "\\".$class_res."|".$type,
+                                $type,
                                 $method.'_'.$camelField."(callable|string \$label = null)",
                                 "Method {$method}_{$camelField}"
                             );
                             $doc->tagPropertyRead(
-                                "\\".$class_res."|".$type,
+                                $type,
                                 $method.'_'.$camelField,
                                 "Property {$method}_{$camelField}"
                             );
@@ -475,6 +480,11 @@ class MacroableHelperGenerator implements DumpExecute
                         "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
                         $method.'_'.$camelField,
                         "Property {$method}_{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        'sort_in_'.$camelField,
+                        "Property sort_in_{$camelField}"
                     );
                 }
             }

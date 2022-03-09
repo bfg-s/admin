@@ -389,6 +389,8 @@ abstract class Component extends DIV implements onRender
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$name") ? __("admin.$name") : $label);
+        } else if (method_exists($this, $name)) {
+            return $this->{$name}();
         }
 
         return $this;

@@ -28,6 +28,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * @mixin ModelTableComponentMacroList
  * @mixin ModelTableComponentFields
  * @mixin ModelTableComponentMethods
+ * @property-read ModelTableComponent $sort
  */
 class ModelTableComponent extends Component
 {
@@ -160,6 +161,12 @@ class ModelTableComponent extends Component
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->col(Lang::has("admin.$label") ? __("admin.$label") : $label, $name);
+        } else if (
+            preg_match("/^sort_in_(.+)$/", $name, $m)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
+            return $this->sort($m[1]);
         } else {
             if (static::hasExtension($name) && isset($this->columns[$this->last])) {
                 $this->columns[$this->last]['macros'][] = [$name, $arguments];
@@ -182,6 +189,14 @@ class ModelTableComponent extends Component
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->col(Lang::has("admin.$name") ? __("admin.$name") : $label, $name);
+        } else if (
+            preg_match("/^sort_in_(.+)$/", $name, $m)
+            && !isset(Component::$inputs[$name])
+            && !Controller::hasExplanation($name)
+        ) {
+            return $this->sort($m[1]);
+        } else if (method_exists($this, $name)) {
+            return $this->{$name}();
         }
 
         return parent::__get($name);
