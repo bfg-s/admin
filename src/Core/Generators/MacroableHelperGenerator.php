@@ -370,16 +370,19 @@ class MacroableHelperGenerator implements DumpExecute
                 foreach ($this->getModelFields() as $field) {
                     $camelField = Str::snake($field);
 
-                    $doc->tagMethod(
-                        "\\".$class_res."|".$type,
-                        $method.'_'.$camelField."(callable|string \$label = null)",
-                        "Method {$method}_{$camelField}"
-                    );
-                    $doc->tagPropertyRead(
-                        "\\".$class_res."|".$type,
-                        $method.'_'.$camelField,
-                        "Property {$method}_{$camelField}"
-                    );
+                    if ($camelField) {
+
+                        $doc->tagMethod(
+                            "\\".$class_res."|".$type,
+                            $method.'_'.$camelField."(callable|string \$label = null)",
+                            "Method {$method}_{$camelField}"
+                        );
+                        $doc->tagPropertyRead(
+                            "\\".$class_res."|".$type,
+                            $method.'_'.$camelField,
+                            "Property {$method}_{$camelField}"
+                        );
+                    }
                 }
             }
         }
@@ -409,7 +412,15 @@ class MacroableHelperGenerator implements DumpExecute
             });
 
         $fields = $files->map(function ($class) {
-            return (new $class)->getFillable();
+            $fillable = (new $class)->getFillable();
+            $class = new ReflectionClass($class);
+            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+            foreach ($methods as $method) {
+                if (preg_match('/^get(.*)Attribute$/', $method->name, $m)) {
+                    $fillable[] = Str::snake($m[1]);
+                }
+            }
+            return $fillable;
         })->collapse()->unique()->toArray();
 
         $fields[] = 'id';
@@ -420,9 +431,19 @@ class MacroableHelperGenerator implements DumpExecute
             $result = [];
             /** @var Relation $relation */
             foreach ($relations as $n => $relation) {
+
+                $fillable = $relation->getModel()->getFillable();
+                $class = new ReflectionClass($relation->getModel());
+                $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+                foreach ($methods as $method) {
+                    if (preg_match('/^get(.*)Attribute$/', $method->name, $m)) {
+                        $fillable[] = Str::snake($m[1]);
+                    }
+                }
+
                 $result[] = [
                     'name' => $n,
-                    'fillable' => $relation->getModel()->getFillable(),
+                    'fillable' => $fillable,
                 ];
             }
             return $result;
@@ -442,34 +463,37 @@ class MacroableHelperGenerator implements DumpExecute
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
+                if ($camelField) {
 
-                $doc->tagMethod(
-                    "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                    $method.'_'.$camelField."(callable|string \$label = null)",
-                    "Method {$method}_{$camelField}"
-                );
-                $doc->tagPropertyRead(
-                    "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                    $method.'_'.$camelField,
-                    "Property {$method}_{$camelField}"
-                );
+                    $doc->tagMethod(
+                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $method.'_'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $method.'_'.$camelField,
+                        "Property {$method}_{$camelField}"
+                    );
+                }
             }
 
             foreach ($this->relations as $relation) {
                 foreach ($relation['fillable'] as $field) {
-
                     $camelField = Str::snake($field);
+                    if ($camelField) {
 
-                    $doc->tagMethod(
-                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                        $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
-                        "Method {$method}_{$relation['name']}__{$camelField}"
-                    );
-                    $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                        $method.'_'.$relation['name'].'__'.$camelField,
-                        "Property {$method}_{$relation['name']}__{$camelField}"
-                    );
+                        $doc->tagMethod(
+                            "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                            $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
+                            "Method {$method}_{$relation['name']}__{$camelField}"
+                        );
+                        $doc->tagPropertyRead(
+                            "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                            $method.'_'.$relation['name'].'__'.$camelField,
+                            "Property {$method}_{$relation['name']}__{$camelField}"
+                        );
+                    }
                 }
             }
         });
@@ -481,33 +505,38 @@ class MacroableHelperGenerator implements DumpExecute
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
-                $doc->tagMethod(
-                    "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                    $method.'_'.$camelField."(callable|string \$label = null)",
-                    "Method {$method}_{$camelField}"
-                );
-                $doc->tagPropertyRead(
-                    "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                    $method.'_'.$camelField,
-                    "Property {$method}_{$camelField}"
-                );
+                if ($camelField) {
+
+                    $doc->tagMethod(
+                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $method.'_'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $method.'_'.$camelField,
+                        "Property {$method}_{$camelField}"
+                    );
+                }
             }
 
             foreach ($this->relations as $relation) {
                 foreach ($relation['fillable'] as $field) {
 
                     $camelField = Str::snake($field);
+                    if ($camelField) {
 
-                    $doc->tagMethod(
-                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                        $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
-                        "Method {$method}_{$relation['name']}__{$camelField}"
-                    );
-                    $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                        $method.'_'.$relation['name'].'__'.$camelField,
-                        "Property {$method}_{$relation['name']}__{$camelField}"
-                    );
+                        $doc->tagMethod(
+                            "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                            $method.'_'.$relation['name'].'__'.$camelField."(callable|string \$label = null)",
+                            "Method {$method}_{$relation['name']}__{$camelField}"
+                        );
+                        $doc->tagPropertyRead(
+                            "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                            $method.'_'.$relation['name'].'__'.$camelField,
+                            "Property {$method}_{$relation['name']}__{$camelField}"
+                        );
+                    }
                 }
             }
         });
@@ -521,17 +550,18 @@ class MacroableHelperGenerator implements DumpExecute
                     $camelField = Str::snake($field);
 
                     $method = 'in';
-
-                    $doc->tagMethod(
-                        "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
-                        $method.'_'.$input.'_'.$camelField."(callable|string \$label = null, callable|string \$condition = null)",
-                        "Method {$method}_{$input}_{$camelField}"
-                    );
-                    $doc->tagPropertyRead(
-                        "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
-                        $method.'_'.$input.'_'.$camelField,
-                        "Property {$method}_{$input}_{$camelField}"
-                    );
+                    if ($camelField) {
+                        $doc->tagMethod(
+                            "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                            $method.'_'.$input.'_'.$camelField."(callable|string \$label = null, callable|string \$condition = null)",
+                            "Method {$method}_{$input}_{$camelField}"
+                        );
+                        $doc->tagPropertyRead(
+                            "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                            $method.'_'.$input.'_'.$camelField,
+                            "Property {$method}_{$input}_{$camelField}"
+                        );
+                    }
                 }
             }
         });
