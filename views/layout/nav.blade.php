@@ -15,13 +15,13 @@
             <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i
                     class="fas fa-redo-alt"></i></a>
         </li>
-        @if(count(\LteAdmin\Getters\Menu::getCurrentQuery()))
+        @if(admin_repo()->getCurrentQuery && count(admin_repo()->getCurrentQuery))
             <li class="nav-item">
                 <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}"
                    title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
             </li>
         @endif
-        @foreach(gets()->lte->menu->nested_collect->where('left_nav_bar_view') as $menu)
+        @foreach(admin_repo()->nestedCollect->where('left_nav_bar_view') as $menu)
             @if(View::exists($menu['left_nav_bar_view']))
                 @include($menu['left_nav_bar_view'], $menu['params'])
             @else
@@ -36,7 +36,7 @@
 
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        @foreach(gets()->lte->menu->nested_collect->where('badge')->where('link') as $menu)
+        @foreach(admin_repo()->nestedCollect->where('badge')->where('link') as $menu)
             @php
                 $counter = isset($menu['badge']['instructions']) && $menu['badge']['instructions'] ?
                     eloquent_instruction($menu['badge']['text'], $menu['badge']['instructions'])->count() :
@@ -54,7 +54,7 @@
             @endif
         @endforeach
 
-        @foreach(gets()->lte->menu->nested_collect->where('nav_bar_view')->where('prepend', false) as $menu)
+        @foreach(admin_repo()->nestedCollect->where('nav_bar_view')->where('prepend', false) as $menu)
             @if(View::exists($menu['nav_bar_view']))
                 @include($menu['nav_bar_view'], $menu['params'])
             @else
@@ -87,7 +87,7 @@
             </li>
         @endif
 
-        @foreach(gets()->lte->menu->nested_collect->where('nav_bar_view')->where('prepend', true) as $menu)
+        @foreach(admin_repo()->nestedCollect->where('nav_bar_view')->where('prepend', true) as $menu)
             @if(View::exists($menu['nav_bar_view']))
                 @include($menu['nav_bar_view'], $menu['params'])
             @else

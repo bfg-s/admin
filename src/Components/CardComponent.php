@@ -8,7 +8,6 @@ use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
 use LteAdmin\Explanation;
-use LteAdmin\Getters\Menu;
 use LteAdmin\Page;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\FontAwesome;
@@ -37,7 +36,7 @@ class CardComponent extends Component
     ];
 
     /**
-     * @var array|Menu|null
+     * @var array|null
      */
     protected $now;
 
@@ -366,7 +365,7 @@ class CardComponent extends Component
 
         $this->addClass("card-{$this->type}");
 
-        $model = gets()->lte->menu->model;
+        $model = admin_repo()->modelNow;
 
         $originTitle = $this->title;
         $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
@@ -438,7 +437,7 @@ class CardComponent extends Component
 
             if ($this->has_search_form && $this->now && $this->now['current.type'] && $this->now['current.type'] === 'index') {
                 /** @var Model $model */
-                $model = gets()->lte->menu->model;
+                $model = admin_repo()->modelNow;
 
                 if ($model && property_exists($model, 'forceDeleting')) {
                     if (!request()->has('show_deleted')) {

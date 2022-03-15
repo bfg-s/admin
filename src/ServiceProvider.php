@@ -9,25 +9,22 @@ use Get;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
-use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Layout;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use LJS;
 use LteAdmin\Commands\LteControllerCommand;
+use LteAdmin\Commands\LteDbDumpCommand;
 use LteAdmin\Commands\LteExtensionCommand;
+use LteAdmin\Commands\LteHelpersCommand;
 use LteAdmin\Commands\LteInstallCommand;
 use LteAdmin\Commands\LteUserCommand;
 use LteAdmin\Core\BladeDirectiveAlpineStore;
-use LteAdmin\Core\Generators\ExtensionNavigatorHelperGenerator;
-use LteAdmin\Core\Generators\MacroableHelperGenerator;
 use LteAdmin\Exceptions\Handler;
-use LteAdmin\Getters\Functions;
-use LteAdmin\Getters\Menu;
-use LteAdmin\Getters\Role;
 use LteAdmin\Layouts\LteAuthLayout;
 use LteAdmin\Layouts\LteLayout;
 use LteAdmin\Middlewares\Authenticate;
+use LteAdmin\Repositories\AdminRepository;
 use Road;
 use Str;
 
@@ -41,8 +38,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         LteControllerCommand::class,
         LteUserCommand::class,
         LteExtensionCommand::class,
-        //LteJaxCommand::class,
-        //LteDbDumpCommand::class,
+        LteDbDumpCommand::class,
+        LteHelpersCommand::class,
     ];
 
     /**
@@ -70,11 +67,6 @@ class ServiceProvider extends ServiceProviderIlluminate
     protected $routeMiddleware = [
         'lte-auth' => Authenticate::class,
     ];
-
-    /**
-     * @var ApplicationServiceProvider
-     */
-    protected $app_provider;
 
     /**
      * Bootstrap services.
@@ -195,25 +187,17 @@ class ServiceProvider extends ServiceProviderIlluminate
              * Run lte boots.
              */
             LteBoot::run();
-
-            /**
-             * Helper registration.
-             */
-            DumpAutoload::addToExecute(ExtensionNavigatorHelperGenerator::class);
-            DumpAutoload::addToExecute(MacroableHelperGenerator::class);
         }
+
+        /**
+         * Register repositories
+         */
+        $this->app->singleton(AdminRepository::class, fn() => new AdminRepository);
 
         /**
          * Make lte view variables.
          */
         $this->viewVariables();
-
-        /**
-         * Register getters.
-         */
-        Get::register(Menu::class);
-        Get::register(Role::class);
-        Get::register(Functions::class);
 
         /**
          * Simple bind in service container.

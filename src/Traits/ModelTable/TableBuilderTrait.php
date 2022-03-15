@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
 use LteAdmin\Components\SearchFormComponent;
-use LteAdmin\Getters\Menu;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
@@ -81,7 +80,7 @@ trait TableBuilderTrait
     }
 
     /**
-     * @return array|Closure|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Model|Relation|Menu|string|null
+     * @return array|Closure|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Model|Relation|string|null
      */
     protected function createModel()
     {

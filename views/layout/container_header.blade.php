@@ -1,6 +1,6 @@
 <!-- Content Header (Page header) -->
 @php
-    $menu = gets()->lte->menu->now;
+    $menu = admin_repo()->now;
     $__head_title = ['LteAdmin']
 @endphp
 
@@ -23,7 +23,7 @@
                     @endif
                 </h1>
             </div>
-            @php($first = gets()->lte->menu->nested_collect->first())
+            @php($first = admin_repo()->nestedCollect->first())
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     @if (isset($breadcrumb) && is_array($breadcrumb) && count($breadcrumb))
@@ -43,11 +43,11 @@
                             @endif
                         @endforeach
                     @else
-                        @if (gets()->lte->menu->now_parents->count() && $first['id'] !== $menu['id'])
+                        @if (admin_repo()->nowParents->count() && $first['id'] !== $menu['id'])
                             <li class="breadcrumb-item active">
                                 {!! __($first['title']) !!}
                             </li>
-                            @foreach(gets()->lte->menu->now_parents->reverse() as $item)
+                            @foreach(admin_repo()->nowParents->reverse() as $item)
                                 <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
                                     {!! __($item['title']) !!}
                                     @php($__head_title[] = __($item['title']))

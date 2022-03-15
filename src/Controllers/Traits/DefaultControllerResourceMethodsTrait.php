@@ -208,7 +208,7 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         return request('_after', 'index') == 'index'
-            ? respond()->put('ljs.$nav.goTo', $this->menu['link.index']())
+            ? respond()->put('ljs.$nav.goTo', admin_repo()->now['link.index']())
             : respond()->reload();
     }
 }

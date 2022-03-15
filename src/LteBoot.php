@@ -63,7 +63,7 @@ class LteBoot
         }
 
         if (!app()->runningInConsole()) {
-            gets()->lte->menu->save_current_query();
+            admin_repo()->saveCurrentQuery;
         }
     }
 }

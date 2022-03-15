@@ -79,10 +79,10 @@ class Page extends Container
         parent::__construct(null);
         $this->router = $router;
         $this->content = DIV::class;
-        $this->menus = gets()->lte->menu->nested_collect;
-        $this->menu = gets()->lte->menu->now;
-        $this->resource_type = gets()->lte->menu->type;
-        $this->model(gets()->lte->menu->model);
+        $this->menus = admin_repo()->nestedCollect;
+        $this->menu = admin_repo()->now;
+        $this->resource_type = admin_repo()->type;
+        $this->model(admin_repo()->modelNow);
         $this->registerClass($this->component);
         if ($this->router->current()) {
             $this->controller = $this->router->current()->controller;
@@ -99,7 +99,7 @@ class Page extends Container
     public function model($model = null)
     {
         if ($model instanceof SearchFormComponent) {
-            $model = $model->makeModel($this->model ?: gets()->lte->menu->model);
+            $model = $model->makeModel($this->model ?: admin_repo()->modelNow);
         }
         if ($model !== null) {
             $this->model = is_callable($model)
@@ -107,7 +107,7 @@ class Page extends Container
                 : (is_string($model) ? new $model() : $model);
         }
 
-        return $this->model ?? $this->model = gets()->lte->menu->model;
+        return $this->model ?? $this->model = admin_repo()->modelNow;
     }
 
     /**
@@ -189,7 +189,7 @@ class Page extends Container
         $return = $class ? strtolower(class_basename($class)) : 'object_'.spl_object_id($this);
         $prep = '';
         if (isset(static::$models[$return])) {
-            $prep .= gets()->lte->menu->model?->id ?? static::$models[$return];
+            $prep .= admin_repo()->modelNow?->id ?? static::$models[$return];
             static::$models[$return]++;
         } else {
             static::$models[$return] = 1;

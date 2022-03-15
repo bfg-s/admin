@@ -113,12 +113,6 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->makeModelEvents();
-
-        if (static::$started) {
-            $this->menu = gets()->lte->menu->now;
-        } else {
-            static::$started = true;
-        }
     }
 
     private function makeModelEvents()
@@ -204,7 +198,7 @@ class Controller extends BaseController
 
         $_after = request()->get('_after', 'index');
 
-        if ($_after === 'index' && $menu = gets()->lte->menu->now) {
+        if ($_after === 'index' && $menu = admin_repo()->now) {
             return redirect($menu['link.index']())->with('_after', $_after);
         }
 

@@ -111,13 +111,6 @@ class SelectField extends FormGroupComponent
             ->addClass($this->class);
     }
 
-    public function separator(string $separator)
-    {
-        $this->separator = $separator;
-
-        return $this;
-    }
-
     /**
      * @param  array|Arrayable  $options
      * @param  bool  $first_default
@@ -146,6 +139,13 @@ class SelectField extends FormGroupComponent
         if ($first_default && !$this->nullable) {
             $this->default(array_key_first($this->options));
         }
+
+        return $this;
+    }
+
+    public function separator(string $separator)
+    {
+        $this->separator = $separator;
 
         return $this;
     }

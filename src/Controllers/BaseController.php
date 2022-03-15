@@ -13,7 +13,6 @@ use Lang;
 use LteAdmin;
 use LteAdmin\Core\ModelSaver;
 use LteAdmin\ExtendProvider;
-use LteAdmin\Getters\Menu;
 use LteAdmin\Models\LteRole;
 
 /**
@@ -121,17 +120,17 @@ abstract class BaseController extends Controller
     /**
      * Get menu model.
      *
-     * @return CurrentModel|Product|User|Model|Menu|string|null
+     * @return CurrentModel|Product|User|Model|string|null
      */
     public function model()
     {
-        return gets()->lte->menu->model;
+        return admin_repo()->modelNow;
     }
 
     /**
      * Get only exists model.
      *
-     * @return Model|Menu|string|null
+     * @return Model|string|null
      */
     public function existsModel()
     {
@@ -141,21 +140,21 @@ abstract class BaseController extends Controller
     /**
      * Get model primary.
      *
-     * @return Menu|object|string|null
+     * @return object|string|null
      */
     public function model_primary()
     {
-        return gets()->lte->menu->model_primary;
+        return admin_repo()->modelPrimary;
     }
 
     /**
      * Get now menu.
      *
-     * @return array|Menu|null
+     * @return array|null
      */
     public function now()
     {
-        return gets()->lte->menu->now;
+        return admin_repo()->now;
     }
 
     /**
@@ -172,11 +171,11 @@ abstract class BaseController extends Controller
     /**
      * Get resource type.
      *
-     * @return Menu|string|null
+     * @return string|null
      */
     public function type()
     {
-        return gets()->lte->menu->type;
+        return admin_repo()->type;
     }
 
     /**
@@ -187,10 +186,10 @@ abstract class BaseController extends Controller
     public function data($name = null, $default = null)
     {
         if (!$name) {
-            return gets()->lte->menu->data;
+            return admin_repo()->data;
         }
 
-        return gets()->lte->menu->data($name, $default);
+        return admin_repo()->data($name, $default);
     }
 
     /**

@@ -1,105 +1,58 @@
 <?php
 
-namespace LteAdmin\Getters;
+namespace LteAdmin\Repositories;
 
 use App;
+use Bfg\Repository\Repository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Lar\Developer\Getter;
+use Illuminate\Support\Str;
 use LteAdmin\Exceptions\ResourceControllerExistsException;
 use LteAdmin\Exceptions\ShouldBeModelInControllerException;
 use LteAdmin\Models\LtePermission;
+use LteAdmin\Models\LteUser;
 use Navigate;
 use Route;
-use Str;
 
-class Menu extends Getter
+/**
+ * @property-read array $nested
+ * @property-read string|null $currentQueryField
+ * @property-read string|null $type
+ * @property-read array $getCurrentQuery
+ * @property-read array $now
+ * @property-read array|null $data
+ * @property-read mixed $modelPrimary
+ * @property-read mixed $currentController
+ * @property-read Collection $nestedCollect
+ * @property-read Collection $nowParents
+ * @property-read Model $modelNow
+ * @property-read null $saveCurrentQuery
+ */
+class AdminRepository extends Repository
 {
-    /**
-     * @var string
-     */
-    public static $name = 'lte.menu';
-    public static $currentQueryField = null;
-    public static $currentController = null;
-    public static array $models = [];
-    /**
-     * @var int
-     */
-    protected static $nested_counter = 0;
-    protected static $queries = [];
+    protected static array $cache = [
+        'models' => [],
+        'queries' => [],
+        'nested_counter' => 0,
+    ];
 
-    public static function saveCurrentQuery()
+    public function now()
     {
-        $can = request()->pjax() || !request()->ajax();
-        if (request()->isMethod('GET') && $can) {
-            $name = static::currentQueryField();
-            if (isset(static::$queries[$name]) && static::$queries[$name]) {
-                return;
-            }
-            $all = request()->query();
-            foreach ($all as $key => $item) {
-                if (str_starts_with($key, '_')) {
-                    unset($all[$key]);
-                }
-            }
-            static::$queries[$name] = $all;
-            session([$name => $all]);
-        }
-    }
-
-    protected static function currentQueryField()
-    {
-        if (!static::$currentQueryField) {
-            static::$currentQueryField = Route::currentRouteName();
-        }
-
-        return static::$currentQueryField;
-    }
-
-    public static function getCurrentQuery()
-    {
-        return static::getQuery(static::currentQueryField());
-    }
-
-    public static function getQuery(string $name)
-    {
-        if (!isset(static::$queries[$name]) || !static::$queries[$name]) {
-            static::$queries[$name] = session($name, []);
-        }
-
-        return static::$queries[$name];
-    }
-
-    /**
-     * @return Collection
-     */
-    public static function all()
-    {
-        return collect(config('lte_menu'));
-    }
-
-    /**
-     * @return array|null
-     */
-    public static function now()
-    {
-        $return = gets()->lte->menu->nested_collect->where('route', '=', static::currentQueryField())->first();
+        $return = $this->nestedCollect->where('route', '=', $this->currentQueryField)->first();
         if (!$return) {
-            $route = preg_replace('/\.[a-zA-Z0-9\_\-]+$/', '', static::currentQueryField());
-            $return = gets()->lte->menu->nested_collect->where('route', '=', $route)->first();
+            $route = preg_replace('/\.[a-zA-Z0-9_\-]+$/', '', $this->currentQueryField);
+            $return = $this->nestedCollect->where('route', '=', $route)->first();
         }
 
         return $return;
     }
 
-    /**
-     * @return string|null
-     */
-    public static function type()
+    public function type()
     {
         $return = null;
 
-        $menu = gets()->lte->menu->now;
+        $menu = $this->now;
 
         if ($menu && isset($menu['current.type'])) {
             $return = $menu['current.type'];
@@ -114,34 +67,26 @@ class Menu extends Getter
         return $return;
     }
 
-    /**
-     * @param  null  $__name_
-     * @param  null  $__default
-     * @return string|null
-     */
-    public static function data($__name_ = null, $__default = null)
+    public function data($__name_ = null, $__default = null)
     {
         $return = $__default;
 
-        $menu = gets()->lte->menu->now;
+        $menu = $this->now;
 
         if ($menu && isset($menu['data'])) {
             $return = $menu['data'];
 
             if ($__name_) {
-                $return = isset($return[$__name_]) ? $return[$__name_] : $__default;
+                $return = $return[$__name_] ?? $__default;
             }
         }
 
         return $return;
     }
 
-    /**
-     * @return object|string|null
-     */
-    public static function model_primary()
+    public function modelPrimary(): object|string|null
     {
-        $menu = gets()->lte->menu->now;
+        $menu = $this->now;
 
         if (Route::current() && isset($menu['model.param'])) {
             return Route::current()->parameter($menu['model.param']);
@@ -150,18 +95,13 @@ class Menu extends Getter
         return null;
     }
 
-    /**
-     * @return Model|string|null
-     * @throws ShouldBeModelInControllerException
-     */
-    public static function model()
+    public function modelNow()
     {
         $return = null;
 
-        $menu = gets()->lte->menu->now;
+        $menu = $this->now;
 
-        if (static::currentController()) {
-            $controller = static::currentController();
+        if ($controller = $this->currentController) {
             if (method_exists($controller, 'getModel')) {
                 $return = call_user_func([$controller, 'getModel']);
             } elseif (property_exists($controller, 'model')) {
@@ -192,40 +132,71 @@ class Menu extends Getter
         return $return;
     }
 
-    public static function currentController()
+    public function saveCurrentQuery(Request $request)
     {
-        if (!static::$currentController) {
-            static::$currentController = Route::current()?->controller;
+        $can = $request->pjax() || !$request->ajax();
+        if ($request->isMethod('GET') && $can) {
+            $name = $this->currentQueryField;
+            if (isset(static::$cache['queries'][$name]) && static::$cache['queries'][$name]) {
+                return;
+            }
+            $all = $request->query();
+            foreach ($all as $key => $item) {
+                if (str_starts_with($key, '_')) {
+                    unset($all[$key]);
+                }
+            }
+            static::$cache['queries'][$name] = $all;
+            session([$name => $all]);
+        }
+    }
+
+    public function getCurrentQuery()
+    {
+        return $this->getQuery($this->currentQueryField);
+    }
+
+    public function getQuery(string $name)
+    {
+        if (!isset(static::$cache['queries'][$name]) || !static::$cache['queries'][$name]) {
+            static::$cache['queries'][$name] = session($name, []);
         }
 
-        return static::$currentController;
+        return static::$cache['queries'][$name];
     }
 
-    /**
-     * @return Collection|array
-     */
-    public static function now_parents()
+    public function currentQueryField(): ?string
     {
-        return gets()->lte->menu->now ? collect(static::get_parents(gets()->lte->menu->now)) : collect([]);
+        return Route::currentRouteName();
     }
 
-    /**
-     * @param  array  $subject
-     * @param  array  $result
-     * @return array
-     */
-    protected static function get_parents(array $subject, $result = [])
+    public function currentController(): mixed
+    {
+        return Route::current()?->controller;
+    }
+
+    public function nestedCollect(): Collection
+    {
+        return collect($this->nested);
+    }
+
+    public function nowParents(): Collection
+    {
+        return $this->now ? collect($this->getParents($this->now)) : collect([]);
+    }
+
+    protected function getParents(array $subject, $result = []): array
     {
         $result[$subject['id']] = $subject;
 
         if ($subject['parent_id']) {
-            $parent = gets()->lte->menu->nested_collect->where('active', true)->where(
+            $parent = $this->nestedCollect->where('active', true)->where(
                 'id',
                 $subject['parent_id']
             )->first();
 
             if ($parent) {
-                return static::get_parents($parent, $result);
+                return $this->getParents($parent, $result);
             } else {
                 return $result;
             }
@@ -234,132 +205,12 @@ class Menu extends Getter
         return $result;
     }
 
-    /**
-     * @return Collection
-     */
-    public static function nested_collect()
-    {
-        return collect(gets()->lte->menu->nested);
-    }
-
-    /**
-     * @param  array  $params
-     * @return bool|string
-     */
-    public static function current_index_link(array $params = [])
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.index'])) {
-            return $menu['link.index']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string|int|array  $params
-     * @return bool|string
-     */
-    public static function current_show_link($params)
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.show'])) {
-            return $menu['link.show']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string|int|array  $params
-     * @return bool|string
-     */
-    public static function current_update_link($params)
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.update'])) {
-            return $menu['link.update']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string|int|array  $params
-     * @return bool|string
-     */
-    public static function current_destroy_link($params)
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.destroy'])) {
-            return $menu['link.destroy']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string|int|array  $params
-     * @return bool|string
-     */
-    public static function current_edit_link($params)
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.edit'])) {
-            return $menu['link.edit']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  array  $params
-     * @return bool|string
-     */
-    public static function current_store_link(array $params = [])
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.store'])) {
-            return $menu['link.store']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  array  $params
-     * @return bool|string
-     */
-    public static function current_create_link(array $params = [])
-    {
-        $menu = gets()->lte->menu->now;
-
-        if (isset($menu['link.create'])) {
-            return $menu['link.create']($params);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  bool  $__route_items_
-     * @param  int  $__route_parent_id_
-     * @param  string  $__route_name_
-     * @param  array|null  $__parent
-     * @return array
-     */
-    public static function nested(
+    public function nested(
         $__route_items_ = false,
         int $__route_parent_id_ = 0,
         $__route_name_ = 'lte',
         array $__parent = null
-    ) {
+    ): array {
         if ($__route_items_ === false) {
             $__route_items_ = Navigate::getMaked();
         }
@@ -367,14 +218,14 @@ class Menu extends Getter
         $return = [];
 
         foreach ($__route_items_ as $key => $item) {
-            $childs = false;
+            $child = false;
 
             if (isset($item['items'])) {
-                $childs = $item['items'];
+                $child = $item['items'];
                 unset($item['items']);
             }
 
-            $id = static::$nested_counter;
+            $id = static::$cache['nested_counter'];
 
             $add = [
                 'id' => $id,
@@ -403,7 +254,7 @@ class Menu extends Getter
 
             if (!isset($item['link'])) {
                 $item['link'] = false;
-            } elseif (preg_match('/^http/', $item['link'])) {
+            } elseif (str_starts_with($item['link'], 'http')) {
                 $item['target'] = true;
             }
 
@@ -418,21 +269,21 @@ class Menu extends Getter
             }
 
             if (isset($item['action'])) {
-                $item['route_params'] = array_merge($item['route_params'] ?? [], static::getQuery($item['route']));
+                $item['route_params'] = array_merge($item['route_params'] ?? [], $this->getQuery($item['route']));
                 $item['link'] = route($item['route'], $item['route_params'] ?? []);
                 $item['controller'] = ltrim(
                     is_array($item['action']) ? $item['action'][0] : Str::parseCallback($item['action'])[0],
                     '\\'
                 );
-                $item['current'] = $item['route'] == static::currentQueryField();
+                $item['current'] = $item['route'] == $this->currentQueryField;
             } elseif (isset($item['resource'])) {
                 $item['route_params'] = array_callable_results($item['route_params'] ?? [], $item);
 
-                $item['current.type'] = str_replace($item['route'].'.', '', static::currentQueryField());
+                $item['current.type'] = str_replace($item['route'].'.', '', $this->currentQueryField);
                 $item['current'] = str_replace(
                         '.'.$item['current.type'],
                         '',
-                        static::currentQueryField()
+                        $this->currentQueryField
                     ) == $item['route'];
 
                 $item['link.show'] = function ($params) use ($item) {
@@ -446,7 +297,7 @@ class Menu extends Getter
                         $params = [$item['model.param'] => $params];
                     }
                     $name = $item['route'].'.show';
-                    $params = array_merge($params, static::getQuery($name));
+                    $params = array_merge($params, $this->getQuery($name));
 
                     return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
@@ -488,7 +339,7 @@ class Menu extends Getter
                     }
 
                     $name = $item['route'].'.edit';
-                    $params = array_merge($params, static::getQuery($name));
+                    $params = array_merge($params, $this->getQuery($name));
 
                     return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
@@ -501,7 +352,7 @@ class Menu extends Getter
                     }
 
                     $name = $item['route'].'.index';
-                    $params = array_merge($params, static::getQuery($name));
+                    $params = array_merge($params, $this->getQuery($name));
 
                     return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
@@ -524,7 +375,7 @@ class Menu extends Getter
                         return null;
                     }
                     $name = $item['route'].'.create';
-                    $params = array_merge($params, static::getQuery($name));
+                    $params = array_merge($params, $this->getQuery($name));
 
                     return route($name, array_merge($params, ($item['route_params'] ?? [])));
                 };
@@ -535,10 +386,10 @@ class Menu extends Getter
             /** @var string $model */
             $item['model_class'] = ($item['controller'] ?? null) ? ($item['controller']::$model ?? null) : null;
 
-            if ($item['model_class'] && in_array($item['model_class'], static::$models)) {
+            if ($item['model_class'] && in_array($item['model_class'], static::$cache['models'])) {
                 throw new ResourceControllerExistsException($item['model_class'], $item['controller']);
             } else {
-                static::$models[] = $item['model_class'];
+                static::$cache['models'][] = $item['model_class'];
             }
 
             if (!isset($item['selected'])) {
@@ -546,7 +397,7 @@ class Menu extends Getter
             }
 
             if (!$item['selected'] && $item['route']) {
-                $current_route = static::currentQueryField();
+                $current_route = $this->currentQueryField;
 
                 $item['selected'] = $item['route'] == $current_route
                     || Str::is($item['route'].'.*', $current_route);
@@ -578,10 +429,10 @@ class Menu extends Getter
 
             $last = array_key_last($return);
 
-            static::$nested_counter++;
+            static::$cache['nested_counter']++;
 
-            if ($childs) {
-                $chl = static::nested($childs, $id, $item['route'] ?? 'lte', $result);
+            if ($child) {
+                $chl = $this->nested($child, $id, $item['route'] ?? 'lte', $result);
 
                 $return[$last]['active'] = (bool) collect($chl)->where('active', true)->count();
 
@@ -592,15 +443,8 @@ class Menu extends Getter
         return $return;
     }
 
-    public static function collapse($item)
+    protected function getModelClass(): string
     {
-    }
-
-    /**
-     * @return Collection
-     */
-    public function default()
-    {
-        return collect([]);
+        return LteUser::class;
     }
 }

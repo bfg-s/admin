@@ -3,11 +3,11 @@
 namespace LteAdmin\Commands;
 
 use App\Admin\Delegates\CommonTrait;
-use Composer\Json\JsonFormatter;
 use File;
 use Illuminate\Console\Command;
 use LteAdmin\ApplicationServiceProvider;
 use LteAdmin\Core\ConfigExtensionProvider;
+use LteAdmin\Core\JsonFormatter;
 use LteAdmin\Core\NavigatorExtensionProvider;
 use LteAdmin\Interfaces\ActionWorkExtensionInterface;
 use LteAdmin\Models\LteSeeder;
@@ -103,7 +103,7 @@ class LteInstallCommand extends Command
                 !isset($base_composer['scripts']['post-autoload-dump'])
                 || !in_array('@php artisan lar:dump', $base_composer['scripts']['post-autoload-dump'])
             ) {
-                $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lar:dump';
+                $base_composer['scripts']['post-autoload-dump'][] = '@php artisan lte:helpers';
 
                 file_put_contents(
                     base_path('composer.json'),

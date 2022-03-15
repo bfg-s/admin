@@ -407,7 +407,8 @@ class Select2 extends Collection
                     }
                     $result = [];
                     foreach ($data as $d) {
-                        $result[$d[$key]] = collect($d)->only(array_slice($this->columns, 1))->implode($this->separator);
+                        $result[$d[$key]] = collect($d)->only(array_slice($this->columns,
+                            1))->implode($this->separator);
                     }
                     $this->value_data = $result;
                 } else {

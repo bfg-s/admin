@@ -1,23 +1,23 @@
-@foreach(($items ?? gets()->lte->menu->nested_collect->where('parent_id', 0)) as $menu)
+@foreach(($items ?? admin_repo()->nestedCollect->where('parent_id', 0)) as $menu)
 
     @php
-        $access = isset($menu['roles']) ? lte_user()->hasRoles($menu['roles']) : true;
-        $childs = gets()->lte->menu->nested_collect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);
-        $on = $childs->count() ? !!$childs->where('active', true)->count() : true;
-        //if(isset($menu['title']) && $menu['title'] === 'Layout') {dd($menu, $childs->where('active', true));}
+        $access = !isset($menu['roles'])  ||  lte_user()->hasRoles($menu['roles']);
+        $child = admin_repo()->nestedCollect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);
+        $on = !$child->count()  ||  !!$child->where('active', true)->count();
+        //if(isset($menu['title']) && $menu['title'] === 'Layout') {dd($menu, $child->where('active', true));}
     @endphp
 
     @if($menu['active'] && $access && $on)
 
         @php
-            $selected = $menu['selected'] || $childs->where('selected', true)->count()
+            $selected = $menu['selected'] || $child->where('selected', true)->count()
         @endphp
 
-        <li class="nav-item {{ $childs->count() && $selected ? 'menu-open' : '' }}">
+        <li class="nav-item {{ $child->count() && $selected ? 'menu-open' : '' }}">
 
-            <a href="{{$menu['link'] && !$childs->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}"
+            <a href="{{$menu['link'] && !$child->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}"
                @if($menu['target']) target="_blank"
-               @endif class="nav-link {{ !$childs->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $childs->count() ? 'has-treeview' : '' }}">
+               @endif class="nav-link {{ !$child->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $child->count() ? 'has-treeview' : '' }}">
 
                 @if (isset($menu['icon']))
 
@@ -32,7 +32,7 @@
 
                         <span
                             id="nav_badge_{{isset($menu['badge']['id']) && $menu['badge']['id'] ? $menu['badge']['id'] : $menu['id']}}"
-                            class="right badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}}" {!! isset($menu['badge']['title']) ? "title='{$menu['badge']['title']}'" : "" !!}>
+                            class="right badge badge-{{$menu['badge']['type'] ?? 'info'}}" {!! isset($menu['badge']['title']) ? "title='{$menu['badge']['title']}'" : "" !!}>
                             @if(isset($menu['badge']['instructions']) && $menu['badge']['instructions'])
                                 {{eloquent_instruction($menu['badge']['text'], $menu['badge']['instructions'])->count()}}
                             @else
@@ -46,7 +46,7 @@
                             @lang($menu['badge'])
                         </span>
 
-                    @elseif($childs->count())
+                    @elseif($child->count())
 
                         @php
                             $with_badges = 0
@@ -64,9 +64,9 @@
                 </p>
             </a>
 
-            @if($childs->count())
+            @if($child->count())
                 <ul class="nav nav-treeview">
-                    @include('lte::layout.side_bar_items', ['items' => $childs, 'nes' => true])
+                    @include('lte::layout.side_bar_items', ['items' => $child, 'nes' => true])
                 </ul>
             @endif
         </li>

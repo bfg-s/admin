@@ -72,21 +72,6 @@ trait TableControlsTrait
     }
 
     /**
-     * @param  string  $var_name
-     * @param $test
-     */
-    protected function set_test_var(string $var_name, $test)
-    {
-        if (is_embedded_call($test)) {
-            $this->{$var_name} = $test;
-        } else {
-            $this->{$var_name} = static function () use ($test) {
-                return (bool) $test;
-            };
-        }
-    }
-
-    /**
      * @param  Closure|array|mixed  $test
      * @return $this
      */
@@ -224,6 +209,21 @@ trait TableControlsTrait
                 })
                 ->toArray(),
         ];
+    }
+
+    /**
+     * @param  string  $var_name
+     * @param $test
+     */
+    protected function set_test_var(string $var_name, $test)
+    {
+        if (is_embedded_call($test)) {
+            $this->{$var_name} = $test;
+        } else {
+            $this->{$var_name} = static function () use ($test) {
+                return (bool) $test;
+            };
+        }
     }
 
     /**

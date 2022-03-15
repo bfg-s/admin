@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\LI;
 use Lar\Layout\Tags\OL;
-use LteAdmin\Getters\Menu;
 
 class NestedComponent extends Component
 {
@@ -22,7 +21,7 @@ class NestedComponent extends Component
     ];
 
     /**
-     * @var Builder|Model|Relation|Menu|string|null
+     * @var Builder|Model|Relation|string|null
      */
     protected $model;
 

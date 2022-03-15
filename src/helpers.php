@@ -2,10 +2,10 @@
 
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
-use LteAdmin\Getters\Menu;
 use LteAdmin\Models\LtePermission;
 use LteAdmin\Models\LteUser;
 use LteAdmin\Page;
+use LteAdmin\Repositories\AdminRepository;
 
 if (!function_exists('lte_log')) {
     /**
@@ -17,7 +17,7 @@ if (!function_exists('lte_log')) {
     function lte_log(string $title, ?string $detail = null, string $icon = null)
     {
         $params = [];
-        $params['icon'] = $icon ?: (gets()->lte->menu->now ? gets()->lte->menu->now['icon'] : $icon);
+        $params['icon'] = $icon ?: (admin_repo()->now ? admin_repo()->now['icon'] : $icon);
         $params['title'] = $title;
         $params['detail'] = $detail;
         $params['ip'] = request()->ip();
@@ -276,11 +276,11 @@ if (!function_exists('urlWithGet')) {
 if (!function_exists('lte_model_type')) {
     /**
      * @param  string|null  $type
-     * @return bool|Menu|string|null
+     * @return bool|string|null
      */
     function lte_model_type(string $type = null)
     {
-        $menu_type = gets()->lte->menu->type;
+        $menu_type = admin_repo()->type;
 
         if ($type) {
             return $menu_type === $type;
@@ -293,11 +293,11 @@ if (!function_exists('lte_model_type')) {
 if (!function_exists('lte_model')) {
     /**
      * @param  string|null  $path
-     * @return Model|Menu|mixed|string|null
+     * @return Model|mixed|string|null
      */
     function lte_model(string $path = null)
     {
-        $model = gets()->lte->menu->model;
+        $model = admin_repo()->modelNow;
 
         if ($model && $model->exists) {
             if ($path) {
@@ -313,17 +313,17 @@ if (!function_exists('lte_model')) {
 
 if (!function_exists('lte_now')) {
     /**
-     * @return array|Menu|array|null
+     * @return array|array|null
      */
     function lte_now()
     {
-        return gets()->lte->menu->now;
+        return admin_repo()->now;
     }
 }
 
 if (!function_exists('lte_page')) {
     /**
-     * @return array|Menu|array|null
+     * @return array|array|null
      */
     function lte_page()
     {
@@ -370,5 +370,12 @@ if (!function_exists('check_referer')) {
         }
 
         return $result;
+    }
+}
+
+if (!function_exists('admin_repo')) {
+    function admin_repo()
+    {
+        return app(AdminRepository::class);
     }
 }

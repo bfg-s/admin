@@ -15,7 +15,6 @@ use LteAdmin\Delegates\Column;
 use LteAdmin\Delegates\Form;
 use LteAdmin\Delegates\SearchForm;
 use LteAdmin\Delegates\Tab;
-use LteAdmin\Getters\Menu;
 use LteAdmin\Models\LteLog;
 use LteAdmin\Models\LteUser;
 use LteAdmin\Page;
@@ -176,7 +175,7 @@ class UserController extends Controller
     }
 
     /**
-     * @return Model|Menu|LteUser|string|null
+     * @return Model|LteUser|string|null
      */
     public function getModel()
     {

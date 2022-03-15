@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin\Core\Generators;
+namespace LteAdmin\Commands\Generators;
 
 use Illuminate\Console\Command;
-use Lar\Developer\Commands\Dump\DumpExecute;
 use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
 use LteAdmin;
+use LteAdmin\Interfaces\LteHelpGeneratorInterface;
 use LteAdmin\Navigate;
 use ReflectionClass;
 use ReflectionException;
 
-class ExtensionNavigatorHelperGenerator implements DumpExecute
+class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
 {
     /**
      * @param  Command  $command
