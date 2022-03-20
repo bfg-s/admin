@@ -8,7 +8,7 @@
                 placeholder="Search"
                 type="search"
                 @blur="blur"
-                @focus="show=true"
+                @mouseup="show_if_has"
                 @keyup="key_up_nav"
                 @keyup.enter.prevent="got_to_search"
                 @search="click_cancel"
@@ -132,6 +132,11 @@ export default {
             } else {
 
                 this.show = false;
+            }
+        },
+        show_if_has () {
+            if (this.items.length) {
+                this.show = true;
             }
         },
         run_search() {
