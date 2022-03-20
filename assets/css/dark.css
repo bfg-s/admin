@@ -23,7 +23,7 @@
 .dark-mode .card-body table th a span {
     color: white !important;
 }
-.dark-mode .table-secondary, .table-secondary>td, .table-secondary>th {
+.dark-mode .table-secondary, .dark-mode .table-secondary>td, .dark-mode .table-secondary>th {
     background-color: #454d55 !important;
 }
 .dark-mode hr {
@@ -35,7 +35,7 @@
 .dark-mode .ck .ck-toolbar {
     border: 1px solid #6c757d !important;
 }
-.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+.dark-mode .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
     border-color: #6c757d !important;
 }
 .dark-mode .page-item .page-link {
