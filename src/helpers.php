@@ -380,3 +380,47 @@ if (!function_exists('admin_repo')) {
         return app(AdminRepository::class);
     }
 }
+
+if (!function_exists('back_validate')) {
+    /**
+     * Validator with back response.
+     *
+     * @param  array  $subject
+     * @param  array  $rules
+     * @param  array  $messages
+     * @return bool|RedirectResponse|Respond
+     */
+    function back_validate(array $subject, array $rules, array $messages = [])
+    {
+        $rules_new = [];
+
+        if (request()->has('__only_has')) {
+            foreach ($subject as $key => $item) {
+                if (isset($rules[$key])) {
+                    $rules_new[$key] = $rules[$key];
+                }
+            }
+            $rules = $rules_new;
+        }
+
+        if ($result = quick_validate($subject, $rules, $messages)) {
+            if (request()->ajax() && !request()->pjax()) {
+                foreach ($result->errors()->messages() as $key => $message) {
+                    foreach ($message as $item) {
+                        Respond::glob()->toast_error($item);
+                    }
+                }
+
+                if (request()->ajax() && !request()->pjax()) {
+                    Respond::glob()->reload();
+                }
+
+                return Respond::glob();
+            }
+
+            return back()->withInput()->withErrors($result);
+        }
+
+        return false;
+    }
+}
