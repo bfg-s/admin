@@ -460,3 +460,21 @@ if (!function_exists('respond_validate')) {
         return collect($subject)->line_validate($rules, $messages);
     }
 }
+
+if (!function_exists('is_image')) {
+    /**
+     * Is Image.
+     *
+     * @param $path
+     * @return bool
+     */
+    function is_image($path)
+    {
+        try {
+            return (bool) exif_imagetype($path);
+        } catch (Exception $exception) {
+        }
+
+        return false;
+    }
+}
