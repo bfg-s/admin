@@ -103,7 +103,7 @@ export default {
                 const data = $(this.$refs[key][0]).find(".modal-content :input").serializeArray();
                 const params = {};
                 data.map((i) => {
-                    if (i.name.indexOf('_') !== 0) {
+                    if (i.name.indexOf('_') !== 0 && i.name !== '_method') {
                         params[i.name] = i.value;
                     }
                 })

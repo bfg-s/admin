@@ -64,7 +64,8 @@ module.exports = class Select2 extends Executor {
                             let d = $(target).parents('form').serializeArray();
                             if (Array.isArray(d)) {
                                 d.map((i) => {
-                                    form[i.name] = i.value;
+                                    if (i.name !== '_method')
+                                        form[i.name] = i.value;
                                 })
                             }
                             new_params[`${name}_form`] = form;
@@ -74,7 +75,7 @@ module.exports = class Select2 extends Executor {
 
                         data.map(({name, value}) => {
                             if (String(name)[0] !== '_') {
-                                if (name.indexOf("q[") !== 0)
+                                if (name.indexOf("q[") !== 0 && name !== '_method')
                                     new_params[name] = value;
                             }
                         });

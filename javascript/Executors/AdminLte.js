@@ -16,7 +16,7 @@ class AdminLte extends Executor {
             data.push({name: '_changed_value', value: changed_value});
             const j = jax;
             data.map(({name, value}, key) => {
-                if (name.indexOf("q[") !== 0)
+                if (name.indexOf("q[") !== 0 && name !== '_method')
                     j.param(name, value);
             });
             j.lte_admin.load_lives().then(((content) => {
