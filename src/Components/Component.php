@@ -46,6 +46,7 @@ use LteAdmin\Components\Fields\TextareaField;
 use LteAdmin\Components\Fields\TimeField;
 use LteAdmin\Controllers\Controller;
 use LteAdmin\Core\Delegate;
+use LteAdmin\Core\MenuItem;
 use LteAdmin\Explanation;
 use LteAdmin\Jax\LteAdmin;
 use LteAdmin\Page;
@@ -134,7 +135,7 @@ abstract class Component extends DIV implements onRender
      */
     protected Page $page;
     /**
-     * @var array|null
+     * @var MenuItem|null
      */
     protected $menu;
     protected $iSelectModel = false;

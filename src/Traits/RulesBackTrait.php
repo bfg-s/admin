@@ -85,22 +85,6 @@ trait RulesBackTrait
         return $this->_rule(__FUNCTION__, [$date], $message);
     }
 
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _rule(string $rule, array $params = [], string $message = null)
-    {
-        $params = trim(implode(',', $params), ',');
-        if ($params) {
-            $rule .= ":{$params}";
-        }
-
-        return $this->rule($rule, $message);
-    }
-
     public function after_or_equal_if($condition, string $date, string $message = null)
     {
         return $condition ? $this->after_or_equal($date, $message) : $this;
@@ -424,23 +408,6 @@ trait RulesBackTrait
     public function dimensions(array $params, string $message = null)
     {
         return $this->_n_rule(__FUNCTION__, $params, $message);
-    }
-
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _n_rule(string $rule, array $params = [], string $message = null)
-    {
-        $new_params = [];
-
-        foreach ($params as $key => $param) {
-            $new_params[] = "{$key}={$param}";
-        }
-
-        return $this->_rule($rule, $new_params, $message);
     }
 
     public function distinct_if($condition, string $message = null)
@@ -1258,5 +1225,38 @@ trait RulesBackTrait
     public function uuid(string $message = null)
     {
         return $this->rule(__FUNCTION__, $message);
+    }
+
+    /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _rule(string $rule, array $params = [], string $message = null)
+    {
+        $params = trim(implode(',', $params), ',');
+        if ($params) {
+            $rule .= ":{$params}";
+        }
+
+        return $this->rule($rule, $message);
+    }
+
+    /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _n_rule(string $rule, array $params = [], string $message = null)
+    {
+        $new_params = [];
+
+        foreach ($params as $key => $param) {
+            $new_params[] = "{$key}={$param}";
+        }
+
+        return $this->_rule($rule, $new_params, $message);
     }
 }

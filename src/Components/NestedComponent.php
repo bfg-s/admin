@@ -316,12 +316,12 @@ class NestedComponent extends Component
 
                             if ($cc_access) {
                                 if (($this->edit_control)($item)) {
-                                    $group->resourceEdit($this->menu['link.edit']($key), '');
+                                    $group->resourceEdit($this->menu->getLinkEdit($key), '');
                                 }
 
                                 if (($this->delete_control)($item)) {
                                     $group->resourceDestroy(
-                                        $this->menu['link.destroy']($key),
+                                        $this->menu->getLinkDestroy($key),
                                         '',
                                         $model->getRouteKeyName(),
                                         $key
@@ -329,7 +329,7 @@ class NestedComponent extends Component
                                 }
 
                                 if (($this->info_control)($item)) {
-                                    $group->resourceInfo($this->menu['link.show']($key), '');
+                                    $group->resourceInfo($this->menu->getLinkShow($key), '');
                                 }
                             }
                         })

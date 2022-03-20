@@ -1,5 +1,6 @@
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm" @watch>
+{{--<nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm" @watch>--}}
+<nav @class(['main-header', 'navbar', 'navbar-expand', 'navbar-dark' => admin_repo()->isDarkMode(), 'navbar-white navbar-light' => !admin_repo()->isDarkMode()]) @watch>
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -21,11 +22,11 @@
                    title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
             </li>
         @endif
-        @foreach(admin_repo()->nestedCollect->where('left_nav_bar_view') as $menu)
-            @if(View::exists($menu['left_nav_bar_view']))
-                @include($menu['left_nav_bar_view'], $menu['params'])
+        @foreach(admin_repo()->menuList->where('left_nav_bar_view') as $menu)
+            @if(View::exists($menu->getLeftNavBarView()))
+                @include($menu->getLeftNavBarView(), $menu->getParams())
             @else
-                {!! new $menu['left_nav_bar_view'](...$menu['params']); !!}
+                {!! new ($menu->getLeftNavBarView())(...$menu->getParams()); !!}
             @endif
         @endforeach
     </ul>
@@ -36,31 +37,42 @@
 
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        @foreach(admin_repo()->nestedCollect->where('badge')->where('link') as $menu)
+        @foreach(admin_repo()->menuList->where('badge')->where('link') as $menu)
             @php
-                $counter = isset($menu['badge']['instructions']) && $menu['badge']['instructions'] ?
-                    eloquent_instruction($menu['badge']['text'], $menu['badge']['instructions'])->count() :
-                    $menu['badge']['text'];
-                $link = isset($menu['link']) ? (isset($menu['badge']['params']) ? makeUrlWithParams($menu['link'], $menu['badge']['params']) : $menu['link']) : 'javascript:void(0)';
+                $badge = $menu->getBadge();
+                $counter = isset($badge['instructions']) && $badge['instructions'] ?
+                    eloquent_instruction($badge['text'], $badge['instructions'])->count() :
+                    $badge['text'];
+                $link = $menu->getLink() ? (isset($badge['params']) ? makeUrlWithParams($menu->getLink(), $badge['params']) : $menu->getLink()) : 'javascript:void(0)';
             @endphp
             @if($counter)
                 <li class="nav-item">
-                    <a class="nav-link" href="{{$link}}" title="{{__($menu['badge']['title'] ?? $menu['title'])}}">
-                        <i class="{{$menu['icon']}}"></i>
+                    <a class="nav-link" href="{{$link}}" title="{{__($badge['title'] ?? $menu->getTitle())}}">
+                        <i class="{{$menu->getIcon()}}"></i>
                         <span
-                            class="badge badge-{{isset($menu['badge']['type']) ? $menu['badge']['type'] : 'info'}} navbar-badge">{{$counter}}</span>
+                            class="badge badge-{{$badge['type'] ?? 'info'}} navbar-badge">{{$counter}}</span>
                     </a>
                 </li>
             @endif
         @endforeach
 
-        @foreach(admin_repo()->nestedCollect->where('nav_bar_view')->where('prepend', false) as $menu)
-            @if(View::exists($menu['nav_bar_view']))
-                @include($menu['nav_bar_view'], $menu['params'])
+        @foreach(admin_repo()->menuList->where('nav_bar_view')->where('prepend', false) as $menu)
+            @if(View::exists($menu->getNavBarView()))
+                @include($menu->getNavBarView(), $menu->getParams())
             @else
-                {!! new $menu['nav_bar_view'](...$menu['params']); !!}
+                {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
             @endif
         @endforeach
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" role="button" data-turbolinks="false"
+               data-click="jax.lte_admin.toggle_dark">
+                @if(admin_repo()->isDarkMode())
+                    <i class="fas fa-sun"></i>
+                @else
+                    <i class="fas fa-adjust"></i>
+                @endif
+            </a>
+        </li>
         <li>
             <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i
                     class="fas fa-external-link-square-alt"></i></a>
@@ -87,11 +99,11 @@
             </li>
         @endif
 
-        @foreach(admin_repo()->nestedCollect->where('nav_bar_view')->where('prepend', true) as $menu)
-            @if(View::exists($menu['nav_bar_view']))
-                @include($menu['nav_bar_view'], $menu['params'])
+        @foreach(admin_repo()->menuList->where('nav_bar_view')->where('prepend', true) as $menu)
+            @if(View::exists($menu->getNavBarView()))
+                @include($menu->getNavBarView(), $menu->getParams())
             @else
-                {!! new $menu['nav_bar_view'](...$menu['params']); !!}
+                {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
             @endif
         @endforeach
 

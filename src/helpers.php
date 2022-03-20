@@ -2,6 +2,7 @@
 
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
+use LteAdmin\Core\MenuItem;
 use LteAdmin\Models\LtePermission;
 use LteAdmin\Models\LteUser;
 use LteAdmin\Page;
@@ -17,7 +18,7 @@ if (!function_exists('lte_log')) {
     function lte_log(string $title, ?string $detail = null, string $icon = null)
     {
         $params = [];
-        $params['icon'] = $icon ?: (admin_repo()->now ? admin_repo()->now['icon'] : $icon);
+        $params['icon'] = $icon ?: (admin_repo()->now ? admin_repo()->now->getIcon() : $icon);
         $params['title'] = $title;
         $params['detail'] = $detail;
         $params['ip'] = request()->ip();
@@ -313,7 +314,7 @@ if (!function_exists('lte_model')) {
 
 if (!function_exists('lte_now')) {
     /**
-     * @return array|array|null
+     * @return MenuItem|null
      */
     function lte_now()
     {

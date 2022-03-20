@@ -152,7 +152,7 @@ class Authenticate
     {
         $now = lte_now();
 
-        if (isset($now['roles']) && !lte_user()->hasRoles($now['roles'])) {
+        if ($now?->getRoles() && !lte_user()->hasRoles($now->getRoles())) {
             return false;
         }
 

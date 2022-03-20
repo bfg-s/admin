@@ -16,6 +16,7 @@ use LteAdmin\Components\Component;
 use LteAdmin\Components\SearchFormComponent;
 use LteAdmin\Controllers\Controller;
 use LteAdmin\Core\Container;
+use LteAdmin\Core\MenuItem;
 use LteAdmin\Traits\Delegable;
 use LteAdmin\Traits\Macroable;
 use Throwable;
@@ -37,7 +38,7 @@ class Page extends Container
      * @var array
      */
     protected static $models = [];
-    public ?array $menu;
+    public ?MenuItem $menu;
     public ?Collection $menus = null;
     public ?Controller $controller = null;
     public ?string $controllerClassName = null;
@@ -79,7 +80,7 @@ class Page extends Container
         parent::__construct(null);
         $this->router = $router;
         $this->content = DIV::class;
-        $this->menus = admin_repo()->nestedCollect;
+        $this->menus = admin_repo()->menuList;
         $this->menu = admin_repo()->now;
         $this->resource_type = admin_repo()->type;
         $this->model(admin_repo()->modelNow);
@@ -152,7 +153,7 @@ class Page extends Container
 
     public function menu()
     {
-        $model = $this->menu['model_class'] ?? null;
+        $model = $this->menu->getModelClass();
         if ($model && $this->model_class != $model) {
             $this->menu = $this->menus->where('model_class', $this->model_class)->first();
         }

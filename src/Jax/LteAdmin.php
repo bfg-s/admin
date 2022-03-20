@@ -2,6 +2,7 @@
 
 namespace LteAdmin\Jax;
 
+use Cookie;
 use DB;
 use Excel;
 use Exception;
@@ -245,5 +246,15 @@ class LteAdmin extends LteAdminExecutor
         } else {
             $this->toast_error(__('lte.callback_not_found'));
         }
+    }
+
+    public function toggle_dark()
+    {
+        Cookie::queue(
+            'admin-dark-mode',
+            admin_repo()->isDarkMode() ? 0 : 1,
+            time() + time()
+        );
+        $this->put('window.location.reload');
     }
 }

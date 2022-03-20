@@ -198,8 +198,10 @@ class Controller extends BaseController
 
         $_after = request()->get('_after', 'index');
 
-        if ($_after === 'index' && $menu = admin_repo()->now) {
-            return redirect($menu['link.index']())->with('_after', $_after);
+        $menu = admin_repo()->now;
+
+        if ($_after === 'index' && $menu && $menu->isResource()) {
+            return redirect($menu->getLinkIndex())->with('_after', $_after);
         }
 
         return back()->with('_after', $_after);

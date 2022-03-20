@@ -238,6 +238,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         app('view')->share([
             'lte' => config('lte'),
             'default_page' => config('lte.paths.view', 'admin').'.page',
+            'darkMode' => admin_repo()->isDarkMode()
         ]);
     }
 

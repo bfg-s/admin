@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
+use LteAdmin\Core\MenuItem;
 use LteAdmin\Explanation;
 use LteAdmin\Page;
 use LteAdmin\Traits\Delegable;
@@ -36,7 +37,7 @@ class CardComponent extends Component
     ];
 
     /**
-     * @var array|null
+     * @var MenuItem|null
      */
     protected $now;
 
@@ -435,7 +436,7 @@ class CardComponent extends Component
                 });
             }
 
-            if ($this->has_search_form && $this->now && $this->now['current.type'] && $this->now['current.type'] === 'index') {
+            if ($this->has_search_form && $this->now && $this->now->isType('index')) {
                 /** @var Model $model */
                 $model = admin_repo()->modelNow;
 
@@ -449,8 +450,8 @@ class CardComponent extends Component
                 }
             }
 
-            if ($this->now && $this->now['current.type'] && !request()->has('show_deleted')) {
-                $type = $this->now['current.type'];
+            if ($this->now && $this->now->isResource() && !request()->has('show_deleted')) {
+                $type = $this->now->getType();
 
                 if ($type === 'create') {
                     if ($test('list')) {

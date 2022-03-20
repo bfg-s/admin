@@ -1,52 +1,48 @@
-@foreach(($items ?? admin_repo()->nestedCollect->where('parent_id', 0)) as $menu)
+@foreach(($items ?? admin_repo()->menuList->where('parent_id', 0)) as $menu)
 
     @php
-        $access = !isset($menu['roles'])  ||  lte_user()->hasRoles($menu['roles']);
-        $child = admin_repo()->nestedCollect->where('parent_id', '!=', 0)->where('parent_id', $menu['id']);
-        $on = !$child->count()  ||  !!$child->where('active', true)->count();
-        //if(isset($menu['title']) && $menu['title'] === 'Layout') {dd($menu, $child->where('active', true));}
+        $access = !$menu->getRoles() || lte_user()->hasRoles($menu->getRoles());
+        $child = $menu->getChild();
+        $hasChild = $child && $child->isNotEmpty();
+        $hasChildSelected = $hasChild && $child->where('selected', true)->count();
+        $badge = $menu->getBadge();
+        $selected = $menu->isSelected() || $hasChildSelected
     @endphp
 
-    @if($menu['active'] && $access && $on)
+    @if($menu->isActive() && $access)
 
-        @php
-            $selected = $menu['selected'] || $child->where('selected', true)->count()
-        @endphp
+        <li class="nav-item {{ $hasChild && $selected ? 'menu-open' : '' }}">
 
-        <li class="nav-item {{ $child->count() && $selected ? 'menu-open' : '' }}">
+            <a href="{{$menu->getLink() ?: 'javascript:void(0)'}}"
+               @if($menu->isTarget()) target="_blank"
+               @endif class="nav-link {{ !$hasChild ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $hasChild ? 'has-treeview' : '' }}">
 
-            <a href="{{$menu['link'] && !$child->count() ? (isset($menu['link.index']) ? $menu['link.index']() : $menu['link']) : 'javascript:void(0)'}}"
-               @if($menu['target']) target="_blank"
-               @endif class="nav-link {{ !$child->count() ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $child->count() ? 'has-treeview' : '' }}">
-
-                @if (isset($menu['icon']))
-
-                    <i class="nav-icon {{$menu['icon']}}"></i>
-
+                @if ($menu->getIcon())
+                    <i class="nav-icon {{$menu->getIcon()}}"></i>
                 @endif
 
                 <p>
-                    @lang($menu['title'])
+                    @lang($menu->getTitle())
 
-                    @if (isset($menu['badge']) && is_array($menu['badge']))
+                    @if (is_array($badge))
 
                         <span
-                            id="nav_badge_{{isset($menu['badge']['id']) && $menu['badge']['id'] ? $menu['badge']['id'] : $menu['id']}}"
-                            class="right badge badge-{{$menu['badge']['type'] ?? 'info'}}" {!! isset($menu['badge']['title']) ? "title='{$menu['badge']['title']}'" : "" !!}>
-                            @if(isset($menu['badge']['instructions']) && $menu['badge']['instructions'])
-                                {{eloquent_instruction($menu['badge']['text'], $menu['badge']['instructions'])->count()}}
+                            id="nav_badge_{{isset($badge['id']) && $badge['id'] ? $badge['id'] : $menu->getId()}}"
+                            class="right badge badge-{{$badge['type'] ?? 'info'}}" {!! isset($badge['title']) ? "title='{$badge['title']}'" : "" !!}>
+                            @if(isset($badge['instructions']) && $badge['instructions'])
+                                {{eloquent_instruction($badge['text'], $badge['instructions'])->count()}}
                             @else
-                                {{isset($menu['badge']['text']) ? __($menu['badge']['text']) : 0}}
+                                {{isset($badge['text']) ? __($badge['text']) : 0}}
                             @endif
                         </span>
 
-                    @elseif(isset($menu['badge']))
+                    @elseif(isset($badge))
 
-                        <span id="nav_badge_{{$menu['id']}}" class="right badge badge-info">
-                            @lang($menu['badge'])
+                        <span id="nav_badge_{{$menu->getId()}}" class="right badge badge-info">
+                            @lang($badge)
                         </span>
 
-                    @elseif($child->count())
+                    @elseif($hasChild)
 
                         @php
                             $with_badges = 0
@@ -64,14 +60,14 @@
                 </p>
             </a>
 
-            @if($child->count())
+            @if($hasChild)
                 <ul class="nav nav-treeview">
                     @include('lte::layout.side_bar_items', ['items' => $child, 'nes' => true])
                 </ul>
             @endif
         </li>
 
-    @elseif(isset($menu['main_header']) && $menu['main_header'])
-        <li class="nav-header">@lang($menu['main_header'])</li>
+    @elseif($menu->getMainHeader())
+        <li class="nav-header">@lang($menu->getMainHeader())</li>
     @endif
 @endforeach

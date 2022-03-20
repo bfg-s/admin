@@ -11,19 +11,24 @@
                 <h1>
                     @if(isset($page_info))
                         @if(is_array($page_info))
-                            @if(isset($page_info['icon'])) <i
-                                class="{{$page_info['icon']}}"></i> @elseif(isset($menu['icon'])) <i
-                                class="{{$menu['icon']}}"></i>  @endif {!! __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu['head_title'] ?? ($menu['title'] ?? 'Blank page')))) !!}
+                            @if(isset($page_info['icon']))
+                                <i class="{{$page_info['icon']}}"></i>
+                            @elseif($menu->getIcon())
+                                <i class="{{$menu->getIcon()}}"></i>
+                            @endif
+                            {!! __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu->getHeadTitle() ?? ($menu->getTitle() ?? 'Blank page')))) !!}
                         @else
-                            @if(isset($menu['icon'])) <i class="{{$menu['icon']}}"></i>  @endif {{__($page_info)}}
+                            @if($menu->getIcon()) <i class="{{$menu->getIcon()}}"></i>  @endif {{__($page_info)}}
                         @endif
                     @else
-                        @if(isset($menu['icon'])) <i
-                            class="{{$menu['icon']}}"></i> @endif {!! __($menu['head_title'] ?? ($menu['title'] ?? 'Blank page')) !!}
+                        @if($menu->getIcon())
+                            <i class="{{$menu->getIcon()}}"></i>
+                        @endif
+                        {!! __($menu->getHeadTitle() ?? ($menu->getTitle() ?? 'Blank page')) !!}
                     @endif
                 </h1>
             </div>
-            @php($first = admin_repo()->nestedCollect->first())
+            @php($first = admin_repo()->menuList->first())
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     @if (isset($breadcrumb) && is_array($breadcrumb) && count($breadcrumb))
@@ -43,7 +48,7 @@
                             @endif
                         @endforeach
                     @else
-                        @if (admin_repo()->nowParents->count() && $first['id'] !== $menu['id'])
+                        @if (admin_repo()->nowParents->count() && $first['id'] !== $menu->getId())
                             <li class="breadcrumb-item active">
                                 {!! __($first['title']) !!}
                             </li>

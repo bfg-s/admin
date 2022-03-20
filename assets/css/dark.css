@@ -1,0 +1,43 @@
+.dark-mode .ck-editor {
+    color: white;
+}
+.dark-mode .ck.ck-reset_all, .ck.ck-reset_all * {
+    color: white !important;
+    background-color: #343a40 !important;
+}
+.dark-mode .ck.ck-editor__main>.ck-editor__editable {
+    background: #2f3439 !important;
+}
+.dark-mode a {
+    color: #c2c7d0;
+}
+.dark-mode a:hover {
+    color: #ffffff !important;
+}
+.dark-mode button {
+    color: #c2c7d0;
+}
+.dark-mode button:hover {
+    color: #ffffff;
+}
+.dark-mode .card-body table th a span {
+    color: white !important;
+}
+.dark-mode .table-secondary, .table-secondary>td, .table-secondary>th {
+    background-color: #454d55 !important;
+}
+.dark-mode hr {
+    background: #6c757d !important;
+}
+.dark-mode .file-caption-name {
+    color: white !important;
+}
+.dark-mode .ck .ck-toolbar {
+    border: 1px solid #6c757d !important;
+}
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+    border-color: #6c757d !important;
+}
+.dark-mode .page-item .page-link {
+    color: unset !important;
+}

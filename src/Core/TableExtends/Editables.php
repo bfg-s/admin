@@ -64,14 +64,14 @@ class Editables
     {
         $now = lte_now();
 
-        if ($model && $now && isset($now['link.update'])) {
+        if ($now && $now->isResource()) {
             $val = multi_dot_call($model, $field);
 
             return A::create(['href' => '#'])->setDatas([
                 'title' => is_string($title) ? $title : '',
                 'pk' => $model->id,
                 'type' => $type,
-                'url' => $now['link.update']($model->getRouteKey()),
+                'url' => $now->getLinkUpdate($model->getRouteKey()),
                 'name' => $field,
                 'value' => is_array($val) ? json_encode($val) : $val,
             ])->on_load('editable')->text($value);

@@ -179,7 +179,10 @@ trait TableControlsTrait
     {
         $this->getModelName();
         $this->model_class = $this->realModel() ? get_class($this->realModel()) : null;
-        $hasDelete = $this->menu && $this->get_test_var('check_delete') && isset($this->menu['link.destroy']) && $this->menu['link.destroy'](0);
+        $hasDelete = $this->menu
+            && $this->get_test_var('check_delete')
+            && $this->menu->isResource()
+            && $this->menu->getLinkDestroy(0);
         $select_type = request()->get($this->model_name.'_type', $this->order_type);
         $this->order_field = request()->get($this->model_name, $this->order_field);
 
@@ -246,7 +249,9 @@ trait TableControlsTrait
     protected function _create_controls()
     {
         if ($this->get_test_var('controls')) {
-            $hasDelete = $this->menu && isset($this->menu['link.destroy']) && $this->menu['link.destroy'](0);
+            $hasDelete = $this->menu
+                && $this->menu->isResource()
+                && $this->menu->getLinkDestroy(0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
             $modelName = $this->model_name;
 
@@ -282,39 +287,39 @@ trait TableControlsTrait
                 $menu = $this->menu;
 
                 return ButtonsComponent::create()->when(function (ButtonsComponent $group) use ($model, $menu) {
-                    if ($menu) {
+                    if ($menu && $menu->isResource()) {
                         $key = $model->getRouteKey();
 
                         if (!request()->has('show_deleted')) {
-                            if (isset($menu['link.edit']) && $this->get_test_var('control_edit', [$model])) {
-                                $group->resourceEdit($menu['link.edit']($key), '');
+                            if ($this->get_test_var('control_edit', [$model])) {
+                                $group->resourceEdit($menu->getLinkEdit($key), '');
                             }
 
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_delete', [$model])) {
+                            if ($this->get_test_var('control_delete', [$model])) {
                                 $group->resourceDestroy(
-                                    $menu['link.destroy']($key),
+                                    $menu->getLinkDestroy($key),
                                     '',
                                     $model->getRouteKeyName(),
                                     $key
                                 );
                             }
 
-                            if (isset($menu['link.show']) && $this->get_test_var('control_info', [$model])) {
-                                $group->resourceInfo($menu['link.show']($key), '');
+                            if ($this->get_test_var('control_info', [$model])) {
+                                $group->resourceInfo($menu->getLinkShow($key), '');
                             }
                         } else {
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_restore', [$model])) {
+                            if ($this->get_test_var('control_restore', [$model])) {
                                 $group->resourceRestore(
-                                    $menu['link.destroy']($key),
+                                    $menu->getLinkDestroy($key),
                                     '',
                                     $model->getRouteKeyName(),
                                     $key
                                 );
                             }
 
-                            if (isset($menu['link.destroy']) && $this->get_test_var('control_force_delete', [$model])) {
+                            if ($this->get_test_var('control_force_delete', [$model])) {
                                 $group->resourceForceDestroy(
-                                    $menu['link.destroy']($key),
+                                    $menu->getLinkDestroy($key),
                                     '',
                                     $model->getRouteKeyName(),
                                     $key

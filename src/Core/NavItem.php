@@ -155,8 +155,8 @@ class NavItem implements Arrayable
             $this->items['route'] = $name;
         }
 
-        if (!isset($this->items['model.param'])) {
-            $this->items['model.param'] = Str::singular(
+        if (!isset($this->items['resource_route'])) {
+            $this->items['resource_route'] = Str::singular(
                 Str::contains($name, '/') ? last(explode('/', $name)) : $name
             );
         }

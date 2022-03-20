@@ -28,7 +28,6 @@ class LteBase extends LayoutComponent
         ],
 
         'lte-asset/plugins/fontawesome-free/css/all.min.css',
-        'lte-asset/css/adminlte.min.css',
 
         'lte-asset/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css',
         'lte-asset/plugins/bootstrap-slider/css/bootstrap-slider.min.css',
@@ -57,7 +56,9 @@ class LteBase extends LayoutComponent
         'lte-admin/plugins/star-rating/star-rating.min.css',
         'lte-admin/plugins/star-rating/krajee-fas/theme.min.css',
 
+        'lte-asset/css/adminlte.min.css',
         'lte-admin/css/app.css',
+        'lte-admin/css/dark.css',
         'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
     ];
 
@@ -163,5 +164,7 @@ class LteBase extends LayoutComponent
         $this->head->meta(['name' => 'csrf-token', 'content' => session()->token()]);
         $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => asset('lte-admin/img/favicon.png')]);
         $this->head->link(['rel' => 'apple-touch-icon', 'href' => asset('lte-admin/img/favicon.png')]);
+        $this->body->addClassIf(admin_repo()->isDarkMode(), ' dark-mode');
+        $this->js->var('darkMode', admin_repo()->isDarkMode());
     }
 }

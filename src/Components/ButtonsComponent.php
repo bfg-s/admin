@@ -131,9 +131,9 @@ class ButtonsComponent extends Component
      */
     public function resourceList(string $link = null, string $title = null)
     {
-        if ($link || isset($this->menu['link'])) {
+        if ($link || $this->menu->isResource()) {
             $return = $this->primary(['fas fa-list-alt', $title ?? __('lte.list')]);
-            $return->dataClick()->location($link ?? $this->menu['link.index']());
+            $return->dataClick()->location($link ?? $this->menu->getLinkIndex());
             $return->setTitleIf($title === '', __('lte.list'));
 
             return $return;
@@ -153,10 +153,9 @@ class ButtonsComponent extends Component
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
             if (
-                $key &&
-                isset($this->menu['link.edit'])
+                $key && $this->menu->isResource()
             ) {
-                $link = $this->menu['link.edit']($key);
+                $link = $this->menu->getLinkEdit($key);
             }
         }
 
@@ -204,10 +203,9 @@ class ButtonsComponent extends Component
             $key = $this->realModel()->getRouteKey();
 
             if (
-                $key &&
-                isset($this->menu['link.show'])
+                $key && $this->menu->isResource()
             ) {
-                $link = $this->menu['link.show']($key);
+                $link = $this->menu->getLinkShow($key);
             }
         }
 
@@ -239,10 +237,9 @@ class ButtonsComponent extends Component
             $key = $this->realModel()->getRouteKey();
 
             if (
-                $key &&
-                isset($this->menu['link.destroy'])
+                $key && $this->menu->isResource()
             ) {
-                $link = $this->menu['link.destroy']($key);
+                $link = $this->menu->getLinkDestroy($key);
             }
         }
 
@@ -251,7 +248,7 @@ class ButtonsComponent extends Component
                 return new Buttons();
             }
 
-            $stay = !$this->menu['current'] ? (str_contains($link, '?') ? '&' : '?').'_after=stay' : '';
+            $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay' : '';
 
             return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
                 'click' => 'alert::confirm',
@@ -292,10 +289,9 @@ class ButtonsComponent extends Component
             $key = $this->realModel()->getRouteKey();
 
             if (
-                $key &&
-                isset($this->menu['link.destroy'])
+                $key && $this->menu->isResource()
             ) {
-                $link = $this->menu['link.destroy']($key);
+                $link = $this->menu->getLinkDestroy($key);
             }
         }
 
@@ -329,10 +325,9 @@ class ButtonsComponent extends Component
             $key = $this->realModel()->getRouteKey();
 
             if (
-                $key &&
-                isset($this->menu['link.destroy'])
+                $key && $this->menu->isResource()
             ) {
-                $link = $this->menu['link.destroy']($key);
+                $link = $this->menu->getLinkDestroy($key);
             }
         }
 
@@ -392,8 +387,8 @@ class ButtonsComponent extends Component
      */
     public function resourceAdd(string $link = null, string $title = null)
     {
-        if (!$link && isset($this->menu['link.create'])) {
-            $link = $this->menu['link.create']();
+        if (!$link && $this->menu->isResource()) {
+            $link = $this->menu->getLinkCreate();
         }
 
         if ($link) {

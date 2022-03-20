@@ -85,7 +85,7 @@ class FormComponent extends Component
 
         $type = $this->page->resource_type;
 
-        if (isset($menu['model.param'])) {
+        if ($menu->getResourceRoute()) {
             $this->appEnd(
                 INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
             );
@@ -94,14 +94,14 @@ class FormComponent extends Component
         if (!$this->action && $type && $this->model && $menu) {
             $key = $this->model->getOriginal($this->model->getRouteKeyName());
 
-            if ($type === 'edit' && isset($menu['link.update'])) {
-                $this->action = $menu['link.update']($key);
+            if ($type === 'edit' && $menu->isResource()) {
+                $this->action = $menu->getLinkUpdate($key);
                 $this->hiddens(['_method' => 'PUT']);
-            } elseif ($type === 'create' && isset($menu['link.store'])) {
-                $this->action = $menu['link.store']();
+            } elseif ($type === 'create' && $menu->isResource()) {
+                $this->action = $menu->getLinkStore();
             }
-        } elseif (isset($menu['post']) && isset($menu['route']) && Route::has($menu['route'].'.post')) {
-            $this->action = route($menu['route'].'.post', $menu['route_params'] ?? []);
+        } elseif ($menu->getPost() && $menu->getRoute() && Route::has($menu->getRoute().'.post')) {
+            $this->action = route($menu->getRoute().'.post', $menu->getRouteParams() ?? []);
         }
 
         if (!$this->action) {

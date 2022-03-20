@@ -72,6 +72,17 @@ trait Eventable
     }
 
     /**
+     * @param  array  $params
+     * @return $this
+     */
+    protected function callConstructEvents(array $params = [])
+    {
+        $this->callEvent(static::class, $params);
+
+        return $this;
+    }
+
+    /**
      * @param $name
      * @param  array  $arguments
      * @param  null  $on_last_closure
@@ -102,17 +113,6 @@ trait Eventable
         }
 
         return $this->__last_data;
-    }
-
-    /**
-     * @param  array  $params
-     * @return $this
-     */
-    protected function callConstructEvents(array $params = [])
-    {
-        $this->callEvent(static::class, $params);
-
-        return $this;
     }
 
     /**
