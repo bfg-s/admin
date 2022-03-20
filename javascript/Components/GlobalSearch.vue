@@ -10,6 +10,7 @@
                 @blur="blur"
                 @focus="show=true"
                 @keyup="key_up_nav"
+                @keyup.enter.prevent="got_to_search"
                 @search="click_cancel"
             >
             <div class="input-group-append">
@@ -88,6 +89,9 @@ export default {
         }
     },
     methods: {
+        got_to_search () {
+            "doc::location".exec({q: this.q});
+        },
         key_up_nav(e) {
             e.preventDefault();
             let last = this.items.length - 1;
