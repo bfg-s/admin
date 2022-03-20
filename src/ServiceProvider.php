@@ -5,7 +5,6 @@ namespace LteAdmin;
 use Arr;
 use Blade;
 use Exception;
-use Get;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
@@ -178,11 +177,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->loadViewsFrom(__DIR__.'/../views', 'lte');
 
         if ($this->app->runningInConsole()) {
-            /**
-             * Register lte admin getter for console.
-             */
-            Get::create('lte');
-
             /**
              * Run lte boots.
              */
