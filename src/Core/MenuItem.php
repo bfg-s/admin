@@ -160,9 +160,9 @@ class MenuItem implements ArrayAccess
     }
 
     /**
-     * @param  string  $route
+     * @param  string|null  $route
      */
-    public function setRoute(string $route): void
+    public function setRoute(?string $route): void
     {
         $this->route = $route;
     }

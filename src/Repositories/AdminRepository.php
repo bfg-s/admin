@@ -179,24 +179,9 @@ class AdminRepository extends Repository
         return collect($this->now ? $this->getParents($this->now) : []);
     }
 
-    protected function getParents(MenuItem $menuItem, $result = []): array
+    public function isDarkMode()
     {
-        $result[$menuItem->getId()] = $menuItem;
-
-        if ($menuItem->getParentId()) {
-            $parent = $this->menuList
-                ->where('active', true)
-                ->where('id', $menuItem->getParentId())
-                ->first();
-
-            if ($parent) {
-                return $this->getParents($parent, $result);
-            } else {
-                return $result;
-            }
-        }
-
-        return $result;
+        return request()->cookie('admin-dark-mode', 0) == 1;
     }
 
     public function menuList(): Collection
@@ -230,6 +215,7 @@ class AdminRepository extends Repository
             $menuItem->setLeftNavBarView($item['left_nav_bar_view'] ?? null);
             $menuItem->setPrepend($item['prepend'] ?? false);
             $menuItem->setExtension($item['extension'] ?? null);
+            $menuItem->setMainHeader($item['main_header'] ?? null);
             $menuItem->setResource($item['resource'] ?? null);
             $menuItem->setResourceRoute($item['resource_route'] ?? null);
             $menuItem->setLinkParams($item['link_params'] ?? null);
@@ -295,13 +281,28 @@ class AdminRepository extends Repository
         return $result;
     }
 
-    public function isDarkMode()
-    {
-        return request()->cookie('admin-dark-mode', 0) == 1;
-    }
-
     protected function getModelClass(): string
     {
         return LteUser::class;
+    }
+
+    protected function getParents(MenuItem $menuItem, $result = []): array
+    {
+        $result[$menuItem->getId()] = $menuItem;
+
+        if ($menuItem->getParentId()) {
+            $parent = $this->menuList
+                ->where('active', true)
+                ->where('id', $menuItem->getParentId())
+                ->first();
+
+            if ($parent) {
+                return $this->getParents($parent, $result);
+            } else {
+                return $result;
+            }
+        }
+
+        return $result;
     }
 }
