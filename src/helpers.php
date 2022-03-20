@@ -424,3 +424,39 @@ if (!function_exists('back_validate')) {
         return false;
     }
 }
+
+if (!function_exists('quick_validate')) {
+    /**
+     * Quick validate collection.
+     *
+     * @param $subject
+     * @param  array  $rules
+     * @param  array  $messages
+     * @return bool|\Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
+     */
+    function quick_validate(array $subject, array $rules, array $messages = [])
+    {
+        $result = \Illuminate\Support\Facades\Validator::make($subject, $rules, $messages);
+
+        if ($result->fails()) {
+            return $result;
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('respond_validate')) {
+    /**
+     * Quick validate collection.
+     *
+     * @param $subject
+     * @param  array  $rules
+     * @param  array  $messages
+     * @return \Illuminate\Support\Collection|bool
+     */
+    function respond_validate($subject, array $rules, array $messages = [])
+    {
+        return collect($subject)->line_validate($rules, $messages);
+    }
+}
