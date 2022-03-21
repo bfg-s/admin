@@ -1,7 +1,4 @@
-.dark-mode .ck-editor {
-    color: white;
-}
-.dark-mode .ck.ck-reset_all, .ck.ck-reset_all * {
+.dark-mode .ck.ck-reset_all, .dark-mode  .ck.ck-reset_all * {
     color: white !important;
     background-color: #343a40 !important;
 }
@@ -40,4 +37,19 @@
 }
 .dark-mode .page-item .page-link {
     color: unset !important;
+}
+
+.dark-mode .dd-handle {
+    border: 1px solid #6c757d !important;
+    background: #343a40 !important;
+}
+.dark-mode .dd3-content {
+    border: 1px solid #6c757d !important;
+    background: #343a40 !important;
+}
+.dark-mode .dd3-content:hover {
+    background: #454d55 !important;
+}
+.dark-mode .dd3-handle i {
+    color: #cccdcf !important;
 }
