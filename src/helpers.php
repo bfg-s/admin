@@ -478,3 +478,45 @@ if (!function_exists('is_image')) {
         return false;
     }
 }
+
+if (!function_exists('butty_date')) {
+    function butty_date($time)
+    {
+        $timestamp = strtotime($time);
+        $published = date('d.m.Y', $timestamp);
+
+        if ($published === date('d.m.Y')) {
+            return trans('lte.date.today_short', ['time' => date('H:i', $timestamp)]);
+        } elseif ($published === date('d.m.Y', strtotime('-1 day'))) {
+            return trans('lte.date.yesterday_short', ['time' => date('H:i', $timestamp)]);
+        } else {
+            $formatted = trans('lte.date.later_short', [
+                'date' => date('d F'.(date('Y', $timestamp) === date('Y') ? null : ' Y'), $timestamp),
+            ]);
+
+            return strtr($formatted, trans('lte.date.month_declensions'));
+        }
+    }
+}
+
+if (!function_exists('butty_date_time')) {
+    function butty_date_time($time)
+    {
+        $timestamp = strtotime($time);
+
+        $published = date('d.m.Y', $timestamp);
+
+        if ($published === date('d.m.Y')) {
+            return trans('lte.date.today', ['time' => date('H:i', $timestamp)]);
+        } elseif ($published === date('d.m.Y', strtotime('-1 day'))) {
+            return trans('lte.date.yesterday', ['time' => date('H:i', $timestamp)]);
+        } else {
+            $formatted = trans('lte.date.later', [
+                'time' => date('H:i', $timestamp),
+                'date' => date('d F'.(date('Y', $timestamp) === date('Y') ? null : ' Y'), $timestamp),
+            ]);
+
+            return strtr($formatted, trans('lte.date.month_declensions'));
+        }
+    }
+}
