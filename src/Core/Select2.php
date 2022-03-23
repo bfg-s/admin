@@ -406,9 +406,13 @@ class Select2 extends Collection
                         $data = $data->get($this->columns);
                     }
                     $result = [];
+                    $lang = App::getLocale();
                     foreach ($data as $d) {
+
                         $result[$d[$key]] = collect($d)->only(array_slice($this->columns,
-                            1))->implode($this->separator);
+                            1))
+                            ->map(fn ($i) => is_array($i) && array_key_exists($lang, $i) ? $i[$lang] : $i)
+                            ->implode($this->separator);
                     }
                     $this->value_data = $result;
                 } else {
