@@ -15,13 +15,6 @@ class CreateTableLteMenu extends Migration
      */
     public function up()
     {
-        $sqlite = config('lte.connections.lte-sqlite.database');
-
-        if (!is_file($sqlite)) {
-
-            file_put_contents($sqlite, '');
-        }
-
         if (!Schema::hasTable('lte_menu')) {
 
             Schema::create('lte_menu', static function (Blueprint $table) {

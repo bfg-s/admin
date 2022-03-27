@@ -300,6 +300,13 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register lte jax executors.
          */
         $this->registerJax();
+
+        $sqlite = config('lte.connections.lte-sqlite.database');
+
+        if (!is_file($sqlite)) {
+
+            file_put_contents($sqlite, '');
+        }
     }
 
     /**
