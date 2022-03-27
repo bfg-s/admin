@@ -228,8 +228,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         app('view')->share([
             'lte' => config('lte'),
-            'default_page' => config('lte.paths.view', 'admin').'.page',
-            'darkMode' => admin_repo()->isDarkMode()
+            'default_page' => config('lte.paths.view', 'admin').'.page'
         ]);
     }
 
@@ -324,6 +323,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         config(Arr::dot(config('lte.auth', []), 'auth.'));
         config(Arr::dot(config('lte.disks', []), 'filesystems.disks.'));
+        config(Arr::dot(config('lte.connections', []), 'database.connections.'));
     }
 
     /**

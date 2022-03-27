@@ -2,6 +2,7 @@
 
 namespace LteAdmin\Jax;
 
+use Illuminate\Support\Facades\App;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use Request;
@@ -28,9 +29,14 @@ class LteAdminExecutor extends JaxExecutor
 
     public function refererEmit()
     {
+        $refUrl = str_replace(
+            '/'.App::getLocale(), '/en',
+            Request::server('HTTP_REFERER')
+        );
+
         Route::dispatch(
             Request::create(
-                Request::server('HTTP_REFERER')
+                $refUrl
             )
         )->getContent();
     }

@@ -271,40 +271,7 @@ trait NavCommon
     }
 
     /**
-     * @return void
-     */
-    public function injectExtensionHere()
-    {
-        $extensions = LteAdmin::$nav_extensions;
-
-        foreach ($extensions as $key => $extension) {
-            if ($key === 'application') {
-                continue;
-            }
-
-            if (is_array($extension)) {
-                foreach ($extension as $item) {
-                    Navigate::$extension = $item;
-
-                    $item->navigator($this);
-
-                    Navigate::$extension = null;
-                }
-            } else {
-                Navigate::$extension = $extension;
-
-                $extension->navigator($this);
-
-                Navigate::$extension = null;
-            }
-
-            unset(LteAdmin::$nav_extensions[$key]);
-        }
-    }
-
-    /**
      * @param $name
-     * @param $to
      */
     protected function includeAfterGroup($name)
     {

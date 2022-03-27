@@ -164,7 +164,7 @@ class LteBase extends LayoutComponent
         $this->head->meta(['name' => 'csrf-token', 'content' => session()->token()]);
         $this->head->link(['rel' => 'icon', 'type' => 'image/png', 'href' => asset('lte-admin/img/favicon.png')]);
         $this->head->link(['rel' => 'apple-touch-icon', 'href' => asset('lte-admin/img/favicon.png')]);
-        $this->body->addClassIf(admin_repo()->isDarkMode(), ' dark-mode');
-        $this->js->var('darkMode', admin_repo()->isDarkMode());
+        $this->body->addClassIf(admin_repo()->isDarkMode, ' dark-mode');
+        $this->js->var('darkMode', admin_repo()->isDarkMode);
     }
 }

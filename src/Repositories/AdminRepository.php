@@ -25,6 +25,7 @@ use Route;
  * @property-read Collection $nowParents
  * @property-read Model $modelNow
  * @property-read null $saveCurrentQuery
+ * @property-read bool $isDarkMode
  * @property-read Collection|MenuItem[] $menuList
  */
 class AdminRepository extends Repository
@@ -43,7 +44,6 @@ class AdminRepository extends Repository
             $route = preg_replace('/\.[a-zA-Z0-9_\-]+$/', '', $this->currentQueryField);
             $return = $this->menuList->where('route', '=', $route)->first();
         }
-
         return $return;
     }
 
@@ -181,7 +181,7 @@ class AdminRepository extends Repository
 
     public function isDarkMode()
     {
-        return request()->cookie('admin-dark-mode', 0) == 1;
+        return request()->cookie('lte-dark-mode', (int) config('lte.dark_mode', true)) == 1;
     }
 
     public function menuList(): Collection
@@ -218,6 +218,8 @@ class AdminRepository extends Repository
             $menuItem->setMainHeader($item['main_header'] ?? null);
             $menuItem->setResource($item['resource'] ?? null);
             $menuItem->setResourceRoute($item['resource_route'] ?? null);
+            $menuItem->setResourceOnly($item['resource_only'] ?? null);
+            $menuItem->setResourceExcept($item['resource_except'] ?? null);
             $menuItem->setLinkParams($item['link_params'] ?? null);
             $menuItem->setParams($item['params'] ?? null);
             $menuItem->mergeRoles($item['roles'] ?? []);

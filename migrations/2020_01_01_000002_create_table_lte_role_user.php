@@ -14,15 +14,16 @@ class CreateTableLteRoleUser extends Migration
     public function up()
     {
         Schema::create('lte_role_user', static function (Blueprint $table) {
-            $table->unsignedBigInteger('lte_role_id');
 
-            $table->unsignedBigInteger('lte_user_id');
+            $table->foreignId('lte_role_id')
+                ->constrained('lte_roles')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
 
-            $table->timestamps();
-
-            $table->foreign('lte_role_id')->references('id')->on('lte_roles')->onDelete('cascade');
-
-            $table->foreign('lte_user_id')->references('id')->on('lte_users')->onDelete('cascade');
+            $table->foreignId('lte_user_id')
+                ->constrained('lte_users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 

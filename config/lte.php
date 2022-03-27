@@ -9,6 +9,11 @@ use LteAdmin\Models\LteUser;
 return [
 
     /**
+     * The dark mode by default for administrator
+     */
+    'dark_mode' => true,
+
+    /**
      * Admin application namespace.
      */
     'app_namespace' => 'App\\Admin',
@@ -97,6 +102,16 @@ return [
             'root' => public_path('uploads'),
             'visibility' => 'public',
             'url' => env('APP_URL').'/uploads',
+        ],
+    ],
+
+    'connections' => [
+        'lte-sqlite' => [
+            'driver' => 'sqlite',
+            'url' => null,
+            'database' => database_path('lte-database.sqlite'),
+            'prefix' => '',
+            'foreign_key_constraints' => true,
         ],
     ],
 

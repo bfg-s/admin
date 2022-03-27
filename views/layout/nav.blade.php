@@ -1,6 +1,6 @@
 <!-- Navbar -->
 {{--<nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm" @watch>--}}
-<nav @class(['main-header', 'navbar', 'navbar-expand', 'navbar-dark' => admin_repo()->isDarkMode(), 'navbar-white navbar-light' => !admin_repo()->isDarkMode()]) @watch>
+<nav @class(['main-header', 'navbar', 'navbar-expand', 'navbar-dark' => admin_repo()->isDarkMode, 'navbar-white navbar-light' => !admin_repo()->isDarkMode]) @watch>
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -66,7 +66,7 @@
         <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)" role="button" data-turbolinks="false"
                data-click="jax.lte_admin.toggle_dark">
-                @if(admin_repo()->isDarkMode())
+                @if(admin_repo()->isDarkMode)
                     <i class="fas fa-sun"></i>
                 @else
                     <i class="fas fa-adjust"></i>

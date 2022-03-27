@@ -178,13 +178,13 @@ class SelectField extends FormGroupComponent
         $this->nullable = true;
 
         if ($this->options) {
-            $opts = ['' => 'none'];
+            $opts = ['' => ''];
             foreach ($this->options as $k => $option) {
                 $opts[$k] = $option;
             }
             $this->options = $opts;
         } else {
-            $this->options = ['' => 'none'];
+            $this->options = ['' => ''];
         }
 
         $this->data['allow-clear'] = 'true';

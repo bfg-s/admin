@@ -53,3 +53,36 @@
 .dark-mode .dd3-handle i {
     color: #cccdcf !important;
 }
+
+.dark-mode .popover {
+    background-color: #343a40 !important;
+}
+.dark-mode .bs-popover-auto[x-placement^=bottom]>.arrow::after, .dark-mode .bs-popover-bottom>.arrow::after {
+    border-bottom-color: #343a40 !important;
+}
+.dark-mode .popover-body {
+    color: white;
+}
+
+.dark-mode input:-webkit-autofill,
+.dark-mode input:-webkit-autofill:hover,
+.dark-mode input:-webkit-autofill:focus,
+.dark-mode textarea:-webkit-autofill,
+.dark-mode textarea:-webkit-autofill:hover,
+.dark-mode textarea:-webkit-autofill:focus,
+.dark-mode select:-webkit-autofill,
+.dark-mode select:-webkit-autofill:hover,
+.dark-mode select:-webkit-autofill:focus {
+    background-color: #343a40 !important;
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px #343a40 inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark-mode .card .breadcrumb {
+    background-color: #343a40 !important;
+}
+
+.dark-mode .card .breadcrumb-item {
+    color: #adb5bd !important;
+}

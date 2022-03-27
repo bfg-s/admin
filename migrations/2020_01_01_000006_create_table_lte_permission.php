@@ -22,13 +22,15 @@ class CreateTableLtePermission extends Migration
 
             $table->enum('state', ['close', 'open'])->default('open');
 
-            $table->unsignedBigInteger('lte_role_id');
+            $table->string('description')->nullable();
+
+            $table->foreignId('lte_role_id')
+                ->constrained('lte_roles')
+                ->cascadeOnDelete();
 
             $table->boolean('active')->default(1);
 
             $table->timestamps();
-
-            $table->foreign('lte_role_id')->references('id')->on('lte_roles')->onDelete('cascade');
         });
     }
 

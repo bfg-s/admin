@@ -251,9 +251,9 @@ class LteAdmin extends LteAdminExecutor
     public function toggle_dark()
     {
         Cookie::queue(
-            'admin-dark-mode',
-            admin_repo()->isDarkMode() ? 0 : 1,
-            time() + time()
+            'lte-dark-mode',
+            (int) !admin_repo()->isDarkMode,
+            time() * 2
         );
         $this->put('window.location.reload');
     }
