@@ -63,30 +63,25 @@
                 {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
             @endif
         @endforeach
-        <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)" role="button" data-turbolinks="false"
-               data-click="jax.lte_admin.toggle_dark">
-                @if(admin_repo()->isDarkMode)
-                    <i class="fas fa-sun"></i>
-                @else
-                    <i class="fas fa-adjust"></i>
-                @endif
-            </a>
-        </li>
+
         <li>
             <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i
                     class="fas fa-external-link-square-alt"></i></a>
         </li>
-        <li>
-            <a class="nav-link" href="javascript:void(0)" data-click="alert::confirm"
-               data-params="{{__('lte.logout')}}, {{admin()->name}}? && {{route('lte.profile.logout')}} >> $jax.get"
-               title="{{__('lte.logout')}}"><i class="fas fa-sign-out-alt"></i></a>
-        </li>
+
+        @foreach(admin_repo()->menuList->where('nav_bar_view')->where('prepend', true) as $menu)
+            @if(View::exists($menu->getNavBarView()))
+                @include($menu->getNavBarView(), $menu->getParams())
+            @else
+                {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
+            @endif
+        @endforeach
+
         @if(config('layout.lang_mode'))
         <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown language_dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="{{isset(config('lte.lang_flags')[App::getLocale()]) ? config('lte.lang_flags')[App::getLocale()] : ''}}"></i> {{strtoupper(App::getLocale())}}
+                    <i class="{{isset(config('lte.lang_flags')[App::getLocale()]) ? config('lte.lang_flags')[App::getLocale()] : ''}}"></i> <div class="d-none d-lg-inline d-xl-inline">{{strtoupper(App::getLocale())}}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     @foreach(config('layout.languages') as $lang)
@@ -98,15 +93,6 @@
                 </div>
             </li>
         @endif
-
-        @foreach(admin_repo()->menuList->where('nav_bar_view')->where('prepend', true) as $menu)
-            @if(View::exists($menu->getNavBarView()))
-                @include($menu->getNavBarView(), $menu->getParams())
-            @else
-                {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
-            @endif
-        @endforeach
-
         {{--
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">

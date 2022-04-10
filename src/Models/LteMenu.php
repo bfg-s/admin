@@ -2,9 +2,14 @@
 
 namespace LteAdmin\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class LteMenu
@@ -20,15 +25,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $order
  * @property bool $active
  * @property int|null $parent_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|LteMenu[] $child
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Collection|LteMenu[] $child
  * @property-read int|null $child_count
  * @property-read LteMenu|null $parent
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu newQuery()
- * @method static \Illuminate\Database\Query\Builder|LteMenu onlyTrashed()
+ * @method static Builder|LteMenu onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu query()
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu whereAction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu whereActive($value)
@@ -42,9 +47,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu whereRoute($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LteMenu whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|LteMenu withTrashed()
- * @method static \Illuminate\Database\Query\Builder|LteMenu withoutTrashed()
- * @mixin \Eloquent
+ * @method static Builder|LteMenu withTrashed()
+ * @method static Builder|LteMenu withoutTrashed()
+ * @mixin Eloquent
  */
 class LteMenu extends Model
 {
@@ -80,7 +85,7 @@ class LteMenu extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function parent()
     {
@@ -88,7 +93,7 @@ class LteMenu extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function child()
     {

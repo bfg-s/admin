@@ -179,6 +179,26 @@ class AdminRepository extends Repository
         return collect($this->now ? $this->getParents($this->now) : []);
     }
 
+    protected function getParents(MenuItem $menuItem, $result = []): array
+    {
+        $result[$menuItem->getId()] = $menuItem;
+
+        if ($menuItem->getParentId()) {
+            $parent = $this->menuList
+                ->where('active', true)
+                ->where('id', $menuItem->getParentId())
+                ->first();
+
+            if ($parent) {
+                return $this->getParents($parent, $result);
+            } else {
+                return $result;
+            }
+        }
+
+        return $result;
+    }
+
     public function isDarkMode()
     {
         return request()->cookie('lte-dark-mode', (int) config('lte.dark_mode', true)) == 1;
@@ -286,25 +306,5 @@ class AdminRepository extends Repository
     protected function getModelClass(): string
     {
         return LteUser::class;
-    }
-
-    protected function getParents(MenuItem $menuItem, $result = []): array
-    {
-        $result[$menuItem->getId()] = $menuItem;
-
-        if ($menuItem->getParentId()) {
-            $parent = $this->menuList
-                ->where('active', true)
-                ->where('id', $menuItem->getParentId())
-                ->first();
-
-            if ($parent) {
-                return $this->getParents($parent, $result);
-            } else {
-                return $result;
-            }
-        }
-
-        return $result;
     }
 }

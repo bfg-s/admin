@@ -2,6 +2,7 @@
 
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use LteAdmin\Core\MenuItem;
 use LteAdmin\Models\LtePermission;
 use LteAdmin\Models\LteUser;
@@ -453,7 +454,7 @@ if (!function_exists('respond_validate')) {
      * @param $subject
      * @param  array  $rules
      * @param  array  $messages
-     * @return \Illuminate\Support\Collection|bool
+     * @return Collection|bool
      */
     function respond_validate($subject, array $rules, array $messages = [])
     {
@@ -518,5 +519,24 @@ if (!function_exists('butty_date_time')) {
 
             return strtr($formatted, trans('lte.date.month_declensions'));
         }
+    }
+}
+
+if (!function_exists('array_dots_uncollapse')) {
+    /**
+     * Expand an array folded into a dot array.
+     *
+     * @param  array  $array
+     * @return array
+     */
+    function array_dots_uncollapse(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            Arr::set($result, $key, $value);
+        }
+
+        return $result;
     }
 }

@@ -11,8 +11,9 @@ use LteAdmin\Delegates\ModelInfoTable;
 use LteAdmin\Delegates\ModelTable;
 use LteAdmin\Delegates\SearchForm;
 use LteAdmin\Models\LteMenu;
-use LteAdmin\Models\LteRole;
 use LteAdmin\Page;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Component\Finder\SplFileInfo;
 
 class MenuController extends Controller
@@ -61,6 +62,15 @@ class MenuController extends Controller
                     ),
                 ),
             );
+    }
+
+    protected function columnOfSort()
+    {
+        return $this->column->num(5)->card(
+            $this->card->nestedTools(),
+            $this->card->title('lte.admin_menu_sort_title'),
+            $this->card->nested()
+        );
     }
 
     /**
@@ -119,6 +129,45 @@ class MenuController extends Controller
             );
     }
 
+    protected function actions(bool $withMethods = true)
+    {
+        $controllersFolder = lte_app_path('Controllers');
+
+        if (is_dir($controllersFolder)) {
+            $files = collect(File::allFiles($controllersFolder));
+
+            $parentMethods = collect((new ReflectionClass(Controller::class))
+                ->getMethods(ReflectionMethod::IS_PUBLIC))->pluck('name', 'name')->toArray();
+
+            $classes = $files
+                ->filter(fn(SplFileInfo $info) => Str::is('*.php', $info->getPathname()))
+                ->map(fn(SplFileInfo $info) => class_in_file($info->getPathname()))
+                ->filter(fn($className) => $className !== 'App\\Admin\\Controllers\\Controller');
+
+            if (!$withMethods) {
+                return $classes->mapWithKeys(fn($s) => [$s => $s]);
+            }
+
+            return $classes->map(function (string $className) use ($parentMethods) {
+                $class = new ReflectionClass($className);
+                $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+                $classActions = [];
+                foreach ($methods as $method) {
+                    if (!isset($parentMethods[$method->getName()])) {
+                        $val = "$className@".$method->getName();
+                        $classActions[$val] = $val;
+                    }
+                }
+                return $classActions;
+            })
+                ->filter()
+                ->collapse()
+                ->toArray();
+        }
+
+        return [];
+    }
+
     /**
      * @param  Page  $page
      * @param  Column  $column
@@ -150,55 +199,5 @@ class MenuController extends Controller
                     )
                 )
             );
-    }
-
-    protected function columnOfSort()
-    {
-        return $this->column->num(5)->card(
-            $this->card->nestedTools(),
-            $this->card->title('lte.admin_menu_sort_title'),
-            $this->card->nested()
-        );
-    }
-
-    protected function actions(bool $withMethods = true)
-    {
-        $controllersFolder = lte_app_path('Controllers');
-
-        if (is_dir($controllersFolder)) {
-
-            $files = collect(File::allFiles($controllersFolder));
-
-            $parentMethods = collect((new \ReflectionClass(Controller::class))
-                ->getMethods(\ReflectionMethod::IS_PUBLIC))->pluck('name', 'name')->toArray();
-
-            $classes = $files
-                ->filter(fn (SplFileInfo $info) => Str::is('*.php', $info->getPathname()))
-                ->map(fn (SplFileInfo $info) => class_in_file($info->getPathname()))
-                ->filter(fn ($className) => $className !== 'App\\Admin\\Controllers\\Controller');
-
-            if (!$withMethods) {
-
-                return $classes->mapWithKeys(fn ($s) => [$s => $s]);
-            }
-
-            return $classes->map(function (string $className) use ($parentMethods) {
-                    $class = new \ReflectionClass($className);
-                    $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-                    $classActions = [];
-                    foreach ($methods as $method) {
-                        if (!isset($parentMethods[$method->getName()])) {
-                            $val = "$className@" . $method->getName();
-                            $classActions[$val] = $val;
-                        }
-                    }
-                    return $classActions;
-                })
-                ->filter()
-                ->collapse()
-                ->toArray();
-        }
-
-        return [];
     }
 }

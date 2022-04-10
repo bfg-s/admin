@@ -1,6 +1,7 @@
 <?php
 
 use Lar\Roads\Roads;
+use LteAdmin\Controllers\SettingsController;
 use LteAdmin\Core\RoutesAdaptor;
 
 /**
@@ -16,6 +17,7 @@ Road::layout('lte_auth_layout')->group(static function (Roads $roads) {
  * Basic routes.
  */
 Road::layout(config('lte.route.layout'))->group(static function (Roads $roads) {
+    $roads->get('settings', [SettingsController::class, 'index'])->name('settings');
     $roads->get('profile', config('lte.action.profile.index'))->name('profile');
     $roads->post('profile', config('lte.action.profile.update'))->name('profile.post');
     $roads->get('profile/logout', config('lte.action.profile.logout'))->name('profile.logout');
@@ -31,5 +33,3 @@ Road::layout(config('lte.route.layout'))->group(static function (Roads $roads) {
         RoutesAdaptor::create_by_menu($roads);
     });
 });
-
-Route::emitter('lte');

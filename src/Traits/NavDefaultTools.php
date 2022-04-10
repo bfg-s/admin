@@ -33,6 +33,68 @@ trait NavDefaultTools
         return $this;
     }
 
+    /**
+     * Make default administration group.
+     * @param  Closure|array  $call
+     * @return NavGroup
+     */
+    public function lteAdministrationGroup($call)
+    {
+        return $this->group('lte.administration', 'admin', static function (NavGroup $group) use ($call) {
+            if (is_embedded_call($call)) {
+                call_user_func($call, $group);
+            }
+        })->icon_cogs();
+    }
+
+    /**
+     * Make administrator list tool.
+     * @param  string|null  $action
+     * @return NavItem
+     */
+    public function lteAdministrators(string $action = null)
+    {
+        return $this->item('lte.administrators', 'administrators')
+            ->resource('lte_user', $action ?? AdministratorsController::class)
+            ->icon_users_cog();
+    }
+
+    /**
+     * Make roles list tool.
+     * @param  string|null  $action
+     * @return NavItem
+     */
+    public function lteRoles(string $action = null)
+    {
+        return $this->item('lte.roles', 'roles')
+            ->resource('lte_role', $action ?? RolesController::class)
+            ->icon_user_secret();
+    }
+
+    /**
+     * Make permissions list tool.
+     * @param  string|null  $action
+     * @return NavItem
+     */
+    public function ltePermission(string $action = null)
+    {
+        return $this->item('lte.permission', 'permission')
+            ->resource('lte_permission', $action ?? PermissionController::class)
+            ->icon_ban();
+    }
+
+    /**
+     * Make menu list tool.
+     * @param  string|null  $action
+     * @return NavItem
+     */
+    public function lteMenu(string $action = null)
+    {
+        return $this->item('lte.admin_menu', 'menu')
+            ->resource('lte_menu', $action ?? MenuController::class)
+            ->icon_bars();
+    }
+
     public function makeMenu()
     {
         $db = config('lte.connections.lte-sqlite.database');
@@ -44,43 +106,6 @@ trait NavDefaultTools
                 ->with('child')
                 ->get()
                 ->map(fn(LteMenu $menu) => $this->injectRemoteMenu($menu));
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public function makeExtensions()
-    {
-        $extensions = LteAdmin::$nav_extensions;
-
-        if (count($extensions) > 1) {
-
-            $this->menu_header('lte.extensions');
-        }
-
-        foreach ($extensions as $key => $extension) {
-            if ($key === 'application') {
-                continue;
-            }
-
-            if (is_array($extension)) {
-                foreach ($extension as $item) {
-                    Navigate::$extension = $item;
-
-                    $item->navigator($this);
-
-                    Navigate::$extension = null;
-                }
-            } else {
-                Navigate::$extension = $extension;
-
-                $extension->navigator($this);
-
-                Navigate::$extension = null;
-            }
-
-            unset(LteAdmin::$nav_extensions[$key]);
         }
     }
 
@@ -109,65 +134,39 @@ trait NavDefaultTools
     }
 
     /**
-     * Make default administration group.
-     * @param  Closure|array  $call
-     * @return NavGroup
+     * @return void
      */
-    public function lteAdministrationGroup($call)
+    public function makeExtensions()
     {
-        return $this->group('lte.administration', 'admin', static function (NavGroup $group) use ($call) {
-            if (is_embedded_call($call)) {
-                call_user_func($call, $group);
+        $extensions = LteAdmin::$nav_extensions;
+
+        if (count($extensions) > 1) {
+            $this->menu_header('lte.extensions');
+        }
+
+        foreach ($extensions as $key => $extension) {
+            if ($key === 'application') {
+                continue;
             }
-        })->icon_cogs();
-    }
 
-    /**
-     * Make administrator list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function lteAdministrators(string $action = null)
-    {
-        return $this->item('lte.administrators', 'administrators')
-            ->resource('lte_user', $action ?? AdministratorsController::class)
-            ->icon_users_cog();
-    }
+            if (is_array($extension)) {
+                foreach ($extension as $item) {
+                    Navigate::$extension = $item;
 
-    /**
-     * Make menu list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function lteMenu(string $action = null)
-    {
-        return $this->item('lte.admin_menu', 'menu')
-            ->resource('lte_menu', $action ?? MenuController::class)
-            ->icon_bars();
-    }
+                    $item->navigator($this);
 
-    /**
-     * Make roles list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function lteRoles(string $action = null)
-    {
-        return $this->item('lte.roles', 'roles')
-            ->resource('lte_role', $action ?? RolesController::class)
-            ->icon_user_secret();
-    }
+                    Navigate::$extension = null;
+                }
+            } else {
+                Navigate::$extension = $extension;
 
-    /**
-     * Make permissions list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function ltePermission(string $action = null)
-    {
-        return $this->item('lte.permission', 'permission')
-            ->resource('lte_permission', $action ?? PermissionController::class)
-            ->icon_ban();
+                $extension->navigator($this);
+
+                Navigate::$extension = null;
+            }
+
+            unset(LteAdmin::$nav_extensions[$key]);
+        }
     }
 
     /**

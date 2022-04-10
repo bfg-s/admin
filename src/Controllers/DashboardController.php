@@ -119,7 +119,7 @@ class DashboardController extends Controller
             __('lte.cgi') => php_sapi_name(),
             __('lte.os') => php_uname(),
             __('lte.server') => Arr::get($_SERVER, 'SERVER_SOFTWARE'),
-            __('lte.root') => Arr::get($_SERVER, 'DOCUMENT_ROOT'),
+            //__('lte.root') => Arr::get($_SERVER, 'DOCUMENT_ROOT'),
             'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0,
         ];
     }

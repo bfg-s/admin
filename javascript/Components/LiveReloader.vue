@@ -8,7 +8,7 @@
         <li :class="{'nav-item': true, dropdown: true}" style="margin-left: -10px;">
             <button aria-expanded="false" aria-haspopup="true" class="btn btn-link nav-item"
                     data-reference="parent" data-toggle="dropdown" style="padding-left: 0; padding-bottom: 0" type="button">
-                {{ interval }} sec
+                {{ interval }} <span class="d-none d-lg-inline d-xl-inline">sec</span>
             </button>
             <div :class="{'dropdown-menu': true}">
                 <a v-for="(i,k) in intervals" :key="k" :class="{'dropdown-item': true, active: interval===i}"

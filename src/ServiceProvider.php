@@ -134,7 +134,9 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register publishers lang.
          */
         $this->publishes([
-            __DIR__.'/../translations' => resource_path('lang'),
+            __DIR__.'/../translations/en' => resource_path('lang/en'),
+            __DIR__.'/../translations/ru' => resource_path('lang/ru'),
+            __DIR__.'/../translations/uk' => resource_path('lang/uk'),
         ], ['lte-lang', 'laravel-assets']);
 
         /**
@@ -304,7 +306,6 @@ class ServiceProvider extends ServiceProviderIlluminate
         $sqlite = config('lte.connections.lte-sqlite.database');
 
         if (!is_file($sqlite)) {
-
             file_put_contents($sqlite, '');
         }
     }

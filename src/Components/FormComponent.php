@@ -85,7 +85,7 @@ class FormComponent extends Component
 
         $type = $this->page->resource_type;
 
-        if ($menu->getResourceRoute()) {
+        if ($menu && $menu->getResourceRoute()) {
             $this->appEnd(
                 INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
             );
@@ -100,7 +100,7 @@ class FormComponent extends Component
             } elseif ($type === 'create' && $menu->isResource()) {
                 $this->action = $menu->getLinkStore();
             }
-        } elseif ($menu->getPost() && $menu->getRoute() && Route::has($menu->getRoute().'.post')) {
+        } elseif ($menu && $menu->getPost() && $menu->getRoute() && Route::has($menu->getRoute().'.post')) {
             $this->action = route($menu->getRoute().'.post', $menu->getRouteParams() ?? []);
         }
 
