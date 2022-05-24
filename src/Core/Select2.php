@@ -128,7 +128,7 @@ class Select2 extends Collection
         }
 
         if ($value) {
-            $this->value($value);
+            $this->val($value);
         }
 
         if ($format) {
@@ -148,7 +148,7 @@ class Select2 extends Collection
      * @param $value
      * @return $this
      */
-    public function value($value)
+    public function val($value)
     {
         $this->value = $value;
 
