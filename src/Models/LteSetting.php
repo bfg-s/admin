@@ -53,13 +53,14 @@ class LteSetting extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'type', 'name', 'value', 'description'
+        'group', 'title', 'type', 'name', 'value', 'description'
     ];
 
     /**
      * @var array
      */
     protected $casts = [
+        'group' => 'string',
         'title' => 'string',
         'type' => 'string',
         'name' => 'string',

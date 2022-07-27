@@ -11,4 +11,13 @@ use LteAdmin\Core\Delegator;
 class ModelInfoTable extends Delegator
 {
     protected $class = ModelInfoTableComponent::class;
+
+    public function rowDefault(...$delegates): array
+    {
+        return [
+            $this->id(),
+            ...$delegates,
+            $this->at(),
+        ];
+    }
 }

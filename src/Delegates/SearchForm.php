@@ -11,4 +11,13 @@ use LteAdmin\Core\Delegator;
 class SearchForm extends Delegator
 {
     protected $class = SearchFormComponent::class;
+
+    public function inDefault(...$delegates): array
+    {
+        return [
+            $this->id(),
+            ...$delegates,
+            $this->created_at(),
+        ];
+    }
 }

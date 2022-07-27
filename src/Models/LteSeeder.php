@@ -73,5 +73,41 @@ class LteSeeder extends Seeder
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        LteSetting::updateOrCreate([
+            'group' => 'General',
+            'title' => 'lte.settings_site_name',
+            'type' => 'input',
+            'name' => 'site_name',
+            'value' => config('app.name'),
+            'description' => 'lte.settings_site_name_description',
+        ]);
+
+        LteSetting::updateOrCreate([
+            'group' => 'General',
+            'title' => 'lte.settings_timezone',
+            'type' => 'input',
+            'name' => 'app.timezone',
+            'value' => config('app.timezone'),
+            'description' => 'lte.settings_timezone_description',
+        ]);
+
+        LteSetting::updateOrCreate([
+            'group' => 'General',
+            'title' => 'lte.settings_locale',
+            'type' => 'input',
+            'name' => 'app.locale',
+            'value' => config('app.locale'),
+            'description' => 'lte.settings_locale_description',
+        ]);
+
+        LteSetting::updateOrCreate([
+            'group' => 'Admin',
+            'title' => 'lte.settings_dark_mode',
+            'type' => 'switcher',
+            'name' => 'lte.dark_mode',
+            'value' => config('lte.dark_mode'),
+            'description' => 'lte.settings_dark_mode_description',
+        ]);
     }
 }

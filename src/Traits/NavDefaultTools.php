@@ -3,6 +3,7 @@
 namespace LteAdmin\Traits;
 
 use Closure;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use LteAdmin\Controllers\AdministratorsController;
 use LteAdmin\Controllers\FunctionsController;
@@ -99,7 +100,7 @@ trait NavDefaultTools
     {
         $db = config('lte.connections.lte-sqlite.database');
 
-        if (is_file($db)) {
+        if (is_file($db) && Schema::connection('lte-sqlite')->hasTable('lte_menu')) {
             LteMenu::where('active', 1)
                 ->orderBy('order')
                 ->whereNull('parent_id')

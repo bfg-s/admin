@@ -35,7 +35,7 @@ abstract class Delegator
         return $result;
     }
 
-    public function ifIndex()
+    public function ifIndex(): static
     {
         $router = app('router');
         $this->if($router->currentRouteNamed('*.index'));
@@ -43,14 +43,14 @@ abstract class Delegator
         return $this;
     }
 
-    public function if($condition)
+    public function if($condition): static
     {
         $this->condition = is_callable($condition) ? call_user_func($condition) : $condition;
 
         return $this;
     }
 
-    public function ifCreate()
+    public function ifCreate(): static
     {
         $router = app('router');
         $this->if(
@@ -61,7 +61,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifEdit()
+    public function ifEdit(): static
     {
         $router = app('router');
         $this->if(
@@ -72,7 +72,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifForm()
+    public function ifForm(): static
     {
         $router = app('router');
         $this->if(
@@ -85,7 +85,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifShow(...$delegates)
+    public function ifShow(...$delegates): static
     {
         $router = app('router');
         $this->if($router->currentRouteNamed('*.show'));
@@ -93,7 +93,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifQuery(string $path, mixed $need_value = true)
+    public function ifQuery(string $path, mixed $need_value = true): bool|static
     {
         $val = request($path);
         if (is_array($need_value)) {
@@ -105,7 +105,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifNotQuery(string $path, mixed $need_value = true)
+    public function ifNotQuery(string $path, mixed $need_value = true): bool|static
     {
         $val = request($path);
         if (is_array($need_value)) {
@@ -117,7 +117,7 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifNot($condition)
+    public function ifNot($condition): static
     {
         $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
 
@@ -129,7 +129,7 @@ abstract class Delegator
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isNotModelInput(string $path, mixed $need_value = true)
+    public function isNotModelInput(string $path, mixed $need_value = true): bool
     {
         return !$this->isModelInput($path, $need_value);
     }
@@ -139,7 +139,7 @@ abstract class Delegator
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isModelInput(string $path, mixed $need_value = true)
+    public function isModelInput(string $path, mixed $need_value = true): bool
     {
         $val = old($path, $this->modelInput($path));
         if (is_array($need_value)) {
@@ -158,5 +158,20 @@ abstract class Delegator
         }
 
         return request($path, $default);
+    }
+
+    public function inputInfoId(): array
+    {
+        return [
+            $this->ifEdit()->info('id', 'lte.id')
+        ];
+    }
+
+    public function inputInfoAt(): array
+    {
+        return [
+            $this->ifEdit()->info_updated_at(),
+            $this->ifEdit()->info_created_at(),
+        ];
     }
 }
