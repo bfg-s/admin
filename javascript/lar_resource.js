@@ -14,7 +14,7 @@ const load = () => {
     ljs.vue.component('v-loading', VueElementLoading);
     ljs.vue.component('v-modal-collection', require('./Components/ModalCollection').default);
     ljs.vue.component('v-navigator', require('./Components/Menu/Navigation').default);
-    window.messageConfigure({domain: ljs.cfg('home')});
+    //window.messageConfigure({domain: ljs.cfg('home')});
 };
 
 const methods = require('./lar_methods.js');
