@@ -53,7 +53,7 @@ final class Explanation
             }
             foreach ($delegate as $item) {
                 if (is_callable($item)) {
-                    $item = call_user_func($item);
+                    $item = app()->call($item);
                 }
                 if (is_array($item)) {
                     $this->with($item);
