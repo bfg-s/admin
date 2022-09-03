@@ -496,6 +496,10 @@ class Select2 extends Collection
                 }
                 $text = $text === null ? (string) multi_dot_call($datum, '0') : (string) $text;
 
+                if ($id && $text) {
+                    $text = $id . ") " . $text;
+                }
+
                 foreach (array_slice($this->columns, 2) as $part) {
                     $t = multi_dot_call($datum, $part);
                     if ($t) {
