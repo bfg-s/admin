@@ -315,12 +315,20 @@ class Select2 extends Collection
 
     /**
      * @return $this
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function makeSearch()
     {
         $q = request()->get($this->getName().'_q', false);
 
         if ($q) {
+            $cacheColumns = null;
+            if (str_ends_with($q, ')') || str_ends_with($q, ') ')) {
+                $q = rtrim($q, "\s)");
+                $cacheColumns = $this->columns;
+                $this->columns = [$this->columns[0]];
+            }
             $collect_filt = function (Collection $collect) use ($q) {
                 if ($collect->has($this->columns[0])) {
                     return $collect->filter(function ($item) use ($q) {
@@ -367,6 +375,10 @@ class Select2 extends Collection
                         }
                     }
                 });
+            }
+
+            if ($cacheColumns) {
+                $this->columns = $cacheColumns;
             }
         }
 
