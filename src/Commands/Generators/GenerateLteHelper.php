@@ -89,11 +89,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Set {$key} Event"
             );
 
-            $doc->tagMethod(
-                'self|static|\\'.Component::class,
-                '_'.$name_key.'($data)',
-                "Set parent {$key} Event"
-            );
+//            $doc->tagMethod(
+//                'self|static|\\'.Component::class,
+//                '_'.$name_key.'($data)',
+//                "Set parent {$key} Event"
+//            );
 
             $doc->tagMethod(
                 'self|static|\\'.Component::class,
@@ -101,11 +101,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Set {$key} Event if \$eq == true"
             );
 
-            $doc->tagMethod(
-                'self|static|\\'.Component::class,
-                '_'.$name_key.'If($eq, $data)',
-                "Set parent {$key} Event if \$eq == true"
-            );
+//            $doc->tagMethod(
+//                'self|static|\\'.Component::class,
+//                '_'.$name_key.'If($eq, $data)',
+//                "Set parent {$key} Event if \$eq == true"
+//            );
         });
     }
 
@@ -144,11 +144,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Set {$key} Attribute if \$eq == true"
             );
 
-            $doc->tagMethod(
-                'self|static|\\'.Component::class,
-                '_'.$name_key."If(\$eq, string \${$key}_data = \"\")",
-                "Set parent {$key} Attribute if \$eq == true"
-            );
+//            $doc->tagMethod(
+//                'self|static|\\'.Component::class,
+//                '_'.$name_key."If(\$eq, string \${$key}_data = \"\")",
+//                "Set parent {$key} Attribute if \$eq == true"
+//            );
 
             $doc->tagMethod(
                 'string',
@@ -156,11 +156,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Get {$key} Attribute"
             );
 
-            $doc->tagMethod(
-                'string',
-                '_'.$name_key2.'()',
-                "Get parent {$key} Attribute"
-            );
+//            $doc->tagMethod(
+//                'string',
+//                '_'.$name_key2.'()',
+//                "Get parent {$key} Attribute"
+//            );
         });
     }
 
@@ -190,11 +190,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Add Component {$key}"
             );
 
-            $doc->tagMethod(
-                '\\'.$item,
-                '_'.$key.'('.$params.')',
-                "Add Component {$key} to parent"
-            );
+//            $doc->tagMethod(
+//                '\\'.$item,
+//                '_'.$key.'('.$params.')',
+//                "Add Component {$key} to parent"
+//            );
         });
     }
 
@@ -224,12 +224,12 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                     pars_description_from_doc($method->getDocComment())
                 );
 
-                $doc->tagMethod(
-                    'self|static|\\'.Component::class.($name === 'ljs' || $name === 'lj' ? '|\\'.Respond::class : '')
-                    .($return ? "|$return" : ''),
-                    '_'.$name.'('.refl_params_entity($method->getParameters()).')',
-                    'Apply to parent. '.pars_description_from_doc($method->getDocComment())
-                );
+//                $doc->tagMethod(
+//                    'self|static|\\'.Component::class.($name === 'ljs' || $name === 'lj' ? '|\\'.Respond::class : '')
+//                    .($return ? "|$return" : ''),
+//                    '_'.$name.'('.refl_params_entity($method->getParameters()).')',
+//                    'Apply to parent. '.pars_description_from_doc($method->getDocComment())
+//                );
             }
         }
     }
@@ -251,11 +251,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                     "Add tag {$key}"
                 );
 
-                $doc->tagMethod(
-                    '\\'.$class,
-                    '_'.$key.'(...$when)',
-                    "Add tag {$key} ot parent"
-                );
+//                $doc->tagMethod(
+//                    '\\'.$class,
+//                    '_'.$key.'(...$when)',
+//                    "Add tag {$key} ot parent"
+//                );
             }
         });
     }

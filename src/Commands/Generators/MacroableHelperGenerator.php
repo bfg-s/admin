@@ -134,12 +134,10 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
             }
         }
 
-        $r_ns = '';
-
         $isset_classes = [];
 
         foreach ($macroable_classes as $namespace_name => $data) {
-            $namespace = namespace_entity($namespace_name);
+            //$namespace = namespace_entity($namespace_name);
 
             foreach ($data as $class) {
                 $type = $class['type'];
@@ -204,23 +202,26 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                     }
 
                     if (!isset($isset_classes[$namespace_name][$name])) {
-                        $namespace->class($name, function ($class_obj) use ($class) {
-                            $class_obj->doc(function ($doc) use ($class) {
-                                /** @var DocumentorEntity $doc */
-                                $this->extendMethods($doc, $class);
-                            });
+                        $class_obj = class_entity($name);
+                        $class_obj->namespace($namespace_name);
+
+                        $class_obj->doc(function ($doc) use ($class) {
+                            /** @var DocumentorEntity $doc */
+                            $this->extendMethods($doc, $class);
                         });
+
+                        $nameClass = \Str::snake($name);
+                        $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
+                        file_put_contents($file, "<?php \n\n".$class_obj->render());
 
                         $isset_classes[$namespace_name][$name] = $name;
                     }
                 }
             }
-            $r_ns .= $namespace->render();
+            //$r_ns .= $namespace->render();
         }
 
-        $r_ns .= "\n".$this->createSearchAndColAndRowFields();
-
-        return $r_ns;
+        $this->createSearchAndColAndRowFields();
     }
 
     /**
@@ -506,9 +507,8 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
 
     public function createSearchAndColAndRowFields()
     {
-        $namespace = namespace_entity("LteAdmin\Components");
-
-        $class = $namespace->class('ModelTableComponentFields');
+        $class = class_entity("ModelTableComponentFields");
+        $class->namespace('LteAdmin\Components');
 
         $class->doc(function ($doc) {
             $method = 'col';
@@ -556,7 +556,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
             }
         });
 
-        $class = $namespace->class('ModelInfoTableComponentFields');
+        $nameClass = \Str::snake('ModelTableComponentFields');
+        $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
+        file_put_contents($file, "<?php \n\n".$class->render());
+
+        $class = class_entity('ModelInfoTableComponentFields');
+        $class->namespace('LteAdmin\Components');
 
         $class->doc(function ($doc) {
             $method = 'row';
@@ -601,7 +606,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
             }
         });
 
-        $class = $namespace->class('SearchFormComponentFields');
+        $nameClass = \Str::snake('ModelInfoTableComponentFields');
+        $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
+        file_put_contents($file, "<?php \n\n".$class->render());
+
+        $class = class_entity('SearchFormComponentFields');
+        $class->namespace('LteAdmin\Components');
 
         $class->doc(function ($doc) {
             foreach (LteAdmin\Components\SearchFormComponent::$field_components as $input => $class) {
@@ -626,6 +636,8 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
             }
         });
 
-        return $namespace->render();
+        $nameClass = \Str::snake('SearchFormComponentFields');
+        $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
+        file_put_contents($file, "<?php \n\n".$class->render());
     }
 }
