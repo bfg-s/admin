@@ -18,23 +18,15 @@ class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
      */
     public function handle(Command $command)
     {
-        $namespace = namespace_entity("LteAdmin\Core");
+        $class = class_entity('NavigatorExtensions');
+        $class->namespace("LteAdmin\Core");
 
-        $namespace->class('NavigatorExtensions', function ($class) {
-            $class->doc(function ($doc) {
-                /** @var DocumentorEntity $doc */
-                $this->generateDefaultMethods($doc);
-            });
+        $class->doc(function ($doc) {
+            /** @var DocumentorEntity $doc */
+            $this->generateDefaultMethods($doc);
         });
 
-        $namespace->class('NavigatorMethods', function ($class) {
-            $class->doc(function ($doc) {
-                /** @var DocumentorEntity $doc */
-                $this->generateAllMethods($doc);
-            });
-        });
-
-        return $namespace->render();
+        return $class->render();
     }
 
     /**
@@ -47,31 +39,6 @@ class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
     {
         foreach (LteAdmin::extensions() as $name => $provider) {
             $doc->tagMethod('void', $provider::$slug, "Make extension routes ($name})");
-        }
-    }
-
-    /**
-     * Generate all methods.
-     *
-     * @param  DocumentorEntity  $doc
-     */
-    protected function generateAllMethods($doc)
-    {
-        $methods = [];
-
-        $nav = new ReflectionClass(Navigate::class);
-
-        foreach ($nav->getMethods() as $method) {
-            $methods[$method->getName()] = $method;
-        }
-        foreach ($methods as $method) {
-            $ret = pars_return_from_doc($method->getDocComment());
-
-            $doc->tagMethod(
-                'self|static|'.($ret ? $ret : '\\'.Navigate::class),
-                $method->getName().'('.refl_params_entity($method->getParameters()).')',
-                pars_description_from_doc($method->getDocComment())
-            );
         }
     }
 }

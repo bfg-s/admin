@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Log;
 use LteAdmin\Commands\Generators\ExtensionNavigatorHelperGenerator;
+use LteAdmin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
 use LteAdmin\Commands\Generators\GenerateBladeHelpers;
 use LteAdmin\Commands\Generators\GenerateLteHelper;
 use LteAdmin\Commands\Generators\GenerateNewJaxHelper;
@@ -30,6 +31,7 @@ class LteHelpersCommand extends Command
         //GenerateBladeHelpers::class,
         GenerateNewJaxHelper::class,
         ExtensionNavigatorHelperGenerator::class,
+        ExtensionNavigatorMethodsHelperGenerator::class,
         MacroableHelperGenerator::class,
     ];
     /**
@@ -168,9 +170,12 @@ class LteHelpersCommand extends Command
                         $this->error("Error: [{$exception->getCode()}:{$exception->getMessage()}]");
                         $this->error(" > File: [{$exception->getFile()}:{$exception->getLine()}]");
                     }
-                    $file = base_path("vendor/_laravel_idea/_ide_helper_{$name}.php");
-                    file_put_contents($file, "<?php \n\n".$file_data);
-                    $this->info("> Helper [".str_replace(base_path(), '', $file)."] generated!");
+                    if ($file_data) {
+
+                        $file = base_path("vendor/_laravel_idea/_ide_helper_{$name}.php");
+                        file_put_contents($file, "<?php \n\n".$file_data);
+                        $this->info("> Helper [".str_replace(base_path(), '', $file)."] generated!");
+                    }
                 }
             } elseif (is_array($executor)) {
                 $this->info("> {$executor[0]}::{$executor[1]}");
