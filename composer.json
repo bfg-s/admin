@@ -21,7 +21,7 @@
         "php": "^8.0",
         "ext-pdo": "*",
         "lar/ljs": "^2.6.4",
-        "lar/layout": "^3.0.1",
+        "lar/layout": "^3.0.3",
         "bfg/emitter": "^1.2",
         "bfg/repository": "^1.0",
         "bfg/embedded-call": "^1.0",
