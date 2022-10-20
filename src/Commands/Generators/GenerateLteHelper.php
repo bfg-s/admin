@@ -132,11 +132,11 @@ class GenerateLteHelper implements LteHelpGeneratorInterface
                 "Set {$key} Attribute"
             );
 
-            $doc->tagMethod(
-                'self|static|\\'.Component::class,
-                '_'.$name_key."(string \${$key}_data = \"\")",
-                "Set parent {$key} Attribute"
-            );
+//            $doc->tagMethod(
+//                'self|static|\\'.Component::class,
+//                '_'.$name_key."(string \${$key}_data = \"\")",
+//                "Set parent {$key} Attribute"
+//            );
 
             $doc->tagMethod(
                 'self|static|\\'.Component::class,
