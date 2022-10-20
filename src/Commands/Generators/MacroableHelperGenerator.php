@@ -9,7 +9,7 @@ use Closure;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Log;
 use LteAdmin;
 use LteAdmin\Controllers\Controller;

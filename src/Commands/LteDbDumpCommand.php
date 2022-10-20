@@ -5,7 +5,7 @@ namespace LteAdmin\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
 use LteAdmin\Core\ModelSaver;
 use LteAdmin\Models\LteFileStorage;
 use LteAdmin\Models\LtePermission;

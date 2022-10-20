@@ -3,7 +3,7 @@
 namespace LteAdmin\Commands\Generators;
 
 use Illuminate\Console\Command;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
 use LteAdmin;
 use LteAdmin\Interfaces\LteHelpGeneratorInterface;
 use LteAdmin\Navigate;

@@ -3,7 +3,7 @@
 namespace LteAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Lar\EntityCarrier\Core\Entities\DocumentorEntity;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
 use LteAdmin\Delegates\Card;
 use LteAdmin\Delegates\Form;
 use LteAdmin\Delegates\ModelInfoTable;
