@@ -135,7 +135,7 @@ class LteHelpersCommand extends Command
             $this->info('> artisan ide-helper:meta');
         }
 
-        $file = base_path('_ide_helper_lar.php');
+        $file = base_path('vendor/_ide_helper_lar.php');
         $file_data = '';
 
         foreach (static::$executors as $executor) {
