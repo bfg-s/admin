@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Log;
 use LteAdmin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use LteAdmin\Commands\Generators\GenerateBladeHelpers;
-use LteAdmin\Commands\Generators\GenerateHelper;
+use LteAdmin\Commands\Generators\GenerateLteHelper;
 use LteAdmin\Commands\Generators\GenerateNewJaxHelper;
 use LteAdmin\Commands\Generators\GenerateRespondHelper;
 use LteAdmin\Commands\Generators\GetterHelper;
@@ -25,9 +25,9 @@ class LteHelpersCommand extends Command
      * @var array
      */
     protected static $executors = [
-        GenerateHelper::class,
+        GenerateLteHelper::class,
         GenerateRespondHelper::class,
-        GenerateBladeHelpers::class,
+        //GenerateBladeHelpers::class,
         GenerateNewJaxHelper::class,
         ExtensionNavigatorHelperGenerator::class,
         MacroableHelperGenerator::class,
@@ -135,14 +135,18 @@ class LteHelpersCommand extends Command
             $this->info('> artisan ide-helper:meta');
         }
 
-        $file = base_path('vendor/_ide_helper_lar.php');
-        $file_data = '';
-
         foreach (static::$executors as $executor) {
             if (is_string($executor)) {
+                $name = \Str::snake(class_basename($executor));
+                $name = str_replace([
+                    'generator',
+                    'generate',
+                ], '', $name);
+                $name = trim(str_replace('__', '_', $name), '_');
                 $obj = new $executor($this);
 
                 if ($obj instanceof LteHelpGeneratorInterface) {
+                    $file_data = '';
                     $this->info("> {$executor}::handle");
 
                     try {
@@ -164,6 +168,9 @@ class LteHelpersCommand extends Command
                         $this->error("Error: [{$exception->getCode()}:{$exception->getMessage()}]");
                         $this->error(" > File: [{$exception->getFile()}:{$exception->getLine()}]");
                     }
+                    $file = base_path("vendor/_laravel_idea/_ide_helper_{$name}.php");
+                    file_put_contents($file, "<?php \n\n".$file_data);
+                    $this->info("> Helper [".str_replace(base_path(), '', $file)."] generated!");
                 }
             } elseif (is_array($executor)) {
                 $this->info("> {$executor[0]}::{$executor[1]}");
@@ -172,9 +179,9 @@ class LteHelpersCommand extends Command
             }
         }
 
-        if ($file_data) {
-            file_put_contents($file, "<?php \n\n".$file_data);
-            $this->info('> Helper [_ide_helper_lar.php] generated!');
-        }
+//        if ($file_data) {
+//            file_put_contents($file, "<?php \n\n".$file_data);
+//            $this->info('> Helper [_ide_helper_lar.php] generated!');
+//        }
     }
 }

@@ -15,7 +15,7 @@ use LteAdmin\Interfaces\LteHelpGeneratorInterface;
 use ReflectionClass;
 use ReflectionException;
 
-class GenerateHelper implements LteHelpGeneratorInterface
+class GenerateLteHelper implements LteHelpGeneratorInterface
 {
     /**
      * @var array
@@ -40,20 +40,19 @@ class GenerateHelper implements LteHelpGeneratorInterface
      */
     public function handle(Command $command)
     {
-        $namespace = namespace_entity("Lar\Layout");
+        $class = class_entity('LarDoc');
+        $class->namespace("Lar\Layout");
 
-        $namespace->class('LarDoc', function ($class) {
-            /** @var ClassEntity $class */
-            $class->extend('\\Lar\\Tagable\\Tag');
+        /** @var ClassEntity $class */
+        $class->extend('\\Lar\\Tagable\\Tag');
 
-            foreach (static::$on_generate_doc as $global) {
-                call_user_func($global, $class);
-            }
+        foreach (static::$on_generate_doc as $global) {
+            call_user_func($global, $class);
+        }
 
-            $this->generateClassDoc($class);
-        });
+        $this->generateClassDoc($class);
 
-        file_put_contents('_ide_helper_tag.php', $namespace->wrap('php')->render());
+        return $class->render();
     }
 
     /**
@@ -219,25 +218,17 @@ class GenerateHelper implements LteHelpGeneratorInterface
                 }
 
                 $doc->tagMethod(
-
                     'self|static|\\'.Component::class.($name === 'ljs' || $name === 'lj' ? '|\\'.Respond::class : '')
                     .($return ? "|$return" : ''),
-
                     $name.'('.refl_params_entity($method->getParameters()).')',
-
                     pars_description_from_doc($method->getDocComment())
-
                 );
 
                 $doc->tagMethod(
-
                     'self|static|\\'.Component::class.($name === 'ljs' || $name === 'lj' ? '|\\'.Respond::class : '')
                     .($return ? "|$return" : ''),
-
                     '_'.$name.'('.refl_params_entity($method->getParameters()).')',
-
                     'Apply to parent. '.pars_description_from_doc($method->getDocComment())
-
                 );
             }
         }
