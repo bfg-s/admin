@@ -537,20 +537,22 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
 
             foreach ($this->relations as $relation) {
                 foreach ($relation['fillable'] as $field) {
-                    $camelField = Str::snake($field);
-                    $m = $method.'_'.$relation['name'].'__'.$camelField;
-                    if ($camelField && !in_array($m, $methods)) {
-                        $doc->tagMethod(
-                            "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                            $m."(callable|string \$label = null)",
-                            "Method {$m}"
-                        );
-                        $doc->tagPropertyRead(
-                            "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
-                            $m,
-                            "Property {$m}"
-                        );
-                        $methods[] = $m;
+                    if ($field) {
+                        $camelField = Str::snake($field);
+                        $m = $method.'_'.$relation['name'].'__'.$camelField;
+                        if ($camelField && !in_array($m, $methods)) {
+                            $doc->tagMethod(
+                                "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                                $m."(callable|string \$label = null)",
+                                "Method {$m}"
+                            );
+                            $doc->tagPropertyRead(
+                                "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                                $m,
+                                "Property {$m}"
+                            );
+                            $methods[] = $m;
+                        }
                     }
                 }
             }
@@ -587,20 +589,22 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
 
             foreach ($this->relations as $relation) {
                 foreach ($relation['fillable'] as $field) {
-                    $camelField = Str::snake($field);
-                    $m = $method.'_'.$relation['name'].'__'.$camelField;
-                    if ($camelField && !in_array($m, $methods)) {
-                        $doc->tagMethod(
-                            "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                            $m."(callable|string \$label = null)",
-                            "Method {$m}"
-                        );
-                        $doc->tagPropertyRead(
-                            "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
-                            $method.'_'.$relation['name'].'__'.$camelField,
-                            "Property {$method}_{$relation['name']}__{$camelField}"
-                        );
-                        $methods[] = $m;
+                    if ($field) {
+                        $camelField = Str::snake($field);
+                        $m = $method.'_'.$relation['name'].'__'.$camelField;
+                        if ($camelField && !in_array($m, $methods)) {
+                            $doc->tagMethod(
+                                "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                                $m."(callable|string \$label = null)",
+                                "Method {$m}"
+                            );
+                            $doc->tagPropertyRead(
+                                "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                                $method.'_'.$relation['name'].'__'.$camelField,
+                                "Property {$method}_{$relation['name']}__{$camelField}"
+                            );
+                            $methods[] = $m;
+                        }
                     }
                 }
             }
