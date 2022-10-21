@@ -134,9 +134,9 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register publishers lang.
          */
         $this->publishes([
-            __DIR__.'/../translations/en' => resource_path('lang/en'),
-            __DIR__.'/../translations/ru' => resource_path('lang/ru'),
-            __DIR__.'/../translations/uk' => resource_path('lang/uk'),
+            __DIR__.'/../translations/en' => base_path('lang/en'),
+            __DIR__.'/../translations/ru' => base_path('lang/ru'),
+            __DIR__.'/../translations/uk' => base_path('lang/uk'),
         ], ['lte-lang', 'laravel-assets']);
 
         /**
