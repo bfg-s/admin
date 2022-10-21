@@ -137,6 +137,13 @@ class LteHelpersCommand extends Command
             $this->info('> artisan ide-helper:meta');
         }
 
+        $helpersDir = base_path("vendor/_laravel_idea");
+
+        if (! is_dir($helpersDir)) {
+
+            mkdir($helpersDir);
+        }
+
         foreach (static::$executors as $executor) {
             if (is_string($executor)) {
                 $name = \Str::snake(class_basename($executor));
