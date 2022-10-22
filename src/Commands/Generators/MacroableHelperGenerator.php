@@ -13,6 +13,7 @@ use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Log;
 use LteAdmin;
 use LteAdmin\Controllers\Controller;
+use LteAdmin\Core\Delegate;
 use LteAdmin\Interfaces\LteHelpGeneratorInterface;
 use LteAdmin\Page;
 use LteAdmin\Traits\Macroable;
@@ -513,22 +514,23 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
         $class->doc(function ($doc) {
             $method = 'col';
             $methods = [];
+            $modelTableType = "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class."|\\".Delegate::class;
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
                 if ($camelField) {
                     $doc->tagMethod(
-                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $modelTableType,
                         $method.'_'.$camelField."(callable|string \$label = null)",
                         "Method {$method}_{$camelField}"
                     );
                     $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $modelTableType,
                         $method.'_'.$camelField,
                         "Property {$method}_{$camelField}"
                     );
                     $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                        $modelTableType,
                         'sort_in_'.$camelField,
                         "Property sort_in_{$camelField}"
                     );
@@ -542,12 +544,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                         $m = $method.'_'.$relation['name'].'__'.$camelField;
                         if ($camelField && !in_array($m, $methods)) {
                             $doc->tagMethod(
-                                "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                                $modelTableType,
                                 $m."(callable|string \$label = null)",
                                 "Method {$m}"
                             );
                             $doc->tagPropertyRead(
-                                "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class,
+                                $modelTableType,
                                 $m,
                                 "Property {$m}"
                             );
@@ -568,6 +570,7 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
         $class->doc(function ($doc) {
             $method = 'row';
             $methods = [];
+            $modelInfoType = "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class."|\\".Delegate::class;
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
@@ -575,12 +578,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                     $methods[] = $method.'_'.$camelField;
 
                     $doc->tagMethod(
-                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $modelInfoType,
                         $method.'_'.$camelField."(callable|string \$label = null)",
                         "Method {$method}_{$camelField}"
                     );
                     $doc->tagPropertyRead(
-                        "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                        $modelInfoType,
                         $method.'_'.$camelField,
                         "Property {$method}_{$camelField}"
                     );
@@ -594,12 +597,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                         $m = $method.'_'.$relation['name'].'__'.$camelField;
                         if ($camelField && !in_array($m, $methods)) {
                             $doc->tagMethod(
-                                "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                                $modelInfoType,
                                 $m."(callable|string \$label = null)",
                                 "Method {$m}"
                             );
                             $doc->tagPropertyRead(
-                                "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class,
+                                $modelInfoType,
                                 $method.'_'.$relation['name'].'__'.$camelField,
                                 "Property {$method}_{$relation['name']}__{$camelField}"
                             );
@@ -624,14 +627,15 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                     $camelField = Str::snake($field);
 
                     $method = 'in';
+                    $searchFormType = "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class."|\\".Delegate::class;
                     if ($camelField) {
                         $doc->tagMethod(
-                            "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                            $searchFormType,
                             $method.'_'.$input.'_'.$camelField."(callable|string \$label = null, callable|string \$condition = null)",
                             "Method {$method}_{$input}_{$camelField}"
                         );
                         $doc->tagPropertyRead(
-                            "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class,
+                            $searchFormType,
                             $method.'_'.$input.'_'.$camelField,
                             "Property {$method}_{$input}_{$camelField}"
                         );
