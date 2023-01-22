@@ -150,7 +150,7 @@ return [
     'successfully_restored' => 'Successfully restored!',
     'back' => 'Back',
     'remove' => 'Remove',
-    'settings' => 'Settings',
+    'settings' => 'Setting',
     'timeline' => 'Timeline',
     'sort' => 'Sort',
     'statistic_for_today' => ':entity for today',

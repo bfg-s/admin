@@ -45,7 +45,7 @@
     <div class="sidebar-custom navbar navbar-expand-lg justify-content-center">
         <div class="row" @live('sidebar-custom')>
 {{--            <div class="col-auto">--}}
-{{--                <a href="{{ route('lte.settings') }}" class="btn btn-link" data-turbolinks="false" title="Settings">--}}
+{{--                <a href="{{ route('lte.settings') }}" class="btn btn-link" data-turbolinks="false" title="Setting">--}}
 {{--                    <i class="fas fa-cog"></i>--}}
 {{--                </a>--}}
 {{--            </div>--}}

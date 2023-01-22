@@ -86,3 +86,6 @@
 .dark-mode .card .breadcrumb-item {
     color: #adb5bd !important;
 }
+.dark-mode .popover-header {
+    background-color: #2e3439 !important;
+}

@@ -95,8 +95,6 @@ class SelectField extends FormGroupComponent
             if ($vals) {
                 $this->options($vals, true);
             }
-        } else {
-            $this->options([[$this->value]]);
         }
 
         app(Page::class)->toStore('live', [$this->path => $this->value]);
