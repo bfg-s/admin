@@ -70,31 +70,7 @@ class SelectField extends FormGroupComponent
     public function field()
     {
         if ($this->load_subject) {
-            $selector = new Select2(
-                $this->load_subject,
-                $this->load_format,
-                $this->value,
-                $this->nullable ? $this->title : null,
-                $this->field_id.'_',
-                $this->load_where,
-                $this->separator
-            );
-
-            $r_name = $selector->getName();
-
-            if (request()->has($r_name)) {
-                exit($selector->toJson(JSON_UNESCAPED_UNICODE));
-            }
-
-            $this->data['select-name'] = $r_name;
-
-            $this->on_load('select2::ajax');
-
-            $vals = $selector->getValueData();
-
-            if ($vals) {
-                $this->options($vals, true);
-            }
+            $this->loadSubject();
         }
 
         app(Page::class)->toStore('live', [$this->path => $this->value]);
@@ -109,6 +85,38 @@ class SelectField extends FormGroupComponent
             ->setDatas($this->data)
             ->addClassIf($this->has_bug, 'is-invalid')
             ->addClass($this->class);
+    }
+
+    /**
+     * @return void
+     */
+    protected function loadSubject()
+    {
+        $selector = new Select2(
+            $this->load_subject,
+            $this->load_format,
+            $this->value,
+            $this->nullable ? $this->title : null,
+            $this->field_id.'_',
+            $this->load_where,
+            $this->separator
+        );
+
+        $r_name = $selector->getName();
+
+        if (request()->has($r_name)) {
+            exit($selector->toJson(JSON_UNESCAPED_UNICODE));
+        }
+
+        $this->data['select-name'] = $r_name;
+
+        $this->on_load('select2::ajax');
+
+        $vals = $selector->getValueData();
+
+        if ($vals) {
+            $this->options($vals, true);
+        }
     }
 
     /**
