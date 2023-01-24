@@ -114,6 +114,11 @@ class SelectField extends FormGroupComponent
 
         $vals = $selector->getValueData();
 
+        $this->setSubjectValues($vals);
+    }
+
+    protected function setSubjectValues($vals)
+    {
         if ($vals) {
             $this->options($vals, true);
         }
