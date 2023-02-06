@@ -38,6 +38,69 @@ class Editables
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
+     * @param $field
+     * @return mixed|string
+     */
+    public function input_select($value, array $props = [], Model $model = null, $field = null)
+    {
+        if ($model) {
+
+            $options = $props[0] ?? [];
+            $format = $props[1] ?? (is_array($options) ? false : 'id:name');
+            $where = $props[2] ?? null;
+
+            return "<div class='m-auto' style='max-width: 200px'>" . FieldComponent::select($field)
+                ->only_input()
+                ->value($value)
+                ->force_set_id('input_'.$field.'_'.$model->id)
+                ->when(is_array($options), fn ($q) => $q->options($options, $format))
+                ->when(is_string($options), fn ($q) => $q->load($options, $format, $where))
+                ->on_change('jax.lte_admin.custom_save', [
+                    get_class($model),
+                    $model->id,
+                    $field,
+                    '>>$:val()',
+                ]) . "</div>";
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @param $field
+     * @return mixed|string
+     */
+    public function input_radios($value, array $props = [], Model $model = null, $field = null)
+    {
+        if ($model) {
+
+            $options = $props[0] ?? [];
+            $first_default = $props[1] ?? false;
+
+            return FieldComponent::radios($field)
+                ->only_input()
+                ->value($value)
+                ->set_name($field.'_'.$model->id)
+                ->force_set_id('input_'.$field.'_'.$model->id)
+                ->when(is_array($options), fn ($q) => $q->options($options, !! $first_default))
+                ->on_change('jax.lte_admin.custom_save', [
+                    get_class($model),
+                    $model->id,
+                    $field,
+                    '>>lte::get_selected_radio()',
+                ]);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
      * @param  null  $field
      * @param  null  $title
      * @return string

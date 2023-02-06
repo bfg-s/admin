@@ -17,6 +17,7 @@ use LteAdmin\Traits\RulesBackTrait;
 use LteAdmin\Traits\RulesFrontTrait;
 use Route;
 use Str;
+use Illuminate\Support\Traits\Conditionable;
 
 /**
  * @mixin FormGroupComponentMacroList
@@ -28,6 +29,7 @@ abstract class FormGroupComponent extends DIV
     use FontAwesome;
     use Macroable;
     use Delegable;
+    use Conditionable;
 
     /**
      * @var array

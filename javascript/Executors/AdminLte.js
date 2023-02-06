@@ -7,6 +7,15 @@ class AdminLte extends Executor {
         return "lte";
     }
 
+    get_selected_radio () {
+        if (this.target) {
+            console.log($(this.target).find(':checked').val());
+            return $(this.target).find(':checked').val();
+        }
+
+        return null;
+    }
+
     flash_document(changed_name = null, changed_value = null) {
         let data = $(":input").serializeArray();
         let lives = $('.__live__');

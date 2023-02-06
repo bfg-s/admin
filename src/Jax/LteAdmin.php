@@ -106,10 +106,10 @@ class LteAdmin extends LteAdminExecutor
      * @param  string|null  $model
      * @param  int|null  $id
      * @param  string|null  $field_name
-     * @param  bool  $val
+     * @param  mixed  $val
      * @return array
      */
-    public function custom_save(string $model = null, int $id = null, string $field_name = null, bool $val = false)
+    public function custom_save(string $model = null, int $id = null, string $field_name = null, $val = false)
     {
         if (!check_referer('PUT')) {
             return [];
