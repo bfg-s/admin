@@ -49,7 +49,7 @@ class Editables
             $format = $props[1] ?? (is_array($options) ? false : 'id:name');
             $where = $props[2] ?? null;
 
-            return "<div class='m-auto' style='max-width: 200px'>" . FieldComponent::select($field)
+            return "<div style='max-width: 200px'>" . FieldComponent::select($field)
                 ->only_input()
                 ->value($value)
                 ->force_set_id('input_'.$field.'_'.$model->id)

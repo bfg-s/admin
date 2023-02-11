@@ -144,3 +144,7 @@ input:focus, textarea:focus, select:focus {
 .sidebar-custom a:hover {
     color: white;
 }
+
+.dark-mode .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b{
+    border-color: white transparent transparent transparent !important;
+}
