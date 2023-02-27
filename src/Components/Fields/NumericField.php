@@ -14,6 +14,6 @@ class NumericField extends InputField
      */
     protected $data = [
         'load' => 'mask',
-        'load-params' => '9{0,}',
+        'load-params' => '-{0,1}9{0,}',
     ];
 }

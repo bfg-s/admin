@@ -21,7 +21,7 @@ class AutocompleteField extends SelectField
      */
     protected function setSubjectValues($vals)
     {
-        if (count($vals)) {
+        if (is_array($vals) && count($vals)) {
             $this->options($vals, true);
         } else {
             $this->options([$this->value]);
