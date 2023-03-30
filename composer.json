@@ -1,6 +1,6 @@
 {
     "name": "bfg/admin",
-    "description": "Laravel Admin Lte by BFG",
+    "description": "Laravel Admin by BFG",
     "type": "bfg-library",
     "keywords": [
         "laravel",
@@ -9,7 +9,7 @@
         "bfg",
         "wood"
     ],
-    "homepage": "https://bitbucket.org/lar-repo/lte-admin",
+    "homepage": "https://packagist.org/packages/bfg/admin",
     "license": "MIT",
     "authors": [
         {
