@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\SwitcherField;
+use Admin\Components\Fields\SwitcherField;
 
 class SwitcherSearchField extends SwitcherField
 {

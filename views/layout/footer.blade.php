@@ -1,6 +1,6 @@
 <footer class="main-footer text-sm">
     <div class="float-right d-none d-sm-block">
-        <b>Version</b> {{LteAdmin::version()}}
+        <b>Version</b> {{Admin::version()}}
     </div>
-    {!! config('lte.footer.copy') !!}
+    {!! config('admin.footer.copy') !!}
 </footer>

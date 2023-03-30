@@ -1,15 +1,15 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Closure;
 use Event;
-use LteAdmin\Components\Component;
-use LteAdmin\Components\ModelTableComponent;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\ExtendProvider;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\Piplineble;
+use Admin\Components\Component;
+use Admin\Components\ModelTableComponent;
+use Admin\Controllers\Controller;
+use Admin\ExtendProvider;
+use Admin\Traits\Macroable;
+use Admin\Traits\Piplineble;
 
 class ConfigExtensionProvider
 {
@@ -49,7 +49,7 @@ class ConfigExtensionProvider
     protected $pipe_map = [];
 
     /**
-     * The event listener mappings for the lte application.
+     * The event listener mappings for the application.
      * @var array
      */
     protected $listen = [];
@@ -70,7 +70,7 @@ class ConfigExtensionProvider
     }
 
     /**
-     * On boot lte application.
+     * On boot application.
      */
     public function boot()
     {

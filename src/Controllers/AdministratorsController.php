@@ -1,31 +1,31 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use Illuminate\Http\Request;
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\ChartJs;
-use LteAdmin\Delegates\Form;
-use LteAdmin\Delegates\ModelInfoTable;
-use LteAdmin\Delegates\ModelTable;
-use LteAdmin\Delegates\SearchForm;
-use LteAdmin\Delegates\Tab;
-use LteAdmin\Models\LteRole;
-use LteAdmin\Models\LteUser;
-use LteAdmin\Page;
+use Admin\Delegates\Card;
+use Admin\Delegates\ChartJs;
+use Admin\Delegates\Form;
+use Admin\Delegates\ModelInfoTable;
+use Admin\Delegates\ModelTable;
+use Admin\Delegates\SearchForm;
+use Admin\Delegates\Tab;
+use Admin\Models\AdminRole;
+use Admin\Models\AdminUser;
+use Admin\Page;
 
 class AdministratorsController extends Controller
 {
     /**
      * @var string
      */
-    public static $model = LteUser::class;
+    public static $model = AdminUser::class;
 
     /**
-     * @param  LteUser  $user
+     * @param  AdminUser  $user
      * @return string
      */
-    public function show_role(LteUser $user)
+    public function show_role(AdminUser $user)
     {
         return '<span class="badge badge-success">'.$user->roles->pluck('name')->implode('</span> <span class="badge badge-success">').'</span>';
     }
@@ -45,23 +45,23 @@ class AdministratorsController extends Controller
     public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
     {
         return $page->card(
-            $card->title('lte.admin_list'),
+            $card->title('admin.admin_list'),
             $card->search_form(
                 $searchForm->id(),
-                $searchForm->email('email', 'lte.email_address'),
-                $searchForm->input('login', 'lte.login_name'),
-                $searchForm->input('name', 'lte.name'),
+                $searchForm->email('email', 'admin.email_address'),
+                $searchForm->input('login', 'admin.login_name'),
+                $searchForm->input('name', 'admin.name'),
                 $searchForm->at(),
             ),
             $card->model_table(
                 $modelTable->id(),
-                $modelTable->col('lte.avatar', 'avatar')->avatar(),
-                $modelTable->col('lte.role', [$this, 'show_role']),
-                $modelTable->col('lte.email_address', 'email')->sort(),
-                $modelTable->col('lte.login_name', 'login')->sort(),
-                $modelTable->col('lte.name', 'name')->sort(),
+                $modelTable->col('admin.avatar', 'avatar')->avatar(),
+                $modelTable->col('admin.role', [$this, 'show_role']),
+                $modelTable->col('admin.email_address', 'email')->sort(),
+                $modelTable->col('admin.login_name', 'login')->sort(),
+                $modelTable->col('admin.name', 'name')->sort(),
                 $modelTable->at(),
-                $modelTable->controlDelete(static function (LteUser $user) {
+                $modelTable->controlDelete(static function (AdminUser $user) {
                     return $user->id !== 1 && admin()->id !== $user->id;
                 }),
                 $modelTable->disableChecks(),
@@ -80,27 +80,27 @@ class AdministratorsController extends Controller
     {
         return $page
             ->card(
-                $card->title(['lte.add_admin', 'lte.edit_admin']),
+                $card->title(['admin.add_admin', 'admin.edit_admin']),
                 $card->form(
                     $form->tab(
                         $tab->ifEdit()->info_id(),
-                        $tab->image('avatar', 'lte.avatar')->nullable(),
-                        $tab->icon_cogs()->title('lte.common'),
-                        $tab->input('login', 'lte.login_name')
+                        $tab->image('avatar', 'admin.avatar')->nullable(),
+                        $tab->icon_cogs()->title('admin.common'),
+                        $tab->input('login', 'admin.login_name')
                             ->required()
-                            ->unique(LteUser::class, 'login', $this->model()->id),
-                        $tab->input('name', 'lte.name')->required(),
-                        $tab->email('email', 'lte.email_address')
-                            ->required()->unique(LteUser::class, 'email', $this->model()->id),
-                        $tab->multi_select('roles[]', 'lte.role')->icon_user_secret()
-                            ->options(LteRole::all()->pluck('name', 'id')),
+                            ->unique(AdminUser::class, 'login', $this->model()->id),
+                        $tab->input('name', 'admin.name')->required(),
+                        $tab->email('email', 'admin.email_address')
+                            ->required()->unique(AdminUser::class, 'email', $this->model()->id),
+                        $tab->multi_select('roles[]', 'admin.role')->icon_user_secret()
+                            ->options(AdminRole::all()->pluck('name', 'id')),
                         $tab->ifEdit()->info_updated_at(),
                         $tab->ifEdit()->info_created_at(),
                     ),
                     $form->if(admin()->isRootAdmin())->tab(
                         $tab->ifEdit()->info_id(),
-                        $tab->icon_key()->title('lte.password'),
-                        $tab->password('password', 'lte.new_password')
+                        $tab->icon_key()->title('admin.password'),
+                        $tab->password('password', 'admin.new_password')
                             ->confirm()->required_condition($this->isType('create')),
                         $tab->ifEdit()->info_updated_at(),
                         $tab->ifEdit()->info_created_at(),
@@ -135,18 +135,18 @@ class AdministratorsController extends Controller
             ->card(
                 $card->model_info_table(
                     $modelInfoTable->id(),
-                    $modelInfoTable->row('lte.avatar', 'avatar')->avatar(150),
-                    $modelInfoTable->row('lte.role', [$this, 'show_role']),
-                    $modelInfoTable->row('lte.email_address', 'email'),
-                    $modelInfoTable->row('lte.login_name', 'login'),
-                    $modelInfoTable->row('lte.name', 'name'),
+                    $modelInfoTable->row('admin.avatar', 'avatar')->avatar(150),
+                    $modelInfoTable->row('admin.role', [$this, 'show_role']),
+                    $modelInfoTable->row('admin.email_address', 'email'),
+                    $modelInfoTable->row('admin.login_name', 'login'),
+                    $modelInfoTable->row('admin.name', 'name'),
                     $modelInfoTable->at(),
                 )
             )
             ->card(
-                $card->title('lte.activity')->warningType(),
+                $card->title('admin.activity')->warningType(),
                 $card->tab(
-                    $tab->icon_clock()->title('lte.timeline'),
+                    $tab->icon_clock()->title('admin.timeline'),
                     $tab->with(fn($content) => UserController::timelineComponent(
                         $content,
                         $this->model()->logs(),
@@ -154,12 +154,12 @@ class AdministratorsController extends Controller
                     )),
                 ),
                 $card->tab(
-                    $tab->title('lte.activity')->icon_chart_line(),
+                    $tab->title('admin.activity')->icon_chart_line(),
                     $tab->active($request->has('q')),
                     $tab->chart_js(
                         $chartJs->model($this->model()->logs())
                             ->hasSearch(
-                                $searchForm->date_range('created_at', 'lte.created_at')
+                                $searchForm->date_range('created_at', 'admin.created_at')
                                     ->default(implode(' - ', $this->defaultDateRange()))
                             )
                             ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
@@ -172,7 +172,7 @@ class AdministratorsController extends Controller
                     )
                 ),
                 $card->tab(
-                    $tab->title('lte.day_activity')->icon_chart_line(),
+                    $tab->title('admin.day_activity')->icon_chart_line(),
                     $tab->chart_js(
                         $chartJs->model($this->model()->logs())
                             ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())

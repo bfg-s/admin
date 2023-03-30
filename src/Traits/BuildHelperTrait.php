@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
-use LteAdmin\Components\TabsComponent;
+use Admin\Components\TabsComponent;
 
 trait BuildHelperTrait
 {

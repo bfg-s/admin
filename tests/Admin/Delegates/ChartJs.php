@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\ChartJs as LteChartJs;
+use Admin\Delegates\ChartJs as LteChartJs;
 
 /**
  * ChartJs Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class ChartJs extends LteChartJs
 {

@@ -1,20 +1,20 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 use Closure;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use LteAdmin\Controllers\AdministratorsController;
-use LteAdmin\Controllers\FunctionsController;
-use LteAdmin\Controllers\MenuController;
-use LteAdmin\Controllers\PermissionController;
-use LteAdmin\Controllers\RolesController;
-use LteAdmin\Core\NavGroup;
-use LteAdmin\Core\NavItem;
-use LteAdmin\LteAdmin;
-use LteAdmin\Models\LteMenu;
-use LteAdmin\Navigate;
+use Admin\Controllers\AdministratorsController;
+use Admin\Controllers\FunctionsController;
+use Admin\Controllers\MenuController;
+use Admin\Controllers\PermissionController;
+use Admin\Controllers\RolesController;
+use Admin\Core\NavGroup;
+use Admin\Core\NavItem;
+use Admin\Admin;
+use Admin\Models\AdminMenu;
+use Admin\Navigate;
 
 trait NavDefaultTools
 {
@@ -41,7 +41,7 @@ trait NavDefaultTools
      */
     public function lteAdministrationGroup($call)
     {
-        return $this->group('lte.administration', 'admin', static function (NavGroup $group) use ($call) {
+        return $this->group('admin.administration', 'admin', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {
                 call_user_func($call, $group);
             }
@@ -55,7 +55,7 @@ trait NavDefaultTools
      */
     public function lteAdministrators(string $action = null)
     {
-        return $this->item('lte.administrators', 'administrators')
+        return $this->item('admin.administrators', 'administrators')
             ->resource('lte_user', $action ?? AdministratorsController::class)
             ->icon_users_cog();
     }
@@ -67,7 +67,7 @@ trait NavDefaultTools
      */
     public function lteRoles(string $action = null)
     {
-        return $this->item('lte.roles', 'roles')
+        return $this->item('admin.roles', 'roles')
             ->resource('lte_role', $action ?? RolesController::class)
             ->icon_user_secret();
     }
@@ -79,7 +79,7 @@ trait NavDefaultTools
      */
     public function ltePermission(string $action = null)
     {
-        return $this->item('lte.permission', 'permission')
+        return $this->item('admin.permission', 'permission')
             ->resource('lte_permission', $action ?? PermissionController::class)
             ->icon_ban();
     }
@@ -91,26 +91,26 @@ trait NavDefaultTools
      */
     public function lteMenu(string $action = null)
     {
-        return $this->item('lte.admin_menu', 'menu')
-            ->resource('lte_menu', $action ?? MenuController::class)
+        return $this->item('admin.admin_menu', 'menu')
+            ->resource('admin_menu', $action ?? MenuController::class)
             ->icon_bars();
     }
 
     public function makeMenu()
     {
-        $db = config('lte.connections.lte-sqlite.database');
+        $db = config('admin.connections.admin-sqlite.database');
 
-        if (is_file($db) && Schema::connection('lte-sqlite')->hasTable('lte_menu')) {
-            LteMenu::where('active', 1)
+        if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_menu')) {
+            AdminMenu::where('active', 1)
                 ->orderBy('order')
                 ->whereNull('parent_id')
                 ->with('child')
                 ->get()
-                ->map(fn(LteMenu $menu) => $this->injectRemoteMenu($menu));
+                ->map(fn(AdminMenu $menu) => $this->injectRemoteMenu($menu));
         }
     }
 
-    protected function injectRemoteMenu(LteMenu $menu, NavGroup $rootGroup = null)
+    protected function injectRemoteMenu(AdminMenu $menu, NavGroup $rootGroup = null)
     {
         $rootGroup = $rootGroup ?: $this;
 
@@ -127,7 +127,7 @@ trait NavDefaultTools
                 $rootGroup->group(
                     $menu->name,
                     $menu->route,
-                    fn(NavGroup $group) => $menu->child->map(fn(LteMenu $lteMenu) => $this->injectRemoteMenu($lteMenu,
+                    fn(NavGroup $group) => $menu->child->map(fn(AdminMenu $lteMenu) => $this->injectRemoteMenu($lteMenu,
                         $group))
                 )->icon($menu->icon);
             }
@@ -139,10 +139,10 @@ trait NavDefaultTools
      */
     public function makeExtensions()
     {
-        $extensions = LteAdmin::$nav_extensions;
+        $extensions = Admin::$nav_extensions;
 
         if (count($extensions) > 1) {
-            $this->menu_header('lte.extensions');
+            $this->menu_header('admin.extensions');
         }
 
         foreach ($extensions as $key => $extension) {
@@ -166,7 +166,7 @@ trait NavDefaultTools
                 Navigate::$extension = null;
             }
 
-            unset(LteAdmin::$nav_extensions[$key]);
+            unset(Admin::$nav_extensions[$key]);
         }
     }
 
@@ -177,7 +177,7 @@ trait NavDefaultTools
      */
     public function lteAccessGroup($call)
     {
-        return $this->group('lte.access', 'access', static function (NavGroup $group) use ($call) {
+        return $this->group('admin.access', 'access', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {
                 call_user_func($call, $group);
             }

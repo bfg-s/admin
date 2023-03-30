@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\ModalBodyComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\ModalBodyComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin ModalBodyComponent

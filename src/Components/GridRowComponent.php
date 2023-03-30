@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 class GridRowComponent extends Component
 {

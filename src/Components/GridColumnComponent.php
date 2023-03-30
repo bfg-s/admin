@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
-use LteAdmin\Explanation;
+use Admin\Explanation;
 
 class GridColumnComponent extends Component
 {

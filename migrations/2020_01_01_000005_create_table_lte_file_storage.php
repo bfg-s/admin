@@ -28,7 +28,7 @@ class CreateTableLteFileStorage extends Migration
 
             $table->string('field')->nullable();
 
-            $table->string('driver', 32)->default('lte');
+            $table->string('driver', 32)->default('admin');
 
             $table->string('driver_path')->default('/');
 

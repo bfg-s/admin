@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Tests\Traits;
+namespace Admin\Tests\Traits;
 
 use CreateTestTables;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use LteAdmin\Models\LteSeeder;
+use Admin\Models\AdminSeeder;
 
 trait DatabaseMigrations
 {
@@ -26,7 +26,7 @@ trait DatabaseMigrations
         ]);
         $this->migrateTestTables();
         $this->artisan('db:seed', [
-            'class' => LteSeeder::class
+            'class' => AdminSeeder::class
         ]);
     }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Controllers;
+namespace Admin\Tests\Admin\Controllers;
 
-use LteAdmin\Controllers\Controller as LteController;
+use Admin\Controllers\Controller as AdminController;
 
-class Controller extends LteController
+class Controller extends AdminController
 {
 
 }

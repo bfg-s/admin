@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits\ModelTable;
+namespace Admin\Traits\ModelTable;
 
 use Closure;
 

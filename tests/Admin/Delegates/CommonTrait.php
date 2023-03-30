@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
 trait CommonTrait
 {

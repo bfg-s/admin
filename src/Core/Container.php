@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Interfaces\SegmentContainerInterface;
-use LteAdmin\Traits\Eventable;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\Piplineble;
+use Admin\Interfaces\SegmentContainerInterface;
+use Admin\Traits\Eventable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\Piplineble;
 use Throwable;
 
 abstract class Container implements SegmentContainerInterface
@@ -55,7 +55,7 @@ abstract class Container implements SegmentContainerInterface
      */
     public function __construct($warp)
     {
-        $this->layout = 'lte::layout';
+        $this->layout = 'admin::layout';
         //$this->component = DIV::create();
         $this->component = DIV::create(['row', 'pl-3 pr-3']);
         $this->callConstructEvents([DIV::class => $this->component]);
@@ -151,7 +151,7 @@ abstract class Container implements SegmentContainerInterface
      */
     public function render()
     {
-        return view('lte::container', [
+        return view('admin::container', [
             'layout' => $this->layout,
             'yield' => $this->content_yield,
             'component' => $this->component,

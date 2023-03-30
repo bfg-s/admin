@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use LteAdmin\Traits\Eventable;
+use Admin\Traits\Eventable;
 use ReflectionException;
 
 class Select2 extends Collection

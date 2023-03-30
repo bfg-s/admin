@@ -1,21 +1,21 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\Form;
-use LteAdmin\Delegates\ModelInfoTable;
-use LteAdmin\Delegates\ModelTable;
-use LteAdmin\Delegates\SearchForm;
-use LteAdmin\Models\LteRole;
-use LteAdmin\Page;
+use Admin\Delegates\Card;
+use Admin\Delegates\Form;
+use Admin\Delegates\ModelInfoTable;
+use Admin\Delegates\ModelTable;
+use Admin\Delegates\SearchForm;
+use Admin\Models\AdminRole;
+use Admin\Page;
 
 class RolesController extends Controller
 {
     /**
      * @var string
      */
-    public static $model = LteRole::class;
+    public static $model = AdminRole::class;
 
     /**
      * @param  Page  $page
@@ -27,17 +27,17 @@ class RolesController extends Controller
     public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
     {
         return $page->card(
-            $card->title('lte.list_of_roles'),
+            $card->title('admin.list_of_roles'),
             $card->search_form(
                 $searchForm->id(),
-                $searchForm->input('name', 'lte.title'),
-                $searchForm->input('slug', 'lte.slug'),
+                $searchForm->input('name', 'admin.title'),
+                $searchForm->input('slug', 'admin.slug'),
                 $searchForm->at(),
             ),
             $card->model_table(
                 $modelTable->id(),
-                $modelTable->col('lte.title', 'name')->sort(),
-                $modelTable->col('lte.slug', 'slug')->sort()->badge('success'),
+                $modelTable->col('admin.title', 'name')->sort(),
+                $modelTable->col('admin.slug', 'slug')->sort()->badge('success'),
                 $modelTable->at(),
             ),
         );
@@ -52,11 +52,11 @@ class RolesController extends Controller
     public function matrix(Page $page, Card $card, Form $form)
     {
         return $page->card(
-            $card->title(['lte.add_role', 'lte.edit_role']),
+            $card->title(['admin.add_role', 'admin.edit_role']),
             $card->form(
                 $form->ifEdit()->info_id(),
-                $form->input('name', 'lte.title')->required()->duplication_how_slug('#input_slug'),
-                $form->input('slug', 'lte.slug')->required()->slugable(),
+                $form->input('name', 'admin.title')->required()->duplication_how_slug('#input_slug'),
+                $form->input('slug', 'admin.slug')->required()->slugable(),
                 $form->ifEdit()->info_updated_at(),
                 $form->ifEdit()->info_created_at(),
             ),
@@ -75,8 +75,8 @@ class RolesController extends Controller
         return $page->card(
             $card->model_info_table(
                 $modelInfoTable->id(),
-                $modelInfoTable->row('lte.title', 'name'),
-                $modelInfoTable->row('lte.slug', 'slug')->badge('success'),
+                $modelInfoTable->row('admin.title', 'name'),
+                $modelInfoTable->row('admin.slug', 'slug')->badge('success'),
                 $modelInfoTable->at(),
             )
         );

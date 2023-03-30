@@ -1,18 +1,18 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Controllers;
+namespace Admin\Tests\Admin\Controllers;
 
-use LteAdmin\Page;
-use LteAdmin\Tests\Admin\Delegates\Card;
-use LteAdmin\Tests\Admin\Delegates\Form;
-use LteAdmin\Tests\Admin\Delegates\ModelInfoTable;
-use LteAdmin\Tests\Admin\Delegates\ModelTable;
-use LteAdmin\Tests\Admin\Delegates\SearchForm;
-use LteAdmin\Tests\Models\User;
+use Admin\Page;
+use Admin\Tests\Admin\Delegates\Card;
+use Admin\Tests\Admin\Delegates\Form;
+use Admin\Tests\Admin\Delegates\ModelInfoTable;
+use Admin\Tests\Admin\Delegates\ModelTable;
+use Admin\Tests\Admin\Delegates\SearchForm;
+use Admin\Tests\Models\User;
 
 /**
  * UsersController Class.
- * @package LteAdmin\Tests\Admin\Controllers
+ * @package Admin\Tests\Admin\Controllers
  */
 class UsersController extends Controller
 {

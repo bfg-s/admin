@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;

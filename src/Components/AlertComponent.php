@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\TypesTrait;
 
 /**
  * Class AlertComponent.

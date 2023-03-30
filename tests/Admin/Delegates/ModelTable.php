@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\ModelTable as LteModelTable;
+use Admin\Delegates\ModelTable as LteModelTable;
 
 /**
  * ModelTable Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class ModelTable extends LteModelTable
 {

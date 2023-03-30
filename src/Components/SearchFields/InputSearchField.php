@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\InputField;
+use Admin\Components\Fields\InputField;
 
 class InputSearchField extends InputField
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Exception;
 use Illuminate\Console\Command;
-use LteAdmin\ExtendProvider;
-use LteAdmin\Models\LteRole;
+use Admin\ExtendProvider;
+use Admin\Models\AdminRole;
 
 class PermissionsExtensionProvider
 {
@@ -37,7 +37,7 @@ class PermissionsExtensionProvider
         if (method_exists($this, 'roles')) {
             $roles = $this->roles();
             if (is_array($roles)) {
-                ModelSaver::doMany(LteRole::class, $roles);
+                ModelSaver::doMany(AdminRole::class, $roles);
                 if (count($roles)) {
                     $this->command->info('Created '.count($roles).' roles.');
                 }
@@ -56,7 +56,7 @@ class PermissionsExtensionProvider
             if (is_array($roles)) {
                 $roles_count = 0;
                 foreach ($roles as $role) {
-                    if (LteRole::where('slug', $role['slug'])->delete()) {
+                    if (AdminRole::where('slug', $role['slug'])->delete()) {
                         $roles_count++;
                     }
                 }

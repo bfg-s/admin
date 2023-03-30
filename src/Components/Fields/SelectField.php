@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 use App;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Components\Cores\Select2FieldCore;
-use LteAdmin\Components\FormGroupComponent;
-use LteAdmin\Core\Select2;
-use LteAdmin\Page;
+use Admin\Components\Cores\Select2FieldCore;
+use Admin\Components\FormGroupComponent;
+use Admin\Core\Select2;
+use Admin\Page;
 use ReflectionException;
 
 class SelectField extends FormGroupComponent

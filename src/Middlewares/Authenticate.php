@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Middlewares;
+namespace Admin\Middlewares;
 
 use Cache;
 use Closure;
@@ -11,8 +11,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Lar\Layout\Core\LConfigs;
 use Lar\Layout\Respond;
-use LteAdmin\LteBoot;
-use LteAdmin\Models\LtePermission;
+use Admin\Boot;
+use Admin\Models\AdminPermission;
 use ReflectionException;
 use Route;
 use Symfony\Component\DomCrawler\Crawler;
@@ -39,27 +39,27 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::guard('lte')->guest() && $this->shouldPassThrough($request)) {
+        if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
-            return redirect()->route('lte.dashboard');
+            return redirect()->route('admin.dashboard');
         }
 
-        if (Auth::guard('lte')->guest() && !$this->shouldPassThrough($request)) {
+        if (Auth::guard('admin')->guest() && !$this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
             $this->unauthenticated($request);
         }
 
-        LteBoot::run();
+        Boot::run();
 
-        LConfigs::add('home', route('lte.home'));
-        LConfigs::add('uploader', route('lte.uploader'));
+        LConfigs::add('home', route('admin.home'));
+        LConfigs::add('uploader', route('admin.uploader'));
 
         if (!$this->access()) {
             if ($request->ajax() && !$request->pjax()) {
-                lte_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
-                $respond = ['0:toast::error' => [__('lte.access_denied'), __('lte.error')]];
+                admin_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
+                $respond = ['0:toast::error' => [__('admin.access_denied'), __('admin.error')]];
 
                 if (request()->has('_exec')) {
                     $respond['1:doc::reload'] = null;
@@ -68,10 +68,10 @@ class Authenticate
                 return response()->json($respond);
             } else {
                 if (!$request->isMethod('get')) {
-                    lte_log_danger('Pattern go to the forbidden zone', 'Blocked POST request', 'fas fa-shield-alt');
+                    admin_log_danger('Pattern go to the forbidden zone', 'Blocked POST request', 'fas fa-shield-alt');
                     session()->flash(
                         'respond',
-                        respond()->toast_error([__('lte.access_denied'), __('lte.error')])->toJson()
+                        respond()->toast_error([__('admin.access_denied'), __('admin.error')])->toJson()
                     );
 
                     return back();
@@ -81,7 +81,7 @@ class Authenticate
             static::$access = false;
         }
 
-        lte_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
+        admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
 
         /** @var Response $response */
         $response = $next($request);
@@ -108,8 +108,8 @@ class Authenticate
     protected function shouldPassThrough($request)
     {
         $excepts = [
-            lte_uri('login'),
-            lte_uri('logout'),
+            admin_uri('login'),
+            admin_uri('logout'),
         ];
 
         foreach ($excepts as $except) {
@@ -140,8 +140,8 @@ class Authenticate
 
         throw new AuthenticationException(
             'Unauthenticated.',
-            ['lte'],
-            route('lte.login')
+            ['admin'],
+            route('admin.login')
         );
     }
 
@@ -150,13 +150,13 @@ class Authenticate
      */
     protected function access()
     {
-        $now = lte_now();
+        $now = admin_now();
 
-        if ($now?->getRoles() && !lte_user()->hasRoles($now->getRoles())) {
+        if ($now?->getRoles() && !admin_user()->hasRoles($now->getRoles())) {
             return false;
         }
 
-        return LtePermission::check();
+        return AdminPermission::check();
     }
 
     protected function watchModal(Request $request, Response $response)

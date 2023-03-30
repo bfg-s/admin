@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 trait SearchFormHelpersTrait
 {
@@ -9,7 +9,7 @@ trait SearchFormHelpersTrait
      */
     public function id()
     {
-        $this->numeric('id', 'lte.id', '=');
+        $this->numeric('id', 'admin.id', '=');
 
         return $this;
     }
@@ -27,7 +27,7 @@ trait SearchFormHelpersTrait
      */
     public function created_at()
     {
-        $this->date_time_range('created_at', 'lte.created_at');
+        $this->date_time_range('created_at', 'admin.created_at');
 
         return $this;
     }
@@ -37,7 +37,7 @@ trait SearchFormHelpersTrait
      */
     public function updated_at()
     {
-        $this->date_time_range('updated_at', 'lte.updated_at');
+        $this->date_time_range('updated_at', 'admin.updated_at');
 
         return $this;
     }

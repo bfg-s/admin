@@ -1,14 +1,14 @@
 <?php
 
-namespace LteAdmin\Tests\Providers;
+namespace Admin\Tests\Providers;
 
-use LteAdmin\ApplicationServiceProvider;
-use LteAdmin\Tests\Admin\Config;
-use LteAdmin\Tests\Admin\Navigator;
+use Admin\ApplicationServiceProvider;
+use Admin\Tests\Admin\Config;
+use Admin\Tests\Admin\Navigator;
 
 /**
  * AdminServiceProvider Class.
- * @package LteAdmin\Tests\Providers
+ * @package Admin\Tests\Providers
  */
 class AdminServiceProvider extends ApplicationServiceProvider
 {

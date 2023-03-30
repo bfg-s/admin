@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Exception;
@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Lar\Layout\Tags\SPAN;
 use Lar\Tagable\Tag;
-use LteAdmin\Controllers\Controller;
+use Admin\Controllers\Controller;
 
 /**
- * @methods LteAdmin\Components\ModelTableComponent::$extensions (...$params) static
+ * @methods Admin\Components\ModelTableComponent::$extensions (...$params) static
  * @mixin ModelInfoTableComponentMacroList
  * @mixin ModelInfoTableComponentFields
  * @mixin ModelInfoTableComponentMethods
@@ -57,7 +57,7 @@ class ModelInfoTableComponent extends Component
      */
     public function id()
     {
-        $this->row('lte.id', 'id');
+        $this->row('admin.id', 'id');
 
         return $this;
     }
@@ -81,7 +81,7 @@ class ModelInfoTableComponent extends Component
      */
     public function deleted_at()
     {
-        $this->row('lte.deleted_at', 'deleted_at')->true_data();
+        $this->row('admin.deleted_at', 'deleted_at')->butty_date_time()->true_data();
 
         return $this;
     }
@@ -101,7 +101,7 @@ class ModelInfoTableComponent extends Component
      */
     public function created_at()
     {
-        $this->row('lte.created_at', 'created_at')->true_data();
+        $this->row('admin.created_at', 'created_at')->butty_date_time()->true_data();
 
         return $this;
     }
@@ -111,7 +111,7 @@ class ModelInfoTableComponent extends Component
      */
     public function updated_at()
     {
-        $this->row('lte.updated_at', 'updated_at')->true_data();
+        $this->row('admin.updated_at', 'updated_at')->butty_date_time()->true_data();
 
         return $this;
     }
@@ -121,7 +121,7 @@ class ModelInfoTableComponent extends Component
      */
     public function active_switcher()
     {
-        $this->row('lte.active', 'active')->yes_no();
+        $this->row('admin.active', 'active')->yes_no();
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -301,7 +301,7 @@ class TimelineComponent extends Component
      */
     protected function paginateFooter($paginate)
     {
-        return $this->model_name && $paginate ? DIV::create(['paginate-footer'])->view('lte::segment.paginate_footer', [
+        return $this->model_name && $paginate ? DIV::create(['paginate-footer'])->view('admin::segment.paginate_footer', [
             'model' => $this->model,
             'paginator' => $paginate,
             'from' => (($paginate->currentPage() * $paginate->perPage()) - $paginate->perPage()) + 1,

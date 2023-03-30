@@ -1,13 +1,13 @@
 <?php
 
-namespace LteAdmin\Traits\ModelTable;
+namespace Admin\Traits\ModelTable;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\SPAN;
-use LteAdmin\Components\ButtonsComponent;
-use LteAdmin\Core\ModelTableAction;
-use LteAdmin\Core\PrepareExport;
+use Admin\Components\ButtonsComponent;
+use Admin\Core\ModelTableAction;
+use Admin\Core\PrepareExport;
 
 trait TableControlsTrait
 {
@@ -258,7 +258,7 @@ trait TableControlsTrait
             if ($this->checks && !request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
                     $span->_addClass('fit');
-                    $span->view('lte::segment.model_table_checkbox', [
+                    $span->view('admin::segment.model_table_checkbox', [
                         'id' => false,
                         'table_id' => $this->model_name,
                         'object' => $this->model_class,
@@ -269,7 +269,7 @@ trait TableControlsTrait
                         })->pluck('field')->toArray(),
                     ])->render();
                 }, function (Model $model) use ($modelName) {
-                    return view('lte::segment.model_table_checkbox', [
+                    return view('admin::segment.model_table_checkbox', [
                         'id' => $model->id,
                         'table_id' => $modelName,
                         'disabled' => !$this->get_test_var('control_selectable', [$model]),

@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 @php
     $menu = admin_repo()->now;
-    $__head_title = ['LteAdmin']
+    $__head_title = ['Admin']
 @endphp
 
 <section class="content-header">

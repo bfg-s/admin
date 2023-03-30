@@ -5,15 +5,15 @@ use Illuminate\Support\Collection;
 
 if (!request()->ajax() || request()->is('*dashboard*')) {
     if (class_exists(InstalledVersions::class)) {
-        \LteAdmin\LteAdmin::$version = InstalledVersions::getPrettyVersion('lar/lte-admin');
+        \Admin\Admin::$version = InstalledVersions::getPrettyVersion('bfg/admin');
     } else {
         $lock_file = base_path('composer.lock');
         if (is_file($lock_file)) {
             $lock = file_get_contents($lock_file);
             $json = json_decode($lock, 1);
-            $admin = collect($json['packages'])->where('name', 'lar/lte-admin')->first();
+            $admin = collect($json['packages'])->where('name', 'bfg/admin')->first();
             if ($admin && isset($admin['version'])) {
-                \LteAdmin\LteAdmin::$version = ltrim($admin['version'], 'v');
+                \Admin\Admin::$version = ltrim($admin['version'], 'v');
             }
         }
     }

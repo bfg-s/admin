@@ -1,15 +1,15 @@
 <?php
 
-namespace LteAdmin\Tests\Admin;
+namespace Admin\Tests\Admin;
 
-use LteAdmin\Core\NavGroup;
-use LteAdmin\Core\NavigatorExtensionProvider;
-use LteAdmin\Interfaces\ActionWorkExtensionInterface;
-use LteAdmin\Tests\Admin\Controllers\UsersController;
+use Admin\Core\NavGroup;
+use Admin\Core\NavigatorExtensionProvider;
+use Admin\Interfaces\ActionWorkExtensionInterface;
+use Admin\Tests\Admin\Controllers\UsersController;
 
 /**
  * Navigator Class.
- * @package LteAdmin\Tests\Admin
+ * @package Admin\Tests\Admin
  */
 class Navigator extends NavigatorExtensionProvider implements ActionWorkExtensionInterface
 {

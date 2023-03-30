@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\ChecksField;
+use Admin\Components\Fields\ChecksField;
 
 class ChecksSearchField extends ChecksField
 {

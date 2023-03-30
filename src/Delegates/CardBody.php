@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\CardBodyComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\CardBodyComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin CardBodyComponent

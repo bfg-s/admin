@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core\PageParts;
+namespace Admin\Core\PageParts;
 
 use Illuminate\Support\Stringable;
 

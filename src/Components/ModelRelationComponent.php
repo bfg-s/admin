@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use LteAdmin\Traits\ModelRelation\ModelRelationBuilderTrait;
-use LteAdmin\Traits\ModelRelation\ModelRelationHelpersTrait;
+use Admin\Traits\ModelRelation\ModelRelationBuilderTrait;
+use Admin\Traits\ModelRelation\ModelRelationHelpersTrait;
 
 class ModelRelationComponent extends Component
 {

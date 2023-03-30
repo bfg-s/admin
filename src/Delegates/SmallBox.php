@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\SmallBoxComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\SmallBoxComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin SmallBoxComponent

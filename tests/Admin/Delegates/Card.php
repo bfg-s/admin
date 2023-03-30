@@ -1,14 +1,14 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\Card as LteCard;
+use Admin\Delegates\Card as AdminCard;
 
 /**
  * Card Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
-class Card extends LteCard
+class Card extends AdminCard
 {
     use CommonTrait;
 }

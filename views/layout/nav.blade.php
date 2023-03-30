@@ -8,18 +8,18 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::back" title="@lang('lte.back')" href="javascript:void(0)"><i
+            <a class="nav-link" data-click="doc::back" title="@lang('admin.back')" href="javascript:void(0)"><i
                     class="fas fa-arrow-left"></i></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="doc::reload" title="@lang('lte.refresh')" href="javascript:void(0)"><i
+            <a class="nav-link" data-click="doc::reload" title="@lang('admin.refresh')" href="javascript:void(0)"><i
                     class="fas fa-redo-alt"></i></a>
         </li>
         @if(admin_repo()->getCurrentQuery && count(admin_repo()->getCurrentQuery))
             <li class="nav-item">
                 <a class="nav-link" data-click="doc::location" data-param="{{url()->current()}}"
-                   title="@lang('lte.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
+                   title="@lang('admin.reset_page')" href="javascript:void(0)"><i class="fas fa-retweet"></i></a>
             </li>
         @endif
         @foreach(admin_repo()->menuList->where('left_nav_bar_view') as $menu)
@@ -32,8 +32,8 @@
     </ul>
 
     <!-- SEARCH FORM -->
-{!! \LteAdmin\Components\Vue\GlobalSearch::create() !!}
-{!! \LteAdmin\Components\Vue\LiveReloader::create() !!}
+{!! \Admin\Components\Vue\GlobalSearch::create() !!}
+{!! \Admin\Components\Vue\LiveReloader::create() !!}
 
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -65,7 +65,7 @@
         @endforeach
 
         <li>
-            <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('lte.open_homepage_in_new_tab')}}"><i
+            <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('admin.open_homepage_in_new_tab')}}"><i
                     class="fas fa-external-link-square-alt"></i></a>
         </li>
 
@@ -81,13 +81,13 @@
         <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown language_dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="{{isset(config('lte.lang_flags')[App::getLocale()]) ? config('lte.lang_flags')[App::getLocale()] : ''}}"></i> <div class="d-none d-lg-inline d-xl-inline">{{strtoupper(App::getLocale())}}</div>
+                    <i class="{{isset(config('admin.lang_flags')[App::getLocale()]) ? config('admin.lang_flags')[App::getLocale()] : ''}}"></i> <div class="d-none d-lg-inline d-xl-inline">{{strtoupper(App::getLocale())}}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     @foreach(config('layout.languages') as $lang)
                         <a class="dropdown-item {{App::getLocale() == $lang ? 'active' : ''}}"
                            href="{{remake_lang_url($lang)}}">
-                            <i class="{{isset(config('lte.lang_flags')[$lang]) ? config('lte.lang_flags')[$lang] : ''}}"></i> {{strtoupper($lang)}}
+                            <i class="{{isset(config('admin.lang_flags')[$lang]) ? config('admin.lang_flags')[$lang] : ''}}"></i> {{strtoupper($lang)}}
                         </a>
                     @endforeach
                 </div>

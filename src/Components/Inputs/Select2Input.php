@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Inputs;
+namespace Admin\Components\Inputs;
 
 use Illuminate\Support\Collection;
 
@@ -21,7 +21,7 @@ class Select2Input extends InputComponent
 
     protected function mount()
     {
-        $this->view('lte::inputs.select2', [
+        $this->view('admin::inputs.select2', [
             'options' => $this->options,
             'default' => $this->default,
         ]);

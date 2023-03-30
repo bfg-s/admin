@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\NumberField;
+use Admin\Components\Fields\NumberField;
 
 class NumberSearchField extends NumberField
 {

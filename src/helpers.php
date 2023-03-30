@@ -3,20 +3,20 @@
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use LteAdmin\Core\MenuItem;
-use LteAdmin\Models\LtePermission;
-use LteAdmin\Models\LteUser;
-use LteAdmin\Page;
-use LteAdmin\Repositories\AdminRepository;
+use Admin\Core\MenuItem;
+use Admin\Models\AdminPermission;
+use Admin\Models\AdminUser;
+use Admin\Page;
+use Admin\Repositories\AdminRepository;
 
-if (!function_exists('lte_log')) {
+if (!function_exists('admin_log')) {
     /**
      * @param  string  $title
      * @param  string|null  $detail
      * @param  string|null  $icon
      * @return string
      */
-    function lte_log(string $title, ?string $detail = null, string $icon = null)
+    function admin_log(string $title, ?string $detail = null, string $icon = null): bool|string
     {
         $params = [];
         $params['icon'] = $icon ?: (admin_repo()->now ? admin_repo()->now->getIcon() : $icon);
@@ -33,71 +33,71 @@ if (!function_exists('lte_log')) {
         return admin() ? admin()->logs()->create($params) : false;
     }
 
-    function lte_log_warning(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_warning(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-warning');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-warning');
     }
 
-    function lte_log_primary(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_primary(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-primary');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-primary');
     }
 
-    function lte_log_secondary(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_secondary(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-secondary');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-secondary');
     }
 
-    function lte_log_success(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_success(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-success');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-success');
     }
 
-    function lte_log_info(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_info(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-info');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-info');
     }
 
-    function lte_log_danger(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_danger(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-danger');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-danger');
     }
 
-    function lte_log_dark(string $title, ?string $detail = null, string $icon = null)
+    function admin_log_dark(string $title, ?string $detail = null, string $icon = null): bool|string
     {
-        return lte_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-dark');
+        return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-dark');
     }
 }
 
-if (!function_exists('lte_relative_path')) {
+if (!function_exists('admin_relative_path')) {
     /**
      * @param  string  $path
      * @return string
      */
-    function lte_relative_path(string $path = '')
+    function admin_relative_path(string $path = ''): string
     {
-        return '/'.trim('/'.trim(str_replace(base_path(), '', config('lte.paths.app')), '/')
+        return '/'.trim('/'.trim(str_replace(base_path(), '', config('admin.paths.app')), '/')
                 .'/'.trim($path, '/'), '/');
     }
 }
-if (!function_exists('lte_app_namespace')) {
+if (!function_exists('admin_app_namespace')) {
     /**
      * @param  string  $path
      * @return string
      */
-    function lte_app_namespace(string $path = '')
+    function admin_app_namespace(string $path = ''): string
     {
-        return trim('\\'.trim(config('lte.app_namespace'), '\\')
+        return trim('\\'.trim(config('admin.app_namespace'), '\\')
             .'\\'.trim($path, '\\'), '\\');
     }
 }
 
-if (!function_exists('lte_related_methods')) {
+if (!function_exists('admin_related_methods')) {
     /**
      * @param  string  $method
      * @return string[]
      */
-    function lte_related_methods(string $method)
+    function admin_related_methods(string $method): array
     {
         if ($method == 'store') {
             $methods = [$method, 'create', 'access'];
@@ -119,11 +119,11 @@ if (!function_exists('lte_related_methods')) {
     }
 }
 
-if (!function_exists('lte_controller_model')) {
+if (!function_exists('admin_controller_model')) {
     /**
      * @return string
      */
-    function lte_controller_model()
+    function admin_controller_model(): string
     {
         $class = Str::parseCallback(Route::currentRouteAction())[0];
 
@@ -135,64 +135,64 @@ if (!function_exists('lte_controller_model')) {
     }
 }
 
-if (!function_exists('lte_app_path')) {
+if (!function_exists('admin_app_path')) {
     /**
      * @param  string  $path
      * @return string
      */
-    function lte_app_path(string $path = '')
+    function admin_app_path(string $path = ''): string
     {
-        return rtrim(config('lte.paths.app').'/'.trim($path, '/'), '/');
+        return rtrim(config('admin.paths.app').'/'.trim($path, '/'), '/');
     }
 }
 
-if (!function_exists('lte_uri')) {
+if (!function_exists('admin_uri')) {
     /**
      * @param  string  $uri
      * @return string
      */
-    function lte_uri(string $uri = '')
+    function admin_uri(string $uri = ''): string
     {
         if (!empty($uri)) {
             $uri = '/'.trim($uri, '/');
         }
 
-        return (config('layout.lang_mode') ? '/'.Layout::nowLang() : '').'/'.trim(config('lte.route.prefix'), '/').$uri;
+        return (config('layout.lang_mode') ? '/'.Layout::nowLang() : '').'/'.trim(config('admin.route.prefix'), '/').$uri;
     }
 }
 
-if (!function_exists('lte_asset')) {
+if (!function_exists('admin_asset')) {
     /**
-     * @param  string  $link
+     * @param  string|null  $link
      * @return string
      */
-    function lte_asset(string $link = null)
+    function admin_asset(string $link = null): string
     {
         if ($link) {
-            return asset('lte-admin/'.trim($link, '/'));
+            return asset('admin/'.trim($link, '/'));
         }
 
-        return asset('lte-admin');
+        return asset('admin');
     }
 }
 
-if (!function_exists('lte_user')) {
+if (!function_exists('admin_user')) {
     /**
-     * @return LteUser|Admin
+     * @return AdminUser
      */
-    function lte_user()
+    function admin_user(): AdminUser
     {
-        return LteAdmin::user() ?? new LteUser();
+        return Admin::user() ?? new AdminUser();
     }
 }
 
 if (!function_exists('admin')) {
     /**
-     * @return LteUser|Admin
+     * @return AdminUser
      */
-    function admin()
+    function admin(): AdminUser
     {
-        return LteAdmin::user() ?? new LteUser();
+        return Admin::user() ?? new AdminUser();
     }
 }
 
@@ -202,7 +202,7 @@ if (!function_exists('versionString')) {
      * @param  string  $delimiter
      * @return string
      */
-    function versionString($version, string $delimiter = '.')
+    function versionString($version, string $delimiter = '.'): string
     {
         $version = explode($delimiter, $version);
 
@@ -292,12 +292,12 @@ if (!function_exists('lte_model_type')) {
     }
 }
 
-if (!function_exists('lte_model')) {
+if (!function_exists('admin_model')) {
     /**
      * @param  string|null  $path
      * @return Model|mixed|string|null
      */
-    function lte_model(string $path = null)
+    function admin_model(string $path = null)
     {
         $model = admin_repo()->modelNow;
 
@@ -313,21 +313,21 @@ if (!function_exists('lte_model')) {
     }
 }
 
-if (!function_exists('lte_now')) {
+if (!function_exists('admin_now')) {
     /**
      * @return MenuItem|null
      */
-    function lte_now()
+    function admin_now()
     {
         return admin_repo()->now;
     }
 }
 
-if (!function_exists('lte_page')) {
+if (!function_exists('admin_page')) {
     /**
      * @return array|array|null
      */
-    function lte_page()
+    function admin_page()
     {
         return app(Page::class);
     }
@@ -364,11 +364,11 @@ if (!function_exists('check_referer')) {
         $result = false;
 
         if ($url || $referer) {
-            $result = LtePermission::checkUrl($url ?: $referer, $method);
+            $result = AdminPermission::checkUrl($url ?: $referer, $method);
         }
 
         if (!$result) {
-            respond()->toast_error([__('lte.access_denied'), __('lte.error')]);
+            respond()->toast_error([__('admin.access_denied'), __('admin.error')]);
         }
 
         return $result;
@@ -483,19 +483,21 @@ if (!function_exists('is_image')) {
 if (!function_exists('butty_date')) {
     function butty_date($time)
     {
+        if (! $time) return $time;
+
         $timestamp = strtotime($time);
         $published = date('d.m.Y', $timestamp);
 
         if ($published === date('d.m.Y')) {
-            return trans('lte.date.today_short', ['time' => date('H:i', $timestamp)]);
+            return trans('admin.date.today_short', ['time' => date('H:i', $timestamp)]);
         } elseif ($published === date('d.m.Y', strtotime('-1 day'))) {
-            return trans('lte.date.yesterday_short', ['time' => date('H:i', $timestamp)]);
+            return trans('admin.date.yesterday_short', ['time' => date('H:i', $timestamp)]);
         } else {
-            $formatted = trans('lte.date.later_short', [
+            $formatted = trans('admin.date.later_short', [
                 'date' => date('d F'.(date('Y', $timestamp) === date('Y') ? null : ' Y'), $timestamp),
             ]);
 
-            return strtr($formatted, trans('lte.date.month_declensions'));
+            return strtr($formatted, trans('admin.date.month_declensions'));
         }
     }
 }
@@ -503,21 +505,23 @@ if (!function_exists('butty_date')) {
 if (!function_exists('butty_date_time')) {
     function butty_date_time($time)
     {
+        if (! $time) return $time;
+
         $timestamp = strtotime($time);
 
         $published = date('d.m.Y', $timestamp);
 
         if ($published === date('d.m.Y')) {
-            return trans('lte.date.today', ['time' => date('H:i', $timestamp)]);
+            return trans('admin.date.today', ['time' => date('H:i', $timestamp)]);
         } elseif ($published === date('d.m.Y', strtotime('-1 day'))) {
-            return trans('lte.date.yesterday', ['time' => date('H:i', $timestamp)]);
+            return trans('admin.date.yesterday', ['time' => date('H:i', $timestamp)]);
         } else {
-            $formatted = trans('lte.date.later', [
+            $formatted = trans('admin.date.later', [
                 'time' => date('H:i', $timestamp),
                 'date' => date('d F'.(date('Y', $timestamp) === date('Y') ? null : ' Y'), $timestamp),
             ]);
 
-            return strtr($formatted, trans('lte.date.month_declensions'));
+            return strtr($formatted, trans('admin.date.month_declensions'));
         }
     }
 }

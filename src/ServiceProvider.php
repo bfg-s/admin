@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin;
+namespace Admin;
 
 use Arr;
 use Blade;
@@ -12,18 +12,18 @@ use Lar\Layout\Layout;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
 use LJS;
-use LteAdmin\Commands\LteControllerCommand;
-use LteAdmin\Commands\LteDbDumpCommand;
-use LteAdmin\Commands\LteExtensionCommand;
-use LteAdmin\Commands\LteHelpersCommand;
-use LteAdmin\Commands\LteInstallCommand;
-use LteAdmin\Commands\LteUserCommand;
-use LteAdmin\Core\BladeDirectiveAlpineStore;
-use LteAdmin\Exceptions\Handler;
-use LteAdmin\Layouts\LteAuthLayout;
-use LteAdmin\Layouts\LteLayout;
-use LteAdmin\Middlewares\Authenticate;
-use LteAdmin\Repositories\AdminRepository;
+use Admin\Commands\AdminControllerCommand;
+use Admin\Commands\AdminDbDumpCommand;
+use Admin\Commands\AdminExtensionCommand;
+use Admin\Commands\AdminHelpersCommand;
+use Admin\Commands\AdminInstallCommand;
+use Admin\Commands\AdminUserCommand;
+use Admin\Core\BladeDirectiveAlpineStore;
+use Admin\Exceptions\Handler;
+use Admin\Layouts\AdminAuthLayout;
+use Admin\Layouts\AdminLayout;
+use Admin\Middlewares\Authenticate;
+use Admin\Repositories\AdminRepository;
 use Road;
 use Str;
 
@@ -33,12 +33,12 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $commands = [
-        LteInstallCommand::class,
-        LteControllerCommand::class,
-        LteUserCommand::class,
-        LteExtensionCommand::class,
-        LteDbDumpCommand::class,
-        LteHelpersCommand::class,
+        AdminInstallCommand::class,
+        AdminControllerCommand::class,
+        AdminUserCommand::class,
+        AdminExtensionCommand::class,
+        AdminDbDumpCommand::class,
+        AdminHelpersCommand::class,
     ];
 
     /**
@@ -64,7 +64,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $routeMiddleware = [
-        'lte-auth' => Authenticate::class,
+        'admin-auth' => Authenticate::class,
     ];
 
     /**
@@ -76,7 +76,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     public function boot()
     {
         /**
-         * Register AdminLte Events.
+         * Register Admin Events.
          */
         foreach ($this->listen as $event => $listeners) {
             foreach (array_unique($listeners) as $listener) {
@@ -87,99 +87,91 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register app routes.
          */
-        if (is_file(lte_app_path('routes.php'))) {
-            Road::domain(config('lte.route.domain', ''))
+        if (is_file(admin_app_path('routes.php'))) {
+            Road::domain(config('admin.route.domain', ''))
                 ->web()
-                ->middleware(['lte-auth'])
+                ->middleware(['admin-auth'])
                 ->lang(config('layout.lang_mode', true))
-                ->layout(config('lte.route.layout'))
-                ->prefix(config('lte.route.prefix'))
-                ->name(config('lte.route.name'))
-                ->group(lte_app_path('routes.php'));
+                ->layout(config('admin.route.layout'))
+                ->prefix(config('admin.route.prefix'))
+                ->name(config('admin.route.name'))
+                ->group(admin_app_path('routes.php'));
         }
 
         /**
          * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
-            Road::domain(config('lte.route.domain', ''))
+            Road::domain(config('admin.route.domain', ''))
                 ->web()
-                ->middleware(['lte-auth'])
+                ->middleware(['admin-auth'])
                 ->lang(config('layout.lang_mode', true))
-                ->layout(config('lte.route.layout'))
-                ->prefix(config('lte.route.prefix'))
-                ->name(config('lte.route.name'))
+                ->layout(config('admin.route.layout'))
+                ->prefix(config('admin.route.prefix'))
+                ->name(config('admin.route.name'))
                 ->group(base_path('routes/admin.php'));
         }
 
         /**
-         * Register Lte Admin basic routes.
+         * Register Admin basic routes.
          */
-        Road::domain(config('lte.route.domain', ''))
+        Road::domain(config('admin.route.domain', ''))
             ->web()
             ->lang(config('layout.lang_mode', true))
-            ->middleware(['lte-auth'])
-            ->prefix(config('lte.route.prefix'))
-            ->name(config('lte.route.name'))
+            ->middleware(['admin-auth'])
+            ->prefix(config('admin.route.prefix'))
+            ->name(config('admin.route.name'))
             ->group(__DIR__.'/routes.php');
 
         /**
          * Register publishers configs.
          */
         $this->publishes([
-            __DIR__.'/../config/lte.php' => config_path('lte.php'),
-        ], 'lte-config');
+            __DIR__.'/../config/admin.php' => config_path('admin.php'),
+        ], 'admin-config');
 
         /**
          * Register publishers lang.
          */
         $this->publishes([
-            __DIR__.'/../translations/en' => base_path('lang/en'),
-            __DIR__.'/../translations/ru' => base_path('lang/ru'),
-            __DIR__.'/../translations/uk' => base_path('lang/uk'),
-        ], ['lte-lang', 'laravel-assets']);
+            __DIR__.'/../translations/en' => lang_path('en'),
+            __DIR__.'/../translations/ru' => lang_path('ru'),
+            __DIR__.'/../translations/uk' => lang_path('uk'),
+        ], ['admin-lang', 'laravel-assets']);
 
         /**
          * Register publishers assets.
          */
         $this->publishes([
-            base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
-            base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
-            __DIR__.'/../assets' => public_path('/lte-admin'),
-        ], ['lte-assets', 'laravel-assets']);
-
-        /**
-         * Register publishers adminlte assets.
-         */
-        $this->publishes([
-            base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/lte-asset'),
-            base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/lte-asset/plugins'),
-        ], ['lte-adminlte-assets', 'laravel-assets']);
+            base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/admin-asset'),
+            base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/admin-asset/plugins'),
+            __DIR__.'/../assets' => public_path('/admin'),
+        ], ['admin-assets', 'laravel-assets']);
 
         /**
          * Register publishers migrations.
          */
         $this->publishes([
             __DIR__.'/../migrations' => database_path('migrations'),
-        ], ['lte-migrations', 'laravel-assets']);
+        ], ['admin-migrations', 'laravel-assets']);
 
         /**
          * Register publishers html examples.
          */
         $this->publishes([
-            base_path('/vendor/almasaeed2010/adminlte/pages') => public_path('/lte-html'),
-        ], 'lte-html');
+            base_path('/vendor/almasaeed2010/adminlte/pages') => public_path('/admin-html'),
+        ], 'admin-html');
 
         /**
-         * Load AdminLte views.
+         * Load Admin views.
          */
-        $this->loadViewsFrom(__DIR__.'/../views', 'lte');
+        $this->loadViewsFrom(__DIR__.'/../views', 'admin');
 
         if ($this->app->runningInConsole()) {
             /**
-             * Run lte boots.
+             * Run boots.
              */
-            LteBoot::run();
+            Boot::run();
         }
 
         /**
@@ -188,7 +180,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->app->singleton(AdminRepository::class, fn() => new AdminRepository);
 
         /**
-         * Make lte view variables.
+         * Make view variables.
          */
         $this->viewVariables();
 
@@ -203,19 +195,19 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         /**
-         * Run lte with jax on admin page.
+         * Run with jax on admin page.
          */
         JaxController::on_start(static function () {
             $ref = request()->server->get('HTTP_REFERER');
-            if ($ref && Str::is(url(config('lte.route.prefix').'*'), $ref)) {
-                LteBoot::run();
+            if ($ref && Str::is(url(config('admin.route.prefix').'*'), $ref)) {
+                Boot::run();
             }
         });
 
         /**
          * Register Jax namespace.
          */
-        LJS::jaxNamespace(lte_relative_path('Jax'), lte_app_namespace('Jax'));
+        LJS::jaxNamespace(admin_relative_path('Jax'), admin_app_namespace('Jax'));
 
         /**
          * Register AlpineJs Blade directive.
@@ -224,13 +216,13 @@ class ServiceProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Make lte view variables.
+     * Make view variables.
      */
     private function viewVariables()
     {
         app('view')->share([
-            'lte' => config('lte'),
-            'default_page' => config('lte.paths.view', 'admin').'.page'
+            'admin' => config('admin'),
+            'default_page' => config('admin.paths.view', 'admin').'.page'
         ]);
     }
 
@@ -254,7 +246,7 @@ class ServiceProvider extends ServiceProviderIlluminate
                 $this->app->register('App\Providers\AdminServiceProvider');
             }
         } else {
-            $this->app->register('LteAdmin\Tests\Providers\AdminServiceProvider');
+            $this->app->register('Admin\Tests\Providers\AdminServiceProvider');
         }
 
         /**
@@ -269,17 +261,17 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Merge config from having by default.
          */
         $this->mergeConfigFrom(
-            __DIR__.'/../config/lte.php',
-            'lte'
+            __DIR__.'/../config/admin.php',
+            'admin'
         );
 
         /**
-         * Register Lte middleware.
+         * Register admin middleware.
          */
         $this->registerRouteMiddleware();
 
         /**
-         * Register Lte commands.
+         * Register admin commands.
          */
         $this->commands($this->commands);
 
@@ -289,21 +281,21 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->loadAuthAndDiscConfig();
 
         /**
-         * Register Lte layout.
+         * Register layout.
          */
-        Layout::registerComponent('lte_layout', LteLayout::class);
+        Layout::registerComponent('admin_layout', AdminLayout::class);
 
         /**
-         * Register Lte Login layout.
+         * Register Login layout.
          */
-        Layout::registerComponent('lte_auth_layout', LteAuthLayout::class);
+        Layout::registerComponent('admin_auth_layout', AdminAuthLayout::class);
 
         /**
-         * Register lte jax executors.
+         * Register jax executors.
          */
         $this->registerJax();
 
-        $sqlite = config('lte.connections.lte-sqlite.database');
+        $sqlite = config('admin.connections.admin-sqlite.database');
 
         if (!is_file($sqlite)) {
             file_put_contents($sqlite, '');
@@ -329,9 +321,9 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     private function loadAuthAndDiscConfig()
     {
-        config(Arr::dot(config('lte.auth', []), 'auth.'));
-        config(Arr::dot(config('lte.disks', []), 'filesystems.disks.'));
-        config(Arr::dot(config('lte.connections', []), 'database.connections.'));
+        config(Arr::dot(config('admin.auth', []), 'auth.'));
+        config(Arr::dot(config('admin.disks', []), 'filesystems.disks.'));
+        config(Arr::dot(config('admin.connections', []), 'database.connections.'));
     }
 
     /**
@@ -339,6 +331,6 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     protected function registerJax()
     {
-        JaxExecutor::addNamespace(__DIR__.'/Jax', 'LteAdmin\\Jax');
+        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Admin\\Jax');
     }
 }

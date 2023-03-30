@@ -1,19 +1,19 @@
 <?php
 
-namespace LteAdmin\Commands\Generators;
+namespace Admin\Commands\Generators;
 
 use Arr;
 use File;
 use Illuminate\Console\Command;
 use Lar\LJS\JaxController;
-use LteAdmin\Interfaces\LteHelpGeneratorInterface;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use Str;
 use Symfony\Component\Finder\SplFileInfo;
 
-class GenerateNewJaxHelper implements LteHelpGeneratorInterface
+class GenerateNewJaxHelper implements AdminHelpGeneratorInterface
 {
     /**
      * @var array

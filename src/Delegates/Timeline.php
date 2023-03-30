@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\TimelineComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\TimelineComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin TimelineComponent

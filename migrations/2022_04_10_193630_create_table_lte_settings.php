@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTableLteSettings extends Migration
 {
-    protected $connection = 'lte-sqlite';
+    protected $connection = 'admin-sqlite';
 
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class CreateTableLteSettings extends Migration
 
             Schema::create('lte_settings', static function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->string('group')->default('lte.global_settings');
+                $table->string('group')->default('admin.global_settings');
                 $table->string('title');
                 $table->string('type')->default('input');
                 $table->string('name');

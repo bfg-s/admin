@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use LteAdmin\Models\LteFileStorage;
+use Admin\Models\AdminFileStorage;
 
 class UploadController extends Controller
 {
@@ -13,7 +13,7 @@ class UploadController extends Controller
     public function index()
     {
         if (request()->hasFile('editormd-image-file')) {
-            if ($file = LteFileStorage::makeFile(request()->file('editormd-image-file'))) {
+            if ($file = AdminFileStorage::makeFile(request()->file('editormd-image-file'))) {
                 return response()->json([
                     'success' => 1,
                     'message' => 'Uploaded',
@@ -27,7 +27,7 @@ class UploadController extends Controller
             ]);
         }
 
-        if (request()->hasFile('upload') && $file = LteFileStorage::makeFile(request()->file('upload'))) {
+        if (request()->hasFile('upload') && $file = AdminFileStorage::makeFile(request()->file('upload'))) {
             return response()->json([
                 'url' => asset($file),
                 'uploaded' => 1,

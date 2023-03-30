@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
 use App\Admin\Delegates\ChartJs;
 use App\Admin\Delegates\ModelTable;
 use App\Admin\Delegates\StatisticPeriod;
-use LteAdmin\Components\CardComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\CardComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin CardComponent
@@ -32,7 +32,7 @@ class Card extends Delegator
         return [
             $this->ifNotQuery('chart')->buttons()->warning(['fas fa-chart-line', 'Statistic'])
                 ->switchQuery('chart'),
-            $this->ifQuery('chart')->buttons()->secondary(['fas fa-table', __('lte.list')])
+            $this->ifQuery('chart')->buttons()->secondary(['fas fa-table', __('admin.list')])
                 ->switchQuery('chart'),
             $this->ifNotQuery('chart')->model_table(
                 $modelTable->colDefault(
@@ -64,13 +64,13 @@ class Card extends Delegator
         $chartJs = new ChartJs();
 
         return [
-            $this->ifNotQuery('screen', 1)->buttons()->info(['fas fa-stream', __('lte.sort')])
+            $this->ifNotQuery('screen', 1)->buttons()->info(['fas fa-stream', __('admin.sort')])
                 ->setQuery('screen', 1),
 
             $this->ifNotQuery('screen', 2)->buttons()->warning(['fas fa-chart-line', 'Statistic'])
                 ->setQuery('screen', 2),
 
-            $this->ifQuery('screen')->buttons()->secondary(['fas fa-table', __('lte.list')])
+            $this->ifQuery('screen')->buttons()->secondary(['fas fa-table', __('admin.list')])
                 ->forgetQuery('screen'),
 
             $this->ifNotQuery('screen')->model_table(

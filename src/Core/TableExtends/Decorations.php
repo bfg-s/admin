@@ -1,14 +1,14 @@
 <?php
 
-namespace LteAdmin\Core\TableExtends;
+namespace Admin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\SPAN;
-use LteAdmin\Components\FieldComponent;
-use LteAdmin\Components\FieldMethods;
-use LteAdmin\Components\Fields\RatingField;
+use Admin\Components\FieldComponent;
+use Admin\Components\FieldMethods;
+use Admin\Components\Fields\RatingField;
 
 class Decorations
 {
@@ -190,8 +190,8 @@ class Decorations
      */
     public function yes_no($value)
     {
-        return $value ? '<span class="badge badge-success">'.__('lte.yes').'</span>' :
-            '<span class="badge badge-danger">'.__('lte.no').'</span>';
+        return $value ? '<span class="badge badge-success">'.__('admin.yes').'</span>' :
+            '<span class="badge badge-danger">'.__('admin.no').'</span>';
     }
 
     /**
@@ -200,8 +200,8 @@ class Decorations
      */
     public function on_off($value)
     {
-        return $value ? '<span class="badge badge-success">'.__('lte.on').'</span>' :
-            '<span class="badge badge-danger">'.__('lte.off').'</span>';
+        return $value ? '<span class="badge badge-success">'.__('admin.on').'</span>' :
+            '<span class="badge badge-danger">'.__('admin.off').'</span>';
     }
 
     /**

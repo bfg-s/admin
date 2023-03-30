@@ -1,13 +1,13 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
-use LteAdmin;
-use LteAdmin\Delegates\Buttons;
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\Column;
-use LteAdmin\Delegates\Form;
-use LteAdmin\Page;
+use Admin;
+use Admin\Delegates\Buttons;
+use Admin\Delegates\Card;
+use Admin\Delegates\Column;
+use Admin\Delegates\Form;
+use Admin\Page;
 
 class SettingsController extends Controller
 {
@@ -16,7 +16,7 @@ class SettingsController extends Controller
             'title' => 'Global',
             'description' => 'The global settings',
             'items' => [
-                'lte.dark_mode' => [
+                'admin.dark_mode' => [
                     'type' => 'switcher',
                     'title' => 'Dark mode',
                     'description' => 'The dark mode by default',

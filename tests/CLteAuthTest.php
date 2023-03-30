@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Tests;
+namespace Admin\Tests;
 
 use Laravel\Dusk\Browser;
 use Throwable;
@@ -14,26 +14,26 @@ class CLteAuthTest extends DuskTestCase
     public function test_lte_auth()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visitRoute('lte.login')
+            $browser->visitRoute('admin.login')
                 ->type('login', 'root')
                 ->type('password', 'root')
-                ->press(__('lte.sign_in'))
-                ->assertRouteIs('lte.dashboard')
-                ->visitRoute('lte.profile.logout');
+                ->press(__('admin.sign_in'))
+                ->assertRouteIs('admin.dashboard')
+                ->visitRoute('admin.profile.logout');
 
-            $browser->visitRoute('lte.login')
+            $browser->visitRoute('admin.login')
                 ->type('login', 'admin')
                 ->type('password', 'admin')
-                ->press(__('lte.sign_in'))
-                ->assertRouteIs('lte.dashboard')
-                ->visitRoute('lte.profile.logout');
+                ->press(__('admin.sign_in'))
+                ->assertRouteIs('admin.dashboard')
+                ->visitRoute('admin.profile.logout');
 
-            $browser->visitRoute('lte.login')
+            $browser->visitRoute('admin.login')
                 ->type('login', 'moderator')
                 ->type('password', 'moderator')
-                ->press(__('lte.sign_in'))
-                ->assertRouteIs('lte.dashboard')
-                ->visitRoute('lte.profile.logout');
+                ->press(__('admin.sign_in'))
+                ->assertRouteIs('admin.dashboard')
+                ->visitRoute('admin.profile.logout');
         });
     }
 
@@ -44,11 +44,11 @@ class CLteAuthTest extends DuskTestCase
     public function test_lte_fail_auth()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visitRoute('lte.login')
+            $browser->visitRoute('admin.login')
                 ->type('login', 'fail-test')
                 ->type('password', 'fail-test')
-                ->press(__('lte.sign_in'))
-                ->assertRouteIs('lte.login');
+                ->press(__('admin.sign_in'))
+                ->assertRouteIs('admin.login');
         });
     }
 }

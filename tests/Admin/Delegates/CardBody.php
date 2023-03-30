@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\CardBody as LteCardBody;
+use Admin\Delegates\CardBody as LteCardBody;
 
 /**
  * CardBody Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class CardBody extends LteCardBody
 {

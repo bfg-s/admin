@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin\Commands\Generators;
+namespace Admin\Commands\Generators;
 
 use Illuminate\Console\Command;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
-use LteAdmin;
-use LteAdmin\Interfaces\LteHelpGeneratorInterface;
-use LteAdmin\Navigate;
+use Admin;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
+use Admin\Navigate;
 use ReflectionClass;
 use ReflectionException;
 
-class ExtensionNavigatorMethodsHelperGenerator implements LteHelpGeneratorInterface
+class ExtensionNavigatorMethodsHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
      * @param  Command  $command
@@ -19,7 +19,7 @@ class ExtensionNavigatorMethodsHelperGenerator implements LteHelpGeneratorInterf
     public function handle(Command $command)
     {
         $class = class_entity('NavigatorMethods');
-        $class->namespace("LteAdmin\Core");
+        $class->namespace("Admin\Core");
 
         $class->doc(function ($doc) {
             /** @var DocumentorEntity $doc */

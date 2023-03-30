@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Illuminate\Routing\PendingResourceRegistration;
 use Lar\Roads\Roads;
-use LteAdmin\LteAdmin;
-use LteAdmin\Navigate;
+use Admin\Admin;
+use Admin\Navigate;
 
 class RoutesAdaptor
 {
@@ -21,7 +21,7 @@ class RoutesAdaptor
 
         Navigate::$roads = $roads;
 
-        $extensions = LteAdmin::$nav_extensions;
+        $extensions = Admin::$nav_extensions;
 
         if (isset($extensions['application'])) {
             Navigate::$extension = $extensions['application'];
@@ -30,7 +30,7 @@ class RoutesAdaptor
 
             Navigate::$extension = null;
 
-            $extensions = LteAdmin::$nav_extensions;
+            $extensions = Admin::$nav_extensions;
         }
 
         if (count($extensions)) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 class AccessDeniedComponent extends Component
 {
@@ -12,8 +12,8 @@ class AccessDeniedComponent extends Component
     {
         $this->alert(
             AlertComponent::new()
-                ->title('lte.error')
-                ->body('lte.access_denied')
+                ->title('admin.error')
+                ->body('admin.access_denied')
                 ->dangerType()
                 ->icon_exclamation_triangle()
                 ->mt3()

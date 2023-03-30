@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 class SwitcherField extends InputField
 {
@@ -64,11 +64,11 @@ class SwitcherField extends InputField
     protected function on_build()
     {
         if (!isset($this->data['on-text'])) {
-            $this->data['on-text'] = __('lte.on');
+            $this->data['on-text'] = __('admin.on');
         }
 
         if (!isset($this->data['off-text'])) {
-            $this->data['off-text'] = __('lte.off');
+            $this->data['off-text'] = __('admin.off');
         }
     }
 

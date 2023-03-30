@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Tests\Models;
+namespace Admin\Tests\Models;
 
 use App\Models\Address;
 use App\Models\Commentary;

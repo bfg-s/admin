@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,49 +11,49 @@ use Illuminate\Support\Str;
 use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
 use Lar\Tagable\Tag;
-use LteAdmin\Components\Fields\AmountField;
-use LteAdmin\Components\Fields\AutocompleteField;
-use LteAdmin\Components\Fields\ChecksField;
-use LteAdmin\Components\Fields\CKEditorField;
-use LteAdmin\Components\Fields\CodeMirrorField;
-use LteAdmin\Components\Fields\ColorField;
-use LteAdmin\Components\Fields\DateField;
-use LteAdmin\Components\Fields\DateRangeField;
-use LteAdmin\Components\Fields\DateTimeField;
-use LteAdmin\Components\Fields\DateTimeRangeField;
-use LteAdmin\Components\Fields\DualSelectField;
-use LteAdmin\Components\Fields\EmailField;
-use LteAdmin\Components\Fields\FileField;
-use LteAdmin\Components\Fields\HiddenField;
-use LteAdmin\Components\Fields\IconField;
-use LteAdmin\Components\Fields\ImageField;
-use LteAdmin\Components\Fields\InfoCreatedAtField;
-use LteAdmin\Components\Fields\InfoField;
-use LteAdmin\Components\Fields\InfoIdField;
-use LteAdmin\Components\Fields\InfoUpdatedAtField;
-use LteAdmin\Components\Fields\InputField;
-use LteAdmin\Components\Fields\MDEditorField;
-use LteAdmin\Components\Fields\MultiSelectField;
-use LteAdmin\Components\Fields\NumberField;
-use LteAdmin\Components\Fields\NumericField;
-use LteAdmin\Components\Fields\PasswordField;
-use LteAdmin\Components\Fields\RadiosField;
-use LteAdmin\Components\Fields\RatingField;
-use LteAdmin\Components\Fields\SelectField;
-use LteAdmin\Components\Fields\SelectTagsField;
-use LteAdmin\Components\Fields\SwitcherField;
-use LteAdmin\Components\Fields\TextareaField;
-use LteAdmin\Components\Fields\TimeField;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\Core\Delegate;
-use LteAdmin\Core\MenuItem;
-use LteAdmin\Explanation;
-use LteAdmin\Jax\LteAdmin;
-use LteAdmin\Page;
-use LteAdmin\Traits\BuildHelperTrait;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FieldMassControlTrait;
-use LteAdmin\Traits\Macroable;
+use Admin\Components\Fields\AmountField;
+use Admin\Components\Fields\AutocompleteField;
+use Admin\Components\Fields\ChecksField;
+use Admin\Components\Fields\CKEditorField;
+use Admin\Components\Fields\CodeMirrorField;
+use Admin\Components\Fields\ColorField;
+use Admin\Components\Fields\DateField;
+use Admin\Components\Fields\DateRangeField;
+use Admin\Components\Fields\DateTimeField;
+use Admin\Components\Fields\DateTimeRangeField;
+use Admin\Components\Fields\DualSelectField;
+use Admin\Components\Fields\EmailField;
+use Admin\Components\Fields\FileField;
+use Admin\Components\Fields\HiddenField;
+use Admin\Components\Fields\IconField;
+use Admin\Components\Fields\ImageField;
+use Admin\Components\Fields\InfoCreatedAtField;
+use Admin\Components\Fields\InfoField;
+use Admin\Components\Fields\InfoIdField;
+use Admin\Components\Fields\InfoUpdatedAtField;
+use Admin\Components\Fields\InputField;
+use Admin\Components\Fields\MDEditorField;
+use Admin\Components\Fields\MultiSelectField;
+use Admin\Components\Fields\NumberField;
+use Admin\Components\Fields\NumericField;
+use Admin\Components\Fields\PasswordField;
+use Admin\Components\Fields\RadiosField;
+use Admin\Components\Fields\RatingField;
+use Admin\Components\Fields\SelectField;
+use Admin\Components\Fields\SelectTagsField;
+use Admin\Components\Fields\SwitcherField;
+use Admin\Components\Fields\TextareaField;
+use Admin\Components\Fields\TimeField;
+use Admin\Controllers\Controller;
+use Admin\Core\Delegate;
+use Admin\Core\MenuItem;
+use Admin\Explanation;
+use Admin\Jax\Admin;
+use Admin\Page;
+use Admin\Traits\BuildHelperTrait;
+use Admin\Traits\Delegable;
+use Admin\Traits\FieldMassControlTrait;
+use Admin\Traits\Macroable;
 
 /**
  * @methods static::$inputs
@@ -430,7 +430,7 @@ abstract class Component extends DIV implements onRender
 
     public static function registerCallBack(callable $callback, array $parameters = [], $model = null)
     {
-        LteAdmin::$callbacks[] = $callback;
+        Admin::$callbacks[] = $callback;
 
         if ($model) {
             foreach ($parameters as $key => $parameter) {
@@ -447,7 +447,7 @@ abstract class Component extends DIV implements onRender
 
         return [
             'jax.lte_admin.call_callback' => [
-                array_key_last(LteAdmin::$callbacks),
+                array_key_last(Admin::$callbacks),
                 $parameters
             ]
         ];

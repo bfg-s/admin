@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Exceptions;
+namespace Admin\Exceptions;
 
 use Exception;
 

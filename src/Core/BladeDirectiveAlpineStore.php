@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 class BladeDirectiveAlpineStore
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Commands\Generators;
+namespace Admin\Commands\Generators;
 
 use App\Admin\Delegates\ModelInfoTable;
 use App\Admin\Delegates\ModelTable;
@@ -11,12 +11,12 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Log;
-use LteAdmin;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\Core\Delegate;
-use LteAdmin\Interfaces\LteHelpGeneratorInterface;
-use LteAdmin\Page;
-use LteAdmin\Traits\Macroable;
+use Admin;
+use Admin\Controllers\Controller;
+use Admin\Core\Delegate;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
+use Admin\Page;
+use Admin\Traits\Macroable;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -26,7 +26,7 @@ use Str;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
-class MacroableHelperGenerator implements LteHelpGeneratorInterface
+class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
      * @var string[]
@@ -63,7 +63,7 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
 
         $dirs = array_merge([app_path()], static::$dirs);
 
-        foreach (array_keys(LteAdmin::extensionProviders()) as $provider) {
+        foreach (array_keys(Admin::extensionProviders()) as $provider) {
             $dirs[] = dirname((new ReflectionClass($provider))->getFileName());
         }
 
@@ -106,7 +106,7 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                 continue;
             }
 
-            $coreTrait = 'LteAdmin\\Core\\Traits\\Macroable';
+            $coreTrait = 'Admin\\Core\\Traits\\Macroable';
 
             $traits = array_keys($refl->getTraits());
 
@@ -359,8 +359,8 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
             if (
                 $isProperty
                 || $isAny
-                || $type == '\LteAdmin\Components\ModelTableComponent'
-                || $type == '\LteAdmin\Components\ModelInfoTableComponent'
+                || $type == '\Admin\Components\ModelTableComponent'
+                || $type == '\Admin\Components\ModelInfoTableComponent'
             ) {
                 $doc->tagPropertyRead(
                     $type,
@@ -369,9 +369,9 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
                 );
             }
 
-            if (in_array($method, array_keys(LteAdmin\Components\Component::$inputs))) {
+            if (in_array($method, array_keys(Admin\Components\Component::$inputs))) {
                 if (!in_array($method, ['info_id', 'info_created_at', 'info_updated_at'])) {
-                    $class_res = LteAdmin\Components\Component::$inputs[$method];
+                    $class_res = Admin\Components\Component::$inputs[$method];
                     foreach ($this->getModelFields() as $field) {
                         $camelField = Str::snake($field);
 
@@ -509,12 +509,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
     public function createSearchAndColAndRowFields()
     {
         $class = class_entity("ModelTableComponentFields");
-        $class->namespace('LteAdmin\Components');
+        $class->namespace('Admin\Components');
 
         $class->doc(function ($doc) {
             $method = 'col';
             $methods = [];
-            $modelTableType = "\\".LteAdmin\Components\ModelTableComponent::class."|\\".ModelTable::class."|\\".Delegate::class;
+            $modelTableType = "\\".Admin\Components\ModelTableComponent::class."|\\".ModelTable::class."|\\".Delegate::class;
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
@@ -565,12 +565,12 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
         file_put_contents($file, "<?php \n\n".$class->render());
 
         $class = class_entity('ModelInfoTableComponentFields');
-        $class->namespace('LteAdmin\Components');
+        $class->namespace('Admin\Components');
 
         $class->doc(function ($doc) {
             $method = 'row';
             $methods = [];
-            $modelInfoType = "\\".LteAdmin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class."|\\".Delegate::class;
+            $modelInfoType = "\\".Admin\Components\ModelInfoTableComponent::class."|\\".ModelInfoTable::class."|\\".Delegate::class;
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);
@@ -618,16 +618,16 @@ class MacroableHelperGenerator implements LteHelpGeneratorInterface
         file_put_contents($file, "<?php \n\n".$class->render());
 
         $class = class_entity('SearchFormComponentFields');
-        $class->namespace('LteAdmin\Components');
+        $class->namespace('Admin\Components');
 
         $class->doc(function ($doc) {
-            foreach (LteAdmin\Components\SearchFormComponent::$field_components as $input => $class) {
+            foreach (Admin\Components\SearchFormComponent::$field_components as $input => $class) {
                 /** @var DocumentorEntity $doc */
                 foreach ($this->getModelFields() as $field) {
                     $camelField = Str::snake($field);
 
                     $method = 'in';
-                    $searchFormType = "\\".$class."|\\".LteAdmin\Components\SearchFormComponent::class."|\\".SearchForm::class."|\\".Delegate::class;
+                    $searchFormType = "\\".$class."|\\".Admin\Components\SearchFormComponent::class."|\\".SearchForm::class."|\\".Delegate::class;
                     if ($camelField) {
                         $doc->tagMethod(
                             $searchFormType,

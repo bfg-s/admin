@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
-use LteAdmin\Components\FormGroupComponent;
+use Admin\Components\FormGroupComponent;
 
 trait RulesFrontTrait
 {

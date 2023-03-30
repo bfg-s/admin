@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use DB;
 use File;
@@ -10,7 +10,7 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
-use LteAdmin\ExtendProvider;
+use Admin\ExtendProvider;
 use Symfony\Component\Finder\Finder;
 
 class InstallExtensionProvider

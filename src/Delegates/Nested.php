@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\NestedComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\NestedComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin NestedComponent

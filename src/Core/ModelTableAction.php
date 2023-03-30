@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Illuminate\Contracts\Support\Arrayable;
-use LteAdmin\Components\Component;
-use LteAdmin\Traits\FontAwesome;
+use Admin\Components\Component;
+use Admin\Traits\FontAwesome;
 
 class ModelTableAction implements Arrayable
 {
@@ -13,7 +13,7 @@ class ModelTableAction implements Arrayable
     protected $title = 'Action';
     protected $icon = 'fas fa-dot-circle';
     protected $confirm = null;
-    protected $warning = 'lte.before_need_to_select';
+    protected $warning = 'admin.before_need_to_select';
 
     public function __construct(
         protected $model,

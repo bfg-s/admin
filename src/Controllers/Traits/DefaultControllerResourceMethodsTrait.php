@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Controllers\Traits;
+namespace Admin\Controllers\Traits;
 
 use App;
 use Exception;
@@ -8,12 +8,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Lar\Layout\Respond;
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\Form;
-use LteAdmin\Delegates\ModelInfoTable;
-use LteAdmin\Delegates\ModelTable;
-use LteAdmin\Delegates\SearchForm;
-use LteAdmin\Page;
+use Admin\Delegates\Card;
+use Admin\Delegates\Form;
+use Admin\Delegates\ModelInfoTable;
+use Admin\Delegates\ModelTable;
+use Admin\Delegates\SearchForm;
+use Admin\Page;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
@@ -118,9 +118,9 @@ trait DefaultControllerResourceMethodsTrait
         $updated = $this->requestToModel($save);
 
         if ($updated) {
-            respond()->put('alert::success', __('lte.saved_successfully'));
+            respond()->put('alert::success', __('admin.saved_successfully'));
         } else {
-            respond()->put('alert::error', __('lte.unknown_error'));
+            respond()->put('alert::error', __('admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -151,9 +151,9 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save);
 
         if ($stored) {
-            respond()->put('alert::success', __('lte.successfully_created'));
+            respond()->put('alert::success', __('admin.successfully_created'));
         } else {
-            respond()->put('alert::error', __('lte.unknown_error'));
+            respond()->put('alert::error', __('admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -182,29 +182,29 @@ trait DefaultControllerResourceMethodsTrait
         if ($model) {
             try {
                 if ($restore && $model->restore()) {
-                    respond()->put('alert::success', __('lte.successfully_restored'));
+                    respond()->put('alert::success', __('admin.successfully_restored'));
 
                     respond()->reload();
                 } elseif ($force && $model->forceDelete()) {
-                    respond()->put('alert::success', __('lte.successfully_deleted'));
+                    respond()->put('alert::success', __('admin.successfully_deleted'));
 
                     respond()->reload();
                 } elseif ($model->delete()) {
-                    respond()->put('alert::success', __('lte.successfully_deleted'));
+                    respond()->put('alert::success', __('admin.successfully_deleted'));
 
                     respond()->reload();
                 } else {
-                    respond()->put('alert::error', __('lte.unknown_error'));
+                    respond()->put('alert::error', __('admin.unknown_error'));
                 }
             } catch (Exception $exception) {
                 if (!App::isLocal()) {
-                    respond()->put('alert::error', __('lte.unknown_error'));
+                    respond()->put('alert::error', __('admin.unknown_error'));
                 } else {
                     respond()->put('alert::error', $exception->getMessage());
                 }
             }
         } else {
-            respond()->put('alert::error', __('lte.model_not_found'));
+            respond()->put('alert::error', __('admin.model_not_found'));
         }
 
         return request('_after', 'index') == 'index'

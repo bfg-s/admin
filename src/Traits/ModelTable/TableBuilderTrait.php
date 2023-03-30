@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits\ModelTable;
+namespace Admin\Traits\ModelTable;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,7 +11,7 @@ use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\TH;
 use Lar\Layout\Tags\TR;
-use LteAdmin\Components\SearchFormComponent;
+use Admin\Components\SearchFormComponent;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
@@ -75,7 +75,7 @@ trait TableBuilderTrait
                     'alert alert-warning mt-3 text-center text-justify', 'role' => 'alert',
                     'style' => 'background: rgba(255, 193, 7, 0.1); text-transform: uppercase;'
                 ])
-                ->text(__('lte.empty'));
+                ->text(__('admin.empty'));
         }
     }
 

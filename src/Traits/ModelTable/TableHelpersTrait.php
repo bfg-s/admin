@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits\ModelTable;
+namespace Admin\Traits\ModelTable;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Components\ButtonsComponent;
-use LteAdmin\Core\PrepareExport;
+use Admin\Components\ButtonsComponent;
+use Admin\Core\PrepareExport;
 use Str;
 
 trait TableHelpersTrait
@@ -237,7 +237,7 @@ trait TableHelpersTrait
      */
     public function id()
     {
-        $this->column('lte.id', 'id')->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.id', 'id')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -277,7 +277,7 @@ trait TableHelpersTrait
      */
     public function created_at()
     {
-        $this->column('lte.created_at', 'created_at')->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.created_at', 'created_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -287,7 +287,7 @@ trait TableHelpersTrait
      */
     public function updated_at()
     {
-        $this->column('lte.updated_at', 'updated_at')->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.updated_at', 'updated_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -297,7 +297,7 @@ trait TableHelpersTrait
      */
     public function deleted_at()
     {
-        $this->column('lte.deleted_at', 'deleted_at')->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.deleted_at', 'deleted_at')->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -307,7 +307,7 @@ trait TableHelpersTrait
      */
     public function active_switcher()
     {
-        $this->column('lte.active', 'active')->input_switcher()->hide_on_mobile()->sort();
+        $this->column('admin.active', 'active')->input_switcher()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -353,7 +353,7 @@ trait TableHelpersTrait
      */
     public function footer()
     {
-        return $this->paginate ? DIV::create(['card-footer'])->view('lte::segment.model_table_footer', [
+        return $this->paginate ? DIV::create(['card-footer'])->view('admin::segment.model_table_footer', [
             'model' => $this->model,
             'paginator' => $this->paginate,
             'from' => (($this->paginate->currentPage() * $this->paginate->perPage()) - $this->paginate->perPage()) + 1,

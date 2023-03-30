@@ -1,13 +1,13 @@
 <?php
 
-namespace LteAdmin\Tests;
+namespace Admin\Tests;
 
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk\TestCase as BaseTestCase;
-use LteAdmin\Tests\Traits\DatabaseMigrations;
-use LteAdmin\Tests\Traits\SetUp;
+use Admin\Tests\Traits\DatabaseMigrations;
+use Admin\Tests\Traits\SetUp;
 use Tests\CreatesApplication;
 
 abstract class DuskTestCase extends BaseTestCase

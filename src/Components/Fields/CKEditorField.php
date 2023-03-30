@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
 use Lar\Layout\Tags\TEXTAREA;
-use LteAdmin\Components\FormGroupComponent;
+use Admin\Components\FormGroupComponent;
 
 class CKEditorField extends FormGroupComponent
 {

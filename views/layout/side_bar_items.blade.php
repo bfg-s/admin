@@ -1,7 +1,7 @@
 @foreach(($items ?? admin_repo()->menuList->where('parent_id', 0)) as $menu)
 
     @php
-        $access = !$menu->getRoles() || lte_user()->hasRoles($menu->getRoles());
+        $access = !$menu->getRoles() || admin_user()->hasRoles($menu->getRoles());
         $child = $menu->getChild();
         $hasChild = $child && $child->isNotEmpty();
         $hasChildSelected = $hasChild && $child->where('selected', true)->count();
@@ -27,8 +27,8 @@
                     @if (is_array($badge))
 
                         <span
-                            id="nav_badge_{{isset($badge['id']) && $badge['id'] ? $badge['id'] : $menu->getId()}}"
-                            class="right badge badge-{{$badge['type'] ?? 'info'}}" {!! isset($badge['title']) ? "title='{$badge['title']}'" : "" !!}>
+                                id="nav_badge_{{isset($badge['id']) && $badge['id'] ? $badge['id'] : $menu->getId()}}"
+                                class="right badge badge-{{$badge['type'] ?? 'info'}}" {!! isset($badge['title']) ? "title='{$badge['title']}'" : "" !!}>
                             @if(isset($badge['instructions']) && $badge['instructions'])
                                 {{eloquent_instruction($badge['text'], $badge['instructions'])->count()}}
                             @else
@@ -62,7 +62,7 @@
 
             @if($hasChild)
                 <ul class="nav nav-treeview">
-                    @include('lte::layout.side_bar_items', ['items' => $child, 'nes' => true])
+                    @include('admin::layout.side_bar_items', ['items' => $child, 'nes' => true])
                 </ul>
             @endif
         </li>

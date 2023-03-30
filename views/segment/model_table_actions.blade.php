@@ -1,5 +1,5 @@
 @php
-    use LteAdmin\Core\PrepareExport
+    use Admin\Core\PrepareExport
 @endphp
 @if(!request()->has('show_deleted'))
     <div class="card-title dropdown dropdown-inline" style="margin: -5px 10px -4px -.625rem;">
@@ -16,7 +16,7 @@
                     @if($column['key'])
                         <button class="dropdown-item" type="button" data-click="doc::location"
                                 data-param="{{urlWithGet([$column['key'] => (int)$column['hide']])}}">
-                            <i class="fas fa-border-{{!$column['hide'] ? 'all':'none'}}"></i> {{__(!$column['hide']? 'lte.hide':'lte.show')}}
+                            <i class="fas fa-border-{{!$column['hide'] ? 'all':'none'}}"></i> {{__(!$column['hide']? 'admin.hide':'admin.show')}}
                             "{{$column['label']}}"
                         </button>
                     @endif
@@ -80,11 +80,11 @@
                         data-order="{{$order_field}}"
                         data-order-type="{{$select_type}}"
                         data-columns="{{json_encode($all_columns, JSON_UNESCAPED_UNICODE)}}"
-                        data-confirm="@lang('lte.delete_selected_rows')"
-                        data-warning="@lang('lte.before_need_to_select')"
+                        data-confirm="@lang('admin.delete_selected_rows')"
+                        data-warning="@lang('admin.before_need_to_select')"
                         data-jax="lte_admin.mass_delete"
                         type="button"
-                ><i class="fas fa-trash"></i>&nbsp; @lang('lte.delete')</button>
+                ><i class="fas fa-trash"></i>&nbsp; @lang('admin.delete')</button>
                 <hr class="dropdown-divider"/>
             @endif
             @if($hasDelete || count($actions))

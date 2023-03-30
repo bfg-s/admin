@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
-use LteAdmin\Delegates\Buttons;
+use Admin\Delegates\Buttons;
 use Request;
 
 class ButtonsComponent extends Component
@@ -65,9 +65,9 @@ class ButtonsComponent extends Component
      */
     public function reload(string $link = null, string $title = null)
     {
-        $return = $this->secondary(['fas fa-redo-alt', $title ?? __('lte.refresh')]);
+        $return = $this->secondary(['fas fa-redo-alt', $title ?? __('admin.refresh')]);
         $return->dataClick()->location($link ?? Request::getRequestUri());
-        $return->setTitleIf($title === '', __('lte.refresh'));
+        $return->setTitleIf($title === '', __('admin.refresh'));
 
         return $return;
     }
@@ -87,8 +87,8 @@ class ButtonsComponent extends Component
      */
     public function nestable()
     {
-        $this->info(['far fa-minus-square', __('lte.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
-        $this->primary(['far fa-plus-square', __('lte.expand_all')])->setDatas(['click' => 'nestable::expand']);
+        $this->info(['far fa-minus-square', __('admin.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
+        $this->primary(['far fa-plus-square', __('admin.expand_all')])->setDatas(['click' => 'nestable::expand']);
 
         return $this;
     }
@@ -132,9 +132,9 @@ class ButtonsComponent extends Component
     public function resourceList(string $link = null, string $title = null)
     {
         if ($link || $this->menu->isResource()) {
-            $return = $this->primary(['fas fa-list-alt', $title ?? __('lte.list')]);
+            $return = $this->primary(['fas fa-list-alt', $title ?? __('admin.list')]);
             $return->dataClick()->location($link ?? $this->menu->getLinkIndex());
-            $return->setTitleIf($title === '', __('lte.list'));
+            $return->setTitleIf($title === '', __('admin.list'));
 
             return $return;
         }
@@ -163,9 +163,9 @@ class ButtonsComponent extends Component
             if (!$this->menu) {
                 return new Buttons();
             }
-            $return = $this->success(['fas fa-edit', $title ?? __('lte.edit')]);
+            $return = $this->success(['fas fa-edit', $title ?? __('admin.edit')]);
             $return->dataClick()->location($link);
-            $return->setTitleIf($title === '', __('lte.edit'));
+            $return->setTitleIf($title === '', __('admin.edit'));
 
             return $return;
         }
@@ -213,9 +213,9 @@ class ButtonsComponent extends Component
             if (!$this->menu) {
                 return new Buttons();
             }
-            $return = $this->info(['fas fa-info-circle', $title ?? __('lte.information')]);
+            $return = $this->info(['fas fa-info-circle', $title ?? __('admin.information')]);
             $return->dataClick()->location($link);
-            $return->setTitleIf($title === '', __('lte.information'));
+            $return->setTitleIf($title === '', __('admin.information'));
 
             return $return;
         }
@@ -250,16 +250,16 @@ class ButtonsComponent extends Component
 
             $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay' : '';
 
-            return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete')])->setDatas([
+            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
                     __(
-                        'lte.delete_subject',
+                        'admin.delete_subject',
                         ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
                     ),
                     $link.$stay.' >> $jax.del',
                 ],
-            ])->setTitleIf($title === '', __('lte.delete'));
+            ])->setTitleIf($title === '', __('admin.delete'));
         }
 
         return $this;
@@ -296,16 +296,16 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->danger(['fas fa-trash-alt', $title ?? __('lte.delete_forever')])->setDatas([
+            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete_forever')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
                     __(
-                        'lte.delete_forever_subject',
+                        'admin.delete_forever_subject',
                         ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
                     ),
                     $link.'?force=1 >> $jax.del',
                 ],
-            ])->setTitleIf($title === '', __('lte.delete_forever'));
+            ])->setTitleIf($title === '', __('admin.delete_forever'));
         }
 
         return $this;
@@ -332,16 +332,16 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('lte.restore')])->setDatas([
+            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('admin.restore')])->setDatas([
                 'click' => 'alert::confirm',
                 'params' => [
                     __(
-                        'lte.restore_subject',
+                        'admin.restore_subject',
                         ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
                     ),
                     $link.'?restore=1 >> $jax.del',
                 ],
-            ])->setTitleIf($title === '', __('lte.restore'));
+            ])->setTitleIf($title === '', __('admin.restore'));
         }
 
         return $this;
@@ -365,7 +365,7 @@ class ButtonsComponent extends Component
     public function submit($icon = null, string $form = null)
     {
         if (!$icon) {
-            $icon = ['fas fa-save', __('lte.submit')];
+            $icon = ['fas fa-save', __('admin.submit')];
         }
 
         $datas = [
@@ -392,8 +392,8 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            $return = $this->success(['fas fa-plus', $title ?? __('lte.add')]);
-            $return->setTitleIf($title === '', __('lte.add'));
+            $return = $this->success(['fas fa-plus', $title ?? __('admin.add')]);
+            $return->setTitleIf($title === '', __('admin.add'));
             $return->dataClick()->location($link);
 
             return $return;

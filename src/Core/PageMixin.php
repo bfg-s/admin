@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
-use LteAdmin\Components\CardComponent;
-use LteAdmin\Page;
+use Admin\Components\CardComponent;
+use Admin\Page;
 
 /**
  * @mixin Page

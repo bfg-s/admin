@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
@@ -9,12 +9,12 @@ use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\I;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Page;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\RulesBackTrait;
-use LteAdmin\Traits\RulesFrontTrait;
+use Admin\Page;
+use Admin\Traits\Delegable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\Macroable;
+use Admin\Traits\RulesBackTrait;
+use Admin\Traits\RulesFrontTrait;
 use Route;
 use Str;
 use Illuminate\Support\Traits\Conditionable;

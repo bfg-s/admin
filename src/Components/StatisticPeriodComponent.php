@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
-use LteAdmin\Traits\FontAwesome;
+use Admin\Traits\FontAwesome;
 
 class StatisticPeriodComponent extends Component
 {
@@ -27,7 +27,7 @@ class StatisticPeriodComponent extends Component
     {
         $this->column()
             ->info_box(
-                __('lte.statistic_for_today', ['entity' => $this->entity]),
+                __('admin.statistic_for_today', ['entity' => $this->entity]),
                 $this->model->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
             )->successType();
@@ -39,7 +39,7 @@ class StatisticPeriodComponent extends Component
     {
         $this->column()
             ->info_box(
-                __('lte.statistic_per_week', ['entity' => $this->entity]),
+                __('admin.statistic_per_week', ['entity' => $this->entity]),
                 $this->model->whereBetween(
                     'created_at',
                     [now()->subWeek()->startOfDay(), now()->endOfDay()]
@@ -54,7 +54,7 @@ class StatisticPeriodComponent extends Component
     {
         $this->column()
             ->info_box(
-                __('lte.statistic_per_year', ['entity' => $this->entity]),
+                __('admin.statistic_per_year', ['entity' => $this->entity]),
                 $this->model->whereBetween(
                     'created_at',
                     [now()->subYear()->startOfDay(), now()->endOfDay()]
@@ -69,7 +69,7 @@ class StatisticPeriodComponent extends Component
     {
         $this->column()
             ->info_box(
-                __('lte.statistic_total', ['entity' => mb_strtolower($this->entity)]),
+                __('admin.statistic_total', ['entity' => mb_strtolower($this->entity)]),
                 $this->model->count().' ',
                 $this->icon
             )->primaryType();

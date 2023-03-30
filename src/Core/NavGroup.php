@@ -1,15 +1,15 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use LteAdmin\Interfaces\NavigateInterface;
-use LteAdmin\LteAdmin;
-use LteAdmin\Navigate;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\NavCommon;
-use LteAdmin\Traits\NavDefaultTools;
+use Admin\Interfaces\NavigateInterface;
+use Admin\Admin;
+use Admin\Navigate;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\NavCommon;
+use Admin\Traits\NavDefaultTools;
 
 /**
  * @mixin NavigatorExtensions
@@ -145,14 +145,14 @@ class NavGroup implements Arrayable, NavigateInterface
      */
     public function __call($name, $arguments)
     {
-        if (isset(LteAdmin::$nav_extensions[$name])) {
-            Navigate::$extension = LteAdmin::$nav_extensions[$name];
+        if (isset(Admin::$nav_extensions[$name])) {
+            Navigate::$extension = Admin::$nav_extensions[$name];
 
-            LteAdmin::$nav_extensions[$name]->navigator($this);
+            Admin::$nav_extensions[$name]->navigator($this);
 
             Navigate::$extension = null;
 
-            unset(LteAdmin::$nav_extensions[$name]);
+            unset(Admin::$nav_extensions[$name]);
         }
     }
 }

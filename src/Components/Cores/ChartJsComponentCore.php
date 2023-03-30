@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Cores;
+namespace Admin\Components\Cores;
 
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -190,7 +190,7 @@ class ChartJsComponentCore
     {
         $chart = static::$charts[$this->name];
 
-        return view('lte::segment.chartjs')
+        return view('admin::segment.chartjs')
             ->with('isNotAjax', !request()->ajax() && !request()->pjax())
             ->with('datasets', $chart['datasets'])
             ->with('element', $this->name)

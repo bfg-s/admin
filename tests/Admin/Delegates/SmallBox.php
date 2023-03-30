@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\SmallBox as LteSmallBox;
+use Admin\Delegates\SmallBox as LteSmallBox;
 
 /**
  * SmallBox Class
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class SmallBox extends LteSmallBox
 {

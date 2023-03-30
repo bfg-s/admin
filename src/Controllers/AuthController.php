@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use LteAdmin;
+use Admin;
 
 use function respond;
 
@@ -16,11 +16,11 @@ class AuthController
      */
     public function login()
     {
-        if (!LteAdmin::guest()) {
-            return redirect()->route('lte.dashboard');
+        if (!Admin::guest()) {
+            return redirect()->route('admin.dashboard');
         }
 
-        return view('lte::auth.login');
+        return view('admin::auth.login');
     }
 
     /**
@@ -36,7 +36,7 @@ class AuthController
 
         $login = false;
 
-        if (Auth::guard('lte')->attempt(
+        if (Auth::guard('admin')->attempt(
             ['login' => $request->login, 'password' => $request->password],
             $request->remember == 'on' ? true : false
         )) {
@@ -44,10 +44,10 @@ class AuthController
 
             respond()->toast_success('Was authorized using login!');
 
-            lte_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
+            admin_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
-        } elseif (Auth::guard('lte')->attempt(
+        } elseif (Auth::guard('admin')->attempt(
             ['email' => $request->login, 'password' => $request->password],
             $request->remember == 'on' ? true : false
         )) {
@@ -55,7 +55,7 @@ class AuthController
 
             respond()->toast_success('Was authorized using E-Mail!');
 
-            lte_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
+            admin_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
 
             $login = true;
         } else {

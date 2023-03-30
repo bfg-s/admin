@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Cores;
+namespace Admin\Components\Cores;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection;

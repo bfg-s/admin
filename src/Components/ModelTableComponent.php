@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Exception;
@@ -12,14 +12,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Lar\Tagable\Tag;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\ModelTable\TableBuilderTrait;
-use LteAdmin\Traits\ModelTable\TableControlsTrait;
-use LteAdmin\Traits\ModelTable\TableExtensionTrait;
-use LteAdmin\Traits\ModelTable\TableHelpersTrait;
-use LteAdmin\Traits\Piplineble;
+use Admin\Controllers\Controller;
+use Admin\Traits\Delegable;
+use Admin\Traits\Macroable;
+use Admin\Traits\ModelTable\TableBuilderTrait;
+use Admin\Traits\ModelTable\TableControlsTrait;
+use Admin\Traits\ModelTable\TableExtensionTrait;
+use Admin\Traits\ModelTable\TableHelpersTrait;
+use Admin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

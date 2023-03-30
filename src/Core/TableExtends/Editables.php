@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Core\TableExtends;
+namespace Admin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\A;
-use LteAdmin\Components\FieldComponent;
+use Admin\Components\FieldComponent;
 
 class Editables
 {
@@ -90,7 +90,7 @@ class Editables
                     get_class($model),
                     $model->id,
                     $field,
-                    '>>lte::get_selected_radio()',
+                    '>>admin::get_selected_radio()',
                 ]);
         }
 
@@ -125,7 +125,7 @@ class Editables
      */
     protected function editable($value, Model $model, $title, $field, $type)
     {
-        $now = lte_now();
+        $now = admin_now();
 
         if ($now && $now->isResource()) {
             $val = multi_dot_call($model, $field);

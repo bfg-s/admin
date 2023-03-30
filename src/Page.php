@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin;
+namespace Admin;
 
 use BadMethodCallException;
 use Closure;
@@ -11,20 +11,20 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Components\CardComponent;
-use LteAdmin\Components\Component;
-use LteAdmin\Components\SearchFormComponent;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\Core\Container;
-use LteAdmin\Core\MenuItem;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\Macroable;
+use Admin\Components\CardComponent;
+use Admin\Components\Component;
+use Admin\Components\SearchFormComponent;
+use Admin\Controllers\Controller;
+use Admin\Core\Container;
+use Admin\Core\MenuItem;
+use Admin\Traits\Delegable;
+use Admin\Traits\Macroable;
 use Throwable;
 
 /**
  * @template CurrentModel
- * @macro_return LteAdmin\Page
- * @methods LteAdmin\Controllers\Controller::$explanation_list (...$delegates) LteAdmin\Page
+ * @macro_return Admin\Page
+ * @methods Admin\Controllers\Controller::$explanation_list (...$delegates) Admin\Page
  * @mixin PageMacroList
  * @mixin PageMethods
  */

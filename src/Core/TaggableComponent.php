@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Lar\Layout\Abstracts\Component;
-use LteAdmin\Controllers\Controller;
+use Admin\Controllers\Controller;
 
 class TaggableComponent extends Component
 {

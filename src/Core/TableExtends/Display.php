@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core\TableExtends;
+namespace Admin\Core\TableExtends;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\TD;

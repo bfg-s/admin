@@ -1,23 +1,23 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Components\ModelInfoTableComponent;
-use LteAdmin\Components\TabContentComponent;
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\ChartJs;
-use LteAdmin\Delegates\Column;
-use LteAdmin\Delegates\Form;
-use LteAdmin\Delegates\SearchForm;
-use LteAdmin\Delegates\Tab;
-use LteAdmin\Models\LteLog;
-use LteAdmin\Models\LteUser;
-use LteAdmin\Page;
+use Admin\Components\ModelInfoTableComponent;
+use Admin\Components\TabContentComponent;
+use Admin\Delegates\Card;
+use Admin\Delegates\ChartJs;
+use Admin\Delegates\Column;
+use Admin\Delegates\Form;
+use Admin\Delegates\SearchForm;
+use Admin\Delegates\Tab;
+use Admin\Models\AdminLog;
+use Admin\Models\AdminUser;
+use Admin\Page;
 
 class UserController extends Controller
 {
@@ -25,9 +25,9 @@ class UserController extends Controller
      * Static variable Model.
      * @var string
      */
-    public static $model = LteUser::class;
+    public static $model = AdminUser::class;
     /**
-     * @var LteUser
+     * @var AdminUser
      */
     protected $user;
 
@@ -57,43 +57,43 @@ class UserController extends Controller
         return $page
             ->title($this->model()->name)
             ->icon_user()
-            ->breadcrumb('lte.administrator', 'lte.profile')
+            ->breadcrumb('admin.administrator', 'admin.profile')
             ->column(
                 $column->num(3)->card(
                     $card
-                        ->title('lte.information')
+                        ->title('admin.information')
                         ->primaryType()
                         ->card_body()
-                        ->view('lte::auth.user_portfolio', ['user' => $this->model()])
+                        ->view('admin::auth.user_portfolio', ['user' => $this->model()])
                 )
             )
             ->column(
                 $column->num(9)->card(
-                    $card->title('lte.edit')
+                    $card->title('admin.edit')
                         ->successType(),
                     $card->tab(
                         $tab->right(),
                         $tab->active(!$request->has('ltelog_per_page') && !$request->has('ltelog_page') && !$request->has('q')),
-                        $tab->icon_cogs()->title('lte.settings'),
+                        $tab->icon_cogs()->title('admin.settings'),
                         $tab->form(
                             $form->vertical(),
-                            $form->image('avatar', 'lte.avatar'),
-                            $form->input('login', 'lte.login_name')
+                            $form->image('avatar', 'admin.avatar'),
+                            $form->input('login', 'admin.login_name')
                                 ->required()
-                                ->unique(LteUser::class, 'login', $this->model()->id),
-                            $form->email('email', 'lte.email_address')
+                                ->unique(AdminUser::class, 'login', $this->model()->id),
+                            $form->email('email', 'admin.email_address')
                                 ->required()
-                                ->unique(LteUser::class, 'email', $this->model()->id),
-                            $form->input('name', 'lte.name')
+                                ->unique(AdminUser::class, 'email', $this->model()->id),
+                            $form->input('name', 'admin.name')
                                 ->required(),
-                            $form->divider(__('lte.password')),
-                            $form->password('password', 'lte.new_password')
+                            $form->divider(__('admin.password')),
+                            $form->password('password', 'admin.new_password')
                                 ->confirm(),
                         )
                     ),
                     $card->tab(
                         $tab->active(request()->has('ltelog_per_page') || request()->has('ltelog_page')),
-                        $tab->icon_history()->title('lte.timeline'),
+                        $tab->icon_history()->title('admin.timeline'),
                         $tab->with(fn(TabContentComponent $content) => static::timelineComponent(
                             $content,
                             $this->model()->logs(),
@@ -101,12 +101,12 @@ class UserController extends Controller
                         ))
                     ),
                     $card->tab(
-                        $tab->title('lte.activity')->icon_chart_line(),
+                        $tab->title('admin.activity')->icon_chart_line(),
                         $tab->active($request->has('q')),
                         $tab->chart_js(
                             $chartJs->model($this->model()->logs())
                                 ->hasSearch(
-                                    $searchForm->date_range('created_at', 'lte.created_at')
+                                    $searchForm->date_range('created_at', 'admin.created_at')
                                         ->default(implode(' - ', $this->defaultDateRange()))
                                 )
                                 ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
@@ -119,7 +119,7 @@ class UserController extends Controller
                         )
                     ),
                     $card->tab(
-                        $tab->title('lte.day_activity')->icon_chart_line(),
+                        $tab->title('admin.day_activity')->icon_chart_line(),
                         $tab->chart_js(
                             $chartJs->model($this->model()->logs())
                                 ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
@@ -140,10 +140,10 @@ class UserController extends Controller
     {
         $content->div(['col-md-12'])->timeline(
             $controller->timeline->model($model),
-            $controller->timeline->set_title(static function (LteLog $log) {
+            $controller->timeline->set_title(static function (AdminLog $log) {
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             }),
-            $controller->timeline->set_body(static function (DIV $div, LteLog $log) {
+            $controller->timeline->set_body(static function (DIV $div, AdminLog $log) {
                 $div->p0()->model_info_table()->model($log)->when(static function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();
                     $table->row('URL', 'url')->to_prepend_link();
@@ -167,15 +167,15 @@ class UserController extends Controller
 
     public function on_updated($form)
     {
-        lte_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
+        admin_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
 
         if (isset($form['password']) && $form['password']) {
-            lte_log_success('Changed the password', get_class($this->model()), 'fas fa-key');
+            admin_log_success('Changed the password', get_class($this->model()), 'fas fa-key');
         }
     }
 
     /**
-     * @return Model|LteUser|string|null
+     * @return Model|AdminUser|string|null
      */
     public function getModel()
     {
@@ -188,11 +188,11 @@ class UserController extends Controller
      */
     public function logout(Respond $respond)
     {
-        lte_log_success('Was logout', null, 'fas fa-sign-out-alt');
+        admin_log_success('Was logout', null, 'fas fa-sign-out-alt');
 
-        Auth::guard('lte')->logout();
+        Auth::guard('admin')->logout();
 
-        $respond->redirect(route('lte.login'));
+        $respond->redirect(route('admin.login'));
 
         return $respond;
     }

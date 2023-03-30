@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 trait TypesTrait
 {

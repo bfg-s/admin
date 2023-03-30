@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits\ModelRelation;
+namespace Admin\Traits\ModelRelation;
 
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
@@ -8,13 +8,13 @@ use Lar\Layout\Components\Template;
 use Lar\Layout\Components\TemplateArea;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Components\ButtonsComponent;
-use LteAdmin\Components\FormGroupComponent;
-use LteAdmin\Components\GridColumnComponent;
-use LteAdmin\Components\ModelRelationComponent;
-use LteAdmin\Components\ModelRelationContentComponent;
-use LteAdmin\Core\ModelSaver;
-use LteAdmin\Explanation;
+use Admin\Components\ButtonsComponent;
+use Admin\Components\FormGroupComponent;
+use Admin\Components\GridColumnComponent;
+use Admin\Components\ModelRelationComponent;
+use Admin\Components\ModelRelationContentComponent;
+use Admin\Core\ModelSaver;
+use Admin\Explanation;
 
 /**
  * @mixin Component
@@ -67,8 +67,8 @@ trait ModelRelationBuilderTrait
                             $this->last_content->callControls($group, $item);
 
                             if ($del) {
-                                $group->danger(['fas fa-trash', __('lte.delete')])
-                                    ->on_click('lte::drop_relation', [
+                                $group->danger(['fas fa-trash', __('admin.delete')])
+                                    ->on_click('admin::drop_relation', [
                                         INPUT::create()->setType('hidden')->addClass('delete_field')
                                             ->setName("{$this->relation_name}[".$item->{$item->getKeyName()}.']['.ModelSaver::DELETE_FIELD.']')
                                             ->setValue($item->{$item->getKeyName()})->render(),
@@ -81,12 +81,12 @@ trait ModelRelationBuilderTrait
                                 $div->buttons()->when(function (ButtonsComponent $group) use ($item) {
                                     $text_d = $this->last_content->get_test_var('control_restore_text');
                                     $s = $text_d ? $text_d : (strtoupper($item->getKeyName()).': '.$item->{$item->getKeyName()});
-                                    $text = __('lte.restore_subject', ['subject' => $s]);
+                                    $text = __('admin.restore_subject', ['subject' => $s]);
                                     $group->secondary([
                                         'fas fa-redo',
                                         tag_replace($text, $item),
                                     ])
-                                        ->on_click('lte::return_relation');
+                                        ->on_click('admin::return_relation');
                                 });
                             })->hide()->addClass('return_relation');
                         }
@@ -180,7 +180,7 @@ trait ModelRelationBuilderTrait
         }
         $container->column()->textRight()->p0()->buttons()->when(static function (ButtonsComponent $group) {
             $group->setStyle('margin-left: 0!important;');
-            $group->warning(['fas fa-minus', __('lte.remove')])->on_click('lte::drop_relation_tpl');
+            $group->warning(['fas fa-minus', __('admin.remove')])->on_click('admin::drop_relation_tpl');
         });
         $container->hr(['style' => 'border-top: 0;']);
 
@@ -190,9 +190,9 @@ trait ModelRelationBuilderTrait
         $hr = $this->hr();
         $row = $hr->row();
         $row->column()->textRight()->buttons()->when(function (ButtonsComponent $group) {
-            $group->success(['fas fa-plus', __('lte.add')])
+            $group->success(['fas fa-plus', __('admin.add')])
                 ->on_click(
-                    'lte::add_relation_tpl',
+                    'admin::add_relation_tpl',
                     $this->relation_name
                 );
         });

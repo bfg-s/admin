@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\LarDoc;
-use LteAdmin\Components\Vue\FormActionAfterSave;
-use LteAdmin\Explanation;
+use Admin\Components\Vue\FormActionAfterSave;
+use Admin\Explanation;
 
 class FormFooterComponent extends Component
 {
@@ -115,12 +115,12 @@ class FormFooterComponent extends Component
         $menu = $this->menu;
 
         if ($type === 'edit' || isset($menu['post'])) {
-            $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'lte.save')])->setDatas([
+            $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'admin.save')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id,
             ]);
         } elseif ($type === 'create') {
-            $group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'lte.add')])->setDatas([
+            $group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'admin.add')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id,
             ]);
@@ -133,9 +133,9 @@ class FormFooterComponent extends Component
                 'select' => session('_after', 'index'),
                 'type' => $type,
                 'lang' => [
-                    'to_the_list' => __('lte.to_the_list'),
-                    'add_more' => __('lte.add_more'),
-                    'edit_further' => __('lte.edit_further'),
+                    'to_the_list' => __('admin.to_the_list'),
+                    'add_more' => __('admin.add_more'),
+                    'edit_further' => __('admin.edit_further'),
                 ],
             ]));
         }

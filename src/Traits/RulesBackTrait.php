@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 use Closure;
-use LteAdmin\Controllers\Controller;
+use Admin\Controllers\Controller;
 
 trait RulesBackTrait
 {

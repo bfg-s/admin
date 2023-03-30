@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
-use LteAdmin\Traits\FontAwesome;
+use Admin\Traits\FontAwesome;
 
 class TabContentComponent extends Component
 {

@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin;
+namespace Admin;
 
 use Broadcast;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Roads\Roads;
-use LteAdmin\Core\NavGroup;
-use LteAdmin\Core\NavigatorExtensions;
-use LteAdmin\Core\NavItem;
-use LteAdmin\Interfaces\NavigateInterface;
-use LteAdmin\Traits\NavDefaultTools;
+use Admin\Core\NavGroup;
+use Admin\Core\NavigatorExtensions;
+use Admin\Core\NavItem;
+use Admin\Interfaces\NavigateInterface;
+use Admin\Traits\NavDefaultTools;
 
 /**
  * @mixin NavigatorExtensions
@@ -117,8 +117,8 @@ class Navigate implements NavigateInterface
      */
     protected function includeAfterGroup($name)
     {
-        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
-            foreach (LteAdmin::$nav_extensions[$name] as $item) {
+        if (is_string($name) && isset(Admin::$nav_extensions[$name]) && is_array(Admin::$nav_extensions[$name])) {
+            foreach (Admin::$nav_extensions[$name] as $item) {
                 if (!is_array($item)) {
                     self::$extension = $item;
 
@@ -128,7 +128,7 @@ class Navigate implements NavigateInterface
                 }
             }
 
-            unset(LteAdmin::$nav_extensions[$name]);
+            unset(Admin::$nav_extensions[$name]);
         }
     }
 
@@ -205,14 +205,14 @@ class Navigate implements NavigateInterface
      */
     public function __call($name, $arguments)
     {
-        if (isset(LteAdmin::$nav_extensions[$name])) {
-            self::$extension = LteAdmin::$nav_extensions[$name];
+        if (isset(Admin::$nav_extensions[$name])) {
+            self::$extension = Admin::$nav_extensions[$name];
 
-            LteAdmin::$nav_extensions[$name]->navigator($this);
+            Admin::$nav_extensions[$name]->navigator($this);
 
             self::$extension = null;
 
-            unset(LteAdmin::$nav_extensions[$name]);
+            unset(Admin::$nav_extensions[$name]);
         }
     }
 }

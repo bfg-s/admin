@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
-use LteAdmin\Components\LangComponent;
+use Admin\Components\LangComponent;
 
 /**
  * @property-read LangComponent|static $lang

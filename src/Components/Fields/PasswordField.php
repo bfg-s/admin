@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 use Route;
 
@@ -38,7 +38,7 @@ class PasswordField extends InputField
         if (!$label && $this->title) {
             $label = $this->title;
 
-            $info = __('lte.confirmation');
+            $info = __('admin.confirmation');
         }
 
         $p = $this->parent_field;

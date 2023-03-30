@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\Timeline as LteTimeline;
+use Admin\Delegates\Timeline as LteTimeline;
 
 /**
  * Timeline Class
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class Timeline extends LteTimeline
 {

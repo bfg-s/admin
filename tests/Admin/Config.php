@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin;
+namespace Admin\Tests\Admin;
 
-use LteAdmin\Core\ConfigExtensionProvider;
+use Admin\Core\ConfigExtensionProvider;
 
 /**
  * Config Class.
- * @package LteAdmin\Tests\Admin
+ * @package Admin\Tests\Admin
  */
 class Config extends ConfigExtensionProvider
 {

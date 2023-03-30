@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Components\Cores\CheckBoxFieldCore;
-use LteAdmin\Components\FormGroupComponent;
+use Admin\Components\Cores\CheckBoxFieldCore;
+use Admin\Components\FormGroupComponent;
 
 class ChecksField extends FormGroupComponent
 {

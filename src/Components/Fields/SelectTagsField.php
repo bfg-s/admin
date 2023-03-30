@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Components\Cores\Select2TagsFieldCore;
+use Admin\Components\Cores\Select2TagsFieldCore;
 
 class SelectTagsField extends SelectField
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\IconField;
+use Admin\Components\Fields\IconField;
 
 class IconSearchField extends IconField
 {

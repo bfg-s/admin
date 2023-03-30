@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use DB;
 use Illuminate\Contracts\Support\Arrayable;
@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
-use LteAdmin\Models\LteFileStorage;
-use LteAdmin\Traits\Eventable;
+use Admin\Models\AdminFileStorage;
+use Admin\Traits\Eventable;
 
 class ModelSaver
 {
@@ -143,7 +143,7 @@ class ModelSaver
         $data = [];
         foreach ($this->data as $key => $datum) {
             if (is_object($datum) && $datum instanceof UploadedFile) {
-                $data[$key] = LteFileStorage::makeFile($datum);
+                $data[$key] = AdminFileStorage::makeFile($datum);
             } else {
                 $data[$key] = $datum;
             }
@@ -545,7 +545,7 @@ class ModelSaver
         if (!$call && is_callable($model)) {
             $call = $model;
 
-            $model = lte_controller_model();
+            $model = admin_controller_model();
         }
 
         $event = "on_$event";

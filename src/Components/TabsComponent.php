@@ -1,13 +1,13 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\Macroable;
+use Admin\Traits\Delegable;
+use Admin\Traits\Macroable;
 use ReflectionException;
 
 /**

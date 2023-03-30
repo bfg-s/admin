@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
 use Carbon\Carbon;
-use LteAdmin\Components\Fields\DateTimeField;
+use Admin\Components\Fields\DateTimeField;
 
 class DateTimeSearchField extends DateTimeField
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\AmountField;
+use Admin\Components\Fields\AmountField;
 
 class AmountSearchField extends AmountField
 {

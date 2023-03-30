@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Tests;
+namespace Admin\Tests;
 
-use LteAdmin\Tests\Models\User;
+use Admin\Tests\Models\User;
 
 class BLteCommandsTest extends TestCase
 {
@@ -13,7 +13,7 @@ class BLteCommandsTest extends TestCase
 
     public function test_lte_install_command(array $options = [])
     {
-        $this->artisan('lte:install', $options)
+        $this->artisan('admin:install', $options)
             ->assertExitCode(0);
     }
 
@@ -29,7 +29,7 @@ class BLteCommandsTest extends TestCase
 
     public function test_lte_make_user_root_command(int $role_id = 1)
     {
-        $this->artisan('lte:user', [
+        $this->artisan('admin:user', [
             'email' => 'test@email.com',
             'name' => 'test',
             'password' => 'test',
@@ -44,12 +44,12 @@ class BLteCommandsTest extends TestCase
 
     public function test_lte_make_controller_without_model_command()
     {
-        $this->artisan('lte:controller', [
+        $this->artisan('admin:controller', [
             'name' => 'NoModel',
             '--force' => true,
         ])->assertExitCode(0);
 
-        $file = lte_app_path('Controllers/NoModelController.php');
+        $file = admin_app_path('Controllers/NoModelController.php');
 
         $this->assertTrue(is_file($file));
 
@@ -58,13 +58,13 @@ class BLteCommandsTest extends TestCase
 
     public function test_lte_make_controller_with_model_command()
     {
-        $this->artisan('lte:controller', [
+        $this->artisan('admin:controller', [
             'name' => 'WithModel',
             '--model' => User::class,
             '--force' => true,
         ])->assertExitCode(0);
 
-        $file = lte_app_path('Controllers/WithModelController.php');
+        $file = admin_app_path('Controllers/WithModelController.php');
 
         $this->assertTrue(is_file($file));
 

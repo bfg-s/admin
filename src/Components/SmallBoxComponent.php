@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Traits\Delegable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\Macroable;
+use Admin\Traits\TypesTrait;
 
 /**
  * @mixin SmallBoxComponentMacroList

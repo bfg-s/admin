@@ -1,18 +1,18 @@
 <?php
 
-namespace LteAdmin;
+namespace Admin;
 
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
-use LteAdmin\Core\ConfigExtensionProvider;
-use LteAdmin\Core\InstallExtensionProvider;
-use LteAdmin\Core\NavGroup;
-use LteAdmin\Core\NavigatorExtensionProvider;
-use LteAdmin\Core\PermissionsExtensionProvider;
-use LteAdmin\Core\UnInstallExtensionProvider;
-use LteAdmin\Interfaces\NavigateInterface;
-use LteAdmin\Models\LteFunction;
+use Admin\Core\ConfigExtensionProvider;
+use Admin\Core\InstallExtensionProvider;
+use Admin\Core\NavGroup;
+use Admin\Core\NavigatorExtensionProvider;
+use Admin\Core\PermissionsExtensionProvider;
+use Admin\Core\UnInstallExtensionProvider;
+use Admin\Interfaces\NavigateInterface;
+use Admin\Models\LteFunction;
 use ReflectionClass;
 
 class ExtendProvider extends ServiceProviderIlluminate
@@ -120,7 +120,7 @@ class ExtendProvider extends ServiceProviderIlluminate
         $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        \LteAdmin::registerExtension($this);
+        \Admin::registerExtension($this);
     }
 
     /**
@@ -175,7 +175,7 @@ class ExtendProvider extends ServiceProviderIlluminate
      */
     public function included()
     {
-        return isset(LteAdmin::$extensions[static::$name]) && LteAdmin::$extensions[static::$name];
+        return isset(Admin::$extensions[static::$name]) && Admin::$extensions[static::$name];
     }
 
     /**

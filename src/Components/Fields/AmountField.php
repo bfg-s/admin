@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 class AmountField extends InputField
 {

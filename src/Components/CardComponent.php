@@ -1,19 +1,19 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\LarDoc;
 use Lar\Layout\Tags\DIV;
 use Lar\Layout\Tags\H3;
-use LteAdmin\Core\MenuItem;
-use LteAdmin\Explanation;
-use LteAdmin\Page;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Core\MenuItem;
+use Admin\Explanation;
+use Admin\Page;
+use Admin\Traits\Delegable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\Macroable;
+use Admin\Traits\TypesTrait;
 
 class CardComponent extends Component
 {
@@ -233,7 +233,7 @@ class CardComponent extends Component
         $this->headerObj(function (DIV $div) {
             $ad = $this->table->getActionData();
             if ($ad['show']) {
-                $div->prepEnd()->view('lte::segment.model_table_actions', $ad);
+                $div->prepEnd()->view('admin::segment.model_table_actions', $ad);
             }
         });
 
@@ -371,17 +371,17 @@ class CardComponent extends Component
         $originTitle = $this->title;
         $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
         if (lte_model_type('index')) {
-            $this->title = $this->title !== null ? $this->title : 'lte.list';
+            $this->title = $this->title !== null ? $this->title : 'admin.list';
             if (request()->has('show_deleted') && request('show_deleted') == 1) {
-                $this->title = __($this->title).' <small><b>('.__('lte.deleted').')</b></small>';
+                $this->title = __($this->title).' <small><b>('.__('admin.deleted').')</b></small>';
             }
         } elseif (lte_model_type('create')) {
-            $this->title = $this->title !== null ? $this->title : 'lte.add';
+            $this->title = $this->title !== null ? $this->title : 'admin.add';
         } elseif (lte_model_type('edit')) {
             $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
-            $this->title = $this->title !== null ? $this->title : 'lte.id_edit';
+            $this->title = $this->title !== null ? $this->title : 'admin.id_edit';
         } elseif (lte_model_type('show')) {
-            $this->title = $this->title !== null ? $this->title : 'lte.information';
+            $this->title = $this->title !== null ? $this->title : 'admin.information';
         }
 
         if ($this->title_obj) {
@@ -410,7 +410,7 @@ class CardComponent extends Component
 
             if ($test('search')) {
                 $this->buttons()->when(function (ButtonsComponent $group) {
-                    $group->primary(['fas fa-search', __('lte.search')])
+                    $group->primary(['fas fa-search', __('admin.search')])
                         ->setDatas([
                             'toggle' => 'collapse',
                             'target' => '.table_search_form',
@@ -424,7 +424,7 @@ class CardComponent extends Component
                         });
 
                     if ($this->search_form && request()->has('q')) {
-                        $group->danger(['fas fa-window-close', __('lte.cancel')])
+                        $group->danger(['fas fa-window-close', __('admin.cancel')])
                             ->attr('id', 'cancel_search_params')
                             ->query([], ['q', 'page'])
                             ->whenRender(function (ButtonComponent $button) {
@@ -443,7 +443,7 @@ class CardComponent extends Component
                 if ($model && property_exists($model, 'forceDeleting')) {
                     if (!request()->has('show_deleted')) {
                         $this->buttons()->dark('fas fa-trash')
-                            ->on_click('doc::location', urlWithGet(['show_deleted' => 1]))->setTitle(__('lte.deleted'));
+                            ->on_click('doc::location', urlWithGet(['show_deleted' => 1]))->setTitle(__('admin.deleted'));
                     } else {
                         $this->buttons()->resourceList(urlWithGet([], ['show_deleted']));
                     }

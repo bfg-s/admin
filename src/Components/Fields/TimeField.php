@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
-use LteAdmin\Traits\DateControlTrait;
+use Admin\Traits\DateControlTrait;
 
 class TimeField extends InputField
 {

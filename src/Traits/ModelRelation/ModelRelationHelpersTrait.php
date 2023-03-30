@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Traits\ModelRelation;
+namespace Admin\Traits\ModelRelation;
 
 trait ModelRelationHelpersTrait
 {

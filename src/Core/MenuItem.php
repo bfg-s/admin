@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use App;
 use ArrayAccess;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LteAdmin\ExtendProvider;
+use Admin\ExtendProvider;
 
 class MenuItem implements ArrayAccess
 {

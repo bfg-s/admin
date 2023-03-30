@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Events;
+namespace Admin\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;

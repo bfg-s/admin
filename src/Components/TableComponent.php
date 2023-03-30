@@ -1,14 +1,14 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Lar\Layout\Tags\TABLE as TableParent;
-use LteAdmin\Explanation;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Explanation;
+use Admin\Traits\Delegable;
+use Admin\Traits\Macroable;
+use Admin\Traits\TypesTrait;
 
 /**
  * @mixin TableComponentMacroList

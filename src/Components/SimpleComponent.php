@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use LteAdmin\Traits\Delegable;
+use Admin\Traits\Delegable;
 
 abstract class SimpleComponent implements Renderable, Htmlable
 {
@@ -34,7 +34,7 @@ abstract class SimpleComponent implements Renderable, Htmlable
         $this->newExplain($this->delegates);
 
         return $this->template
-            ? view("lte::theme.$this->template", $this->state)
+            ? view("admin::theme.$this->template", $this->state)
             : "";
     }
 

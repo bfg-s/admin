@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\Alert as LteAlert;
+use Admin\Delegates\Alert as LteAlert;
 
 /**
  * Alert Class
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class Alert extends LteAlert
 {

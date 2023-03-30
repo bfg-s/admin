@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\GridColumnComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\GridColumnComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin GridColumnComponent

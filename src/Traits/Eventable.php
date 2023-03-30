@@ -1,13 +1,13 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 use Closure;
 
 /**
  * Trait Eventable.
  *
- * @package LteAdmin\Traits
+ * @package Admin\Traits
  */
 trait Eventable
 {

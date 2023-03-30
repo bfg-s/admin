@@ -1,44 +1,44 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Lar\Layout\Respond;
-use LteAdmin\Components\AlertComponent;
-use LteAdmin\Components\ButtonsComponent;
-use LteAdmin\Components\CardBodyComponent;
-use LteAdmin\Components\CardComponent;
-use LteAdmin\Components\ChartJsComponent;
-use LteAdmin\Components\DividerComponent;
-use LteAdmin\Components\FieldComponent;
-use LteAdmin\Components\FormComponent;
-use LteAdmin\Components\GridColumnComponent;
-use LteAdmin\Components\GridRowComponent;
-use LteAdmin\Components\InfoBoxComponent;
-use LteAdmin\Components\LangComponent;
-use LteAdmin\Components\LiveComponent;
-use LteAdmin\Components\ModalComponent;
-use LteAdmin\Components\ModelInfoTableComponent;
-use LteAdmin\Components\ModelRelationComponent;
-use LteAdmin\Components\ModelTableComponent;
-use LteAdmin\Components\NestedComponent;
-use LteAdmin\Components\SearchFormComponent;
-use LteAdmin\Components\SmallBoxComponent;
-use LteAdmin\Components\StatisticPeriodComponent;
-use LteAdmin\Components\TableComponent;
-use LteAdmin\Components\TabsComponent;
-use LteAdmin\Components\TimelineComponent;
-use LteAdmin\Components\WatchComponent;
-use LteAdmin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
-use LteAdmin\Core\Delegate;
-use LteAdmin\Exceptions\NotFoundExplainForControllerException;
-use LteAdmin\Explanation;
-use LteAdmin\Page;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\Piplineble;
+use Admin\Components\AlertComponent;
+use Admin\Components\ButtonsComponent;
+use Admin\Components\CardBodyComponent;
+use Admin\Components\CardComponent;
+use Admin\Components\ChartJsComponent;
+use Admin\Components\DividerComponent;
+use Admin\Components\FieldComponent;
+use Admin\Components\FormComponent;
+use Admin\Components\GridColumnComponent;
+use Admin\Components\GridRowComponent;
+use Admin\Components\InfoBoxComponent;
+use Admin\Components\LangComponent;
+use Admin\Components\LiveComponent;
+use Admin\Components\ModalComponent;
+use Admin\Components\ModelInfoTableComponent;
+use Admin\Components\ModelRelationComponent;
+use Admin\Components\ModelTableComponent;
+use Admin\Components\NestedComponent;
+use Admin\Components\SearchFormComponent;
+use Admin\Components\SmallBoxComponent;
+use Admin\Components\StatisticPeriodComponent;
+use Admin\Components\TableComponent;
+use Admin\Components\TabsComponent;
+use Admin\Components\TimelineComponent;
+use Admin\Components\WatchComponent;
+use Admin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
+use Admin\Core\Delegate;
+use Admin\Exceptions\NotFoundExplainForControllerException;
+use Admin\Explanation;
+use Admin\Page;
+use Admin\Traits\Macroable;
+use Admin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -46,7 +46,7 @@ use function redirect;
 
 /**
  * @property-read Page $page
- * @methods LteAdmin\Controllers\Controller::$explanation_list (likeProperty)
+ * @methods Admin\Controllers\Controller::$explanation_list (likeProperty)
  * @mixin ControllerMethods
  * @mixin ControllerMacroList
  */
@@ -124,13 +124,13 @@ class Controller extends BaseController
             /** @var Model $model */
             $model = static::$model;
             $model::created(static function ($model) {
-                lte_log_info('Created model', get_class($model), 'fas fa-plus');
+                admin_log_info('Created model', get_class($model), 'fas fa-plus');
             });
             $model::updated(static function ($model) {
-                lte_log_info('Updated model', get_class($model), 'fas fa-highlighter');
+                admin_log_info('Updated model', get_class($model), 'fas fa-highlighter');
             });
             $model::deleted(static function ($model) {
-                lte_log_danger('Deleted model', get_class($model), 'fas fa-trash');
+                admin_log_danger('Deleted model', get_class($model), 'fas fa-trash');
             });
         }
     }

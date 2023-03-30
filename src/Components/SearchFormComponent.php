@@ -1,34 +1,34 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Lar\Layout\Tags\OL;
 use Lar\Tagable\Tag;
-use LteAdmin\Components\SearchFields\AmountSearchField;
-use LteAdmin\Components\SearchFields\ChecksSearchField;
-use LteAdmin\Components\SearchFields\ColorSearchField;
-use LteAdmin\Components\SearchFields\DateRangeSearchField;
-use LteAdmin\Components\SearchFields\DateSearchField;
-use LteAdmin\Components\SearchFields\DateTimeRangeSearchField;
-use LteAdmin\Components\SearchFields\DateTimeSearchField;
-use LteAdmin\Components\SearchFields\EmailSearchField;
-use LteAdmin\Components\SearchFields\IconSearchField;
-use LteAdmin\Components\SearchFields\InputSearchField;
-use LteAdmin\Components\SearchFields\MultiSelectSearchField;
-use LteAdmin\Components\SearchFields\NumberSearchField;
-use LteAdmin\Components\SearchFields\NumericSearchField;
-use LteAdmin\Components\SearchFields\RadiosSearchField;
-use LteAdmin\Components\SearchFields\SelectSearchField;
-use LteAdmin\Components\SearchFields\SelectTagsSearchField;
-use LteAdmin\Components\SearchFields\SwitcherSearchField;
-use LteAdmin\Components\SearchFields\TimeFieldSearchField;
-use LteAdmin\Controllers\Controller;
-use LteAdmin\Explanation;
-use LteAdmin\Traits\SearchFormConditionRulesTrait;
-use LteAdmin\Traits\SearchFormHelpersTrait;
+use Admin\Components\SearchFields\AmountSearchField;
+use Admin\Components\SearchFields\ChecksSearchField;
+use Admin\Components\SearchFields\ColorSearchField;
+use Admin\Components\SearchFields\DateRangeSearchField;
+use Admin\Components\SearchFields\DateSearchField;
+use Admin\Components\SearchFields\DateTimeRangeSearchField;
+use Admin\Components\SearchFields\DateTimeSearchField;
+use Admin\Components\SearchFields\EmailSearchField;
+use Admin\Components\SearchFields\IconSearchField;
+use Admin\Components\SearchFields\InputSearchField;
+use Admin\Components\SearchFields\MultiSelectSearchField;
+use Admin\Components\SearchFields\NumberSearchField;
+use Admin\Components\SearchFields\NumericSearchField;
+use Admin\Components\SearchFields\RadiosSearchField;
+use Admin\Components\SearchFields\SelectSearchField;
+use Admin\Components\SearchFields\SelectTagsSearchField;
+use Admin\Components\SearchFields\SwitcherSearchField;
+use Admin\Components\SearchFields\TimeFieldSearchField;
+use Admin\Controllers\Controller;
+use Admin\Explanation;
+use Admin\Traits\SearchFormConditionRulesTrait;
+use Admin\Traits\SearchFormHelpersTrait;
 
 /**
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
@@ -244,13 +244,13 @@ class SearchFormComponent extends Component
                     $div = OL::create(['breadcrumb p-1 pl-2 ml-1 m-0 bg-white']);
                     $div->li(['breadcrumb-item active'])
                         ->i(['fas fa-search'])
-                        ->_text(' '.__('lte.sort_result_report'));
+                        ->_text(' '.__('admin.sort_result_report'));
                 }
 
                 $div->li(['breadcrumb-item'])
                     ->a([
                         'href' => urlWithGet([], [$formGroup->get_path()])
-                    ])->setTitle(__('lte.cancel').': '.$formGroup->get_title())
+                    ])->setTitle(__('admin.cancel').': '.$formGroup->get_title())
                     ->i(['fas fa-window-close text-danger'])
                     ->__text(' '.$formGroup->get_title().': '.$val);
             }
@@ -278,7 +278,7 @@ class SearchFormComponent extends Component
         }
 
         $this->div()->textRight()->buttons()->when(static function (ButtonsComponent $group) use ($action) {
-            $group->success(['fas fa-search', __('lte.to_find')])->setType('submit');
+            $group->success(['fas fa-search', __('admin.to_find')])->setType('submit');
         });
     }
 }

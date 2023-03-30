@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core\TableExtends;
+namespace Admin\Core\TableExtends;
 
 use Carbon\Carbon;
 use Exception;
@@ -9,7 +9,7 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
-use LteAdmin\Models\LtePermission;
+use Admin\Models\AdminPermission;
 use Str;
 
 class Formatter
@@ -75,39 +75,39 @@ class Formatter
         }
 
         $urlIndex = route(
-            config('lte.route.name').$props[0].'.index'
+            config('admin.route.name').$props[0].'.index'
         );
 
         $urlEdit = route(
-            config('lte.route.name').$props[0].'.edit',
+            config('admin.route.name').$props[0].'.edit',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
         $urlShow = route(
-            config('lte.route.name').$props[0].'.show',
+            config('admin.route.name').$props[0].'.show',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlIndex = LtePermission::checkUrl($urlIndex) ?
+        $urlIndex = AdminPermission::checkUrl($urlIndex) ?
             $urlIndex : false;
 
-        $urlEdit = LtePermission::checkUrl($urlEdit) ?
+        $urlEdit = AdminPermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-        $urlShow = LtePermission::checkUrl($urlShow) ?
+        $urlShow = AdminPermission::checkUrl($urlShow) ?
             $urlShow : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : '').$value.
+            )->setTitle(__('admin.edit')) : '').$value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
-            )->setTitle(__('lte.information')) : '').
+            )->setTitle(__('admin.information')) : '').
 
             ($urlIndex ? A::create(['ml-1 link text-sm'])->setHref($urlIndex)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-list-alt')
-            )->setTitle(__('lte.list')) : '');
+            )->setTitle(__('admin.list')) : '');
     }
 
     /**
@@ -133,16 +133,16 @@ class Formatter
         }
 
         $urlEdit = route(
-            config('lte.route.name').$props[0].'.edit',
+            config('admin.route.name').$props[0].'.edit',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlEdit = LtePermission::checkUrl($urlEdit) ?
+        $urlEdit = AdminPermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
         return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
-            )->setTitle(__('lte.edit')) : '').$value;
+            )->setTitle(__('admin.edit')) : '').$value;
     }
 
     /**
@@ -168,18 +168,18 @@ class Formatter
         }
 
         $urlShow = route(
-            config('lte.route.name').$props[0].'.show',
+            config('admin.route.name').$props[0].'.show',
             [$props[1] => $model ? $model->{$props[2]} : '']
         );
 
-        $urlShow = LtePermission::checkUrl($urlShow) ?
+        $urlShow = AdminPermission::checkUrl($urlShow) ?
             $urlShow : false;
 
         return $value.
 
             ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
                 I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
-            )->setTitle(__('lte.information')) : '');
+            )->setTitle(__('admin.information')) : '');
     }
 
     /**
@@ -417,5 +417,23 @@ class Formatter
         }
 
         return $value;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function butty_date($value = null)
+    {
+        return butty_date($value);
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function butty_date_time($value = null)
+    {
+        return butty_date_time($value);
     }
 }

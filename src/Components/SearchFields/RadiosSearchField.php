@@ -1,8 +1,8 @@
 <?php
 
-namespace LteAdmin\Components\SearchFields;
+namespace Admin\Components\SearchFields;
 
-use LteAdmin\Components\Fields\RadiosField;
+use Admin\Components\Fields\RadiosField;
 
 class RadiosSearchField extends RadiosField
 {

@@ -1,20 +1,20 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use App;
 use Arr;
 use Composer\Composer;
 use DB;
 use Lar\Layout\Abstracts\Component;
-use LteAdmin;
-use LteAdmin\Components\GridColumnComponent;
-use LteAdmin\Delegates\Card;
-use LteAdmin\Delegates\CardBody;
-use LteAdmin\Delegates\ChartJs;
-use LteAdmin\Delegates\SearchForm;
-use LteAdmin\Delegates\StatisticPeriod;
-use LteAdmin\Page;
+use Admin;
+use Admin\Components\GridColumnComponent;
+use Admin\Delegates\Card;
+use Admin\Delegates\CardBody;
+use Admin\Delegates\ChartJs;
+use Admin\Delegates\SearchForm;
+use Admin\Delegates\StatisticPeriod;
+use Admin\Page;
 use PDO;
 
 class DashboardController extends Controller
@@ -45,11 +45,11 @@ class DashboardController extends Controller
         SearchForm $searchForm
     ) {
         return $page->card(
-            $card->title(__('lte.user_statistics')),
+            $card->title(__('admin.user_statistics')),
             $card->card_body(
                 $cardBody->statistic_period(
                     $statisticPeriod->model(config('auth.providers.users.model'))
-                        ->title('lte.users')
+                        ->title('admin.users')
                         ->icon_users()
                         ->forToday()
                         ->perWeek()
@@ -59,22 +59,22 @@ class DashboardController extends Controller
                 $cardBody->chart_js(
                     $chartJs->model(config('auth.providers.users.model'))
                         ->hasSearch(
-                            $searchForm->date_range('created_at', 'lte.created_at')
+                            $searchForm->date_range('created_at', 'admin.created_at')
                                 ->default(implode(' - ', $this->defaultDateRange()))
                         )
                         ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                         ->groupDataByAt('created_at')
-                        ->eachPointCount(__('lte.added_to_users'))
+                        ->eachPointCount(__('admin.added_to_users'))
                         ->miniChart(),
                 )
             )
         )
             ->when(admin()->isRoot(), function (Page $page) {
                 $page->next()->row(
-                    $this->cardTableCol('lte.environment', [$this, 'environmentInfo']),
+                    $this->cardTableCol('admin.environment', [$this, 'environmentInfo']),
                     $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
                     $this->cardTableCol('Composer', [$this, 'composerInfo']),
-                    $this->cardTableCol('lte.database', [$this, 'databaseInfo']),
+                    $this->cardTableCol('admin.database', [$this, 'databaseInfo']),
                 );
             });
     }
@@ -114,12 +114,12 @@ class DashboardController extends Controller
         }
 
         return [
-            __('lte.php_version') => '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
-            __('lte.php_modules') => implode(', ', $mods),
-            __('lte.cgi') => php_sapi_name(),
-            __('lte.os') => php_uname(),
-            __('lte.server') => Arr::get($_SERVER, 'SERVER_SOFTWARE'),
-            //__('lte.root') => Arr::get($_SERVER, 'DOCUMENT_ROOT'),
+            __('admin.php_version') => '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
+            __('admin.php_modules') => implode(', ', $mods),
+            __('admin.cgi') => php_sapi_name(),
+            __('admin.os') => php_uname(),
+            __('admin.server') => Arr::get($_SERVER, 'SERVER_SOFTWARE'),
+            //__('admin.root') => Arr::get($_SERVER, 'DOCUMENT_ROOT'),
             'System Load Average' => function_exists('sys_getloadavg') ? sys_getloadavg()[0] : 0,
         ];
     }
@@ -130,29 +130,29 @@ class DashboardController extends Controller
     public function laravelInfo()
     {
         $user_model = config('auth.providers.users.model');
-        $lte_user_model = config('lte.auth.providers.lte.model');
+        $lte_user_model = config('admin.auth.providers.admin.model');
 
         return [
-            __('lte.laravel_version') => '<span class="badge badge-dark">v'.versionString(App::version()).'</span>',
-            __('lte.lte_version') => '<span class="badge badge-dark">v'.versionString(LteAdmin::version()).'</span>',
-            __('lte.timezone') => config('app.timezone'),
-            __('lte.language') => config('app.locale'),
-            __('lte.languages_involved') => implode(', ', config('layout.languages')),
-            __('lte.env') => config('app.env'),
-            __('lte.url') => config('app.url'),
-            __('lte.users') => number_format($user_model::count(), 0, '', ','),
-            __('lte.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
+            __('admin.laravel_version') => '<span class="badge badge-dark">v'.versionString(App::version()).'</span>',
+            __('admin.lte_version') => '<span class="badge badge-dark">v'.versionString(Admin::version()).'</span>',
+            __('admin.timezone') => config('app.timezone'),
+            __('admin.language') => config('app.locale'),
+            __('admin.languages_involved') => implode(', ', config('layout.languages')),
+            __('admin.env') => config('app.env'),
+            __('admin.url') => config('app.url'),
+            __('admin.users') => number_format($user_model::count(), 0, '', ','),
+            __('admin.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
             '' => function (Component $component) {
                 $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('lte.drivers'));
+                $component->_find('th')->h6(['m-0'], __('admin.drivers'));
             },
-            __('lte.broadcast_driver') => '<span class="badge badge-secondary">'.config('broadcasting.default').'</span>',
-            __('lte.cache_driver') => '<span class="badge badge-secondary">'.config('cache.default').'</span>',
-            __('lte.session_driver') => '<span class="badge badge-secondary">'.config('session.driver').'</span>',
-            __('lte.queue_driver') => '<span class="badge badge-secondary">'.config('queue.default').'</span>',
-            __('lte.mail_driver') => '<span class="badge badge-secondary">'.config('mail.driver').'</span>',
-            __('lte.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
-            __('lte.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
+            __('admin.broadcast_driver') => '<span class="badge badge-secondary">'.config('broadcasting.default').'</span>',
+            __('admin.cache_driver') => '<span class="badge badge-secondary">'.config('cache.default').'</span>',
+            __('admin.session_driver') => '<span class="badge badge-secondary">'.config('session.driver').'</span>',
+            __('admin.queue_driver') => '<span class="badge badge-secondary">'.config('queue.default').'</span>',
+            __('admin.mail_driver') => '<span class="badge badge-secondary">'.config('mail.driver').'</span>',
+            __('admin.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
+            __('admin.hashing_driver') => '<span class="badge badge-secondary">'.config('hashing.driver').'</span>',
         ];
     }
 
@@ -162,10 +162,10 @@ class DashboardController extends Controller
     public function composerInfo()
     {
         $return = [
-            __('lte.composer_version') => '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
+            __('admin.composer_version') => '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
             '' => static function (Component $component) {
                 $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('lte.required'));
+                $component->_find('th')->h6(['m-0'], __('admin.required'));
             },
         ];
 
@@ -189,19 +189,19 @@ class DashboardController extends Controller
         $pdo = DB::query('SHOW VARIABLES')->getConnection()->getPdo();
 
         return [
-            __('lte.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
-            __('lte.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION),
-            __('lte.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO),
-            __('lte.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
-            __('lte.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
+            __('admin.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
+            __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION),
+            __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO),
+            __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
+            __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
             '' => static function (Component $component) {
                 $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('lte.connection_info'));
+                $component->_find('th')->h6(['m-0'], __('admin.connection_info'));
             },
-            __('lte.db_driver') => config('database.default'),
-            __('lte.database') => env('DB_DATABASE'),
-            __('lte.user') => env('DB_USERNAME'),
-            __('lte.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
+            __('admin.db_driver') => config('database.default'),
+            __('admin.database') => env('DB_DATABASE'),
+            __('admin.user') => env('DB_USERNAME'),
+            __('admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
         ];
     }
 }

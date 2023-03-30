@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
 use App\Admin\Delegates\Tab;
-use LteAdmin\Components\FormComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\FormComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin FormComponent

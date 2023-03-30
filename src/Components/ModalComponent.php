@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Tags\DIV;
 use ReflectionException;

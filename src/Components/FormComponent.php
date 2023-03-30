@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Tags\INPUT;
-use LteAdmin\Page;
-use LteAdmin\Traits\BuildHelperTrait;
+use Admin\Page;
+use Admin\Traits\BuildHelperTrait;
 use Route;
 
 class FormComponent extends Component

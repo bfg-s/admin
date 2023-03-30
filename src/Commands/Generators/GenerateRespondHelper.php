@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Commands\Generators;
+namespace Admin\Commands\Generators;
 
 use Closure;
 use Illuminate\Console\Command;
@@ -10,11 +10,11 @@ use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Bfg\Entity\Core\Entities\ParamEntity;
 use Lar\Layout\Respond;
 use Lar\Tagable\Core\HTML5Library;
-use LteAdmin\Interfaces\LteHelpGeneratorInterface;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use ReflectionClass;
 use ReflectionException;
 
-class GenerateRespondHelper implements LteHelpGeneratorInterface
+class GenerateRespondHelper implements AdminHelpGeneratorInterface
 {
     /**
      * @var array

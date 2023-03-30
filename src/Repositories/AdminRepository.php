@@ -1,16 +1,16 @@
 <?php
 
-namespace LteAdmin\Repositories;
+namespace Admin\Repositories;
 
 use Bfg\Repository\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LteAdmin\Core\MenuItem;
-use LteAdmin\Exceptions\ShouldBeModelInControllerException;
-use LteAdmin\Models\LtePermission;
-use LteAdmin\Models\LteUser;
+use Admin\Core\MenuItem;
+use Admin\Exceptions\ShouldBeModelInControllerException;
+use Admin\Models\AdminPermission;
+use Admin\Models\AdminUser;
 use Navigate;
 use Route;
 
@@ -201,7 +201,7 @@ class AdminRepository extends Repository
 
     public function isDarkMode()
     {
-        return request()->cookie('lte-dark-mode', (int) config('lte.dark_mode', true)) == 1;
+        return request()->cookie('admin-dark-mode', (int) config('admin.dark_mode', true)) == 1;
     }
 
     public function menuList(): Collection
@@ -244,7 +244,7 @@ class AdminRepository extends Repository
             $menuItem->setParams($item['params'] ?? null);
             $menuItem->mergeRoles($item['roles'] ?? []);
             $menuItem->mergeRoles($parent?->getRoles());
-            $menuItem->insertParentRouteName($parent?->getRoute() ?: 'lte');
+            $menuItem->insertParentRouteName($parent?->getRoute() ?: 'admin');
             $menuItem->setCurrentRoute($this->currentQueryField);
             $menuItem->setTarget();
             if ($menuItem->getAction()) {
@@ -282,7 +282,7 @@ class AdminRepository extends Repository
 
             if ($menuItem->isActive() && $menuItem->getLink()) {
                 $menuItem->setActive(
-                    LtePermission::checkUrl($menuItem->getLink())
+                    AdminPermission::checkUrl($menuItem->getLink())
                 );
             }
 
@@ -305,6 +305,6 @@ class AdminRepository extends Repository
 
     protected function getModelClass(): string
     {
-        return LteUser::class;
+        return AdminUser::class;
     }
 }

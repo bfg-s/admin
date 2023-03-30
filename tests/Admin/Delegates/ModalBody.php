@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\ModalBody as LteModalBody;
+use Admin\Delegates\ModalBody as LteModalBody;
 
 /**
  * ModalBody Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class ModalBody extends LteModalBody
 {

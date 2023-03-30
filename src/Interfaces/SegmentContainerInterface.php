@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Interfaces;
+namespace Admin\Interfaces;
 
 use Illuminate\Contracts\Support\Renderable;
 

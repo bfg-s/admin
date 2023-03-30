@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Components\Fields;
+namespace Admin\Components\Fields;
 
 class InfoCreatedAtField extends InfoField
 {
@@ -9,7 +9,7 @@ class InfoCreatedAtField extends InfoField
      */
     protected $icon = 'fas fa-quote-right';
 
-    public function __construct(string $name = 'created_at', string $title = 'lte.created_at', ...$params)
+    public function __construct(string $name = 'created_at', string $title = 'admin.created_at', ...$params)
     {
         parent::__construct($name, $title, $params);
     }

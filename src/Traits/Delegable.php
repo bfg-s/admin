@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
-use LteAdmin\Core\Delegate;
-use LteAdmin\Explanation;
+use Admin\Core\Delegate;
+use Admin\Explanation;
 
 trait Delegable
 {

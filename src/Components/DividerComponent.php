@@ -1,10 +1,10 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Tags\DIV;
 use Lar\Tagable\Events\onRender;
-use LteAdmin\Traits\Macroable;
+use Admin\Traits\Macroable;
 use ReflectionException;
 
 class DividerComponent extends DIV implements onRender

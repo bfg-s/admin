@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
-use LteAdmin\Components\LangComponent;
-use LteAdmin\Page;
+use Admin\Components\LangComponent;
+use Admin\Page;
 
 /**
  * @property-read LangComponent|static $lang
@@ -163,7 +163,7 @@ abstract class Delegator
     public function inputInfoId(): array
     {
         return [
-            $this->ifEdit()->info('id', 'lte.id')
+            $this->ifEdit()->info('id', 'admin.id')
         ];
     }
 

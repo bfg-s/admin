@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromCollection;

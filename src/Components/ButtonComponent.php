@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\TypesTrait;
 
 class ButtonComponent extends Component
 {
@@ -113,7 +113,7 @@ class ButtonComponent extends Component
     /**
      * @param  array  $unset
      * @param  array  $params
-     * @return $this|m.\LteAdmin\Components\ButtonComponent.query
+     * @return $this|m.\Admin\Components\ButtonComponent.query
      */
     public function unsetQuery(array $unset = [], array $params = [])
     {

@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Core;
+namespace Admin\Core;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use LteAdmin\Navigate;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\NavCommon;
+use Admin\Navigate;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\NavCommon;
 use Str;
 
 class NavItem implements Arrayable

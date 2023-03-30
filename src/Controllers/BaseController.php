@@ -1,6 +1,6 @@
 <?php
 
-namespace LteAdmin\Controllers;
+namespace Admin\Controllers;
 
 use App\Models\Product;
 use App\Models\User;
@@ -10,10 +10,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 use Lang;
-use LteAdmin;
-use LteAdmin\Core\ModelSaver;
-use LteAdmin\ExtendProvider;
-use LteAdmin\Models\LteRole;
+use Admin;
+use Admin\Core\ModelSaver;
+use Admin\ExtendProvider;
+use Admin\Models\AdminRole;
 
 /**
  * @template CurrentModel
@@ -57,11 +57,11 @@ abstract class BaseController extends Controller
         return [
             'slug' => $method,
             'class' => static::class,
-            'description' => $p_desc.($description ? " [$description]" : (Lang::has("lte.about_method.{$method}") ? " [@lte.about_method.{$method}]" : " [{$method}]")),
-            'roles' => $roles === ['*'] ? LteRole::all()->pluck('id')->toArray() : collect($roles)->map(static function (
+            'description' => $p_desc.($description ? " [$description]" : (Lang::has("admin.about_method.{$method}") ? " [@admin.about_method.{$method}]" : " [{$method}]")),
+            'roles' => $roles === ['*'] ? AdminRole::all()->pluck('id')->toArray() : collect($roles)->map(static function (
                 $item
             ) {
-                return is_numeric($item) ? $item : LteRole::where('slug', $item)->first()->id;
+                return is_numeric($item) ? $item : AdminRole::where('slug', $item)->first()->id;
             })->filter()->values()->toArray(),
         ];
     }
@@ -77,13 +77,13 @@ abstract class BaseController extends Controller
 
         $provider = 'ServiceProvider';
 
-        $providers = LteAdmin::extensionProviders();
+        $providers = Admin::extensionProviders();
 
         $iteration = 1;
 
         while (!empty($piece = body_namespace_element(static::class, $iteration))) {
             if (isset($providers["{$piece}\\{$provider}"])) {
-                static::$extension_affiliation = LteAdmin::getExtension($providers["{$piece}\\{$provider}"]);
+                static::$extension_affiliation = Admin::getExtension($providers["{$piece}\\{$provider}"]);
 
                 break;
             }

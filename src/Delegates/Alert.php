@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Delegates;
+namespace Admin\Delegates;
 
-use LteAdmin\Components\AlertComponent;
-use LteAdmin\Core\Delegator;
+use Admin\Components\AlertComponent;
+use Admin\Core\Delegator;
 
 /**
  * @mixin AlertComponent

@@ -1,16 +1,14 @@
 <?php
 
-namespace LteAdmin\Commands\Generators;
+namespace Admin\Commands\Generators;
 
 use Illuminate\Console\Command;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
-use LteAdmin;
-use LteAdmin\Interfaces\LteHelpGeneratorInterface;
-use LteAdmin\Navigate;
-use ReflectionClass;
+use Admin;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use ReflectionException;
 
-class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
+class ExtensionNavigatorHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
      * @param  Command  $command
@@ -19,7 +17,7 @@ class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
     public function handle(Command $command)
     {
         $class = class_entity('NavigatorExtensions');
-        $class->namespace("LteAdmin\Core");
+        $class->namespace("Admin\Core");
 
         $class->doc(function ($doc) {
             /** @var DocumentorEntity $doc */
@@ -37,7 +35,7 @@ class ExtensionNavigatorHelperGenerator implements LteHelpGeneratorInterface
      */
     protected function generateDefaultMethods($doc)
     {
-        foreach (LteAdmin::extensions() as $name => $provider) {
+        foreach (Admin::extensions() as $name => $provider) {
             $doc->tagMethod('void', $provider::$slug, "Make extension routes ($name})");
         }
     }

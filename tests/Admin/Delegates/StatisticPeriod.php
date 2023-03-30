@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Tests\Admin\Delegates;
+namespace Admin\Tests\Admin\Delegates;
 
-use LteAdmin\Delegates\StatisticPeriod as LteStatisticPeriod;
+use Admin\Delegates\StatisticPeriod as LteStatisticPeriod;
 
 /**
  * StatisticPeriod Class.
- * @package LteAdmin\Tests\Admin\Delegates
+ * @package Admin\Tests\Admin\Delegates
  */
 class StatisticPeriod extends LteStatisticPeriod
 {

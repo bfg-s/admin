@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTableLteMenu extends Migration
 {
-    protected $connection = 'lte-sqlite';
+    protected $connection = 'admin-sqlite';
 
     /**
      * Run the migrations.

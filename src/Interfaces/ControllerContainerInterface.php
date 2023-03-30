@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Interfaces;
+namespace Admin\Interfaces;
 
-use LteAdmin\Core\Delegate;
-use LteAdmin\Page;
+use Admin\Core\Delegate;
+use Admin\Page;
 
 interface ControllerContainerInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Tests;
+namespace Admin\Tests;
 
-use LteAdmin\Tests\Traits\DatabaseMigrations;
-use LteAdmin\Tests\Traits\SetUp;
+use Admin\Tests\Traits\DatabaseMigrations;
+use Admin\Tests\Traits\SetUp;
 use Tests\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase

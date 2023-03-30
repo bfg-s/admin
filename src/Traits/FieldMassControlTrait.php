@@ -1,9 +1,9 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
-use LteAdmin\Components\FieldComponent;
-use LteAdmin\Components\FormGroupComponent;
+use Admin\Components\FieldComponent;
+use Admin\Components\FormGroupComponent;
 
 trait FieldMassControlTrait
 {

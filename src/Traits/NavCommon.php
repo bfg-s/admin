@@ -1,11 +1,11 @@
 <?php
 
-namespace LteAdmin\Traits;
+namespace Admin\Traits;
 
 use Closure;
-use LteAdmin\ExtendProvider;
-use LteAdmin\LteAdmin;
-use LteAdmin\Navigate;
+use Admin\ExtendProvider;
+use Admin\Admin;
+use Admin\Navigate;
 use Str;
 
 trait NavCommon
@@ -275,8 +275,8 @@ trait NavCommon
      */
     protected function includeAfterGroup($name)
     {
-        if (is_string($name) && isset(LteAdmin::$nav_extensions[$name]) && is_array(LteAdmin::$nav_extensions[$name])) {
-            foreach (LteAdmin::$nav_extensions[$name] as $item) {
+        if (is_string($name) && isset(Admin::$nav_extensions[$name]) && is_array(Admin::$nav_extensions[$name])) {
+            foreach (Admin::$nav_extensions[$name] as $item) {
                 Navigate::$extension = $item;
 
                 $item->navigator($this);
@@ -284,7 +284,7 @@ trait NavCommon
                 Navigate::$extension = null;
             }
 
-            unset(LteAdmin::$nav_extensions[$name]);
+            unset(Admin::$nav_extensions[$name]);
         }
     }
 }

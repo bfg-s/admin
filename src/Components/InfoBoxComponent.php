@@ -1,12 +1,12 @@
 <?php
 
-namespace LteAdmin\Components;
+namespace Admin\Components;
 
 use Lar\Layout\Tags\DIV;
-use LteAdmin\Traits\Delegable;
-use LteAdmin\Traits\FontAwesome;
-use LteAdmin\Traits\Macroable;
-use LteAdmin\Traits\TypesTrait;
+use Admin\Traits\Delegable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\Macroable;
+use Admin\Traits\TypesTrait;
 
 /**
  * @mixin InfoBoxComponentMacroList
@@ -149,7 +149,7 @@ class InfoBoxComponent extends DIV
         if ($this->link) {
             $link = !is_array($this->link) ? [$this->link] : $this->link;
             $a = $this->a(['small-box-footer'])->setHrefIf(isset($link[0]), $link[0]);
-            $a->text($link[1] ?? __('lte.more_info'), ':space');
+            $a->text($link[1] ?? __('admin.more_info'), ':space');
             $a->i([$link[2] ?? 'fas fa-arrow-circle-right']);
         }
 
