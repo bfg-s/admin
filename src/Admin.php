@@ -2,7 +2,6 @@
 
 namespace Admin;
 
-use App\Models\Admin;
 use Auth;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -14,7 +13,7 @@ class Admin
     /**
      * @var string
      */
-    public static $version = '3.1.12';
+    public static $version = '5.0.0';
 
     /**
      * @var ExtendProvider[]
