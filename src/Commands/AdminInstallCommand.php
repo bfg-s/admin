@@ -169,8 +169,8 @@ class AdminInstallCommand extends Command
                 $class = class_basename($parentClass);
                 $delegateClass = class_entity($class);
                 $delegateClass->namespace(admin_app_namespace('Delegates'));
-                $delegateClass->use("$parentClass as Lte$class");
-                $delegateClass->extend("Lte$class");
+                $delegateClass->use("$parentClass as Admin$class");
+                $delegateClass->extend("Admin$class");
                 $delegateClass->addTrait('CommonTrait');
                 file_put_contents($file, $delegateClass->wrap('php')->render());
                 $this->info("Delegate {$class} created!");
