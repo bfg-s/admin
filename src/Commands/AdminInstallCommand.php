@@ -142,7 +142,7 @@ class AdminInstallCommand extends Command
         if (!is_file($controller)) {
             file_put_contents(
                 $controller,
-                "<?php\n\nnamespace ".admin_app_namespace('Controllers').";\n\nuse Admin\Controllers\Controller as LteController;\n\nclass Controller extends LteController\n{\n\t\n}"
+                "<?php\n\nnamespace ".admin_app_namespace('Controllers').";\n\nuse Admin\Controllers\Controller as AdminController;\n\nclass Controller extends AdminController\n{\n\t\n}"
             );
 
             $this->info("File {$controller} created!");
