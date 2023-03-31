@@ -31,7 +31,7 @@ return [
      */
     'route' => [
         'domain' => '',
-        'prefix' => 'admin',
+        'prefix' => 'bfg',
         'name' => 'admin.',
         'layout' => 'admin_layout',
     ],
