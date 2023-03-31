@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableLteSettings extends Migration
+class CreateTableAdminSettings extends Migration
 {
     protected $connection = 'admin-sqlite';
 
