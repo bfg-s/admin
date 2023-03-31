@@ -17,7 +17,7 @@ module.exports = class extends Executor {
         }).on('change', (e) => {
             let list = $(e.target);
 
-            jax.lte_admin.nestable_save(
+            jax.admin.nestable_save(
                 e.target.dataset.model,
                 e.target.dataset.maxDepth,
                 list.nestable('serialize'),

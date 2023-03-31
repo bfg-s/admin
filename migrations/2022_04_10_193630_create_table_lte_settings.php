@@ -15,9 +15,9 @@ class CreateTableLteSettings extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('lte_settings')) {
+        if (!Schema::hasTable('admin_settings')) {
 
-            Schema::create('lte_settings', static function (Blueprint $table) {
+            Schema::create('admin_settings', static function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('group')->default('admin.global_settings');
                 $table->string('title');
@@ -38,6 +38,6 @@ class CreateTableLteSettings extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_settings');
+        Schema::dropIfExists('admin_settings');
     }
 }

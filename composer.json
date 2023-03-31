@@ -22,6 +22,7 @@
         "php": "^8.0",
         "ext-pdo": "*",
         "lar/ljs": "^2.6.4",
+        "lar/roads": "^2.2.2",
         "lar/layout": "^3.0.3",
         "bfg/emitter": "^1.2",
         "bfg/repository": "^1.0",
@@ -32,12 +33,13 @@
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
         "almasaeed2010/adminlte": "^3.1.0",
+        "laravel/laravel": "^8.0|^9.0|^10.0",
         "barryvdh/laravel-ide-helper": "^v2.12.3"
     },
     "require-dev": {
         "laravel/dusk": "^6.22",
         "phpunit/phpunit": "^9.5|^10.0",
-        "laravel/laravel": "^8.0|^9.0|^10.0"
+        "orchestra/testbench": "^7.23"
     },
     "autoload": {
         "psr-4": {

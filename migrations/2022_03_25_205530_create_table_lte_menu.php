@@ -15,9 +15,9 @@ class CreateTableLteMenu extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('lte_menu')) {
+        if (!Schema::hasTable('admin_menu')) {
 
-            Schema::create('lte_menu', static function (Blueprint $table) {
+            Schema::create('admin_menu', static function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('name');
                 $table->string('icon');
@@ -29,7 +29,7 @@ class CreateTableLteMenu extends Migration
                 $table->boolean('active')->default(1);
                 $table->foreignId('parent_id')
                     ->nullable()
-                    ->constrained('lte_menu')
+                    ->constrained('admin_menu')
                     ->nullOnDelete()->cascadeOnUpdate();
                 $table->timestamps();
                 $table->softDeletes();
@@ -44,6 +44,6 @@ class CreateTableLteMenu extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_menu');
+        Schema::dropIfExists('admin_menu');
     }
 }

@@ -4,7 +4,7 @@ import VueElementLoading from 'vue-element-loading'
 let tooltip_selector = '[title]:not([class^="select2"])';
 
 const load = () => {
-    require('./lte_load')(tooltip_selector);
+    require('./admin_load')(tooltip_selector);
     ljs.vue.mixin(require('./vue_mixin'));
     ljs.vue.component('global_search', require('./Components/GlobalSearch').default);
     ljs.vue.component('live_reloader', require('./Components/LiveReloader').default);

@@ -446,7 +446,7 @@ abstract class Component extends DIV implements onRender
         }
 
         return [
-            'jax.lte_admin.call_callback' => [
+            'jax.admin.call_callback' => [
                 array_key_last(Admin::$callbacks),
                 $parameters
             ]

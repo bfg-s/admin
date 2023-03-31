@@ -55,7 +55,7 @@ class AdminFileStorage extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_file_storage';
+    protected $table = 'admin_file_storage';
     /**
      * The attributes that are mass assignable.
      *

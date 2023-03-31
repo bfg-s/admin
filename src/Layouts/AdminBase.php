@@ -12,7 +12,7 @@ class AdminBase extends LayoutComponent
      *
      * @var string
      */
-    protected $name = 'lte_layout';
+    protected $name = 'admin_layout';
 
     /**
      * @var string

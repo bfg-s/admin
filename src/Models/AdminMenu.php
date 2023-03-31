@@ -60,7 +60,7 @@ class AdminMenu extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_menu';
+    protected $table = 'admin_menu';
 
     /**
      * @var array

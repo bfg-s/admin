@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Admin\Core\MenuItem;
@@ -275,12 +274,12 @@ if (!function_exists('urlWithGet')) {
     }
 }
 
-if (!function_exists('lte_model_type')) {
+if (!function_exists('admin_model_type')) {
     /**
      * @param  string|null  $type
      * @return bool|string|null
      */
-    function lte_model_type(string $type = null)
+    function admin_model_type(string $type = null)
     {
         $menu_type = admin_repo()->type;
 

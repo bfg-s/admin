@@ -10,7 +10,7 @@ use Log;
 use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
 use Admin\Commands\Generators\GenerateBladeHelpers;
-use Admin\Commands\Generators\GenerateLteHelper;
+use Admin\Commands\Generators\GenerateAdminHelper;
 use Admin\Commands\Generators\GenerateNewJaxHelper;
 use Admin\Commands\Generators\GenerateRespondHelper;
 use Admin\Commands\Generators\GetterHelper;
@@ -26,7 +26,7 @@ class AdminHelpersCommand extends Command
      * @var array
      */
     protected static $executors = [
-        GenerateLteHelper::class,
+        GenerateAdminHelper::class,
         GenerateRespondHelper::class,
         GenerateNewJaxHelper::class,
         ExtensionNavigatorHelperGenerator::class,

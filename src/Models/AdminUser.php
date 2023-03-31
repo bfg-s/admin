@@ -68,7 +68,7 @@ class AdminUser extends Model implements AuthenticatableContract
     /**
      * @var string
      */
-    protected $table = 'lte_users';
+    protected $table = 'admin_users';
     /**
      * @var array
      */
@@ -88,7 +88,7 @@ class AdminUser extends Model implements AuthenticatableContract
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(AdminRole::class, 'lte_role_user', 'lte_user_id', 'lte_role_id');
+        return $this->belongsToMany(AdminRole::class, 'admin_role_user', 'admin_user_id', 'admin_role_id');
     }
 
     /**
@@ -96,7 +96,7 @@ class AdminUser extends Model implements AuthenticatableContract
      */
     public function logs(): HasMany
     {
-        return $this->hasMany(AdminLog::class, 'lte_user_id', 'id');
+        return $this->hasMany(AdminLog::class, 'admin_user_id', 'id');
     }
 
     /**

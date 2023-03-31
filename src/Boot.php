@@ -56,7 +56,7 @@ class Boot
             ModelTableComponent::addExtensionClass($item);
         }
 
-        foreach (\Admin::extensions() as $extension) {
+        foreach (\Admin\Facades\AdminFacade::extensions() as $extension) {
             if ($extension->included()) {
                 $extension->config()->boot();
             }

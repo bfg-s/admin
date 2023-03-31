@@ -5,6 +5,7 @@ namespace Admin\Core;
 use Illuminate\Routing\PendingResourceRegistration;
 use Lar\Roads\Roads;
 use Admin\Admin;
+use Admin\Admin\Facades\NavigateFacade;
 use Admin\Navigate;
 
 class RoutesAdaptor
@@ -26,7 +27,7 @@ class RoutesAdaptor
         if (isset($extensions['application'])) {
             Navigate::$extension = $extensions['application'];
 
-            $extensions['application']->navigator(\Navigate::instance());
+            $extensions['application']->navigator(\Admin\Facades\NavigateFacade::instance());
 
             Navigate::$extension = null;
 
@@ -43,14 +44,14 @@ class RoutesAdaptor
                     foreach ($extension as $item) {
                         Navigate::$extension = $item;
 
-                        $item->navigator(\Navigate::instance());
+                        $item->navigator(\Admin\Facades\NavigateFacade::instance());
 
                         Navigate::$extension = null;
                     }
                 } else {
                     Navigate::$extension = $extension;
 
-                    $extension->navigator(\Navigate::instance());
+                    $extension->navigator(\Admin\Facades\NavigateFacade::instance());
 
                     Navigate::$extension = null;
                 }
@@ -59,7 +60,7 @@ class RoutesAdaptor
 
         $new_menu = [];
 
-        foreach (\Navigate::get() as $menu) {
+        foreach (\Admin\Facades\NavigateFacade::get() as $menu) {
             static::make_route($menu, $roads);
             $new_menu[] = $menu;
         }

@@ -28,7 +28,7 @@ class AdminLte extends Executor {
                 if (name.indexOf("q[") !== 0 && name !== '_method')
                     j.param(name, value);
             });
-            j.lte_admin.load_lives().then(((content) => {
+            j.admin.load_lives().then(((content) => {
                 if (typeof content === 'object') {
                     Object.keys(content).map((key) => {
                         const q = $(`#${key}`);

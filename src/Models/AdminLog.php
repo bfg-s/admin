@@ -20,11 +20,11 @@ use Admin\Traits\DumpedModel;
  * @property string|null $method
  * @property string $user_agent
  * @property string $session_id
- * @property int|null $lte_user_id
+ * @property int|null $admin_user_id
  * @property int|null $web_id
  * @property string|null $icon
  * @property Carbon|null $created_at
- * @property-read \App\Models\LteUser|null $lte_user
+ * @property-read \App\Models\LteUser|null $admin_user
  * @method static Builder|AdminLog makeDumpedModel()
  * @method static Builder|AdminLog newModelQuery()
  * @method static Builder|AdminLog newQuery()
@@ -52,13 +52,13 @@ class AdminLog extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_logs';
+    protected $table = 'admin_logs';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'icon', 'lte_user_id', 'title', 'detail', 'ip', 'url', 'route', 'method', 'session_id', 'user_agent', 'web_id',
+        'icon', 'admin_user_id', 'title', 'detail', 'ip', 'url', 'route', 'method', 'session_id', 'user_agent', 'web_id',
     ];
 
     /**
@@ -66,7 +66,7 @@ class AdminLog extends Model
      */
     protected $casts = [
         'icon' => 'string',
-        'lte_user_id' => 'int',
+        'admin_user_id' => 'int',
         'title' => 'string',
         'detail' => 'string',
         'ip' => 'string',
@@ -81,8 +81,8 @@ class AdminLog extends Model
     /**
      * @return HasOne
      */
-    public function lte_user(): HasOne
+    public function admin_user(): HasOne
     {
-        return $this->hasOne(AdminUser::class, 'id', 'lte_user_id');
+        return $this->hasOne(AdminUser::class, 'id', 'admin_user_id');
     }
 }

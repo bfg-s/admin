@@ -108,7 +108,7 @@ module.exports = class extends Executor {
         let ids = this.selectedIds;
         ljs.progress.start();
         "toast::success".exec("Downloading...");
-        jax.lte_admin.export_excel(this.object, ids, this.order, this.orderType, this.table)
+        jax.admin.export_excel(this.object, ids, this.order, this.orderType, this.table)
             .then(() => {
                 "toast::success".exec("Saving...");
             })
@@ -121,7 +121,7 @@ module.exports = class extends Executor {
         let ids = this.selectedIds;
         ljs.progress.start();
         "toast::success".exec("Downloading...");
-        jax.lte_admin.export_csv(this.object, ids, this.order, this.orderType, this.table)
+        jax.admin.export_csv(this.object, ids, this.order, this.orderType, this.table)
             .then(() => {
                 "toast::success".exec("Saving...");
             })

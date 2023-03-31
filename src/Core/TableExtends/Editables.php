@@ -23,7 +23,7 @@ class Editables
                 ->only_input()
                 ->labels(...$props)
                 ->switchSize('mini')
-                ->value($value)->on_mouseup('jax.lte_admin.custom_save', [
+                ->value($value)->on_mouseup('jax.admin.custom_save', [
                     get_class($model),
                     $model->id,
                     $field,
@@ -55,7 +55,7 @@ class Editables
                 ->force_set_id('input_'.$field.'_'.$model->id)
                 ->when(is_array($options), fn ($q) => $q->options($options, $format))
                 ->when(is_string($options), fn ($q) => $q->load($options, $format, $where))
-                ->on_change('jax.lte_admin.custom_save', [
+                ->on_change('jax.admin.custom_save', [
                     get_class($model),
                     $model->id,
                     $field,
@@ -86,7 +86,7 @@ class Editables
                 ->set_name($field.'_'.$model->id)
                 ->force_set_id('input_'.$field.'_'.$model->id)
                 ->when(is_array($options), fn ($q) => $q->options($options, !! $first_default))
-                ->on_change('jax.lte_admin.custom_save', [
+                ->on_change('jax.admin.custom_save', [
                     get_class($model),
                     $model->id,
                     $field,

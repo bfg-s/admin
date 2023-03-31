@@ -20,7 +20,7 @@ use Str;
  * @property array $method
  * @property string $state
  * @property string|null $description
- * @property int $lte_role_id
+ * @property int $admin_role_id
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -51,12 +51,12 @@ class AdminPermission extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_permission';
+    protected $table = 'admin_permission';
     /**
      * @var string[]
      */
     protected $fillable = [
-        'path', 'method', 'state', 'description', 'lte_role_id', 'active', // state: open, close
+        'path', 'method', 'state', 'description', 'admin_role_id', 'active', // state: open, close
     ];
     /**
      * @var string[]
@@ -116,7 +116,7 @@ class AdminPermission extends Model
 
         $roles = Admin::user()?->roles->pluck('id') ?? [];
 
-        return static::$now = static::whereIn('lte_role_id', $roles)
+        return static::$now = static::whereIn('admin_role_id', $roles)
             ->where('active', 1)
             ->get();
     }
@@ -185,6 +185,6 @@ class AdminPermission extends Model
      */
     public function role()
     {
-        return $this->hasOne(AdminRole::class, 'id', 'lte_role_id');
+        return $this->hasOne(AdminRole::class, 'id', 'admin_role_id');
     }
 }

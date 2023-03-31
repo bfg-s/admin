@@ -4,7 +4,7 @@ namespace Admin\Models;
 
 use DB;
 use Illuminate\Database\Seeder;
-use Admin\Commands\LteDbDumpCommand;
+use Admin\Commands\AdminDbDumpCommand;
 
 class AdminSeeder extends Seeder
 {
@@ -15,14 +15,16 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        if (class_exists(LteDbDumpCommand::$file_name)) {
+        if (class_exists(AdminDbDumpCommand::$file_name)) {
             return;
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        if (! app()->runningUnitTests()) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
 
         /** @var AdminUser $user_model */
-        $user_model = config('admin.auth.providers.admin.model');
+        $user_model = config('admin.auth.providers.admin.model', AdminUser::class);
 
         // create a user.
         $user_model::truncate();
@@ -69,10 +71,12 @@ class AdminSeeder extends Seeder
         $moderatorUser->roles()->save($moderatorRole);
 
         AdminPermission::create([
-            'path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'lte_role_id' => $moderatorRole->id
+            'path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'admin_role_id' => $moderatorRole->id
         ]);
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (! app()->runningUnitTests()) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         AdminSetting::updateOrCreate([
             'group' => 'General',

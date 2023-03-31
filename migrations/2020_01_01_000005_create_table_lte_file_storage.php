@@ -13,7 +13,7 @@ class CreateTableLteFileStorage extends Migration
      */
     public function up()
     {
-        Schema::create('lte_file_storage', static function (Blueprint $table) {
+        Schema::create('admin_file_storage', static function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('original_name');
@@ -45,6 +45,6 @@ class CreateTableLteFileStorage extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_file_storage');
+        Schema::dropIfExists('admin_file_storage');
     }
 }

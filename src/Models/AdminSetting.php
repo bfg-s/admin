@@ -47,7 +47,7 @@ class AdminSetting extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_settings';
+    protected $table = 'admin_settings';
 
     /**
      * @var array

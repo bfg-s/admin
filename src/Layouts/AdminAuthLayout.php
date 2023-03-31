@@ -11,7 +11,7 @@ class AdminAuthLayout extends AdminBase
      *
      * @var string
      */
-    protected $name = 'lte_auth_layout';
+    protected $name = 'admin_auth_layout';
 
     /**
      * @var string

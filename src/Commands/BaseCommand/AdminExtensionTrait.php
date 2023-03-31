@@ -116,7 +116,7 @@ trait AdminExtensionTrait
         $namespace = 'Admin\\'.ucfirst(Str::camel($folder !== 'bfg' ? $folder : 'extend')).'\\'.ucfirst(Str::camel($extension));
 
         $data = str_replace([
-            '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{LTE_VERSION}',
+            '{NAME}', '{DESCRIPTION}', '{FOLDER}', '{EXTENSION}', '{ADMIN_VERSION}',
             '{COMPOSER_NAMESPACE}', '{NAMESPACE}', '{SLUG}',
         ], [
             $name, static::$desc, $folder, $extension, \Admin::version(),

@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Illuminate\Support\Str;
 use Lang;
 use Admin\Delegates\Card;
 use Admin\Delegates\Form;
@@ -44,7 +45,7 @@ class PermissionController extends Controller
                 $card->search_form(
                     $searchForm->id(),
                     $searchForm->input('path', 'admin.path'),
-                    $searchForm->select('lte_role_id', 'admin.role')
+                    $searchForm->select('admin_role_id', 'admin.role')
                         ->options(AdminRole::all()->pluck('name', 'id'))->nullable(),
                     $searchForm->at(),
                 ),
@@ -84,7 +85,7 @@ class PermissionController extends Controller
                     $form->radios('state', 'admin.state')
                         ->options(['close' => __('admin.close'), 'open' => __('admin.open')], true)
                         ->required(),
-                    $form->radios('lte_role_id', 'admin.role')
+                    $form->radios('admin_role_id', 'admin.role')
                         ->options(AdminRole::all()->pluck('name', 'id'), true)
                         ->required(),
                     $form->input('description', 'admin.description'),
@@ -92,6 +93,9 @@ class PermissionController extends Controller
                         ->default(1),
                     $form->ifEdit()->info_updated_at(),
                     $form->ifEdit()->info_created_at(),
+                ),
+                $card->card_body()->p(
+                    Str::markdown(__('admin.permission_instruction'))
                 ),
                 $card->footer_form(),
             );
@@ -138,5 +142,18 @@ class PermissionController extends Controller
     public function show_state(AdminPermission $permission)
     {
         return '<span class="badge badge-'.($permission->state === 'open' ? 'success' : 'danger').'">'.($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>').' '.__("admin.{$permission->state}").'</span>';
+    }
+
+    /**
+     * @return array
+     */
+    public function permissionInfo(): array
+    {
+        $card = new Card;
+
+        return [
+            $card->title('Instructions')->successType(),
+            $card->card_body()->p(\Str::markdown(__('admin.permission_instruction')))
+        ];
     }
 }

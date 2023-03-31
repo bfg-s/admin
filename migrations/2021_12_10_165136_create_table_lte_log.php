@@ -13,7 +13,7 @@ class CreateTableLteLog extends Migration
      */
     public function up()
     {
-        Schema::create('lte_logs', static function (Blueprint $table) {
+        Schema::create('admin_logs', static function (Blueprint $table) {
             $table->string('title');
             $table->text('detail')->nullable();
             $table->string('ip', 64);
@@ -22,9 +22,9 @@ class CreateTableLteLog extends Migration
             $table->string('method', 16)->nullable();
             $table->string('user_agent', 500);
             $table->string('session_id', 250);
-            $table->foreignId('lte_user_id')
+            $table->foreignId('admin_user_id')
                 ->nullable()
-                ->constrained('lte_users')
+                ->constrained('admin_users')
                 ->nullOnDelete()->cascadeOnUpdate();
             $table->bigInteger('web_id')->nullable();
             $table->string('icon')->nullable();
@@ -39,6 +39,6 @@ class CreateTableLteLog extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_logs');
+        Schema::dropIfExists('admin_logs');
     }
 }

@@ -130,18 +130,18 @@ class DashboardController extends Controller
     public function laravelInfo()
     {
         $user_model = config('auth.providers.users.model');
-        $lte_user_model = config('admin.auth.providers.admin.model');
+        $admin_user_model = config('admin.auth.providers.admin.model');
 
         return [
             __('admin.laravel_version') => '<span class="badge badge-dark">v'.versionString(App::version()).'</span>',
-            __('admin.lte_version') => '<span class="badge badge-dark">v'.versionString(Admin::version()).'</span>',
+            __('admin.admin_version') => '<span class="badge badge-dark">v'.versionString(Admin::version()).'</span>',
             __('admin.timezone') => config('app.timezone'),
             __('admin.language') => config('app.locale'),
             __('admin.languages_involved') => implode(', ', config('layout.languages')),
             __('admin.env') => config('app.env'),
             __('admin.url') => config('app.url'),
             __('admin.users') => number_format($user_model::count(), 0, '', ','),
-            __('admin.lte_users') => number_format($lte_user_model::count(), 0, '', ','),
+            __('admin.admin_users') => number_format($admin_user_model::count(), 0, '', ','),
             '' => function (Component $component) {
                 $component->_addClass(['table-secondary']);
                 $component->_find('th')->h6(['m-0'], __('admin.drivers'));

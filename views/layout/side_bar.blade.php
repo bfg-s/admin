@@ -60,7 +60,7 @@
 
         <div class="col-4">
             <a class="btn btn-link" href="javascript:void(0)" role="button" data-turbolinks="false"
-               data-click="jax.lte_admin.toggle_dark" title="{{ admin_repo()->isDarkMode ? 'Light' : 'Dark' }} mode">
+               data-click="jax.admin.toggle_dark" title="{{ admin_repo()->isDarkMode ? 'Light' : 'Dark' }} mode">
                 @if(admin_repo()->isDarkMode)
                     <i class="fas fa-sun"></i>
                 @else

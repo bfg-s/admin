@@ -2,6 +2,7 @@
 
 namespace Admin;
 
+use Admin\Facades\AdminFacade;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
@@ -120,7 +121,7 @@ class ExtendProvider extends ServiceProviderIlluminate
         $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        \Admin::registerExtension($this);
+        AdminFacade::registerExtension($this);
     }
 
     /**

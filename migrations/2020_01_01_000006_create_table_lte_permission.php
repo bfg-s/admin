@@ -13,7 +13,7 @@ class CreateTableLtePermission extends Migration
      */
     public function up()
     {
-        Schema::create('lte_permission', static function (Blueprint $table) {
+        Schema::create('admin_permission', static function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('path')->default('*');
@@ -24,8 +24,8 @@ class CreateTableLtePermission extends Migration
 
             $table->string('description')->nullable();
 
-            $table->foreignId('lte_role_id')
-                ->constrained('lte_roles')
+            $table->foreignId('admin_role_id')
+                ->constrained('admin_roles')
                 ->cascadeOnDelete();
 
             $table->boolean('active')->default(1);
@@ -41,6 +41,6 @@ class CreateTableLtePermission extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_permission');
+        Schema::dropIfExists('admin_permission');
     }
 }

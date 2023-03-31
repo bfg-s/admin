@@ -13,12 +13,12 @@ return [
     'languages_involved' => 'Languages Involved',
     'variable_env' => 'Variable ENV',
     'users' => 'Users',
-    'lte_users' => 'LTE Users',
+    'admin_users' => 'LTE Users',
     'default_language' => 'Default language',
     'php_version' => 'PHP Version',
     'laravel_version' => 'Laravel Version',
     'composer_version' => 'Composer Version',
-    'lte_version' => 'Admin Version',
+    'admin_version' => 'Admin Version',
     'cgi' => 'CGI',
     'os' => 'Operating System',
     'server' => 'Server',
@@ -228,4 +228,27 @@ return [
     'menu_except_show' => 'Show',
     'menu_action_resource' => 'Resource',
     'extensions' => 'Extensions',
+    'instructions' => 'Instructions',
+    'permission_instruction' => "A tool for controlling and issuing access to certain administration roles.
+Rights are granted as follows:
+
+Consider the example of the Administration tool,
+go to this page and look at the url,
+for example, there is such a `".route('admin.administration.admin_user.index')."`,
+In order to close access to this page, you must do the following:
+
+Go to `Administration/Permissions` and click on the `Add` button.
+Below is a step-by-step guide to filling out the form:
+
+1. `Path` - Enter the link mask there, write only what is after `" . url(config('admin.route.prefix') . '/...') . "` that is, we enter `promocode*` there, `*` - says that instead of it there can be anything.
+2. `Methods` - Specify which methods are prohibited by this link, select `*`. The rest of the methods are:
+    - `*` - Disable all methods.
+    - `GET` - Prohibit access to the page.
+    - `HEAD` - Prohibits viewing of detailed information (button \"i\" in the table).
+    - `POST` - Prevent adding newlines.
+    - `PUT` - Prohibit editing.
+    - `DELETE` - Forbid deleting the line.
+3. `State` - Here we indicate the behavior of our new rule, it will either deny access or open it, in our case we need to close it, so we select the `Close` item.
+4. `Role` - Specify which role this rule is for. In our case, we select the `Moderator`.
+5. `Active` - The current state of the rule, it can be turned off and it will not be taken into account.",
 ];

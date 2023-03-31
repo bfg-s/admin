@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Lar\Layout\CfgFile;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
+use League\Flysystem\FilesystemException;
 use League\Flysystem\MountManager;
 use Admin\Admin;
 
@@ -22,6 +23,7 @@ class BaseAdminExtension extends Command
     /**
      * @param $name
      * @return null
+     * @throws FilesystemException
      */
     protected function edit_extension($name)
     {
@@ -146,6 +148,7 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceInstall($name)
     {
@@ -153,7 +156,7 @@ class BaseAdminExtension extends Command
         if (isset(Admin::$not_installed_extensions[$name])) {
             Admin::$not_installed_extensions[$name]->install($this);
             Admin::$not_installed_extensions[$name]->permission($this, 'up');
-            CfgFile::open(storage_path('lte_extensions.php'))->write($name, true);
+            CfgFile::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] installed!");
 
             return null;
@@ -179,6 +182,7 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceUninstall($name)
     {
@@ -186,7 +190,7 @@ class BaseAdminExtension extends Command
         if (isset(Admin::$installed_extensions[$name])) {
             Admin::$installed_extensions[$name]->permission($this, 'down');
             Admin::$installed_extensions[$name]->uninstall($this);
-            CfgFile::open(storage_path('lte_extensions.php'))->remove($name);
+            CfgFile::open(storage_path('admin_extensions.php'))->remove($name);
             $this->info("Extension [$name] uninstalled!");
 
             return null;
@@ -212,6 +216,7 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceReinstall($name)
     {
@@ -232,6 +237,7 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return mixed|null
      */
     protected function work_with_extension($name)
     {
@@ -315,8 +321,9 @@ class BaseAdminExtension extends Command
     /**
      * @param $name
      * @param  bool  $auto
+     * @return null
      */
-    protected function download_extension($name, $auto = false)
+    protected function download_extension($name, bool $auto = false)
     {
         if (!$auto) {
             if (!$this->confirm("Download extension [$name]?", true)) {
@@ -353,11 +360,12 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceEnable($name)
     {
         if (isset(Admin::$installed_extensions[$name])) {
-            CfgFile::open(storage_path('lte_extensions.php'))->write($name, true);
+            CfgFile::open(storage_path('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] enabled!");
 
             return null;
@@ -369,11 +377,12 @@ class BaseAdminExtension extends Command
 
     /**
      * @param $name
+     * @return null
      */
     protected function choiceDisable($name)
     {
         if (isset(Admin::$installed_extensions[$name])) {
-            CfgFile::open(storage_path('lte_extensions.php'))->write($name, false);
+            CfgFile::open(storage_path('admin_extensions.php'))->write($name, false);
             $this->info("Extension [$name] disabled!");
 
             return null;

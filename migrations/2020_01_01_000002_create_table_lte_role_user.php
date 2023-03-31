@@ -13,15 +13,15 @@ class CreateTableLteRoleUser extends Migration
      */
     public function up()
     {
-        Schema::create('lte_role_user', static function (Blueprint $table) {
+        Schema::create('admin_role_user', static function (Blueprint $table) {
 
-            $table->foreignId('lte_role_id')
-                ->constrained('lte_roles')
+            $table->foreignId('admin_role_id')
+                ->constrained('admin_roles')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('lte_user_id')
-                ->constrained('lte_users')
+            $table->foreignId('admin_user_id')
+                ->constrained('admin_users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
@@ -34,6 +34,6 @@ class CreateTableLteRoleUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lte_role_user');
+        Schema::dropIfExists('admin_role_user');
     }
 }

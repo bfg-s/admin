@@ -2,16 +2,15 @@
 
 namespace Admin;
 
-use Arr;
 use Blade;
 use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Layout\Layout;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
-use LJS;
 use Admin\Commands\AdminControllerCommand;
 use Admin\Commands\AdminDbDumpCommand;
 use Admin\Commands\AdminExtensionCommand;
@@ -88,7 +87,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register app routes.
          */
         if (is_file(admin_app_path('routes.php'))) {
-            Road::domain(config('admin.route.domain', ''))
+            \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
                 ->web()
                 ->middleware(['admin-auth'])
                 ->lang(config('layout.lang_mode', true))
@@ -102,7 +101,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
-            Road::domain(config('admin.route.domain', ''))
+            \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
                 ->web()
                 ->middleware(['admin-auth'])
                 ->lang(config('layout.lang_mode', true))
@@ -115,7 +114,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Admin basic routes.
          */
-        Road::domain(config('admin.route.domain', ''))
+        \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
             ->web()
             ->lang(config('layout.lang_mode', true))
             ->middleware(['admin-auth'])
@@ -207,7 +206,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register Jax namespace.
          */
-        LJS::jaxNamespace(admin_relative_path('Jax'), admin_app_namespace('Jax'));
+        \Lar\LJS\Facade::jaxNamespace(admin_relative_path('Jax'), admin_app_namespace('Jax'));
 
         /**
          * Register AlpineJs Blade directive.

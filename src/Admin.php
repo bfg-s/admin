@@ -142,7 +142,9 @@ class Admin
         }
 
         if (!self::$extensions) {
-            self::$extensions = include storage_path('lte_extensions.php');
+            self::$extensions = is_file(storage_path('admin_extensions.php'))
+                ? include storage_path('admin_extensions.php')
+                : [];
         }
 
         if (isset(self::$extensions[$provider::$name]) || $provider::$slug === 'application') {

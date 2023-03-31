@@ -53,7 +53,7 @@ class AdminInstallCommand extends Command
 
         $make_seeds = false;
 
-        if (!Schema::hasTable('lte_users')) {
+        if (!Schema::hasTable('admin_users')) {
             $make_seeds = true;
         } elseif (!AdminUser::count()) {
             $make_seeds = true;
@@ -87,7 +87,7 @@ class AdminInstallCommand extends Command
 
         $this->makeApp();
 
-        $extensions = storage_path('lte_extensions.php');
+        $extensions = storage_path('admin_extensions.php');
 
         if (!is_file($extensions)) {
             file_put_contents(

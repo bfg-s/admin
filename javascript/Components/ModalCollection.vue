@@ -119,7 +119,7 @@ export default {
                         .param('_modal_submit', 'true')
                         .params(typeof modal.params === 'object' && !Array.isArray(modal.params) ? modal.params : {})
                         .params(params)
-                        .lte_admin
+                        .admin
                         .load_modal()
                         .then(data => {
                             ljs.exec(data);
@@ -136,7 +136,7 @@ export default {
                 jax.param('_modal', modal.handle)
                     .param('_modal_id', modal.key)
                     .params(typeof modal.params === 'object' && !Array.isArray(modal.params) ? modal.params : {})
-                    .lte_admin
+                    .admin
                     .load_modal()
                     .then(data => {
 

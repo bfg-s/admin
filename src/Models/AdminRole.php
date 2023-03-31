@@ -39,7 +39,7 @@ class AdminRole extends Model
     /**
      * @var string
      */
-    protected $table = 'lte_roles';
+    protected $table = 'admin_roles';
 
     /**
      * @var array
@@ -55,9 +55,9 @@ class AdminRole extends Model
     {
         return $this->belongsToMany(
             config('admin.auth.providers.admin.model'),
-            'lte_role_user',
-            'lte_role_id',
-            'lte_user_id'
+            'admin_role_user',
+            'admin_role_id',
+            'admin_user_id'
         );
     }
 }

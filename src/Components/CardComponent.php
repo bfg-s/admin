@@ -370,17 +370,17 @@ class CardComponent extends Component
 
         $originTitle = $this->title;
         $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
-        if (lte_model_type('index')) {
+        if (admin_model_type('index')) {
             $this->title = $this->title !== null ? $this->title : 'admin.list';
             if (request()->has('show_deleted') && request('show_deleted') == 1) {
                 $this->title = __($this->title).' <small><b>('.__('admin.deleted').')</b></small>';
             }
-        } elseif (lte_model_type('create')) {
+        } elseif (admin_model_type('create')) {
             $this->title = $this->title !== null ? $this->title : 'admin.add';
-        } elseif (lte_model_type('edit')) {
+        } elseif (admin_model_type('edit')) {
             $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
             $this->title = $this->title !== null ? $this->title : 'admin.id_edit';
-        } elseif (lte_model_type('show')) {
+        } elseif (admin_model_type('show')) {
             $this->title = $this->title !== null ? $this->title : 'admin.information';
         }
 

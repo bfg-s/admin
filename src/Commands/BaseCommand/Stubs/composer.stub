@@ -12,7 +12,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.3.0",
-        "lar/lte-admin": "^{LTE_VERSION}"
+        "lar/lte-admin": "^{ADMIN_VERSION}"
     },
     "require-dev": {},
     "autoload": {
