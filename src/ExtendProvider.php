@@ -3,8 +3,12 @@
 namespace Admin;
 
 use Admin\Facades\AdminFacade;
+use Admin\Models\AdminMenu;
+use Admin\Models\AdminSetting;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Admin\Core\ConfigExtensionProvider;
 use Admin\Core\InstallExtensionProvider;
@@ -104,6 +108,14 @@ class ExtendProvider extends ServiceProviderIlluminate
                 $key = $item;
             }
             $this->app->bind($key, $item);
+        }
+
+        $db = config('admin.connections.admin-sqlite.database');
+
+        if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_settings')) {
+            AdminSetting::get(['name', 'value'])->map(
+                fn (AdminSetting $setting) => Config::set($setting->name, $setting->value)
+            );
         }
     }
 
