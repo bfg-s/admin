@@ -229,6 +229,8 @@ return [
     'menu_action_resource' => 'Resource',
     'extensions' => 'Extensions',
     'instructions' => 'Instructions',
+    'group' => 'Group',
+    'type' => 'Type',
     'permission_instruction' => "A tool for controlling and issuing access to certain administration roles.
 Rights are granted as follows:
 
