@@ -19,6 +19,22 @@ composer require lar/lte-admin:^5
 # Documentation
 We have extensive [documentation](https://wood.veskod.com/documentation/admin-panel) in which you can get acquainted with the bfg admin panel.
 
+# Screenshots
+### Administrations
+[![Administrations](https://wood.veskod.com/images/admin/administrations.png "Administrations")](https://wood.veskod.com/images/admin/administrations.png "Administrations")
+
+### Administration edit
+[![Administration edit](https://wood.veskod.com/images/admin/edit-admin.png "Administration edit")](https://wood.veskod.com/images/admin/edit-admin.png "Administration edit")
+
+### Roles
+[![Roles](https://wood.veskod.com/images/admin/roles.png "Roles")](https://wood.veskod.com/images/admin/roles.png "Roles")
+
+### Permissions
+[![Dashboard](https://wood.veskod.com/images/admin/permissions.png "Dashboard")](https://wood.veskod.com/images/admin/permissions.png "Dashboard")
+
+### User panel, activity per day
+[![User panel, activity per day](https://wood.veskod.com/images/admin/user-panel-activity-per-day.png "User panel, activity per day")](https://wood.veskod.com/images/admin/user-panel-activity-per-day.png "User panel, activity per day")
+
 # OS Required
 - Ubuntu/UNIX
 - Apache/Nginx
