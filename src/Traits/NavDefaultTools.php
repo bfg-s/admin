@@ -2,6 +2,7 @@
 
 namespace Admin\Traits;
 
+use Admin\Controllers\SettingsController;
 use Closure;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ trait NavDefaultTools
             $group->lteRoles();
             $group->ltePermission();
             $group->lteMenu();
+            $group->lteSettings();
         });
 
         return $this;
@@ -94,6 +96,18 @@ trait NavDefaultTools
         return $this->item('admin.admin_menu', 'menu')
             ->resource('admin_menu', $action ?? MenuController::class)
             ->icon_bars();
+    }
+
+    /**
+     * Make menu list tool.
+     * @param  string|null  $action
+     * @return NavItem
+     */
+    public function lteSettings(string $action = null): NavItem
+    {
+        return $this->item('admin.settings', 'settings')
+            ->resource('settings', $action ?? SettingsController::class)
+            ->icon_cog();
     }
 
     public function makeMenu(): void

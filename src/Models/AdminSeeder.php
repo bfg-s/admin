@@ -80,38 +80,38 @@ class AdminSeeder extends Seeder
 
         AdminSetting::updateOrCreate([
             'group' => 'General',
-            'title' => 'admin.settings_site_name',
+            'title' => 'Site name',
             'type' => 'input',
             'name' => 'site_name',
             'value' => config('app.name'),
-            'description' => 'admin.settings_site_name_description',
+            'description' => 'Application name',
         ]);
 
         AdminSetting::updateOrCreate([
             'group' => 'General',
-            'title' => 'admin.settings_timezone',
+            'title' => 'Timezone',
             'type' => 'input',
             'name' => 'app.timezone',
             'value' => config('app.timezone'),
-            'description' => 'admin.settings_timezone_description',
+            'description' => 'Default application timezone',
         ]);
 
         AdminSetting::updateOrCreate([
             'group' => 'General',
-            'title' => 'admin.settings_locale',
+            'title' => 'Locale',
             'type' => 'input',
             'name' => 'app.locale',
             'value' => config('app.locale'),
-            'description' => 'admin.settings_locale_description',
+            'description' => 'Application default locale',
         ]);
 
         AdminSetting::updateOrCreate([
             'group' => 'Admin',
-            'title' => 'admin.settings_dark_mode',
+            'title' => 'Dark mode',
             'type' => 'switcher',
             'name' => 'admin.dark_mode',
             'value' => config('admin.dark_mode'),
-            'description' => 'admin.settings_dark_mode_description',
+            'description' => 'Admin dark mode by default',
         ]);
     }
 }
