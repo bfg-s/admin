@@ -28,7 +28,7 @@ class AdminControllerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Make Admin LTE Controller';
+    protected $description = 'Make Admin Controller';
 
     /**
      * Execute the console command.

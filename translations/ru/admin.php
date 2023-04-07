@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'login_title' => 'LTE <b>Админ</b>',
+    'login_title' => 'BFG <b>Админ</b>',
     'login_message' => 'Вход в систему',
     'email' => 'Логин/Почта',
     'password' => 'Пароль',
@@ -13,7 +13,7 @@ return [
     'languages_involved' => 'Задействовано языков',
     'variable_env' => 'Переменная ENV',
     'users' => 'Пользователей',
-    'admin_users' => 'Пользователи LTE',
+    'admin_users' => 'Пользователи админ',
     'default_language' => 'Язык по умолчанию',
     'php_version' => 'Версия PHP',
     'laravel_version' => 'Версия Laravel',

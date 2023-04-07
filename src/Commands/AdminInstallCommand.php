@@ -29,7 +29,7 @@ class AdminInstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Install or update admin LTE';
+    protected $description = 'Install or update BFG admin';
 
     /**
      * Execute the console command.
@@ -208,7 +208,7 @@ class AdminInstallCommand extends Command
             $this->call('admin:extension', ['--reinstall' => true, '--yes' => true, '--force' => true]);
         }
 
-        $this->info('Lar Admin LTE Installed');
+        $this->info('Bfg Admin Installed');
 
         return 0;
     }

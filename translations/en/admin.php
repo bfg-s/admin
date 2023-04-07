@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'login_title' => 'LTE <b>Admin</b>',
+    'login_title' => 'BFG <b>Admin</b>',
     'login_message' => 'Sign in to start your session',
     'email' => 'Login/Email',
     'password' => 'Password',
@@ -13,7 +13,7 @@ return [
     'languages_involved' => 'Languages Involved',
     'variable_env' => 'Variable ENV',
     'users' => 'Users',
-    'admin_users' => 'LTE Users',
+    'admin_users' => 'Admin users',
     'default_language' => 'Default language',
     'php_version' => 'PHP Version',
     'laravel_version' => 'Laravel Version',
