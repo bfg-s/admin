@@ -9,13 +9,11 @@ use Illuminate\Console\Command;
 use Log;
 use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
-use Admin\Commands\Generators\GenerateBladeHelpers;
 use Admin\Commands\Generators\GenerateAdminHelper;
 use Admin\Commands\Generators\GenerateNewJaxHelper;
 use Admin\Commands\Generators\GenerateRespondHelper;
-use Admin\Commands\Generators\GetterHelper;
 use Admin\Commands\Generators\MacroableHelperGenerator;
-use Admin\Interfaces\LteHelpGeneratorInterface;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Throwable;
 
 class AdminHelpersCommand extends Command
@@ -86,11 +84,13 @@ class AdminHelpersCommand extends Command
      */
     public function handle()
     {
+        dd(1);
+
         if ($class = $this->option('class')) {
             if (class_exists($class)) {
                 $obj = new $class($this);
 
-                if ($obj instanceof LteHelpGeneratorInterface) {
+                if ($obj instanceof AdminHelpGeneratorInterface) {
                     $this->info("> {$class}::handle");
 
                     try {
@@ -144,6 +144,7 @@ class AdminHelpersCommand extends Command
         }
 
         foreach (static::$executors as $executor) {
+            dump($executor);
             if (is_string($executor)) {
                 $name = \Str::snake(class_basename($executor));
                 $name = str_replace([
@@ -153,7 +154,7 @@ class AdminHelpersCommand extends Command
                 $name = trim(str_replace('__', '_', $name), '_');
                 $obj = new $executor($this);
 
-                if ($obj instanceof LteHelpGeneratorInterface) {
+                if ($obj instanceof AdminHelpGeneratorInterface) {
                     $file_data = '';
                     $this->info("> {$executor}::handle");
 

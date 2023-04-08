@@ -2,7 +2,7 @@
 
 namespace {NAMESPACE}\Extension;
 
-use LteAdmin\Core\PermissionsExtensionProvider;
+use Admin\Core\PermissionsExtensionProvider;
 
 /**
  * Class Permissions

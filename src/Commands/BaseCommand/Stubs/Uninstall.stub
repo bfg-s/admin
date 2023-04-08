@@ -2,8 +2,8 @@
 
 namespace {NAMESPACE}\Extension;
 
-use LteAdmin\Core\UnInstallExtensionProvider;
-use LteAdmin\Interfaces\ActionWorkExtensionInterface;
+use Admin\Core\UnInstallExtensionProvider;
+use Admin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Navigator

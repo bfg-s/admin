@@ -2,8 +2,8 @@
 
 namespace {NAMESPACE}\Extension;
 
-use LteAdmin\Core\InstallExtensionProvider;
-use LteAdmin\Interfaces\ActionWorkExtensionInterface;
+use Admin\Core\InstallExtensionProvider;
+use Admin\Interfaces\ActionWorkExtensionInterface;
 
 /**
  * Class Install
