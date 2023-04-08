@@ -84,8 +84,6 @@ class AdminHelpersCommand extends Command
      */
     public function handle()
     {
-        dd(1);
-
         if ($class = $this->option('class')) {
             if (class_exists($class)) {
                 $obj = new $class($this);
@@ -144,7 +142,6 @@ class AdminHelpersCommand extends Command
         }
 
         foreach (static::$executors as $executor) {
-            dump($executor);
             if (is_string($executor)) {
                 $name = \Str::snake(class_basename($executor));
                 $name = str_replace([
