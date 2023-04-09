@@ -351,7 +351,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             if (!$isProperty || $isAny) {
                 $doc->tagMethod(
                     $type,
-                    $method."(string \$name, callable|string \$label = null)",
+                    $method.($params ?: "(string \$name, callable|string \$label = null)"),
                     "Method $method"
                 );
             }
