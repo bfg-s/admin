@@ -21,8 +21,8 @@ module.exports = class extends Executor {
         return editormd(this.target.id, merge({
             width: "100%",
             height: 300,
-            path: '/lte-admin/plugins/',
-            pluginPath: '/lte-admin/plugins/editor.md-master/plugins/',
+            path: '/admin/plugins/',
+            pluginPath: '/admin/plugins/editor.md-master/plugins/',
             markdown: data,
             autoFocus: false,
             placeholder: "",
@@ -31,7 +31,7 @@ module.exports = class extends Executor {
                 return ['undo', 'redo', '|', 'bold', 'del', 'italic', 'quote', '|',
                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', '|', 'list-ul', 'list-ol', '|', 'hr', 'link', 'reference-link', 'pagebreak',
                     'image', 'code', 'table', 'datetime', 'html-entities', '||',
-                    /*'goto-line', 'clear',*/ 'search', 'preview', 'watch']
+                    'goto-line', 'clear', 'search', 'preview', 'watch', 'fullscreen']
             },
             watch: false,
             htmlDecode: "style,script,iframe|on*",

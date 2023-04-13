@@ -30,6 +30,7 @@ class MDEditorField extends FormGroupComponent
             'id' => $this->field_id,
             'data-name' => $this->name,
             'data-placeholder' => $this->title,
+            'style' => 'z-index: 99999999',
             'm-0',
         ], ...$this->params)
             ->text(e($this->value))
