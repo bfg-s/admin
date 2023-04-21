@@ -20,7 +20,7 @@ composer require lar/lte-admin:^5
 We have extensive [documentation](https://wood.veskod.com/documentation/admin-panel) in which you can get acquainted with the bfg admin panel.
 
 # Demo
-[![Bfg admin demo](https://wood.veskod.com/images/admin/gif.gif "Bfg admin demo")](https://wood.veskod.com/images/admin/gif.gif "Bfg admin demo")
+[![Bfg admin demo](https://github.com/bfg-s/admin/blob/0857e0f3d8960796728fc42deb2137f3535867ec/assets/img/gif.gif "Bfg admin demo")](https://github.com/bfg-s/admin/blob/0857e0f3d8960796728fc42deb2137f3535867ec/assets/img/gif.gif "Bfg admin demo")
 
 # OS Required
 - Ubuntu/UNIX
