@@ -30,9 +30,9 @@ We have extensive [documentation](https://wood.veskod.com/documentation/admin-pa
 
 # PHP Required
 
- - `PHP ^8.0|^8.1`
- - `Laravel ^8.0|^9.0|^10.0`
- - `ext-pdo`
+- [PHP](https://www.php.net/) **^8.0|^8.1** + (`ext-pdo`)
+- [Laravel Framework](https://laravel.com/docs/9.x) **^8.0|^9.0|^10.0**
+- [AdminLte Bootstrap Template](https://adminlte.io/themes/v3/) **^3.1**
 
 # Laravel Required
 
