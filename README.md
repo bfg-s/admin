@@ -13,7 +13,7 @@ Bfg admin panel is a free extension for your Laravel project, if you need to qui
 
 # Install
 ```
-composer require lar/lte-admin:^5
+composer require bfg/admin:^5
 ```
 
 # Documentation
