@@ -21,6 +21,7 @@ We have extensive [documentation](https://wood.veskod.com/documentation/admin-pa
 
 # Demo
 [Video on YouTube](https://www.youtube.com/watch?v=2HjjJsHDKTg)
+
 [![Bfg admin demo](https://github.com/bfg-s/admin/blob/e9e3c16136c72a1500afeb87c06b7d2fec6ebf62/assets/img/gif2.gif "Bfg admin demo")](https://github.com/bfg-s/admin/blob/e9e3c16136c72a1500afeb87c06b7d2fec6ebf62/assets/img/gif2.gif "Bfg admin demo")
 
 # OS Required
