@@ -12,8 +12,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
- * Class LteMenu
- *
  * @package Admin\Models
  * @property int $id
  * @property string $name

@@ -17,7 +17,6 @@ use Admin\Core\NavigatorExtensionProvider;
 use Admin\Core\PermissionsExtensionProvider;
 use Admin\Core\UnInstallExtensionProvider;
 use Admin\Interfaces\NavigateInterface;
-use Admin\Models\LteFunction;
 use ReflectionClass;
 
 class ExtendProvider extends ServiceProviderIlluminate

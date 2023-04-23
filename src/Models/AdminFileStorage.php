@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Storage;
 use Admin\Traits\DumpedModel;
 
 /**
- * Admin\Models\LteFileStorage.
- *
  * @property int $id
  * @property string $original_name
  * @property string $file_name

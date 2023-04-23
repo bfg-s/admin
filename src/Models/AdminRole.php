@@ -11,8 +11,6 @@ use Illuminate\Support\Carbon;
 use Admin\Traits\DumpedModel;
 
 /**
- * Admin\Models\LteRole.
- *
  * @property int $id
  * @property string $name
  * @property string $slug

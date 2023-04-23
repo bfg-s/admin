@@ -35,7 +35,7 @@ class Boot
     ];
 
     /**
-     * Run boot Lte scripts.
+     * Run boot scripts.
      * @throws ReflectionException
      */
     public static function run()

@@ -9,8 +9,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
- * Class LteSetting
- *
  * @package Admin\Models
  * @property int $id
  * @property string $title

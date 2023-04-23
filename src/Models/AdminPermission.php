@@ -13,8 +13,6 @@ use Admin\Traits\DumpedModel;
 use Str;
 
 /**
- * Admin\Models\LtePermission.
- *
  * @property int $id
  * @property string $path
  * @property array $method
@@ -24,7 +22,7 @@ use Str;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\LteRole|null $role
+ * @property-read \Admin\Models\AdminRole|null $role
  * @method static Builder|AdminPermission makeDumpedModel()
  * @method static Builder|AdminPermission newModelQuery()
  * @method static Builder|AdminPermission newQuery()
@@ -33,7 +31,7 @@ use Str;
  * @method static Builder|AdminPermission whereCreatedAt($value)
  * @method static Builder|AdminPermission whereDescription($value)
  * @method static Builder|AdminPermission whereId($value)
- * @method static Builder|AdminPermission whereLteRoleId($value)
+ * @method static Builder|AdminPermission whereAdminRoleId($value)
  * @method static Builder|AdminPermission whereMethod($value)
  * @method static Builder|AdminPermission wherePath($value)
  * @method static Builder|AdminPermission whereState($value)

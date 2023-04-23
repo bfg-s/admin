@@ -7,7 +7,6 @@ use Closure;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Admin\Controllers\AdministratorsController;
-use Admin\Controllers\FunctionsController;
 use Admin\Controllers\MenuController;
 use Admin\Controllers\PermissionController;
 use Admin\Controllers\RolesController;
@@ -25,12 +24,12 @@ trait NavDefaultTools
      */
     public function makeDefaults(): static
     {
-        $this->lteAdministrationGroup(static function (NavGroup $group) {
-            $group->lteAdministrators();
-            $group->lteRoles();
-            $group->ltePermission();
-            $group->lteMenu();
-            $group->lteSettings();
+        $this->adminAdministrationGroup(static function (NavGroup $group) {
+            $group->adminAdministrators();
+            $group->adminRoles();
+            $group->adminPermission();
+            $group->adminMenu();
+            $group->adminSettings();
         });
 
         return $this;
@@ -41,7 +40,7 @@ trait NavDefaultTools
      * @param  array|Closure  $call
      * @return NavGroup
      */
-    public function lteAdministrationGroup(array|Closure $call): NavGroup
+    public function adminAdministrationGroup(array|Closure $call): NavGroup
     {
         return $this->group('admin.administration', 'administration', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {
@@ -55,7 +54,7 @@ trait NavDefaultTools
      * @param  string|null  $action
      * @return NavItem
      */
-    public function lteAdministrators(string $action = null): NavItem
+    public function adminAdministrators(string $action = null): NavItem
     {
         return $this->item('admin.administrators', 'administrators')
             ->resource('admin_user', $action ?? AdministratorsController::class)
@@ -67,7 +66,7 @@ trait NavDefaultTools
      * @param  string|null  $action
      * @return NavItem
      */
-    public function lteRoles(string $action = null): NavItem
+    public function adminRoles(string $action = null): NavItem
     {
         return $this->item('admin.roles', 'roles')
             ->resource('admin_role', $action ?? RolesController::class)
@@ -79,7 +78,7 @@ trait NavDefaultTools
      * @param  string|null  $action
      * @return NavItem
      */
-    public function ltePermission(string $action = null): NavItem
+    public function adminPermission(string $action = null): NavItem
     {
         return $this->item('admin.permission', 'permission')
             ->resource('admin_permission', $action ?? PermissionController::class)
@@ -91,7 +90,7 @@ trait NavDefaultTools
      * @param  string|null  $action
      * @return NavItem
      */
-    public function lteMenu(string $action = null): NavItem
+    public function adminMenu(string $action = null): NavItem
     {
         return $this->item('admin.admin_menu', 'menu')
             ->resource('admin_menu', $action ?? MenuController::class)
@@ -103,7 +102,7 @@ trait NavDefaultTools
      * @param  string|null  $action
      * @return NavItem
      */
-    public function lteSettings(string $action = null): NavItem
+    public function adminSettings(string $action = null): NavItem
     {
         return $this->item('admin.settings', 'settings')
             ->resource('settings', $action ?? SettingsController::class)

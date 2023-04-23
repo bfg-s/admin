@@ -138,7 +138,7 @@ class AdminBase extends LayoutComponent
     ];
 
     /**
-     * LteBase constructor.
+     * AdminBase constructor.
      */
     public function __construct()
     {

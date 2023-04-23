@@ -5,7 +5,7 @@ use Admin\Controllers\SettingsController;
 use Admin\Core\RoutesAdaptor;
 
 /**
- * Lte Auth routes.
+ * Admin Auth routes.
  */
 \Lar\Roads\Facade::layout('admin_auth_layout')->group(static function (Roads $roads) {
     $roads->get('/', config('admin.action.auth.login_form_action'))->name('home');
@@ -14,7 +14,7 @@ use Admin\Core\RoutesAdaptor;
 });
 
 /**
- * Basic routes.
+ * Admin Basic routes.
  */
 \Lar\Roads\Facade::layout(config('admin.route.layout'))->group(static function (Roads $roads) {
     $roads->get('settings', [SettingsController::class, 'index'])->name('settings');

@@ -19,8 +19,6 @@ use Illuminate\Support\Carbon;
 use Admin\Traits\DumpedModel;
 
 /**
- * App\Models\LteUser.
- *
  * @property int $id
  * @property string $login
  * @property string $password
@@ -31,11 +29,11 @@ use Admin\Traits\DumpedModel;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection|\App\Models\LteLog[] $logs
+ * @property-read Collection|\Admin\Models\AdminLog[] $logs
  * @property-read int|null $logs_count
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection|\App\Models\LteRole[] $roles
+ * @property-read Collection|\Admin\Models\AdminRole[] $roles
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser makeDumpedModel()
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser newModelQuery()

@@ -10,8 +10,6 @@ use Illuminate\Support\Carbon;
 use Admin\Traits\DumpedModel;
 
 /**
- * Admin\Models\LteLog.
- *
  * @property string $title
  * @property string|null $detail
  * @property string $ip
@@ -24,7 +22,7 @@ use Admin\Traits\DumpedModel;
  * @property int|null $web_id
  * @property string|null $icon
  * @property Carbon|null $created_at
- * @property-read \App\Models\LteUser|null $admin_user
+ * @property-read \Admin\Models\AdminUser|null $admin_user
  * @method static Builder|AdminLog makeDumpedModel()
  * @method static Builder|AdminLog newModelQuery()
  * @method static Builder|AdminLog newQuery()
@@ -33,7 +31,7 @@ use Admin\Traits\DumpedModel;
  * @method static Builder|AdminLog whereDetail($value)
  * @method static Builder|AdminLog whereIcon($value)
  * @method static Builder|AdminLog whereIp($value)
- * @method static Builder|AdminLog whereLteUserId($value)
+ * @method static Builder|AdminLog whereAdminUserId($value)
  * @method static Builder|AdminLog whereMethod($value)
  * @method static Builder|AdminLog whereRoute($value)
  * @method static Builder|AdminLog whereSessionId($value)

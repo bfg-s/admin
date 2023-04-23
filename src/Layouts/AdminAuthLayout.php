@@ -19,7 +19,7 @@ class AdminAuthLayout extends AdminBase
     protected $pjax = 'admin-login-container';
 
     /**
-     * LteAuthLayout constructor.
+     * AdminAuthLayout constructor.
      *
      * @throws Exception
      */

@@ -1,10 +1,10 @@
 'use strict';
 
-class AdminLte extends Executor {
+class Admin extends Executor {
 
     static __name() {
 
-        return "lte";
+        return "admin";
     }
 
     get_selected_radio () {
@@ -89,4 +89,4 @@ class AdminLte extends Executor {
 
 }
 
-module.exports = AdminLte;
+module.exports = Admin;
