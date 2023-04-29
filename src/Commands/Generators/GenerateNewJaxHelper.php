@@ -2,9 +2,9 @@
 
 namespace Admin\Commands\Generators;
 
-use Arr;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Lar\LJS\JaxController;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
