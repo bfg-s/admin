@@ -6,6 +6,7 @@ use App;
 use Artisan;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Log;
 use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
@@ -143,7 +144,7 @@ class AdminHelpersCommand extends Command
 
         foreach (static::$executors as $executor) {
             if (is_string($executor)) {
-                $name = \Str::snake(class_basename($executor));
+                $name = Str::snake(class_basename($executor));
                 $name = str_replace([
                     'generator',
                     'generate',
