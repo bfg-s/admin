@@ -5,12 +5,12 @@ namespace Admin\Commands\Generators;
 use Arr;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Lar\LJS\JaxController;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use Str;
 use Symfony\Component\Finder\SplFileInfo;
 
 class GenerateNewJaxHelper implements AdminHelpGeneratorInterface
@@ -113,7 +113,7 @@ class GenerateNewJaxHelper implements AdminHelpGeneratorInterface
             $name = implode(
                 '.',
                 array_map(
-                    'Str::snake',
+                    "\\Illuminate\\Support\\Str::snake",
                     explode(
                         '\\', $path
                     )

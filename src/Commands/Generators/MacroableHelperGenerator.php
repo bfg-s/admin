@@ -22,7 +22,7 @@ use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
-use Str;
+use Illuminate\Support\Str;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
@@ -211,7 +211,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                             $this->extendMethods($doc, $class);
                         });
 
-                        $nameClass = \Str::snake($name);
+                        $nameClass = Str::snake($name);
                         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
                         file_put_contents($file, "<?php \n\n".$class_obj->render());
 
@@ -560,7 +560,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
         });
 
-        $nameClass = \Str::snake('ModelTableComponentFields');
+        $nameClass = Str::snake('ModelTableComponentFields');
         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
         file_put_contents($file, "<?php \n\n".$class->render());
 
@@ -613,7 +613,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
         });
 
-        $nameClass = \Str::snake('ModelInfoTableComponentFields');
+        $nameClass = Str::snake('ModelInfoTableComponentFields');
         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
         file_put_contents($file, "<?php \n\n".$class->render());
 
@@ -644,7 +644,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
         });
 
-        $nameClass = \Str::snake('SearchFormComponentFields');
+        $nameClass = Str::snake('SearchFormComponentFields');
         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
         file_put_contents($file, "<?php \n\n".$class->render());
     }
