@@ -153,7 +153,7 @@ class PermissionController extends Controller
 
         return [
             $card->title('Instructions')->successType(),
-            $card->card_body()->p(\Str::markdown(__('admin.permission_instruction')))
+            $card->card_body()->p(Str::markdown(__('admin.permission_instruction')))
         ];
     }
 }

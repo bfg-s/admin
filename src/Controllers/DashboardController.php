@@ -3,9 +3,9 @@
 namespace Admin\Controllers;
 
 use App;
-use Arr;
 use Composer\Composer;
 use DB;
+use Illuminate\Support\Arr;
 use Lar\Layout\Abstracts\Component;
 use Admin;
 use Admin\Components\GridColumnComponent;

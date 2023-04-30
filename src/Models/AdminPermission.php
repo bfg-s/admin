@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Admin;
 use Admin\Traits\DumpedModel;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id

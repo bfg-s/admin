@@ -10,7 +10,7 @@ use Admin\Delegates\ModelInfoTable;
 use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Page;
-use Str;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

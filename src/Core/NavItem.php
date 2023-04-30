@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Admin\Navigate;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\NavCommon;
-use Str;
+use Illuminate\Support\Str;
 
 class NavItem implements Arrayable
 {

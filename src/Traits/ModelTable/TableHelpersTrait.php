@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\App;
 use Lar\Layout\Tags\DIV;
 use Admin\Components\ButtonsComponent;
 use Admin\Core\PrepareExport;
-use Str;
+use Illuminate\Support\Str;
 
 trait TableHelpersTrait
 {

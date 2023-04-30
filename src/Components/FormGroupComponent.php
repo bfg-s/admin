@@ -16,7 +16,7 @@ use Admin\Traits\Macroable;
 use Admin\Traits\RulesBackTrait;
 use Admin\Traits\RulesFrontTrait;
 use Route;
-use Str;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 
 /**

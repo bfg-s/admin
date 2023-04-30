@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Tags\A;
 use Lar\Layout\Tags\I;
 use Admin\Models\AdminPermission;
-use Str;
+use Illuminate\Support\Str;
 
 class Formatter
 {

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Illuminate\Support\Str;
 use Lar\Layout\Layout;
 use Lar\LJS\JaxController;
 use Lar\LJS\JaxExecutor;
@@ -24,7 +25,6 @@ use Admin\Layouts\AdminLayout;
 use Admin\Middlewares\Authenticate;
 use Admin\Repositories\AdminRepository;
 use Road;
-use Str;
 
 class ServiceProvider extends ServiceProviderIlluminate
 {

@@ -4,7 +4,7 @@ namespace Admin\Commands\BaseCommand;
 
 use Composer\Json\JsonFormatter;
 use Admin\Admin;
-use Str;
+use Illuminate\Support\Str;
 
 trait AdminExtensionTrait
 {

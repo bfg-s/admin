@@ -6,7 +6,7 @@ use Closure;
 use Admin\ExtendProvider;
 use Admin\Admin;
 use Admin\Navigate;
-use Str;
+use Illuminate\Support\Str;
 
 trait NavCommon
 {
