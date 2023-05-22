@@ -257,7 +257,7 @@ if (!function_exists('urlWithGet')) {
     {
         $url = explode('?', url()->current())[0];
 
-        $params = Arr::dot(array_merge(request()->query(), $params));
+        $params = \Illuminate\Support\Arr::dot(array_merge(request()->query(), $params));
         foreach ($unset as $k => $item) {
             if (isset($params[$item])) {
                 unset($params[$item], $unset[$k]);
