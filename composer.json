@@ -23,7 +23,7 @@
         "ext-pdo": "*",
         "lar/ljs": "^2.6.4",
         "lar/roads": "^2.2.2",
-        "lar/layout": "^3.0.3",
+        "lar/layout": "^3.0.7",
         "bfg/emitter": "^1.2",
         "bfg/repository": "^1.0",
         "bfg/embedded-call": "^1.0",
