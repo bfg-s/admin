@@ -240,12 +240,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * App register provider.
          */
-        if (!$this->app->runningUnitTests()) {
-            if (class_exists('App\Providers\AdminServiceProvider')) {
-                $this->app->register('App\Providers\AdminServiceProvider');
-            }
-        } else {
-            $this->app->register('Admin\Tests\Providers\AdminServiceProvider');
+        if (class_exists('App\Providers\AdminServiceProvider')) {
+            $this->app->register('App\Providers\AdminServiceProvider');
         }
 
         /**
