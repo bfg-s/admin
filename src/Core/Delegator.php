@@ -35,10 +35,13 @@ abstract class Delegator
         return $result;
     }
 
-    public function ifIndex(): static
+    public function ifIndex($addCondition = true): static
     {
         $router = app('router');
-        $this->if($router->currentRouteNamed('*.index'));
+        $this->if(
+            $router->currentRouteNamed('*.index')
+            && $addCondition
+        );
 
         return $this;
     }
@@ -50,36 +53,39 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifCreate(): static
+    public function ifCreate($addCondition = true): static
     {
         $router = app('router');
         $this->if(
-            $router->currentRouteNamed('*.create')
-            || $router->currentRouteNamed('*.store')
+            ($router->currentRouteNamed('*.create')
+            || $router->currentRouteNamed('*.store'))
+            && $addCondition
         );
 
         return $this;
     }
 
-    public function ifEdit(): static
+    public function ifEdit($addCondition = true): static
     {
         $router = app('router');
         $this->if(
-            $router->currentRouteNamed('*.edit')
-            || $router->currentRouteNamed('*.update')
+            ($router->currentRouteNamed('*.edit')
+            || $router->currentRouteNamed('*.update'))
+            && $addCondition
         );
 
         return $this;
     }
 
-    public function ifForm(): static
+    public function ifForm($addCondition = true): static
     {
         $router = app('router');
         $this->if(
-            $router->currentRouteNamed('*.edit')
+            ($router->currentRouteNamed('*.edit')
             || $router->currentRouteNamed('*.update')
             || $router->currentRouteNamed('*.create')
-            || $router->currentRouteNamed('*.store')
+            || $router->currentRouteNamed('*.store'))
+            && $addCondition
         );
 
         return $this;
