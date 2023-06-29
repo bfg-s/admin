@@ -290,10 +290,16 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->registerJax();
 
-        $sqlite = config('admin.connections.admin-sqlite.database');
+        if (
+            config('admin.functional.menu')
+            || config('admin.functional.settings')
+        ) {
 
-        if (!is_file($sqlite)) {
-            file_put_contents($sqlite, '');
+            $sqlite = config('admin.connections.admin-sqlite.database');
+
+            if (!is_file($sqlite)) {
+                file_put_contents($sqlite, '');
+            }
         }
     }
 

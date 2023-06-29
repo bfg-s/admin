@@ -54,6 +54,14 @@ return [
     ],
 
     /**
+     * Additional repo functional
+     */
+    'functional' => [
+        'menu' => false,
+        'settings' => false,
+    ],
+
+    /**
      * Authentication settings for all admin pages. Include an authentication
      * guard and a user provider setting of authentication driver.
      */
@@ -105,6 +113,9 @@ return [
         ],
     ],
 
+    /**
+     * SQLite's connection for menu and settings
+     */
     'connections' => [
         'admin-sqlite' => [
             'driver' => 'sqlite',
@@ -115,10 +126,16 @@ return [
         ],
     ],
 
+    /**
+     * Footer data
+     */
     'footer' => [
         'copy' => '<strong>Copyright &copy; '.date('Y').'.</strong> All rights reserved.',
     ],
 
+    /**
+     * Language flag icons
+     */
     'lang_flags' => [
         'uk' => 'flag-icon flag-icon-ua',
         'en' => 'flag-icon flag-icon-us',

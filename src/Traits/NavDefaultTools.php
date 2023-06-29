@@ -28,8 +28,12 @@ trait NavDefaultTools
             $group->adminAdministrators();
             $group->adminRoles();
             $group->adminPermission();
-            $group->adminMenu();
-            $group->adminSettings();
+            if (config('admin.functional.menu')) {
+                $group->adminMenu();
+            }
+            if (config('admin.functional.settings')) {
+                $group->adminSettings();
+            }
         });
 
         return $this;
@@ -111,15 +115,18 @@ trait NavDefaultTools
 
     public function makeMenu(): void
     {
-        $db = config('admin.connections.admin-sqlite.database');
+        if (config('admin.functional.menu')) {
 
-        if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_menu')) {
-            AdminMenu::where('active', 1)
-                ->orderBy('order')
-                ->whereNull('parent_id')
-                ->with('child')
-                ->get()
-                ->map(fn(AdminMenu $menu) => $this->injectRemoteMenu($menu));
+            $db = config('admin.connections.admin-sqlite.database');
+
+            if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_menu')) {
+                AdminMenu::where('active', 1)
+                    ->orderBy('order')
+                    ->whereNull('parent_id')
+                    ->with('child')
+                    ->get()
+                    ->map(fn(AdminMenu $menu) => $this->injectRemoteMenu($menu));
+            }
         }
     }
 
