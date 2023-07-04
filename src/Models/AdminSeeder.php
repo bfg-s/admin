@@ -78,40 +78,43 @@ class AdminSeeder extends Seeder
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
 
-        AdminSetting::updateOrCreate([
-            'group' => 'General',
-            'title' => 'Site name',
-            'type' => 'input',
-            'name' => 'site_name',
-            'value' => config('app.name'),
-            'description' => 'Application name',
-        ]);
+        if (config('admin.functional.settings')) {
 
-        AdminSetting::updateOrCreate([
-            'group' => 'General',
-            'title' => 'Timezone',
-            'type' => 'input',
-            'name' => 'app.timezone',
-            'value' => config('app.timezone'),
-            'description' => 'Default application timezone',
-        ]);
+            AdminSetting::updateOrCreate([
+                'group' => 'General',
+                'title' => 'Site name',
+                'type' => 'input',
+                'name' => 'site_name',
+                'value' => config('app.name'),
+                'description' => 'Application name',
+            ]);
 
-        AdminSetting::updateOrCreate([
-            'group' => 'General',
-            'title' => 'Locale',
-            'type' => 'input',
-            'name' => 'app.locale',
-            'value' => config('app.locale'),
-            'description' => 'Application default locale',
-        ]);
+            AdminSetting::updateOrCreate([
+                'group' => 'General',
+                'title' => 'Timezone',
+                'type' => 'input',
+                'name' => 'app.timezone',
+                'value' => config('app.timezone'),
+                'description' => 'Default application timezone',
+            ]);
 
-        AdminSetting::updateOrCreate([
-            'group' => 'Admin',
-            'title' => 'Dark mode',
-            'type' => 'switcher',
-            'name' => 'admin.dark_mode',
-            'value' => config('admin.dark_mode'),
-            'description' => 'Admin dark mode by default',
-        ]);
+            AdminSetting::updateOrCreate([
+                'group' => 'General',
+                'title' => 'Locale',
+                'type' => 'input',
+                'name' => 'app.locale',
+                'value' => config('app.locale'),
+                'description' => 'Application default locale',
+            ]);
+
+            AdminSetting::updateOrCreate([
+                'group' => 'Admin',
+                'title' => 'Dark mode',
+                'type' => 'switcher',
+                'name' => 'admin.dark_mode',
+                'value' => config('admin.dark_mode'),
+                'description' => 'Admin dark mode by default',
+            ]);
+        }
     }
 }
