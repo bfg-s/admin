@@ -79,7 +79,7 @@ class AdminInstallCommand extends Command
 
         foreach ($public_dirs as $public_dir) {
             if (!is_dir($dir = public_path($public_dir))) {
-                mkdir($dir, 0777, true);
+                @mkdir($dir, 0777, true);
 
                 $this->info("Directory {$dir} created!");
             }
