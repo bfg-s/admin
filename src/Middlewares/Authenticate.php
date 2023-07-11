@@ -109,6 +109,8 @@ class Authenticate
     {
         $excepts = [
             admin_uri('login'),
+            admin_uri('2fa'),
+            admin_uri('2fa_post'),
             admin_uri('logout'),
         ];
 

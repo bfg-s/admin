@@ -18,13 +18,13 @@ class CreateTableAdminUsers extends Migration
 
             $table->string('login', 190)->unique();
 
-            $table->string('password', 60);
-
             $table->string('email')->unique();
 
             $table->string('name')->nullable();
 
             $table->string('avatar')->nullable();
+
+            $table->string('password', 60);
 
             $table->string('remember_token', 100)->nullable();
 

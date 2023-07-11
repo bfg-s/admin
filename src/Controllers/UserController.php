@@ -2,13 +2,16 @@
 
 namespace Admin\Controllers;
 
+use Admin\Delegates\Modal;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Lar\Layout\Respond;
 use Lar\Layout\Tags\DIV;
 use Admin\Components\ModelInfoTableComponent;
 use Admin\Components\TabContentComponent;
+use Admin\Delegates\Buttons;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
 use Admin\Delegates\Column;
@@ -18,6 +21,10 @@ use Admin\Delegates\Tab;
 use Admin\Models\AdminLog;
 use Admin\Models\AdminUser;
 use Admin\Page;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FAQRCode\Google2FA;
 
 class UserController extends Controller
 {
@@ -31,6 +38,96 @@ class UserController extends Controller
      */
     protected $user;
 
+    public function showQr(Respond $respond)
+    {
+        $password = $this->modelInput('password');
+
+        if (Hash::check($password, admin()->password)) {
+            $respond->put('modal:put', ['modal-1']);
+        } else {
+            $respond->toast_error('Wrong password!');
+        }
+    }
+
+    public function disableQr(Respond $respond)
+    {
+        $password = $this->modelInput('password');
+
+        if (Hash::check($password, admin()->password)) {
+
+            admin()->update([
+                'two_factor_secret' => null,
+                'two_factor_confirmed_at' => null,
+            ]);
+
+            $respond->toast_success('2fa is success disable!');
+            $respond->reload();
+
+        } else {
+            $respond->toast_error('Wrong password!');
+        }
+    }
+
+    /**
+     * @param  Form  $form
+     * @return array
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws SecretKeyTooShortException
+     */
+    public function qrGenerateFinish(Form $form): array
+    {
+        $google2fa = new Google2FA();
+
+        $secret = $google2fa->generateSecretKey();
+        $qr_code = $google2fa->getQRCodeInline(
+            config('app.name'),
+            admin()->email,
+            $secret
+        );
+
+        return [
+            $form->p(__('admin.2fa_auth_finish_msg')),
+            $form->center($qr_code),
+            $form->p(),
+            $form->p(__('admin.2fa_auth_finish_msg2')),
+            $form->input('otp', ''),
+            $form->hidden('secret', '')->default($secret),
+        ];
+    }
+
+    /**
+     * @param  Request  $request
+     * @param  Respond  $respond
+     * @return Respond|void
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws SecretKeyTooShortException
+     */
+    public function twofaEnable(Request $request, Respond $respond)
+    {
+        $otp = $this->modelInput('otp');
+        $secret = $this->modelInput('secret');
+
+        $google2fa = new Google2FA();
+
+        if ($google2fa->verify($otp, $secret)) {
+
+            admin()->update([
+                'two_factor_secret' => $secret,
+                'two_factor_confirmed_at' => now(),
+            ]);
+
+            session(["2fa_checked" => true]);
+
+            $respond->toast_success(__('admin.2fa_is_enabled'));
+
+            return $respond->reload();
+        }
+
+        $respond->toast_error(__('admin.2fa_is_wrong'));
+    }
+
     /**
      * @param  Request  $request
      * @param  Page  $page
@@ -40,6 +137,8 @@ class UserController extends Controller
      * @param  Tab  $tab
      * @param  ChartJs  $chartJs
      * @param  SearchForm  $searchForm
+     * @param  Buttons  $buttons
+     * @param  Modal  $modal
      * @return Page
      */
     public function index(
@@ -50,11 +149,51 @@ class UserController extends Controller
         Form $form,
         Tab $tab,
         ChartJs $chartJs,
-        SearchForm $searchForm
+        SearchForm $searchForm,
+        Buttons $buttons,
+        Modal $modal,
     ) {
         $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
         return $page
+            ->modal(
+                $modal->title(__('admin.2fa_secure_confirm_password'))->closable()->temporary(),
+                $modal->submitEvent([$this, 'showQr']),
+                $modal->form(
+                    $form->p(__('admin.2fa_secure_confirm_password_info')),
+                    $form->password('password', 'admin.password')->queryable(),
+                ),
+                $modal->buttons()
+                    ->success()
+                    ->icon_check()
+                    ->title(__('admin.2fa_secure_confirm_password_confirm'))
+                    ->modalSubmit(),
+            )
+            ->modal(
+                $modal->title(__('admin.2fa_auth_finish'))->closable()->temporary(),
+                $modal->submitEvent([$this, 'twofaEnable']),
+                $modal->form(
+                    [$this, 'qrGenerateFinish']
+                ),
+                $modal->buttons()
+                    ->success()
+                    ->icon_check()
+                    ->title(__('admin.2fa_secure_confirm_password_confirm'))
+                    ->modalSubmit()
+            )
+            ->modal(
+                $modal->title(__('admin.2fa_secure_confirm_password'))->closable()->temporary(),
+                $modal->submitEvent([$this, 'disableQr']),
+                $modal->form(
+                    $form->p(__('admin.2fa_secure_confirm_password_info')),
+                    $form->password('password', 'admin.password')->queryable(),
+                ),
+                $modal->buttons()
+                    ->success()
+                    ->icon_check()
+                    ->title(__('admin.2fa_secure_confirm_password_confirm'))
+                    ->modalSubmit(),
+            )
             ->title($this->model()->name)
             ->icon_user()
             ->breadcrumb('admin.administrator', 'admin.profile')
@@ -89,6 +228,22 @@ class UserController extends Controller
                             $form->divider(__('admin.password')),
                             $form->password('password', 'admin.new_password')
                                 ->confirm(),
+                        )
+                    ),
+                    $card->tab(
+                        $tab->icon_shield_alt()->title('admin.2fa_secure'),
+                        $tab->if(!admin()->two_factor_confirmed_at)->h1(__('admin.2fa_secure_not_enable_title')),
+                        $tab->if(admin()->two_factor_confirmed_at)->h1('You have enabled two factor authentication.'),
+                        $tab->p(__('admin.2fa_secure_not_enable_info')),
+                        $tab->if(admin()->two_factor_confirmed_at)->buttons(
+                            $buttons->danger()
+                                ->modal('modal-2')
+                                ->text('Disable')
+                        ),
+                        $tab->if(!admin()->two_factor_confirmed_at)->buttons(
+                            $buttons->primary()
+                                ->modal()
+                                ->text(__('admin.2fa_secure_enable_button'))
                         )
                     ),
                     $card->tab(

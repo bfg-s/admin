@@ -10,6 +10,9 @@ use Admin\Core\RoutesAdaptor;
 \Lar\Roads\Facade::layout('admin_auth_layout')->group(static function (Roads $roads) {
     $roads->get('/', config('admin.action.auth.login_form_action'))->name('home');
     $roads->get('login', config('admin.action.auth.login_form_action'))->name('login');
+    $roads->get('2fa', config('admin.action.auth.login_form_2fa_get'))->name('2fa.get');
+    $roads->post('2fa', config('admin.action.auth.login_form_2fa'))->name('2fa');
+    $roads->post('2fa_post', config('admin.action.auth.login_form_2fa_post'))->name('2fa.post');
     $roads->post('login', config('admin.action.auth.login_post_action'))->name('login.post');
 });
 

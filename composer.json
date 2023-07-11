@@ -21,7 +21,8 @@
     "require": {
         "php": "^8.0|^8.1",
         "ext-pdo": "*",
-        "lar/ljs": "^2.6.4",
+        "ext-imagick": "*",
+        "lar/ljs": "^2.7.0",
         "lar/roads": "^2.2.2",
         "lar/layout": "^3.0.7",
         "bfg/repository": "^1.0",
@@ -32,7 +33,9 @@
         "symfony/dom-crawler": "^v6.0.1",
         "symfony/css-selector": "^v6.0.1",
         "almasaeed2010/adminlte": "^3.1.0",
-        "barryvdh/laravel-ide-helper": "^v2.12.3"
+        "barryvdh/laravel-ide-helper": "^v2.12.3",
+        "bacon/bacon-qr-code": "^2.0",
+        "pragmarx/google2fa-qrcode": "*"
     },
     "require-dev": {
 

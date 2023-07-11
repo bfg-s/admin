@@ -42,6 +42,9 @@ return [
     'action' => [
         'auth' => [
             'login_form_action' => [AuthController::class, 'login'],
+            'login_form_2fa' => [AuthController::class, 'twofa'],
+            'login_form_2fa_get' => [AuthController::class, 'twofaGet'],
+            'login_form_2fa_post' => [AuthController::class, 'twofaPost'],
             'login_post_action' => [AuthController::class, 'login_post'],
         ],
         'profile' => [

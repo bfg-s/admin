@@ -238,6 +238,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         });
 
         /**
+         * Ljs middlewares for secure
+         */
+        \Lar\LJS\ServiceProvider::$jaxMiddlewares[] = 'admin-auth';
+
+        /**
          * App register provider.
          */
         if (class_exists('App\Providers\AdminServiceProvider')) {

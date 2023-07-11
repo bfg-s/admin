@@ -253,4 +253,18 @@ Below is a step-by-step guide to filling out the form:
 3. `State` - Here we indicate the behavior of our new rule, it will either deny access or open it, in our case we need to close it, so we select the `Close` item.
 4. `Role` - Specify which role this rule is for. In our case, we select the `Moderator`.
 5. `Active` - The current state of the rule, it can be turned off and it will not be taken into account.",
+    '2fa_secure' => '2fa Secure',
+    '2fa_secure_not_enable_title' => 'You have not enabled two factor authentication.',
+    '2fa_secure_not_enable_info' => "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.",
+    '2fa_secure_enable_button' => "Enable",
+    '2fa_secure_confirm_password' => "Confirm Password",
+    '2fa_secure_confirm_password_info' => "For your security, please confirm your password to continue.",
+    '2fa_secure_confirm_password_confirm' => "Confirm",
+    'code' => "Code",
+    '2fa_auth_msg' => "Please confirm access to your account by entering the authentication code provided by your authenticator application.",
+    '2fa_auth_finish' => "Finish enabling two factor authentication.",
+    '2fa_auth_finish_msg' => "To finish enabling two factor authentication, scan the following QR code using your phone's authenticator application or enter the setup key and provide the generated OTP code.",
+    '2fa_auth_finish_msg2' => "Generate a One Time Password (OTP) and enter the value below.",
+    '2fa_is_enabled' => 'You 2fa is enabled!',
+    '2fa_is_wrong' => 'Wrong verification!',
 ];

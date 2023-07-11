@@ -7,7 +7,7 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">{{__('admin.login_message')}}</p>
 
-            <form action="{{route('admin.login.post')}}" method="post" target>
+            <form action="{{route('admin.2fa')}}" method="post" target>
                 @csrf
                 <div class="input-group mb-3">
                     <input type="text" name="login" autofocus class="form-control" placeholder="{{__('admin.email')}}"/>

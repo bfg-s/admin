@@ -2,6 +2,12 @@
 
 namespace Admin\Models;
 
+use BaconQrCode\Renderer\Color\Rgb;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\Fill;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 use Eloquent;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -17,6 +23,8 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Admin\Traits\DumpedModel;
+use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
+use Laravel\Fortify\Fortify;
 
 /**
  * @property int $id
@@ -25,10 +33,12 @@ use Admin\Traits\DumpedModel;
  * @property string $email
  * @property string|null $name
  * @property string $avatar
+ * @property string $two_factor_secret
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property Carbon|null $two_factor_confirmed_at
  * @property-read Collection|\Admin\Models\AdminLog[] $logs
  * @property-read int|null $logs_count
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
@@ -67,19 +77,33 @@ class AdminUser extends Model implements AuthenticatableContract
      * @var string
      */
     protected $table = 'admin_users';
+
     /**
      * @var array
      */
     protected $fillable = [
-        'login', 'email', 'name', 'avatar', 'password',
+        'login', 'email', 'name', 'avatar', 'password', 'two_factor_secret', 'two_factor_confirmed_at'
     ];
+
     /**
      * @var array
      */
     protected $guarded = [
         'password', 'remember_token',
     ];
-    protected $casts = [];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'login' => 'string',
+        'email' => 'string',
+        'name' => 'string',
+        'avatar' => 'string',
+        "password" => 'string',
+        "two_factor_secret" => 'string',
+        "two_factor_confirmed_at" => 'datetime',
+    ];
 
     /**
      * @return BelongsToMany

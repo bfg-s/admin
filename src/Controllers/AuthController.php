@@ -6,6 +6,12 @@ use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Admin;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FAQRCode\Google2FA;
+
+use Illuminate\Support\Facades\Crypt;
 
 use function respond;
 
@@ -24,8 +30,70 @@ class AuthController
     }
 
     /**
+     * Make login page.
+     */
+    public function twofa(Request $request)
+    {
+        $result = $this->login_post($request);
+
+        if (Admin::guest()) {
+            return redirect()->route('admin.login');
+        }
+
+        if (! admin()->two_factor_confirmed_at) {
+            return $result;
+        } else {
+            Auth::guard('admin')->logout();
+        }
+
+        return view('admin::auth.2fa', [
+            'login' => $request->login,
+            'password' => $request->password,
+        ]);
+    }
+
+    public function twofaGet(Request $request)
+    {
+        if (!Admin::guest()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('admin.login');
+    }
+
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws SecretKeyTooShortException
+     * @throws InvalidCharactersException
+     */
+    public function twofaPost(Request $request)
+    {
+        $data = $request->validate([
+            'login' => 'required|min:3|max:191',
+            'password' => 'required|min:4|max:191',
+            'code' => 'required|min:6|max:6',
+        ]);
+
+        $result = $this->login_post($request);
+
+        if (!admin()) {
+            return redirect()->route('admin.login');
+        }
+
+        $google2fa = new Google2FA();
+        $secret = admin()->two_factor_secret;
+
+        if (! $google2fa->verify($data['code'], $secret)) {
+            Auth::guard('admin')->logout();
+            return redirect()->route('admin.login');
+        }
+
+        return $result;
+    }
+
+    /**
      * @param  Request  $request
-     * @return RedirectResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function login_post(Request $request)
     {
@@ -38,22 +106,18 @@ class AuthController
 
         if (Auth::guard('admin')->attempt(
             ['login' => $request->login, 'password' => $request->password],
-            $request->remember == 'on' ? true : false
+            true
         )) {
             $request->session()->regenerate();
-
-            respond()->toast_success('Was authorized using login!');
 
             admin_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
 
             $login = true;
         } elseif (Auth::guard('admin')->attempt(
             ['email' => $request->login, 'password' => $request->password],
-            $request->remember == 'on' ? true : false
+            true
         )) {
             $request->session()->regenerate();
-
-            respond()->toast_success('Was authorized using E-Mail!');
 
             admin_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
 
