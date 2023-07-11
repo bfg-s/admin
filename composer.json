@@ -21,7 +21,6 @@
     "require": {
         "php": "^8.0|^8.1",
         "ext-pdo": "*",
-        "ext-imagick": "*",
         "lar/ljs": "^2.7.0",
         "lar/roads": "^2.2.2",
         "lar/layout": "^3.0.7",
