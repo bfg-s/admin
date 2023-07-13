@@ -15,19 +15,20 @@ class CreateTableAdminSettings extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('admin_settings')) {
-
-            Schema::create('admin_settings', static function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->string('group')->default('admin.global_settings');
-                $table->string('title');
-                $table->string('type')->default('input');
-                $table->string('name');
-                $table->text('value')->nullable();
-                $table->text('description')->nullable();
-                $table->timestamps();
-                $table->softDeletes();
-            });
+        if (config('admin.functional.settings')) {
+            if (!Schema::hasTable('admin_settings')) {
+                Schema::create('admin_settings', static function (Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->string('group')->default('admin.global_settings');
+                    $table->string('title');
+                    $table->string('type')->default('input');
+                    $table->string('name');
+                    $table->text('value')->nullable();
+                    $table->text('description')->nullable();
+                    $table->timestamps();
+                    $table->softDeletes();
+                });
+            }
         }
     }
 
@@ -38,6 +39,8 @@ class CreateTableAdminSettings extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_settings');
+        if (config('admin.functional.settings')) {
+            Schema::dropIfExists('admin_settings');
+        }
     }
 }
