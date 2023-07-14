@@ -13,12 +13,12 @@
                         @if(is_array($page_info))
                             @if(isset($page_info['icon']))
                                 <i class="{{$page_info['icon']}}"></i>
-                            @elseif($menu->getIcon())
+                            @elseif($menu && $menu->getIcon())
                                 <i class="{{$menu->getIcon()}}"></i>
                             @endif
-                            {!! __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu->getHeadTitle() ?? ($menu->getTitle() ?? 'Blank page')))) !!}
+                            {!! __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu?->getHeadTitle() ?? ($menu?->getTitle() ?? 'Blank page')))) !!}
                         @else
-                            @if($menu->getIcon()) <i class="{{$menu->getIcon()}}"></i>  @endif {{__($page_info)}}
+                            @if($menu && $menu->getIcon()) <i class="{{$menu->getIcon()}}"></i>  @endif {{__($page_info)}}
                         @endif
                     @else
                         @if($menu->getIcon())
