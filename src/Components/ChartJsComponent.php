@@ -159,6 +159,30 @@ class ChartJsComponent extends Component
         return $this;
     }
 
+    public function customChart(string $title, array $data): static
+    {
+        $this->builder
+            ->type($this->type)
+            ->size(['width' => 400, 'height' => $this->size])
+            ->labels(collect($data)->keys()->toArray());
+
+        $bgColor = $this->randColor();
+        $this->builder->addDataset(
+            [
+                'label' => __($title),
+                'backgroundColor' => $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
+                'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
+                'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
+                'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
+                'pointHoverBackgroundColor' => $this->randColor(), //"#fff",
+                'pointHoverBorderColor' => $this->randColor(),
+                'data' => collect($data)->values()->toArray(),
+            ]
+        );
+
+        return $this;
+    }
+
     protected function randColor(int $min = 1, $max = 255)
     {
         $r1 = rand($min, $max);
