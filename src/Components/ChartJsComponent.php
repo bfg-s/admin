@@ -159,14 +159,14 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    public function customChart(string $title, array $data): static
+    public function customChart(string $title, array $data, array $color = []): static
     {
         $this->builder
             ->type($this->type)
             ->size(['width' => 400, 'height' => $this->size])
             ->labels(collect($data)->keys()->toArray());
 
-        $bgColor = $this->randColor();
+        $bgColor = $color ?: $this->randColor();
         $this->builder->addDataset(
             [
                 'label' => __($title),
