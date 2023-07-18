@@ -88,7 +88,7 @@ class UserController extends Controller
 
         return [
             $form->p(__('admin.2fa_auth_finish_msg')),
-            $form->center($qr_code),
+            str_contains($qr_code, '</svg>') ? $form->center($qr_code) : $form->center()->img(['src' => $qr_code]),
             $form->p(),
             $form->p(__('admin.2fa_auth_finish_msg2')),
             $form->input('otp', ''),
