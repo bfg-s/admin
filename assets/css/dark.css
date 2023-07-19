@@ -89,3 +89,6 @@
 .dark-mode .popover-header {
     background-color: #2e3439 !important;
 }
+.dark-mode pre {
+    color: white;
+}

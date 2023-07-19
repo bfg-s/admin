@@ -436,4 +436,16 @@ class Formatter
     {
         return butty_date_time($value);
     }
+
+    /**
+     * @param $value
+     * @return mixed|string|null
+     */
+    public function to_json($value = null)
+    {
+        if ($value && is_array($value)) {
+            return "<pre>".json_encode($value, JSON_PRETTY_PRINT)."</pre>";
+        }
+        return $value;
+    }
 }
