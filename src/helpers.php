@@ -543,3 +543,18 @@ if (!function_exists('array_dots_uncollapse')) {
         return $result;
     }
 }
+
+if (!function_exists('array_is_list')) {
+    /**
+     * Check if array is a list (no assoc)
+     * @param  array  $arr
+     * @return bool
+     */
+    function array_is_list(array $arr): bool
+    {
+        if ($arr === []) {
+            return true;
+        }
+        return array_keys($arr) === range(0, count($arr) - 1);
+    }
+}
