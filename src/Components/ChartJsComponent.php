@@ -159,7 +159,7 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    public function customChart(string $title, array $data, array $color = []): static
+    public function customChart(string|array $title, array $data, array $color = []): static
     {
         $isDataList = array_is_list($data);
         $isColorList = $color && isset($color[0]) && is_array($color[0]);
@@ -179,7 +179,7 @@ class ChartJsComponent extends Component
             }
             $this->builder->addDataset(
                 [
-                    'label' => __($title),
+                    'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
                     'backgroundColor' => $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
                     'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
                     'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
