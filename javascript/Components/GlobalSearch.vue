@@ -60,6 +60,9 @@ export default {
 
             this.timer = setTimeout(() => {
                 this.run_search();
+                if (this.q.length && window.location.search.indexOf('?q') === -1) {
+                    this.show = true;
+                }
             }, 500);
         },
         i(val) {
@@ -151,9 +154,11 @@ export default {
                     $jax.get(link.href, {q: this.q})
                         .then((r) => {
                             if (r.total) {
+                                const urlObj = new URL(link.href);
+                                //console.log(urlObj);
                                 this.items.push({
                                     inner: link.inner,
-                                    href: `${link.href}?q=${this.q}`,
+                                    href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}`,
                                     total: r.total
                                 });
                             }
