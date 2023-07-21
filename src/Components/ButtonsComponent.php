@@ -229,9 +229,10 @@ class ButtonsComponent extends Component
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
+     * @param  array  $add
      * @return \Lar\Layout\Abstracts\Component|ButtonsComponent|Buttons
      */
-    public function resourceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
+    public function resourceDestroy(string $link = null, string $title = null, string $message = null, $key = null, array $add = [])
     {
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
@@ -248,7 +249,7 @@ class ButtonsComponent extends Component
                 return new Buttons();
             }
 
-            $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay' : '';
+            $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay&' . http_build_query($add) : '?' . http_build_query($add);
 
             return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete')])->setDatas([
                 'click' => 'alert::confirm',

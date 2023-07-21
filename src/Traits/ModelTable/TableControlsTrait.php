@@ -300,7 +300,8 @@ trait TableControlsTrait
                                     $menu->getLinkDestroy($key),
                                     '',
                                     $model->getRouteKeyName(),
-                                    $key
+                                    $key,
+                                    ['_after' => 'stay']
                                 );
                             }
 
