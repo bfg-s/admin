@@ -2,6 +2,7 @@
 
 namespace Admin\Jax;
 
+use Admin\Components\ModelTableComponent;
 use Cookie;
 use DB;
 use Excel;
@@ -212,6 +213,8 @@ class Admin extends AdminExecutor
         if (!check_referer()) {
             return [];
         }
+
+        ModelTableComponent::$is_export = true;
 
         $this->refererEmit();
 

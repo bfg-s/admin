@@ -2,11 +2,14 @@
 
 namespace Admin\Core;
 
+use Admin\Traits\SearchFormConditionRulesTrait;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class PrepareExport implements FromCollection
 {
+    use SearchFormConditionRulesTrait;
+
     public static $columns = [];
 
     /**
@@ -35,6 +38,11 @@ class PrepareExport implements FromCollection
     protected string $table;
 
     /**
+     * @var array
+     */
+    public static array $fields = [];
+
+    /**
      * @param  string  $model
      * @param  array  $ids
      * @param  string  $order
@@ -55,10 +63,51 @@ class PrepareExport implements FromCollection
         $query = $this->model::query();
         if ($this->ids) {
             $query = $query->whereIn('id', $this->ids);
+        } else {
+            if (request()->has('q')) {
+                $r = request('q');
+                if (is_string($r)) {
+                    $query = $query->orWhere(function ($q) use ($r) {
+                        foreach (static::$fields as $field) {
+                            if (!str_ends_with($field['field_name'], '_at')) {
+                                $q = $q->orWhere($field['field_name'], 'like', "%{$r}%");
+                            }
+                        }
+                        return $q;
+                    });
+                } elseif (is_array($r)) {
+                    foreach ($r as $key => $val) {
+                        if ($val != null) {
+                            foreach (static::$fields as $field) {
+                                if ($field['field_name'] === $key) {
+                                    $val = method_exists($field['class'], 'transformValue') ?
+                                        $field['class']::transformValue($val) :
+                                        $val;
+
+                                    if (is_embedded_call($field['method'])) {
+                                        $result = call_user_func($field['method'], $query, $val, $key);
+
+                                        if ($result) {
+                                            $query = $result;
+                                        }
+                                    } else {
+                                        $query = $this->{$field['method']}(
+                                            $query,
+                                            $val,
+                                            $key
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         if ($this->order && $this->order_type) {
             $query = $query->orderBy($this->order, $this->order_type);
         }
+
         $exportCollection = [];
         foreach ($query->get() as $item) {
             foreach (static::$columns as $tables) {

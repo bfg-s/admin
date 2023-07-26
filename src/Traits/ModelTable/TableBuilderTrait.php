@@ -50,7 +50,7 @@ trait TableBuilderTrait
             $header_count++;
         }
 
-        if (request()->has('q') && request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
+        if (!static::$is_export && request()->has('q') && request()->ajax() && !request()->pjax() && $this->search && $this->search->fieldsCount()) {
             die($this->paginate->toJson());
         }
 

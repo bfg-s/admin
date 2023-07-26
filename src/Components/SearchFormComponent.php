@@ -2,6 +2,7 @@
 
 namespace Admin\Components;
 
+use Admin\Core\PrepareExport;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -190,7 +191,7 @@ class SearchFormComponent extends Component
                     }
                 }
 
-                $this->fields[] = [
+                $this->fields[] = PrepareExport::$fields[] = [
                     'field' => $name,
                     'condition' => $condition,
                     'field_name' => $field_name,

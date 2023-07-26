@@ -172,7 +172,8 @@ class ButtonComponent extends Component
 
     protected function mount()
     {
-        $this->addClass("btn-$this->type");
+        //$this->addClass("btn-tool");
+        $this->addClass("btn-outline-$this->type");
         if ($this->icon) {
             $this->i([$this->icon])->_text($this->title ? ':space' : '');
         }

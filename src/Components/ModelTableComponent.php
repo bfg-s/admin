@@ -83,7 +83,7 @@ class ModelTableComponent extends Component
     /**
      * @var int[]
      */
-    protected $per_pages = [10, 15, 20, 50, 100];
+    protected $per_pages = [10, 15, 20, 50, 100, 500, 1000];
     /**
      * @var string
      */
@@ -105,6 +105,8 @@ class ModelTableComponent extends Component
      */
     protected $prepend = false;
     protected $controlsObj;
+
+    public static bool $is_export = false;
 
     /**
      * @param ...$delegates
