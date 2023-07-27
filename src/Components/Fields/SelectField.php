@@ -89,6 +89,7 @@ class SelectField extends FormGroupComponent
 
     /**
      * @return void
+     * @throws ReflectionException
      */
     protected function loadSubject()
     {
@@ -105,7 +106,8 @@ class SelectField extends FormGroupComponent
         $r_name = $selector->getName();
 
         if (request()->has($r_name)) {
-            exit($selector->toJson(JSON_UNESCAPED_UNICODE));
+            echo $selector->toJson(JSON_UNESCAPED_UNICODE);
+            die;
         }
 
         $this->data['select-name'] = $r_name;
