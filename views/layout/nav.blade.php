@@ -64,6 +64,12 @@
             @endif
         @endforeach
 
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+
         <li>
             <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('admin.open_homepage_in_new_tab')}}"><i
                     class="fas fa-external-link-square-alt"></i></a>

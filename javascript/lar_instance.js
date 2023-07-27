@@ -31,6 +31,7 @@ module.exports = ($methods) => {
     ljs.regExec(require('./Executors/table_action'));
     ljs.regExec(require('./Executors/tabs'));
     ljs.regExec(require('./Executors/cookie'));
+    ljs.regExec(require('./Executors/slider'));
 
     $(document).on('change', '[name]', (e) => {
         let obj = e.target;

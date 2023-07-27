@@ -242,4 +242,19 @@ class Decorations
 
         return "<i class=\"fas fa-square\" title='{$value}' style=\"color: {$value}; font-size: {$size}px\"></i>";
     }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return string
+     */
+    public function progress_complete($value, $props = [])
+    {
+        $text = $props[0] ?? (__('admin.complete') ?? 'Complete');
+
+        return '<div class="progress progress-sm">
+                    <div class="progress-bar bg-green" role="progressbar" aria-valuenow="'.$value.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$value.'%">
+                    </div>
+                </div>' . ($text ? '<small>'.$value.'% '.$text.'</small>':'');
+    }
 }

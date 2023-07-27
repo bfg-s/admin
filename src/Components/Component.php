@@ -2,6 +2,7 @@
 
 namespace Admin\Components;
 
+use Admin\Components\Fields\SliderField;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -104,6 +105,7 @@ abstract class Component extends DIV implements onRender
         'rating' => RatingField::class,
         'hidden' => HiddenField::class,
         'autocomplete' => AutocompleteField::class,
+        'slider' => SliderField::class,
     ];
     protected static $regInputs = null;
     /**

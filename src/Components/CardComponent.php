@@ -94,6 +94,11 @@ class CardComponent extends Component
     /**
      * @var bool
      */
+    protected $window_controls = true;
+
+    /**
+     * @var bool
+     */
     protected $has_search_form = true;
     protected Page $page;
 
@@ -358,6 +363,25 @@ class CardComponent extends Component
         return $this;
     }
 
+    /**
+     * @param  bool  $eq
+     * @return $this
+     */
+    public function windowControls(bool $eq = true)
+    {
+        $this->window_controls = $eq;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withoutWindowControls()
+    {
+        return $this->windowControls(false);
+    }
+
     protected function mount()
     {
         $this->callRenderEvents();
@@ -398,7 +422,9 @@ class CardComponent extends Component
             $this->tools->appEnd($this->group);
         }
 
-        $this->tools->text('
+        if ($this->window_controls) {
+
+            $this->tools->text('
                 <button type="button" class="btn btn-tool" data-card-widget="maximize">
                 <i class="fas fa-expand"></i>
                 </button>
@@ -409,6 +435,7 @@ class CardComponent extends Component
                 <i class="fas fa-times"></i>
                 </button>
                 ');
+        }
     }
 
     /**

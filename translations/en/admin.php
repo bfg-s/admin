@@ -267,4 +267,5 @@ Below is a step-by-step guide to filling out the form:
     '2fa_auth_finish_msg2' => "Generate a One Time Password (OTP) and enter the value below.",
     '2fa_is_enabled' => 'You 2fa is enabled!',
     '2fa_is_wrong' => 'Wrong verification!',
+    'complete' => 'Complete',
 ];

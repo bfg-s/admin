@@ -129,6 +129,7 @@ class PrepareExport implements FromCollection
         foreach ($exportCollection as $head => $col) {
             $headers[] = $head;
             foreach ($col as $ic => $item) {
+                dd($item);
                 $result[$ic][$i] = $item;
             }
             $i++;
