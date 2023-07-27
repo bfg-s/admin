@@ -107,6 +107,7 @@ class SelectField extends FormGroupComponent
 
         if (request()->has($r_name)) {
             echo $selector->toJson(JSON_UNESCAPED_UNICODE);
+            http_response_code(200);
             die;
         }
 
