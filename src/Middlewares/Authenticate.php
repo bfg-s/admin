@@ -81,6 +81,23 @@ class Authenticate
             static::$access = false;
         }
 
+        //dd(\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile'));
+
+        if (
+            ! Auth::guard('admin')->guest()
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('jax.executor')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile.logout')
+            && config('admin.functional.force-2fa')
+            && ! admin()->two_factor_confirmed_at
+        ) {
+            session()->flash(
+                'respond',
+                respond()->toast_error([__('admin.2fa_enable_before'), __('admin.error')])->toJson()
+            );
+            return redirect()->route('admin.profile');
+        }
+
         admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
 
         /** @var Response $response */

@@ -268,4 +268,5 @@ Below is a step-by-step guide to filling out the form:
     '2fa_is_enabled' => 'You 2fa is enabled!',
     '2fa_is_wrong' => 'Wrong verification!',
     'complete' => 'Complete',
+    '2fa_enable_before' => 'First, you need to enable two-factor authentication!',
 ];

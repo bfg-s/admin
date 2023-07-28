@@ -62,6 +62,7 @@ return [
     'functional' => [
         'menu' => false,
         'settings' => false,
+        'force-2fa' => false,
     ],
 
     /**
