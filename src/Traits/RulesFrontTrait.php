@@ -16,7 +16,7 @@ trait RulesFrontTrait
      * поле обязательное для заполнения.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_required()
+    public function is_required()
     {
         $this->rules[] = 'required';
 
@@ -27,7 +27,7 @@ trait RulesFrontTrait
      * проверяет корректность e-mail адреса.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_email()
+    public function is_email()
     {
         $this->rules[] = 'email';
 
@@ -38,7 +38,7 @@ trait RulesFrontTrait
      * проверяет корректность url адреса.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_url()
+    public function is_url()
     {
         $this->rules[] = 'url';
 
@@ -49,7 +49,7 @@ trait RulesFrontTrait
      * проверяет корректность даты.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_date()
+    public function is_date()
     {
         $this->rules[] = 'date';
 
@@ -60,7 +60,7 @@ trait RulesFrontTrait
      * проверка на число.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_number()
+    public function is_number()
     {
         $this->rules[] = 'number';
 
@@ -71,7 +71,7 @@ trait RulesFrontTrait
      * только цифры.
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_digits()
+    public function is_digits()
     {
         $this->rules[] = 'digits';
 
@@ -83,7 +83,7 @@ trait RulesFrontTrait
      * @param  string  $field
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_equal_to(string $field)
+    public function is_equal_to(string $field)
     {
         $this->rules['equalTo'] = $field;
 
@@ -95,7 +95,7 @@ trait RulesFrontTrait
      * @param  int  $max
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_max_length(int $max)
+    public function is_max_length(int $max)
     {
         $this->rules['maxlength'] = $max;
 
@@ -107,7 +107,7 @@ trait RulesFrontTrait
      * @param  int  $min
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_min_length(int $min)
+    public function is_min_length(int $min)
     {
         $this->rules['minlength'] = $min;
 
@@ -120,7 +120,7 @@ trait RulesFrontTrait
      * @param  int  $max
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_range_length(int $min, int $max)
+    public function is_range_length(int $min, int $max)
     {
         $this->rules['rangelength'] = "[{$min},{$max}]";
 
@@ -133,7 +133,7 @@ trait RulesFrontTrait
      * @param  int  $max
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_range(int $min, int $max)
+    public function is_range(int $min, int $max)
     {
         $this->rules['range'] = "[{$min},{$max}]";
 
@@ -145,7 +145,7 @@ trait RulesFrontTrait
      * @param  int  $max
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_max(int $max)
+    public function is_max(int $max)
     {
         $this->rules['max'] = $max;
 
@@ -157,7 +157,7 @@ trait RulesFrontTrait
      * @param  int  $min
      * @return $this|FormGroupComponent
      */
-    protected function _front_rule_min(int $min)
+    public function is_min(int $min)
     {
         $this->rules['min'] = $min;
 

@@ -441,7 +441,7 @@ trait RulesBackTrait
     public function email(string $message = null)
     {
         if ($this->print_front) {
-            $this->_front_rule_email();
+            $this->is_email();
         }
 
         return $this->rule(__FUNCTION__, $message);
@@ -876,7 +876,7 @@ trait RulesBackTrait
     public function numeric(string $message = null)
     {
         if ($this->print_front) {
-            $this->_front_rule_number();
+            $this->is_number();
         }
 
         return $this->rule(__FUNCTION__, $message);
@@ -956,7 +956,7 @@ trait RulesBackTrait
     public function required(string $message = null)
     {
         if ($this->print_front) {
-            $this->_front_rule_required();
+            $this->is_required();
         }
 
         return $this->rule(__FUNCTION__, $message);
@@ -1204,7 +1204,7 @@ trait RulesBackTrait
     public function url(string $message = null)
     {
         if ($this->print_front) {
-            $this->_front_rule_url();
+            $this->is_url();
         }
 
         return $this->rule(__FUNCTION__, $message);

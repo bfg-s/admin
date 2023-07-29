@@ -88,10 +88,18 @@ class AdministratorsController extends Controller
                         $tab->icon_cogs()->title('admin.common'),
                         $tab->input('login', 'admin.login_name')
                             ->required()
-                            ->unique(AdminUser::class, 'login', $this->model()->id),
-                        $tab->input('name', 'admin.name')->required(),
+                            ->unique(AdminUser::class, 'login', $this->model()->id)
+                            ->is_max_length(191)
+                            ->max(191),
+                        $tab->input('name', 'admin.name')
+                            ->required()
+                            ->is_max_length(191)
+                            ->max(191),
                         $tab->email('email', 'admin.email_address')
-                            ->required()->unique(AdminUser::class, 'email', $this->model()->id),
+                            ->required()
+                            ->unique(AdminUser::class, 'email', $this->model()->id)
+                            ->is_max_length(191)
+                            ->max(191),
                         $tab->multi_select('roles[]', 'admin.role')->icon_user_secret()
                             ->options(AdminRole::all()->pluck('name', 'id')),
                         $tab->ifEdit()->info_updated_at(),
