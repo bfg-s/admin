@@ -2,6 +2,7 @@
 
 namespace Admin\Layouts;
 
+use Illuminate\Support\Facades\App;
 use Lar\Layout\Abstracts\LayoutComponent;
 use Admin\Admin;
 
@@ -93,7 +94,7 @@ class AdminBase extends LayoutComponent
         'admin-asset/plugins/select2/js/select2.full.min.js',
 
         'admin/plugins/jquery-validation/jquery.validate.min.js',
-        'admin/plugins/jquery-validation/localization/messages_ru.min.js',
+
         'admin/plugins/bootstrap-fileinput/js/plugins/piexif.min.js',
         'admin/plugins/bootstrap-fileinput/js/plugins/sortable.min.js',
         'admin/plugins/ckeditor5-build-classic/ckeditor.js',
@@ -142,6 +143,10 @@ class AdminBase extends LayoutComponent
      */
     public function __construct()
     {
+        if (($locale = App::getLocale()) != 'en') {
+            $this->head_scripts[] = 'admin/plugins/jquery-validation/localization/messages_'.$locale.'.min.js';
+        }
+
         if (Admin::$echo) {
             $this->head_scripts['ljs'][] = 'echo';
         }
