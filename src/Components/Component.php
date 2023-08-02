@@ -174,8 +174,9 @@ abstract class Component extends DIV implements onRender
                 $model = call_user_func($model, $this->model ?: $this->page->model());
             }
 
-            if (is_array($model) && ! isset($model[0])) {
-                $model = eloquent_instruction($this->model ?: $this->page->model(), $model);
+            $m = $this->model ?: $this->page->model();
+            if (is_array($model) && ! isset($model[0]) && $m) {
+                $model = eloquent_instruction($m, $model);
             }
 
             if (is_string($model) && class_exists($model)) {
