@@ -174,7 +174,7 @@ abstract class Component extends DIV implements onRender
                 $model = call_user_func($model, $this->model ?: $this->page->model());
             }
 
-            if (is_array($model)) {
+            if (is_array($model) && ! isset($model[0])) {
                 $model = eloquent_instruction($this->model ?: $this->page->model(), $model);
             }
 
@@ -192,7 +192,7 @@ abstract class Component extends DIV implements onRender
             $this->model_name = $this->page->getModelName($model);
             if (!$search) {
                 $c = $this->realModel();
-                if ($c) {
+                if ($c && !is_array($c)) {
                     $class = is_string($c) ? $this->model : get_class($c);
                     $this->menu = $this->page->findModelMenu($class);
                 }

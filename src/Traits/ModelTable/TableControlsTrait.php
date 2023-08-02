@@ -193,7 +193,8 @@ trait TableControlsTrait
     public function getActionData()
     {
         $this->getModelName();
-        $this->model_class = $this->realModel() ? get_class($this->realModel()) : null;
+        $m = $this->realModel();
+        $this->model_class = $this->realModel() && is_object($m) ? get_class($m) : null;
         $hasDelete = $this->menu
             && $this->get_test_var('check_delete')
             && $this->menu->isResource()
@@ -283,7 +284,7 @@ trait TableControlsTrait
 
             $this->column(static function (SPAN $span) {
                 $span->_addClass('fit');
-            }, function (Model $model) {
+            }, function (Model|array $model) {
                 $menu = $this->menu;
 
                 return ButtonsComponent::create()->when(function (ButtonsComponent $group) use ($model, $menu) {
