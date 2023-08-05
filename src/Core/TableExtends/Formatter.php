@@ -15,11 +15,11 @@ use Illuminate\Support\Str;
 class Formatter
 {
     /**
-     * @param $props
+     * @param  array  $props
      * @param $value
      * @return string
      */
-    public function str_limit($value = null, $props = [])
+    public function str_limit($value = null, array $props = []): string
     {
         $value = $this->strip_tags($value, []);
         $limit = $props[0] ?? 20;
@@ -32,7 +32,12 @@ class Formatter
         return "<span title='{$value}'>".$str.'</span>';
     }
 
-    public function strip_tags($value = null, $props = [])
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return mixed|string|null
+     */
+    public function strip_tags($value = null, array $props = []): mixed
     {
         if ($value) {
             $value = strip_tags(
@@ -43,7 +48,12 @@ class Formatter
         return $value;
     }
 
-    public function to_html($value = null, $props = [])
+    /**
+     * @param $value
+     * @param  array  $props
+     * @return mixed|string|null
+     */
+    public function to_html($value = null, array $props = []): mixed
     {
         if ($value) {
             $value = html_entity_decode($value);
@@ -59,7 +69,7 @@ class Formatter
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route($value, array $props = [], Model $model = null)
+    public function admin_resource_route($value, array $props = [], Model $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -117,7 +127,7 @@ class Formatter
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route_edit($value, array $props = [], Model $model = null)
+    public function admin_resource_route_edit($value, array $props = [], Model $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -152,7 +162,7 @@ class Formatter
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route_show($value, array $props = [], Model $model = null)
+    public function admin_resource_route_show($value, array $props = [], Model $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -188,7 +198,7 @@ class Formatter
      * @param  Model|null  $model
      * @return string
      */
-    public function to_append($value = null, $props = [], Model $model = null)
+    public function to_append($value = null, array $props = [], Model $model = null): string
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $append = call_user_func($props[0], $model);
@@ -206,7 +216,7 @@ class Formatter
      * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend($value = null, $props = [], Model $model = null)
+    public function to_prepend($value = null, array $props = [], Model $model = null): string
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $prepend = call_user_func($props[0], $model);
@@ -224,7 +234,7 @@ class Formatter
      * @param  Model|null  $model
      * @return string
      */
-    public function to_append_link($value = null, $props = [], Model $model = null)
+    public function to_append_link($value = null, array $props = [], Model $model = null): string
     {
         if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
@@ -253,7 +263,7 @@ class Formatter
      * @param  Model|null  $model
      * @return string
      */
-    public function to_prepend_link($value = null, $props = [], Model $model = null)
+    public function to_prepend_link($value = null, array $props = [], Model $model = null): string
     {
         if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
@@ -277,11 +287,11 @@ class Formatter
     }
 
     /**
-     * @param $props
+     * @param  array  $props
      * @param $value
      * @return string
      */
-    public function number_format($value = null, $props = [])
+    public function number_format($value = null, array $props = []): string
     {
         $dec = $props[0] ?? 0;
         $dec_point = $props[1] ?? '.';
@@ -292,11 +302,11 @@ class Formatter
     }
 
     /**
-     * @param $props
+     * @param  array  $props
      * @param $value
      * @return string
      */
-    public function money($value = null, $props = [])
+    public function money($value = null, array $props = []): string
     {
         if (!$value) {
             $value = 0;
@@ -311,7 +321,7 @@ class Formatter
      * @param  Model|null  $model
      * @return array|Application|Translator|string|null
      */
-    public function to_lang($value = null, $props = [], Model $model = null)
+    public function to_lang($value = null, array $props = [], Model $model = null): array|string|Translator|Application|null
     {
         return $model ? tag_replace(__($value, $props), $model) : __($value, $props);
     }
@@ -321,7 +331,7 @@ class Formatter
      * @param  array  $props
      * @return array|Application|Translator|string|null
      */
-    public function to_string($value = null, $props = [])
+    public function to_string($value = null, array $props = []): array|string|Translator|Application|null
     {
         if (is_object($value)) {
             return get_class($value);
@@ -343,7 +353,7 @@ class Formatter
      * @param  array  $props
      * @return array|Application|Translator|string|null
      */
-    public function has_lang($value = null, $props = [])
+    public function has_lang($value = null, array $props = []): array|string|Translator|Application|null
     {
         return lang_in_text($value);
     }
@@ -353,7 +363,7 @@ class Formatter
      * @param  array  $props
      * @return array|Application|Translator|string|null
      */
-    public function trim($value = null, $props = [])
+    public function trim($value = null, array $props = []): array|string|Translator|Application|null
     {
         if (isset($props[0])) {
             return trim($value, $props[0]);
@@ -367,7 +377,7 @@ class Formatter
      * @param  array  $props
      * @return string
      */
-    public function carbon_format($value = null, $props = [])
+    public function carbon_format($value = null, array $props = []): string
     {
         $format = $props[0] ?? 'Y-m-d H:i:s';
 
@@ -385,7 +395,7 @@ class Formatter
      * @param  array  $props
      * @return string
      */
-    public function carbon_time($value = null, $props = [])
+    public function carbon_time($value = null, array $props = []): string
     {
         $format = $props[0] ?? 'H:i:s';
         $time = explode(':', $value);
@@ -402,7 +412,7 @@ class Formatter
      * @param  array  $props
      * @return mixed|string
      */
-    public function explode($value = null, $props = [])
+    public function explode($value = null, array $props = []): mixed
     {
         $delimiter = $props[0] ?? null;
 
@@ -423,7 +433,7 @@ class Formatter
      * @param $value
      * @return string
      */
-    public function butty_date($value = null)
+    public function butty_date($value = null): string
     {
         return butty_date($value);
     }
@@ -432,7 +442,7 @@ class Formatter
      * @param $value
      * @return string
      */
-    public function butty_date_time($value = null)
+    public function butty_date_time($value = null): string
     {
         return butty_date_time($value);
     }
@@ -441,7 +451,7 @@ class Formatter
      * @param $value
      * @return mixed|string|null
      */
-    public function to_json($value = null)
+    public function to_json($value = null): mixed
     {
         if ($value && is_array($value)) {
             return "<pre>".json_encode($value, JSON_PRETTY_PRINT)."</pre>";

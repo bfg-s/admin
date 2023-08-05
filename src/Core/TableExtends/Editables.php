@@ -16,7 +16,7 @@ class Editables
      * @param  null  $field
      * @return Component
      */
-    public function input_switcher($value, array $props = [], Model $model = null, $field = null)
+    public function input_switcher($value, array $props = [], Model $model = null, $field = null): Component
     {
         if ($model) {
             return FieldComponent::switcher($field)
@@ -41,7 +41,7 @@ class Editables
      * @param $field
      * @return mixed|string
      */
-    public function input_select($value, array $props = [], Model $model = null, $field = null)
+    public function input_select($value, array $props = [], Model $model = null, $field = null): mixed
     {
         if ($model) {
 
@@ -73,7 +73,7 @@ class Editables
      * @param $field
      * @return mixed|string
      */
-    public function input_radios($value, array $props = [], Model $model = null, $field = null)
+    public function input_radios($value, array $props = [], Model $model = null, $field = null): mixed
     {
         if ($model) {
 
@@ -111,8 +111,26 @@ class Editables
         Model $model = null,
         $field = null,
         $title = null
-    ) {
+    ): string {
         return $this->editable($value, $model, $title, $field, 'text');
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|null  $model
+     * @param  null  $field
+     * @param  null  $title
+     * @return string
+     */
+    public function textarea_editable(
+        $value,
+        array $props = [],
+        Model $model = null,
+        $field = null,
+        $title = null
+    ): string {
+        return $this->editable($value, $model, $title, $field, 'textarea');
     }
 
     /**
@@ -123,7 +141,7 @@ class Editables
      * @param $type
      * @return string
      */
-    protected function editable($value, Model $model, $title, $field, $type)
+    protected function editable($value, Model $model, $title, $field, $type): string
     {
         $now = admin_now();
 
@@ -141,23 +159,5 @@ class Editables
         }
 
         return $value;
-    }
-
-    /**
-     * @param $value
-     * @param  array  $props
-     * @param  Model|null  $model
-     * @param  null  $field
-     * @param  null  $title
-     * @return string
-     */
-    public function textarea_editable(
-        $value,
-        array $props = [],
-        Model $model = null,
-        $field = null,
-        $title = null
-    ) {
-        return $this->editable($value, $model, $title, $field, 'textarea');
     }
 }

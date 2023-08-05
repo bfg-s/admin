@@ -29,13 +29,9 @@ class Display
         TD $td = null,
         TH $th = null,
         TR $tr = null
-    ) {
-        if ($td) {
-            $td->addClass('d-none', 'd-sm-table-cell');
-        }
-        if ($th) {
-            $th->addClass('d-none', 'd-sm-table-cell');
-        }
+    ): mixed {
+        $td?->addClass('d-none', 'd-sm-table-cell');
+        $th?->addClass('d-none', 'd-sm-table-cell');
 
         return $value;
     }

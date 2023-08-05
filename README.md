@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank">
+<p align="center"><a href="https://wood.veskod.com/documentation/admin-panel" target="_blank">
 <img src="https://wood.veskod.com/images/logo.png" alt="Laravel Logo">
 </a></p>
 

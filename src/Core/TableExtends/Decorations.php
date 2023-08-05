@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Lar\Layout\Abstracts\Component;
 use Lar\Layout\Tags\SPAN;
 use Admin\Components\FieldComponent;
-use Admin\Components\FieldMethods;
 use Admin\Components\Fields\RatingField;
 
 class Decorations
@@ -15,9 +14,9 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @return FieldComponent|FieldMethods|RatingField
+     * @return FieldComponent|RatingField
      */
-    public function rating_stars($value, $props = [])
+    public function rating_stars($value, array $props = []): FieldComponent|RatingField
     {
         return FieldComponent::rating('rating')
             ->only_input()
@@ -29,9 +28,9 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @return string
+     * @return string|Component|null
      */
-    public function password_stars($value, $props = [])
+    public function password_stars($value, array $props = []): string|Component|null
     {
         if (!$value) {
             return $this->true_data($value);
@@ -49,7 +48,7 @@ class Decorations
      * @param $value
      * @return Component|mixed|null
      */
-    public function true_data($value)
+    public function true_data($value): mixed
     {
         $return = SPAN::create(['badge']);
 
@@ -73,7 +72,7 @@ class Decorations
      * @param  array  $props
      * @return string
      */
-    public function uploaded_file($value, $props = [])
+    public function uploaded_file($value, array $props = []): string
     {
         if ($value) {
             if (is_image(public_path($value))) {
@@ -87,20 +86,20 @@ class Decorations
     }
 
     /**
-     * @param $props
+     * @param  array  $props
      * @param $value
      * @return string
      */
-    public function avatar($value, $props = [])
+    public function avatar($value, array $props = []): string
     {
         $size = $props[0] ?? 30;
 
         if ($value) {
-            if (!preg_match('/^http/', $value)) {
+            if (!str_starts_with($value, 'http')) {
                 $value = '/'.trim($value, '/');
             }
 
-            return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\" />";
+            return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\"  alt='avatar'/>";
         } else {
             return '<span class="badge badge-dark">none</span>';
         }
@@ -109,10 +108,10 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
-     * @return string
+     * @param  Model|array|null  $model
+     * @return string|Component|null
      */
-    public function copied($value, $props = [], Model $model = null)
+    public function copied($value, array $props = [], Model|array $model = null): string|Component|null
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $value_for_copy = call_user_func($props[0], $model);
@@ -128,10 +127,10 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
-     * @return string
+     * @param  Model|array|null  $model
+     * @return string|Component|null
      */
-    public function copied_right($value, $props = [], Model $model = null)
+    public function copied_right($value, array $props = [], Model|array $model = null): string|Component|null
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $value_for_copy = call_user_func($props[0], $model);
@@ -148,7 +147,7 @@ class Decorations
      * @param $value
      * @return string
      */
-    public function badge_number($value)
+    public function badge_number($value): string
     {
         return $this->badge($value, [$value <= 0 || $value == 0 ? 'danger' : 'success']);
     }
@@ -156,10 +155,10 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function badge($value, $props = [], Model $model = null)
+    public function badge($value, array $props = [], Model|array $model = null): string
     {
         $type = $props[0] ?? 'info';
         if (is_embedded_call($type)) {
@@ -171,10 +170,11 @@ class Decorations
 
     /**
      * @param $value
-     * @param $props
+     * @param  array  $props
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function pill($value, $props = [], Model $model = null)
+    public function pill($value, array $props = [], Model|array $model = null): string
     {
         $type = $props[0] ?? 'info';
         if (is_embedded_call($type)) {
@@ -188,7 +188,7 @@ class Decorations
      * @param $value
      * @return string
      */
-    public function yes_no($value)
+    public function yes_no($value): string
     {
         return $value ? '<span class="badge badge-success">'.__('admin.yes').'</span>' :
             '<span class="badge badge-danger">'.__('admin.no').'</span>';
@@ -198,7 +198,7 @@ class Decorations
      * @param $value
      * @return string
      */
-    public function on_off($value)
+    public function on_off($value): string
     {
         return $value ? '<span class="badge badge-success">'.__('admin.on').'</span>' :
             '<span class="badge badge-danger">'.__('admin.off').'</span>';
@@ -209,7 +209,7 @@ class Decorations
      * @param  int[]  $props
      * @return string
      */
-    public function fa_icon($value, $props = [])
+    public function fa_icon($value, array $props = []): string
     {
         $size = $props[0] ?? 22;
 
@@ -221,7 +221,7 @@ class Decorations
      * @param  array  $props
      * @return string
      */
-    public function badge_tags($value, $props = [])
+    public function badge_tags($value, array $props = []): string
     {
         $c = collect($value);
         $limit = $props[0] ?? 5;
@@ -236,7 +236,7 @@ class Decorations
      * @param  array  $props
      * @return string
      */
-    public function color_cube($value, $props = [])
+    public function color_cube($value, array $props = []): string
     {
         $size = $props[0] ?? 22;
 
@@ -248,7 +248,7 @@ class Decorations
      * @param  array  $props
      * @return string
      */
-    public function progress_complete($value, $props = [])
+    public function progress_complete($value, array $props = []): string
     {
         $text = $props[0] ?? (__('admin.complete') ?? 'Complete');
 
