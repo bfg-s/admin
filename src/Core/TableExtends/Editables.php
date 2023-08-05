@@ -100,7 +100,7 @@ class Editables
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @param  null  $field
      * @param  null  $title
      * @return string
@@ -108,7 +108,7 @@ class Editables
     public function input_editable(
         $value,
         array $props = [],
-        Model $model = null,
+        Model|array $model = null,
         $field = null,
         $title = null
     ): string {
@@ -118,7 +118,7 @@ class Editables
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @param  null  $field
      * @param  null  $title
      * @return string
@@ -126,7 +126,7 @@ class Editables
     public function textarea_editable(
         $value,
         array $props = [],
-        Model $model = null,
+        Model|array $model = null,
         $field = null,
         $title = null
     ): string {
@@ -135,13 +135,13 @@ class Editables
 
     /**
      * @param $value
-     * @param  Model  $model
+     * @param  Model|array  $model
      * @param $title
      * @param $field
      * @param $type
      * @return string
      */
-    protected function editable($value, Model $model, $title, $field, $type): string
+    protected function editable($value, Model|array $model, $title, $field, $type): string
     {
         $now = admin_now();
 

@@ -12,7 +12,7 @@ class Display
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @param  null  $field
      * @param  null  $title
      * @param  TD|null  $td
@@ -23,7 +23,7 @@ class Display
     public function hide_on_mobile(
         $value,
         array $props = [],
-        Model $model = null,
+        Model|array $model = null,
         $field = null,
         $title = null,
         TD $td = null,

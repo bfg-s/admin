@@ -65,11 +65,11 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route($value, array $props = [], Model $model = null): string
+    public function admin_resource_route($value, array $props = [], Model|array $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -123,11 +123,11 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route_edit($value, array $props = [], Model $model = null): string
+    public function admin_resource_route_edit($value, array $props = [], Model|array $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -158,11 +158,11 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      * @throws Exception
      */
-    public function admin_resource_route_show($value, array $props = [], Model $model = null): string
+    public function admin_resource_route_show($value, array $props = [], Model|array $model = null): string
     {
         if (!isset($props[0]) || !$props[0]) { // route name
 
@@ -195,10 +195,10 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function to_append($value = null, array $props = [], Model $model = null): string
+    public function to_append($value = null, array $props = [], Model|array $model = null): string
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $append = call_user_func($props[0], $model);
@@ -213,10 +213,10 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function to_prepend($value = null, array $props = [], Model $model = null): string
+    public function to_prepend($value = null, array $props = [], Model|array $model = null): string
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $prepend = call_user_func($props[0], $model);
@@ -231,10 +231,10 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function to_append_link($value = null, array $props = [], Model $model = null): string
+    public function to_append_link($value = null, array $props = [], Model|array $model = null): string
     {
         if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
@@ -260,10 +260,10 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return string
      */
-    public function to_prepend_link($value = null, array $props = [], Model $model = null): string
+    public function to_prepend_link($value = null, array $props = [], Model|array $model = null): string
     {
         if (!$value) {
             return '<span class="badge badge-dark">NULL</span>';
@@ -318,10 +318,10 @@ class Formatter
     /**
      * @param $value
      * @param  array  $props
-     * @param  Model|null  $model
+     * @param  Model|array|null  $model
      * @return array|Application|Translator|string|null
      */
-    public function to_lang($value = null, array $props = [], Model $model = null): array|string|Translator|Application|null
+    public function to_lang($value = null, array $props = [], Model|array $model = null): array|string|Translator|Application|null
     {
         return $model ? tag_replace(__($value, $props), $model) : __($value, $props);
     }
