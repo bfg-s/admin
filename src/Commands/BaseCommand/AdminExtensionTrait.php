@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 trait AdminExtensionTrait
 {
     public static $desc;
-    public static $name;
-    public static $email;
+    public static $author_name;
+    public static $author_email;
 
     /**
      * @param  string  $path
@@ -101,14 +101,14 @@ trait AdminExtensionTrait
                 static::$desc = $this->ask('Enter description of extension');
             }
         }
-        if (!static::$name) {
-            while (!static::$name) {
-                static::$name = $this->ask('Enter author name of extension');
+        if (!static::$author_name) {
+            while (!static::$author_name) {
+                static::$author_name = $this->ask('Enter author name of extension');
             }
         }
-        if (!static::$email) {
-            while (!static::$email) {
-                static::$email = $this->ask('Enter author email of extension');
+        if (!static::$author_email) {
+            while (!static::$author_email) {
+                static::$author_email = $this->ask('Enter author email of extension');
             }
         }
     }
@@ -135,7 +135,7 @@ trait AdminExtensionTrait
             $name, static::$desc, $folder, $extension, \Admin::version(),
             str_replace('\\', '\\\\', $namespace), $namespace,
             Str::slug(str_replace('/', '_', $name), '_'),
-            static::$name, static::$email
+            static::$author_name, static::$author_email
         ], $data);
 
         return $data;
