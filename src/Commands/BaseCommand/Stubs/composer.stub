@@ -1,8 +1,8 @@
 {
     "name": "{NAME}",
     "description": "{DESCRIPTION}",
-    "type": "lar-lte-admin-extension",
-    "keywords": ["laravel", "lar", "lte", "admin", "extension", "{EXTENSION}"],
+    "type": "bfg-admin-extension",
+    "keywords": ["laravel", "bfg", "lte", "admin", "extension", "{EXTENSION}"],
     "license": "MIT",
     "authors": [
         {
@@ -11,8 +11,8 @@
     ],
     "prefer-stable": true,
     "require": {
-        "php": ">=7.3.0",
-        "lar/lte-admin": "^{ADMIN_VERSION}"
+        "php": "^8.0|^8.1",
+        "bfg/admin": "^{ADMIN_VERSION}"
     },
     "require-dev": {},
     "autoload": {
