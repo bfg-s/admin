@@ -74,6 +74,19 @@ class Admin
      */
     public function version()
     {
+        if (class_exists(\Composer\InstalledVersions::class)) {
+            return \Composer\InstalledVersions::getPrettyVersion('bfg/admin');
+        } else {
+            $lock_file = base_path('composer.lock');
+            if (is_file($lock_file)) {
+                $lock = file_get_contents($lock_file);
+                $json = json_decode($lock, 1);
+                $admin = collect($json['packages'])->where('name', 'bfg/admin')->first();
+                if ($admin && isset($admin['version'])) {
+                    return ltrim($admin['version'], 'v');
+                }
+            }
+        }
         return self::$version;
     }
 

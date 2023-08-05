@@ -108,6 +108,7 @@ class BaseAdminExtension extends Command
                 $base_dir.'/migrations/.gitkeep' => '',
                 $base_dir.'/composer.json' => $this->get_stub('composer'),
                 $base_dir.'/README.md' => $this->get_stub('README'),
+                $base_dir.'/LICENSE.md' => $this->get_stub('LICENSE'),
                 $base_dir.'/src/helpers.php' => $this->get_stub('helpers'),
                 $base_dir.'/src/ServiceProvider.php' => $this->get_stub('ServiceProvider'),
                 $base_dir.'/src/Extension/Config.php' => $this->get_stub('Config'),

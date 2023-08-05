@@ -6,7 +6,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "{FOLDER}"
+            "name": "{AUTHOR_NAME}",
+            "email": "{AUTHOR_EMAIL}"
         }
     ],
     "prefer-stable": true,

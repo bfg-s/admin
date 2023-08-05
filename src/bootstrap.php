@@ -1,23 +1,6 @@
 <?php
 
-use Composer\InstalledVersions;
 use Illuminate\Support\Collection;
-
-if (!request()->ajax() || request()->is('*dashboard*')) {
-    if (class_exists(InstalledVersions::class)) {
-        \Admin\Admin::$version = InstalledVersions::getPrettyVersion('bfg/admin');
-    } else {
-        $lock_file = base_path('composer.lock');
-        if (is_file($lock_file)) {
-            $lock = file_get_contents($lock_file);
-            $json = json_decode($lock, 1);
-            $admin = collect($json['packages'])->where('name', 'bfg/admin')->first();
-            if ($admin && isset($admin['version'])) {
-                \Admin\Admin::$version = ltrim($admin['version'], 'v');
-            }
-        }
-    }
-}
 
 Collection::macro('nestable_pluck', function (
     string $value,
