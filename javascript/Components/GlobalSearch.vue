@@ -151,14 +151,13 @@ export default {
 
                 this.links.forEach((link, ind) => {
 
-                    $jax.get(link.href, {q: this.q})
+                    $jax.get(link.href, {q: this.q, format: 'json'})
                         .then((r) => {
                             if (r.total) {
                                 const urlObj = new URL(link.href);
-                                //console.log(urlObj);
                                 this.items.push({
                                     inner: link.inner,
-                                    href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}`,
+                                    href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}&format=json`,
                                     total: r.total
                                 });
                             }
