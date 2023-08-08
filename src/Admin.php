@@ -155,8 +155,8 @@ class Admin
         }
 
         if (!self::$extensions) {
-            self::$extensions = is_file(storage_path('admin_extensions.php'))
-                ? include storage_path('admin_extensions.php')
+            self::$extensions = is_file(app()->bootstrapPath('admin_extensions.php'))
+                ? include app()->bootstrapPath('admin_extensions.php')
                 : [];
         }
 

@@ -157,7 +157,7 @@ class BaseAdminExtension extends Command
         if (isset(Admin::$not_installed_extensions[$name])) {
             Admin::$not_installed_extensions[$name]->install($this);
             Admin::$not_installed_extensions[$name]->permission($this, 'up');
-            CfgFile::open(storage_path('admin_extensions.php'))->write($name, true);
+            CfgFile::open(app()->bootstrapPath('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] installed!");
 
             return null;
@@ -191,7 +191,7 @@ class BaseAdminExtension extends Command
         if (isset(Admin::$installed_extensions[$name])) {
             Admin::$installed_extensions[$name]->permission($this, 'down');
             Admin::$installed_extensions[$name]->uninstall($this);
-            CfgFile::open(storage_path('admin_extensions.php'))->remove($name);
+            CfgFile::open(app()->bootstrapPath('admin_extensions.php'))->remove($name);
             $this->info("Extension [$name] uninstalled!");
 
             return null;
@@ -366,7 +366,7 @@ class BaseAdminExtension extends Command
     protected function choiceEnable($name)
     {
         if (isset(Admin::$installed_extensions[$name])) {
-            CfgFile::open(storage_path('admin_extensions.php'))->write($name, true);
+            CfgFile::open(app()->bootstrapPath('admin_extensions.php'))->write($name, true);
             $this->info("Extension [$name] enabled!");
 
             return null;
@@ -383,7 +383,7 @@ class BaseAdminExtension extends Command
     protected function choiceDisable($name)
     {
         if (isset(Admin::$installed_extensions[$name])) {
-            CfgFile::open(storage_path('admin_extensions.php'))->write($name, false);
+            CfgFile::open(app()->bootstrapPath('admin_extensions.php'))->write($name, false);
             $this->info("Extension [$name] disabled!");
 
             return null;

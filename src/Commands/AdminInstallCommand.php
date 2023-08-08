@@ -87,7 +87,7 @@ class AdminInstallCommand extends Command
 
         $this->makeApp();
 
-        $extensions = storage_path('admin_extensions.php');
+        $extensions = app()->bootstrapPath('admin_extensions.php');
 
         if (!is_file($extensions)) {
             file_put_contents(
