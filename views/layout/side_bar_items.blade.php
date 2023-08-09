@@ -6,7 +6,7 @@
         $hasChild = $child && $child->isNotEmpty();
         $hasChildSelected = $hasChild && $child->where('selected', true)->count();
         $badge = $menu->getBadge();
-        $selected = $menu->isSelected() || $hasChildSelected
+        $selected = $menu->isSelected() || $hasChildSelected;
     @endphp
 
     @if($menu->isActive() && $access)
@@ -14,6 +14,7 @@
         <li class="nav-item {{ $hasChild && $selected ? 'menu-open' : '' }}">
 
             <a href="{{$menu->getLink() ?: 'javascript:void(0)'}}"
+               @if($menu->getDontUseSearch()) data-ignore="1" @endif
                @if($menu->isTarget()) target="_blank"
                @endif class="nav-link {{ !$hasChild ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $hasChild ? 'has-treeview' : '' }}">
 

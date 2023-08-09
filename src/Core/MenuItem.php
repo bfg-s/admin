@@ -20,6 +20,7 @@ class MenuItem implements ArrayAccess
     protected ?string $route = null; // route
     protected ?string $icon = null; // icon
     protected ?string $resource_route = null;
+    protected ?string $dontUseSearch = null;
     protected ?string $link = null; // link
     protected ?string $type = null; // current.type
     protected ?string $controller = null; // controller
@@ -797,5 +798,15 @@ class MenuItem implements ArrayAccess
     public function offsetUnset(mixed $offset)
     {
         $this->{$offset} = null;
+    }
+
+    public function setDontUseSearch(?string $dontUseSearch): void
+    {
+        $this->dontUseSearch = $dontUseSearch;
+    }
+
+    public function getDontUseSearch(): ?string
+    {
+        return $this->dontUseSearch;
     }
 }

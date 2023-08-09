@@ -47,6 +47,16 @@ class NavItem implements Arrayable
     }
 
     /**
+     * @return $this
+     */
+    public function dontUseSearch(): static
+    {
+        $this->items['dontUseSearch'] = true;
+
+        return $this;
+    }
+
+    /**
      * @param  string|null  $title
      * @return $this
      */

@@ -81,7 +81,9 @@ export default {
 
             menu.querySelectorAll('a[href^="http"]')
                 .forEach((obj) => {
-                    this.links.push({href: obj.href, inner: obj.innerHTML});
+                    if (obj.dataset.ignore !== '1') {
+                        this.links.push({href: obj.href, inner: obj.innerHTML});
+                    }
                 });
 
             let q = ljs.help.query_get('q');
@@ -157,7 +159,7 @@ export default {
                                 const urlObj = new URL(link.href);
                                 this.items.push({
                                     inner: link.inner,
-                                    href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}&format=json`,
+                                    href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}`,
                                     total: r.total
                                 });
                             }

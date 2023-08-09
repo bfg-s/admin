@@ -241,6 +241,7 @@ class AdminRepository extends Repository
             $menuItem->setResourceOnly($item['resource_only'] ?? null);
             $menuItem->setResourceExcept($item['resource_except'] ?? null);
             $menuItem->setLinkParams($item['link_params'] ?? null);
+            $menuItem->setDontUseSearch($item['dontUseSearch'] ?? null);
             $menuItem->setParams($item['params'] ?? null);
             $menuItem->mergeRoles($item['roles'] ?? []);
             $menuItem->mergeRoles($parent?->getRoles());
