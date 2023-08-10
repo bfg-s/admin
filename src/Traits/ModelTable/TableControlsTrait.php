@@ -269,9 +269,9 @@ trait TableControlsTrait
                             return isset($i['field']) && is_string($i['field']);
                         })->pluck('field')->toArray(),
                     ])->render();
-                }, function (Model $model) use ($modelName) {
+                }, function (Model|array $model) use ($modelName) {
                     return view('admin::segment.model_table_checkbox', [
-                        'id' => $model->id,
+                        'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
                         'table_id' => $modelName,
                         'disabled' => !$this->get_test_var('control_selectable', [$model]),
                     ])->render();
