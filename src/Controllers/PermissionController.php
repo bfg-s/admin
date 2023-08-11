@@ -83,11 +83,9 @@ class PermissionController extends Controller
                         })->toArray())
                         ->required(),
                     $form->radios('state', 'admin.state')
-                        ->options(['close' => __('admin.close'), 'open' => __('admin.open')], true)
-                        ->required(),
+                        ->options(['close' => __('admin.close'), 'open' => __('admin.open')], true),
                     $form->radios('admin_role_id', 'admin.role')
-                        ->options(AdminRole::all()->pluck('name', 'id'), true)
-                        ->required(),
+                        ->options(AdminRole::all()->pluck('name', 'id'), true),
                     $form->input('description', 'admin.description'),
                     $form->switcher('active', 'admin.active')->switchSize('mini')
                         ->default(1),
