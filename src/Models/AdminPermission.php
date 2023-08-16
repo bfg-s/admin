@@ -74,7 +74,7 @@ class AdminPermission extends Model
 
         /** @var AdminPermission $close */
         foreach (static::now()->where('state', 'close') as $close) {
-            $path = static::makeCheckedPath($close->path);
+            $path = ltrim(static::makeCheckedPath($close->path), '/');
 
             if (($close->method[0] === '*' || in_array($method, $close->method)) && Str::is(
                     url($path),
@@ -88,7 +88,7 @@ class AdminPermission extends Model
         if (!$result) {
             /** @var AdminPermission $close */
             foreach (static::now()->where('state', 'open') as $open) {
-                $path = static::makeCheckedPath($open->path);
+                $path = ltrim(static::makeCheckedPath($open->path), '/');
 
                 if (($open->method[0] === '*' || in_array($method, $open->method)) && Str::is(
                         url($path),
