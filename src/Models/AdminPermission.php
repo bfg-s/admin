@@ -86,6 +86,7 @@ class AdminPermission extends Model
         }
 
         if (!$result) {
+
             /** @var AdminPermission $close */
             foreach (static::now()->where('state', 'open') as $open) {
                 $path = ltrim(static::makeCheckedPath($open->path), '/');
