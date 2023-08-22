@@ -24,6 +24,7 @@
         "lar/ljs": "^2.7.0",
         "lar/roads": "^2.2.2",
         "lar/layout": "^3.0.7",
+        "lar/tagable": "^1.4.1",
         "bfg/repository": "^1.0",
         "bfg/embedded-call": "^1.0",
         "maatwebsite/excel": "^3.1.37",
