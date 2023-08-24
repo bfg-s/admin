@@ -128,7 +128,7 @@ class AdminPermission extends Model
     {
         $per_path = config('layout.lang_mode') ? '*/' : '';
 
-        return trim($per_path.config('admin.route.prefix'), '/').'/'.trim($inner_path, '/');
+        return ltrim(trim($per_path.config('admin.route.prefix'), '/').'/'.trim($inner_path, '/'), '/');
     }
 
     /**
