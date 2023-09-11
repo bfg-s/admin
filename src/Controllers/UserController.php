@@ -109,20 +109,23 @@ class UserController extends Controller
         $otp = $this->modelInput('otp');
         $secret = $this->modelInput('secret');
 
-        $google2fa = new Google2FA();
+        if ($otp && $secret) {
 
-        if ($google2fa->verify($otp, $secret)) {
+            $google2fa = new Google2FA();
 
-            admin()->update([
-                'two_factor_secret' => $secret,
-                'two_factor_confirmed_at' => now(),
-            ]);
+            if ($google2fa->verify($otp, $secret)) {
 
-            session(["2fa_checked" => true]);
+                admin()->update([
+                    'two_factor_secret' => $secret,
+                    'two_factor_confirmed_at' => now(),
+                ]);
 
-            $respond->toast_success(__('admin.2fa_is_enabled'));
+                session(["2fa_checked" => true]);
 
-            return $respond->reload();
+                $respond->toast_success(__('admin.2fa_is_enabled'));
+
+                return $respond->reload();
+            }
         }
 
         $respond->toast_error(__('admin.2fa_is_wrong'));
