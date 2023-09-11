@@ -454,7 +454,9 @@ class Formatter
     public function to_json($value = null): mixed
     {
         if ($value) {
-            $result = json_decode($value);
+            $result = json_decode(
+                htmlspecialchars_decode($value), true
+            );
 
             if (json_last_error() === JSON_ERROR_NONE) {
                 $value = $result;
