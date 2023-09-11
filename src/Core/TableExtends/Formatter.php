@@ -453,9 +453,18 @@ class Formatter
      */
     public function to_json($value = null): mixed
     {
-        if ($value && is_array($value)) {
-            return "<pre>".json_encode($value, JSON_PRETTY_PRINT)."</pre>";
+        if ($value) {
+            $result = json_decode($value);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $value = $result;
+            }
+
+            if (is_array($value)) {
+                return "<pre>".json_encode($value, JSON_PRETTY_PRINT)."</pre>";
+            }
         }
+
         return $value;
     }
 }
