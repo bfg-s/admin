@@ -585,3 +585,14 @@ if (!function_exists('admin_view')) {
         return view(admin_template($view), $data, $mergeData);
     }
 }
+
+if (!function_exists('is_embedded_call')) {
+    /**
+     * @param  mixed  $subject
+     * @return bool
+     */
+    function is_embedded_call(mixed $subject): bool
+    {
+        return is_string($subject) ? class_exists($subject) : is_callable($subject);
+    }
+}
