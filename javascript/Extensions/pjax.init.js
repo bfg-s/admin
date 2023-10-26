@@ -94,6 +94,6 @@ $(document).on('pjax:error', (xhr, textStatus, error, options) => {
         obj.removeAttribute('data-old-text');
     });
     if (options !== 'abort') {
-        exec("toast:error", options);
+        exec("toast::error", options);
     }
 });

@@ -6,7 +6,7 @@ window.libs['tpl::clearArea'] = function ($to) {
         area.innerHTML = '';
     } else {
 
-        exec("toast:error", `Template area [${$to}] undefined!`);
+        exec("toast::error", `Template area [${$to}] undefined!`);
     }
 };
 
@@ -57,11 +57,11 @@ window.libs['tpl::copyTo'] = function ($tpl, $to = $tpl, $before = null) {
             area.appendChild(cloned);
         } else {
 
-            exec("toast:error", `Template area [${$to}] undefined!`);
+            exec("toast::error", `Template area [${$to}] undefined!`);
         }
     } else {
 
-        exec("toast:error", `Template [${$tpl}] undefined!`);
+        exec("toast::error", `Template [${$tpl}] undefined!`);
     }
 };
 

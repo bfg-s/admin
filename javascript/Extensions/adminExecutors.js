@@ -39,6 +39,7 @@ window.libs['admin::add_relation_tpl'] = function (path) {
     //zone.appendChild(tpl);
     //ljs.$nav.readyObject(tpl);
     $(zone).append(tpl.children);
+    window.updateInits();
     let container = $(`[data-relation-path='${path}']`);
     container.find('.template_empty_container').hide();
 };

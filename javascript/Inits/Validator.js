@@ -29,7 +29,7 @@ window.libs['valid'] = function () {
 
                     if (label) {
 
-                        "toast:error".exec(err.message, label.innerHTML.replace(/<.*>/gi, ''));
+                        exec("toast::error", err.message, label.innerHTML.replace(/<.*>/gi, ''));
                     }
                 }
             });
