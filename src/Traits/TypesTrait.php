@@ -5,14 +5,14 @@ namespace Admin\Traits;
 trait TypesTrait
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $type = 'info';
+    protected ?string $type = 'info';
 
     /**
      * @return static
      */
-    public function primaryType()
+    public function primaryType(): static
     {
         $this->type = 'primary';
 
@@ -22,7 +22,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function secondaryType()
+    public function secondaryType(): static
     {
         $this->type = 'secondary';
 
@@ -32,7 +32,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function successType()
+    public function successType(): static
     {
         $this->type = 'success';
 
@@ -42,7 +42,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function dangerType()
+    public function dangerType(): static
     {
         $this->type = 'danger';
 
@@ -52,7 +52,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function warningType()
+    public function warningType(): static
     {
         $this->type = 'warning';
 
@@ -62,7 +62,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function infoType()
+    public function infoType(): static
     {
         $this->type = 'info';
 
@@ -72,7 +72,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function lightType()
+    public function lightType(): static
     {
         $this->type = 'light';
 
@@ -82,7 +82,7 @@ trait TypesTrait
     /**
      * @return static
      */
-    public function darkType()
+    public function darkType(): static
     {
         $this->type = 'dark';
 
@@ -90,9 +90,10 @@ trait TypesTrait
     }
 
     /**
+     * @param  string  $type
      * @return static
      */
-    public function wisibleType(string $type)
+    public function visibleType(string $type): static
     {
         $this->type = $type;
 

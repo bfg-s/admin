@@ -2,10 +2,10 @@
 
 namespace Admin\Core\TableExtends;
 
+use Admin\Components\ModelTable\ColumnComponent;
+use Admin\Components\ModelTable\HeaderComponent;
+use Admin\Components\ModelTable\RowComponent;
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Tags\TD;
-use Lar\Layout\Tags\TH;
-use Lar\Layout\Tags\TR;
 
 class Display
 {
@@ -15,9 +15,9 @@ class Display
      * @param  Model|array|null  $model
      * @param  null  $field
      * @param  null  $title
-     * @param  TD|null  $td
-     * @param  TH|null  $th
-     * @param  TR|null  $tr
+     * @param  ColumnComponent|null  $td
+     * @param  HeaderComponent|null  $th
+     * @param  RowComponent|null  $tr
      * @return mixed
      */
     public function hide_on_mobile(
@@ -26,9 +26,9 @@ class Display
         Model|array $model = null,
         $field = null,
         $title = null,
-        TD $td = null,
-        TH $th = null,
-        TR $tr = null
+        ColumnComponent $td = null,
+        HeaderComponent $th = null,
+        RowComponent $tr = null
     ): mixed {
         $td?->addClass('d-none', 'd-sm-table-cell');
         $th?->addClass('d-none', 'd-sm-table-cell');

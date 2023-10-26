@@ -28,12 +28,6 @@ trait NavDefaultTools
             $group->adminAdministrators();
             $group->adminRoles();
             $group->adminPermission();
-            if (config('admin.functional.menu')) {
-                $group->adminMenu();
-            }
-            if (config('admin.functional.settings')) {
-                $group->adminSettings();
-            }
         });
 
         return $this;
@@ -87,47 +81,6 @@ trait NavDefaultTools
         return $this->item('admin.permission', 'permission')
             ->resource('admin_permission', $action ?? PermissionController::class)
             ->icon_ban();
-    }
-
-    /**
-     * Make menu list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function adminMenu(string $action = null): NavItem
-    {
-        return $this->item('admin.admin_menu', 'menu')
-            ->resource('admin_menu', $action ?? MenuController::class)
-            ->icon_bars();
-    }
-
-    /**
-     * Make menu list tool.
-     * @param  string|null  $action
-     * @return NavItem
-     */
-    public function adminSettings(string $action = null): NavItem
-    {
-        return $this->item('admin.settings', 'settings')
-            ->resource('settings', $action ?? SettingsController::class)
-            ->icon_cog();
-    }
-
-    public function makeMenu(): void
-    {
-        if (config('admin.functional.menu')) {
-
-            $db = config('admin.connections.admin-sqlite.database');
-
-            if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_menu')) {
-                AdminMenu::where('active', 1)
-                    ->orderBy('order')
-                    ->whereNull('parent_id')
-                    ->with('child')
-                    ->get()
-                    ->map(fn(AdminMenu $menu) => $this->injectRemoteMenu($menu));
-            }
-        }
     }
 
     protected function injectRemoteMenu(AdminMenu $menu, NavGroup $rootGroup = null): void
@@ -192,10 +145,10 @@ trait NavDefaultTools
 
     /**
      * Make default access group.
-     * @param  Closure|array  $call
+     * @param  callable  $call
      * @return NavGroup
      */
-    public function lteAccessGroup($call): NavGroup
+    public function lteAccessGroup(callable $call): NavGroup
     {
         return $this->group('admin.access', 'access', static function (NavGroup $group) use ($call) {
             if (is_embedded_call($call)) {

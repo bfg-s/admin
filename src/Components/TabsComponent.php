@@ -2,59 +2,56 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\LarDoc;
-use Lar\Layout\Tags\DIV;
-use Lar\Tagable\Events\onRender;
 use Admin\Traits\Delegable;
-use Admin\Traits\Macroable;
-use ReflectionException;
 
-/**
- * @mixin TabsComponentMacroList
- */
-class TabsComponent extends DIV implements onRender
+class TabsComponent extends Component
 {
-    use Macroable;
     use Delegable;
+
+    /**
+     * @var string
+     */
+    protected string $view = 'tabs';
 
     /**
      * Count of tabs.
      * @var int
      */
-    protected static $counter = 0;
-
-    /**
-     * @var bool
-     */
-    protected $only_content = true;
-
-    /**
-     * @var Component
-     */
-    protected $nav;
-
-    /**
-     * @var Component
-     */
-    protected $tab_contents;
+    protected static int $counter = 0;
 
     /**
      * @var array
      */
-    protected $tab_content_props = [];
+    protected array $tabs = [];
+
+    /**
+     * @var bool
+     */
+    protected bool $left = true;
+
+    /**
+     * @var bool
+     */
+    protected bool $leftSeted = false;
 
     /**
      * Tabs constructor.
-     * @param  mixed  ...$params
+     * @param  mixed  ...$explanations
      */
-    public function __construct(...$params)
+    public function __construct(...$explanations)
     {
-        parent::__construct();
+        parent::__construct(...$explanations);
+    }
 
-        $this->when($params);
-
-        $this->callConstructEvents();
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'left' => $this->left,
+            'tabs' => $this->tabs,
+        ];
     }
 
     /**
@@ -62,7 +59,7 @@ class TabsComponent extends DIV implements onRender
      * @param  array  $list
      * @return $this
      */
-    public function tabList(array $list)
+    public function tabList(array $list): static
     {
         foreach ($list as $item) {
             $this->tab($item);
@@ -71,11 +68,17 @@ class TabsComponent extends DIV implements onRender
         return $this;
     }
 
-    public function tab(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return TabsComponent
+     */
+    public function tab(...$delegates): static
     {
-        return $this->createNewTab(
+        $this->createNewTab(
             TabContentComponent::create()->delegatesNow($delegates)
         );
+
+        return $this;
     }
 
     /**
@@ -83,54 +86,38 @@ class TabsComponent extends DIV implements onRender
      * @param $icon
      * @param  callable|array|null  $contentCb
      * @param  bool|null  $active
-     * @return Component|LarDoc|TabContentComponent
+     * @return Component|TabContentComponent
      */
     public function createNewTab(
         string|TabContentComponent $title,
         $icon = null,
         callable|array $contentCb = null,
         ?bool $active = null
-    ) {
+    ): TabContentComponent|Component {
         if ($icon && !is_string($icon)) {
             $contentCb = $icon;
             $icon = null;
         }
-
-        $left = true;
 
         if ($title instanceof TabContentComponent) {
             $content = $title;
             $title = $content->getTitle;
             $icon = $content->getIcon;
             $active = $content->getActiveCondition;
-            $left = $content->getLeft;
+            if (! $this->leftSeted) {
+                $this->left = $content->getLeft;
+                $this->leftSeted = true;
+            }
         }
-        $this->makeNav($left);
+
+
         $id = 'tab-'.md5($title).'-'.static::$counter;
-        $active = $active === null ? !$this->nav->contentCount() : $active;
-        $a = $this->nav->li(['nav-item'])->a([
-            'nav-link',
-            'id' => $id.'-label',
-            'data-toggle' => 'pill',
-            'role' => 'tab',
-            'aria-controls' => $id,
-            'aria-selected' => $active ? 'true' : 'false',
-        ])
-            //->on_click('tabs::tab_button')
-            ->addClassIf($active, 'active')
-            ->setHref("#{$id}");
+        $active = $active === null ? !count($this->tabs) : $active;
 
-        if ($icon) {
-            $a->i([$icon, 'mr-1']);
-        }
-
-        $a->text(__($title));
-
-        $content = (isset($content) ? $content : TabContentComponent::create())->attr([
+        $content = ($content ?? TabContentComponent::create())->attr([
             'id' => $id,
             'aria-labelledby' => $id.'-label',
-        ])->when($this->tab_content_props)
-            ->addClassIf($active, 'active show');
+        ])->addClassIf($active, 'active show');
 
         if (is_callable($contentCb)) {
             call_user_func($contentCb, $content);
@@ -138,8 +125,13 @@ class TabsComponent extends DIV implements onRender
             $content->delegates(...$contentCb);
         }
 
-        $this->tab_contents
-            ->appEnd($content->render());
+        $this->tabs[] = [
+            'id' => $id,
+            'active' => $active,
+            'icon' => $icon,
+            'title' => $title,
+            'content' => $content,
+        ];
 
         static::$counter++;
 
@@ -147,46 +139,10 @@ class TabsComponent extends DIV implements onRender
     }
 
     /**
-     * @return $this
+     * @return void
      */
-    protected function makeNav($left)
+    protected function mount(): void
     {
-        if (!$this->nav) {
-            $row = $this->div(['row']);
-            if ($left) {
-                $this->nav = $row->div(['col-md-2'])->ul([
-                    'nav flex-column nav-tabs h-100', 'role' => 'tablist', 'aria-orientation' => 'vertical'
-                ]);
-                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
-            } else {
-                $this->tab_contents = $row->div(['col-md-10'])->div(['tab-content']);
-                $this->nav = $row->div(['col-md-2'])->ul([
-                    'nav flex-column nav-tabs nav-tabs-right h-100', 'role' => 'tablist',
-                    'aria-orientation' => 'vertical'
-                ]);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed  ...$props
-     * @return $this
-     */
-    public function container(...$props)
-    {
-        $this->tab_content_props = array_merge($this->tab_content_props, $props);
-
-        return $this;
-    }
-
-    /**
-     * @return mixed|void
-     * @throws ReflectionException
-     */
-    public function onRender()
-    {
-        $this->callRenderEvents();
+        // TODO: Implement mount() method.
     }
 }

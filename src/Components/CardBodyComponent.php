@@ -5,20 +5,55 @@ namespace Admin\Components;
 class CardBodyComponent extends Component
 {
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'card-body',
-    ];
+    protected string $view = 'card-body';
 
-    public function fullSpace()
+    /**
+     * @var bool
+     */
+    protected bool $foolSpace = false;
+
+    /**
+     * @var bool
+     */
+    protected bool $tableResponsive = false;
+
+    /**
+     * @return $this
+     */
+    public function fullSpace(): static
     {
-        $this->addClass('p-0');
+        $this->foolSpace = true;
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return $this
+     */
+    public function tableResponsive(): static
+    {
+        $this->tableResponsive = true;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'foolSpace' => $this->foolSpace,
+            'tableResponsive' => $this->tableResponsive,
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
     }
 }

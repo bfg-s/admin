@@ -10,13 +10,12 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use Admin\Traits\Eventable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 
 class Select2 extends Collection
 {
-    use Eventable;
-
     /**
      * @var bool
      */
@@ -228,27 +227,24 @@ class Select2 extends Collection
      * Create data for Model.
      *
      * @return void
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createModel()
+    private function createModel(): void
     {
         $class = get_class($this->data);
 
         $this->name = strtolower(class_basename($class));
-
-        $result = $this->callEvent($class, [$class => $this->data]);
-
-        if ($result instanceof $this->data) {
-            $this->data = $result;
-        }
 
         $this->makePaginator();
     }
 
     /**
      * @return Select2
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function makePaginator()
+    private function makePaginator(): Select2
     {
         $this->makeSearch()->makeGroupBy();
 

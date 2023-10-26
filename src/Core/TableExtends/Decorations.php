@@ -2,21 +2,21 @@
 
 namespace Admin\Core\TableExtends;
 
+use Admin\Components\Component;
+use Admin\Components\FieldComponent;
+use Admin\Components\Inputs\RatingInput;
+use Admin\Components\Small\SpanComponent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\SPAN;
-use Admin\Components\FieldComponent;
-use Admin\Components\Fields\RatingField;
 
 class Decorations
 {
     /**
      * @param $value
      * @param  array  $props
-     * @return FieldComponent|RatingField
+     * @return FieldComponent|RatingInput
      */
-    public function rating_stars($value, array $props = []): FieldComponent|RatingField
+    public function rating_stars($value, array $props = []): FieldComponent|RatingInput
     {
         return FieldComponent::rating('rating')
             ->only_input()
@@ -50,7 +50,7 @@ class Decorations
      */
     public function true_data($value): mixed
     {
-        $return = SPAN::create(['badge']);
+        $return = SpanComponent::create(['badge']);
 
         if (is_null($value) || $value === '') {
             return $return->addClass('badge-dark')->text('NULL');

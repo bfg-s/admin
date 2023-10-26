@@ -257,6 +257,7 @@ Below is a step-by-step guide to filling out the form:
     '2fa_secure_not_enable_title' => 'You have not enabled two factor authentication.',
     '2fa_secure_not_enable_info' => "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.",
     '2fa_secure_enable_button' => "Enable",
+    '2fa_secure_enable_disable' => "Disable",
     '2fa_secure_confirm_password' => "Confirm Password",
     '2fa_secure_confirm_password_info' => "For your security, please confirm your password to continue.",
     '2fa_secure_confirm_password_confirm' => "Confirm",
@@ -269,4 +270,5 @@ Below is a step-by-step guide to filling out the form:
     '2fa_is_wrong' => 'Wrong verification!',
     'complete' => 'Complete',
     '2fa_enable_before' => 'First, you need to enable two-factor authentication!',
+    'you_have_enabled_two_factor_authentication' => 'You have enabled two factor authentication.',
 ];

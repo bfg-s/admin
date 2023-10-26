@@ -5,21 +5,25 @@ namespace Admin\Components;
 class ModalBodyComponent extends Component
 {
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'modal-body',
-    ];
+    protected string $view = 'modal-body';
 
-    public function form(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return FormComponent
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function form(...$delegates): FormComponent
     {
         $form = FormComponent::create(...$delegates);
 
         $form->vertical()->attr('target');
         if (request()->has('_modal_id')) {
-            $form->onSubmit("event.preventDefault();'modal:submit'.exec('".request()->get('_modal_id')."');return false;");
+            $form->setOnSubmit("event.preventDefault();'modal:submit'.exec('".request()->get('_modal_id')."');return false;");
         } else {
-            $form->onSubmit("event.preventDefault();return false;");
+            $form->setOnSubmit("event.preventDefault();return false;");
         }
 
         $this->appEnd($form);
@@ -27,7 +31,10 @@ class ModalBodyComponent extends Component
         return $form;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         // TODO: Implement mount() method.
     }

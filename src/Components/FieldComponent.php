@@ -2,20 +2,13 @@
 
 namespace Admin\Components;
 
-/**
- * @mixin FieldComponentMacroList
- */
 class FieldComponent extends Component
 {
     /**
-     * @var bool
+     * @return void
      */
-    protected $only_content = true;
-
-    protected $label = null;
-
-    protected function mount()
+    protected function mount(): void
     {
-        // TODO: Implement mount() method.
+        //
     }
 }

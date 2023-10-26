@@ -4,52 +4,44 @@ namespace Admin\Components;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Lar\Layout\Tags\TABLE as TableParent;
 use Admin\Explanation;
 use Admin\Traits\Delegable;
-use Admin\Traits\Macroable;
 use Admin\Traits\TypesTrait;
 
-/**
- * @mixin TableComponentMacroList
- */
-class TableComponent extends TableParent
+class TableComponent extends Component
 {
     use TypesTrait;
-    use Macroable;
     use Delegable;
+
+    /**
+     * @var string
+     */
+    protected string $view = 'table';
 
     /**
      * @var array
      */
-    protected $array_build = [];
-
-    /**
-     * @var string[]
-     */
-    protected $props = [
-        'table', 'table-sm', 'table-hover',
-    ];
+    protected array $array_build = [];
 
     /**
      * @var bool
      */
-    protected $auto_tbody = false;
+    protected bool $auto_tbody = false;
 
     /**
      * @var bool
      */
-    protected $first_th = true;
+    protected bool $first_th = true;
 
     /**
-     * @var Closure
+     * @var mixed
      */
-    protected $map;
+    protected mixed $map = null;
 
     /**
-     * @var Closure
+     * @var mixed
      */
-    protected $mapWithKeys;
+    protected mixed $mapWithKeys = null;
 
     /**
      * @param ...$delegates
@@ -61,17 +53,37 @@ class TableComponent extends TableParent
         parent::__construct();
 
         $this->explainForce(Explanation::new($delegates));
+    }
 
-        $this->toExecute('ifArray');
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        $rows = $this->array_build['rows'] ?? $this->array_build;
 
-        $this->callConstructEvents();
+        if ($this->map) {
+            $rows = collect($rows)->map($this->map)->toArray();
+        }
+
+        if ($this->mapWithKeys) {
+            $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
+        }
+
+        return [
+            'rows' => $rows,
+            'array_build' => $this->array_build,
+            'type' => $this->type,
+            'hasHeader' => isset($this->array_build['headers']) && $this->array_build['rows'],
+            'first_th' => $this->first_th,
+        ];
     }
 
     /**
      * @param $rows
      * @return $this
      */
-    public function rows($rows)
+    public function rows($rows): static
     {
         if (is_callable($rows)) {
             $rows = call_user_func($rows);
@@ -89,11 +101,10 @@ class TableComponent extends TableParent
     }
 
     /**
-     * @param  string  $row
      * @param  Closure  $call
      * @return $this
      */
-    public function map(Closure $call)
+    public function map(Closure $call): static
     {
         $this->map = $call;
 
@@ -104,7 +115,7 @@ class TableComponent extends TableParent
      * @param  Closure  $call
      * @return $this
      */
-    public function mapWithKeys(Closure $call)
+    public function mapWithKeys(Closure $call): static
     {
         $this->mapWithKeys = $call;
 
@@ -112,76 +123,10 @@ class TableComponent extends TableParent
     }
 
     /**
-     * Create table from array.
+     * @return void
      */
-    protected function ifArray()
+    protected function mount(): void
     {
-        $this->callRenderEvents();
 
-        if (isset($this->array_build['headers']) && $this->array_build['rows']) {
-            $this->build_header_table($this->array_build['headers'], $this->array_build['rows']);
-        } else {
-            $this->build_easy_table($this->array_build);
-        }
-    }
-
-    /**
-     * @param  array  $headers
-     * @param  array  $rows
-     */
-    protected function build_header_table(array $headers, array $rows)
-    {
-        $head = $this->thead()->addClassIf($this->type, "thead-{$this->type}")->tr();
-
-        foreach ($headers as $header) {
-            $head->th(['scope' => 'col'], $header);
-        }
-
-        $this->build_easy_table($rows, true);
-    }
-
-    /**
-     * @param  array  $rows
-     * @param  bool  $has_header
-     */
-    protected function build_easy_table(array $rows, bool $has_header = false)
-    {
-        if ($this->map) {
-            $rows = collect($rows)->map($this->map)->toArray();
-        }
-
-        if ($this->mapWithKeys) {
-            $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
-        }
-
-        if (!$has_header && $this->type) {
-            $this->addClass("table-{$this->type}");
-        }
-
-        $body = $this->tbody(['']);
-
-        $row_i = 0;
-        $simple = false;
-        foreach ($rows as $key => $row) {
-            $tr = $body->tr();
-            if (is_array($row) && !$simple) {
-                foreach (array_values($row) as $ki => $col) {
-                    if (!$ki && $this->first_th) {
-                        $tr->th(['scope' => 'row'])->when($col);
-                    } else {
-                        $tr->td()->when($col);
-                    }
-                }
-            } else {
-                $simple = true;
-                if ($this->first_th) {
-                    $tr->th(['scope' => 'row'], $key);
-                } else {
-                    $tr->td($key);
-                }
-                $tr->td()->when($row);
-            }
-            $row_i++;
-        }
     }
 }

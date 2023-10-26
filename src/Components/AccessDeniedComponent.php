@@ -4,11 +4,20 @@ namespace Admin\Components;
 
 class AccessDeniedComponent extends Component
 {
+    /**
+     * @var string
+     */
     protected $element = "section";
 
+    /**
+     * @var string
+     */
     protected $class = 'content-header';
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         $this->alert(
             AlertComponent::new()
@@ -17,6 +26,7 @@ class AccessDeniedComponent extends Component
                 ->dangerType()
                 ->icon_exclamation_triangle()
                 ->mt3()
+                ->w100()
         );
     }
 }

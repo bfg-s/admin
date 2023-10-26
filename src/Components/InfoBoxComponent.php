@@ -2,61 +2,53 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Tags\DIV;
 use Admin\Traits\Delegable;
 use Admin\Traits\FontAwesome;
-use Admin\Traits\Macroable;
 use Admin\Traits\TypesTrait;
 
-/**
- * @mixin InfoBoxComponentMacroList
- */
-class InfoBoxComponent extends DIV
+class InfoBoxComponent extends Component
 {
     use FontAwesome;
     use TypesTrait;
-    use Macroable;
     use Delegable;
 
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'small-box',
-    ];
+    protected string $view = 'info-box';
 
     /**
      * @var string|null
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @var string|null
      */
-    private $icon;
+    private ?string $icon = null;
 
     /**
-     * @var string|null
+     * @var string|array|null
      */
-    private $link;
+    private string|array|null $link = null;
 
     /**
      * @var string|mixed
      */
-    private $body;
+    private mixed $body = null;
 
     /**
      * @var array
      */
-    private $params;
+    private array $params = [];
 
     /**
      * @param  string|null  $title
-     * @param $body
+     * @param  string  $body
      * @param  string  $icon
      * @param ...$params
      */
-    public function __construct(string $title = null, $body = '', string $icon = 'fas fa-info-circle', ...$params)
+    public function __construct(string $title = null, string $body = '', string $icon = 'fas fa-info-circle', ...$params)
     {
         parent::__construct();
 
@@ -67,17 +59,13 @@ class InfoBoxComponent extends DIV
         $this->body = $body;
 
         $this->params = $params;
-
-        $this->toExecute('_build');
-
-        $this->callConstructEvents();
     }
 
     /**
-     * @param  array  $title
+     * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -85,12 +73,12 @@ class InfoBoxComponent extends DIV
     }
 
     /**
-     * @param  string  $icon
+     * @param  string  $name
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $name): static
     {
-        $this->icon = $icon;
+        $this->icon = $name;
 
         return $this;
     }
@@ -101,7 +89,7 @@ class InfoBoxComponent extends DIV
      * @param  string|null  $icon
      * @return $this
      */
-    public function link(string $link, string $text = null, string $icon = null)
+    public function link(string $link, string $text = null, string $icon = null): static
     {
         $this->link = [$link, $text, $icon];
 
@@ -109,11 +97,11 @@ class InfoBoxComponent extends DIV
     }
 
     /**
-     * @param  string|array  $body
+     * @param  array|string  $body
      * @param  string  $small_info
      * @return $this
      */
-    public function body($body, $small_info = '')
+    public function body(array|string $body, string $small_info = ''): static
     {
         $this->body = [$body, $small_info];
 
@@ -121,38 +109,24 @@ class InfoBoxComponent extends DIV
     }
 
     /**
-     * Build alert.
+     * @return array
      */
-    protected function _build()
+    protected function viewData(): array
     {
-        $this->callRenderEvents();
+        return [
+            'type' => $this->type,
+            'body' => is_array($this->body) ? $this->body : [$this->body],
+            'title' => $this->title,
+            'icon' => $this->icon,
+            'link' => $this->link ? (!is_array($this->link) ? [$this->link] : $this->link) : null,
+        ];
+    }
 
-        $this->addClass("bg-{$this->type}");
-
-        $inner = $this->div(['inner']);
-
-        if ($this->body) {
-            $this->body = is_array($this->body) ? $this->body : [$this->body];
-            $inner->h3()
-                ->text(' '.($this->body[0] ?? ''))
-                ->sup(['style' => 'font-size: 20px'])->text(' '.($this->body[1] ?? ''));
-        }
-
-        if ($this->title) {
-            $inner->p($this->title);
-        }
-
-        if ($this->icon) {
-            $this->div(['icon'])->i([$this->icon]);
-        }
-
-        if ($this->link) {
-            $link = !is_array($this->link) ? [$this->link] : $this->link;
-            $a = $this->a(['small-box-footer'])->setHrefIf(isset($link[0]), $link[0]);
-            $a->text($link[1] ?? __('admin.more_info'), ':space');
-            $a->i([$link[2] ?? 'fas fa-arrow-circle-right']);
-        }
-
-        $this->when($this->params);
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+        // TODO: Implement mount() method.
     }
 }

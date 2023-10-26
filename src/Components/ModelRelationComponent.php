@@ -14,29 +14,42 @@ class ModelRelationComponent extends Component
     /**
      * @var mixed
      */
-    protected static $fm;
+    protected static mixed $fm = null;
+
     /**
-     * @var Relation
+     * @var Relation|null
      */
-    protected $relation;
+    protected ?Relation $relation = null;
+
     /**
-     * @var string
+     * @var string|null
      */
-    protected $relation_name;
+    protected ?string $relation_name = null;
+
     /**
-     * @var string
+     * @var string|null
      */
-    protected $path_name;
+    protected ?string $path_name = null;
+
     /**
      * @var ModelRelationContentComponent
      */
     protected $last_content;
+
     /**
      * @var callable
      */
     protected $on_empty;
-    protected $fm_old;
-    protected $innerDelegates = [];
+
+    /**
+     * @var mixed
+     */
+    protected mixed $fm_old;
+
+    /**
+     * @var array
+     */
+    protected array $innerDelegates = [];
 
     /**
      * @param  array|string  $relationName
@@ -57,14 +70,21 @@ class ModelRelationComponent extends Component
         $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
     }
 
-    public function template(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function template(...$delegates): static
     {
         $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         if (!($this->relation instanceof Relation)) {
             $this->alert()->title('Danger!')->body("Relation [$this->relation_name] not found!")->dangerType();

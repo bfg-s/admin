@@ -3,10 +3,15 @@
 namespace Admin\Components;
 
 use Admin\Delegates\Buttons;
-use Request;
+use Illuminate\Support\Facades\Request;
 
 class ButtonsComponent extends Component
 {
+    /**
+     * @var string
+     */
+    protected string $view = 'buttons';
+
     /**
      * @param ...$delegates
      */
@@ -15,32 +20,28 @@ class ButtonsComponent extends Component
         parent::__construct();
 
         $this->delegatesNow(...$delegates);
-
-        $this->addClass('btn-group btn-group-sm ml-1');
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param $ico
+     * @return ButtonComponent
      */
-    public function default($ico = null, array $when = [])
+    public function default($ico = null): ButtonComponent
     {
-        return $this->btn('default', $ico, $when);
+        return $this->btn('default', $ico);
     }
 
     /**
      * @param  string  $type
-     * @param  string|array|null  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  null  $ico
+     * @return ButtonComponent
      */
-    public function btn($type, $ico = null, array $when = [])
+    public function btn(string $type, $ico = null): ButtonComponent
     {
         $this->model();
 
-        $btn = ButtonComponent::create()
-            ->wisibleType($type)->model($this->model);
+        $btn = $this->createComponent(ButtonComponent::class)
+            ->visibleType($type)->model($this->model);
 
         if ($ico && is_string($ico)) {
             $btn->icon($ico);
@@ -49,8 +50,6 @@ class ButtonsComponent extends Component
                 $btn->iconTitle($ico);
             }
         }
-
-        $btn->attr($when);
 
         $this->appEnd($btn);
 
@@ -61,9 +60,9 @@ class ButtonsComponent extends Component
      * Reload button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @return ButtonComponent
      */
-    public function reload(string $link = null, string $title = null)
+    public function reload(string $link = null, string $title = null): ButtonComponent
     {
         $return = $this->secondary(['fas fa-redo-alt', $title ?? __('admin.refresh')]);
         $return->dataClick()->location($link ?? Request::getRequestUri());
@@ -73,19 +72,18 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent
      */
-    public function secondary($ico = null, array $when = [])
+    public function secondary(mixed $ico = null): ButtonComponent
     {
-        return $this->btn('secondary', $ico, $when);
+        return $this->btn('secondary', $ico);
     }
 
     /**
      * @return $this
      */
-    public function nestable()
+    public function nestable(): static
     {
         $this->info(['far fa-minus-square', __('admin.collapse_all')])->setDatas(['click' => 'nestable::collapse']);
         $this->primary(['far fa-plus-square', __('admin.expand_all')])->setDatas(['click' => 'nestable::expand']);
@@ -94,42 +92,39 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed  $name
+     * @return ButtonComponent
      */
-    public function info($ico = null, array $when = [])
+    public function info($name = null): ButtonComponent
     {
-        return $this->btn('info', $ico, $when);
+        return $this->btn('info', $name);
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent
      */
-    public function primary($ico = null, array $when = [])
+    public function primary(mixed $ico = null): ButtonComponent
     {
-        return $this->btn('primary', $ico, $when);
+        return $this->btn('primary', $ico);
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent
      */
-    public function dark($ico = null, array $when = [])
+    public function dark(mixed $ico = null): ButtonComponent
     {
-        return $this->btn('dark', $ico, $when);
+        return $this->btn('dark', $ico);
     }
 
     /**
      * Resource list button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return $this|\Lar\Layout\Abstracts\Component|ButtonComponent
+     * @return $this|ButtonComponent
      */
-    public function resourceList(string $link = null, string $title = null)
+    public function resourceList(string $link = null, string $title = null): ButtonComponent|static
     {
         if ($link || $this->menu->isResource()) {
             $return = $this->primary(['fas fa-list-alt', $title ?? __('admin.list')]);
@@ -146,9 +141,9 @@ class ButtonsComponent extends Component
      * Resource edit button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent|Buttons
+     * @return ButtonComponent|ButtonsComponent|Buttons
      */
-    public function resourceEdit(string $link = null, string $title = null)
+    public function resourceEdit(string $link = null, string $title = null): ButtonComponent|Buttons|static
     {
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
@@ -178,13 +173,12 @@ class ButtonsComponent extends Component
      */
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent
      */
-    public function success($ico = null, array $when = [])
+    public function success(mixed $ico = null): ButtonComponent
     {
-        return $this->btn('success', $ico, $when);
+        return $this->btn('success', $ico);
     }
 
     /**
@@ -195,9 +189,9 @@ class ButtonsComponent extends Component
      * Resource info button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent|Buttons
+     * @return ButtonComponent|ButtonsComponent|Buttons
      */
-    public function resourceInfo(string $link = null, string $title = null)
+    public function resourceInfo(string $link = null, string $title = null): Buttons|ButtonComponent|static
     {
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
@@ -230,10 +224,15 @@ class ButtonsComponent extends Component
      * @param  string|null  $message
      * @param  null  $key
      * @param  array  $add
-     * @return \Lar\Layout\Abstracts\Component|ButtonsComponent|Buttons
+     * @return ButtonsComponent|Buttons
      */
-    public function resourceDestroy(string $link = null, string $title = null, string $message = null, $key = null, array $add = [])
-    {
+    public function resourceDestroy(
+        string $link = null,
+        string $title = null,
+        string $message = null,
+        $key = null, array $add = []
+    ): Buttons|ButtonComponent {
+
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -267,13 +266,12 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent|static
      */
-    public function danger($ico = null, array $when = [])
+    public function danger(mixed $ico = null): ButtonComponent|static
     {
-        return $this->btn('danger', $ico, $when);
+        return $this->btn('danger', $ico);
     }
 
     /**
@@ -282,10 +280,15 @@ class ButtonsComponent extends Component
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
-     * @return \Lar\Layout\Abstracts\Component|static|self||ButtonComponent
+     * @return static|ButtonComponent
      */
-    public function resourceForceDestroy(string $link = null, string $title = null, string $message = null, $key = null)
-    {
+    public function resourceForceDestroy(
+        string $link = null,
+        string $title = null,
+        string $message = null,
+        $key = null
+    ): ButtonComponent|static {
+
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -318,10 +321,15 @@ class ButtonsComponent extends Component
      * @param  string|null  $title
      * @param  string|null  $message
      * @param  null  $key
-     * @return \Lar\Layout\Abstracts\Component|static|self||ButtonComponent
+     * @return ButtonComponent|static
      */
-    public function resourceRestore(string $link = null, string $title = null, string $message = null, $key = null)
-    {
+    public function resourceRestore(
+        string $link = null,
+        string $title = null,
+        string $message = null,
+        $key = null
+    ): ButtonComponent|static {
+
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -349,21 +357,20 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * @param  mixed  $ico
-     * @param  array  $when
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @param  mixed|null  $ico
+     * @return ButtonComponent
      */
-    public function warning($ico = null, array $when = [])
+    public function warning(mixed $ico = null): ButtonComponent
     {
-        return $this->btn('warning', $ico, $when);
+        return $this->btn('warning', $ico);
     }
 
     /**
-     * @param  string|array|null  $icon
+     * @param  array|string|null  $icon
      * @param  string|null  $form
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent
+     * @return ButtonComponent
      */
-    public function submit($icon = null, string $form = null)
+    public function submit(array|string $icon = null, string $form = null): ButtonComponent
     {
         if (!$icon) {
             $icon = ['fas fa-save', __('admin.submit')];
@@ -384,9 +391,9 @@ class ButtonsComponent extends Component
      * Resource add button.
      * @param  string|null  $link
      * @param  string|null  $title
-     * @return \Lar\Layout\Abstracts\Component|ButtonComponent|ButtonsComponent
+     * @return ButtonComponent|static
      */
-    public function resourceAdd(string $link = null, string $title = null)
+    public function resourceAdd(string $link = null, string $title = null): ButtonComponent|static
     {
         if (!$link && $this->menu->isResource()) {
             $link = $this->menu->getLinkCreate();
@@ -403,8 +410,11 @@ class ButtonsComponent extends Component
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
-        // TODO: Implement mount() method.
+
     }
 }

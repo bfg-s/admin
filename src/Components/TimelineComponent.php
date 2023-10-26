@@ -2,12 +2,10 @@
 
 namespace Admin\Components;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
-use Lar\Layout\Tags\DIV;
 use Throwable;
 
 class TimelineComponent extends Component
@@ -15,7 +13,7 @@ class TimelineComponent extends Component
     /**
      * @var string
      */
-    protected $class = 'timeline';
+    protected string $view = 'timeline';
 
     /**
      * @var callable|string|null
@@ -45,22 +43,22 @@ class TimelineComponent extends Component
     /**
      * @var int
      */
-    protected $per_page = 15;
+    protected int $per_page = 15;
 
     /**
      * @var int[]
      */
-    protected $per_pages = [10, 15, 20, 50, 100];
+    protected array $per_pages = [10, 15, 20, 50, 100];
 
     /**
      * @var string
      */
-    protected $order_field = 'created_at';
+    protected string $order_field = 'created_at';
 
     /**
      * @var string
      */
-    protected $order_type = 'desc';
+    protected string $order_type = 'desc';
 
     /**
      * @var callable|string|null
@@ -68,10 +66,15 @@ class TimelineComponent extends Component
     protected $append = null;
 
     /**
+     * @var bool
+     */
+    protected bool $full_body = false;
+
+    /**
      * @param  callable|string  $icon
      * @return $this
      */
-    public function set_icon($icon)
+    public function set_icon(callable|string $icon): static
     {
         if (is_string($icon) || is_embedded_call($icon)) {
             $this->icon = $icon;
@@ -84,7 +87,7 @@ class TimelineComponent extends Component
      * @param  callable|string  $title
      * @return $this
      */
-    public function set_title($title)
+    public function set_title(callable|string $title): static
     {
         if (is_string($title) || is_embedded_call($title)) {
             $this->title = $title;
@@ -97,7 +100,7 @@ class TimelineComponent extends Component
      * @param  callable|string  $body
      * @return $this
      */
-    public function set_body($body)
+    public function set_body(callable|string $body): static
     {
         if (is_string($body) || is_embedded_call($body)) {
             $this->body = $body;
@@ -110,7 +113,7 @@ class TimelineComponent extends Component
      * @param  callable|string  $footer
      * @return $this
      */
-    public function set_footer($footer)
+    public function set_footer(callable|string $footer): static
     {
         if (is_string($footer) || is_embedded_call($footer)) {
             $this->footer = $footer;
@@ -123,7 +126,7 @@ class TimelineComponent extends Component
      * @param  callable|string  $per_page
      * @return $this
      */
-    public function set_per_page($per_page)
+    public function set_per_page(callable|string $per_page): static
     {
         if (is_string($per_page) || is_embedded_call($per_page)) {
             $this->per_page = $per_page;
@@ -136,7 +139,7 @@ class TimelineComponent extends Component
      * @param  callable|string  $order_type
      * @return $this
      */
-    public function set_order_type($order_type)
+    public function set_order_type(callable|string $order_type): static
     {
         if (is_string($order_type) || is_embedded_call($order_type)) {
             $this->order_type = $order_type;
@@ -146,86 +149,61 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @throws Throwable
+     * @return $this
      */
-    protected function mount()
+    public function setFullBody(): static
+    {
+        $this->full_body = true;
+        return $this;
+    }
+
+    /**
+     * @return array|null[]|string[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'full_body' => $this->full_body,
+            'per_page' => $this->per_page,
+            'order_type' => $this->order_type,
+            'prepend' => $this->prepend,
+            'order_field' => $this->order_field,
+            'append' => $this->append,
+            'paginate' => $paginate = $this->getPaginate(),
+            'paginateFooter' => $this->paginateFooter($paginate),
+            'icon' => function ($model) {
+                return $this->callCallableExtender('icon', $model, $this, 'fas fa-lightbulb bg-blue');
+            },
+            'title' => function ($model) {
+                return $this->callCallableExtender('title', $model, $this);
+            },
+            'body' => function ($model) {
+                return $this->callCallableExtender('body', $model, $this);
+            },
+            'footer' => function ($model) {
+                return $this->callCallableExtender('footer', $model, $this);
+            },
+        ];
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function mount(): void
     {
         $this->per_page = $this->callCallableCurrent('per_page', $this);
-
         $this->order_type = $this->callCallableCurrent('order_type', $this);
+        $this->prepend = $this->callCallableCurrent('prepend', $this);
+        $this->append = $this->callCallableCurrent('append', $this);
 
         if (request()->has($this->model_name.'_per_page') && in_array(
                 request()->get($this->model_name.'_per_page'),
                 $this->per_pages
             )) {
             $this->per_page = (string) request()->get($this->model_name.'_per_page');
-        }
-
-        $paginate = $this->getPaginate();
-
-        $this->text(
-            $this->callCallableCurrent('prepend', $this)
-        );
-
-        foreach ($paginate as $model) {
-            $rootDiv = $this->div();
-
-            if ($model[$this->order_field] instanceof Carbon && $model[$this->order_field]->day == 1) {
-                $rootDiv->div(['time-label'])->span(['bg-green'])->text($model[$this->order_field]->toDateTimeString());
-            }
-
-            $rootDiv->when(function (DIV $div) use ($model) {
-                $i = $div->i();
-
-                $icon = $this->callCallableExtender('icon', $model, $i, 'fas fa-lightbulb bg-blue');
-
-                if ($icon && is_string($icon)) {
-                    $i->addClass($icon);
-                }
-
-                $div->div(['timeline-item'], function (DIV $div) use ($model) {
-                    $div->span(['time'])->i(['fas fa-clock'])->_()->text($model[$this->order_field] ? ' '.butty_date_time($model[$this->order_field]) : '');
-
-                    $h3 = $div->h3(['timeline-header']);
-
-                    $title = $this->callCallableExtender('title', $model, $h3);
-
-                    if ($title && is_string($title)) {
-                        $h3->text($title);
-                    }
-
-                    if ($this->body) {
-                        $div = $div->div(['timeline-body']);
-                        $body = $this->callCallableExtender('body', $model, $div);
-
-                        if ($body && is_string($body)) {
-                            $div->text($body);
-                        }
-                    }
-
-                    if ($this->footer) {
-                        $div = $div->div(['timeline-footer']);
-                        $footer = $this->callCallableExtender('footer', $model, $div);
-                        if ($footer && is_string($footer)) {
-                            $div->text($footer);
-                        }
-                    }
-                });
-            });
-        }
-
-        if ($paginate->lastPage() == $paginate->currentPage()) {
-            $this->div()->i(['fas fa-clock bg-gray']);
-        }
-
-        $this->text(
-            $this->callCallableCurrent('append', $this)
-        );
-
-        if ($paginate) {
-            $this->appEnd(
-                $this->paginateFooter($paginate)
-            );
         }
     }
 
@@ -235,7 +213,7 @@ class TimelineComponent extends Component
      * @return mixed
      * @throws Throwable
      */
-    protected function callCallableCurrent(string $segment, $area)
+    protected function callCallableCurrent(string $segment, $area): mixed
     {
         $isProp = $segment && property_exists($this, $segment);
         $value = $isProp ? $this->{$segment} : null;
@@ -249,9 +227,9 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @return array|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator
+     * @return mixed
      */
-    protected function getPaginate()
+    protected function getPaginate(): mixed
     {
         if (!$this->model) {
             return [];
@@ -281,7 +259,7 @@ class TimelineComponent extends Component
      * @return mixed
      * @throws Throwable
      */
-    protected function callCallableExtender(string $segment, $model, $area, $default = null)
+    protected function callCallableExtender(string $segment, $model, $area, $default = null): mixed
     {
         $s = $this->{$segment};
 
@@ -296,12 +274,12 @@ class TimelineComponent extends Component
     }
 
     /**
-     * @return DIV|string
-     * @throws Throwable
+     * @param $paginate
+     * @return \Illuminate\View\View|string
      */
-    protected function paginateFooter($paginate)
+    protected function paginateFooter($paginate): string|\Illuminate\View\View
     {
-        return $this->model_name && $paginate ? DIV::create(['paginate-footer'])->view('admin::segment.paginate_footer', [
+        return $this->model_name && $paginate ? admin_view('components.time-line.paginate-footer', [
             'model' => $this->model,
             'paginator' => $paginate,
             'from' => (($paginate->currentPage() * $paginate->perPage()) - $paginate->perPage()) + 1,
@@ -320,7 +298,7 @@ class TimelineComponent extends Component
      * @param  LengthAwarePaginator  $page
      * @return array
      */
-    protected function paginationElements(LengthAwarePaginator $page)
+    protected function paginationElements(LengthAwarePaginator $page): array
     {
         $window = UrlWindow::make($page);
 

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Admin;
-use Admin\Traits\DumpedModel;
 use Illuminate\Support\Str;
 
 /**
@@ -40,8 +39,6 @@ use Illuminate\Support\Str;
  */
 class AdminPermission extends Model
 {
-    use DumpedModel;
-
     /**
      * @var Collection
      */
@@ -105,9 +102,9 @@ class AdminPermission extends Model
     }
 
     /**
-     * @return Collection|\Illuminate\Support\Collection|AdminPermission[]
+     * @return mixed
      */
-    public static function now()
+    public static function now(): mixed
     {
         if (static::$now) {
             return static::$now;
@@ -124,7 +121,7 @@ class AdminPermission extends Model
      * @param  string  $inner_path
      * @return string
      */
-    public static function makeCheckedPath(string $inner_path)
+    public static function makeCheckedPath(string $inner_path): string
     {
         $per_path = config('layout.lang_mode') ? '*/' : '';
 
@@ -134,7 +131,7 @@ class AdminPermission extends Model
     /**
      * @return bool
      */
-    public static function check()
+    public static function check(): bool
     {
         if (!admin_user()) {
             return true;
@@ -182,7 +179,7 @@ class AdminPermission extends Model
     /**
      * @return HasOne
      */
-    public function role()
+    public function role(): HasOne
     {
         return $this->hasOne(AdminRole::class, 'id', 'admin_role_id');
     }

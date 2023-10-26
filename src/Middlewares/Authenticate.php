@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Lar\Layout\Core\LConfigs;
-use Lar\Layout\Respond;
+use Admin\Respond;
 use Admin\Boot;
 use Admin\Models\AdminPermission;
 use ReflectionException;
@@ -53,9 +52,6 @@ class Authenticate
 
         Boot::run();
 
-        LConfigs::add('home', route('admin.home'));
-        LConfigs::add('uploader', route('admin.uploader'));
-
         if (!$this->access()) {
             if ($request->ajax() && !$request->pjax()) {
                 admin_log_danger('Pattern go to the forbidden zone', 'Blocked Ajax request', 'fas fa-shield-alt');
@@ -71,7 +67,7 @@ class Authenticate
                     admin_log_danger('Pattern go to the forbidden zone', 'Blocked POST request', 'fas fa-shield-alt');
                     session()->flash(
                         'respond',
-                        respond()->toast_error([__('admin.access_denied'), __('admin.error')])->toJson()
+                        Respond::glob()->toast_error([__('admin.access_denied'), __('admin.error')])->toJson()
                     );
 
                     return back();
@@ -80,8 +76,6 @@ class Authenticate
 
             static::$access = false;
         }
-
-        //dd(\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile'));
 
         if (
             ! Auth::guard('admin')->guest()
@@ -93,7 +87,7 @@ class Authenticate
         ) {
             session()->flash(
                 'respond',
-                respond()->toast_error([__('admin.2fa_enable_before'), __('admin.error')])->toJson()
+                Respond::glob()->toast_error([__('admin.2fa_enable_before'), __('admin.error')])->toJson()
             );
             return redirect()->route('admin.profile');
         }

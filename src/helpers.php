@@ -1,5 +1,7 @@
 <?php
 
+use Admin\Facades\AdminFacade;
+use Admin\Respond;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Admin\Core\MenuItem;
@@ -7,6 +9,7 @@ use Admin\Models\AdminPermission;
 use Admin\Models\AdminUser;
 use Admin\Page;
 use Admin\Repositories\AdminRepository;
+use Illuminate\View\View;
 
 if (!function_exists('admin_log')) {
     /**
@@ -367,7 +370,7 @@ if (!function_exists('check_referer')) {
         }
 
         if (!$result) {
-            respond()->toast_error([__('admin.access_denied'), __('admin.error')]);
+            Respond::glob()->toast_error([__('admin.access_denied'), __('admin.error')]);
         }
 
         return $result;
@@ -556,5 +559,29 @@ if (!function_exists('array_is_list')) {
             return true;
         }
         return array_keys($arr) === range(0, count($arr) - 1);
+    }
+}
+
+if (!function_exists('admin_template')) {
+    /**
+     * @param  string  $template
+     * @return string
+     */
+    function admin_template(string $template): string
+    {
+        return AdminFacade::getTheme()->template($template);
+    }
+}
+
+if (!function_exists('admin_view')) {
+    /**
+     * @param $view
+     * @param  array  $data
+     * @param  array  $mergeData
+     * @return View
+     */
+    function admin_view($view = null, array $data = [], array $mergeData = []): View
+    {
+        return view(admin_template($view), $data, $mergeData);
     }
 }

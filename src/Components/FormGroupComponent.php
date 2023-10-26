@@ -2,132 +2,140 @@
 
 namespace Admin\Components;
 
-use Closure;
+use Admin\Components\Inputs\Parts\InputFormGroupComponent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ViewErrorBag;
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\I;
-use Lar\Layout\Tags\INPUT;
 use Admin\Page;
-use Admin\Traits\Delegable;
 use Admin\Traits\FontAwesome;
-use Admin\Traits\Macroable;
 use Admin\Traits\RulesBackTrait;
 use Admin\Traits\RulesFrontTrait;
-use Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Conditionable;
 
-/**
- * @mixin FormGroupComponentMacroList
- */
-abstract class FormGroupComponent extends DIV
+abstract class FormGroupComponent extends Component
 {
     use RulesFrontTrait;
     use RulesBackTrait;
     use FontAwesome;
-    use Macroable;
-    use Delegable;
-    use Conditionable;
 
     /**
      * @var array
      */
-    public static $construct_modify = [];
+    public static array $construct_modify = [];
+
+    /**
+     * @var string|null
+     */
+    protected ?string $title = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $name = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $icon = 'fas fa-pencil-alt';
+
+    /**
+     * @var string|null
+     */
+    protected ?string $info = null;
+
+    /**
+     * @var int|null
+     */
+    protected ?int $label_width = 2;
+
     /**
      * @var bool
      */
-    protected $only_content = true;
-    /**
-     * @var string
-     */
-    protected $title;
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var string
-     */
-    protected $icon = 'fas fa-pencil-alt';
-    /**
-     * @var string
-     */
-    protected $info;
-    /**
-     * @var int
-     */
-    protected $label_width = 2;
-    /**
-     * @var array
-     */
-    protected $params = [];
+    protected bool $vertical = false;
+
     /**
      * @var bool
      */
-    protected $vertical = false;
+    protected bool $reversed = false;
+
     /**
-     * @var bool
+     * @var Component|FormComponent|null
      */
-    protected $reversed = false;
-    /**
-     * @var Component|FormComponent
-     */
-    protected $parent_field;
+    protected FormComponent|Component|null $parent_field = null;
+
     /**
      * @var Model
      */
     protected $model;
+
     /**
      * @var mixed
      */
     protected $value;
+
     /**
-     * @var string
+     * @var string|null
      */
-    protected $field_id;
+    protected ?string $field_id = null;
     /**
-     * @var string
+     * @var string|null
      */
-    protected $path;
+    protected ?string $path = null;
+
     /**
      * @var bool
      */
-    protected $has_bug = false;
+    protected bool $has_bug = false;
+
     /**
      * @var ViewErrorBag
      */
-    protected $errors;
+    protected mixed $errors = null;
+
     /**
      * @var bool
      */
-    protected $admin_controller = false;
+    protected bool $admin_controller = false;
+
     /**
-     * @var string
+     * @var string|null
      */
-    protected $controller;
+    protected ?string $controller;
+
     /**
-     * @var string
+     * @var string|null
      */
-    protected $method;
+    protected ?string $method = null;
+
     /**
      * @var bool
      */
     protected $only_input = false;
+
     /**
-     * @var Closure
+     * @var callable
      */
-    protected $value_to;
+    protected mixed $value_to = null;
+
     /**
      * @var Page
      */
     protected Page $page;
-    protected $default = null;
+
+    /**
+     * @var mixed|null
+     */
+    protected mixed $default = null;
+
     /**
      * @var array
      */
-    protected $fgs = [];
+    protected array $fgs = [];
+
+    /**
+     * @var string
+     */
+    protected string $view = 'content-only';
 
     /**
      * FormGroup constructor.
@@ -143,7 +151,6 @@ abstract class FormGroupComponent extends DIV
 
         $this->title = $title ? __($title) : $title;
         $this->name = $name;
-        $this->params = array_merge($this->params, $params);
         $this->field_id = 'input_'.Str::slug($this->name, '_');
         $this->path = trim(str_replace(['[', ']'], '.', str_replace('[]', '', $name)), '.');
         $this->errors = request()->session()->get('errors') ?: new ViewErrorBag();
@@ -152,13 +159,12 @@ abstract class FormGroupComponent extends DIV
             list($this->controller, $this->method) = Str::parseCallback(Route::currentRouteAction());
             $this->admin_controller = property_exists($this->controller, 'rules');
         }
-        $this->toExecute('makeWrapper');
         if (!$title) {
             $this->vertical();
         }
         $this->model = $this->page->model();
         $this->after_construct();
-        $this->callConstructEvents();
+
         foreach (self::$construct_modify as $item) {
             if (is_callable($item)) {
                 call_user_func($item, $this, $this->model);
@@ -167,9 +173,36 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
+     * @param  string  $id
      * @return $this
      */
-    public function vertical()
+    public function setId(string $id): static
+    {
+        $this->field_id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    protected function on_build(): void
+    {
+
+    }
+
+    /**
+     * @return void
+     */
+    public function mount(): void
+    {
+        $this->makeWrapper();
+    }
+
+    /**
+     * @return $this
+     */
+    public function vertical(): static
     {
         $this->vertical = true;
 
@@ -178,12 +211,18 @@ abstract class FormGroupComponent extends DIV
 
     /**
      * After construct event.
+     * @return void
      */
-    protected function after_construct()
+    protected function after_construct(): void
     {
     }
 
-    public function queryable()
+    /**
+     * @return $this
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function queryable(): static
     {
         $request = request();
         if ($request->has($this->path)) {
@@ -197,7 +236,7 @@ abstract class FormGroupComponent extends DIV
      * @param  mixed  $value
      * @return $this
      */
-    public function value($value)
+    public function value(mixed $value): static
     {
         $this->value = $value;
 
@@ -208,7 +247,7 @@ abstract class FormGroupComponent extends DIV
      * @param  Component  $parent
      * @return $this
      */
-    public function set_parent(Component $parent)
+    public function set_parent(Component $parent): static
     {
         $this->parent_field = $parent;
 
@@ -218,7 +257,7 @@ abstract class FormGroupComponent extends DIV
     /**
      * @return $this
      */
-    public function horizontal()
+    public function horizontal(): static
     {
         $this->vertical = false;
 
@@ -228,7 +267,7 @@ abstract class FormGroupComponent extends DIV
     /**
      * @return $this
      */
-    public function reversed()
+    public function reversed(): static
     {
         $this->reversed = true;
 
@@ -238,7 +277,7 @@ abstract class FormGroupComponent extends DIV
     /**
      * @return $this
      */
-    public function only_input()
+    public function only_input(): static
     {
         $this->only_input = true;
 
@@ -246,19 +285,20 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  string|null  $icon
+     * @param  string|null  $name
      * @return $this
      */
-    public function icon(string $icon = null)
+    public function icon(string $name = null): static
     {
-        if ($this->icon !== null) {
-            $this->icon = $icon;
-        }
+        $this->icon = $name;
 
         return $this;
     }
 
-    public function crypt()
+    /**
+     * @return $this
+     */
+    public function crypt(): static
     {
         if ($this->admin_controller) {
             $this->controller::$crypt_fields[] = $this->name;
@@ -271,7 +311,7 @@ abstract class FormGroupComponent extends DIV
      * @param  int  $width
      * @return $this
      */
-    public function label_width(int $width)
+    public function label_width(int $width): static
     {
         $this->label_width = $width;
 
@@ -282,7 +322,7 @@ abstract class FormGroupComponent extends DIV
      * @param  array  $datas
      * @return $this
      */
-    public function mergeDataList(array $datas)
+    public function mergeDataList(array $datas): static
     {
         $this->data = array_merge($this->data, $datas);
 
@@ -293,7 +333,7 @@ abstract class FormGroupComponent extends DIV
      * @param  array  $rules
      * @return $this
      */
-    public function mergeRuleList(array $rules)
+    public function mergeRuleList(array $rules): static
     {
         $this->rules = array_merge($this->rules, $rules);
 
@@ -304,7 +344,7 @@ abstract class FormGroupComponent extends DIV
      * @param $value
      * @return $this
      */
-    public function default($value)
+    public function default($value): static
     {
         $this->default = $value;
 
@@ -315,7 +355,7 @@ abstract class FormGroupComponent extends DIV
      * @param  string  $path
      * @return $this
      */
-    public function defaultFromModel(string $path)
+    public function defaultFromModel(string $path): static
     {
         if ($this->model) {
             $this->value_to = function () use ($path) {
@@ -329,10 +369,10 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  Model  $model
+     * @param  Model|null  $model
      * @return $this
      */
-    public function setModel(Model $model = null)
+    public function setModel(Model $model = null): static
     {
         $this->model = $model;
 
@@ -340,12 +380,12 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  string  $info
+     * @param  string  $name
      * @return $this
      */
-    public function info(string $info)
+    public function info(string $name): static
     {
-        $this->info = $info;
+        $this->info = $name;
 
         return $this;
     }
@@ -354,7 +394,7 @@ abstract class FormGroupComponent extends DIV
      * @param  callable  $call
      * @return $this
      */
-    public function fg(callable $call)
+    public function fg(callable $call): static
     {
         $this->fgs[] = $call;
 
@@ -362,10 +402,10 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  Closure|array  $call
+     * @param  callable  $call
      * @return $this
      */
-    public function value_to($call)
+    public function value_to(callable $call): static
     {
         $this->value_to = $call;
 
@@ -373,10 +413,10 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @param  string  $var
+     * @param  string|null  $var
      * @return $this
      */
-    public function stated(string $var = null)
+    public function stated(string $var = null): static
     {
         $this->data['stated'] = $var ? $var : '';
         $this->data['state'] = $var ? $var : '';
@@ -388,7 +428,7 @@ abstract class FormGroupComponent extends DIV
      * @param  string|null  $var
      * @return $this
      */
-    public function state(string $var = null)
+    public function state(string $var = null): static
     {
         $this->data['state'] = $var ? $var : '';
 
@@ -396,9 +436,9 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function get_id()
+    public function get_id(): ?string
     {
         return $this->field_id;
     }
@@ -407,7 +447,7 @@ abstract class FormGroupComponent extends DIV
      * @param $id
      * @return $this
      */
-    public function set_id($id)
+    public function set_id($id): static
     {
         $this->field_id = Str::slug($id, '_');
 
@@ -418,7 +458,7 @@ abstract class FormGroupComponent extends DIV
      * @param $id
      * @return $this
      */
-    public function force_set_id($id)
+    public function force_set_id($id): static
     {
         $this->field_id = $id;
 
@@ -426,9 +466,9 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function get_name()
+    public function get_name(): ?string
     {
         return $this->name;
     }
@@ -437,7 +477,7 @@ abstract class FormGroupComponent extends DIV
      * @param  string  $name
      * @return $this
      */
-    public function set_name(string $name)
+    public function set_name(string $name): static
     {
         $this->name = $name;
 
@@ -445,9 +485,9 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function get_path()
+    public function get_path(): ?string
     {
         return $this->path;
     }
@@ -456,7 +496,7 @@ abstract class FormGroupComponent extends DIV
      * @param  string  $path
      * @return $this
      */
-    public function set_path(string $path)
+    public function set_path(string $path): static
     {
         $this->path = $path;
 
@@ -464,9 +504,9 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function get_title()
+    public function get_title(): ?string
     {
         return $this->title;
     }
@@ -475,7 +515,7 @@ abstract class FormGroupComponent extends DIV
      * @param  string  $title
      * @return $this
      */
-    public function set_title(string $title)
+    public function set_title(string $title): static
     {
         $this->title = $title;
 
@@ -484,15 +524,17 @@ abstract class FormGroupComponent extends DIV
 
     /**
      * Make wrapper for input.
+     * @return void
      */
-    protected function makeWrapper()
+    protected function makeWrapper(): void
     {
-        $this->callRenderEvents();
-
         $this->on_build();
 
         if ($this->only_input) {
             $this->value = $this->create_value();
+            if ($this->value_to) {
+                $this->value = call_user_func($this->value_to, $this->value, $this->model);
+            }
             $this->appEnd(
                 $this->field()
             )->appEnd(
@@ -502,30 +544,27 @@ abstract class FormGroupComponent extends DIV
             return;
         }
 
-        $fg = $this->div(['form-group row']);
+        $fg = $this->createComponent(InputFormGroupComponent::class);
+
+        $group_width = 12 - $this->label_width;
+
+        $fg->setViewData([
+            'icon' => $this->icon,
+            'vertical' => $this->vertical,
+            'name' => $this->name,
+            'title' => $this->title,
+            'group_width' => $group_width,
+            'label_width' => $this->label_width,
+            'reversed' => $this->reversed,
+            'id' => $this->field_id,
+            'info' => $this->info,
+            'errors' => $this->errors,
+            'messages' => $this->errors->get($this->name),
+            'hasError' => $this->errors->has($this->name),
+        ]);
 
         foreach ($this->fgs as $fgs) {
             call_user_func($fgs, $fg);
-        }
-
-        if (!$this->reversed) {
-            $this->make_label($fg);
-        }
-
-        $icon = is_string($this->icon) && preg_match('/^(fas\s|fab\s|far\s)fa\-[a-zA-Z0-9\-\_]+/', $this->icon) ?
-            I::create([$this->icon]) : $this->icon;
-
-        $group_width = 12 - $this->label_width;
-        $input_group = $fg->div()->addClassIf($icon, 'input-group')
-            ->addClassIf($this->vertical, 'w-100')
-            ->addClassIf(!$this->vertical && $this->title, "col-sm-{$group_width}");
-
-        $this->make_icon_wrapper($input_group, $icon);
-
-        $fg->setDatas(['label-width' => $this->label_width]);
-
-        if ($this->vertical) {
-            $fg->setDatas(['vertical' => 'true']);
         }
 
         $this->value = $this->create_value();
@@ -534,31 +573,19 @@ abstract class FormGroupComponent extends DIV
             $this->value = call_user_func($this->value_to, $this->value, $this->model);
         }
 
-        $input_group->appEnd(
+        $fg->appEnd(
             $this->field()
         )->appEnd(
             $this->app_end_field()
         );
 
-        if ($this->reversed) {
-            $this->make_label($fg);
-        }
-
-        $this->make_info_message($fg)
-            ->make_error_massages($fg);
-    }
-
-    /**
-     * @return void
-     */
-    protected function on_build()
-    {
+        $this->appEnd($fg);
     }
 
     /**
      * @return mixed
      */
-    protected function create_value()
+    protected function create_value(): mixed
     {
         if ($this->value !== null) {
             return $this->value;
@@ -575,85 +602,15 @@ abstract class FormGroupComponent extends DIV
     }
 
     /**
-     * @return INPUT|mixed
+     * @return mixed
      */
-    abstract public function field();
+    abstract public function field(): mixed;
 
     /**
      * @return string
      */
-    protected function app_end_field()
+    protected function app_end_field(): string
     {
         return '';
-    }
-
-    /**
-     * @param  DIV  $form_group
-     */
-    protected function make_label(DIV $form_group)
-    {
-        if ($this->title) {
-            $form_group->label(['for' => $this->field_id, 'class' => 'col-form-label'], $this->title)
-                ->addClassIf(!$this->vertical, 'col-sm-'.$this->label_width);
-        }
-    }
-
-    /**
-     * @param  DIV  $input_group
-     * @param  mixed  $icon
-     * @return $this
-     */
-    protected function make_icon_wrapper(DIV $input_group, $icon = null)
-    {
-        if ($icon) {
-            $input_group->div(['class' => 'input-group-prepend'])
-                ->span(['class' => 'input-group-text'], $icon);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  DIV  $fg
-     * @return $this
-     */
-    protected function make_error_massages(DIV $fg)
-    {
-        if ($this->name && $this->errors && $this->errors->has($this->name)) {
-            $group_width = 12 - $this->label_width;
-
-            $messages = $this->errors->get($this->name);
-
-            foreach ($messages as $mess) {
-                if (!$this->vertical) {
-                    $fg->div(["col-sm-{$this->label_width}"]);
-                }
-                $fg->small(['error invalid-feedback d-block'])
-                    ->addClassIf(!$this->vertical, "col-sm-{$group_width}")
-                    ->small(['fas fa-exclamation-triangle'])->_text(':space', $mess);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  DIV  $fg
-     * @return $this
-     */
-    protected function make_info_message(DIV $fg)
-    {
-        if ($this->info) {
-            $group_width = 12 - $this->label_width;
-
-            if (!$this->vertical) {
-                $fg->div(["col-sm-{$this->label_width}"]);
-            }
-            $fg->small(['text-primary invalid-feedback d-block'])
-                ->addClassIf(!$this->vertical, "col-sm-{$group_width}")
-                ->i(['fas fa-info-circle'])->_text(':space', $this->info);
-        }
-
-        return $this;
     }
 }

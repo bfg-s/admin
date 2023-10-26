@@ -6,9 +6,7 @@ use App;
 use Composer\Composer;
 use DB;
 use Illuminate\Support\Arr;
-use Lar\Layout\Abstracts\Component;
 use Admin;
-use Admin\Components\GridColumnComponent;
 use Admin\Delegates\Card;
 use Admin\Delegates\CardBody;
 use Admin\Delegates\ChartJs;
@@ -70,32 +68,32 @@ class DashboardController extends Controller
             )
         )
             ->when(admin()->isRoot(), function (Page $page) {
-                $page->next()->row(
-                    $this->cardTableCol('admin.environment', [$this, 'environmentInfo']),
-                    $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
-                    $this->cardTableCol('Composer', [$this, 'composerInfo']),
-                    $this->cardTableCol('admin.database', [$this, 'databaseInfo']),
-                );
+                $page->view('controllers.dashboard-statistic', [
+                    'environment' => $this->cardTableCol('admin.environment', [$this, 'environmentInfo']),
+                    'laravel' => $this->cardTableCol('Laravel', [$this, 'laravelInfo']),
+                    'composer' => $this->cardTableCol('Composer', [$this, 'composerInfo']),
+                    'database' => $this->cardTableCol('admin.database', [$this, 'databaseInfo']),
+                ]);
             });
     }
 
     /**
      * @param  string  $title
      * @param $rows
-     * @return GridColumnComponent
+     * @return Admin\Components\CardComponent
      */
     public function cardTableCol(string $title, $rows)
     {
-        return $this->row->pl2()->column(
-            $this->column->num(6)
-                ->mb4()
-                ->card()
-                ->title($title)
-                ->h100()
-                ->full_body(['table-responsive'])
-                ->table()
-                ->rows($rows)
-        );
+        $card = Admin\Components\CardComponent::create();
+
+        $card->title($title)
+            ->h100()
+            ->full_body()
+            ->tableResponsive()
+            ->table()
+            ->rows($rows);
+
+        return $card;
     }
 
     /**
@@ -142,10 +140,10 @@ class DashboardController extends Controller
             __('admin.url') => config('app.url'),
             __('admin.users') => number_format($user_model::count(), 0, '', ','),
             __('admin.admin_users') => number_format($admin_user_model::count(), 0, '', ','),
-            '' => function (Component $component) {
-                $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('admin.drivers'));
-            },
+//            '' => function (Component $component) {
+//                $component->_addClass(['table-secondary']);
+//                $component->_find('th')->h6(['m-0'], __('admin.drivers'));
+//            },
             __('admin.broadcast_driver') => '<span class="badge badge-secondary">'.config('broadcasting.default').'</span>',
             __('admin.cache_driver') => '<span class="badge badge-secondary">'.config('cache.default').'</span>',
             __('admin.session_driver') => '<span class="badge badge-secondary">'.config('session.driver').'</span>',
@@ -163,10 +161,10 @@ class DashboardController extends Controller
     {
         $return = [
             __('admin.composer_version') => '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
-            '' => static function (Component $component) {
-                $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('admin.required'));
-            },
+//            '' => static function (Component $component) {
+//                $component->_addClass(['table-secondary']);
+//                $component->_find('th')->h6(['m-0'], __('admin.required'));
+//            },
         ];
 
         $json = file_get_contents(base_path('composer.json'));
@@ -190,18 +188,18 @@ class DashboardController extends Controller
 
         return [
             __('admin.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
-            __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION),
-            __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO),
-            __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
-            __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME),
-            '' => static function (Component $component) {
-                $component->_addClass(['table-secondary']);
-                $component->_find('th')->h6(['m-0'], __('admin.connection_info'));
-            },
+            __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION) . ' ',
+            __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO) . ' ',
+            __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS) . ' ',
+            __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) . ' ',
+//            '' => static function (Component $component) {
+//                $component->_addClass(['table-secondary']);
+//                $component->_find('th')->h6(['m-0'], __('admin.connection_info'));
+//            },
             __('admin.db_driver') => config('database.default'),
             __('admin.database') => env('DB_DATABASE'),
-            __('admin.user') => env('DB_USERNAME'),
-            __('admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))),
+            __('admin.user') => env('DB_USERNAME') . ' ',
+            __('admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))) . ' ',
         ];
     }
 }

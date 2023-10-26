@@ -2,15 +2,12 @@
 
 namespace Admin\Jax;
 
-use Admin\Components\ModelTableComponent;
 use Cookie;
 use DB;
-use Excel;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
-use Admin\Core\PrepareExport;
 use Throwable;
 
 class Admin extends AdminExecutor
@@ -206,34 +203,6 @@ class Admin extends AdminExecutor
         }
 
         abort(404);
-    }
-
-    public function export_excel(string $model, array $ids, string $order, string $order_type, string $table)
-    {
-        if (!check_referer()) {
-            return [];
-        }
-
-        ModelTableComponent::$is_export = true;
-
-        $this->refererEmit();
-
-        $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
-
-        return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.xlsx');
-    }
-
-    public function export_csv(string $model, array $ids, string $order, string $order_type, string $table)
-    {
-        if (!check_referer()) {
-            return [];
-        }
-
-        $this->refererEmit();
-
-        $prepared = new PrepareExport($model, $ids, $order, $order_type, $table);
-
-        return Excel::download($prepared, class_basename($model).'_'.now()->format('Y_m_d_His').'.csv');
     }
 
     public function call_callback(int $key, array $parameters)

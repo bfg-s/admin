@@ -9,9 +9,19 @@ use Admin\Models\AdminUser;
 return [
 
     /**
+     * The theme of admin panel
+     */
+    'theme' => 'admin-lte',
+
+    /**
      * The dark mode by default for administrator
      */
     'dark_mode' => true,
+
+    /**
+     * Language mode for admin panel
+     */
+    'lang_mode' => true,
 
     /**
      * Admin application namespace.
@@ -40,18 +50,6 @@ return [
      * Default actions.
      */
     'action' => [
-        'auth' => [
-            'login_form_action' => [AuthController::class, 'login'],
-            'login_form_2fa' => [AuthController::class, 'twofa'],
-            'login_form_2fa_get' => [AuthController::class, 'twofaGet'],
-            'login_form_2fa_post' => [AuthController::class, 'twofaPost'],
-            'login_post_action' => [AuthController::class, 'login_post'],
-        ],
-        'profile' => [
-            'index' => [UserController::class, 'index'],
-            'update' => [UserController::class, 'update'],
-            'logout' => [UserController::class, 'logout'],
-        ],
         'dashboard' => [DashboardController::class, 'index'],
         'uploader' => [UploadController::class, 'index'],
     ],

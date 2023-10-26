@@ -9,7 +9,12 @@ class GridColumnComponent extends Component
     /**
      * @var string
      */
-    protected $classInner = 'pl-0 col-md';
+    protected string $view = 'grid-column';
+
+    /**
+     * @var int|null
+     */
+    protected ?int $num = null;
 
     /**
      * @param  array  $delegates
@@ -21,15 +26,32 @@ class GridColumnComponent extends Component
         $this->explainForce(Explanation::new($delegates));
     }
 
-    public function num(int $num)
+    /**
+     * @param  int  $num
+     * @return $this
+     */
+    public function num(int $num): static
     {
-        $this->classInner .= "-{$num}";
+        $this->num = $num;
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return int[]|null[]
+     */
+    protected function viewData(): array
     {
-        $this->addClass($this->classInner);
+        return [
+            'num' => $this->num
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+
     }
 }

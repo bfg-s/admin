@@ -5,28 +5,19 @@ namespace Admin\Components;
 class GridRowComponent extends Component
 {
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'row',
-    ];
-
-    protected function mount()
-    {
-        // TODO: Implement mount() method.
-    }
+    protected string $view = 'grid-row';
 
     /**
-     * @return mixed|void
+     * @return voids
      */
-    public function onRender()
+    protected function mount(): void
     {
         $this->newExplainForce($this->delegates);
         $this->newExplainForce($this->force_delegates);
-        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
-            $this->model($this->parent->model);
-        }
-        $this->mount();
-        $this->callRenderEvents();
+//        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
+//            $this->model($this->parent->model);
+//        }
     }
 }

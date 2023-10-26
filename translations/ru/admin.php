@@ -257,6 +257,7 @@ return [
     '2fa_secure_not_enable_title' => 'Вы не включили двухфакторную аутентификацию.',
     '2fa_secure_not_enable_info' => "Когда двухфакторная аутентификация включена, вам будет предложено ввести безопасный случайный токен во время аутентификации. Вы можете получить этот токен из приложения Google Authenticator вашего телефона.",
     '2fa_secure_enable_button' => "Включить",
+    '2fa_secure_enable_disable' => "Выключить",
     '2fa_secure_confirm_password' => "Подтвердите пароль",
     '2fa_secure_confirm_password_info' => "В целях безопасности подтвердите свой пароль, чтобы продолжить.",
     '2fa_secure_confirm_password_confirm' => "Подтвердить",
@@ -269,4 +270,5 @@ return [
     '2fa_is_wrong' => 'Неверная проверка!',
     'complete' => 'Завершено',
     '2fa_enable_before' => 'Для начала вам необходимо включить двухфакторную авторизацию!',
+    'you_have_enabled_two_factor_authentication' => 'У вас включена двухфакторная аутентификация.',
 ];

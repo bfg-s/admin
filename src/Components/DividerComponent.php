@@ -2,79 +2,56 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Tags\DIV;
-use Lar\Tagable\Events\onRender;
-use Admin\Traits\Macroable;
-use ReflectionException;
-
-class DividerComponent extends DIV implements onRender
+class DividerComponent extends Component
 {
-    use Macroable;
-
     /**
      * @var string
      */
-    protected $class = 'row';
+    protected string $view = 'divider';
 
     /**
      * @param  string|callable|null  $right_title
      * @param  string|callable|null  $center_title
      * @param  string|callable|null  $left_title
-     * @param ...$params
+     * @param ...$explanations
      */
     public function __construct(
-        $right_title = null,
-        $center_title = null,
-        $left_title = null,
-        ...$params
+        public mixed $right_title = null,
+        public mixed $center_title = null,
+        public mixed $left_title = null,
+        ...$explanations
     ) {
-        parent::__construct();
-
-        if ($left_title) {
-            if (is_string($left_title)) {
-                $this->div(['col-auto'])->h4($left_title)->textSecondary();
-            } else {
-                $this->div(['col-auto'])->when($left_title);
-            }
+        if (is_callable($this->right_title)) {
+            $this->right_title = call_user_func($this->right_title, $this);
+        }
+        if (is_callable($this->center_title)) {
+            $this->center_title = call_user_func($this->center_title, $this);
+        }
+        if (is_callable($this->left_title)) {
+            $this->left_title = call_user_func($this->left_title, $this);
         }
 
-        $anyTitle = $left_title || $center_title || $right_title;
-
-        if ($center_title) {
-            $this->div(['col'])->hr();
-
-            if (is_string($center_title)) {
-                $this->div(['col-auto'])->h4($center_title)->textSecondary();
-            } else {
-                $this->div(['col-auto'])->when($center_title);
-            }
-
-            $this->div(['col'])->hr([!$anyTitle ? 'mt-0' : '']);
-        } else {
-            $this->div(['col'])->hr([!$anyTitle ? 'mt-0' : '']);
-        }
-
-        if ($right_title) {
-            if (is_string($right_title)) {
-                $this->div(['col-auto'])->h4($right_title)->textSecondary();
-            } else {
-                $this->div(['col-auto'])->when($right_title);
-            }
-        }
-
-        $this->when($params);
-
-        $this->addClass($this->class);
-
-        $this->callConstructEvents();
+        parent::__construct(...$explanations);
     }
 
     /**
-     * @return mixed|void
-     * @throws ReflectionException
+     * @return array
      */
-    public function onRender()
+    protected function viewData(): array
     {
-        $this->callRenderEvents();
+        return [
+            'right_title' => $this->right_title,
+            'center_title' => $this->center_title,
+            'left_title' => $this->left_title,
+            'anyTitle' => $this->left_title || $this->center_title || $this->right_title,
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+        // TODO: Implement mount() method.
     }
 }

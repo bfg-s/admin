@@ -2,9 +2,9 @@
 
 namespace Admin\Commands\BaseCommand;
 
+use Admin\Core\CfgFile;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Lar\Layout\CfgFile;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\FilesystemException;
@@ -18,7 +18,7 @@ class BaseAdminExtension extends Command
     /**
      * @var string
      */
-    protected $remote_url = 'https://packagist.org/packages/list.json?type=bfg-admin-extension';
+    protected string $remote_url = 'https://packagist.org/packages/list.json?type=bfg-admin-extension';
 
     /**
      * @param $name
@@ -240,7 +240,7 @@ class BaseAdminExtension extends Command
      * @param $name
      * @return mixed|null
      */
-    protected function work_with_extension($name)
+    protected function work_with_extension($name): mixed
     {
         $choice = 'Done';
 
@@ -279,11 +279,11 @@ class BaseAdminExtension extends Command
      * @param $name
      * @return mixed
      */
-    protected function find_remote($name)
+    protected function find_remote($name): mixed
     {
         $list = $this->getRemotes();
 
-        if (array_search($name, $list) !== false) {
+        if (in_array($name, $list)) {
             return $this->download_extension($name, $this->option('install'));
         } else {
             $filter_list = collect($list)->filter(static function ($ext) use ($name) {
@@ -310,7 +310,7 @@ class BaseAdminExtension extends Command
     /**
      * @return array
      */
-    protected function getRemotes()
+    protected function getRemotes(): array
     {
         $list = file_get_contents($this->remote_url);
 
@@ -460,7 +460,7 @@ class BaseAdminExtension extends Command
     /**
      * @return Collection
      */
-    protected function all_extensions()
+    protected function all_extensions(): Collection
     {
         return collect(array_merge(Admin::$installed_extensions, Admin::$not_installed_extensions))
             ->filter(static function ($extension) {

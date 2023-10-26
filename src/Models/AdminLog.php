@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
-use Admin\Traits\DumpedModel;
 
 /**
  * @property string $title
@@ -43,8 +42,6 @@ use Admin\Traits\DumpedModel;
  */
 class AdminLog extends Model
 {
-    use DumpedModel;
-
     public const UPDATED_AT = null;
 
     /**

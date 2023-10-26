@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
-use Admin\Traits\DumpedModel;
 
 /**
  * @property int $id
@@ -32,8 +31,6 @@ use Admin\Traits\DumpedModel;
  */
 class AdminRole extends Model
 {
-    use DumpedModel;
-
     /**
      * @var string
      */

@@ -16,77 +16,91 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Admin\Models\AdminFileStorage;
-use Admin\Traits\Eventable;
 
 class ModelSaver
 {
-    use Eventable;
-
     public const DELETE_FIELD = '__DELETE__';
+
     /**
      * @var callable[]
      */
-    protected static $on_save = [];
+    protected static array $on_save = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_saved = [];
+    protected static array $on_saved = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_finish = [];
+    protected static array $on_finish = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_create = [];
+    protected static array $on_create = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_created = [];
+    protected static array $on_created = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_update = [];
+    protected static array $on_update = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_updated = [];
+    protected static array $on_updated = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_delete = [];
+    protected static array $on_delete = [];
+
     /**
      * @var callable[]
      */
-    protected static $on_deleted = [];
+    protected static array $on_deleted = [];
+
     /**
      * Save model.
      *
-     * @var Model
+     * @var Model|null
      */
-    protected $model;
+    protected mixed $model = null;
+
     /**
      * Save data.
      *
      * @var array
      */
-    protected $data;
+    protected array $data = [];
+
     /**
      * @var bool
      */
-    protected $has_delete = false;
+    protected bool $has_delete = false;
+
     /**
      * @var mixed
      */
-    protected $src = null;
+    protected mixed $src = null;
+
+    /**
+     * @var object|null
+     */
     protected ?object $eventsObject;
 
     /**
-     * @param  Model|string  $model
+     * @param  string|Model  $model
      * @param  array  $data
      * @param  object|null  $eventsObject
      */
-    public function __construct($model, array $data, object $eventsObject = null)
+    public function __construct(Model|string $model, array $data, object $eventsObject = null)
     {
         if (is_string($model)) {
             $model = new $model();
@@ -114,9 +128,9 @@ class ModelSaver
     /**
      * Save method.
      *
-     * @return Model|bool|mixed
+     * @return bool|Model
      */
-    public function save()
+    public function save(): Model|bool
     {
         list($data, $add) = $this->getDatas();
 
@@ -138,11 +152,11 @@ class ModelSaver
     /**
      * @return array[]
      */
-    protected function getDatas()
+    protected function getDatas(): array
     {
         $data = [];
         foreach ($this->data as $key => $datum) {
-            if (is_object($datum) && $datum instanceof UploadedFile) {
+            if ($datum instanceof UploadedFile) {
                 $data[$key] = AdminFileStorage::makeFile($datum);
             } else {
                 $data[$key] = $datum;
@@ -180,21 +194,16 @@ class ModelSaver
     /**
      * @return string|null
      */
-    public function getModelKeyName()
+    public function getModelKeyName(): ?string
     {
-        $key = null;
         $model = $this->getModel();
-        if ($model) {
-            $key = $model->getKeyName();
-        }
-
-        return $key;
+        return $model?->getKeyName();
     }
 
     /**
      * @return Model|null
      */
-    public function getModel()
+    public function getModel(): ?Model
     {
         $model = null;
 
@@ -212,7 +221,7 @@ class ModelSaver
     /**
      * @return array
      */
-    protected function getNullableFields()
+    protected function getNullableFields(): array
     {
         $table = $this->getModelTable();
 
@@ -236,21 +245,16 @@ class ModelSaver
     /**
      * @return string|null
      */
-    public function getModelTable()
+    public function getModelTable(): ?string
     {
-        $table = null;
         $model = $this->getModel();
-        if ($model) {
-            $table = $model->getTable();
-        }
-
-        return $table;
+        return $model?->getTable();
     }
 
     /**
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         $table = $this->getModelTable();
 
@@ -258,9 +262,7 @@ class ModelSaver
             return [];
         }
 
-        $fields = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($table);
-
-        return $fields;
+        return $this->model->getConnection()->getSchemaBuilder()->getColumnListing($table);
     }
 
     /**
@@ -356,7 +358,7 @@ class ModelSaver
      * @param  mixed  ...$params
      * @return array
      */
-    protected function call_on(string $name, ...$params)
+    protected function call_on(string $name, ...$params): array
     {
         $events = static::$$name;
         $model = $this->getModel();
@@ -395,7 +397,7 @@ class ModelSaver
      * @param $src
      * @return $this
      */
-    public function setSrc($src)
+    public function setSrc($src): static
     {
         $this->src = $src;
 
@@ -406,9 +408,9 @@ class ModelSaver
      * Create model.
      * @param $data
      * @param $add
-     * @return Model
+     * @return Model|string|null
      */
-    protected function create_model($data, $add)
+    protected function create_model($data, $add): Model|string|null
     {
         $r1 = $this->call_on('on_save', $this->data, $this->model);
         $r2 = $this->call_on('on_create', $this->data, $this->model);
@@ -509,7 +511,7 @@ class ModelSaver
      * @param  array|Arrayable  $data
      * @return Collection
      */
-    public static function doMany($model, $data)
+    public static function doMany($model, array|Arrayable $data): Collection
     {
         $results = collect();
 
@@ -527,10 +529,10 @@ class ModelSaver
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_save($model, callable $call = null)
+    public static function on_save(callable|string $model, callable $call = null): void
     {
         static::on('save', $model, $call);
     }
@@ -540,7 +542,7 @@ class ModelSaver
      * @param $model
      * @param  callable|null  $call
      */
-    public static function on(string $event, $model, callable $call = null)
+    public static function on(string $event, $model, callable $call = null): void
     {
         if (!$call && is_callable($model)) {
             $call = $model;
@@ -558,88 +560,74 @@ class ModelSaver
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_saved($model, callable $call = null)
+    public static function on_saved(callable|string $model, callable $call = null): void
     {
         static::on('saved', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_finish($model, callable $call = null)
+    public static function on_finish(callable|string $model, callable $call = null): void
     {
         static::on('finish', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_create($model, callable $call = null)
+    public static function on_create(callable|string $model, callable $call = null): void
     {
         static::on('create', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_created($model, callable $call = null)
+    public static function on_created(callable|string $model, callable $call = null): void
     {
         static::on('created', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_update($model, callable $call = null)
+    public static function on_update(callable|string $model, callable $call = null): void
     {
         static::on('update', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_updated($model, callable $call = null)
+    public static function on_updated(callable|string $model, callable $call = null): void
     {
         static::on('updated', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_delete(string $model, callable $call = null)
+    public static function on_delete(callable|string $model, callable $call = null): void
     {
         static::on('delete', $model, $call);
     }
 
     /**
-     * @param  string|callable  $model
+     * @param  callable|string  $model
      * @param  callable|null  $call
      */
-    public static function on_deleted(string $model, callable $call = null)
+    public static function on_deleted(callable|string $model, callable $call = null): void
     {
         static::on('deleted', $model, $call);
-    }
-
-    /**
-     * Insert relations when model creating.
-     * @param  array  $data
-     * @return array
-     */
-    protected function insert_relations(array $data)
-    {
-//        foreach ($data as $key => $datum) {
-//
-//        }
-
-        return $data;
     }
 }

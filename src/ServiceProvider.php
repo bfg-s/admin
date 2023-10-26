@@ -2,59 +2,45 @@
 
 namespace Admin;
 
-use Blade;
-use Exception;
-use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
-use Illuminate\Support\Str;
-use Lar\Layout\Layout;
-use Lar\LJS\JaxController;
-use Lar\LJS\JaxExecutor;
+use Admin\BladeDirectives\AlpineStoreBladeDirective;
+use Admin\BladeDirectives\AttributesBladeDirective;
+use Admin\BladeDirectives\SystemCssBladeDirective;
+use Admin\BladeDirectives\SystemJsBladeDirective;
+use Admin\BladeDirectives\SystemJsVariablesBladeDirective;
+use Admin\BladeDirectives\SystemScriptsBladeDirective;
+use Admin\BladeDirectives\SystemStylesBladeDirective;
+use Admin\BladeDirectives\UpdateWithPjaxBladeDirective;
 use Admin\Commands\AdminControllerCommand;
-use Admin\Commands\AdminDbDumpCommand;
 use Admin\Commands\AdminExtensionCommand;
 use Admin\Commands\AdminHelpersCommand;
 use Admin\Commands\AdminInstallCommand;
 use Admin\Commands\AdminUserCommand;
-use Admin\Core\BladeDirectiveAlpineStore;
-use Admin\Exceptions\Handler;
-use Admin\Layouts\AdminAuthLayout;
-use Admin\Layouts\AdminLayout;
+use Admin\Facades\AdminFacade;
 use Admin\Middlewares\Authenticate;
+use Admin\Middlewares\DomMiddleware;
+use Admin\Middlewares\LanguageMiddleware;
 use Admin\Repositories\AdminRepository;
-use Road;
+use Exception;
+use Illuminate\Routing\RouteRegistrar;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 
 class ServiceProvider extends ServiceProviderIlluminate
 {
     /**
      * @var array
      */
-    protected $commands = [
+    protected array $commands = [
         AdminInstallCommand::class,
         AdminControllerCommand::class,
         AdminUserCommand::class,
         AdminExtensionCommand::class,
-        AdminDbDumpCommand::class,
         AdminHelpersCommand::class,
-    ];
-
-    /**
-     * Simple bind in app service provider.
-     * @var array
-     */
-    protected $bind = [
-
-    ];
-
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
-    protected $listen = [
-
     ];
 
     /**
@@ -62,7 +48,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      *
      * @var array
      */
-    protected $routeMiddleware = [
+    protected array $routeMiddleware = [
         'admin-auth' => Authenticate::class,
     ];
 
@@ -70,64 +56,37 @@ class ServiceProvider extends ServiceProviderIlluminate
      * Bootstrap services.
      *
      * @return void
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
-    public function boot()
+    public function boot(): void
     {
-        /**
-         * Register Admin Events.
-         */
-        foreach ($this->listen as $event => $listeners) {
-            foreach (array_unique($listeners) as $listener) {
-                Event::listen($event, $listener);
-            }
-        }
-
         /**
          * Register app routes.
          */
         if (is_file(admin_app_path('routes.php'))) {
-            \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
-                ->web()
-                ->middleware(['admin-auth'])
-                ->lang(config('layout.lang_mode', true))
-                ->layout(config('admin.route.layout'))
-                ->prefix(config('admin.route.prefix'))
-                ->name(config('admin.route.name'))
-                ->group(admin_app_path('routes.php'));
+            $this->makeRouters()->group(admin_app_path('routes.php'));
         }
 
         /**
          * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
-            \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
-                ->web()
-                ->middleware(['admin-auth'])
-                ->lang(config('layout.lang_mode', true))
-                ->layout(config('admin.route.layout'))
-                ->prefix(config('admin.route.prefix'))
-                ->name(config('admin.route.name'))
-                ->group(base_path('routes/admin.php'));
+            $this->makeRouters()->group(base_path('routes/admin.php'));
         }
 
         /**
          * Register Admin basic routes.
          */
-        \Lar\Roads\Facade::domain(config('admin.route.domain', ''))
-            ->web()
-            ->lang(config('layout.lang_mode', true))
-            ->middleware(['admin-auth'])
-            ->prefix(config('admin.route.prefix'))
-            ->name(config('admin.route.name'))
-            ->group(__DIR__.'/routes.php');
+        $this->makeRouters()->group(__DIR__.'/routes.php');
 
         /**
          * Register publishers configs.
          */
         $this->publishes([
             __DIR__.'/../config/admin.php' => config_path('admin.php'),
-        ], 'admin-config');
+        ], ['admin-config', 'laravel-assets']);
 
         /**
          * Register publishers lang.
@@ -166,6 +125,15 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->loadViewsFrom(__DIR__.'/../views', 'admin');
 
+        foreach (AdminFacade::getThemes() as $theme) {
+            if (
+                ($namespace = $theme->getNamespace())
+                && ($directory = $theme->getDirectory())
+            ) {
+                $this->loadViewsFrom($directory, $namespace);
+            }
+        }
+
         if ($this->app->runningInConsole()) {
             /**
              * Run boots.
@@ -184,34 +152,43 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->viewVariables();
 
         /**
-         * Simple bind in service container.
+         * Register Blade directives.
          */
-        foreach ($this->bind as $key => $item) {
-            if (is_numeric($key)) {
-                $key = $item;
-            }
-            $this->app->bind($key, $item);
+        Blade::directive('alpineStore', [AlpineStoreBladeDirective::class, 'directive']);
+        Blade::directive('attributes', [AttributesBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemJs', [SystemJsBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemJsVariables', [SystemJsVariablesBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemCss', [SystemCssBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemScripts', [SystemScriptsBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemStyles', [SystemStylesBladeDirective::class, 'directive']);
+        Blade::directive('updateWithPjax', [UpdateWithPjaxBladeDirective::class, 'directive']);
+
+        /**
+         * Register local respond class
+         */
+        $this->app->instance(Respond::class, Respond::glob());
+    }
+
+    /**
+     * @return RouteRegistrar
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function makeRouters(): \Illuminate\Routing\RouteRegistrar
+    {
+        $route = Route::domain(config('admin.route.domain', ''))
+            ->name(config('admin.route.name'));
+
+        $middlewares = ['web', 'admin-auth', DomMiddleware::class];
+
+        if (config('admin.lang_mode', true)) {
+            $route = $route->prefix(AdminFacade::nowLang() . '/' . config('admin.route.prefix'));
+            $middlewares[] = LanguageMiddleware::class;
+        } else {
+            $route = $route->prefix(config('admin.route.prefix'));
         }
 
-        /**
-         * Run with jax on admin page.
-         */
-        JaxController::on_start(static function () {
-            $ref = request()->server->get('HTTP_REFERER');
-            if ($ref && Str::is(url(config('admin.route.prefix').'*'), $ref)) {
-                Boot::run();
-            }
-        });
-
-        /**
-         * Register Jax namespace.
-         */
-        \Lar\LJS\Facade::jaxNamespace(admin_relative_path('Jax'), admin_app_namespace('Jax'));
-
-        /**
-         * Register AlpineJs Blade directive.
-         */
-        Blade::directive('alpineStore', [BladeDirectiveAlpineStore::class, 'directive']);
+        return $route->middleware($middlewares);
     }
 
     /**
@@ -238,24 +215,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         });
 
         /**
-         * Ljs middlewares for secure
-         */
-        \Lar\LJS\ServiceProvider::$jaxMiddlewares[] = 'admin-auth';
-
-        /**
          * App register provider.
          */
         if (class_exists('App\Providers\AdminServiceProvider')) {
             $this->app->register('App\Providers\AdminServiceProvider');
         }
-
-        /**
-         * Override errors.
-         */
-        $this->app->singleton(
-            ExceptionHandler::class,
-            Handler::class
-        );
 
         /**
          * Merge config from having by default.
@@ -279,33 +243,6 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Setup auth and disc configuration.
          */
         $this->loadAuthAndDiscConfig();
-
-        /**
-         * Register layout.
-         */
-        Layout::registerComponent('admin_layout', AdminLayout::class);
-
-        /**
-         * Register Login layout.
-         */
-        Layout::registerComponent('admin_auth_layout', AdminAuthLayout::class);
-
-        /**
-         * Register jax executors.
-         */
-        $this->registerJax();
-
-        if (
-            config('admin.functional.menu')
-            || config('admin.functional.settings')
-        ) {
-
-            $sqlite = config('admin.connections.admin-sqlite.database');
-
-            if (!is_file($sqlite)) {
-                file_put_contents($sqlite, '');
-            }
-        }
     }
 
     /**
@@ -330,13 +267,5 @@ class ServiceProvider extends ServiceProviderIlluminate
         config(Arr::dot(config('admin.auth', []), 'auth.'));
         config(Arr::dot(config('admin.disks', []), 'filesystems.disks.'));
         config(Arr::dot(config('admin.connections', []), 'database.connections.'));
-    }
-
-    /**
-     * Register jax executors.
-     */
-    protected function registerJax()
-    {
-        JaxExecutor::addNamespace(__DIR__.'/Jax', 'Admin\\Jax');
     }
 }

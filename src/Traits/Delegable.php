@@ -10,12 +10,16 @@ trait Delegable
     /**
      * @return static|Delegate
      */
-    public static function new()
+    public static function new(): Delegate|static
     {
         return new Delegate(static::class);
     }
 
-    public function newExplainForce(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return mixed
+     */
+    public function newExplainForce(...$delegates): mixed
     {
         return $this->explainForce(Explanation::new($delegates));
     }
@@ -24,7 +28,7 @@ trait Delegable
      * @param  Explanation|callable  $explanation
      * @return $this
      */
-    public function explainForce($explanation)
+    public function explainForce($explanation): static
     {
         if (is_callable($explanation)) {
             $explanation = call_user_func($explanation);
@@ -36,12 +40,20 @@ trait Delegable
         return $this;
     }
 
-    public function newExplain(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return mixed
+     */
+    public function newExplain(...$delegates): mixed
     {
         return $this->explain(Explanation::new($delegates));
     }
 
-    public function explain(Explanation $explanation)
+    /**
+     * @param  Explanation  $explanation
+     * @return $this
+     */
+    public function explain(Explanation $explanation): static
     {
         $explanation->applyFor(static::class, $this);
 

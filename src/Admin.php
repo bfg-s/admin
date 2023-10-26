@@ -2,48 +2,71 @@
 
 namespace Admin;
 
+use Admin\Themes\AdminLteTheme;
+use Admin\Themes\PublishedAdminLteTheme;
+use Admin\Themes\Theme;
 use Auth;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Admin\Components\Vue\ModalCollection;
 use Admin\Models\AdminUser;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Admin
 {
     /**
      * @var string
      */
-    public static $version = '5.0.0';
+    public static string $version = '5.0.0';
+
+    /**
+     * @var Theme[]
+     */
+    public static array $themes = [
+        'admin-lte' => AdminLteTheme::class,
+        'published-admin-lte' => PublishedAdminLteTheme::class,
+    ];
 
     /**
      * @var ExtendProvider[]
      */
-    public static $nav_extensions = [];
+    public static array $nav_extensions = [];
 
     /**
      * @var ExtendProvider[]
      */
-    public static $installed_extensions = [];
+    public static array $installed_extensions = [];
 
     /**
      * @var ExtendProvider[]
      */
-    public static $not_installed_extensions = [];
+    public static array $not_installed_extensions = [];
 
     /**
      * @var bool[]
      */
-    public static $extensions;
+    public static array $extensions = [];
 
     /**
      * @var bool
      */
-    public static $echo = false;
+    public static bool $echo = false;
+
+    /**
+     * @var string|null
+     */
+    public static ?string $lang_select = null;
+
+    /**
+     * @var string
+     */
+    public string $theme = 'admin-lte';
 
     /**
      * @var array
      */
-    protected $content_segments = [
+    protected array $content_segments = [
         'app_end_wrapper' => [],
         'prep_end_wrapper' => [
             //['component' => Navigator::class, 'params' => []],
@@ -54,17 +77,57 @@ class Admin
     ];
 
     /**
-     * @return AdminUser|Authenticatable|Admin
+     * Configure instance in constructor
      */
-    public function user()
+    public function __construct()
+    {
+        $this->theme = config('admin.theme', 'admin-lte');
+    }
+
+    /**
+     * Add theme using the "register" method in your service provider.
+     * @param  string  $class
+     * @return void
+     */
+    public function addTheme(string $class): void
+    {
+        $obj = new $class;
+
+        if ($obj instanceof Theme) {
+
+            static::$themes[$obj->getSlug()] = $obj;
+        }
+    }
+
+    /**
+     * @return Theme|null
+     */
+    public function getTheme(): ?Theme
+    {
+        $class = static::$themes[$this->theme] ?? static::$themes['admin-lte'];
+        return new $class();
+    }
+
+    /**
+     * @return Theme[]|string[]
+     */
+    public function getThemes(): array
+    {
+        return array_map(fn (string $class) => new $class, static::$themes);
+    }
+
+    /**
+     * @return AdminUser|Authenticatable|Admin|null
+     */
+    public function user(): Admin|AdminUser|Authenticatable|null
     {
         return Auth::guard('admin')->user();
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function guest()
+    public function guest(): bool
     {
         return Auth::guard('admin')->guest();
     }
@@ -72,7 +135,7 @@ class Admin
     /**
      * @return string
      */
-    public function version()
+    public function version(): string
     {
         if (class_exists(\Composer\InstalledVersions::class)) {
             return \Composer\InstalledVersions::getPrettyVersion('bfg/admin');
@@ -91,64 +154,10 @@ class Admin
     }
 
     /**
-     * @param  string  $component
-     * @param  array  $params
-     * @param  bool  $prepend
-     * @return $this
-     */
-    public function toWrapper(string $component, array $params = [], bool $prepend = false)
-    {
-        $segment = $prepend ? 'prep_end_wrapper' : 'app_end_wrapper';
-
-        return $this->toSegment($segment, $component, $params);
-    }
-
-    /**
-     * @param  string  $segment
-     * @param  string  $component
-     * @param  array  $params
-     * @return $this
-     */
-    public function toSegment(string $segment, string $component, array $params = [])
-    {
-        if (isset($this->content_segments[$segment])) {
-            $this->content_segments[$segment][] = ['component' => $component, 'params' => $params];
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $component
-     * @param  array  $params
-     * @param  bool  $prepend
-     * @return $this
-     */
-    public function toContent(string $component, array $params = [], bool $prepend = false)
-    {
-        $segment = $prepend ? 'prep_end_content' : 'app_end_content';
-
-        return $this->toSegment($segment, $component, $params);
-    }
-
-    /**
-     * @param  string  $segment
-     * @return array
-     */
-    public function getSegments(string $segment)
-    {
-        if (isset($this->content_segments[$segment])) {
-            return $this->content_segments[$segment];
-        }
-
-        return [];
-    }
-
-    /**
      * @param  ExtendProvider  $provider
-     * @throws Exception
+     * @return bool
      */
-    public function registerExtension(ExtendProvider $provider)
+    public function registerExtension(ExtendProvider $provider): bool
     {
         if (!$provider::$name) {
             return false;
@@ -183,7 +192,7 @@ class Admin
      * @param  string  $name
      * @return bool|ExtendProvider
      */
-    public function extension(string $name)
+    public function extension(string $name): bool|ExtendProvider
     {
         if (isset(self::$installed_extensions[$name])) {
             return self::$installed_extensions[$name];
@@ -195,7 +204,7 @@ class Admin
     /**
      * @return ExtendProvider[]
      */
-    public function extensions()
+    public function extensions(): array
     {
         return self::$installed_extensions;
     }
@@ -204,7 +213,7 @@ class Admin
      * @param  string  $name
      * @return ExtendProvider|null
      */
-    public function getExtension(string $name)
+    public function getExtension(string $name): ?ExtendProvider
     {
         if (isset(self::$installed_extensions[$name])) {
             return self::$installed_extensions[$name];
@@ -218,7 +227,7 @@ class Admin
     /**
      * @return string[]
      */
-    public function extensionProviders()
+    public function extensionProviders(): array
     {
         return array_flip(
             array_map(
@@ -229,5 +238,37 @@ class Admin
                 )
             )
         );
+    }
+
+    /**
+     * Get request lang.
+     *
+     * @return array|string|null
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function nowLang(): array|string|null
+    {
+        $select = self::$lang_select;
+
+        if (!$select && session()->has('lang')) {
+            $lang = session()->get('lang');
+
+            if (in_array($lang, config('layout.languages'))) {
+                $select = $lang;
+            }
+        } elseif (!$select && request()->cookie('lang')) {
+            $lang = request()->cookie('lang');
+
+            if (in_array($lang, config('layout.languages'))) {
+                $select = $lang;
+            }
+        }
+
+        if (!$select) {
+            $select = config('app.locale');
+        }
+
+        return $select;
     }
 }

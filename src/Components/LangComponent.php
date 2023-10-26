@@ -7,9 +7,14 @@ use Lar\Tagable\Core\Extension\Content;
 class LangComponent extends Component
 {
     /**
+     * @var string
+     */
+    protected string $view = 'content-only';
+
+    /**
      * @var array|null
      */
-    protected $lang_list = null;
+    protected ?array $lang_list = null;
 
     /**
      * Lang constructor.
@@ -22,31 +27,39 @@ class LangComponent extends Component
         parent::__construct();
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
-        $inner = [];
+        //$inner = [];
 
-        foreach ($this->content as $inner_input) {
-            $inner_input = $inner_input->getOriginalValue();
+        foreach ($this->contents as $key => $inner_input) {
+            //$inner_input = $inner_input->getOriginalValue();
 
-            if (is_object($inner_input) && $inner_input instanceof FormGroupComponent) {
-                $inn = [];
-                $inner_input->unregister();
-                foreach (array_values($this->lang_list ?: config('layout.languages', [])) as $lang) {
+            if ($inner_input instanceof FormGroupComponent) {
+
+                foreach ($this->lang_list ?: config('layout.languages', []) as $lang) {
                     $input = clone $inner_input;
                     $input->set_name($input->get_name()."[{$lang}]");
                     $input->set_path($input->get_path().".{$lang}");
                     $input->set_id($input->get_id()."_{$lang}");
                     $input->set_title($input->get_title().' ['.strtoupper($lang).']');
-                    $inn[] = $input->render();
+                    $this->appEnd(
+                        $input->render()
+                    );
                 }
 
-                $inner[] = new Content($inn[array_key_last($inn)], $this);
+                unset($this->contents[$key]);
+
+                //$inner[] = new Content($inn[array_key_last($inn)], $this);
+                //$this->appEnd($inn[array_key_last($inn)]);
             } else {
-                $inner[] = new Content($inner_input, $this);
+                //$inner[] = new Content($inner_input, $this);
+                $this->appEnd($inner_input);
             }
         }
 
-        $this->content->setItems($inner);
+        //$this->content->setItems($inner);
     }
 }

@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Lar\Layout\Respond;
+use Admin\Respond;
 use Admin\Delegates\Card;
 use Admin\Delegates\Form;
 use Admin\Delegates\ModelInfoTable;
@@ -118,9 +118,9 @@ trait DefaultControllerResourceMethodsTrait
         $updated = $this->requestToModel($save);
 
         if ($updated) {
-            respond()->put('alert::success', __('admin.saved_successfully'));
+            Respond::glob()->put('alert::success', __('admin.saved_successfully'));
         } else {
-            respond()->put('alert::error', __('admin.unknown_error'));
+            Respond::glob()->put('alert::error', __('admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -151,9 +151,9 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save);
 
         if ($stored) {
-            respond()->put('alert::success', __('admin.successfully_created'));
+            Respond::glob()->put('alert::success', __('admin.successfully_created'));
         } else {
-            respond()->put('alert::error', __('admin.unknown_error'));
+            Respond::glob()->put('alert::error', __('admin.unknown_error'));
         }
 
         return $this->returnTo();
@@ -182,33 +182,33 @@ trait DefaultControllerResourceMethodsTrait
         if ($model) {
             try {
                 if ($restore && $model->restore()) {
-                    respond()->put('alert::success', __('admin.successfully_restored'));
+                    Respond::glob()->put('alert::success', __('admin.successfully_restored'));
 
-                    respond()->reload();
+                    Respond::glob()->reload();
                 } elseif ($force && $model->forceDelete()) {
-                    respond()->put('alert::success', __('admin.successfully_deleted'));
+                    Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
 
-                    respond()->reload();
+                    Respond::glob()->reload();
                 } elseif ($model->delete()) {
-                    respond()->put('alert::success', __('admin.successfully_deleted'));
+                    Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
 
-                    respond()->reload();
+                    Respond::glob()->reload();
                 } else {
-                    respond()->put('alert::error', __('admin.unknown_error'));
+                    Respond::glob()->put('alert::error', __('admin.unknown_error'));
                 }
             } catch (Exception $exception) {
                 if (!App::isLocal()) {
-                    respond()->put('alert::error', __('admin.unknown_error'));
+                    Respond::glob()->put('alert::error', __('admin.unknown_error'));
                 } else {
-                    respond()->put('alert::error', $exception->getMessage());
+                    Respond::glob()->put('alert::error', $exception->getMessage());
                 }
             }
         } else {
-            respond()->put('alert::error', __('admin.model_not_found'));
+            Respond::glob()->put('alert::error', __('admin.model_not_found'));
         }
 
         return request('_after', 'index') == 'index'
-            ? respond()->put('ljs.$nav.goTo', admin_repo()->now->getLinkIndex())
-            : respond()->reload();
+            ? Respond::glob()->put('ljs.$nav.goTo', admin_repo()->now->getLinkIndex())
+            : Respond::glob()->reload();
     }
 }

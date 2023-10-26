@@ -5,21 +5,46 @@ namespace Admin\Components;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Admin\Components\Cores\ChartJsComponentCore;
+use Admin\Components\Builders\ChartJsComponentBuilder;
 use Admin\Delegates\SearchForm;
 use Throwable;
 
 class ChartJsComponent extends Component
 {
-    protected static $count = 0;
     /**
-     * @var ChartJsComponentCore
+     * @var int
      */
-    public $builder;
-    protected $dataBuilder;
-    protected $size = 100;
-    protected $type = 'line';
-    protected $datasets = [];
+    protected static int $count = 0;
+
+    /**
+     * @var ChartJsComponentBuilder
+     */
+    public ChartJsComponentBuilder $builder;
+
+    /**
+     * @var mixed
+     */
+    protected mixed $dataBuilder = null;
+
+    /**
+     * @var int
+     */
+    protected int $size = 100;
+
+    /**
+     * @var string
+     */
+    protected string $type = 'line';
+
+    /**
+     * @var array
+     */
+    protected array $datasets = [];
+
+    /**
+     * @var string
+     */
+    protected string $view = 'chartjs';
 
     /**
      * @param  array  $delegates
@@ -31,10 +56,14 @@ class ChartJsComponent extends Component
 
         parent::__construct(...$delegates);
 
-        $this->builder = new ChartJsComponentCore();
+        $this->builder = new ChartJsComponentBuilder();
     }
 
-    public function hasSearch(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function hasSearch(...$delegates): static
     {
         /** @var SearchForm $form */
         $form = $this->div()->search_form($delegates);
@@ -44,26 +73,46 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    public function size(int $size)
+    /**
+     * @param  int  $size
+     * @return $this
+     */
+    public function size(int $size): static
     {
         $this->size = $size;
 
         return $this;
     }
 
-    public function type(int $type)
+    /**
+     * @param  int  $type
+     * @return $this
+     */
+    public function type(int $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function setDefaultDataBetween(string $column, $from, $to)
+    /**
+     * @param  string  $column
+     * @param $from
+     * @param $to
+     * @return ChartJsComponent|$this
+     */
+    public function setDefaultDataBetween(string $column, $from, $to): ChartJsComponent|static
     {
         return !request()->has('q') ? $this->setDataBetween($column, $from, $to) : $this;
     }
 
-    public function setDataBetween(string $column, $from, $to)
+    /**
+     * @param  string  $column
+     * @param $from
+     * @param $to
+     * @return $this
+     */
+    public function setDataBetween(string $column, $from, $to): static
     {
         return $this->prepareData(static function ($model) use ($column, $from, $to) {
             return $model->whereBetween($column, [$from, $to]);
@@ -74,7 +123,7 @@ class ChartJsComponent extends Component
      * @param  callable|null  $callback
      * @return $this
      */
-    public function prepareData(callable $callback = null): self
+    public function prepareData(callable $callback = null): static
     {
         if (!$this->dataBuilder) {
             $this->dataBuilder = $this->model;
@@ -89,16 +138,26 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    public function groupDataByAt(string $atColumn, string $format = 'Y.m.d')
+    /**
+     * @param  string  $atColumn
+     * @param  string  $format
+     * @return $this
+     */
+    public function groupDataByAt(string $atColumn, string $format = 'Y.m.d'): static
     {
         return $this->prepareData(static function ($model) use ($atColumn, $format) {
-            return $model->get()->groupBy(static function (Model $model) use ($atColumn, $format) {
+            return ($model instanceof Collection ? $model : $model->get())
+                ->groupBy(static function (Model $model) use ($atColumn, $format) {
                 return ($model->{$atColumn} instanceof Carbon ? $model->{$atColumn} : Carbon::parse($model->{$atColumn}))->format($format);
             });
         });
     }
 
-    public function groupDataBy(string $column)
+    /**
+     * @param  string  $column
+     * @return $this
+     */
+    public function groupDataBy(string $column): static
     {
         return $this->prepareData(static function ($model) use ($column) {
             return $model->get()->groupBy(static function (Model $model) use ($column) {
@@ -107,14 +166,24 @@ class ChartJsComponent extends Component
         });
     }
 
-    public function eachPointCount(string $title)
+    /**
+     * @param  string  $title
+     * @return $this
+     */
+    public function eachPointCount(string $title): static
     {
         return $this->eachPoint($title, static function (Collection $collection) {
             return $collection->count();
         });
     }
 
-    public function eachPoint(string $title, $callback = null, $default = 0)
+    /**
+     * @param  string  $title
+     * @param  mixed|null  $callback
+     * @param mixed $default
+     * @return $this
+     */
+    public function eachPoint(string $title, mixed $callback = null, mixed $default = 0): static
     {
         $this->datasets[] = [
             'title' => $title,
@@ -126,14 +195,22 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    public function eachPointSum(string $title, $callback = null)
+    /**
+     * @param  string  $title
+     * @param $callback
+     * @return $this
+     */
+    public function eachPointSum(string $title, $callback = null): static
     {
         return $this->eachPoint($title, static function (Collection $collection) use ($callback) {
             return $collection->sum($callback);
         });
     }
 
-    public function miniChart()
+    /**
+     * @return $this
+     */
+    public function miniChart(): static
     {
         $this->builder
             ->type($this->type)
@@ -159,6 +236,12 @@ class ChartJsComponent extends Component
         return $this;
     }
 
+    /**
+     * @param  string|array  $title
+     * @param  array  $data
+     * @param  array  $color
+     * @return $this
+     */
     public function customChart(string|array $title, array $data, array $color = []): static
     {
         $isDataList = array_is_list($data);
@@ -194,7 +277,12 @@ class ChartJsComponent extends Component
         return $this;
     }
 
-    protected function randColor(int $min = 1, $max = 255)
+    /**
+     * @param  int  $min
+     * @param  int  $max
+     * @return array
+     */
+    protected function randColor(int $min = 1, int $max = 255): array
     {
         $r1 = rand($min, $max);
         $r2 = rand($min, $max);
@@ -203,16 +291,29 @@ class ChartJsComponent extends Component
         return [$r1, $r2, $r3];
     }
 
-    protected function renderColor($c, $opacity)
+    /**
+     * @param $c
+     * @param $opacity
+     * @return string
+     */
+    protected function renderColor($c, $opacity): string
     {
         return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
     }
 
-    protected function mount()
+    /**
+     * @return array
+     */
+    protected function viewData(): array
     {
-        $this->text(
-            $this->builder->render()
-        );
-        $this->callRenderEvents();
+        return $this->builder->getParams();
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+
     }
 }

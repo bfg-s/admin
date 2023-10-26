@@ -5,6 +5,7 @@ namespace Admin;
 use Broadcast;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Routing\Router;
 use Lar\Roads\Roads;
 use Admin\Core\NavGroup;
 use Admin\Core\NavigatorExtensions;
@@ -25,9 +26,9 @@ class Navigate implements NavigateInterface
     public static $items = [];
 
     /**
-     * @var Roads
+     * @var Router
      */
-    public static $roads;
+    public static Router $router;
 
     /**
      * @var ExtendProvider
@@ -41,7 +42,7 @@ class Navigate implements NavigateInterface
     public static function do(...$calls)
     {
         foreach ($calls as $call) {
-            call_user_func($call, \Navigate::instance(), static::$roads);
+            call_user_func($call, \Navigate::instance(), static::$router);
         }
 
         return \Navigate::instance();
@@ -105,7 +106,7 @@ class Navigate implements NavigateInterface
         }
 
         if (is_embedded_call($cb)) {
-            call_user_func($cb, $item, static::$roads);
+            call_user_func($cb, $item, static::$router);
         }
 
         return $item;

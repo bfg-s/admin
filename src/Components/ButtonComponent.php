@@ -10,24 +10,55 @@ class ButtonComponent extends Component
     use TypesTrait;
     use FontAwesome;
 
-    protected $icon;
-
-    protected $title;
-
-    protected $class = 'btn btn-xs';
+    /**
+     * @var string|null
+     */
+    protected ?string $icon = null;
 
     /**
-     * Tag element.
-     *
+     * @var null|string
+     */
+    protected ?string $title = null;
+
+    /**
      * @var string
      */
-    protected $element = 'button';
+    protected string $view = 'button';
 
-    public function __construct(...$delegates)
+    /**
+     * @var string
+     */
+    protected string $typeAttribute = 'button';
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
-        parent::__construct($delegates);
 
-        $this->attr('type', 'button');
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'typeAttribute' => $this->typeAttribute,
+            'type' => $this->type,
+            'icon' => $this->icon,
+            'title' => $this->title,
+        ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function setType(string $type): static
+    {
+        $this->typeAttribute = $type;
+
+        return $this;
     }
 
     /**
@@ -37,12 +68,12 @@ class ButtonComponent extends Component
      */
     public function modal(string $modalName = "modal", array $query = []): static
     {
-        $this->on_click(json_encode([
+        $this->on_click([
             'modal:put' => [
                 $modalName,
                 $query,
             ],
-        ]));
+        ]);
 
         return $this;
     }
@@ -50,7 +81,7 @@ class ButtonComponent extends Component
     /**
      * @return $this
      */
-    public function modalDestroy()
+    public function modalDestroy(): static
     {
         if (request()->_modal_id) {
             $this->on_click('modal:destroy', request()->_modal_id);
@@ -62,7 +93,7 @@ class ButtonComponent extends Component
     /**
      * @return $this
      */
-    public function modalHide()
+    public function modalHide(): static
     {
         if (request()->_modal_id) {
             $this->on_click('modal:hide', request()->_modal_id);
@@ -74,7 +105,7 @@ class ButtonComponent extends Component
     /**
      * @return $this
      */
-    public function modalSubmit(string $after = "destroy")
+    public function modalSubmit(string $after = "destroy"): static
     {
         if (request()->_modal_id) {
             $this->on_click('modal:submit', [request()->_modal_id, $after]);
@@ -87,7 +118,7 @@ class ButtonComponent extends Component
      * @param  string|null  $method
      * @return $this
      */
-    public function queryMethod(string $method = null)
+    public function queryMethod(string $method = null): static
     {
         if ($method) {
             $this->query(['method' => $method]);
@@ -103,9 +134,9 @@ class ButtonComponent extends Component
      * @param  array  $unset
      * @return $this
      */
-    public function query(array $params = [], array $unset = [])
+    public function query(array $params = [], array $unset = []): static
     {
-        $this->on_click('doc::location', urlWithGet($params, $unset));
+        $this->on_click('dlocation', urlWithGet($params, $unset));
 
         return $this;
     }
@@ -113,19 +144,19 @@ class ButtonComponent extends Component
     /**
      * @param  array  $unset
      * @param  array  $params
-     * @return $this|m.\Admin\Components\ButtonComponent.query
+     * @return $this
      */
-    public function unsetQuery(array $unset = [], array $params = [])
+    public function unsetQuery(array $unset = [], array $params = []): static
     {
         return $this->query($params, $unset);
     }
 
     /**
      * @param  string|array  $name
-     * @param  int  $value
+     * @param  mixed  $value
      * @return $this
      */
-    public function switchQuery(string|array $name, $value = 1)
+    public function switchQuery(string|array $name, mixed $value = 1): static
     {
         if (request()->has($name)) {
             $this->query([], (array) $name);
@@ -136,19 +167,34 @@ class ButtonComponent extends Component
         return $this;
     }
 
-    public function setQuery(string|array $name, $value = 1)
+    /**
+     * @param  string|array  $name
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function setQuery(string|array $name, mixed $value = 1): static
     {
         $this->query(array_fill_keys((array) $name, $value));
+
         return $this;
     }
 
-    public function forgetQuery(string|array $name)
+    /**
+     * @param  string|array  $name
+     * @return $this
+     */
+    public function forgetQuery(string|array $name): static
     {
         $this->query([], (array) $name);
+
         return $this;
     }
 
-    public function iconTitle(array $data)
+    /**
+     * @param  array  $data
+     * @return $this
+     */
+    public function iconTitle(array $data): static
     {
         $this->icon($data[0] ?? '');
         $this->title($data[1] ?? '');
@@ -156,33 +202,25 @@ class ButtonComponent extends Component
         return $this;
     }
 
-    public function icon(string $name)
+    /**
+     * @param  string  $name
+     * @return $this
+     */
+    public function icon(string $name): static
     {
         $this->icon = $name;
 
         return $this;
     }
 
-    public function title(string $title)
+    /**
+     * @param  string  $title
+     * @return $this
+     */
+    public function title(string $title): static
     {
         $this->title = $title;
 
         return $this;
-    }
-
-    protected function mount()
-    {
-        //$this->addClass("btn-tool");
-        $this->addClass("btn-outline-$this->type");
-        if ($this->icon) {
-            $this->i([$this->icon])->_text($this->title ? ':space' : '');
-        }
-        if ($this->title && $this->icon) {
-            $this->text("<span class='d-none d-sm-inline'>{$this->title}</span>");
-        } else {
-            if ($this->title) {
-                $this->text($this->title);
-            }
-        }
     }
 }

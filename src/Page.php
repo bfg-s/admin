@@ -2,6 +2,14 @@
 
 namespace Admin;
 
+use Admin\Components\CardComponent;
+use Admin\Components\PageComponents;
+use Admin\Components\Component;
+use Admin\Components\SearchFormComponent;
+use Admin\Controllers\Controller;
+use Admin\Core\Container;
+use Admin\Core\MenuItem;
+use Admin\Traits\Delegable;
 use BadMethodCallException;
 use Closure;
 use Exception;
@@ -10,64 +18,82 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
-use Lar\Layout\Tags\DIV;
-use Admin\Components\CardComponent;
-use Admin\Components\Component;
-use Admin\Components\SearchFormComponent;
-use Admin\Controllers\Controller;
-use Admin\Core\Container;
-use Admin\Core\MenuItem;
-use Admin\Traits\Delegable;
-use Admin\Traits\Macroable;
 use Throwable;
 
 /**
  * @template CurrentModel
- * @macro_return Admin\Page
- * @methods Admin\Controllers\Controller::$explanation_list (...$delegates) Admin\Page
- * @mixin PageMacroList
- * @mixin PageMethods
+ * @mixin PageComponents
  */
 class Page extends Container
 {
-    use Macroable;
     use Delegable;
 
     /**
      * Has models on process.
      * @var array
      */
-    protected static $models = [];
+    protected static array $models = [];
+
+    /**
+     * @var MenuItem|null
+     */
     public ?MenuItem $menu;
+
+    /**
+     * @var Collection|MenuItem[]|mixed|null
+     */
     public ?Collection $menus = null;
+
+    /**
+     * @var Controller|mixed|null
+     */
     public ?Controller $controller = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $controllerClassName = null;
+
+    /**
+     * @var string|mixed|null
+     */
     public ?string $resource_type = null;
+
     /**
      * @var array
      */
-    protected $classes = [];
+    protected array $classes = [];
+
     /**
      * @var Explanation[]
      */
-    protected $explanations = [];
+    protected array $explanations = [];
+
     /**
      * @var Router
      */
-    protected $router;
+    protected Router $router;
+
     /**
      * The last content component.
      * @var string
      */
-    protected $content;
+    protected string $content;
+
     /**
      * @var Model|null
      */
-    protected $model = null;
+    protected ?Model $model = null;
+
     /**
      * @var string|null
      */
-    protected $model_class = null;
+    protected ?string $model_class = null;
+
+    /**
+     * @var mixed|array|null
+     */
+    protected mixed $firstExplanation = null;
 
     /**
      * Sheet constructor.
@@ -79,17 +105,15 @@ class Page extends Container
     ) {
         parent::__construct(null);
         $this->router = $router;
-        $this->content = DIV::class;
         $this->menus = admin_repo()->menuList;
         $this->menu = admin_repo()->now;
         $this->resource_type = admin_repo()->type;
         $this->model(admin_repo()->modelNow);
-        $this->registerClass($this->component);
         if ($this->router->current()) {
             $this->controller = $this->router->current()->controller;
             $this->controllerClassName = get_class($this->controller);
-            if ($this->controller && method_exists($this->controller, 'explanation')) {
-                $this->explanation([$this->controller, 'explanation']);
+            if ($this->controller && method_exists($this->controller, 'explanationForFirstCard')) {
+                $this->firstExplanation = [$this->controller, 'explanationForFirstCard'];
             }
         }
     }
@@ -125,7 +149,12 @@ class Page extends Container
         return $class;
     }
 
-    protected function applyExplanations(string $class, object $instance)
+    /**
+     * @param  string  $class
+     * @param  object  $instance
+     * @return void
+     */
+    protected function applyExplanations(string $class, object $instance): void
     {
         foreach ($this->explanations as $key => $explanation) {
             $explanation->applyFor($class, $instance);
@@ -136,10 +165,10 @@ class Page extends Container
     }
 
     /**
-     * @param  Explanation|callable  $extend
+     * @param  callable|Explanation  $extend
      * @return static
      */
-    public function explanation($extend): self
+    public function explanation(callable|Explanation $extend): self
     {
         if (is_callable($extend)) {
             $extend = call_user_func($extend);
@@ -151,7 +180,10 @@ class Page extends Container
         return $this;
     }
 
-    public function menu()
+    /**
+     * @return MenuItem|null
+     */
+    public function menu(): ?MenuItem
     {
         $model = $this->menu->getModelClass();
         if ($model && $this->model_class != $model) {
@@ -161,15 +193,20 @@ class Page extends Container
         return $this->menu;
     }
 
-    public function findModelMenu(string $model)
+    /**
+     * @param  string  $model
+     * @return mixed
+     */
+    public function findModelMenu(string $model): mixed
     {
         return $this->menus->where('model_class', $model)->first();
     }
 
     /**
-     * @return false|mixed|string|null
+     * @param  null  $model
+     * @return string
      */
-    public function getModelName($model = null)
+    public function getModelName($model = null): string
     {
         $class = null;
         $model = $model ?: $this->model;
@@ -199,17 +236,15 @@ class Page extends Container
         return $return.$prep;
     }
 
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
     public function next(...$delegates): static
     {
-        $this->content = DIV::class;
-
-        $this->forgetClass(CardComponent::class);
-
         $this->explanation(
             Explanation::new($delegates)
         );
-
-        $this->registerClass($this->component);
 
         return $this;
     }
@@ -218,7 +253,7 @@ class Page extends Container
      * @param  string  $class
      * @return $this
      */
-    public function forgetClass(string $class)
+    public function forgetClass(string $class): static
     {
         if ($this->hasClass($class)) {
             unset($this->classes[$class]);
@@ -240,6 +275,7 @@ class Page extends Container
      * @param  callable|null  $callback
      * @param  object|null  $registerBefore
      * @return mixed
+     * @throws Throwable
      */
     public function callCallBack(callable $callback = null, object $registerBefore = null): mixed
     {
@@ -263,10 +299,23 @@ class Page extends Container
      */
     public function __call($name, $arguments)
     {
-        if (Controller::hasExtend($name) && !static::hasMacro($name)) {
-            $this->registerClass(
-                $this->getContent()->{$name}(...$arguments) //->addClass('col-12 p-0')
-            );
+        if (isset(Component::$components[$name])) {
+
+            $component = Component::$components[$name];
+
+            $component = new $component(...$arguments);
+
+            if (!$component instanceof Component) {
+                throw new Exception('Component is not admin part');
+            }
+
+            if ($this->firstExplanation && $name == 'card') {
+                $component->explain(call_user_func($this->firstExplanation));
+                $this->firstExplanation = null;
+            }
+
+            $this->contents[] = $component;
+
         } elseif (str_ends_with($name, '_by_default')) {
             $name = str_replace('_by_default', '', $name);
             if (!request()->has('method') || request('method') == $name) {
@@ -301,7 +350,7 @@ class Page extends Container
     /**
      * @return Component|string|null
      */
-    public function getContent()
+    public function getContent(): Component|string|null
     {
         return $this->getClass('content');
     }
@@ -311,21 +360,39 @@ class Page extends Container
      * @template RegisteredDefaultObject
      * @param  RegisteredObject|string  $class
      * @param  RegisteredDefaultObject|null  $default
-     * @return mixed|null|RegisteredObject|RegisteredDefaultObject
+     * @return mixed|RegisteredObject|RegisteredDefaultObject
      */
-    public function getClass(string $class, mixed $default = null)
+    public function getClass(string $class, mixed $default = null): mixed
     {
         $class = $class === 'content' ? $this->content : $class;
 
         return $this->classes[$class] ?? $default;
     }
 
-    protected function explainForClasses(array $delegates = [])
+    /**
+     * @param  array  $delegates
+     * @return $this
+     */
+    protected function explainForClasses(array $delegates = []): static
     {
         foreach ($this->classes as $className => $class) {
             Explanation::new($delegates)->applyFor($className, $class);
         }
 
         return $this;
+    }
+
+    /**
+     * @return Closure
+     */
+    public function withTools(): Closure
+    {
+        return function ($test = null) {
+            if ($this->hasClass(CardComponent::class)) {
+                $this->getClass(CardComponent::class)->defaultTools($test);
+            }
+
+            return $this;
+        };
     }
 }

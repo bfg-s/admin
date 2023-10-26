@@ -10,29 +10,29 @@ trait FieldMassControlTrait
     /**
      * @var bool
      */
-    protected $vertical = false;
+    protected bool $vertical = false;
 
     /**
      * @var bool
      */
-    protected $reversed = false;
+    protected bool $reversed = false;
 
     /**
      * @var bool
      */
-    protected $set = true;
+    protected bool $set = true;
 
     /**
      * @var int|null
      */
-    protected $label_width;
+    protected ?int $label_width = 2;
 
     /**
      * @param $name
      * @param  array  $arguments
      * @return bool|FormGroupComponent|mixed
      */
-    public static function static_call_group($name, array $arguments)
+    public static function static_call_group($name, array $arguments): mixed
     {
         return (new FieldComponent())->{$name}(...$arguments);
     }
@@ -40,7 +40,7 @@ trait FieldMassControlTrait
     /**
      * @return $this
      */
-    public function vertical()
+    public function vertical(): static
     {
         $this->vertical = true;
 
@@ -50,7 +50,7 @@ trait FieldMassControlTrait
     /**
      * @return $this
      */
-    public function horizontal()
+    public function horizontal(): static
     {
         $this->vertical = false;
 
@@ -61,7 +61,7 @@ trait FieldMassControlTrait
      * @param $condition
      * @return $this
      */
-    public function if($condition)
+    public function if($condition): static
     {
         $this->set = $condition;
 
@@ -71,7 +71,7 @@ trait FieldMassControlTrait
     /**
      * @return $this
      */
-    public function reversed()
+    public function reversed(): static
     {
         $this->reversed = true;
 
@@ -82,7 +82,7 @@ trait FieldMassControlTrait
      * @param  int  $width
      * @return $this
      */
-    public function label_width(int $width)
+    public function label_width(int $width): static
     {
         $this->label_width = $width;
 
@@ -94,7 +94,7 @@ trait FieldMassControlTrait
      * @param  array  $arguments
      * @return bool|FormGroupComponent|mixed
      */
-    protected function call_group($name, array $arguments)
+    protected function call_group($name, array $arguments): mixed
     {
         if (isset(static::$inputs[$name])) {
             $class = static::$inputs[$name];

@@ -2,52 +2,48 @@
 
 namespace Admin\Core;
 
-use Closure;
+use Admin\Components\Component;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\DIV;
 use Admin\Interfaces\SegmentContainerInterface;
-use Admin\Traits\Eventable;
 use Admin\Traits\FontAwesome;
-use Admin\Traits\Piplineble;
+use Illuminate\View\View;
 use Throwable;
 
 abstract class Container implements SegmentContainerInterface
 {
     use FontAwesome;
-    use Eventable;
-    use Piplineble;
     use Conditionable;
 
     /**
-     * @var Component
+     * @var Component|null
      */
-    public $component;
+    public ?Component $component = null;
+
     /**
      * @var array
      */
     public array $storeList = [];
-    /**
-     * @var string
-     */
-    protected $layout;
-    /**
-     * @var string
-     */
-    protected $content_yield = 'content';
-    /**
-     * @var null
-     */
-    protected $page_title = [];
+
     /**
      * @var array
      */
-    protected $breadcrumb = [];
+    protected array $page_title = [];
+
     /**
-     * @var Closure
+     * @var array
+     */
+    protected array $breadcrumb = [];
+
+    /**
+     * @var callable
      */
     private $warp;
+
+    /**
+     * @var array
+     */
+    protected array $contents = [];
 
     /**
      * @param $warp
@@ -55,13 +51,9 @@ abstract class Container implements SegmentContainerInterface
      */
     public function __construct($warp)
     {
-        $this->layout = 'admin::layout';
-        //$this->component = DIV::create();
-        $this->component = DIV::create(['row', 'pl-3 pr-3']);
-        $this->callConstructEvents([DIV::class => $this->component]);
         if (is_embedded_call($warp)) {
             embedded_call($warp, [
-                DIV::class => $this->component,
+                'component' => $this->component,
                 static::class => $this,
             ]);
         }
@@ -71,13 +63,19 @@ abstract class Container implements SegmentContainerInterface
     /**
      * @param  mixed  ...$params
      * @return static
+     * @throws Throwable
      */
-    public static function create(...$params)
+    public static function create(...$params): static
     {
         return new static(...$params);
     }
 
-    public function toStore(string $store, $data)
+    /**
+     * @param  string  $store
+     * @param $data
+     * @return $this
+     */
+    public function toStore(string $store, $data): static
     {
         if (!isset($this->storeList[$store])) {
             $this->storeList[$store] = [];
@@ -99,7 +97,7 @@ abstract class Container implements SegmentContainerInterface
      * @param  mixed|string[]  ...$breadcrumbs
      * @return $this
      */
-    public function breadcrumb(...$breadcrumbs)
+    public function breadcrumb(...$breadcrumbs): static
     {
         $this->breadcrumb = array_merge($this->breadcrumb, $breadcrumbs);
 
@@ -111,7 +109,7 @@ abstract class Container implements SegmentContainerInterface
      * @param  string|null  $icon
      * @return $this
      */
-    public function title(string $title, string $icon = null)
+    public function title(string $title, string $icon = null): static
     {
         if (!$this->page_title) {
             $this->page_title = ['title' => $title];
@@ -131,7 +129,7 @@ abstract class Container implements SegmentContainerInterface
      * @param  string|null  $title
      * @return $this
      */
-    public function icon(string $icon, string $title = null)
+    public function icon(string $icon, string $title = null): static
     {
         if (!$this->page_title) {
             $this->page_title = ['icon' => $icon];
@@ -147,14 +145,25 @@ abstract class Container implements SegmentContainerInterface
     }
 
     /**
-     * @return string|void
+     * @param $view
+     * @param  array  $data
+     * @param  array  $mergeData
+     * @return $this
      */
-    public function render()
+    public function view($view = null, array $data = [], array $mergeData = []): static
     {
-        return view('admin::container', [
-            'layout' => $this->layout,
-            'yield' => $this->content_yield,
-            'component' => $this->component,
+        $this->contents[] = admin_view($view, $data, $mergeData);
+
+        return $this;
+    }
+
+    /**
+     * @return View
+     */
+    public function render(): View
+    {
+        return admin_view('container', [
+            'contents' => $this->contents,
             'page_info' => $this->page_title,
             'breadcrumb' => $this->breadcrumb,
             'storeList' => $this->storeList,

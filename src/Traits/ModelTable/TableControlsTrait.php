@@ -2,9 +2,9 @@
 
 namespace Admin\Traits\ModelTable;
 
+use Admin\Components\ModelTable\HeaderComponent;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Tags\SPAN;
 use Admin\Components\ButtonsComponent;
 use Admin\Core\ModelTableAction;
 use Admin\Core\PrepareExport;
@@ -192,7 +192,7 @@ trait TableControlsTrait
 
     public function getActionData()
     {
-        $this->getModelName();
+        //$this->getModelName();
         $m = $this->realModel();
         $this->model_class = $this->realModel() && is_object($m) ? get_class($m) : null;
         $hasDelete = $this->menu
@@ -257,9 +257,11 @@ trait TableControlsTrait
             $modelName = $this->model_name;
 
             if ($this->checks && !request()->has('show_deleted') && $show) {
-                $this->to_prepend()->column(function (SPAN $span) use ($hasDelete) {
-                    $span->_addClass('fit');
-                    $span->view('admin::segment.model_table_checkbox', [
+                $this->to_prepend()->column(function (HeaderComponent $headerComponent) use ($hasDelete) {
+
+                    $headerComponent->fit();
+
+                    $headerComponent->view('components.model-table.checkbox', [
                         'id' => false,
                         'table_id' => $this->model_name,
                         'object' => $this->model_class,
@@ -268,13 +270,14 @@ trait TableControlsTrait
                         'columns' => collect($this->columns)->filter(static function ($i) {
                             return isset($i['field']) && is_string($i['field']);
                         })->pluck('field')->toArray(),
-                    ])->render();
+                    ]);
+
                 }, function (Model|array $model) use ($modelName) {
-                    return view('admin::segment.model_table_checkbox', [
+                    return admin_view('components.model-table.checkbox', [
                         'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
                         'table_id' => $modelName,
                         'disabled' => !$this->get_test_var('control_selectable', [$model]),
-                    ])->render();
+                    ]);
                 });
             }
 
@@ -282,12 +285,12 @@ trait TableControlsTrait
                 $this->deleted_at();
             }
 
-            $this->column(static function (SPAN $span) {
-                $span->_addClass('fit');
-            }, function (Model|array $model) {
+            $this->column(function (HeaderComponent $headerComponent) {
+                $headerComponent->fit();
+            },function (Model|array $model) {
                 $menu = $this->menu;
 
-                return ButtonsComponent::create()->when(function (ButtonsComponent $group) use ($model, $menu) {
+                return $this->createComponent(ButtonsComponent::class)->use(function (ButtonsComponent $group) use ($model, $menu) {
                     if ($menu && $menu->isResource()) {
                         $key = $model->getRouteKey();
 

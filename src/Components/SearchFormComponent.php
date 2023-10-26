@@ -6,23 +6,21 @@ use Admin\Core\PrepareExport;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Lar\Layout\Tags\OL;
-use Lar\Tagable\Tag;
-use Admin\Components\SearchFields\AmountSearchField;
-use Admin\Components\SearchFields\ChecksSearchField;
-use Admin\Components\SearchFields\ColorSearchField;
-use Admin\Components\SearchFields\DateRangeSearchField;
-use Admin\Components\SearchFields\DateSearchField;
+use Admin\Components\SearchFields\AmountSearchInput;
+use Admin\Components\SearchFields\ChecksSearchInput;
+use Admin\Components\SearchFields\ColorSearchInput;
+use Admin\Components\SearchFields\DateRangeSearchInput;
+use Admin\Components\SearchFields\DateSearchInput;
 use Admin\Components\SearchFields\DateTimeRangeSearchField;
-use Admin\Components\SearchFields\DateTimeSearchField;
-use Admin\Components\SearchFields\EmailSearchField;
-use Admin\Components\SearchFields\IconSearchField;
-use Admin\Components\SearchFields\InputSearchField;
-use Admin\Components\SearchFields\MultiSelectSearchField;
+use Admin\Components\SearchFields\DateTimeSearchInput;
+use Admin\Components\SearchFields\EmailSearchInput;
+use Admin\Components\SearchFields\IconSearchInput;
+use Admin\Components\SearchFields\InputSearch;
+use Admin\Components\SearchFields\MultiSelectSearchInput;
 use Admin\Components\SearchFields\NumberSearchField;
 use Admin\Components\SearchFields\NumericSearchField;
 use Admin\Components\SearchFields\RadiosSearchField;
-use Admin\Components\SearchFields\SelectSearchField;
+use Admin\Components\SearchFields\SelectSearchInput;
 use Admin\Components\SearchFields\SelectTagsSearchField;
 use Admin\Components\SearchFields\SwitcherSearchField;
 use Admin\Components\SearchFields\TimeFieldSearchField;
@@ -32,7 +30,6 @@ use Admin\Traits\SearchFormConditionRulesTrait;
 use Admin\Traits\SearchFormHelpersTrait;
 
 /**
- * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
  * @mixin SearchFormComponentMethods
  * @mixin SearchFormComponentFields
  */
@@ -44,36 +41,46 @@ class SearchFormComponent extends Component
     /**
      * @var array
      */
-    public static $field_components = [
-        'input' => InputSearchField::class,
-        'email' => EmailSearchField::class,
+    public static array $field_components = [
+        'input' => InputSearch::class,
+        'email' => EmailSearchInput::class,
         'number' => NumberSearchField::class,
         'numeric' => NumericSearchField::class,
-        'amount' => AmountSearchField::class,
+        'amount' => AmountSearchInput::class,
         'switcher' => SwitcherSearchField::class,
-        'date_range' => DateRangeSearchField::class,
+        'date_range' => DateRangeSearchInput::class,
         'date_time_range' => DateTimeRangeSearchField::class,
-        'date' => DateSearchField::class,
-        'date_time' => DateTimeSearchField::class,
+        'date' => DateSearchInput::class,
+        'date_time' => DateTimeSearchInput::class,
         'time' => TimeFieldSearchField::class,
-        'icon' => IconSearchField::class,
-        'color' => ColorSearchField::class,
-        'select' => SelectSearchField::class,
-        'multi_select' => MultiSelectSearchField::class,
+        'icon' => IconSearchInput::class,
+        'color' => ColorSearchInput::class,
+        'select' => SelectSearchInput::class,
+        'multi_select' => MultiSelectSearchInput::class,
         'select_tags' => SelectTagsSearchField::class,
-        'checks' => ChecksSearchField::class,
+        'checks' => ChecksSearchInput::class,
         'radios' => RadiosSearchField::class,
     ];
+
+    /**
+     * @var mixed
+     */
     protected static $regInputs = null;
-    protected $element = 'form';
+
+    /**
+     * @var string
+     */
+    protected string $view = 'search-form';
+
     /**
      * @var array
      */
-    protected $fields = [];
+    protected array $fields = [];
+
     /**
      * @var string[]
      */
-    protected $conditions = [
+    protected array $conditions = [
         '=' => 'equally',
         '!=' => 'not_equal',
         '>=' => 'more_or_equal',
@@ -90,10 +97,11 @@ class SearchFormComponent extends Component
         'between' => 'where_between',
         'not_between' => 'where_not_between',
     ];
+
     /**
      * @var array
      */
-    protected $global_search_fields;
+    protected array $global_search_fields = [];
 
     /**
      * Form constructor.
@@ -109,7 +117,7 @@ class SearchFormComponent extends Component
     /**
      * @return int
      */
-    public function fieldsCount()
+    public function fieldsCount(): int
     {
         return count($this->fields);
     }
@@ -118,7 +126,7 @@ class SearchFormComponent extends Component
      * @param  array  $params
      * @return $this
      */
-    public function globalSearchFields(array $params)
+    public function globalSearchFields(array $params): static
     {
         $this->global_search_fields = $params;
 
@@ -128,7 +136,7 @@ class SearchFormComponent extends Component
     /**
      * @param $name
      * @param $arguments
-     * @return bool|FormComponent|Tag|mixed|string
+     * @return bool|FormComponent|mixed|string
      * @throws Exception
      */
     public function __call($name, $arguments)
@@ -143,7 +151,7 @@ class SearchFormComponent extends Component
         if (
             preg_match("/^in_($inputs)_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
             && !isset(static::$field_components[$name])
         ) {
             $field = $matches[1];
@@ -206,6 +214,10 @@ class SearchFormComponent extends Component
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * @param  string  $name
+     * @return SearchFormComponent
+     */
     public function __get(string $name)
     {
         if (!SearchFormComponent::$regInputs) {
@@ -218,7 +230,7 @@ class SearchFormComponent extends Component
         if (
             preg_match("/^in_($inputs)_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
             && !isset(static::$field_components[$name])
         ) {
             $field = $matches[1];
@@ -231,55 +243,35 @@ class SearchFormComponent extends Component
         return parent::__get($name);
     }
 
-    public function getSearchInfoComponent()
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function getSearchInfoComponent(): \Illuminate\View\View
     {
-        $div = null;
-
-        foreach ($this->fields as $field) {
-            /** @var FormGroupComponent $formGroup */
-            $formGroup = $field['class'];
-            $val = request($formGroup->get_path());
-            $val = is_array($val) ? implode(' - ', $val) : $val;
-            if ($val) {
-                if (!$div) {
-                    $div = OL::create(['breadcrumb p-1 pl-2 ml-1 m-0 bg-white']);
-                    $div->li(['breadcrumb-item active'])
-                        ->i(['fas fa-search'])
-                        ->_text(' '.__('admin.sort_result_report'));
-                }
-
-                $div->li(['breadcrumb-item'])
-                    ->a([
-                        'href' => urlWithGet([], [$formGroup->get_path()])
-                    ])->setTitle(__('admin.cancel').': '.$formGroup->get_title())
-                    ->i(['fas fa-window-close text-danger'])
-                    ->__text(' '.$formGroup->get_title().': '.$val);
-            }
-        }
-
-        return $div;
+        return admin_view('components.search-form.info', [
+            'fields' => $this->fields
+        ]);
     }
 
-    protected function mount()
+    /**
+     * @return array
+     */
+    protected function viewData(): array
     {
-        $this->setMethod('get');
-
         $action = urlWithGet([], ['q', 'page']);
 
-        $this->setAction($action);
+        return [
+            'chunks' => collect($this->fields)->chunk(3),
+            'action' => $action,
+            'group' => ButtonsComponent::create()->success(['fas fa-search', __('admin.to_find')])->setType('submit')
+        ];
+    }
 
-        $chunks = collect($this->fields)->chunk(3);
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
 
-        foreach ($chunks as $chunk) {
-            $this->row()->when(function (GridRowComponent $row) use ($chunk) {
-                foreach ($chunk as $field) {
-                    $row->column()->pl3()->pr3()->appEnd($field['class']);
-                }
-            });
-        }
-
-        $this->div()->textRight()->buttons()->when(static function (ButtonsComponent $group) use ($action) {
-            $group->success(['fas fa-search', __('admin.to_find')])->setType('submit');
-        });
     }
 }

@@ -2,15 +2,15 @@
 
 namespace Admin\Components\SearchFields;
 
+use Admin\Components\Inputs\DateTimeRangeInput;
 use Carbon\Carbon;
-use Admin\Components\Fields\DateTimeRangeField;
 
-class DateTimeRangeSearchField extends DateTimeRangeField
+class DateTimeRangeSearchField extends DateTimeRangeInput
 {
     /**
      * @var string
      */
-    public static $condition = 'between';
+    public static string $condition = 'between';
 
     /**
      * @param $value

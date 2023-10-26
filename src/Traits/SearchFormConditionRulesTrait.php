@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 trait SearchFormConditionRulesTrait
 {
     /**
-     * @param  Model  $model
-     * @return Model
+     * @param  mixed  $model
+     * @return mixed
      */
-    public function makeModel($model)
+    public function makeModel(mixed $model): mixed
     {
         if (request()->has('q')) {
             $r = request('q');
@@ -71,56 +71,56 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function equally($model, $value, $key)
+    protected function equally(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '=', $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function not_equal($model, $value, $key)
+    protected function not_equal(mixed$model, $value, $key): mixed
     {
         return $model->where($key, '!=', $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function more_or_equal($model, $value, $key)
+    protected function more_or_equal(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '>=', $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function less_or_equal($model, $value, $key)
+    protected function less_or_equal(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '<=', $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function more($model, $value, $key)
+    protected function more(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '>', $value);
     }
@@ -129,53 +129,53 @@ trait SearchFormConditionRulesTrait
      * @param  Model  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function less($model, $value, $key)
+    protected function less(mixed$model, $value, $key): mixed
     {
         return $model->where($key, '<', $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function like_right($model, $value, $key)
+    protected function like_right(mixed $model, $value, $key): mixed
     {
         return $model->where($key, 'like', '%'.$value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function like_left($model, $value, $key)
+    protected function like_left(mixed $model, $value, $key): mixed
     {
         return $model->where($key, 'like', $value.'%');
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function like_any($model, $value, $key)
+    protected function like_any(mixed $model, $value, $key): mixed
     {
         return $model->where($key, 'like', '%'.$value.'%');
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function nullable($model, $value, $key)
+    protected function nullable(mixed $model, $value, $key): mixed
     {
         if ($value) {
             return $model->whereNull($key);
@@ -185,12 +185,12 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function not_nullable($model, $value, $key)
+    protected function not_nullable(mixed $model, $value, $key): mixed
     {
         if ($value) {
             return $model->whereNotNull($key);
@@ -200,45 +200,45 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function where_in($model, $value, $key)
+    protected function where_in(mixed $model, $value, $key): mixed
     {
         return $model->whereIn($key, $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function where_not_in($model, $value, $key)
+    protected function where_not_in(mixed $model, $value, $key): mixed
     {
         return $model->whereNotIn($key, $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function where_between($model, $value, $key)
+    protected function where_between(mixed $model, $value, $key): mixed
     {
         return $model->whereBetween($key, $value);
     }
 
     /**
-     * @param  Model  $model
+     * @param  mixed  $model
      * @param $key
      * @param $value
-     * @return Model
+     * @return mixed
      */
-    protected function where_not_between($model, $value, $key)
+    protected function where_not_between(mixed $model, $value, $key): mixed
     {
         return $model->whereNotBetween($key, $value);
     }

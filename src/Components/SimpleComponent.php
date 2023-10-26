@@ -10,10 +10,19 @@ abstract class SimpleComponent implements Renderable, Htmlable
 {
     use Delegable;
 
+    /**
+     * @var string|null
+     */
     protected ?string $template = null;
 
+    /**
+     * @var array
+     */
     protected array $state = [];
 
+    /**
+     * @var array
+     */
     protected array $delegates = [];
 
     /**
@@ -24,12 +33,18 @@ abstract class SimpleComponent implements Renderable, Htmlable
         $this->delegates = $delegates;
     }
 
-    public function toHtml()
+    /**
+     * @return mixed
+     */
+    public function toHtml(): mixed
     {
         return $this->render();
     }
 
-    public function render()
+    /**
+     * @return mixed
+     */
+    public function render(): mixed
     {
         $this->newExplain($this->delegates);
 
@@ -38,17 +53,30 @@ abstract class SimpleComponent implements Renderable, Htmlable
             : "";
     }
 
+    /**
+     * @param  string  $name
+     * @return mixed
+     */
     public function __get(string $name)
     {
         return $this->state[$name];
     }
 
+    /**
+     * @param  string  $name
+     * @param $value
+     * @return void
+     */
     public function __set(string $name, $value): void
     {
         $this->state[$name] = $value;
     }
 
-    public function new(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function new(...$delegates): static
     {
         return new static(...$delegates);
     }

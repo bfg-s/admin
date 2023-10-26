@@ -7,22 +7,19 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Lar\Layout\Tags\SPAN;
-use Lar\Tagable\Tag;
 use Admin\Controllers\Controller;
+use Throwable;
 
 /**
- * @methods Admin\Components\ModelTableComponent::$extensions (...$params) static
- * @mixin ModelInfoTableComponentMacroList
  * @mixin ModelInfoTableComponentFields
  * @mixin ModelInfoTableComponentMethods
  */
 class ModelInfoTableComponent extends Component
 {
     /**
-     * @var bool
+     * @var string
      */
-    protected $only_content = true;
+    protected string $view = 'content-only';
 
     /**
      * @var array|Model
@@ -32,21 +29,21 @@ class ModelInfoTableComponent extends Component
     /**
      * @var array
      */
-    protected $rows = [];
+    protected array $rows = [];
 
     /**
      * @var string|null
      */
-    protected $last;
+    protected ?string $last = null;
 
     /**
-     * @param  string  $info
+     * @param  string  $name
      * @return $this
      */
-    public function info(string $info)
+    public function info(string $name): static
     {
         if ($this->last && isset($this->rows[$this->last])) {
-            $this->rows[$this->last]['info'] = $info;
+            $this->rows[$this->last]['info'] = $name;
         }
 
         return $this;
@@ -55,7 +52,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function id()
+    public function id(): static
     {
         $this->row('admin.id', 'id');
 
@@ -67,7 +64,7 @@ class ModelInfoTableComponent extends Component
      * @param  string  $label
      * @return $this
      */
-    public function row(string $label, string|Closure|array $field)
+    public function row(string $label, string|Closure|array $field): static
     {
         $this->last = uniqid('row');
 
@@ -79,7 +76,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function deleted_at()
+    public function deleted_at(): static
     {
         $this->row('admin.deleted_at', 'deleted_at')->butty_date_time()->true_data();
 
@@ -89,7 +86,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function at()
+    public function at(): static
     {
         $this->updated_at()->created_at();
 
@@ -99,7 +96,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function created_at()
+    public function created_at(): static
     {
         $this->row('admin.created_at', 'created_at')->butty_date_time()->true_data();
 
@@ -109,7 +106,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function updated_at()
+    public function updated_at(): static
     {
         $this->row('admin.updated_at', 'updated_at')->butty_date_time()->true_data();
 
@@ -119,7 +116,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @return $this
      */
-    public function active_switcher()
+    public function active_switcher(): static
     {
         $this->row('admin.active', 'active')->yes_no();
 
@@ -129,7 +126,7 @@ class ModelInfoTableComponent extends Component
     /**
      * @param $name
      * @param $arguments
-     * @return $this|bool|ModelInfoTableComponent|Tag|string
+     * @return $this|bool|ModelInfoTableComponent|string
      * @throws Exception
      */
     public function __call($name, $arguments)
@@ -137,7 +134,7 @@ class ModelInfoTableComponent extends Component
         if (
             preg_match("/^row_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
         ) {
             $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
@@ -154,12 +151,16 @@ class ModelInfoTableComponent extends Component
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * @param  string  $name
+     * @return $this|ModelInfoTableComponent
+     */
     public function __get(string $name)
     {
         if (
             preg_match("/^row_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
         ) {
             $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
@@ -170,7 +171,10 @@ class ModelInfoTableComponent extends Component
         return parent::__get($name);
     }
 
-    protected function mount()
+    /**
+     * @throws Throwable
+     */
+    protected function mount(): void
     {
         $data = [];
 
@@ -201,7 +205,9 @@ class ModelInfoTableComponent extends Component
                 }
                 $label = __($label);
                 if ($row['info']) {
-                    $label .= SPAN::create(':space')->i(['title' => __($row['info'])])->icon_info_circle()->_render();
+                    $label .= admin_view('components.model-info-table.info-field', [
+                        'info' => __($row['info'])
+                    ])->render();
                 }
                 $data[] = [$label, $field];
             }

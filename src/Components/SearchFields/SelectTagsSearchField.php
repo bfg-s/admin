@@ -2,19 +2,19 @@
 
 namespace Admin\Components\SearchFields;
 
-use Admin\Components\Fields\SelectTagsField;
+use Admin\Components\Inputs\SelectTagsInput;
 
-class SelectTagsSearchField extends SelectTagsField
+class SelectTagsSearchField extends SelectTagsInput
 {
     /**
      * @var string
      */
-    public static $condition = 'in';
+    public static string $condition = 'in';
 
     /**
      * After construct event.
      */
-    protected function after_construct()
+    protected function after_construct(): void
     {
         $this->nullable();
     }

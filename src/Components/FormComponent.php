@@ -2,10 +2,8 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Tags\INPUT;
-use Admin\Page;
 use Admin\Traits\BuildHelperTrait;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 class FormComponent extends Component
 {
@@ -14,31 +12,43 @@ class FormComponent extends Component
     }
 
     /**
-     * @var string
+     * @var string|null
      */
-    public static $last_id;
-    protected $element = 'form';
+    public static ?string $last_id = null;
+
     /**
      * @var string
      */
-    protected $method = 'post';
+    protected string $view = 'form';
+
+    /**
+     * @var string
+     */
+    protected string $method = 'post';
+
     /**
      * @var string|null
      */
-    protected $action;
+    protected ?string $action = null;
 
-    public static function registrationInToContainer(Page $page, array $delegates = [])
+    /**
+     * @var string
+     */
+    protected string $onSubmit = '';
+
+    /**
+     * @param ...$delegates
+     */
+    public function __construct(...$delegates)
     {
-        if ($page->getContent() instanceof CardComponent) {
-            $card = $page->getClass(CardComponent::class);
-            $page->registerClass($card->bodyForm($delegates));
-            $page->registerClass($card->footerForm());
-        } else {
-            $page->registerClass($page->getContent()->form($delegates));
-        }
+        parent::__construct($delegates);
     }
 
-    public function tab(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return TabsComponent
+     */
+    public function tab(...$delegates): TabsComponent
     {
         array_unshift($delegates, TabContentComponent::new()->vertical()->p2());
 
@@ -49,7 +59,7 @@ class FormComponent extends Component
      * @param  string  $method
      * @return $this
      */
-    public function method(string $method)
+    public function method(string $method): static
     {
         $this->method = $method;
 
@@ -60,36 +70,30 @@ class FormComponent extends Component
      * @param  string  $action
      * @return $this
      */
-    public function action(string $action)
+    public function action(string $action): static
     {
         $this->action = $action;
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @param  string  $onSubmit
+     * @return void
+     */
+    public function setOnSubmit(string $onSubmit): void
     {
-        $this->buildForm();
+        $this->onSubmit = $onSubmit;
     }
 
     /**
-     * Form builder.
+     * @return void
      */
-    protected function buildForm()
+    protected function mount(): void
     {
-        $this->callRenderEvents();
-
-        $this->setMethod($this->method);
-
         $menu = $this->menu;
 
         $type = $this->page->resource_type;
-
-        if ($menu && $menu->getResourceRoute()) {
-            $this->appEnd(
-                INPUT::create(['type' => 'hidden', 'name' => '_after', 'value' => session('_after', 'index')])
-            );
-        }
 
         if (!$this->action && $type && $this->model && $menu) {
             $key = $this->model->getOriginal($this->model->getRouteKeyName());
@@ -108,14 +112,42 @@ class FormComponent extends Component
             $this->action = url()->current();
         }
 
-        $this->setAction($this->action);
+        static::$last_id = uniqid();
 
-        $this->setEnctype('multipart/form-data');
+        if ($menu && $menu->getResourceRoute()) {
+            $this->hiddens([
+                '_after' => session('_after', 'index')
+            ]);
+        }
+    }
 
-        static::$last_id = $this->getUnique();
+    /**
+     * @param  array  $fields
+     * @return $this
+     */
+    public function hiddens(array $fields): static
+    {
+        foreach ($fields as $name => $value) {
 
-        $this->setId(static::$last_id);
+            $this->view('components.inputs.hidden', [
+                'name' => $name,
+                'value' => $value
+            ]);
+        }
 
-        $this->attr('data-load', 'valid');
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'method' => $this->method,
+            'action' => $this->action,
+            'onSubmit' => $this->onSubmit,
+            'id' => static::$last_id,
+        ];
     }
 }

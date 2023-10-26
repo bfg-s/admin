@@ -108,16 +108,6 @@ class ExtendProvider extends ServiceProviderIlluminate
             }
             $this->app->bind($key, $item);
         }
-
-        if (config('admin.functional.settings')) {
-            $db = config('admin.connections.admin-sqlite.database');
-
-            if (is_file($db) && Schema::connection('admin-sqlite')->hasTable('admin_settings')) {
-                AdminSetting::get(['name', 'value'])->map(
-                    fn (AdminSetting $setting) => Config::set($setting->name, $setting->value)
-                );
-            }
-        }
     }
 
     /**

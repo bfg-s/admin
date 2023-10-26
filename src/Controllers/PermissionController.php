@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Delegates\Alert;
 use Illuminate\Support\Str;
 use Lang;
 use Admin\Delegates\Card;
@@ -91,6 +92,27 @@ class PermissionController extends Controller
                         ->default(1),
                     $form->ifEdit()->info_updated_at(),
                     $form->ifEdit()->info_created_at(),
+
+
+                    $form->dual_select('test0', 'test0')->options(['1' => '1', '2' => '2']),
+                    $form->checks('test1', 'test1')->options(['1' => '1', '2' => '2']),
+                    $form->select_tags('test10', 'test10')->options(['1' => '1', '2' => '2']),
+                    $form->ckeditor('test2', 'test2'),
+                    $form->divider(),
+                    $form->divider('1'),
+                    $form->divider(null, '2'),
+                    $form->divider(null, null, '3'),
+                    $form->codemirror('test3', 'test3'),
+                    $form->color('test4', 'test4'),
+                    $form->date('test5', 'test5'),
+                    $form->date_range('test6', 'test6'),
+                    $form->hidden('test7', 'test7')->value(123),
+                    $form->mdeditor('test8', 'test8'),
+                    $form->number('test9', 'test9')->min(0),
+                    $form->slider('test11', 'test11')->min(0),
+                    $form->textarea('test12', 'test12')->rows(10),
+                    $form->time('test13', 'test13'),
+                    $form->password('password', 'password')->confirm(),
                 ),
                 $card->card_body()->p(
                     Str::markdown(__('admin.permission_instruction'))
@@ -105,7 +127,7 @@ class PermissionController extends Controller
      * @param  ModelInfoTable  $modelInfoTable
      * @return Page
      */
-    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable)
+    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable, Alert $alert)
     {
         return $page
             ->card(
@@ -114,10 +136,17 @@ class PermissionController extends Controller
                     $modelInfoTable->row('admin.path', 'path')->badge('success'),
                     $modelInfoTable->row('admin.methods', [$this, 'show_methods']),
                     $modelInfoTable->row('admin.state', [$this, 'show_state']),
-                    $modelInfoTable->row('admin.role', 'role.name'),
+                    $modelInfoTable->row('admin.role', 'role.name')->info('test'),
                     $modelInfoTable->row('admin.active', 'active')->yes_no(),
                     $modelInfoTable->at(),
                 )
+            )->alert(
+                $alert->title('admin.error')
+                    ->body('admin.access_denied')
+                    ->dangerType()
+                    ->icon_exclamation_triangle()
+                    ->mt3()
+                    ->w100(),
             );
     }
 

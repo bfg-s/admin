@@ -4,12 +4,10 @@ namespace Admin\Traits;
 
 trait AlpineInjectionTrait
 {
+    /**
+     * @var array
+     */
     protected array $next_modifiers = [];
-
-    public function xInit($data = ''): static
-    {
-        return $this->xAttribute('init', $data);
-    }
 
     /**
      * @param  string  $name
@@ -22,189 +20,371 @@ trait AlpineInjectionTrait
         $modifiers = array_merge($this->next_modifiers, $modifiers);
         $this->next_modifiers = [];
         $this->attr(
-            "x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : ''),
-            is_array($value) ? json_encode($value) : $value
+            "x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : ''), $value
         );
 
         return $this;
     }
 
-    public function xData($data = ''): static
+    /**
+     * @param  string  $name
+     * @param  array  $modifiers
+     * @return bool
+     */
+    public function xHas(string $name, array $modifiers = []): bool
+    {
+        return isset($this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')])
+            || isset($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]);
+    }
+
+    /**
+     * @param  string  $name
+     * @param  array  $modifiers
+     * @return mixed
+     */
+    public function xGet(string $name, array $modifiers = []): mixed
+    {
+        return $this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]
+            ?? ($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')] ?? null);
+    }
+
+    /**
+     * @param  string  $event
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOn(string $event, mixed $value): static
+    {
+        $this->xInit();
+
+        return $this->xAttribute("on:{$event}", $value);
+    }
+
+    /**
+     * @param  mixed  $data
+     * @return $this
+     */
+    public function xInit(mixed $data = ''): static
+    {
+        if (! $this->xHas('init')) {
+
+            $this->xAttribute('init');
+
+            return $data ? $this->xData($data) : $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed  $data
+     * @return $this
+     */
+    public function xData(mixed $data = ''): static
     {
         return $this->xAttribute('data', $data);
     }
 
-    public function xShow(string $value = '')
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xShow(mixed $value = ''): static
     {
         return $this->xAttribute('show', $value);
     }
 
-    public function xBind(string $attribute, string $value = '')
+    /**
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xBind(string $attribute, mixed $value = ''): static
     {
         return $this->xAttribute("bind:$attribute", $value);
     }
 
-    public function xText(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xText(mixed $value): static
     {
         return $this->xAttribute('text', $value);
     }
 
-    public function xHtml(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xHtml(mixed $value): static
     {
         return $this->xAttribute('html', $value);
     }
 
-    public function xModel(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xModel(mixed $value): static
     {
         return $this->xAttribute('model', $value);
     }
 
-    public function xFor(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xFor(mixed $value): static
     {
         return $this->xAttribute('for', $value);
     }
 
+    /**
+     * @return $this
+     */
     public function xTransition(): static
     {
         return $this->xAttribute('transition');
     }
 
-    public function xEffect(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xEffect(mixed $value): static
     {
         return $this->xAttribute('effect', $value);
     }
 
+    /**
+     * @return $this
+     */
     public function xIgnore(): static
     {
         return $this->xAttribute('ignore');
     }
 
-    public function xRef(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xRef(mixed $value): static
     {
         return $this->xAttribute('ref', $value);
     }
 
+    /**
+     * @return $this
+     */
     public function xCloak(): static
     {
         return $this->xAttribute('cloak');
     }
 
-    public function xTeleport(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xTeleport(mixed $value): static
     {
         return $this->xAttribute('teleport', $value);
     }
 
-    public function xIf(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xIf(mixed $value): static
     {
         return $this->xAttribute('if', $value);
     }
 
-    public function xId(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xId(mixed $value): static
     {
         return $this->xAttribute('id', $value);
     }
 
-    public function xOnClick(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnClick(mixed $value): static
     {
         return $this->xOn('click', $value);
     }
 
-    public function xOn(string $event, string $value): static
-    {
-        return $this->xAttribute("on:{$event}", $value);
-    }
-
-    public function xOnSubmit(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnSubmit(mixed $value): static
     {
         return $this->xOn('submit', $value);
     }
 
-    public function xOnDblclick(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnDblclick(mixed $value): static
     {
         return $this->xOn('dblclick', $value);
     }
 
-    public function xOnChange(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnChange(mixed $value): static
     {
         return $this->xOn('change', $value);
     }
 
-    public function xOnBlur(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnBlur(mixed $value): static
     {
         return $this->xOn('blur', $value);
     }
 
-    public function xOnFocus(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnFocus(mixed $value): static
     {
         return $this->xOn('focus', $value);
     }
 
-    public function xOnFormchange(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnFormchange(mixed $value): static
     {
         return $this->xOn('formchange', $value);
     }
 
-    public function xOnForminput(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnForminput(mixed $value): static
     {
         return $this->xOn('forminput', $value);
     }
 
-    public function xOnInput(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnInput(mixed $value): static
     {
         return $this->xOn('input', $value);
     }
 
-    public function xOnKeydown(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnKeydown(mixed $value): static
     {
         return $this->xOn('keydown', $value);
     }
 
-    public function xOnKeypress(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnKeypress(mixed $value): static
     {
         return $this->xOn('keypress', $value);
     }
 
-    public function xOnKeyup(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnKeyup(mixed $value): static
     {
         return $this->xOn('keyup', $value);
     }
 
-    public function xOnMousedown(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMousedown(mixed $value): static
     {
         return $this->xOn('mousedown', $value);
     }
 
-    public function xOnMousemove(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMousemove(mixed $value): static
     {
         return $this->xOn('mousemove', $value);
     }
 
-    public function xOnMouseout(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMouseout(mixed $value): static
     {
         return $this->xOn('mouseout', $value);
     }
 
-    public function xOnMouseover(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMouseover(mixed $value): static
     {
         return $this->xOn('mouseover', $value);
     }
 
-    public function xOnMouseup(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMouseup(mixed $value): static
     {
         return $this->xOn('mouseup', $value);
     }
 
-    public function xOnMousewheel(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnMousewheel(mixed $value): static
     {
         return $this->xOn('mousewheel', $value);
     }
 
-    public function xOnHover(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnHover(mixed $value): static
     {
         return $this->xOn('hover', $value);
     }
 
-    public function xOnLoad(string $value): static
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOnLoad(mixed $value): static
     {
         return $this->xOn('load', $value);
     }

@@ -2,9 +2,9 @@
 
 namespace Admin\Core\TableExtends;
 
+use Admin\Components\Inputs\SwitcherInput;
+use Admin\Components\Small\AComponent;
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Abstracts\Component;
-use Lar\Layout\Tags\A;
 use Admin\Components\FieldComponent;
 
 class Editables
@@ -14,21 +14,31 @@ class Editables
      * @param  array  $props
      * @param  Model|null  $model
      * @param  null  $field
-     * @return Component
+     * @return SwitcherInput|FieldComponent
      */
-    public function input_switcher($value, array $props = [], Model $model = null, $field = null): Component
+    public function input_switcher($value, array $props = [], Model $model = null, $field = null): SwitcherInput|FieldComponent
     {
         if ($model) {
-            return FieldComponent::switcher($field)
+
+            $id = uniqid('id');
+
+            $fieldComponent = FieldComponent::create();
+
+            $fieldComponent->on_mouseup('custom_save', [
+                get_class($model),
+                $model->id,
+                $field,
+                $id,
+            ]);
+
+            $fieldComponent->switcher($field)
                 ->only_input()
                 ->labels(...$props)
                 ->switchSize('mini')
-                ->value($value)->on_mouseup('jax.admin.custom_save', [
-                    get_class($model),
-                    $model->id,
-                    $field,
-                    '>>$:is(:checked)',
-                ]);
+                ->value($value)
+                ->setId($id);
+
+            return $fieldComponent;
         }
 
         return $value;
@@ -48,19 +58,20 @@ class Editables
             $options = $props[0] ?? [];
             $format = $props[1] ?? (is_array($options) ? false : 'id:name');
             $where = $props[2] ?? null;
+            $id = str_replace('.', '_', 'input_'.$field.'_'.$model->id);
 
-            return "<div style='max-width: 200px'>" . FieldComponent::select($field)
-                ->only_input()
-                ->value($value)
-                ->force_set_id('input_'.$field.'_'.$model->id)
-                ->when(is_array($options), fn ($q) => $q->options($options, $format))
-                ->when(is_string($options), fn ($q) => $q->load($options, $format, $where))
-                ->on_change('jax.admin.custom_save', [
+            return "<div style='max-width: 200px'>" . FieldComponent::select($field)->on_change('custom_save', [
                     get_class($model),
                     $model->id,
                     $field,
-                    '>>$:val()',
-                ]) . "</div>";
+                    $id,
+                ])
+                ->only_input()
+                ->value($value)
+                ->force_set_id($id)
+                ->when(is_array($options), fn ($q) => $q->options($options, $format))
+                ->when(is_string($options), fn ($q) => $q->load($options, $format, $where))
+                 . "</div>";
         }
 
         return $value;
@@ -79,18 +90,19 @@ class Editables
 
             $options = $props[0] ?? [];
             $first_default = $props[1] ?? false;
+            $id = 'input_'.$field.'_'.$model->id;
 
             return FieldComponent::radios($field)
                 ->only_input()
                 ->value($value)
                 ->set_name($field.'_'.$model->id)
-                ->force_set_id('input_'.$field.'_'.$model->id)
+                ->force_set_id($id)
                 ->when(is_array($options), fn ($q) => $q->options($options, !! $first_default))
-                ->on_change('jax.admin.custom_save', [
+                ->on_change('custom_save', [
                     get_class($model),
                     $model->id,
                     $field,
-                    '>>admin::get_selected_radio()',
+                    $id,
                 ]);
         }
 
@@ -148,7 +160,7 @@ class Editables
         if ($now && $now->isResource()) {
             $val = multi_dot_call($model, $field);
 
-            return A::create(['href' => '#'])->setDatas([
+            return AComponent::create()->attr(['href' => '#'])->setDatas([
                 'title' => is_string($title) ? $title : '',
                 'pk' => $model->id,
                 'type' => $type,

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Admin\Traits\DumpedModel;
 
 /**
  * @property int $id
@@ -44,8 +43,6 @@ use Admin\Traits\DumpedModel;
  */
 class AdminFileStorage extends Model
 {
-    use DumpedModel;
-
     /**
      * @var string|null
      */

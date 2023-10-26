@@ -14,7 +14,7 @@ trait NavCommon
      * @param  Closure|array  $call
      * @return $this
      */
-    public function router($call)
+    public function router($call): static
     {
         $this->items['router'][] = $call;
 
@@ -25,7 +25,7 @@ trait NavCommon
      * @param  ExtendProvider|null  $provider
      * @return $this
      */
-    public function extension(ExtendProvider $provider = null)
+    public function extension(ExtendProvider $provider = null): static
     {
         if ($provider) {
             $this->items['extension'] = $provider;
@@ -35,10 +35,10 @@ trait NavCommon
     }
 
     /**
-     * @param  string|array  $roles
+     * @param  array|string  $roles
      * @return $this
      */
-    public function role($roles)
+    public function role(array|string $roles): static
     {
         $this->items['roles'] = is_array($roles) ? $roles : [$roles];
 
@@ -49,7 +49,7 @@ trait NavCommon
      * @param  string  $func
      * @return $this
      */
-    public function func(string $func)
+    public function func(string $func): static
     {
         $this->items['func'] = $func;
 
@@ -60,7 +60,7 @@ trait NavCommon
      * @param  array  $data
      * @return $this
      */
-    public function data(array $data)
+    public function data(array $data): static
     {
         if (!isset($this->items['data'])) {
             $this->items['data'] = $data;
@@ -75,7 +75,7 @@ trait NavCommon
      * @param  string  $uri
      * @return $this
      */
-    public function uri(string $uri)
+    public function uri(string $uri): static
     {
         $this->items['uri'] = $uri;
 
@@ -86,7 +86,7 @@ trait NavCommon
      * @param  string  $icon
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $icon): static
     {
         $this->items['icon'] = $icon;
 
@@ -97,7 +97,7 @@ trait NavCommon
      * @param  string|null  $title
      * @return $this
      */
-    public function title(string $title = null)
+    public function title(string $title = null): static
     {
         if ($title !== null) {
             $this->items['title'] = $title;
@@ -110,7 +110,7 @@ trait NavCommon
      * @param  bool  $state
      * @return $this
      */
-    public function selected(bool $state = true)
+    public function selected(bool $state = true): static
     {
         $this->items['selected'] = $state;
 
@@ -121,7 +121,7 @@ trait NavCommon
      * @param  bool  $state
      * @return $this
      */
-    public function off(bool $state = false)
+    public function off(bool $state = false): static
     {
         $this->items['active'] = $state;
 
@@ -132,7 +132,7 @@ trait NavCommon
      * @param  string|null  $route
      * @return $this
      */
-    public function route(string $route = null)
+    public function route(string $route = null): static
     {
         if ($route !== null) {
             $this->items['route'] = $route;
@@ -145,7 +145,7 @@ trait NavCommon
      * @param $middleware
      * @return $this
      */
-    public function middleware($middleware)
+    public function middleware($middleware): static
     {
         $this->items['middleware'] = $middleware;
 
@@ -156,7 +156,7 @@ trait NavCommon
      * @param  string  $title
      * @return $this
      */
-    public function badge_title(string $title)
+    public function badge_title(string $title): static
     {
         if ($this->items['badge']) {
             $this->items['badge']['title'] = $title;
@@ -170,7 +170,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_danger($data = null, array $instructions = null)
+    public function badge_danger($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'danger', $instructions);
     }
@@ -181,7 +181,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge($data = null, $type = 'info', array $instructions = null)
+    public function badge($data = null, string $type = 'info', array $instructions = null): static
     {
         if (is_array($type)) {
             $instructions = $type;
@@ -205,7 +205,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_dark($data = null, array $instructions = null)
+    public function badge_dark($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'dark', $instructions);
     }
@@ -215,7 +215,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_light($data = null, array $instructions = null)
+    public function badge_light($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'light', $instructions);
     }
@@ -225,7 +225,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_pill($data = null, array $instructions = null)
+    public function badge_pill($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'pill', $instructions);
     }
@@ -235,7 +235,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_primary($data = null, array $instructions = null)
+    public function badge_primary($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'primary', $instructions);
     }
@@ -245,7 +245,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_secondary($data = null, array $instructions = null)
+    public function badge_secondary($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'secondary', $instructions);
     }
@@ -255,7 +255,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_success($data = null, array $instructions = null)
+    public function badge_success($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'success', $instructions);
     }
@@ -265,7 +265,7 @@ trait NavCommon
      * @param  array|null  $instructions
      * @return $this
      */
-    public function badge_warning($data = null, array $instructions = null)
+    public function badge_warning($data = null, array $instructions = null): static
     {
         return $this->badge($data, 'warning', $instructions);
     }
@@ -273,7 +273,7 @@ trait NavCommon
     /**
      * @param $name
      */
-    protected function includeAfterGroup($name)
+    protected function includeAfterGroup($name): void
     {
         if (is_string($name) && isset(Admin::$nav_extensions[$name]) && is_array(Admin::$nav_extensions[$name])) {
             foreach (Admin::$nav_extensions[$name] as $item) {

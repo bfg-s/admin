@@ -2,43 +2,18 @@
 
 namespace Admin\Controllers;
 
+use Admin\Components\CardComponent;
+use Admin\Components\Component;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Lar\Layout\Respond;
-use Admin\Components\AlertComponent;
-use Admin\Components\ButtonsComponent;
-use Admin\Components\CardBodyComponent;
-use Admin\Components\CardComponent;
-use Admin\Components\ChartJsComponent;
-use Admin\Components\DividerComponent;
-use Admin\Components\FieldComponent;
-use Admin\Components\FormComponent;
-use Admin\Components\GridColumnComponent;
-use Admin\Components\GridRowComponent;
-use Admin\Components\InfoBoxComponent;
-use Admin\Components\LangComponent;
-use Admin\Components\LiveComponent;
-use Admin\Components\ModalComponent;
-use Admin\Components\ModelInfoTableComponent;
-use Admin\Components\ModelRelationComponent;
-use Admin\Components\ModelTableComponent;
-use Admin\Components\NestedComponent;
-use Admin\Components\SearchFormComponent;
-use Admin\Components\SmallBoxComponent;
-use Admin\Components\StatisticPeriodComponent;
-use Admin\Components\TableComponent;
-use Admin\Components\TabsComponent;
-use Admin\Components\TimelineComponent;
-use Admin\Components\WatchComponent;
+use Admin\Respond;
 use Admin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
 use Admin\Core\Delegate;
 use Admin\Exceptions\NotFoundExplainForControllerException;
 use Admin\Explanation;
 use Admin\Page;
-use Admin\Traits\Macroable;
-use Admin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -46,66 +21,34 @@ use function redirect;
 
 /**
  * @property-read Page $page
- * @methods Admin\Controllers\Controller::$explanation_list (likeProperty)
- * @mixin ControllerMethods
- * @mixin ControllerMacroList
  */
 class Controller extends BaseController
 {
-    use Piplineble;
     use DefaultControllerResourceMethodsTrait;
-    use Macroable;
 
     /**
      * @var array
      */
-    public static $rules = [];
+    public static array $rules = [];
+
     /**
      * @var array
      */
-    public static $rule_messages = [];
+    public static array $rule_messages = [];
+
     /**
      * @var array
      */
-    public static $crypt_fields = [
+    public static array $crypt_fields = [
         'password',
     ];
-    /**
-     * @var string[]
-     */
-    protected static $explanation_list = [
-        'row' => GridRowComponent::class,
-        'column' => GridColumnComponent::class,
-        'card' => CardComponent::class,
-        'card_body' => CardBodyComponent::class,
-        'search_form' => SearchFormComponent::class,
-        'model_table' => ModelTableComponent::class,
-        'nested' => NestedComponent::class,
-        'form' => FormComponent::class,
-        'model_info_table' => ModelInfoTableComponent::class,
-        'buttons' => ButtonsComponent::class,
-        'chart_js' => ChartJsComponent::class,
-        'timeline' => TimelineComponent::class,
-        'statistic_period' => StatisticPeriodComponent::class,
-        'live' => LiveComponent::class,
-        'watch' => WatchComponent::class,
-        'field' => FieldComponent::class,
-        'model_relation' => ModelRelationComponent::class,
-        'modal' => ModalComponent::class,
 
-        'lang' => LangComponent::class,
-        'table' => TableComponent::class,
-        'alert' => AlertComponent::class,
-        'small_box' => SmallBoxComponent::class,
-        'info_box' => InfoBoxComponent::class,
-        'tabs' => TabsComponent::class,
-        'divider' => DividerComponent::class,
-    ];
-    protected static $started = false;
+    protected static bool $started = false;
+
     /**
      * @var array
      */
-    public $menu = [];
+    public array $menu = [];
 
     /**
      * Controller constructor.
@@ -115,7 +58,10 @@ class Controller extends BaseController
         $this->makeModelEvents();
     }
 
-    private function makeModelEvents()
+    /**
+     * @return void
+     */
+    private function makeModelEvents(): void
     {
         if (
             property_exists($this, 'model')
@@ -135,40 +81,22 @@ class Controller extends BaseController
         }
     }
 
-    public static function getHelpMethodList()
+    /**
+     * @param  string  $name
+     * @param  string  $class
+     * @return void
+     */
+    public static function extend(string $name, string $class): void
     {
-        $result = self::$explanation_list;
-        foreach ($result as $key => $extension) {
-            $result[$key.'_by_request'] = $extension;
-            $result[$key.'_by_default'] = $extension;
-        }
-
-        return $result;
-    }
-
-    public static function getExplanationList()
-    {
-        return self::$explanation_list;
-    }
-
-    public static function hasExplanation(string $name)
-    {
-        return isset(self::$explanation_list[$name]);
-    }
-
-    public static function extend(string $name, string $class)
-    {
-        if (!static::hasExtend($name)) {
-            self::$explanation_list[$name] = $class;
+        if (!Component::hasComponentStatic($name)) {
+            Component::$components[$name] = $class;
         }
     }
 
-    public static function hasExtend(string $name)
-    {
-        return isset(self::$explanation_list[$name]);
-    }
-
-    public function defaultDateRange()
+    /**
+     * @return array
+     */
+    public function defaultDateRange(): array
     {
         return [
             now()->subYear()->toDateString(),
@@ -176,10 +104,13 @@ class Controller extends BaseController
         ];
     }
 
-    public function explanation(): Explanation
+    /**
+     * @return Explanation
+     */
+    public function explanationForFirstCard(): Explanation
     {
         return Explanation::new(
-            $this->card->defaultTools(
+            CardComponent::new()->defaultTools(
                 method_exists($this, 'defaultTools') ? [$this, 'defaultTools'] : null
             )
         );
@@ -190,10 +121,10 @@ class Controller extends BaseController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function returnTo()
+    public function returnTo(): mixed
     {
         if (request()->ajax() && !request()->pjax()) {
-            return respond()->reload();
+            return Respond::glob()->reload();
         }
 
         $_after = request()->get('_after', 'index');
@@ -230,19 +161,29 @@ class Controller extends BaseController
             return Page::new();
         }
 
-        if (isset(static::$explanation_list[$name])) {
-            return new Delegate(static::$explanation_list[$name]);
+        if (isset(Component::$components[$name])) {
+            return new Delegate(Component::$components[$name]);
         }
 
         throw new NotFoundExplainForControllerException($name);
     }
 
-    public function isNotRequest(string $path, mixed $need_value = true)
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isNotRequest(string $path, mixed $need_value = true): bool
     {
         return !$this->isRequest($path, $need_value);
     }
 
-    public function isRequest(string $path, mixed $need_value = true)
+    /**
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool
+     */
+    public function isRequest(string $path, mixed $need_value = true): bool
     {
         $val = $this->request($path);
         if (is_array($need_value)) {
@@ -257,7 +198,7 @@ class Controller extends BaseController
      * @param  null  $default
      * @return array|mixed|null
      */
-    public function request(string $path = null, $default = null)
+    public function request(string $path = null, $default = null): mixed
     {
         if ($path) {
             $model = $this->model();
@@ -279,7 +220,7 @@ class Controller extends BaseController
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isNotModelInput(string $path, mixed $need_value = true)
+    public function isNotModelInput(string $path, mixed $need_value = true): bool
     {
         return !$this->isModelInput($path, $need_value);
     }
@@ -289,7 +230,7 @@ class Controller extends BaseController
      * @param  mixed  $need_value
      * @return bool
      */
-    public function isModelInput(string $path, mixed $need_value = true)
+    public function isModelInput(string $path, mixed $need_value = true): bool
     {
         $val = old($path, $this->modelInput($path));
         if (is_array($need_value)) {
@@ -299,7 +240,12 @@ class Controller extends BaseController
         return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
-    public function modelInput(string $path, $default = null)
+    /**
+     * @param  string  $path
+     * @param $default
+     * @return array|Application|\Illuminate\Foundation\Application|\Illuminate\Http\Request|mixed|string|null
+     */
+    public function modelInput(string $path, $default = null): mixed
     {
         $model = app(Page::class)->model();
 

@@ -2,12 +2,12 @@
 
 namespace Admin\Components\SearchFields;
 
-use Admin\Components\Fields\NumericField;
+use Admin\Components\Inputs\NumericInput;
 
-class NumericSearchField extends NumericField
+class NumericSearchField extends NumericInput
 {
     /**
      * @var string
      */
-    public static $condition = '=';
+    public static string $condition = '=';
 }

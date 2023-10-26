@@ -3,62 +3,26 @@
 namespace Admin\Core;
 
 use Closure;
-use Event;
 use Admin\Components\Component;
 use Admin\Components\ModelTableComponent;
-use Admin\Controllers\Controller;
 use Admin\ExtendProvider;
-use Admin\Traits\Macroable;
-use Admin\Traits\Piplineble;
 
 class ConfigExtensionProvider
 {
     /**
      * @var ExtendProvider
      */
-    public $provider;
+    public ExtendProvider $provider;
 
     /**
      * @var array
      */
-    protected $scripts = [];
+    protected array $scripts = [];
 
     /**
      * @var array
      */
-    protected $styles = [];
-
-    /**
-     * @var array
-     */
-    protected $mixins = [];
-
-    /**
-     * @var array
-     */
-    protected $save_pipes = [];
-
-    /**
-     * @var array
-     */
-    protected $delete_pipes = [];
-
-    /**
-     * @var array
-     */
-    protected $pipe_map = [];
-
-    /**
-     * The event listener mappings for the application.
-     * @var array
-     */
-    protected $listen = [];
-
-    /**
-     * The subscriber classes to register.
-     * @var array
-     */
-    protected $subscribe = [];
+    protected array $styles = [];
 
     /**
      * ConfigExtensionProvider constructor.
@@ -74,43 +38,7 @@ class ConfigExtensionProvider
      */
     public function boot()
     {
-        /** @var Macroable $class */
-        foreach ($this->mixins as $class => $mixin) {
-            if (is_array($mixin)) {
-                foreach ($mixin as $item) {
-                    $class::mixin($item);
-                }
-            } else {
-                $class::mixin($mixin);
-            }
-        }
 
-        /** @var Controller $controller */
-        foreach ($this->save_pipes as $controller => $controller_pipe) {
-            $controller::pipes($controller_pipe, 'save');
-        }
-
-        /** @var Controller $controller */
-        foreach ($this->delete_pipes as $controller => $controller_pipe) {
-            $controller::pipes($controller_pipe, 'delete');
-        }
-
-        /** @var Piplineble $class */
-        foreach ($this->pipe_map as $class => $types) {
-            foreach ($types as $type => $pipe) {
-                $class::pipes($pipe, $type);
-            }
-        }
-
-        foreach ($this->listen as $event => $listeners) {
-            foreach (array_unique($listeners) as $listener) {
-                Event::listen($event, $listener);
-            }
-        }
-
-        foreach ($this->subscribe as $subscriber) {
-            Event::subscribe($subscriber);
-        }
     }
 
     /**
@@ -118,7 +46,7 @@ class ConfigExtensionProvider
      * @param  Closure  $call
      * @return $this
      */
-    public function tableExtension(string $name, Closure $call)
+    public function tableExtension(string $name, Closure $call): static
     {
         ModelTableComponent::addExtension($name, $call);
 
@@ -129,7 +57,7 @@ class ConfigExtensionProvider
      * @param  string  $class
      * @return $this
      */
-    public function tableExtensionClass(string $class)
+    public function tableExtensionClass(string $class): static
     {
         ModelTableComponent::addExtensionClass($class);
 
@@ -141,7 +69,7 @@ class ConfigExtensionProvider
      * @param  string  $class
      * @return $this
      */
-    public function formField(string $name, string $class)
+    public function formField(string $name, string $class): static
     {
         Component::registerFormComponent($name, $class);
 
@@ -152,7 +80,7 @@ class ConfigExtensionProvider
      * Get extension scripts.
      * @return array
      */
-    public function getScripts()
+    public function getScripts(): array
     {
         return $this->scripts;
     }
@@ -164,5 +92,49 @@ class ConfigExtensionProvider
     public function getStyles()
     {
         return $this->styles;
+    }
+
+    /**
+     * Merge scripts to script list
+     * @param  array  $scripts
+     * @return $this
+     */
+    public function mergeScripts(array $scripts): static
+    {
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        return $this;
+    }
+
+    /**
+     * Merge styles to style list
+     * @param  array  $styles
+     * @return $this
+     */
+    public function mergeStyles(array $styles): static
+    {
+        $this->styles = array_merge($this->styles, $styles);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function js(): string
+    {
+        return <<<JS
+
+JS;
+    }
+
+    /**
+     * @return string
+     */
+    public function css(): string
+    {
+        return <<<CSS
+
+CSS;
     }
 }

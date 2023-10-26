@@ -257,6 +257,7 @@ return [
     '2fa_secure_not_enable_title' => 'Ви не ввімкнули двофакторну автентифікацію.',
     '2fa_secure_not_enable_info' => "Якщо двофакторну автентифікацію ввімкнено, під час автентифікації вам буде запропоновано ввести безпечний випадковий маркер. Ви можете отримати цей маркер із програми Google Authenticator на телефоні.",
     '2fa_secure_enable_button' => "Увімкнути",
+    '2fa_secure_enable_disable' => "Вимкнути",
     '2fa_secure_confirm_password' => "Підтвердьте пароль",
     '2fa_secure_confirm_password_info' => "Для вашої безпеки підтвердьте свій пароль, щоб продовжити.",
     '2fa_secure_confirm_password_confirm' => "Підтвердити",
@@ -269,4 +270,5 @@ return [
     '2fa_is_wrong' => 'Неправильна перевірка!',
     'complete' => 'Завершено',
     '2fa_enable_before' => 'Для початку вам необхідно увімкнути двофакторну авторизацію!',
+    'you_have_enabled_two_factor_authentication' => 'У вас включено двофакторну автентифікацію.',
 ];

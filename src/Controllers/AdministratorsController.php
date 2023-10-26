@@ -13,6 +13,8 @@ use Admin\Delegates\Tab;
 use Admin\Models\AdminRole;
 use Admin\Models\AdminUser;
 use Admin\Page;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AdministratorsController extends Controller
 {
@@ -25,12 +27,12 @@ class AdministratorsController extends Controller
      * @param  AdminUser  $user
      * @return string
      */
-    public function show_role(AdminUser $user)
+    public function show_role(AdminUser $user): string
     {
         return '<span class="badge badge-success">'.$user->roles->pluck('name')->implode('</span> <span class="badge badge-success">').'</span>';
     }
 
-    public function defaultTools($type)
+    public function defaultTools($type): bool
     {
         return !($type === 'delete' && $this->model()->id == 1);
     }
@@ -41,8 +43,10 @@ class AdministratorsController extends Controller
      * @param  SearchForm  $searchForm
      * @param  ModelTable  $modelTable
      * @return Page
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
+    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable): Page
     {
         return $page->card(
             $card->title('admin.admin_list'),
@@ -76,7 +80,7 @@ class AdministratorsController extends Controller
      * @param  Tab  $tab
      * @return Page
      */
-    public function matrix(Page $page, Card $card, Form $form, Tab $tab)
+    public function matrix(Page $page, Card $card, Form $form, Tab $tab): Page
     {
         return $page
             ->card(
@@ -136,7 +140,7 @@ class AdministratorsController extends Controller
         Tab $tab,
         ChartJs $chartJs,
         SearchForm $searchForm
-    ) {
+    ): Page {
         $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
         return $page
@@ -195,7 +199,7 @@ class AdministratorsController extends Controller
             );
     }
 
-    public function defaultDateRange()
+    public function defaultDateRange(): array
     {
         return [
             now()->subDay()->startOfDay()->toDateString(),

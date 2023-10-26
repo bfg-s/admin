@@ -6,42 +6,45 @@ use Closure;
 
 class ModelRelationContentComponent extends Component
 {
-    protected $class = 'template_container';
+    /**
+     * @var string
+     */
+    protected string $view = 'model-relation-content';
 
     /**
-     * @var Closure|array|null
+     * @var mixed
      */
-    protected $control_group = null;
+    protected mixed $control_group = null;
 
     /**
-     * @var Closure|array|null
+     * @var mixed
      */
-    protected $control_delete = false;
+    protected mixed $control_delete = false;
 
     /**
-     * @var Closure|array|null
+     * @var mixed
      */
-    protected $control_create = false;
+    protected mixed $control_create = false;
 
     /**
-     * @var Closure|array|null
+     * @var mixed
      */
-    protected $control_restore = null;
+    protected mixed $control_restore = null;
 
     /**
      * @var string|null
      */
-    protected $control_restore_text = '';
+    protected ?string $control_restore_text = '';
 
     /**
      * @var callable[]
      */
-    protected $controls = [];
+    protected array $controls = [];
 
     /**
      * @var bool
      */
-    protected $vertical = true;
+    protected bool $vertical = true;
 
     /**
      * @param  string  $relation
@@ -57,7 +60,10 @@ class ModelRelationContentComponent extends Component
         ]);
     }
 
-    public function fullControl()
+    /**
+     * @return $this
+     */
+    public function fullControl(): static
     {
         $this->controlCreate(true);
         $this->controlRestore(true);
@@ -67,10 +73,10 @@ class ModelRelationContentComponent extends Component
     }
 
     /**
-     * @param  Closure|array|mixed  $test
+     * @param  mixed|null  $test
      * @return $this
      */
-    public function controlCreate($test = null)
+    public function controlCreate(mixed $test = null): static
     {
         $this->set_test_var('control_create', $test);
 
@@ -81,7 +87,7 @@ class ModelRelationContentComponent extends Component
      * @param  string  $var_name
      * @param $test
      */
-    protected function set_test_var(string $var_name, $test)
+    protected function set_test_var(string $var_name, $test): void
     {
         if (is_embedded_call($test)) {
             $this->{$var_name} = $test;
@@ -93,10 +99,10 @@ class ModelRelationContentComponent extends Component
     }
 
     /**
-     * @param  Closure|array|mixed  $test
+     * @param  mixed|null  $test
      * @return $this
      */
-    public function controlRestore($test = null)
+    public function controlRestore(mixed $test = null): static
     {
         $this->set_test_var('control_restore', $test);
 
@@ -104,17 +110,21 @@ class ModelRelationContentComponent extends Component
     }
 
     /**
-     * @param  Closure|array|mixed  $test
+     * @param  mixed|null  $test
      * @return $this
      */
-    public function controlDelete($test = null)
+    public function controlDelete(mixed $test = null): static
     {
         $this->set_test_var('control_delete', $test);
 
         return $this;
     }
 
-    public function controls(callable $call)
+    /**
+     * @param  callable  $call
+     * @return $this
+     */
+    public function controls(callable $call): static
     {
         $this->controls[] = $call;
 
@@ -122,10 +132,10 @@ class ModelRelationContentComponent extends Component
     }
 
     /**
-     * @param  Closure|array|mixed  $test
+     * @param  mixed|null  $test
      * @return $this
      */
-    public function controlGroup($test = null)
+    public function controlGroup(mixed $test = null): static
     {
         $this->set_test_var('control_group', $test);
 
@@ -136,7 +146,7 @@ class ModelRelationContentComponent extends Component
      * @param  string  $text
      * @return $this
      */
-    public function controlRestoreText(string $text)
+    public function controlRestoreText(string $text): static
     {
         $this->control_restore_text = $text;
 
@@ -146,9 +156,9 @@ class ModelRelationContentComponent extends Component
     /**
      * @param  string  $var_name
      * @param  array  $args
-     * @return bool
+     * @return mixed
      */
-    public function get_test_var(string $var_name, array $args = [])
+    public function get_test_var(string $var_name, array $args = []): mixed
     {
         if (is_bool($this->{$var_name}) || is_string($this->{$var_name})) {
             return $this->{$var_name};
@@ -162,7 +172,7 @@ class ModelRelationContentComponent extends Component
     /**
      * @param  mixed  ...$params
      */
-    public function callControls(...$params)
+    public function callControls(...$params): void
     {
         foreach ($this->controls as $control) {
             call_user_func_array($control, $params);
@@ -172,12 +182,15 @@ class ModelRelationContentComponent extends Component
     /**
      * @return bool
      */
-    public function hasControls()
+    public function hasControls(): bool
     {
         return (bool) count($this->controls);
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         //
     }

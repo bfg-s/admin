@@ -16,9 +16,7 @@ use Admin\Controllers\Controller;
 use Admin\Core\Delegate;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Admin\Page;
-use Admin\Traits\Macroable;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -157,11 +155,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                     }
 
                     if (!isset($isset_classes[$namespace_name][$name])) {
-                        $namespace->class($name, function ($class_obj) use ($class) {
-                            $class_obj->doc(function ($doc) use ($class) {
-                                $this->macroMethods($doc, $class);
-                            });
-                        });
 
                         $isset_classes[$namespace_name][$name] = $name;
                     }
@@ -241,28 +234,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Generate default methods.
-     *
-     * @param  DocumentorEntity  $doc
-     * @param  array  $class_data
-     * @throws ReflectionException
-     */
-    protected function macroMethods($doc, array $class_data)
-    {
-        $class = $class_data['class'];
-        /** @var Macroable $class */
-        foreach ($class::get_macro_names() as $macro_name) {
-            $ref = $class::get_macro_reflex($macro_name);
-
-            $doc->tagMethod(
-                $class_data['macro_return'],
-                $macro_name.'('.refl_params_entity($ref->getParameters()).')',
-                "Field Macro $macro_name"
-            );
-        }
     }
 
     /**

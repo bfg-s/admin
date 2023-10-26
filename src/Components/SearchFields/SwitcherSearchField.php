@@ -2,12 +2,12 @@
 
 namespace Admin\Components\SearchFields;
 
-use Admin\Components\Fields\SwitcherField;
+use Admin\Components\Inputs\SwitcherInput;
 
-class SwitcherSearchField extends SwitcherField
+class SwitcherSearchField extends SwitcherInput
 {
     /**
      * @var string
      */
-    public static $condition = '=';
+    public static string $condition = '=';
 }

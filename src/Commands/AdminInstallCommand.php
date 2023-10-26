@@ -2,11 +2,11 @@
 
 namespace Admin\Commands;
 
+use Admin\ApplicationConfig;
 use App\Admin\Delegates\CommonTrait;
 use File;
 use Illuminate\Console\Command;
 use Admin\ApplicationServiceProvider;
-use Admin\Core\ConfigExtensionProvider;
 use Admin\Core\JsonFormatter;
 use Admin\Core\NavigatorExtensionProvider;
 use Admin\Interfaces\ActionWorkExtensionInterface;
@@ -229,8 +229,6 @@ class AdminInstallCommand extends Command
 
             $class->method('handle')
                 ->returnType('void')
-                ->line('$this->makeMenu();')
-                ->line()
                 ->line('$this->makeDefaults();')
                 ->line()
                 ->line('$this->makeExtensions();');
@@ -249,7 +247,7 @@ class AdminInstallCommand extends Command
             $class = class_entity('Config');
             $class->namespace(admin_app_namespace());
             $class->wrap('php');
-            $class->extend(ConfigExtensionProvider::class);
+            $class->extend(ApplicationConfig::class);
             $class->method('boot')
                 ->line('parent::boot();')
                 ->line()

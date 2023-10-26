@@ -2,10 +2,12 @@
 
 namespace Admin\Controllers;
 
-use Auth;
+use Admin\Facades\AdminFacade;
+use Admin\Respond;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Admin;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Auth;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -22,11 +24,11 @@ class AuthController
      */
     public function login()
     {
-        if (!Admin::guest()) {
+        if (!AdminFacade::guest()) {
             return redirect()->route('admin.dashboard');
         }
 
-        return view('admin::auth.login');
+        return admin_view('login');
     }
 
     /**
@@ -36,7 +38,7 @@ class AuthController
     {
         $result = $this->login_post($request);
 
-        if (Admin::guest()) {
+        if (AdminFacade::guest()) {
             return redirect()->route('admin.login');
         }
 
@@ -46,15 +48,16 @@ class AuthController
             Auth::guard('admin')->logout();
         }
 
-        return view('admin::auth.2fa', [
+        return admin_view('2fa', [
             'login' => $request->login,
             'password' => $request->password,
+            'remember' => $request->remember,
         ]);
     }
 
     public function twofaGet(Request $request)
     {
-        if (!Admin::guest()) {
+        if (!AdminFacade::guest()) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -106,7 +109,7 @@ class AuthController
 
         if (Auth::guard('admin')->attempt(
             ['login' => $request->login, 'password' => $request->password],
-            true
+            $request->remember === 'on'
         )) {
             $request->session()->regenerate();
 
@@ -115,7 +118,7 @@ class AuthController
             $login = true;
         } elseif (Auth::guard('admin')->attempt(
             ['email' => $request->login, 'password' => $request->password],
-            true
+            $request->remember === 'on'
         )) {
             $request->session()->regenerate();
 
@@ -123,7 +126,8 @@ class AuthController
 
             $login = true;
         } else {
-            respond()->toast_error('User not found!');
+            //Respond::glob()->toast_error('User not found!');
+            session()->flash('message', 'User not found!');
         }
 
         if ($login && session()->has('return_authenticated_url')) {

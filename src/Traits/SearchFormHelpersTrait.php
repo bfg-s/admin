@@ -7,7 +7,7 @@ trait SearchFormHelpersTrait
     /**
      * @return $this
      */
-    public function id()
+    public function id(): static
     {
         $this->numeric('id', 'admin.id', '=');
 
@@ -17,7 +17,7 @@ trait SearchFormHelpersTrait
     /**
      * @return $this
      */
-    public function at()
+    public function at(): static
     {
         return $this->updated_at()->created_at();
     }
@@ -25,7 +25,7 @@ trait SearchFormHelpersTrait
     /**
      * @return $this
      */
-    public function created_at()
+    public function created_at(): static
     {
         $this->date_time_range('created_at', 'admin.created_at');
 
@@ -35,7 +35,7 @@ trait SearchFormHelpersTrait
     /**
      * @return $this
      */
-    public function updated_at()
+    public function updated_at(): static
     {
         $this->date_time_range('updated_at', 'admin.updated_at');
 

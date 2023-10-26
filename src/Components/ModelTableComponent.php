@@ -2,7 +2,7 @@
 
 namespace Admin\Components;
 
-use Closure;
+use Admin\Middlewares\DomMiddleware;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,21 +11,15 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Lar\Tagable\Tag;
-use Admin\Controllers\Controller;
 use Admin\Traits\Delegable;
-use Admin\Traits\Macroable;
 use Admin\Traits\ModelTable\TableBuilderTrait;
 use Admin\Traits\ModelTable\TableControlsTrait;
 use Admin\Traits\ModelTable\TableExtensionTrait;
 use Admin\Traits\ModelTable\TableHelpersTrait;
-use Admin\Traits\Piplineble;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * @methods static::$extensions (...$params) static
- * @mixin ModelTableComponentMacroList
  * @mixin ModelTableComponentFields
  * @mixin ModelTableComponentMethods
  * @property-read ModelTableComponent $sort
@@ -36,76 +30,91 @@ class ModelTableComponent extends Component
     use TableExtensionTrait;
     use TableBuilderTrait;
     use TableControlsTrait;
-    use Macroable;
-    use Piplineble;
     use Delegable;
 
     /**
-     * @var SearchFormComponent
+     * @var SearchFormComponent|null
      */
-    public $search;
+    public ?SearchFormComponent $search = null;
+
     /**
      * @var string
      */
-    protected $element = 'table';
-    protected $label = null;
-    protected $hasHidden = false;
+    protected string $view = 'model-table';
+
     /**
-     * @var string[]
+     * @var mixed|null
      */
-    protected $props = [
-        'table', 'table-sm', 'table-hover',
-    ];
+    protected mixed $label = null;
+
+    /**
+     * @var bool
+     */
+    protected bool $hasHidden = false;
+
     /**
      * @var Model|Builder|Relation|Collection|array|null
      */
     protected $model;
+
     /**
-     * @var LengthAwarePaginator
+     * @var LengthAwarePaginator|null
      */
-    protected $paginate;
+    protected ?LengthAwarePaginator $paginate = null;
+
     /**
-     * @var Closure|array|null
+     * @var mixed|array
      */
-    protected $model_control = [];
+    protected mixed $model_control = [];
+
     /**
      * @var string
      */
     protected $model_name;
+
     /**
      * @var string
      */
     protected $model_class;
+
     /**
      * @var int
      */
     protected $per_page = 15;
+
     /**
      * @var int[]
      */
     protected $per_pages = [10, 15, 20, 50, 100, 500, 1000];
+
     /**
      * @var string
      */
     protected $order_field = 'id';
+
     /**
      * @var string
      */
     protected $order_type = 'desc';
+
     /**
      * @var array
      */
     protected $columns = [];
+
     /**
      * @var string|null
      */
     protected $last;
+
     /**
      * @var bool
      */
     protected $prepend = false;
-    protected $controlsObj;
 
+    /**
+     * @var bool
+     */
     public static bool $is_export = false;
 
     /**
@@ -129,13 +138,42 @@ class ModelTableComponent extends Component
         $this->delegatesNow($delegates);
 
         $this->_create_controls();
+
+        if (request()->has($this->model_name.'_per_page') && in_array(
+                request()->get($this->model_name.'_per_page'),
+                $this->per_pages
+            )) {
+            $this->per_page = (string) request()->get($this->model_name.'_per_page');
+        }
+
+        DomMiddleware::setModelTableComponent($this);
     }
 
     /**
-     * @param  SearchFormComponent|Closure|array|Builder|Relation  $instruction
-     * @return $this|static
+     * @return LengthAwarePaginator|null
      */
-    public function model($model = null)
+    public function getPaginate(): ?LengthAwarePaginator
+    {
+        return $this->paginate;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'id' => $this->model_name,
+        ];
+    }
+
+    /**
+     * @param  null  $model
+     * @return $this|static
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function model($model = null): static
     {
         if ($model instanceof SearchFormComponent) {
             $this->search = $model;
@@ -143,13 +181,68 @@ class ModelTableComponent extends Component
             $model = null;
         }
 
-        return parent::model($model);
+        $result = parent::model($model);
+
+        $this->createModel();
+
+        return $result;
+    }
+
+    /**
+     * @return mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function createModel(): mixed
+    {
+        if (is_array($this->model)) {
+            $this->model = collect($this->model);
+        }
+
+        if (request()->has('show_deleted')) {
+            $this->model = $this->model->onlyTrashed();
+        }
+
+        $select_type = request()->get($this->model_name.'_type', $this->order_type);
+        $this->order_field = request()->get($this->model_name, $this->order_field);
+
+        if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
+            foreach ($this->model_control as $item) {
+                if ($item instanceof SearchFormComponent) {
+                    $this->model = $item->makeModel($this->model);
+                } elseif (is_embedded_call($item)) {
+                    $r = call_user_func($item, $this->model);
+                    if ($r) {
+                        $this->model = $r;
+                    }
+                } elseif (is_array($item)) {
+                    $this->model = eloquent_instruction($this->model, $item);
+                }
+            }
+
+            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate(
+                $this->per_page,
+                ['*'],
+                $this->model_name.'_page'
+            );
+        } elseif ($this->model instanceof Collection) {
+            if (request()->has($this->model_name)) {
+                $model = $this->model
+                    ->{strtolower($select_type) == 'asc' ? 'sortBy' : 'sortByDesc'}($this->order_field);
+            } else {
+                $model = $this->model;
+            }
+
+            return $this->paginate = $model->paginate($this->per_page, $this->model_name.'_page');
+        }
+
+        return $this->model;
     }
 
     /**
      * @param $name
      * @param $arguments
-     * @return bool|Tag|string
+     * @return bool|string
      * @throws Exception
      */
     public function __call($name, $arguments)
@@ -157,7 +250,7 @@ class ModelTableComponent extends Component
         if (
             preg_match("/^col_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
         ) {
             $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
@@ -167,7 +260,7 @@ class ModelTableComponent extends Component
             if (
                 preg_match("/^sort_in_(.+)$/", $name, $m)
                 && !isset(Component::$inputs[$name])
-                && !Controller::hasExplanation($name)
+                && !Component::hasComponentStatic($name)
             ) {
                 return $this->sort($m[1]);
             } else {
@@ -182,12 +275,16 @@ class ModelTableComponent extends Component
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * @param  string  $name
+     * @return ModelTableComponent
+     */
     public function __get(string $name)
     {
         if (
             preg_match("/^col_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
-            && !Controller::hasExplanation($name)
+            && !Component::hasComponentStatic($name)
         ) {
             $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = ucfirst(str_replace(['.', '_'], ' ', $name));
@@ -197,7 +294,7 @@ class ModelTableComponent extends Component
             if (
                 preg_match("/^sort_in_(.+)$/", $name, $m)
                 && !isset(Component::$inputs[$name])
-                && !Controller::hasExplanation($name)
+                && !Component::hasComponentStatic($name)
             ) {
                 return $this->sort($m[1]);
             } else {
@@ -210,7 +307,12 @@ class ModelTableComponent extends Component
         return parent::__get($name);
     }
 
-    protected function mount()
+    /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function mount(): void
     {
         $this->_build();
     }

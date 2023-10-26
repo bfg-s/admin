@@ -6,19 +6,13 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Collection;
-use Lar\Layout\Tags\DIV;
-use Lar\Layout\Tags\LI;
-use Lar\Layout\Tags\OL;
 
 class NestedComponent extends Component
 {
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'dd',
-    ];
+    protected string $view = 'nested';
 
     /**
      * @var Builder|Model|Relation|string|null
@@ -33,14 +27,14 @@ class NestedComponent extends Component
     /**
      * @var string
      */
-    protected $parent_field = 'parent_id';
+    protected string $parent_field = 'parent_id';
 
     /**
      * Shoe default controls.
      *
-     * @var Closure|array
+     * @var mixed
      */
-    protected $controls;
+    protected mixed $controls = null;
 
     /**
      * Custom controls.
@@ -50,38 +44,38 @@ class NestedComponent extends Component
     protected $custom_controls;
 
     /**
-     * @var Closure|array
+     * @var mixed
      */
-    protected $info_control;
+    protected mixed $info_control = null;
 
     /**
-     * @var Closure|array
+     * @var mixed
      */
-    protected $delete_control;
+    protected mixed $delete_control = null;
 
     /**
-     * @var Closure|array
+     * @var mixed
      */
-    protected $edit_control;
-
-    /**
-     * @var string
-     */
-    private $order_by_field = 'order';
+    protected mixed $edit_control = null;
 
     /**
      * @var string
      */
-    private $order_by_type = 'asc';
+    private string $order_by_field = 'order';
+
+    /**
+     * @var string
+     */
+    private string $order_by_type = 'asc';
 
     /**
      * @var int
      */
-    private $maxDepth = 5;
+    private int $maxDepth = 5;
 
     /**
      * Col constructor.
-     * @param  null  $model
+     * @param  mixed  ...$delegates
      */
     public function __construct(...$delegates)
     {
@@ -101,7 +95,7 @@ class NestedComponent extends Component
      * @param  string|null  $field
      * @return $this
      */
-    public function orderDesc(string $field = null)
+    public function orderDesc(string $field = null): static
     {
         $this->order_by_type = 'desc';
 
@@ -117,7 +111,7 @@ class NestedComponent extends Component
      * @param  string|null  $order
      * @return $this
      */
-    public function orderBy(string $field = null, string $order = null)
+    public function orderBy(string $field = null, string $order = null): static
     {
         if ($field) {
             $this->order_by_field = $field;
@@ -134,14 +128,18 @@ class NestedComponent extends Component
      * @param  string|callable  $field
      * @return $this
      */
-    public function titleField(string|callable $field)
+    public function titleField(string|callable $field): static
     {
         $this->title_field = $field;
 
         return $this;
     }
 
-    public function template(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function template(...$delegates): static
     {
         $this->title_field = $delegates;
 
@@ -152,7 +150,7 @@ class NestedComponent extends Component
      * @param  string|callable  $field
      * @return $this
      */
-    public function parentField(string|callable $field)
+    public function parentField(string|callable $field): static
     {
         $this->parent_field = $field;
 
@@ -163,7 +161,7 @@ class NestedComponent extends Component
      * @param  int  $depth
      * @return $this
      */
-    public function maxDepth(int $depth)
+    public function maxDepth(int $depth): static
     {
         $this->maxDepth = $depth;
 
@@ -174,7 +172,7 @@ class NestedComponent extends Component
      * @param  callable  $call
      * @return $this
      */
-    public function controls(callable $call)
+    public function controls(callable $call): static
     {
         $this->custom_controls = $call;
 
@@ -182,10 +180,10 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param  Closure|array|null  $test
+     * @param  mixed  $test
      * @return $this
      */
-    public function disableControls($test = null)
+    public function disableControls(mixed $test = null): static
     {
         $this->controls = is_embedded_call($test) ? $test : static function () {
             return false;
@@ -195,10 +193,10 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param  Closure|array|null  $test
+     * @param  mixed  $test
      * @return $this
      */
-    public function disableInfo($test = null)
+    public function disableInfo(mixed $test = null): static
     {
         $this->info_control = is_embedded_call($test) ? $test : static function () {
             return false;
@@ -208,10 +206,10 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param  Closure|array|null  $test
+     * @param  mixed  $test
      * @return $this
      */
-    public function disableEdit($test = null)
+    public function disableEdit(mixed $test = null): static
     {
         $this->edit_control = is_embedded_call($test) ? $test : static function () {
             return false;
@@ -221,10 +219,10 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param  Closure|array|null  $test
+     * @param  mixed  $test
      * @return $this
      */
-    public function disableDelete($test = null)
+    public function disableDelete(mixed $test = null): static
     {
         $this->delete_control = is_embedded_call($test) ? $test : static function () {
             return false;
@@ -233,17 +231,12 @@ class NestedComponent extends Component
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
-        $model = null;
-
-        if ($this->model instanceof Relation) {
-            $model = $this->model->getQuery()->getModel();
-        } elseif ($this->model instanceof Builder) {
-            $model = $this->model->getModel();
-        } elseif ($this->model instanceof Model) {
-            $model = $this->model;
-        }
+        $model = $this->realModel();
 
         $hasOrder = false;
 
@@ -267,98 +260,52 @@ class NestedComponent extends Component
         }
 
         $this->model = $this->model->get();
+        $this->model = $this->maxDepth > 1 ? $this->model->whereNull($this->parent_field) : $this->model;
 
-        $this->makeList($this->maxDepth > 1 ? $this->model->whereNull($this->parent_field) : $this->model, $this);
-    }
-
-    /**
-     * @param  Collection  $model
-     * @param  Component  $object
-     */
-    protected function makeList(Collection $model, \Lar\Layout\Abstracts\Component $object)
-    {
         $this->attr('data-order-field', $this->order_by_field);
-
-        $object->ol(['dd-list'])->when(function (OL $ol) use ($model) {
-            foreach ($model as $item) {
-                $this->makeItem($ol, $item);
-            }
-        });
     }
 
     /**
-     * @param  Component  $object
-     * @param  Model  $item
+     * @return array
      */
-    protected function makeItem(\Lar\Layout\Abstracts\Component $object, Model $item)
+    protected function viewData(): array
     {
-        $object->li(['dd-item dd3-item'])->setDatas(['id' => $item->id])->when(function (LI $li) use ($item) {
-            $li->div(['dd-handle dd3-handle'])->when(static function (DIV $div) use ($item) {
-                $div->i(['class' => 'fas fa-arrows-alt']);
-            });
-            $cc_access = ($this->controls)($item);
-            $cc = $this->custom_controls;
-            if ($cc_access || $cc) {
-                $li->div(['float-right m-1'])
-                    ->appEndIf(
-                        $this->menu,
-                        ButtonsComponent::create()->when(function (ButtonsComponent $group) use (
-                            $item,
-                            $cc_access,
-                            $cc
-                        ) {
-                            $model = $item;
-                            $key = $model->getRouteKey();
+        return [
+            'models' => $this->model,
+            'controls' => $this->controls,
+            'cc' => $this->custom_controls,
+            'menu' => $this->menu,
+            'title_field' => $this->title_field,
+            'maxDepth' => $this->maxDepth,
+            'buttons' => function ($item, $cc_access, $cc) {
+                $group = ButtonsComponent::create();
+                $model = $item;
+                $key = $model->getRouteKey();
 
-                            if ($cc) {
-                                call_user_func($cc, $group, $model);
-                            }
+                if ($cc) {
+                    call_user_func($cc, $group, $model);
+                }
 
-                            if ($cc_access) {
-                                if (($this->edit_control)($item)) {
-                                    $group->resourceEdit($this->menu->getLinkEdit($key), '');
-                                }
+                if ($cc_access) {
+                    if (($this->edit_control)($item)) {
+                        $group->resourceEdit($this->menu->getLinkEdit($key), '');
+                    }
 
-                                if (($this->delete_control)($item)) {
-                                    $group->resourceDestroy(
-                                        $this->menu->getLinkDestroy($key),
-                                        '',
-                                        $model->getRouteKeyName(),
-                                        $key
-                                    );
-                                }
+                    if (($this->delete_control)($item)) {
+                        $group->resourceDestroy(
+                            $this->menu->getLinkDestroy($key),
+                            '',
+                            $model->getRouteKeyName(),
+                            $key
+                        );
+                    }
 
-                                if (($this->info_control)($item)) {
-                                    $group->resourceInfo($this->menu->getLinkShow($key), '');
-                                }
-                            }
-                        })
-                    );
-            }
-            $li->div(['dd3-content', 'style' => 'height: auto;min-height: 41px;'])->when(function (DIV $div) use (
-                $item
-            ) {
-                if (is_array($this->title_field)) {
-                    //dd($this->model);
-                    $tag = Tag::create()->addClass('text')
-                        ->newExplainForce($this->title_field)->model($item);
-                    $div->appEnd($tag);
-                } else {
-                    if (is_callable($this->title_field)) {
-                        $div->span(['text'])->text(call_user_func($this->title_field, $item));
-                    } else {
-                        $ddd = multi_dot_call($item, $this->title_field);
-                        $div->span(['text'])->text(__(e($ddd)));
+                    if (($this->info_control)($item)) {
+                        $group->resourceInfo($this->menu->getLinkShow($key), '');
                     }
                 }
-            });
-            if ($this->maxDepth > 1) {
-                $list = $this->model->where($this->parent_field, $item->id);
-                if ($list->count()) {
-                    /** @var Collection $list */
-                    $this->makeList($list, $li);
-                }
-            }
-        });
+                return $group;
+            },
+        ];
     }
 }

@@ -6,47 +6,41 @@ use Closure;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\TypesTrait;
 
-/**
- * Class AlertComponent.
- * @mixin AlertComponentMacroList
- */
 class AlertComponent extends Component
 {
     use FontAwesome;
     use TypesTrait;
 
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'alert', 'role' => 'alert',
-    ];
+    protected string $view = 'alert';
 
     /**
      * @var string|null
      */
-    protected $title;
+    protected ?string $title;
 
     /**
      * @var string|null
      */
-    protected $icon;
+    protected ?string $icon;
 
     /**
      * @var string|mixed
      */
-    protected $body;
+    protected mixed $body;
 
     /**
      * @var array
      */
-    protected $params;
+    protected array $params;
 
     /**
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -54,12 +48,12 @@ class AlertComponent extends Component
     }
 
     /**
-     * @param  string  $icon
+     * @param  string  $name
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $name): static
     {
-        $this->icon = $icon;
+        $this->icon = $name;
 
         return $this;
     }
@@ -68,32 +62,31 @@ class AlertComponent extends Component
      * @param  string|array|Closure  $body
      * @return $this
      */
-    public function body($body)
+    public function body($body): static
     {
         $this->body = $body;
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return array
+     */
+    protected function viewData(): array
     {
-        if ($this->title) {
-            $h4 = $this->h4(['alert-heading']);
+        return [
+            'title' => __($this->title),
+            'icon' => $this->icon,
+            'type' => $this->type,
+            'body' => is_string($this->body) ? __($this->body) : $this->body
+        ];
+    }
 
-            if ($this->icon) {
-                $h4->i([$this->icon]);
-                $h4->text(':space');
-            }
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
 
-            if ($this->title) {
-                $h4->text(__($this->title));
-            }
-        }
-
-        if ($this->body) {
-            $this->appEnd(is_string($this->body) ? __($this->body) : $this->body);
-        }
-
-        $this->addClass("alert-{$this->type}");
     }
 }

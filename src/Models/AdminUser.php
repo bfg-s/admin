@@ -22,7 +22,6 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Admin\Traits\DumpedModel;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 use Laravel\Fortify\Fortify;
 
@@ -71,7 +70,6 @@ class AdminUser extends Model implements AuthenticatableContract
     use AdminUserPermission;
     use Notifiable;
     use SoftDeletes;
-    use DumpedModel;
 
     /**
      * @var string
@@ -125,20 +123,8 @@ class AdminUser extends Model implements AuthenticatableContract
      * @param $avatar
      * @return string
      */
-    public function getAvatarAttribute($avatar)
+    public function getAvatarAttribute($avatar): string
     {
         return $avatar ?: 'admin/img/user.jpg';
-    }
-
-    /**
-     * @return array
-     */
-    public function toDump()
-    {
-        $user_array = $this->toArray();
-
-        $user_array['roles'] = $this->roles->pluck('id')->toArray();
-
-        return $user_array;
     }
 }

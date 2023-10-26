@@ -2,43 +2,49 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\LarDoc;
-use Admin\Components\Vue\FormActionAfterSave;
 use Admin\Explanation;
 
 class FormFooterComponent extends Component
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $form_id;
-
-    /**
-     * @var array
-     */
-    protected $props = [
-        'row',
-    ];
+    protected ?string $form_id = null;
 
     /**
      * @var string|null
      */
-    protected $btn_text;
+    protected ?string $btn_text = null;
 
     /**
      * @var string|null
      */
-    protected $btn_icon;
+    protected ?string $btn_icon = null;
 
     /**
      * @var string|null
      */
-    protected $type;
+    protected ?string $type = null;
+
+    /**
+     * @var ButtonsComponent|null
+     */
+    protected ?ButtonsComponent $group = null;
 
     /**
      * @var bool
      */
-    private $nav_redirect = true;
+    private bool $nav_redirect = true;
+
+    /**
+     * @var string
+     */
+    protected string $view = 'form-footer';
+
+    /**
+     * @var bool
+     */
+    protected bool $row = false;
 
     /**
      * @param ...$delegates
@@ -52,15 +58,13 @@ class FormFooterComponent extends Component
         if (FormComponent::$last_id) {
             $this->setFormId(FormComponent::$last_id);
         }
-
-        $this->callConstructEvents();
     }
 
     /**
      * @param  string  $id
      * @return $this
      */
-    public function setFormId(string $id)
+    public function setFormId(string $id): static
     {
         $this->form_id = $id;
 
@@ -72,7 +76,7 @@ class FormFooterComponent extends Component
      * @param  string|null  $icon
      * @return $this
      */
-    public function defaultBtn(string $text, string $icon = null)
+    public function defaultBtn(string $text, string $icon = null): static
     {
         $this->btn_text = $text;
 
@@ -86,7 +90,7 @@ class FormFooterComponent extends Component
     /**
      * @return $this
      */
-    public function withOutRedirectRadios()
+    public function withOutRedirectRadios(): static
     {
         $this->nav_redirect = false;
 
@@ -95,9 +99,9 @@ class FormFooterComponent extends Component
 
     /**
      * @param  string  $type
-     * @return $this|\Lar\Layout\Abstracts\Component|LarDoc|FormFooterComponent
+     * @return $this
      */
-    public function setType(string $type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 
@@ -105,48 +109,60 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * @param  bool  $row
      * @return $this
      */
-    public function createDefaultCRUDFooter()
+    public function setRow(bool $row): static
     {
-        $group = new ButtonsComponent();
+        $this->row = $row;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'group' => $this->group,
+            'row' => $this->row,
+            'type' => $this->type ?? $this->page->resource_type,
+            'nav_redirect' => $this->nav_redirect,
+        ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function createDefaultCRUDFooter(): static
+    {
+        $this->group = new ButtonsComponent();
 
         $type = $this->type ?? $this->page->resource_type;
         $menu = $this->menu;
 
         if ($type === 'edit' || isset($menu['post'])) {
-            $group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'admin.save')])->setDatas([
+            $this->group->success([$this->btn_icon ?? 'fas fa-save', __($this->btn_text ?? 'admin.save')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id,
             ]);
         } elseif ($type === 'create') {
-            $group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'admin.add')])->setDatas([
+            $this->group->success([$this->btn_icon ?? 'fas fa-plus', __($this->btn_text ?? 'admin.add')])->setDatas([
                 'click' => 'submit',
                 'form' => $this->form_id,
             ]);
         } else {
-            $group->submit(null, $this->form_id);
+            $this->group->submit(null, $this->form_id);
         }
-
-        if (($type === 'create' || $type === 'edit') && $this->nav_redirect) {
-            $this->appEnd(FormActionAfterSave::create([
-                'select' => session('_after', 'index'),
-                'type' => $type,
-                'lang' => [
-                    'to_the_list' => __('admin.to_the_list'),
-                    'add_more' => __('admin.add_more'),
-                    'edit_further' => __('admin.edit_further'),
-                ],
-            ]));
-        }
-
-        $this->div(['col text-right'])
-            ->appEnd($group);
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         //
     }

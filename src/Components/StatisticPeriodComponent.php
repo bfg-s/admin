@@ -11,19 +11,43 @@ class StatisticPeriodComponent extends Component
     /**
      * @var string
      */
-    protected $class = 'row';
-    protected $model;
-    protected $entity;
-    protected $icon = 'fas fa-lightbulb';
+    protected string $view = 'statistic-period';
 
-    public function title(string $nameOfSubject = null)
+    /**
+     * @var string
+     */
+    protected $class = 'row';
+
+    /**
+     * @var mixed
+     */
+    protected $model = null;
+
+    /**
+     * @var mixed
+     */
+    protected mixed $entity = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $icon = 'fas fa-lightbulb';
+
+    /**
+     * @param  string|null  $nameOfSubject
+     * @return $this
+     */
+    public function title(string $nameOfSubject = null): static
     {
         $this->entity = __($nameOfSubject);
 
         return $this;
     }
 
-    public function forToday()
+    /**
+     * @return $this
+     */
+    public function forToday(): static
     {
         $this->column()
             ->info_box(
@@ -35,7 +59,10 @@ class StatisticPeriodComponent extends Component
         return $this;
     }
 
-    public function perWeek()
+    /**
+     * @return $this
+     */
+    public function perWeek(): static
     {
         $this->column()
             ->info_box(
@@ -50,7 +77,10 @@ class StatisticPeriodComponent extends Component
         return $this;
     }
 
-    public function perYear()
+    /**
+     * @return $this
+     */
+    public function perYear(): static
     {
         $this->column()
             ->info_box(
@@ -65,7 +95,10 @@ class StatisticPeriodComponent extends Component
         return $this;
     }
 
-    public function total()
+    /**
+     * @return $this
+     */
+    public function total(): static
     {
         $this->column()
             ->info_box(
@@ -78,17 +111,20 @@ class StatisticPeriodComponent extends Component
     }
 
     /**
-     * @param  string  $icon
+     * @param  string  $name
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $name): static
     {
-        $this->icon = $icon;
+        $this->icon = $name;
 
         return $this;
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         // TODO: Implement mount() method.
     }

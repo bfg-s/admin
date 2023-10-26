@@ -2,13 +2,13 @@
 
 namespace Admin\Core\TableExtends;
 
+use Admin\Components\Small\AComponent;
+use Admin\Components\Small\IComponent;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
-use Lar\Layout\Tags\A;
-use Lar\Layout\Tags\I;
 use Admin\Models\AdminPermission;
 use Illuminate\Support\Str;
 
@@ -107,16 +107,16 @@ class Formatter
         $urlShow = AdminPermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+        return ($urlEdit ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlEdit)->appEnd(
+                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon_pen()
             )->setTitle(__('admin.edit')) : '').$value.
 
-            ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
+            ($urlShow ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlShow)->appEnd(
+                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-info-circle')
             )->setTitle(__('admin.information')) : '').
 
-            ($urlIndex ? A::create(['ml-1 link text-sm'])->setHref($urlIndex)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-list-alt')
+            ($urlIndex ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlIndex)->appEnd(
+                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-list-alt')
             )->setTitle(__('admin.list')) : '');
     }
 
@@ -150,8 +150,8 @@ class Formatter
         $urlEdit = AdminPermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-        return ($urlEdit ? A::create(['ml-1 link text-sm'])->setHref($urlEdit)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon_pen()
+        return ($urlEdit ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlEdit)->appEnd(
+                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon_pen()
             )->setTitle(__('admin.edit')) : '').$value;
     }
 
@@ -187,8 +187,8 @@ class Formatter
 
         return $value.
 
-            ($urlShow ? A::create(['ml-1 link text-sm'])->setHref($urlShow)->appEnd(
-                I::create(['mr-1', 'style' => 'font-size: 12px;'])->icon('fas fa-info-circle')
+            ($urlShow ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlShow)->appEnd(
+                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-info-circle')
             )->setTitle(__('admin.information')) : '');
     }
 
@@ -247,8 +247,9 @@ class Formatter
         ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
-        $link = A::create()->setHref($link)
-            ->i([$icon])->_();
+        $link = AComponent::create()->setHref($link);
+
+        $link->i([$icon]);
 
         if ($title) {
             $link->attr(['title' => $title]);
@@ -276,8 +277,9 @@ class Formatter
         ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
-        $link = A::create()->setHref($link)
-            ->i([$icon])->_();
+        $link = AComponent::create()->setHref($link);
+
+        $link->i([$icon]);
 
         if ($title) {
             $link->attr(['title' => $title]);

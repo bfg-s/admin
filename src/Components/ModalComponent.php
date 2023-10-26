@@ -2,51 +2,104 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Tags\DIV;
+use Illuminate\View\View;
 use ReflectionException;
 
 class ModalComponent extends Component
 {
     /**
+     * @var string
+     */
+    protected string $view = 'modal';
+
+    /**
      * @var array|ModalComponent[]
      */
     public static array $list = [];
 
+    /**
+     * @var int
+     */
     protected static int $count = 0;
+
     /**
      * @var bool
      */
-    public $temporary = false;
-    public $submitEvent = null;
-    public $size;
+    public bool $temporary = false;
+
+    /**
+     * @var mixed|null
+     */
+    public mixed $submitEvent = null;
+
+    /**
+     * @var string
+     */
+    public string $size = 'default';
+
+    /**
+     * @var bool
+     */
     public bool $backdrop = false;
-    protected $vertical = true;
+
+    /**
+     * @var bool
+     */
+    protected bool $vertical = true;
+
     /**
      * @var string|null
      */
-    protected $title;
+    protected ?string $title = null;
+
     /**
      * @var mixed
      */
-    protected $body;
+    protected mixed $body = null;
+
     /**
      * @var array
      */
-    protected $footer_buttons = [];
+    protected array $footer_buttons = [];
+
     /**
      * @var array
      */
-    protected $left_footer_buttons = [];
+    protected array $left_footer_buttons = [];
+
     /**
      * @var array
      */
-    protected $center_footer_buttons = [];
+    protected array $center_footer_buttons = [];
+
+    /**
+     * @var string
+     */
     protected string $modalName;
+
+    /**
+     * @var array
+     */
     protected array $buttonGroups = [];
+
+    /**
+     * @var array
+     */
     protected array $modalDelegates = [];
-    protected array $bodyDelegates = [];
+
+    /**
+     * @var string
+     */
     protected string $vector = "footer_buttons";
 
+    /**
+     * @var View|string|null
+     */
+    protected View|string|null $renderedView = null;
+
+    /**
+     * @param ...$delegates
+     */
     public function __construct(...$delegates)
     {
         parent::__construct();
@@ -62,32 +115,52 @@ class ModalComponent extends Component
         static::$count++;
     }
 
-    public function name(string $name)
+    /**
+     * @param  string  $name
+     * @return $this
+     */
+    public function name(string $name): static
     {
         $this->modalName = $name;
 
         return $this;
     }
 
-    public function buttonsLeftVector()
+    /**
+     * @return $this
+     */
+    public function buttonsLeftVector(): static
     {
         $this->vector = "left_footer_buttons";
+
         return $this;
     }
 
-    public function buttonsCenterVector()
+    /**
+     * @return $this
+     */
+    public function buttonsCenterVector(): static
     {
         $this->vector = "center_footer_buttons";
+
         return $this;
     }
 
-    public function buttonsRightVector()
+    /**
+     * @return $this
+     */
+    public function buttonsRightVector(): static
     {
         $this->vector = "footer_buttons";
+
         return $this;
     }
 
-    public function buttons(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return ButtonsComponent
+     */
+    public function buttons(...$delegates): ButtonsComponent
     {
         $group = ButtonsComponent::create(...$delegates);
 
@@ -96,17 +169,27 @@ class ModalComponent extends Component
         return $group;
     }
 
-    public function modal_body(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function modal_body(...$delegates): static
     {
         $this->bodyDelegates = $delegates;
 
         return $this;
     }
 
-    public function form(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return FormComponent|$this
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function form(...$delegates): FormComponent|static
     {
         if (!$this->body) {
-            $this->body = new ModalBodyComponent();
+            $this->body = $this->createComponent(ModalBodyComponent::class);
         }
 
         $this->body->form(...$delegates);
@@ -114,10 +197,14 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function model_table(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function model_table(...$delegates): static
     {
         if (!$this->body) {
-            $this->body = new ModalBodyComponent();
+            $this->body = $this->createComponent(ModalBodyComponent::class);
         }
 
         $this->body->model_table(...$delegates);
@@ -125,7 +212,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function model_info_table(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function model_info_table(...$delegates): static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -136,7 +227,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function nested(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return NestedComponent|$this
+     */
+    public function nested(...$delegates): NestedComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -147,7 +242,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function card(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return CardComponent|$this
+     */
+    public function card(...$delegates): CardComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -158,7 +257,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function search_form(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return SearchFormComponent|$this
+     */
+    public function search_form(...$delegates): SearchFormComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -169,7 +272,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function chart_js(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return ChartJsComponent|$this
+     */
+    public function chart_js(...$delegates): ChartJsComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -180,7 +287,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function model_relation(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function model_relation(...$delegates): static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -191,7 +302,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function row(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return GridRowComponent|$this
+     */
+    public function row(...$delegates): GridRowComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -202,7 +317,11 @@ class ModalComponent extends Component
         return $this;
     }
 
-    public function column(...$delegates)
+    /**
+     * @param ...$delegates
+     * @return GridColumnComponent|$this
+     */
+    public function column(...$delegates): GridColumnComponent|static
     {
         if (!$this->body) {
             $this->body = new ModalBodyComponent();
@@ -217,14 +336,18 @@ class ModalComponent extends Component
      * @param  string  $text
      * @return $this
      */
-    public function title(string $text)
+    public function title(string $text): static
     {
         $this->title = $text;
 
         return $this;
     }
 
-    public function submitEvent(callable $callable)
+    /**
+     * @param  callable  $callable
+     * @return $this
+     */
+    public function submitEvent(callable $callable): static
     {
         $this->submitEvent = $callable;
 
@@ -235,7 +358,7 @@ class ModalComponent extends Component
      * Extra big size.
      * @return $this
      */
-    public function sizeExtra()
+    public function sizeExtra(): static
     {
         $this->size = 'extra';
 
@@ -246,7 +369,7 @@ class ModalComponent extends Component
      * Big size.
      * @return $this
      */
-    public function sizeBig()
+    public function sizeBig(): static
     {
         $this->size = 'big';
 
@@ -257,7 +380,7 @@ class ModalComponent extends Component
      * Small size.
      * @return $this
      */
-    public function sizeSmall()
+    public function sizeSmall(): static
     {
         $this->size = 'small';
 
@@ -268,7 +391,7 @@ class ModalComponent extends Component
     /**
      * @return $this
      */
-    public function temporary()
+    public function temporary(): static
     {
         $this->temporary = true;
 
@@ -279,7 +402,7 @@ class ModalComponent extends Component
     /**
      * @return $this
      */
-    public function closable()
+    public function closable(): static
     {
         $this->backdrop = true;
 
@@ -287,17 +410,41 @@ class ModalComponent extends Component
     }
 
     /**
-     * @return void
-     * @throws ReflectionException
+     * @return string|View|null
      */
-    protected function mount()
+    public function getRenderedView(): string|View|null
+    {
+        return $this->renderedView;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        $request = request();
+
+        return [
+            'write' => $request->_modal == $this->modalName || ($request->ajax() && !$request->pjax()),
+            'body' => $this->body,
+            'modalName' => $this->modalName,
+            'title' => $this->title,
+            'footer_buttons' => $this->footer_buttons,
+            'left_footer_buttons' => $this->left_footer_buttons,
+            'center_footer_buttons' => $this->center_footer_buttons,
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
         $request = request();
 
         $this->delegatesNow($this->modalDelegates);
 
         if ($request->_modal == $this->modalName || ($request->ajax() && !$request->pjax())) {
-            $this->addClass('modal-content');
 
             if (!$this->body) {
                 $this->body = new ModalBodyComponent();
@@ -307,36 +454,16 @@ class ModalComponent extends Component
 
             $this->body->delegatesNow($this->bodyDelegates);
             $this->body->delegatesNow($this->modalDelegates);
-            $this->setDatas(['modal-name' => $this->modalName]);
-
-            $this->div(['modal-header'])->when(function (DIV $div) {
-                $div->h5(['modal-title'])->text($this->title ?: ':space');
-                $div->a(['refresh_modal', 'href' => 'javascript:void(0)'])
-                    ->span()->text('⟳');
-                $div->a(['close', 'style' => 'margin-left: 8px; padding-left: 0', 'href' => 'javascript:void(0)'])
-                    ->span(['aria-hidden' => 'true'])->text('&times;');
-            });
 
             $this->appEnd($this->body);
-
-            if (count($this->footer_buttons)) {
-                $footer = $this->div(['modal-footer']);
-                $row = $footer->row();
-                $col_l = $row->div(['col-auto'])->textLeft();
-                $col_c = $row->div(['col-auto'])->textCenter();
-                $col_r = $row->div(['col-auto'])->textRight();
-                foreach ($this->left_footer_buttons as $footer_button) {
-                    $col_l->appEnd($footer_button);
-                }
-                foreach ($this->center_footer_buttons as $footer_button) {
-                    $col_c->appEnd($footer_button);
-                }
-                foreach ($this->footer_buttons as $footer_button) {
-                    $col_r->appEnd($footer_button);
-                }
-            }
-        } else {
-            $this->only_content = true;
         }
+    }
+
+    /**
+     * @return View|string
+     */
+    public function render(): View|string
+    {
+        return $this->renderedView = parent::render(); // TODO: Change the autogenerated stub
     }
 }

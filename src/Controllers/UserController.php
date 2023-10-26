@@ -2,13 +2,14 @@
 
 namespace Admin\Controllers;
 
+use Admin\Components\Small\DivComponent;
+use Admin\Components\TimelineComponent;
 use Admin\Delegates\Modal;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Lar\Layout\Respond;
-use Lar\Layout\Tags\DIV;
+use Admin\Respond;
 use Admin\Components\ModelInfoTableComponent;
 use Admin\Components\TabContentComponent;
 use Admin\Delegates\Buttons;
@@ -24,7 +25,10 @@ use Admin\Page;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FAQRCode\Exceptions\MissingQrCodeServiceException;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class UserController extends Controller
 {
@@ -33,12 +37,17 @@ class UserController extends Controller
      * @var string
      */
     public static $model = AdminUser::class;
-    /**
-     * @var AdminUser
-     */
-    protected $user;
 
-    public function showQr(Respond $respond)
+    /**
+     * @var AdminUser|null
+     */
+    protected ?AdminUser $user = null;
+
+    /**
+     * @param  Respond  $respond
+     * @return Respond
+     */
+    public function showQr(Respond $respond): Respond
     {
         $password = $this->modelInput('password');
 
@@ -47,9 +56,14 @@ class UserController extends Controller
         } else {
             $respond->toast_error('Wrong password!');
         }
+        return $respond;
     }
 
-    public function disableQr(Respond $respond)
+    /**
+     * @param  Respond  $respond
+     * @return Respond
+     */
+    public function disableQr(Respond $respond): Respond
     {
         $password = $this->modelInput('password');
 
@@ -66,6 +80,8 @@ class UserController extends Controller
         } else {
             $respond->toast_error('Wrong password!');
         }
+
+        return $respond;
     }
 
     /**
@@ -74,6 +90,7 @@ class UserController extends Controller
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @throws MissingQrCodeServiceException
      */
     public function qrGenerateFinish(Form $form): array
     {
@@ -88,9 +105,9 @@ class UserController extends Controller
 
         return [
             $form->p(__('admin.2fa_auth_finish_msg')),
-            str_contains($qr_code, '</svg>') ? $form->center($qr_code) : $form->center()->img(['src' => $qr_code]),
+            str_contains($qr_code, '</svg>') ? $form->center()->appEnd($qr_code) : $form->center()->img()->attr(['src' => $qr_code]),
             $form->p(),
-            $form->p(__('admin.2fa_auth_finish_msg2')),
+            $form->p()->appEnd(__('admin.2fa_auth_finish_msg2')),
             $form->input('otp', ''),
             $form->hidden('secret', '')->default($secret),
         ];
@@ -129,6 +146,8 @@ class UserController extends Controller
         }
 
         $respond->toast_error(__('admin.2fa_is_wrong'));
+
+        return $respond;
     }
 
     /**
@@ -143,6 +162,8 @@ class UserController extends Controller
      * @param  Buttons  $buttons
      * @param  Modal  $modal
      * @return Page
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(
         Request $request,
@@ -155,7 +176,7 @@ class UserController extends Controller
         SearchForm $searchForm,
         Buttons $buttons,
         Modal $modal,
-    ) {
+    ): Page {
         $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
         return $page
@@ -206,7 +227,7 @@ class UserController extends Controller
                         ->title('admin.information')
                         ->primaryType()
                         ->card_body()
-                        ->view('admin::auth.user_portfolio', ['user' => $this->model()])
+                        ->view('controllers.user_portfolio', ['user' => $this->model()])
                 )
             )
             ->column(
@@ -215,7 +236,7 @@ class UserController extends Controller
                         ->successType(),
                     $card->tab(
                         $tab->right(),
-                        $tab->active(!$request->has('ltelog_per_page') && !$request->has('ltelog_page') && !$request->has('q')),
+                        $tab->active(!$request->has('adminlog1_per_page') && !$request->has('adminlog1_page') && !$request->has('q')),
                         $tab->icon_cogs()->title('admin.settings'),
                         $tab->form(
                             $form->vertical(),
@@ -235,13 +256,13 @@ class UserController extends Controller
                     ),
                     $card->tab(
                         $tab->icon_shield_alt()->title('admin.2fa_secure'),
-                        $tab->if(!admin()->two_factor_confirmed_at)->h1(__('admin.2fa_secure_not_enable_title')),
-                        $tab->if(admin()->two_factor_confirmed_at)->h1('You have enabled two factor authentication.'),
-                        $tab->p(__('admin.2fa_secure_not_enable_info')),
+                        $tab->if(!admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.2fa_secure_not_enable_title')),
+                        $tab->if(admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.you_have_enabled_two_factor_authentication')),
+                        $tab->p()->appEnd(__('admin.2fa_secure_not_enable_info')),
                         $tab->if(admin()->two_factor_confirmed_at)->buttons(
                             $buttons->danger()
                                 ->modal('modal-2')
-                                ->text('Disable')
+                                ->text(__('admin.2fa_secure_enable_disable'))
                         ),
                         $tab->if(!admin()->two_factor_confirmed_at)->buttons(
                             $buttons->primary()
@@ -250,7 +271,7 @@ class UserController extends Controller
                         )
                     ),
                     $card->tab(
-                        $tab->active(request()->has('ltelog_per_page') || request()->has('ltelog_page')),
+                        $tab->active(request()->has('adminlog1_per_page') || request()->has('adminlog1_page')),
                         $tab->icon_history()->title('admin.timeline'),
                         $tab->with(fn(TabContentComponent $content) => static::timelineComponent(
                             $content,
@@ -294,15 +315,23 @@ class UserController extends Controller
             );
     }
 
-    public static function timelineComponent($content, $model, Controller $controller)
+    /**
+     * @param $content
+     * @param $model
+     * @param  Controller  $controller
+     * @return void
+     */
+    public static function timelineComponent($content, $model, Controller $controller): void
     {
-        $content->div(['col-md-12'])->timeline(
-            $controller->timeline->model($model),
-            $controller->timeline->set_title(static function (AdminLog $log) {
+        $timeline = TimelineComponent::new();
+
+        $content->div()->addClass('col-md-12')->timeline(
+            $timeline->model($model)->setFullBody(),
+            $timeline->set_title(function (AdminLog $log) {
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             }),
-            $controller->timeline->set_body(static function (DIV $div, AdminLog $log) {
-                $div->p0()->model_info_table()->model($log)->when(static function (ModelInfoTableComponent $table) {
+            $timeline->set_body(function (TimelineComponent $timelineComponent, AdminLog $log) {
+                return ModelInfoTableComponent::create()->model($log)->use(function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();
                     $table->row('URL', 'url')->to_prepend_link();
                     $table->row('Route', 'route')->copied();
@@ -315,7 +344,10 @@ class UserController extends Controller
         );
     }
 
-    public function defaultDateRange()
+    /**
+     * @return array
+     */
+    public function defaultDateRange(): array
     {
         return [
             now()->subDay()->startOfDay()->toDateString(),
@@ -323,7 +355,11 @@ class UserController extends Controller
         ];
     }
 
-    public function on_updated($form)
+    /**
+     * @param $form
+     * @return void
+     */
+    public function on_updated($form): void
     {
         admin_log_success('Changed data', get_class($this->model()), 'far fa-id-card');
 
@@ -335,14 +371,14 @@ class UserController extends Controller
     /**
      * @return Model|AdminUser|string|null
      */
-    public function getModel()
+    public function getModel(): Model|AdminUser|string|null
     {
         return admin();
     }
 
     /**
      * @param  Respond  $respond
-     * @return Respond
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Respond $respond)
     {
@@ -352,6 +388,6 @@ class UserController extends Controller
 
         $respond->redirect(route('admin.login'));
 
-        return $respond;
+        return back();
     }
 }

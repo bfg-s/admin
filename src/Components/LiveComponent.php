@@ -5,6 +5,11 @@ namespace Admin\Components;
 class LiveComponent extends Component
 {
     /**
+     * @var string
+     */
+    protected string $view = 'live';
+
+    /**
      * @var array|LiveComponent[]
      */
     public static array $list = [];
@@ -21,20 +26,29 @@ class LiveComponent extends Component
     {
         parent::__construct();
 
+        $this->forceDelegates(...$delegates);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function viewData(): array
+    {
         $id = 'live-'.static::$counter;
 
         LiveComponent::$list[$id] = $this;
 
-        $this->forceDelegates(...$delegates);
-
-        $this->addClass('__live__')
-            ->setId($id);
-
-
         static::$counter++;
+
+        return [
+            'id' => $id
+        ];
     }
 
-    protected function mount()
+    /**
+     * @return void
+     */
+    protected function mount(): void
     {
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Admin\Components\SearchFields;
 
-use Admin\Components\Fields\RadiosField;
+use Admin\Components\Inputs\RadiosInput;
 
-class RadiosSearchField extends RadiosField
+class RadiosSearchField extends RadiosInput
 {
     /**
      * @var string
      */
-    public static $condition = '=';
+    public static string $condition = '=';
 }

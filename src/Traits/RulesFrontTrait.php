@@ -10,13 +10,13 @@ trait RulesFrontTrait
      * Validation rules.
      * @var array
      */
-    protected $rules = [];
+    protected array $rules = [];
 
     /**
      * поле обязательное для заполнения.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_required()
+    public function is_required(): static
     {
         $this->rules[] = 'required';
 
@@ -25,9 +25,9 @@ trait RulesFrontTrait
 
     /**
      * проверяет корректность e-mail адреса.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_email()
+    public function is_email(): static
     {
         $this->rules[] = 'email';
 
@@ -36,9 +36,9 @@ trait RulesFrontTrait
 
     /**
      * проверяет корректность url адреса.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_url()
+    public function is_url(): static
     {
         $this->rules[] = 'url';
 
@@ -47,9 +47,9 @@ trait RulesFrontTrait
 
     /**
      * проверяет корректность даты.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_date()
+    public function is_date(): static
     {
         $this->rules[] = 'date';
 
@@ -58,9 +58,9 @@ trait RulesFrontTrait
 
     /**
      * проверка на число.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_number()
+    public function is_number(): static
     {
         $this->rules[] = 'number';
 
@@ -69,9 +69,9 @@ trait RulesFrontTrait
 
     /**
      * только цифры.
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_digits()
+    public function is_digits(): static
     {
         $this->rules[] = 'digits';
 
@@ -81,9 +81,9 @@ trait RulesFrontTrait
     /**
      * равное чему-то (например другому полю equalTo: "#pswd").
      * @param  string  $field
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_equal_to(string $field)
+    public function is_equal_to(string $field): static
     {
         $this->rules['equalTo'] = $field;
 
@@ -93,9 +93,9 @@ trait RulesFrontTrait
     /**
      * максимальное кол-во символов.
      * @param  int  $max
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_max_length(int $max)
+    public function is_max_length(int $max): static
     {
         $this->rules['maxlength'] = $max;
 
@@ -105,9 +105,9 @@ trait RulesFrontTrait
     /**
      * минимальное кол-во символов.
      * @param  int  $min
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_min_length(int $min)
+    public function is_min_length(int $min): static
     {
         $this->rules['minlength'] = $min;
 
@@ -118,9 +118,9 @@ trait RulesFrontTrait
      * кол-во символов от скольких и до скольких (rangelength: [2, 5]).
      * @param  int  $min
      * @param  int  $max
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_range_length(int $min, int $max)
+    public function is_range_length(int $min, int $max): static
     {
         $this->rules['rangelength'] = "[{$min},{$max}]";
 
@@ -131,9 +131,9 @@ trait RulesFrontTrait
      * число должно быть в диапазоне от и до (range: [2, 12]).
      * @param  int  $min
      * @param  int  $max
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_range(int $min, int $max)
+    public function is_range(int $min, int $max): static
     {
         $this->rules['range'] = "[{$min},{$max}]";
 
@@ -143,9 +143,9 @@ trait RulesFrontTrait
     /**
      * максимальное значение числа.
      * @param  int  $max
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_max(int $max)
+    public function is_max(int $max): static
     {
         $this->rules['max'] = $max;
 
@@ -155,9 +155,9 @@ trait RulesFrontTrait
     /**
      * минимальное значение числа.
      * @param  int  $min
-     * @return $this|FormGroupComponent
+     * @return $this
      */
-    public function is_min(int $min)
+    public function is_min(int $min): static
     {
         $this->rules['min'] = $min;
 

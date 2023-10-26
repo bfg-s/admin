@@ -30,6 +30,9 @@ use Route;
  */
 class AdminRepository extends Repository
 {
+    /**
+     * @var array
+     */
     protected static array $cache = [
         'models' => [],
         'queries' => [],
@@ -37,7 +40,10 @@ class AdminRepository extends Repository
         'nested_counter' => 0,
     ];
 
-    public function now()
+    /**
+     * @return mixed
+     */
+    public function now(): mixed
     {
         $return = $this->menuList->where('route', '=', $this->currentQueryField)->first();
         if (!$return) {
@@ -47,7 +53,10 @@ class AdminRepository extends Repository
         return $return;
     }
 
-    public function type()
+    /**
+     * @return string|null
+     */
+    public function type(): ?string
     {
         $return = null;
 
@@ -66,7 +75,12 @@ class AdminRepository extends Repository
         return $return;
     }
 
-    public function data($__name_ = null, $__default = null)
+    /**
+     * @param $__name_
+     * @param $__default
+     * @return array|mixed|null
+     */
+    public function data($__name_ = null, $__default = null): mixed
     {
         $return = $__default;
 
@@ -83,6 +97,9 @@ class AdminRepository extends Repository
         return $return;
     }
 
+    /**
+     * @return object|string|null
+     */
     public function modelPrimary(): object|string|null
     {
         $menu = $this->now;
@@ -96,7 +113,11 @@ class AdminRepository extends Repository
         return null;
     }
 
-    public function modelNow()
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder|Model|object|null
+     * @throws ShouldBeModelInControllerException
+     */
+    public function modelNow(): mixed
     {
         $return = null;
 
@@ -131,7 +152,11 @@ class AdminRepository extends Repository
         return $return;
     }
 
-    public function saveCurrentQuery(Request $request)
+    /**
+     * @param  Request  $request
+     * @return void
+     */
+    public function saveCurrentQuery(Request $request): void
     {
         $can = $request->pjax() || !$request->ajax();
         if ($request->isMethod('GET') && $can) {
@@ -141,7 +166,7 @@ class AdminRepository extends Repository
             }
             $all = $request->query();
             foreach ($all as $key => $item) {
-                if (str_starts_with($key, '_')) {
+                if (str_starts_with($key, '_') || $key == 'format' || $key == 'q') {
                     unset($all[$key]);
                 }
             }
@@ -150,12 +175,19 @@ class AdminRepository extends Repository
         }
     }
 
-    public function getCurrentQuery()
+    /**
+     * @return mixed
+     */
+    public function getCurrentQuery(): mixed
     {
         return $this->getQuery($this->currentQueryField);
     }
 
-    public function getQuery(string $name)
+    /**
+     * @param  string  $name
+     * @return mixed
+     */
+    public function getQuery(string $name): mixed
     {
         if (!isset(static::$cache['queries'][$name]) || !static::$cache['queries'][$name]) {
             static::$cache['queries'][$name] = session($name, []);
@@ -164,22 +196,36 @@ class AdminRepository extends Repository
         return static::$cache['queries'][$name];
     }
 
+    /**
+     * @return string|null
+     */
     public function currentQueryField(): ?string
     {
         return Route::currentRouteName();
     }
 
+    /**
+     * @return mixed
+     */
     public function currentController(): mixed
     {
         return Route::current()?->controller;
     }
 
+    /**
+     * @return Collection
+     */
     public function nowParents(): Collection
     {
         return collect($this->now ? $this->getParents($this->now) : []);
     }
 
-    protected function getParents(MenuItem $menuItem, $result = []): array
+    /**
+     * @param  MenuItem  $menuItem
+     * @param  array  $result
+     * @return array
+     */
+    protected function getParents(MenuItem $menuItem, array $result = []): array
     {
         $result[$menuItem->getId()] = $menuItem;
 
@@ -199,16 +245,27 @@ class AdminRepository extends Repository
         return $result;
     }
 
-    public function isDarkMode()
+    /**
+     * @return bool
+     */
+    public function isDarkMode(): bool
     {
         return request()->cookie('admin-dark-mode', (int) config('admin.dark_mode', true)) == 1;
     }
 
+    /**
+     * @return Collection
+     */
     public function menuList(): Collection
     {
         return $this->buildMenuList();
     }
 
+    /**
+     * @param  array|null  $items
+     * @param  MenuItem|null  $parent
+     * @return Collection
+     */
     private function buildMenuList(
         ?array $items = null,
         MenuItem $parent = null
@@ -304,6 +361,9 @@ class AdminRepository extends Repository
         return $result;
     }
 
+    /**
+     * @return string
+     */
     protected function getModelClass(): string
     {
         return AdminUser::class;

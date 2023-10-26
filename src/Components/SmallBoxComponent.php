@@ -2,57 +2,49 @@
 
 namespace Admin\Components;
 
-use Lar\Layout\Tags\DIV;
 use Admin\Traits\Delegable;
 use Admin\Traits\FontAwesome;
-use Admin\Traits\Macroable;
 use Admin\Traits\TypesTrait;
 
-/**
- * @mixin SmallBoxComponentMacroList
- */
-class SmallBoxComponent extends DIV
+class SmallBoxComponent extends Component
 {
     use FontAwesome;
     use TypesTrait;
-    use Macroable;
     use Delegable;
 
     /**
-     * @var string[]
+     * @var string
      */
-    protected $props = [
-        'info-box',
-    ];
+    protected string $view = 'small-box';
 
     /**
      * @var string|null
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @var string|null
      */
-    private $icon;
+    private ?string $icon = null;
 
     /**
      * @var string|mixed
      */
-    private $body;
+    private mixed $body = null;
 
     /**
      * @var array
      */
-    private $params;
+    private array $params = [];
 
     /**
      * Alert constructor.
      * @param  string|null  $title
-     * @param  string|null  $icon
-     * @param $body
+     * @param  string  $body
+     * @param  string  $icon
      * @param  mixed  ...$params
      */
-    public function __construct(string $title = null, $body = '', string $icon = 'fas fa-info-circle', ...$params)
+    public function __construct(string $title = null, mixed $body = '', string $icon = 'fas fa-info-circle', ...$params)
     {
         parent::__construct();
 
@@ -63,17 +55,13 @@ class SmallBoxComponent extends DIV
         $this->body = $body;
 
         $this->params = $params;
-
-        $this->toExecute('_build');
-
-        $this->callConstructEvents();
     }
 
     /**
-     * @param  array  $title
+     * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -81,22 +69,22 @@ class SmallBoxComponent extends DIV
     }
 
     /**
-     * @param  string  $icon
+     * @param  string  $name
      * @return $this
      */
-    public function icon(string $icon)
+    public function icon(string $name): static
     {
-        $this->icon = $icon;
+        $this->icon = $name;
 
         return $this;
     }
 
     /**
-     * @param  string|array  $body
+     * @param  array|string  $body
      * @param  string  $small_info
      * @return $this
      */
-    public function body($body, $small_info = '')
+    public function body(array|string $body, string $small_info = ''): static
     {
         $this->body = [$body, $small_info];
 
@@ -104,26 +92,23 @@ class SmallBoxComponent extends DIV
     }
 
     /**
-     * Build alert.
+     * @return array
      */
-    protected function _build()
+    protected function viewData(): array
     {
-        $this->callRenderEvents();
+        return [
+            'type' => $this->type,
+            'icon' => $this->icon,
+            'title' => $this->title,
+            'body' => is_array($this->body) ? $this->body : [$this->body],
+        ];
+    }
 
-        $this->span(['info-box-icon elevation-1'])
-            ->addClass("bg-{$this->type}")
-            ->i([$this->icon]);
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
 
-        $content = $this->div(['info-box-content']);
-
-        $content->span(['info-box-text'], $this->title);
-
-        if (!is_array($this->body)) {
-            $this->body = [$this->body];
-        }
-
-        $content->span(['info-box-number'], ($this->body[0] ?? ''))->small($this->body[1] ?? '');
-
-        $content->when($this->params);
     }
 }

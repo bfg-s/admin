@@ -9,6 +9,8 @@ use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Models\AdminRole;
 use Admin\Page;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class RolesController extends Controller
 {
@@ -23,8 +25,10 @@ class RolesController extends Controller
      * @param  SearchForm  $searchForm
      * @param  ModelTable  $modelTable
      * @return Page
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
+    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable): Page
     {
         return $page->card(
             $card->title('admin.list_of_roles'),
@@ -36,8 +40,8 @@ class RolesController extends Controller
             ),
             $card->model_table(
                 $modelTable->id(),
-                $modelTable->col('admin.title', 'name')->sort(),
-                $modelTable->col('admin.slug', 'slug')->sort()->badge('success'),
+                $modelTable->col('admin.title', 'name')->sort()->to_export()->input_editable,
+                $modelTable->col('admin.slug', 'slug')->sort()->badge('success')->to_export(),
                 $modelTable->at(),
             ),
         );

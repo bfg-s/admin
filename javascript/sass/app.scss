@@ -1,5 +1,36 @@
 @import "layout/main-header";
 
+@import '~toastr/toastr';
+
+.fade-enter-active,
+.fade-leave-active {
+    transition:opacity .3s
+}
+.fade-enter,
+.fade-leave-to {
+    opacity:0
+}
+.velmld-overlay {
+    position:absolute;
+    z-index:3000;
+    margin:0;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    transition:opacity .3s
+}
+.velmld-spinner{
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    position:absolute;
+    text-align:center
+}
+.velmld-full-screen{
+    position:fixed
+}
+
 input:focus, textarea:focus, select:focus {
     outline: none !important;
 }

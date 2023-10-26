@@ -11,8 +11,6 @@ use Log;
 use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
 use Admin\Commands\Generators\GenerateAdminHelper;
-use Admin\Commands\Generators\GenerateNewJaxHelper;
-use Admin\Commands\Generators\GenerateRespondHelper;
 use Admin\Commands\Generators\MacroableHelperGenerator;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Throwable;
@@ -24,10 +22,8 @@ class AdminHelpersCommand extends Command
      *
      * @var array
      */
-    protected static $executors = [
+    protected static array $executors = [
         GenerateAdminHelper::class,
-        GenerateRespondHelper::class,
-        GenerateNewJaxHelper::class,
         ExtensionNavigatorHelperGenerator::class,
         ExtensionNavigatorMethodsHelperGenerator::class,
         MacroableHelperGenerator::class,
@@ -61,7 +57,7 @@ class AdminHelpersCommand extends Command
      *
      * @param  string  $class
      */
-    public static function addToExecute(string $class)
+    public static function addToExecute(string $class): void
     {
         static::$executors[] = $class;
     }
@@ -72,7 +68,7 @@ class AdminHelpersCommand extends Command
      * @param  object|string  $obj
      * @param  string  $method
      */
-    public static function addObjToExecute($obj, string $method)
+    public static function addObjToExecute(object|string $obj, string $method): void
     {
         static::$executors[] = [$obj, $method];
     }
@@ -80,10 +76,10 @@ class AdminHelpersCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      * @throws Throwable
      */
-    public function handle()
+    public function handle(): void
     {
         if ($class = $this->option('class')) {
             if (class_exists($class)) {
@@ -188,10 +184,5 @@ class AdminHelpersCommand extends Command
                 embedded_call($executor, [static::class => $this]);
             }
         }
-
-//        if ($file_data) {
-//            file_put_contents($file, "<?php \n\n".$file_data);
-//            $this->info('> Helper [_ide_helper_lar.php] generated!');
-//        }
     }
 }

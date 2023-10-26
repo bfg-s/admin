@@ -2,12 +2,12 @@
 
 namespace Admin\Components\SearchFields;
 
-use Admin\Components\Fields\TimeField;
+use Admin\Components\Inputs\TimeInput;
 
-class TimeFieldSearchField extends TimeField
+class TimeFieldSearchField extends TimeInput
 {
     /**
      * @var string
      */
-    public static $condition = '=';
+    public static string $condition = '=';
 }
