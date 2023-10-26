@@ -110,9 +110,9 @@ class SelectInput extends FormGroupComponent
         $r_name = $selector->getName();
 
         if (request()->has($r_name)) {
-            static::$json = $selector->toJson(JSON_UNESCAPED_UNICODE);
-            //http_response_code(200);
-            //die;
+            echo "\n" . $selector->toJson(JSON_UNESCAPED_UNICODE);
+            http_response_code(200);
+            die;
         }
 
         $this->data['select-name'] = $r_name;

@@ -44,7 +44,14 @@ window.libs['select2::ajax'] =  function () {
 
                 axios.get(window.location.href, {params: new_params})
                     .then((data) => {
-                        success(data.data);
+                        let d = data.data.split("\n");
+                        d = d[d.length-1].trim();
+                        try {
+                            d = JSON.parse(d);
+                        } catch (e) {
+
+                        }
+                        success(d);
                     }).catch(() => failure());
             }
         }
