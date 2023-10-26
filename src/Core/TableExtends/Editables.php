@@ -24,19 +24,25 @@ class Editables
 
             $fieldComponent = FieldComponent::create();
 
-            $fieldComponent->on_mouseup('custom_save', [
-                get_class($model),
-                $model->id,
-                $field,
-                $id,
-            ]);
+//            $fieldComponent->on_mouseup('custom_save', [
+//                get_class($model),
+//                $model->id,
+//                $field,
+//                $id,
+//            ]);
 
             $fieldComponent->switcher($field)
                 ->only_input()
                 ->labels(...$props)
                 ->switchSize('mini')
                 ->value($value)
-                ->setId($id);
+                ->setId($id)
+                ->setDatas(['change' => json_encode(['custom_save' => [
+                    get_class($model),
+                    $model->id,
+                    $field,
+                    $id,
+                ]])]);
 
             return $fieldComponent;
         }

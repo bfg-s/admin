@@ -15,6 +15,17 @@ window.libs['bootstrapSwitch'] = function () {
             $(`[type="hidden"][name="${event.currentTarget.name}"]`).remove();
         }
 
+        let change = event.currentTarget.dataset.change;
+        try {
+            change = JSON.parse(change);
+        } catch (e) {
+
+        }
+
+        if (change) {
+            exec(change);
+        }
+
         exec("admin::flash_document");
     });
 };

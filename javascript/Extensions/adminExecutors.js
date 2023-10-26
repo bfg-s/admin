@@ -72,7 +72,6 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
 
 window.libs['custom_save'] = function (model, id, field, inputId) {
 
-    console.log(inputId);
     const e = $(`#${inputId}`)[0];
 
     let val = null;
