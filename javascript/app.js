@@ -47,6 +47,7 @@ require('./Inits/Rating');
 require('./Inits/Nestable');
 require('./Inits/Editable');
 require('./Inits/Cookie');
+require('./Inits/Tpl');
 
 Alpine.start();
 
