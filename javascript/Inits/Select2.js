@@ -5,7 +5,7 @@ window.libs['select2::init'] = function (...args) {
     return undefined;
 };
 
-window.libs['ajax'] =  function () {
+window.libs['select2::ajax'] =  function () {
     let target = this.target;
 
     return $(target).select2({

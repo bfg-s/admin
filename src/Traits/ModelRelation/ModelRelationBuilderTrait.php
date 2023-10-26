@@ -47,7 +47,7 @@ trait ModelRelationBuilderTrait
                 $item->{$item->getKeyName()}
             );
 
-            $container->view('inputs.hidden', [
+            $container->view('components.inputs.hidden', [
                 'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}."][{$item->getKeyName()}]",
                 'value' => $item->{$item->getKeyName()}
             ]);
@@ -96,7 +96,7 @@ trait ModelRelationBuilderTrait
                                     ])
                                         ->on_click('admin::return_relation');
                                 });
-                            })->hide()->addClass('return_relation');
+                            })->addClass('return_relation');
                         }
                     });
                 }
