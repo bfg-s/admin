@@ -100,7 +100,7 @@ class ModelSaver
      * @param  array  $data
      * @param  object|null  $eventsObject
      */
-    public function __construct(Model|string $model, array $data, object $eventsObject = null)
+    public function __construct(mixed $model, array $data, object $eventsObject = null)
     {
         if (is_string($model)) {
             $model = new $model();
