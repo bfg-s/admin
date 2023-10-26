@@ -79,7 +79,7 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
     setTimeout(() => {
 
         if (e.nodeName === 'INPUT' && e.getAttribute('type') === 'checkbox') {
-            val = !! Number($(`[name="${e.name}"]`).last().val());
+            val = !! Number($(`#${inputId}`).parents('.bootstrap-switch-mini').find(`[name="${e.name}"]`).last().val());
         } else if (e.nodeName === 'DIV') {
             val = $(`#${inputId}`).find(':checked').val();
         } else {

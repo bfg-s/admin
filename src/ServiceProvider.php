@@ -86,7 +86,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->publishes([
             __DIR__.'/../config/admin.php' => config_path('admin.php'),
-        ], ['admin-config', 'laravel-assets']);
+        ], ['admin-config']);
 
         /**
          * Register publishers lang.
