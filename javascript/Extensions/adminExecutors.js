@@ -30,7 +30,7 @@ window.libs['admin::return_relation'] = function () {
 window.libs['admin::add_relation_tpl'] = function (path) {
     let area = `relation_${path}_template`,
         // id = (new Date).getTime(),
-        tpl = "tpl::get_tpl".exec(area),
+        tpl = exec("tpl::get_tpl", area),
         zone = document.querySelector(`span[data-tpl="${area}"]`),
         id = zone ? `new_` + (zone.childElementCount + 1) : (new Date).getTime();
 
