@@ -596,3 +596,19 @@ if (!function_exists('is_embedded_call')) {
         return is_string($subject) ? class_exists($subject) : is_callable($subject);
     }
 }
+
+if (! function_exists('body_namespace_element')) {
+
+    /**
+     * Get only namespace body.
+     *
+     * @param string $namespace
+     * @param int $level
+     * @param string $delimiter
+     * @return string
+     */
+    function body_namespace_element(string $namespace, int $level = 1, string $delimiter = '\\') : string
+    {
+        return Bfg\Entity\Core\Entities\NamespaceEntity::bodySegment($namespace, $level);
+    }
+}
