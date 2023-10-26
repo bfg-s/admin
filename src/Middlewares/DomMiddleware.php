@@ -4,6 +4,7 @@ namespace Admin\Middlewares;
 
 use Admin\BladeDirectives\SystemJsBladeDirective;
 use Admin\BladeDirectives\UpdateWithPjaxBladeDirective;
+use Admin\Components\Inputs\SelectInput;
 use Admin\Components\ModelTableComponent;
 use Admin\Respond;
 use Closure;
@@ -46,6 +47,11 @@ class DomMiddleware
     {
         /** @var Response $response */
         $response = $next($request);
+
+        if (SelectInput::$json) {
+
+            return response(SelectInput::$json);
+        }
 
         if ($response->isRedirection()) {
             session()->flash('respond', Respond::glob()->toJson());

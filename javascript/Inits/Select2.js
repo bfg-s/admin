@@ -42,7 +42,7 @@ window.libs['select2::ajax'] =  function () {
                     }
                 });
 
-                axios.head(window.location.href, {params: new_params})
+                axios.get(window.location.href, {params: new_params})
                     .then((data) => {
                         success(data.data);
                     }).catch(() => failure());

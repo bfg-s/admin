@@ -61,6 +61,11 @@ class SelectInput extends FormGroupComponent
     protected bool $multiple = false;
 
     /**
+     * @var mixed|null
+     */
+    public static mixed $json = null;
+
+    /**
      * @return mixed
      * @throws ReflectionException
      */
@@ -105,9 +110,9 @@ class SelectInput extends FormGroupComponent
         $r_name = $selector->getName();
 
         if (request()->has($r_name)) {
-            echo $selector->toJson(JSON_UNESCAPED_UNICODE);
-            http_response_code(200);
-            die;
+            static::$json = $selector->toJson(JSON_UNESCAPED_UNICODE);
+            //http_response_code(200);
+            //die;
         }
 
         $this->data['select-name'] = $r_name;
