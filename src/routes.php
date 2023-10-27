@@ -27,6 +27,8 @@ Route::group([], function (Router $route) {
     $route->post('export_csv', [SystemController::class, 'export_csv'])->name('export_csv');
     $route->post('custom_save', [SystemController::class, 'custom_save'])->name('custom_save');
     $route->post('call_callback', [SystemController::class, 'call_callback'])->name('call_callback');
+    $route->post('mass_delete', [SystemController::class, 'mass_delete'])->name('mass_delete');
+    $route->post('nestable_save', [SystemController::class, 'nestable_save'])->name('nestable_save');
 });
 
 /**

@@ -15,7 +15,7 @@
                 @foreach($all_columns as $column)
                     @if($column['key'])
                         <button class="dropdown-item" type="button" data-click="location"
-                                data-param="{{urlWithGet([$column['key'] => (int)$column['hide']])}}">
+                                data-params="{{urlWithGet([$column['key'] => (int)$column['hide']])}}">
                             <i class="fas fa-border-{{!$column['hide'] ? 'all':'none'}}"></i> {{__(!$column['hide']? 'admin.hide':'admin.show')}}
                             "{{$column['label']}}"
                         </button>

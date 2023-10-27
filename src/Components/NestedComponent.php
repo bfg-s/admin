@@ -240,6 +240,10 @@ class NestedComponent extends Component
 
         $hasOrder = false;
 
+        $this->setDatas([
+            'route' => route('admin.nestable_save')
+        ]);
+
         if ($model) {
             $fillable = $model->getFillable();
             if (!in_array($this->parent_field, $fillable)) {

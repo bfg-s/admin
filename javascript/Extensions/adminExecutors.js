@@ -106,3 +106,12 @@ window.libs['admin::call_callback'] = function (key, parameters) {
         exec(data.data);
     })
 };
+
+window.libs['admin::delete_item'] = function (title, url) {
+    console.log(title, url);
+    exec('alert::confirm', title, () => {
+        axios.delete(url).then(data => {
+            exec(data.data);
+        });
+    });
+}

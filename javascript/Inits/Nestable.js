@@ -4,13 +4,16 @@ window.libs['nestable'] = function () {
     }).on('change', (e) => {
         let list = $(e.target);
 
-        jax.admin.nestable_save(
-            e.target.dataset.model,
-            e.target.dataset.maxDepth,
-            list.nestable('serialize'),
-            e.target.dataset.parent,
-            e.target.dataset.orderField,
-        )
+        axios.post(e.target.dataset.route, {
+            _token: exec('token'),
+            model: e.target.dataset.model,
+            depth: e.target.dataset.maxDepth,
+            data: list.nestable('serialize'),
+            parent_field: e.target.dataset.parent,
+            order_field: e.target.dataset.orderField,
+        }).then(data => {
+            exec(data.data);
+        });
     });
 
     if (this.collapsed) {

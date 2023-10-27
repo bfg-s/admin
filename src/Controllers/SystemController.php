@@ -8,10 +8,13 @@ use Admin\Core\PrepareExport;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
+use Admin\Requests\NestableSaveRequest;
+use Admin\Requests\TableActionRequest;
 use Admin\Respond;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,6 +29,11 @@ class SystemController extends Controller
     public static array $callbacks = [
 
     ];
+
+    /**
+     * @var int
+     */
+    protected static $i = 0;
 
     /**
      * @param  \Illuminate\Http\Request  $request
@@ -167,6 +175,115 @@ class SystemController extends Controller
         }
 
         return $respond;
+    }
+
+    /**
+     * @param  string  $class
+     * @param  array  $ids
+     * @return array
+     * @throws Exception
+     */
+    public function mass_delete(TableActionRequest $request, Respond $respond)
+    {
+        if (!check_referer('DELETE')) {
+            return [];
+        }
+
+        if (class_exists($request->class) && method_exists($request->class, 'delete')) {
+            $success = false;
+            foreach ($request->class::whereIn('id', $request->ids)->get() as $item) {
+                if ($item->delete()) {
+                    $success = true;
+                } else {
+                    $success = false;
+                }
+            }
+            if ($success) {
+                $respond->put('alert::success', __('admin.successfully_deleted'))->reload();
+            } else {
+                $respond->put('alert::error', __('admin.unknown_error'));
+            }
+        } else {
+            $respond->put('alert::error', __('admin.unknown_error'));
+        }
+
+        return $respond;
+    }
+
+    /**
+     * @param  string  $model
+     * @param  int  $depth
+     * @param  array  $data
+     * @param  string|null  $parent_field
+     * @param  string  $order_field
+     * @return array
+     * @throws Throwable
+     */
+    public function nestable_save(
+        NestableSaveRequest $request,
+        Respond $respond,
+    ) {
+        if (!check_referer('PUT')) {
+            return [];
+        }
+
+        if (class_exists($request->model)) {
+            DB::transaction(function () use ($request) {
+                foreach ($this->nestable_collapse($request->data, $request->depth, $request->parent_field, null, $request->order_field) as $item) {
+
+                    if ($model = $request->model::where('id', $item['id'])->first()) {
+                        $model->update($item['data']);
+                    }
+                }
+            });
+            static::$i = 0;
+            $respond->toast_success(__('admin.saved_successfully'));
+        }
+
+        return $respond;
+    }
+
+    /**
+     * @param  array  $data
+     * @param  int  $depth
+     * @param  string|null  $parent_field
+     * @param  null  $parent
+     * @param  string  $order_field
+     * @return array
+     */
+    private function nestable_collapse(
+        array $data,
+        int $depth,
+        string $parent_field = null,
+        $parent = null,
+        string $order_field = 'order'
+    ) {
+        $result = [];
+
+        foreach ($data as $item) {
+            $new = [];
+
+            $new['id'] = $item['id'];
+
+            if ($depth > 1) {
+                $new['data'][$parent_field ?? 'parent_id'] = $parent;
+            }
+
+            $new['data'][$order_field ?? 'order'] = static::$i;
+
+            $result[] = $new;
+
+            static::$i++;
+
+            if (isset($item['children'])) {
+                $result = array_merge(
+                    $result,
+                    $this->nestable_collapse($item['children'], $depth, $parent_field, $item['id'], $order_field)
+                );
+            }
+        }
+
+        return $result;
     }
 
     /**

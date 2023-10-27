@@ -24,6 +24,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-easy-image": "^18.0.0",
         "@ckeditor/ckeditor5-upload": "^18.0.0",
+        "@fancyapps/fancybox": "^3.5.7",
         "alpinejs": "^3.13.2",
         "axios": "^1.5.1",
         "bootstrap-iconpicker": "^1.8.2",

@@ -177,22 +177,17 @@ trait DefaultControllerResourceMethodsTrait
             $model = $this->model()->onlyTrashed()->where($this->model()->getRouteKeyName(), $this->model_primary());
         }
 
-        $model = static::fire_pipes($model, 'delete');
-
         if ($model) {
             try {
                 if ($restore && $model->restore()) {
                     Respond::glob()->put('alert::success', __('admin.successfully_restored'));
 
-                    Respond::glob()->reload();
                 } elseif ($force && $model->forceDelete()) {
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
 
-                    Respond::glob()->reload();
                 } elseif ($model->delete()) {
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
 
-                    Respond::glob()->reload();
                 } else {
                     Respond::glob()->put('alert::error', __('admin.unknown_error'));
                 }

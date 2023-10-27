@@ -250,15 +250,12 @@ class ButtonsComponent extends Component
 
             $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay&' . http_build_query($add) : '?' . http_build_query($add);
 
-            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete')])->setDatas([
-                'click' => 'alert::confirm',
-                'params' => [
-                    __(
-                        'admin.delete_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
-                    ),
-                    $link.$stay.' >> $jax.del',
-                ],
+            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete')])->on_click('admin::delete_item', [
+                __(
+                    'admin.delete_subject',
+                    ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                ),
+                $link.$stay
             ])->setTitleIf($title === '', __('admin.delete'));
         }
 

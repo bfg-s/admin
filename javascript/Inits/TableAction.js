@@ -1,32 +1,3 @@
-
-function url(target) {
-    return target.dataset.url;
-}
-
-function table(target) {
-    return target.dataset.table;
-}
-
-function object(target) {
-    return target.dataset.object;
-}
-
-function confirm(target) {
-    return target.dataset.confirm;
-}
-
-function jax(target) {
-    return target.dataset.jax;
-}
-
-function commandJson(target) {
-    return target.dataset.commandJson;
-}
-
-function warning(target) {
-    return target.dataset.warning;
-}
-
 function columns(target) {
     return JSON.parse(target.dataset.columns);
 }
@@ -35,17 +6,9 @@ function openColumns(target) {
     return JSON.parse(target.dataset.openColumns);
 }
 
-function order(target) {
-    return target.dataset.order;
-}
-
-function orderType(target) {
-    return target.dataset.orderType;
-}
-
 function selectedIds(target) {
     let ids = [];
-    $(`.select_${table(target)}:checked`).each((i, obj) => {
+    $(`.select_${target.dataset.table}:checked`).each((i, obj) => {
         ids.push(Number(obj.value));
     });
     return ids;
@@ -53,10 +16,11 @@ function selectedIds(target) {
 
 
 window.libs['table_action'] = function () {
+    const target = this.target;
     let ids = selectedIds(this.target);
-    let commandJson = commandJson(this.target) ? JSON.parse(commandJson(this.target)) : null;
+    let commandJson = target.dataset.commandJson ? JSON.parse(target.dataset.commandJson) : null;
 
-    if ((ids.length || !warning(this.target)) && (jax(this.target) || commandJson)) {
+    if ((ids.length || !target.dataset.warning) && (target.dataset.route || commandJson)) {
 
         let call_jax = () => {
             if (commandJson) {
@@ -65,36 +29,45 @@ window.libs['table_action'] = function () {
                     commandJson[key][1] = {};
                 }
                 if (typeof commandJson[key][1] === 'object') {
-                    commandJson[key][1]['object'] = object(this.target);
+                    commandJson[key][1]['object'] = target.dataset.object;
                     commandJson[key][1]['ids'] = ids;
                     commandJson[key][1]['columns'] = columns(this.target);
-                    commandJson[key][1]['order'] = order(this.target);
-                    commandJson[key][1]['orderType'] = orderType(this.target);
+                    commandJson[key][1]['order'] = target.dataset.order;
+                    commandJson[key][1]['orderType'] = target.dataset.orderType;
                 }
                 setTimeout(() => {
-                    ljs.exec(commandJson);
+                    exec(commandJson);
                 }, 100);
             } else {
-                jax.path(jax(this.target), object(this.target), ids, columns(this.target), order(this.target), orderType(this.target), url(this.target));
+                axios.post(target.dataset.route, {
+                    _token: exec('token'),
+                    class: target.dataset.object,
+                    ids: ids,
+                    columns: columns(target),
+                    orderBy: target.dataset.order,
+                    orderType: target.dataset.orderType
+                }).then(data => {
+                    exec(data.data);
+                })
             }
             setTimeout(() => {
                 $(this.target).parents('.card').find('.action-selector').each((i, o) => {
                     o.checked = false;
                 });
-                $(`[name="select_${table(this.target)}"]`)[0].checked = false;
+                $(`[name="select_${target.dataset.table}"]`)[0].checked = false;
             }, 200);
         };
 
-        if (confirm(this.target)) {
+        if (target.dataset.confirm) {
 
-            exec("alert::confirm", confirm(this.target).replace(":num", ids.length), call_jax);
+            exec("alert::confirm", target.dataset.confirm.replace(":num", ids.length), call_jax);
 
         } else {
 
             call_jax();
         }
-    } else if (warning()) {
-        exec('alert::warning', warning());
+    } else if (target.dataset.warning) {
+        exec('alert::warning', target.dataset.warning);
     }
 };
 
@@ -138,11 +111,11 @@ window.libs['table_action::exportToExcel'] = function () {
     exec("toast::success", "Downloading...");
     axios.post(window.export_excel, {
         _token: exec('token'),
-        model: object(this.target),
+        model: this.target.dataset.object,
         ids: ids,
-        order: order(this.target),
-        order_type: orderType(this.target),
-        table: table(this.target),
+        order: this.target.dataset.order,
+        order_type: this.target.dataset.orderType,
+        table: this.target.dataset.table,
     }).then((data) => {
 
         exec("toast::success", "Saving...");
@@ -176,11 +149,11 @@ window.libs['table_action::exportToCsv'] = function () {
     exec("toast::success", "Downloading...");
     axios.post(window.export_csv, {
         _token: exec('token'),
-        model: object(this.target),
+        model: thid.target.dataset.object,
         ids: ids,
-        order: order(this.target),
-        order_type: orderType(this.target),
-        table: table(this.target),
+        order: this.target.dataset.order,
+        order_type: this.target.dataset.orderType,
+        table: this.target.dataset.table,
     }).then((data) => {
         exec("toast::success", "Saving...");
 

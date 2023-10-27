@@ -1,6 +1,6 @@
 <div @class(array_merge(['dd'], $classes)) @attributes($attributes)>
-    <ol class="'dd-list">
-        @foreach($model as $item)
+    <ol class="dd-list">
+        @foreach($models as $item)
             <li class="dd-item dd3-item" data-id="{{ $item->id }}">
                 <div class="dd-handle dd3-handle">
                     <i class="fas fa-arrows-alt"></i>
