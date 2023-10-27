@@ -144,9 +144,9 @@ trait ModelRelationBuilderTrait
 
     /**
      * Build relation template maker button.
-     * @return string
+     * @return void
      */
-    protected function _btn(): string
+    protected function _btn(): void
     {
         $old_model_form = $this->page->model();
 
