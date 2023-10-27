@@ -22,7 +22,7 @@ trait ModelRelationBuilderTrait
     /**
      * Build relation rows.
      */
-    protected function _build(): void
+    protected function _build()
     {
         $old_model_form = $this->page->model();
 
@@ -134,7 +134,7 @@ trait ModelRelationBuilderTrait
      * @param  mixed  ...$params
      * @return void
      */
-    protected function _call_tpl(...$params): void
+    protected function _call_tpl(...$params)
     {
         /**
          * Required Force.
@@ -146,7 +146,7 @@ trait ModelRelationBuilderTrait
      * Build relation template maker button.
      * @return void
      */
-    protected function _btn(): void
+    protected function _btn()
     {
         $old_model_form = $this->page->model();
 
