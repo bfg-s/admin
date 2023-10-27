@@ -2,11 +2,6 @@
 
 namespace Admin\Core;
 
-/**
- * Class CfgFile.
- *
- * @package Lar\Layout
- */
 class CfgFile
 {
     /**

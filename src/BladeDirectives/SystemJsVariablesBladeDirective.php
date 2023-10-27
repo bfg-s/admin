@@ -58,6 +58,7 @@ JS;
             $export_excel = route('admin.export_excel');
             $export_csv = route('admin.export_csv');
             $custom_save = route('admin.custom_save');
+            $call_callback = route('admin.call_callback');
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -66,6 +67,7 @@ window.uploader = "$uploader";
 window.export_excel = "$export_excel";
 window.export_csv = "$export_csv";
 window.custom_save = "$custom_save";
+window.call_callback = "$call_callback";
 JS;
         }
     }

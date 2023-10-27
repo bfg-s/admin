@@ -26,6 +26,7 @@ Route::group([], function (Router $route) {
     $route->post('export_excel', [SystemController::class, 'export_excel'])->name('export_excel');
     $route->post('export_csv', [SystemController::class, 'export_csv'])->name('export_csv');
     $route->post('custom_save', [SystemController::class, 'custom_save'])->name('custom_save');
+    $route->post('call_callback', [SystemController::class, 'call_callback'])->name('call_callback');
 });
 
 /**

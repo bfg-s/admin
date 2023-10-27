@@ -98,3 +98,11 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
         });
     }, 100);
 };
+
+window.libs['admin::call_callback'] = function (key, parameters) {
+    axios.post(window.call_callback, {
+        _token: exec('token'), key, parameters
+    }).then(data => {
+        exec(data.data);
+    })
+};

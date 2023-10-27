@@ -5,6 +5,7 @@ namespace Admin\Controllers;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
+use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Respond;
@@ -19,6 +20,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SystemController extends Controller
 {
+    /**
+     * @var array
+     */
+    public static array $callbacks = [
+
+    ];
+
     /**
      * @param  \Illuminate\Http\Request  $request
      * @return array|mixed|void
@@ -134,6 +142,28 @@ class SystemController extends Controller
             } else {
                 $respond->put('alert::error', __('admin.unknown_error'));
             }
+        }
+
+        return $respond;
+    }
+
+    /**
+     * @param  int  $key
+     * @param  array  $parameters
+     * @return array|void
+     */
+    public function call_callback(CallCallbackRequest $request, Respond $respond)
+    {
+        if (!check_referer()) {
+            return [];
+        }
+
+        $this->refererEmit();
+
+        if (isset(static::$callbacks[$request->key])) {
+            app()->call(static::$callbacks[$request->key], $request->parameters);
+        } else {
+            $respond->toast_error(__('admin.callback_not_found'));
         }
 
         return $respond;

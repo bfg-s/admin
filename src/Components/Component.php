@@ -54,10 +54,10 @@ use Admin\Components\Small\TdComponent;
 use Admin\Components\Small\ThComponent;
 use Admin\Components\Small\TheadComponent;
 use Admin\Components\Small\TrComponent;
+use Admin\Controllers\SystemController;
 use Admin\Core\Delegate;
 use Admin\Core\MenuItem;
 use Admin\Explanation;
-use Admin\Jax\Admin;
 use Admin\Page;
 use Admin\Traits\AlpineInjectionTrait;
 use Admin\Traits\BootstrapClassHelpers;
@@ -995,7 +995,7 @@ abstract class Component implements Renderable
      */
     public static function registerCallBack(callable $callback, array $parameters = [], $model = null): array
     {
-        Admin::$callbacks[] = $callback;
+        SystemController::$callbacks[] = $callback;
 
         if ($model) {
             foreach ($parameters as $key => $parameter) {
@@ -1011,8 +1011,8 @@ abstract class Component implements Renderable
         }
 
         return [
-            'jax.admin.call_callback' => [
-                array_key_last(Admin::$callbacks),
+            'admin::call_callback' => [
+                array_key_last(SystemController::$callbacks),
                 $parameters
             ]
         ];
