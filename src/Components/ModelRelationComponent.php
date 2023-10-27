@@ -67,6 +67,11 @@ class ModelRelationComponent extends Component
     protected mixed $buttons = null;
 
     /**
+     * @var string|null
+     */
+    protected ?string $ordered = null;
+
+    /**
      * @param  array|string  $relationName
      * @param  mixed  ...$delegates
      */
@@ -92,6 +97,17 @@ class ModelRelationComponent extends Component
     public function title(?string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $field
+     * @return $this
+     */
+    public function ordered(string $field = 'order'): static
+    {
+        $this->ordered = $field;
 
         return $this;
     }
@@ -129,6 +145,7 @@ class ModelRelationComponent extends Component
     {
         return [
             'title' => $this->title,
+            'ordered' => $this->ordered,
             'buttons' => $this->buttons,
         ];
     }

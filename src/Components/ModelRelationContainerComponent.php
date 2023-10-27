@@ -52,6 +52,11 @@ class ModelRelationContainerComponent extends Component
     protected array $buttons = [];
 
     /**
+     * @var string|null
+     */
+    protected ?string $ordered = null;
+
+    /**
      * @param  string  $relation
      * @param  string  $name
      * @param ...$delegates
@@ -71,8 +76,20 @@ class ModelRelationContainerComponent extends Component
     protected function viewData(): array
     {
         return [
-            'buttons' => $this->buttons
+            'buttons' => $this->buttons,
+            'ordered' => $this->ordered,
         ];
+    }
+
+    /**
+     * @param  string|null  $ordered
+     * @return $this
+     */
+    public function setOrdered(?string $ordered): static
+    {
+        $this->ordered = $ordered;
+
+        return $this;
     }
 
     /**

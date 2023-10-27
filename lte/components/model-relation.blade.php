@@ -1,4 +1,7 @@
-<div @class(array_merge(['card'], $classes)) @attributes($attributes)>
+<div
+    @class(array_merge(['card'], $classes))
+    @attributes($attributes)
+>
     @if($title)
         <div class="card-header">
 
@@ -20,7 +23,7 @@
             </div>
         </div>
     @endif
-    <div class="card-body">
+    <div class="card-body" @if($ordered) data-load="admin::model_relation_ordered" data-params="{{ $ordered }}" @endif>
         @foreach($contents as $content)
             {!! $content !!}
         @endforeach

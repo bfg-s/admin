@@ -35,7 +35,7 @@ window.libs['valid'] = function () {
             });
 
             if (validator.errorList.length) {
-                ljs.onetime(() => {
+                exec('onetime', 'aaa', () => {
                     let tab = $(validator.errorList[0].element).closest('.tab-pane');
                     if (tab[0] && tab[0].hasAttribute('aria-labelledby')) {
                         let label_id = `#${tab.attr('aria-labelledby')}`;
@@ -59,7 +59,6 @@ window.libs['valid'] = function () {
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {
-            //console.log(element);
             let area = element.closest('.form-group'),
                 lw = area[0] && area[0].dataset.labelWidth !== undefined ? area[0].dataset.labelWidth : 2,
                 label = $('<div></div>').addClass(`col-sm-${lw}`),

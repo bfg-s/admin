@@ -59,6 +59,7 @@ JS;
             $export_csv = route('admin.export_csv');
             $custom_save = route('admin.custom_save');
             $call_callback = route('admin.call_callback');
+            $load_lives = route('admin.load_lives');
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -68,6 +69,7 @@ window.export_excel = "$export_excel";
 window.export_csv = "$export_csv";
 window.custom_save = "$custom_save";
 window.call_callback = "$call_callback";
+window.load_lives = "$load_lives";
 JS;
         }
     }

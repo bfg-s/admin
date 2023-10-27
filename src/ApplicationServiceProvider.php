@@ -19,6 +19,7 @@ class ApplicationServiceProvider extends ExtendProvider
      */
     protected array $defaultScripts = [
         'admin-asset/plugins/jquery/jquery.min.js',
+        'admin/plugins/jquery-ui.js',
         'admin-asset/plugins/bootstrap/js/bootstrap.bundle.min.js',
 
         'admin-asset/plugins/chart.js/Chart.min.js',

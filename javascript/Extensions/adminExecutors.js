@@ -51,12 +51,19 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
         lives.each((i, o) => data.push({name: '_areas[]', value: o.getAttribute('id')}));
         data.push({name: '_changed_field', value: changed_name});
         data.push({name: '_changed_value', value: changed_value});
-        const j = jax;
+
+        let params = {};
+
         data.map(({name, value}, key) => {
             if (name.indexOf("q[") !== 0 && name !== '_method')
-                j.param(name, value);
+                params[name] = value;
         });
-        j.admin.load_lives().then(((content) => {
+
+        axios.post(window.load_lives, {
+            _token: exec('token'),
+            ...params
+        }).then((data => {
+            let content = data.data;
             if (typeof content === 'object') {
                 Object.keys(content).map((key) => {
                     const q = $(`#${key}`);
@@ -66,6 +73,7 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
                         q[0].dataset.hash = live.hash;
                     }
                 });
+                window.updateInits();
             }
         }));
     }
@@ -108,10 +116,47 @@ window.libs['admin::call_callback'] = function (key, parameters) {
 };
 
 window.libs['admin::delete_item'] = function (title, url) {
-    console.log(title, url);
+
     exec('alert::confirm', title, () => {
         axios.delete(url).then(data => {
             exec(data.data);
         });
     });
 }
+
+const registered_onetime = {};
+
+window.libs['onetime'] = function ($name, $execute, $ms = 100) {
+
+    if (registered_onetime[$name]) {
+
+        clearTimeout(registered_onetime[$name]);
+    }
+
+    registered_onetime[$name] = setTimeout(() => {
+
+        if (typeof $execute === 'function') {
+
+            $execute();
+        } else {
+            exec($execute);
+        }
+
+        delete registered_onetime[$name];
+
+    }, $ms);
+};
+
+window.libs['admin::model_relation_ordered'] = function (field) {
+    $(this.target).sortable({
+        revert: true,
+        handle: ".handle",
+        update: ( event, ui ) => {
+            let i = 0;
+            event.target.querySelectorAll('.card-body.template_content').forEach(e => {
+                e.querySelector('.ordered-field').value = i;
+                i++;
+            })
+        }
+    });
+};

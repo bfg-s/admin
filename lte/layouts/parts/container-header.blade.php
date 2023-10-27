@@ -50,8 +50,13 @@
                     @else
                         @if (admin_repo()->nowParents->count() && $first['id'] !== $menu->getId())
                             <li class="breadcrumb-item active">
-                                {!! __($first['title']) !!}
+                                {{ config('app.name') }}
                             </li>
+                            @if ($first['title'])
+                                <li class="breadcrumb-item">
+                                        {!! __($first['title']) !!}
+                                </li>
+                            @endif
                             @foreach(admin_repo()->nowParents->reverse() as $item)
                                 <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
                                     {!! __($item['title']) !!}

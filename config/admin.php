@@ -24,6 +24,11 @@ return [
     'lang_mode' => true,
 
     /**
+     * Default home route
+     */
+    'home-route' => 'admin.dashboard',
+
+    /**
      * Admin application namespace.
      */
     'app_namespace' => 'App\\Admin',

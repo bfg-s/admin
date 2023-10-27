@@ -1,7 +1,17 @@
-<div @class(array_merge(['template_container', 'card', 'card-outline'], $classes)) @attributes($attributes)>
+<div
+    @class(array_merge(['template_container', 'card', 'card-outline'], $classes))
+    @attributes($attributes)
+    @if($ordered) data-oder-by="{{ $ordered }}" @endif
+>
     @if($buttons)
         <div class="card-header">
-
+            @if($ordered)
+                <div class="btn-group btn-group-sm ml-1 control_relation">
+                    <a type="button" class="btn btn-default handle" style="cursor: move;">
+                        <i class="fas fa-arrows-alt"></i>
+                    </a>
+                </div>
+            @endif
             <h3 class="card-title return_relation" style="display: none">
                 Deleted
             </h3>

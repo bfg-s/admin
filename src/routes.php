@@ -29,6 +29,7 @@ Route::group([], function (Router $route) {
     $route->post('call_callback', [SystemController::class, 'call_callback'])->name('call_callback');
     $route->post('mass_delete', [SystemController::class, 'mass_delete'])->name('mass_delete');
     $route->post('nestable_save', [SystemController::class, 'nestable_save'])->name('nestable_save');
+    $route->post('load_lives', [SystemController::class, 'load_lives'])->name('load_lives');
 });
 
 /**

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 class SystemController extends Controller
 {
@@ -36,9 +37,31 @@ class SystemController extends Controller
     protected static $i = 0;
 
     /**
+     * @return array
+     * @throws Throwable
+     */
+    public function load_lives(): array
+    {
+        $this->refererEmit();
+
+        $result_areas = [];
+
+        foreach (LiveComponent::$list as $area => $item) {
+
+            $content = $item->render()->render();
+            $result_areas[$area] = [
+                'hash' => sha1($content),
+                'content' => $content,
+            ];
+        }
+
+        return $result_areas;
+    }
+
+    /**
      * @param  \Illuminate\Http\Request  $request
      * @return array|mixed|void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function load_modal(\Illuminate\Http\Request $request)
     {

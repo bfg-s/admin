@@ -35,7 +35,13 @@ trait ModelRelationBuilderTrait
             $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
         };
 
-        $datas = $this->relation->get();
+        if (! $this->ordered) {
+            $datas = $this->relation->get();
+        } else {
+            $datas = $this->relation->orderBy($this->ordered)->get();
+        }
+
+        $i = 0;
 
         /** @var Model $item */
         foreach ($datas as $item) {
@@ -46,12 +52,21 @@ trait ModelRelationBuilderTrait
                 ModelRelationContainerComponent::class,
                 $this->relation_name,
                 $item->{$item->getKeyName()}
-            );
+            )->setOrdered($this->ordered);
 
             $container->view('components.inputs.hidden', [
                 'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}."][{$item->getKeyName()}]",
                 'value' => $item->{$item->getKeyName()}
             ]);
+
+            if ($this->ordered) {
+
+                $container->view('components.inputs.hidden', [
+                    'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}."][{$this->ordered}]",
+                    'value' => $item->{$this->ordered} ?: $i,
+                    'classes' => ['ordered-field']
+                ]);
+            }
 
             $this->last_content = $this->createComponent(
                 ModelRelationContentComponent::class,
@@ -97,6 +112,8 @@ trait ModelRelationBuilderTrait
             }
 
             $this->appEnd($container);
+
+            $i++;
         }
 
         if (!$datas->count() && $this->on_empty) {

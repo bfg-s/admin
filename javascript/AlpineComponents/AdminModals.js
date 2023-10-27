@@ -135,13 +135,13 @@ Alpine.data('adminModals', (load_modal) => ({
                 modal.params = {};
             }
             this.loading = true;
-            //console.log(this.load_modal);
+
             axios.post(this.load_modal,  {
                 _modal: modal.handle,
                 _modal_id: modal.key,
                 ...modal.params
             }).then(data => {
-                //console.log('>>>>', data);
+
                 data = data.data;
                 modal.content = data.content;
                 modal.options.size = data.size;
@@ -152,7 +152,7 @@ Alpine.data('adminModals', (load_modal) => ({
                 let key12 = findKey(this.modals, ['key', modal.key])
 
                 this.modals[key12] = modal;
-                console.log(this.modals)
+
                 this.loading = false;
 
                 $(obj).on('hidden.bs.modal', () => {

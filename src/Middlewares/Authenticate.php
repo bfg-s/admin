@@ -41,7 +41,7 @@ class Authenticate
         if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
-            return redirect()->route('admin.dashboard');
+            return redirect()->route(config('admin.home-route', 'admin.dashboard'));
         }
 
         if (Auth::guard('admin')->guest() && !$this->shouldPassThrough($request)) {

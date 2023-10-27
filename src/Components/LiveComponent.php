@@ -20,6 +20,11 @@ class LiveComponent extends Component
     protected static $counter = 0;
 
     /**
+     * @var mixed|null
+     */
+    protected mixed $id = null;
+
+    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -34,14 +39,8 @@ class LiveComponent extends Component
      */
     protected function viewData(): array
     {
-        $id = 'live-'.static::$counter;
-
-        LiveComponent::$list[$id] = $this;
-
-        static::$counter++;
-
         return [
-            'id' => $id
+            'id' => $this->id
         ];
     }
 
@@ -50,5 +49,10 @@ class LiveComponent extends Component
      */
     protected function mount(): void
     {
+        $this->id = 'live-'.static::$counter;
+
+        LiveComponent::$list[$this->id] = $this;
+
+        static::$counter++;
     }
 }

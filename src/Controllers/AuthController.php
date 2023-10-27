@@ -25,7 +25,7 @@ class AuthController
     public function login()
     {
         if (!AdminFacade::guest()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route(config('admin.home-route', 'admin.dashboard'));
         }
 
         return admin_view('login');
@@ -58,7 +58,7 @@ class AuthController
     public function twofaGet(Request $request)
     {
         if (!AdminFacade::guest()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route(config('admin.home-route', 'admin.dashboard'));
         }
 
         return redirect()->route('admin.login');
