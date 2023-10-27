@@ -118,6 +118,11 @@ class ModelTableComponent extends Component
     public static bool $is_export = false;
 
     /**
+     * @var bool
+     */
+    public bool $initModel = false;
+
+    /**
      * @param ...$delegates
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

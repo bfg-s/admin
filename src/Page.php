@@ -303,7 +303,10 @@ class Page extends Container
 
             $component = Component::$components[$name];
 
+            /*** @var Component $component **/
             $component = new $component(...$arguments);
+
+            $component->model($this->model);
 
             if (!$component instanceof Component) {
                 throw new Exception('Component is not admin part');
