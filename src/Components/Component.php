@@ -1129,4 +1129,19 @@ CSS;
 
         return $this;
     }
+
+    /**
+     * Hide component.
+     *
+     * @param bool $eq
+     * @return $this
+     */
+    public function hide(mixed $eq = true): static
+    {
+        if ($eq) {
+            $this->attr('style', 'display: none');
+        }
+
+        return $this;
+    }
 }

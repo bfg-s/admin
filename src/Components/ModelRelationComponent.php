@@ -52,6 +52,21 @@ class ModelRelationComponent extends Component
     protected array $innerDelegates = [];
 
     /**
+     * @var string
+     */
+    protected string $view = 'model-relation';
+
+    /**
+     * @var string|null
+     */
+    protected ?string $title = null;
+
+    /**
+     * @var mixed|null
+     */
+    protected mixed $buttons = null;
+
+    /**
      * @param  array|string  $relationName
      * @param  mixed  ...$delegates
      */
@@ -68,6 +83,17 @@ class ModelRelationComponent extends Component
         }
 
         $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
+    }
+
+    /**
+     * @param  string|null  $title
+     * @return static
+     */
+    public function title(?string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     /**
@@ -94,5 +120,16 @@ class ModelRelationComponent extends Component
             $this->_build();
             $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->relation_name]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'title' => $this->title,
+            'buttons' => $this->buttons,
+        ];
     }
 }

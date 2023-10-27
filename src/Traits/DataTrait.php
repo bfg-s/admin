@@ -20,8 +20,9 @@ trait DataTrait
      */
     public function on_click(string|array $command, $value = null): static
     {
-        return $this->xOnClick(
-            Respond::create()->put($command, $value)->renderWithExecutor()
+        return $this->attr(
+            'data-click',
+            Respond::create()->put($command, $value)
         );
     }
 
@@ -251,7 +252,7 @@ trait DataTrait
     {
         return $this->attr(
             'data-load',
-            Respond::create()->put($command, $value) //->renderWithExecutor()
+            Respond::create()->put($command, $value)
         );
     }
 }
