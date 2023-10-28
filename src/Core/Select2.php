@@ -51,8 +51,6 @@ class Select2 extends Collection
      */
     protected $data;
 
-    protected string $separator = " ";
-
     /**
      * @var int
      */
@@ -122,10 +120,7 @@ class Select2 extends Collection
         string $no_select = null,
         string $prefix = null,
         $where = null,
-        string $separator = ' ',
     ) {
-        $this->separator = $separator;
-
         parent::__construct([]);
 
         if (is_embedded_call($where)) {

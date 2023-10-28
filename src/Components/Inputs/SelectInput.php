@@ -51,11 +51,6 @@ class SelectInput extends FormGroupComponent
     protected bool $nullable = false;
 
     /**
-     * @var bool|string
-     */
-    protected string|bool $separator = ' ';
-
-    /**
      * @var bool
      */
     protected bool $multiple = false;
@@ -103,8 +98,7 @@ class SelectInput extends FormGroupComponent
             $this->value,
             $this->nullable ? $this->title : null,
             $this->field_id.'_',
-            $this->load_where,
-            $this->separator
+            $this->load_where
         );
 
         $r_name = $selector->getName();
@@ -163,17 +157,6 @@ class SelectInput extends FormGroupComponent
         if ($first_default && !$this->nullable) {
             $this->default(array_key_first($this->options));
         }
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $separator
-     * @return $this
-     */
-    public function separator(string $separator): static
-    {
-        $this->separator = $separator;
 
         return $this;
     }
