@@ -6,7 +6,6 @@ use Broadcast;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Routing\Router;
-use Lar\Roads\Roads;
 use Admin\Core\NavGroup;
 use Admin\Core\NavigatorExtensions;
 use Admin\Core\NavItem;

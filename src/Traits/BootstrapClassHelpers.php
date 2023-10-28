@@ -2,10 +2,6 @@
 
 namespace Admin\Traits;
 
-/**
- * Trait BootstrapClassHelpers.
- * @package Lar\Tagable\Core\Traits
- */
 trait BootstrapClassHelpers
 {
     /**

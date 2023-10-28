@@ -81,7 +81,7 @@
             @endif
         @endforeach
 
-        @if(config('layout.lang_mode'))
+        @if(config('admin.lang_mode', true))
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown language_dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -89,7 +89,7 @@
                     <div class="d-none d-lg-inline d-xl-inline">{{strtoupper(App::getLocale())}}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    @foreach(config('layout.languages') as $lang)
+                    @foreach(config('admin.languages', ['en', 'uk', 'ru']) as $lang)
                         <a class="dropdown-item {{App::getLocale() == $lang ? 'active' : ''}}"
                            href="{{remake_lang_url($lang)}}">
                             <i class="{{isset(config('admin.lang_flags')[$lang]) ? config('admin.lang_flags')[$lang] : ''}}"></i> {{strtoupper($lang)}}

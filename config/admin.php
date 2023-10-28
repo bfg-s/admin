@@ -24,6 +24,11 @@ return [
     'lang_mode' => true,
 
     /**
+     * Supported languages
+     */
+    'languages' => ['en', 'uk', 'ru'],
+
+    /**
      * Default home route
      */
     'home-route' => 'admin.dashboard',

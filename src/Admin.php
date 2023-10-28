@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Admin\Components\Vue\ModalCollection;
 use Admin\Models\AdminUser;
+use Illuminate\Support\Facades\Crypt;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -249,16 +250,19 @@ class Admin
      */
     public function nowLang(): array|string|null
     {
-        $select = self::$lang_select;
+        if (self::$lang_select) {
+            return self::$lang_select;
+        }
 
-        if (!$select && session()->has('lang')) {
-            $lang = session()->get('lang');
+        $select = null;
 
-            if (in_array($lang, config('layout.languages'))) {
-                $select = $lang;
-            }
-        } elseif (!$select && request()->cookie('lang')) {
+        $segment = request()->segments()[0] ?? null;
+
+        if (in_array($segment, config('admin.languages', ['en', 'uk', 'ru']))) {
+            $select = $segment;
+        } else if (request()->cookie('lang')) {
             $lang = request()->cookie('lang');
+            $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
 
             if (in_array($lang, config('layout.languages'))) {
                 $select = $lang;
@@ -269,6 +273,6 @@ class Admin
             $select = config('app.locale');
         }
 
-        return $select;
+        return self::$lang_select = $select;
     }
 }

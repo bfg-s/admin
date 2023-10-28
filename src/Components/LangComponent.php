@@ -2,8 +2,6 @@
 
 namespace Admin\Components;
 
-use Lar\Tagable\Core\Extension\Content;
-
 class LangComponent extends Component
 {
     /**

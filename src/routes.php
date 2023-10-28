@@ -5,8 +5,6 @@ use Admin\Controllers\DashboardController;
 use Admin\Controllers\SystemController;
 use Admin\Controllers\UploadController;
 use Admin\Controllers\UserController;
-use Lar\Roads\Roads;
-use Admin\Controllers\SettingsController;
 use Admin\Core\RoutesAdaptor;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;

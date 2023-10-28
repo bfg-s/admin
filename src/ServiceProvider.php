@@ -82,6 +82,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->makeRouters()->group(__DIR__.'/routes.php');
 
         /**
+         * Register redirecteble route
+         */
+        $this->redirectebleRoute();
+
+        /**
          * Register publishers configs.
          */
         $this->publishes([
@@ -121,10 +126,8 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], 'admin-html');
 
         /**
-         * Load Admin views.
+         * Load themes views
          */
-        $this->loadViewsFrom(__DIR__.'/../views', 'admin');
-
         foreach (AdminFacade::getThemes() as $theme) {
             if (
                 ($namespace = $theme->getNamespace())
@@ -189,6 +192,22 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         return $route->middleware($middlewares);
+    }
+
+    /**
+     * @return void
+     */
+    public function redirectebleRoute()
+    {
+        if (config('admin.lang_mode', true)) {
+            Route::domain(config('admin.route.domain', ''))
+                ->name(config('admin.route.name') . 'index')
+                ->prefix(config('admin.route.prefix'))
+                ->middleware(['web', 'admin-auth', DomMiddleware::class, LanguageMiddleware::class])
+                ->get('/', function () {
+                    return redirect()->route(config('admin.home-route', 'admin.dashboard'));
+                });
+        }
     }
 
     /**

@@ -192,12 +192,6 @@ class AdminInstallCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
-        if (!is_file(config_path('layout.php'))) {
-            $this->call('vendor:publish', [
-                '--tag' => 'lar-layout-config',
-            ]);
-        }
-
         if (!is_file(config_path('admin.php'))) {
             $this->call('vendor:publish', [
                 '--tag' => 'admin-config',

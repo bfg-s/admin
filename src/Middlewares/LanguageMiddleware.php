@@ -6,6 +6,7 @@ use Admin\Facades\AdminFacade;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,7 +23,11 @@ class LanguageMiddleware
      */
     public function handle($request, Closure $next)
     {
-        App::setLocale(AdminFacade::nowLang());
+        $lang = AdminFacade::nowLang();
+
+        App::setLocale($lang);
+
+        Cookie::queue('lang', $lang, time() * time());
 
         return $next($request);
     }
