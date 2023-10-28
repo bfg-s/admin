@@ -13,7 +13,7 @@ Bfg admin panel is a free extension for your Laravel project, if you need to qui
 
 # Install
 ```
-composer require bfg/admin:^5
+composer require bfg/admin:^6
 ```
 
 # Documentation
@@ -38,10 +38,7 @@ We have extensive [documentation](https://wood.veskod.com/documentation/admin-pa
 
 # Laravel Required
 
- - [lar/ljs](https://packagist.org/packages/lar/ljs)
- - [lar/layout](https://packagist.org/packages/lar/layout)
- - [lar/roads](https://packagist.org/packages/lar/roads)
- - [bfg/emitter](https://packagist.org/packages/bfg/emitter)
+ - [bfg/entity](https://packagist.org/packages/bfg/entity)
  - [bfg/embedded-call](https://packagist.org/packages/bfg/embedded-call)
  - [bfg/repository](https://packagist.org/packages/bfg/repository)
  - [maatwebsite/excel](https://docs.laravel-excel.com/3.1/getting-started/)
