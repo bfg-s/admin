@@ -125,7 +125,7 @@ return [
      * Footer data
      */
     'footer' => [
-        'copy' => 'Property of <a href="https://swipex.ua/" target="_blank">Swipex</a>.
+        'copy' => 'Developed by <a href="https://swipex.ua/" target="_blank">Swipex</a>.
                     All rights reserved. <strong>Copyright &copy; 2020 - '.date('Y').'.</strong>',
     ],
 ];
