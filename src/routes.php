@@ -50,9 +50,12 @@ Route::group([], function (Router $route) {
     $route->post('uploader', [class_exists($app_upload_controller) ? $app_upload_controller : UploadController::class, 'index'])
         ->name('uploader');
 
-    \Admin\Facades\NavigateFacade::item('admin.dashboard', 'dashboard')
-        ->action([class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class, 'index'])
-        ->icon_tachometer_alt();
+    if (config('admin.home-route', 'admin.dashboard') === 'admin.dashboard') {
+
+        \Admin\Facades\NavigateFacade::item('admin.dashboard', 'dashboard')
+            ->action([class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class, 'index'])
+            ->icon_tachometer_alt();
+    }
 
     $route->namespace(admin_app_namespace('Controllers'))->group(static function (Router $route) {
         RoutesAdaptor::create_by_menu($route);
