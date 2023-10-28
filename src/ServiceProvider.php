@@ -94,6 +94,13 @@ class ServiceProvider extends ServiceProviderIlluminate
         ], ['admin-config']);
 
         /**
+         * Register publishers default theme.
+         */
+        $this->publishes([
+            __DIR__.'/../lte' => public_path('vendor/admin/lte'),
+        ], ['admin-theme']);
+
+        /**
          * Register publishers lang.
          */
         $this->publishes([

@@ -597,6 +597,19 @@ abstract class Component implements Renderable
     }
 
     /**
+     * @param $view
+     * @param  array  $data
+     * @param  array  $mergeData
+     * @return $this
+     */
+    public function originView($view = null, array $data = [], array $mergeData = []): static
+    {
+        return $this->appEnd(
+            view($view, $data, $mergeData)
+        );
+    }
+
+    /**
      * @param  string  $class
      * @param  array  $params
      * @return Component

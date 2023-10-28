@@ -43,6 +43,9 @@ class AdminLteTheme extends Theme
         'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
     ];
 
+    /**
+     * @var array|string[]
+     */
     protected array $scripts = [
         'admin-asset/js/adminlte.min.js',
     ];
