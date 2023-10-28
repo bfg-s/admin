@@ -96,7 +96,7 @@ class Admin
 
         if ($obj instanceof Theme) {
 
-            static::$themes[$obj->getSlug()] = $obj;
+            static::$themes[$obj->getSlug()] = $class;
         }
     }
 
