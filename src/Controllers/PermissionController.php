@@ -93,9 +93,7 @@ class PermissionController extends Controller
                     $form->ifEdit()->info_updated_at(),
                     $form->ifEdit()->info_created_at(),
                 ),
-                $card->card_body()->p(
-                    Str::markdown(__('admin.permission_instruction'))
-                ),
+                $card->card_body()->p()->appEnd(Str::markdown(__('admin.permission_instruction'))),
                 $card->footer_form(),
             );
     }
