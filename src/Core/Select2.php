@@ -615,12 +615,6 @@ class Select2 extends Collection
 
         $this->name = strtolower(class_basename($class));
 
-        $result = $this->callEvent($class, [$class => $this->data]);
-
-        if ($result instanceof $this->data) {
-            $this->data = $result;
-        }
-
         $this->makePaginator();
     }
 
@@ -646,12 +640,6 @@ class Select2 extends Collection
         $class = get_class($this->data);
 
         $this->name = strtolower(class_basename($class));
-
-        $result = $this->callEvent($class, [$class => $this->data]);
-
-        if ($result instanceof $this->data) {
-            $this->data = $result;
-        }
 
         $this->makePaginator();
     }
