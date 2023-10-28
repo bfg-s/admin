@@ -31,13 +31,22 @@ window.libs['admin::add_relation_tpl'] = function (path) {
     let area = `relation_${path}_template`,
         // id = (new Date).getTime(),
         tpl = exec("tpl::get_tpl", area),
-        zone = document.querySelector(`span[data-tpl="${area}"]`),
+        zone = document.querySelector(`[data-tpl="${area}"]`),
         id = zone ? `new_` + (zone.childElementCount + 1) : (new Date).getTime();
 
-    tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_id\_\_\}/g, id);
+    const all = zone.querySelectorAll('.template_container');
+    const last = all[all.length-1];
+    let num = zone.childElementCount-1;
+    if (last) {
+        const field = last.querySelector('.ordered-field');
+        if (field) {
+            num = Number(field.value)+1
+        }
+    }
 
-    //zone.appendChild(tpl);
-    //ljs.$nav.readyObject(tpl);
+    tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_id\_\_\}/g, id);
+    tpl.children[0].innerHTML = tpl.children[0].innerHTML.replace(/\{\_\_val\_\_\}/g, num);
+
     $(zone).append(tpl.children);
     window.updateInits();
     let container = $(`[data-relation-path='${path}']`);

@@ -140,8 +140,6 @@ trait ModelRelationBuilderTrait
 
         unset(FormGroupComponent::$construct_modify['build_relation']);
 
-        $this->template_area("relation_{$this->relation_name}_template");
-
         $this->_btn();
 
         ModelRelationComponent::$fm = $this->fm_old;
@@ -180,7 +178,16 @@ trait ModelRelationBuilderTrait
             ModelRelationContainerComponent::class,
             $this->relation_name,
             'template_container'
-        );
+        )->setOrdered($this->ordered);
+
+        if ($this->ordered) {
+
+            $container->view('components.inputs.hidden', [
+                'name' => "{$this->relation_name}[{__id__}][{$this->ordered}]",
+                'value' => '{__val__}',
+                'classes' => ['ordered-field']
+            ]);
+        }
 
         $this->last_content = $this->createComponent(
             ModelRelationContentComponent::class,

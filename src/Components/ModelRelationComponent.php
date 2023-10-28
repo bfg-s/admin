@@ -147,6 +147,7 @@ class ModelRelationComponent extends Component
             'title' => $this->title,
             'ordered' => $this->ordered,
             'buttons' => $this->buttons,
+            'tpl' => "relation_{$this->relation_name}_template",
         ];
     }
 }
