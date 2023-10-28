@@ -184,7 +184,7 @@ class SelectInput extends FormGroupComponent
      * @param  callable|null  $where
      * @return $this
      */
-    public function load($subject, string $format = 'id:name', callable $where = null): static
+    public function load($subject, string $format = '{id}) {name}', callable $where = null): static
     {
         $this->load_subject = $subject;
         $this->load_format = $format;

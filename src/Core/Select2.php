@@ -34,7 +34,7 @@ class Select2 extends Collection
     /**
      * @var string[]
      */
-    protected $columns = ['id'];
+    protected $columns = [];
 
     /**
      * @var array
@@ -92,6 +92,16 @@ class Select2 extends Collection
      * @var Closure|null
      */
     private $where;
+
+    /**
+     * @var string
+     */
+    protected string $format = "{id}) {name}";
+
+    /**
+     * @var array
+     */
+    protected array $relations = [];
 
     /**
      * Select2 constructor.
@@ -158,9 +168,21 @@ class Select2 extends Collection
      * @param  string  $format
      * @return $this
      */
-    public function format(string $format = 'id')
+    public function format(string $format = '{id}) {name}')
     {
-        $this->columns = explode(':', $format);
+        $this->format = $format;
+
+        preg_match_all('/{[A-z\.]+}/m', $format, $m);
+        $matches = $m[0];
+
+        foreach ($matches as $input) {
+            $input = trim($input, '{}');
+            if (str_contains($input, '.')) {
+                $this->relations[$input] = explode('.', $input);
+            } else {
+                $this->columns[] = $input;
+            }
+        }
 
         return $this;
     }
@@ -262,6 +284,9 @@ class Select2 extends Collection
             }
 
             if ($this->data) {
+                foreach ($this->relations as $full => $relation) {
+                    $this->data = $this->data->with($relation[0]);
+                }
                 $this->data = $this->data->paginate($this->paginate_peg_page, ['*'], $this->getName().'_page');
             } else {
                 $this->data = collect([])->paginate($this->paginate_peg_page, $this->getName().'_page');
@@ -370,6 +395,12 @@ class Select2 extends Collection
                             $query->orWhere($column, 'like', "%{$q}%");
                         }
                     }
+                    foreach ($this->relations as $relation) {
+                        $query->orWhereHas(
+                            $relation[0],
+                            fn ($qRelation) => $qRelation->where($relation[1], 'like', "%{$q}%")
+                        );
+                    }
                 });
             }
 
@@ -392,8 +423,10 @@ class Select2 extends Collection
     /**
      * @param  Builder|Collection  $data
      */
-    private function makeValue($data)
+    private function makeValue($dataInsert)
     {
+        $data = clone $dataInsert;
+
         if (!request()->ajax() || request()->pjax()) {
             $key = $this->getKeyColumn();
             $text = $this->getTextColumn();
@@ -411,15 +444,19 @@ class Select2 extends Collection
 
                 if ($has_where) {
                     if (!($data instanceof Arrayable)) {
-                        $data = $data->get($this->columns);
+                        foreach ($this->relations as $relation) {
+                            $data = $data->with($relation[0]);
+                        }
+                        $data = $data->get();
                     }
                     $result = [];
                     $lang = App::getLocale();
+                    /** @var Model $d */
                     foreach ($data as $d) {
-                        $result[$d[$key]] = (isset($d[$key]) ? $d[$key] . ') ':'') . collect($d)->only(array_slice($this->columns,
-                            1))
-                            ->map(fn($i) => is_array($i) && array_key_exists($lang, $i) ? $i[$lang] : $i)
-                            ->implode($this->separator);
+
+                        $result[$d[$key]] = preg_replace_callback('/{([A-z.]+)}/m', function ($m) use ($d) {
+                            return multi_dot_call($d, $m[1]);
+                        }, $this->format);
                     }
                     $this->value_data = $result;
                 } else {
@@ -497,23 +534,9 @@ class Select2 extends Collection
                 $id = multi_dot_call($datum, $field_id);
                 $id = $id === null ? (string) multi_dot_call($datum, '0') : (string) $id;
 
-                $text = multi_dot_call($datum, $field_text);
-                if (is_array($text)) {
-                    $lang = App::getLocale();
-                    $text = $text[$lang] ?? implode($this->separator, $text);
-                }
-                $text = $text === null ? (string) multi_dot_call($datum, '0') : (string) $text;
-
-                if ($id && $text) {
-                    $text = $id . ") " . $text;
-                }
-
-                foreach (array_slice($this->columns, 2) as $part) {
-                    $t = multi_dot_call($datum, $part);
-                    if ($t) {
-                        $text .= $this->separator.$t;
-                    }
-                }
+                $text = preg_replace_callback('/{([A-z.]+)}/m', function ($m) use ($datum) {
+                    return multi_dot_call($datum, $m[1]);
+                }, $this->format);
 
                 $item = ['id' => $id, 'text' => $text];
 

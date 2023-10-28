@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
