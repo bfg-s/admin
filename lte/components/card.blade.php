@@ -9,9 +9,9 @@
             @if($icon)
                 <i class="{{ $icon }} mr-1"></i>
             @endif
-            {{ preg_replace_callback('/\:([a-zA-Z0-9\_\-\.]+)/', static function ($m) use ($model) {
-                return e(multi_dot_call($model, $m[1]));
-            }, __($title)) }}
+            {!! preg_replace_callback('/\:([a-zA-Z0-9\_\-\.]+)/', static function ($m) use ($model) {
+                return multi_dot_call($model, $m[1]);
+            }, __($title)) !!}
         </h3>
 
         <div class="card-tools">
