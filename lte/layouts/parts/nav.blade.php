@@ -85,14 +85,14 @@
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown language_dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="{{isset(config('admin.lang_flags')[App::getLocale()]) ? config('admin.lang_flags')[App::getLocale()] : ''}}"></i>
+                    <i class="flag-icon flag-icon-{{ App::getLocale() === 'en' ? 'us' : App::getLocale() }}"></i>
                     <div class="d-none d-lg-inline d-xl-inline">{{strtoupper(App::getLocale())}}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     @foreach(config('admin.languages', ['en', 'uk', 'ru']) as $lang)
                         <a class="dropdown-item {{App::getLocale() == $lang ? 'active' : ''}}"
                            href="{{remake_lang_url($lang)}}">
-                            <i class="{{isset(config('admin.lang_flags')[$lang]) ? config('admin.lang_flags')[$lang] : ''}}"></i> {{strtoupper($lang)}}
+                            <i class="flag-icon flag-icon-{{$lang === 'en' ? 'us' : $lang}}"></i> {{strtoupper($lang)}}
                         </a>
                     @endforeach
                 </div>

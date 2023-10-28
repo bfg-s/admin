@@ -26,7 +26,7 @@ return [
     /**
      * Supported languages
      */
-    'languages' => ['en', 'uk', 'ru'],
+    'languages' => ['en', 'ua', 'ru'],
 
     /**
      * Default home route
@@ -78,14 +78,12 @@ return [
      * guard and a user provider setting of authentication driver.
      */
     'auth' => [
-
         'guards' => [
             'admin' => [
                 'driver' => 'session',
                 'provider' => 'admin',
             ],
         ],
-
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
@@ -101,9 +99,7 @@ return [
      * disk and upload path.
      */
     'upload' => [
-
         'disk' => 'admin',
-
         /**
          * Image and file upload path under the disk above.
          */
@@ -126,31 +122,10 @@ return [
     ],
 
     /**
-     * SQLite's connection for menu and settings
-     */
-    'connections' => [
-        'admin-sqlite' => [
-            'driver' => 'sqlite',
-            'url' => null,
-            'database' => database_path('admin-database.sqlite'),
-            'prefix' => '',
-            'foreign_key_constraints' => true,
-        ],
-    ],
-
-    /**
      * Footer data
      */
     'footer' => [
-        'copy' => '<strong>Copyright &copy; '.date('Y').'.</strong> All rights reserved.',
-    ],
-
-    /**
-     * Language flag icons
-     */
-    'lang_flags' => [
-        'uk' => 'flag-icon flag-icon-ua',
-        'en' => 'flag-icon flag-icon-us',
-        'ru' => 'flag-icon flag-icon-ru',
+        'copy' => 'Property of <a href="https://swipex.ua/" target="_blank">Swipex</a>.
+                    All rights reserved. <strong>Copyright &copy; 2020 - '.date('Y').'.</strong>',
     ],
 ];

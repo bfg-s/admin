@@ -217,7 +217,6 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         app('view')->share([
             'admin' => config('admin'),
-            'default_page' => config('admin.paths.view', 'admin').'.page'
         ]);
     }
 
@@ -285,6 +284,5 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         config(Arr::dot(config('admin.auth', []), 'auth.'));
         config(Arr::dot(config('admin.disks', []), 'filesystems.disks.'));
-        config(Arr::dot(config('admin.connections', []), 'database.connections.'));
     }
 }
