@@ -124,19 +124,21 @@ class ModelTableComponent extends Component
 
     /**
      * @param ...$delegates
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function __construct(...$delegates)
     {
         parent::__construct();
 
         if (request()->has($this->model_name)) {
-            $this->order_field = request()->get($this->model_name);
+            try {
+                $this->order_field = request()->get($this->model_name);
+            } catch (\Throwable) {}
         }
 
         if (request()->has($this->model_name.'_type')) {
-            $type = request()->get($this->model_name.'_type');
+            try {
+                $type = request()->get($this->model_name.'_type');
+            } catch (\Throwable) {}
             $this->order_type = $type === 'asc' || $type === 'desc' ? $type : 'asc';
         }
 
@@ -144,12 +146,14 @@ class ModelTableComponent extends Component
 
         $this->_create_controls();
 
-        if (request()->has($this->model_name.'_per_page') && in_array(
-                request()->get($this->model_name.'_per_page'),
-                $this->per_pages
-            )) {
-            $this->per_page = (string) request()->get($this->model_name.'_per_page');
-        }
+        try {
+            if (request()->has($this->model_name.'_per_page') && in_array(
+                    request()->get($this->model_name.'_per_page'),
+                    $this->per_pages
+                )) {
+                $this->per_page = (string) request()->get($this->model_name.'_per_page');
+            }
+        } catch (\Throwable) {}
 
         DomMiddleware::setModelTableComponent($this);
     }
