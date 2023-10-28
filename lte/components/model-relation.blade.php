@@ -23,7 +23,7 @@
             </div>
         </div>
     @endif
-    <div class="card-body" @if($ordered) data-load="admin::model_relation_ordered" @if($tpl) data-tpl="{{ $tpl }}" @endif data-params="{{ $ordered }}" @endif>
+    <div class="card-body" @if($ordered) data-load="admin::model_relation_ordered" data-params="{{ $ordered }}" @endif @if($tpl) data-tpl="{{ $tpl }}" @endif>
         @foreach($contents as $content)
             {!! $content !!}
         @endforeach
