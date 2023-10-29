@@ -286,7 +286,7 @@ trait TableHelpersTrait
      */
     public function created_at(): static
     {
-        $this->column('admin.created_at', 'created_at')->butty_date_time()->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.created_at', 'created_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -296,7 +296,7 @@ trait TableHelpersTrait
      */
     public function updated_at(): static
     {
-        $this->column('admin.updated_at', 'updated_at')->butty_date_time()->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.updated_at', 'updated_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }
@@ -306,7 +306,7 @@ trait TableHelpersTrait
      */
     public function deleted_at(): static
     {
-        $this->column('admin.deleted_at', 'deleted_at')->butty_date_time()->true_data()->hide_on_mobile()->sort();
+        $this->column('admin.deleted_at', 'deleted_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
 
         return $this;
     }

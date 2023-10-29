@@ -78,7 +78,7 @@ class ModelInfoTableComponent extends Component
      */
     public function deleted_at(): static
     {
-        $this->row('admin.deleted_at', 'deleted_at')->butty_date_time()->true_data();
+        $this->row('admin.deleted_at', 'deleted_at')->beautiful_date_time()->true_data();
 
         return $this;
     }
@@ -98,7 +98,7 @@ class ModelInfoTableComponent extends Component
      */
     public function created_at(): static
     {
-        $this->row('admin.created_at', 'created_at')->butty_date_time()->true_data();
+        $this->row('admin.created_at', 'created_at')->beautiful_date_time()->true_data();
 
         return $this;
     }
@@ -108,7 +108,7 @@ class ModelInfoTableComponent extends Component
      */
     public function updated_at(): static
     {
-        $this->row('admin.updated_at', 'updated_at')->butty_date_time()->true_data();
+        $this->row('admin.updated_at', 'updated_at')->beautiful_date_time()->true_data();
 
         return $this;
     }
