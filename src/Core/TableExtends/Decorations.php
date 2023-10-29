@@ -8,6 +8,7 @@ use Admin\Components\Inputs\RatingInput;
 use Admin\Components\Small\SpanComponent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 class Decorations
 {
@@ -28,9 +29,10 @@ class Decorations
     /**
      * @param $value
      * @param  array  $props
-     * @return string|Component|null
+     * @return string
+     * @throws Throwable
      */
-    public function password_stars($value, array $props = []): string|Component|null
+    public function password_stars($value, array $props = []): string
     {
         if (!$value) {
             return $this->true_data($value);
@@ -40,78 +42,67 @@ class Decorations
         $id_showed = "showed_{$id}";
         $stars = str_repeat($star, strlen(strip_tags(html_entity_decode($value))));
 
-        return "<span id='{$id}'><i data-click='0> $::hide 1> $::show' data-params='#{$id} && #{$id_showed}' class='fas fa-eye' style='cursor:pointer'></i> {$stars}</span>".
-            "<span id='{$id_showed}' style='display:none'><i data-click='0> $::hide 1> $::show' data-params='#{$id_showed} && #{$id}' class='fas fa-eye-slash' style='cursor:pointer'></i> {$value}</span>";
+        return admin_view('components.model-table.decorations.password-stars', [
+            'id' => $id,
+            'id_showed' => $id_showed,
+            'stars' => $stars,
+            'value' => $value,
+        ])->render();
     }
 
     /**
      * @param $value
-     * @return Component|mixed|null
+     * @return string
+     * @throws Throwable
      */
-    public function true_data($value): mixed
+    public function true_data($value): string
     {
-        $return = SpanComponent::create(['badge']);
-
-        if (is_null($value) || $value === '') {
-            return $return->addClass('badge-dark')->text('NULL');
-        } elseif ($value === true) {
-            return $return->addClass('badge-success')->text('TRUE');
-        } elseif ($value === false) {
-            return $return->addClass('badge-danger')->text('FALSE');
-        } elseif (is_array($value)) {
-            return $return->addClass('badge-info')->text('Array('.count($value).')');
-        } elseif ($value instanceof Carbon) {
-            return $value->format('Y-m-d H:i:s');
-        } else {
-            return $value;
-        }
+        return admin_view('components.model-table.decorations.true-data', [
+            'value' => $value
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  array  $props
      * @return string
+     * @throws Throwable
      */
     public function uploaded_file($value, array $props = []): string
     {
-        if ($value) {
-            if (is_image(public_path($value))) {
-                return $this->avatar($value, $props);
-            } else {
-                return "<span class=\"badge badge-info\" title='{$value}'>".basename($value).'</span>';
-            }
-        } else {
-            return '<span class="badge badge-dark">none</span>';
+        if ($value && is_image(public_path($value))) {
+            return $this->avatar($value, $props);
         }
+
+        return admin_view('components.model-table.decorations.uploaded-file', [
+            'value' => $value,
+        ])->render();
     }
 
     /**
-     * @param  array  $props
      * @param $value
+     * @param  array  $props
      * @return string
+     * @throws Throwable
      */
     public function avatar($value, array $props = []): string
     {
         $size = $props[0] ?? 30;
 
-        if ($value) {
-            if (!str_starts_with($value, 'http')) {
-                $value = '/'.trim($value, '/');
-            }
-
-            return "<img src=\"{$value}\" data-click='fancy::img' data-params='{$value}' style=\"width:auto;height:auto;max-width:{$size}px;max-height:{$size}px;cursor:pointer\"  alt='avatar'/>";
-        } else {
-            return '<span class="badge badge-dark">none</span>';
-        }
+        return admin_view('components.model-table.decorations.avatar', [
+            'value' => $value ? (!str_starts_with($value, 'http') ? '/'.trim($value, '/') : $value) : null,
+            'size' => $size
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
-     * @return string|Component|null
+     * @return string
+     * @throws Throwable
      */
-    public function copied($value, array $props = [], Model|array $model = null): string|Component|null
+    public function copied($value, array $props = [], Model|array $model = null): string
     {
         if (isset($props[0]) && is_embedded_call($props[0])) {
             $value_for_copy = call_user_func($props[0], $model);
@@ -121,7 +112,11 @@ class Decorations
             return $this->true_data($value);
         }
 
-        return "<a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags(html_entity_decode($value_for_copy ?? $value))."'><i class='fas fa-copy'></i></a> ".$value;
+        return admin_view('components.model-table.decorations.copied', [
+            'value_before' => true,
+            'value_for_copy' => $value_for_copy ?? $value,
+            'value' => $value,
+        ])->render();
     }
 
     /**
@@ -129,6 +124,7 @@ class Decorations
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string|Component|null
+     * @throws Throwable
      */
     public function copied_right($value, array $props = [], Model|array $model = null): string|Component|null
     {
@@ -140,12 +136,17 @@ class Decorations
             return $this->true_data($value);
         }
 
-        return $value." <a href='javascript:void(0)' class='d-none d-sm-inline' title='Copy to clipboard' data-click='doc::informed_pbcopy' data-params='".strip_tags(html_entity_decode($value_for_copy ?? $value))."'><i class='fas fa-copy'></i></a>";
+        return admin_view('components.model-table.decorations.copied', [
+            'value_before' => false,
+            'value_for_copy' => $value_for_copy ?? $value,
+            'value' => $value,
+        ])->render();
     }
 
     /**
      * @param $value
      * @return string
+     * @throws Throwable
      */
     public function badge_number($value): string
     {
@@ -157,6 +158,7 @@ class Decorations
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
+     * @throws Throwable
      */
     public function badge($value, array $props = [], Model|array $model = null): string
     {
@@ -165,7 +167,10 @@ class Decorations
             $type = call_user_func($type, $model);
         }
 
-        return "<span class=\"badge badge-{$type}\">{$value}</span>";
+        return admin_view('components.model-table.decorations.badge', [
+            'type' => $type,
+            'value' => $value,
+        ])->render();
     }
 
     /**
@@ -173,6 +178,7 @@ class Decorations
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
+     * @throws Throwable
      */
     public function pill($value, array $props = [], Model|array $model = null): string
     {
@@ -181,80 +187,98 @@ class Decorations
             $type = call_user_func($type, $model);
         }
 
-        return "<span class=\"badge badge-pill badge-{$type}\">{$value}</span>";
+        return admin_view('components.model-table.decorations.pill', [
+            'type' => $type,
+            'value' => $value,
+        ])->render();
     }
 
     /**
      * @param $value
      * @return string
+     * @throws Throwable
      */
     public function yes_no($value): string
     {
-        return $value ? '<span class="badge badge-success">'.__('admin.yes').'</span>' :
-            '<span class="badge badge-danger">'.__('admin.no').'</span>';
+        return admin_view('components.model-table.decorations.yes-no', [
+            'value' => $value,
+        ])->render();
     }
 
     /**
      * @param $value
      * @return string
+     * @throws Throwable
      */
     public function on_off($value): string
     {
-        return $value ? '<span class="badge badge-success">'.__('admin.on').'</span>' :
-            '<span class="badge badge-danger">'.__('admin.off').'</span>';
+        return admin_view('components.model-table.decorations.on-off', [
+            'value' => $value,
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  int[]  $props
      * @return string
+     * @throws Throwable
      */
     public function fa_icon($value, array $props = []): string
     {
         $size = $props[0] ?? 22;
 
-        return "<i class='{$value}' title='{$value}' style='font-size: {$size}px'></i>";
+        return admin_view('components.model-table.decorations.fa-icon', [
+            'value' => $value,
+            'size' => $size,
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  array  $props
      * @return string
+     * @throws Throwable
      */
     public function badge_tags($value, array $props = []): string
     {
         $c = collect($value);
         $limit = $props[0] ?? 5;
 
-        return '<span class="badge badge-info">'.
-            $c->take($limit)->implode('</span> <span class="badge badge-info">').
-            '</span>'.($c->count() > $limit ? ' ... <span class="badge badge-warning" title="'.$c->skip($limit)->implode(', ').'">'.($c->count() - $limit).'x</span>' : '');
+        return admin_view('components.model-table.decorations.badge-tags', [
+            'collect' => $c,
+            'limit' => $limit,
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  array  $props
      * @return string
+     * @throws Throwable
      */
     public function color_cube($value, array $props = []): string
     {
         $size = $props[0] ?? 22;
 
-        return "<i class=\"fas fa-square\" title='{$value}' style=\"color: {$value}; font-size: {$size}px\"></i>";
+        return admin_view('components.model-table.decorations.color-cube', [
+            'value' => $value,
+            'size' => $size,
+        ])->render();
     }
 
     /**
      * @param $value
      * @param  array  $props
      * @return string
+     * @throws Throwable
      */
     public function progress_complete($value, array $props = []): string
     {
         $text = $props[0] ?? (__('admin.complete') ?? 'Complete');
 
-        return '<div class="progress progress-sm">
-                    <div class="progress-bar bg-green" role="progressbar" aria-valuenow="'.$value.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$value.'%">
-                    </div>
-                </div>' . ($text ? '<small>'.explode('.', round($value))[0].'% '.$text.'</small>':'');
+        return admin_view('components.model-table.decorations.progress-complete', [
+            'value' => $value,
+            'text' => $text,
+        ])->render();
     }
 }

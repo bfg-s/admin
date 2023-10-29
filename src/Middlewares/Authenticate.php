@@ -58,7 +58,7 @@ class Authenticate
                 $respond = ['0:toast::error' => [__('admin.access_denied'), __('admin.error')]];
 
                 if (request()->has('_exec')) {
-                    $respond['1:doc::reload'] = null;
+                    $respond['1:reload'] = null;
                 }
 
                 return response()->json($respond);

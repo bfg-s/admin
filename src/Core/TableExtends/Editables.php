@@ -24,13 +24,6 @@ class Editables
 
             $fieldComponent = FieldComponent::create();
 
-//            $fieldComponent->on_mouseup('custom_save', [
-//                get_class($model),
-//                $model->id,
-//                $field,
-//                $id,
-//            ]);
-
             $fieldComponent->switcher($field)
                 ->only_input()
                 ->labels(...$props)

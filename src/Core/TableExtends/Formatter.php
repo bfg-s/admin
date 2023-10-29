@@ -11,13 +11,15 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
 use Admin\Models\AdminPermission;
 use Illuminate\Support\Str;
+use Throwable;
 
 class Formatter
 {
     /**
+     * @param  null  $value
      * @param  array  $props
-     * @param $value
      * @return string
+     * @throws Throwable
      */
     public function str_limit($value = null, array $props = []): string
     {
@@ -29,7 +31,10 @@ class Formatter
             return $str;
         }
 
-        return "<span title='{$value}'>".$str.'</span>';
+        return admin_view('components.model-table.formatter.str-limit', [
+            'value' => $value,
+            'str' => $str,
+        ])->render();
     }
 
     /**
@@ -67,7 +72,7 @@ class Formatter
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
-     * @throws Exception
+     * @throws Throwable
      */
     public function admin_resource_route($value, array $props = [], Model|array $model = null): string
     {
@@ -107,17 +112,12 @@ class Formatter
         $urlShow = AdminPermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return ($urlEdit ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlEdit)->appEnd(
-                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon_pen()
-            )->setTitle(__('admin.edit')) : '').$value.
-
-            ($urlShow ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlShow)->appEnd(
-                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-info-circle')
-            )->setTitle(__('admin.information')) : '').
-
-            ($urlIndex ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlIndex)->appEnd(
-                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-list-alt')
-            )->setTitle(__('admin.list')) : '');
+        return admin_view('components.model-table.formatter.admin-resource-route', [
+            'value' => $value,
+            'urlEdit' => $urlEdit,
+            'urlShow' => $urlShow,
+            'urlIndex' => $urlIndex,
+        ])->render();
     }
 
     /**
@@ -125,7 +125,7 @@ class Formatter
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
-     * @throws Exception
+     * @throws Throwable
      */
     public function admin_resource_route_edit($value, array $props = [], Model|array $model = null): string
     {
@@ -150,9 +150,12 @@ class Formatter
         $urlEdit = AdminPermission::checkUrl($urlEdit) ?
             $urlEdit : false;
 
-        return ($urlEdit ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlEdit)->appEnd(
-                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon_pen()
-            )->setTitle(__('admin.edit')) : '').$value;
+        return admin_view('components.model-table.formatter.admin-resource-route', [
+            'value' => $value,
+            'urlEdit' => $urlEdit,
+            'urlShow' => false,
+            'urlIndex' => false,
+        ])->render();
     }
 
     /**
@@ -160,7 +163,7 @@ class Formatter
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
-     * @throws Exception
+     * @throws Throwable
      */
     public function admin_resource_route_show($value, array $props = [], Model|array $model = null): string
     {
@@ -185,11 +188,12 @@ class Formatter
         $urlShow = AdminPermission::checkUrl($urlShow) ?
             $urlShow : false;
 
-        return $value.
-
-            ($urlShow ? AComponent::create()->addClass('ml-1 link text-sm')->setHref($urlShow)->appEnd(
-                IComponent::create()->attr(['style' => 'font-size: 12px;'])->addClass('mr-1')->icon('fas fa-info-circle')
-            )->setTitle(__('admin.information')) : '');
+        return admin_view('components.model-table.formatter.admin-resource-route', [
+            'value' => $value,
+            'urlEdit' => false,
+            'urlShow' => $urlShow,
+            'urlIndex' => false,
+        ])->render();
     }
 
     /**
@@ -229,17 +233,14 @@ class Formatter
     }
 
     /**
-     * @param $value
+     * @param  null  $value
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
+     * @throws Throwable
      */
     public function to_append_link($value = null, array $props = [], Model|array $model = null): string
     {
-        if (!$value) {
-            return '<span class="badge badge-dark">NULL</span>';
-        }
-
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace(
             $props[1],
@@ -247,29 +248,23 @@ class Formatter
         ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
-        $link = AComponent::create()->setHref($link);
-
-        $link->i([$icon]);
-
-        if ($title) {
-            $link->attr(['title' => $title]);
-        }
-
-        return $value.' '.$link;
+        return admin_view('components.model-table.formatter.to-append-link', [
+            'value' => $value,
+            'icon' => $icon,
+            'link' => $link,
+            'title' => $title,
+        ])->render();
     }
 
     /**
-     * @param $value
+     * @param  null  $value
      * @param  array  $props
      * @param  Model|array|null  $model
      * @return string
+     * @throws Throwable
      */
     public function to_prepend_link($value = null, array $props = [], Model|array $model = null): string
     {
-        if (!$value) {
-            return '<span class="badge badge-dark">NULL</span>';
-        }
-
         $icon = isset($props[0]) ? ($model ? tag_replace($props[0], $model) : $props[0]) : 'fas fa-link';
         $link = isset($props[1]) ? ($model ? tag_replace(
             $props[1],
@@ -277,15 +272,12 @@ class Formatter
         ) : $props[1]) : ($value ?: 'javascript:void(0)');
         $title = isset($props[2]) ? ($model ? tag_replace($props[2], $model) : $props[2]) : $link;
 
-        $link = AComponent::create()->setHref($link);
-
-        $link->i([$icon]);
-
-        if ($title) {
-            $link->attr(['title' => $title]);
-        }
-
-        return $link.' '.$value;
+        return admin_view('components.model-table.formatter.to-append-link', [
+            'value' => $value,
+            'icon' => $icon,
+            'link' => $link,
+            'title' => $title,
+        ])->render();
     }
 
     /**
@@ -435,18 +427,18 @@ class Formatter
      * @param $value
      * @return string
      */
-    public function butty_date($value = null): string
+    public function beautiful_date($value = null): string
     {
-        return butty_date($value);
+        return beautiful_date($value);
     }
 
     /**
      * @param $value
      * @return string
      */
-    public function butty_date_time($value = null): string
+    public function beautiful_date_time($value = null): string
     {
-        return butty_date_time($value);
+        return beautiful_date_time($value);
     }
 
     /**

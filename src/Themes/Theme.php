@@ -37,6 +37,11 @@ abstract class Theme
     /**
      * @var array
      */
+    protected array $firstScripts = [];
+
+    /**
+     * @var array
+     */
     protected array $styles = [];
 
     /**
@@ -135,5 +140,13 @@ JS;
         return <<<CSS
 
 CSS;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFirstScripts(): array
+    {
+        return $this->firstScripts;
     }
 }

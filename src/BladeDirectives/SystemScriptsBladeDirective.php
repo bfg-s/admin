@@ -22,7 +22,9 @@ class SystemScriptsBladeDirective
     {
         $extensions = AdminFacade::extensions();
 
-        $scripts = [];
+        $theme = AdminFacade::getTheme();
+
+        $scripts = $theme->getFirstScripts();
 
         foreach ($extensions as $extension) {
 
@@ -36,8 +38,6 @@ class SystemScriptsBladeDirective
                 $scripts = array_merge($scripts, $component::getScripts());
             }
         }
-
-        $theme = AdminFacade::getTheme();
 
         $scripts = array_merge($scripts, $theme->getScripts());
 

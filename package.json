@@ -28,6 +28,7 @@
         "alpinejs": "^3.13.2",
         "axios": "^1.5.1",
         "bootstrap-iconpicker": "^1.8.2",
+        "clipboard-polyfill": "^4.0.1",
         "inputmask": "^5.0.8",
         "laravel-echo": "^1.11.3",
         "md5": "^2.3.0",

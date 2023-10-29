@@ -1,12 +1,13 @@
 <div
-    @class(array_merge(['timeline'], $classes))
-    @attributes($attributes)
+        @class(array_merge(['timeline'], $classes))
+        @attributes($attributes)
 >
     {!! $prepend !!}
     @foreach ($paginate as $model)
         <div>
             @if($model[$order_field] instanceof Carbon && $model[$order_field]->day == 1)
-                <div class="time-label"><span class="bg-green">{{ $model[$order_field]->toDateTimeString() }}</span></div>
+                <div class="time-label"><span class="bg-green">{{ $model[$order_field]->toDateTimeString() }}</span>
+                </div>
             @endif
             @if($icon)
                 <i class="{!! is_callable($icon) ? call_user_func($icon, $model) : $icon !!}"></i>
@@ -14,7 +15,7 @@
             <div class="timeline-item">
                 <span class="time">
                     <i class="fas fa-clock"></i>
-                    {{ $model[$order_field] ? butty_date_time($model[$order_field]) : '' }}
+                    {{ $model[$order_field] ? beautiful_date_time($model[$order_field]) : '' }}
                 </span>
                 @if($title)
                     <h3 class="timeline-header">{!! is_callable($title) ? call_user_func($title, $model) : $title !!}</h3>

@@ -482,8 +482,8 @@ if (!function_exists('is_image')) {
     }
 }
 
-if (!function_exists('butty_date')) {
-    function butty_date($time)
+if (!function_exists('beautiful_date')) {
+    function beautiful_date($time)
     {
         if (! $time) return $time;
 
@@ -504,8 +504,8 @@ if (!function_exists('butty_date')) {
     }
 }
 
-if (!function_exists('butty_date_time')) {
-    function butty_date_time($time)
+if (!function_exists('beautiful_date_time')) {
+    function beautiful_date_time($time)
     {
         if (! $time) return $time;
 

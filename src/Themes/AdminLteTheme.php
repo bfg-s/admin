@@ -46,6 +46,15 @@ class AdminLteTheme extends Theme
     /**
      * @var array|string[]
      */
+    protected array $firstScripts = [
+        'admin-asset/plugins/jquery/jquery.min.js',
+        'admin/plugins/jquery-ui.js',
+        'admin-asset/plugins/bootstrap/js/bootstrap.bundle.min.js',
+    ];
+
+    /**
+     * @var array|string[]
+     */
     protected array $scripts = [
         'admin-asset/js/adminlte.min.js',
     ];
