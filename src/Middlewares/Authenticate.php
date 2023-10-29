@@ -82,7 +82,7 @@ class Authenticate
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('jax.executor')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile.logout')
-            && config('admin.functional.force-2fa')
+            && config('admin.force-2fa')
             && ! admin()->two_factor_confirmed_at
         ) {
             session()->flash(

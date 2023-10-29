@@ -65,13 +65,9 @@ return [
     ],
 
     /**
-     * Additional repo functional
+     * Use force 2fa for all admin users
      */
-    'functional' => [
-        'menu' => false,
-        'settings' => false,
-        'force-2fa' => false,
-    ],
+    'force-2fa' => false,
 
     /**
      * Authentication settings for all admin pages. Include an authentication
