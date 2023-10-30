@@ -84,7 +84,7 @@ class Select2 extends Collection
     /**
      * @var Collection
      */
-    private $value_data;
+    private mixed $value_data;
 
     /**
      * @var Closure|null
@@ -110,7 +110,6 @@ class Select2 extends Collection
      * @param  string|null  $no_select
      * @param  string|null  $prefix
      * @param  null  $where
-     * @param  string  $separator
      * @throws ReflectionException
      */
     public function __construct(
@@ -167,7 +166,7 @@ class Select2 extends Collection
     {
         $this->format = $format;
 
-        preg_match_all('/{[A-z\.]+}/m', $format, $m);
+        preg_match_all('/{[0-9A-z.-]+}/m', $format, $m);
         $matches = $m[0];
 
         foreach ($matches as $input) {
@@ -449,7 +448,7 @@ class Select2 extends Collection
                     /** @var Model $d */
                     foreach ($data as $d) {
 
-                        $result[$d[$key]] = preg_replace_callback('/{([A-z.]+)}/m', function ($m) use ($d) {
+                        $result[$d[$key]] = preg_replace_callback('/{([0-9A-z.-]+)}/m', function ($m) use ($d) {
                             return multi_dot_call($d, $m[1]);
                         }, $this->format);
                     }
@@ -529,7 +528,7 @@ class Select2 extends Collection
                 $id = multi_dot_call($datum, $field_id);
                 $id = $id === null ? (string) multi_dot_call($datum, '0') : (string) $id;
 
-                $text = preg_replace_callback('/{([A-z.]+)}/m', function ($m) use ($datum) {
+                $text = preg_replace_callback('/{([0-9A-z.-]+)}/m', function ($m) use ($datum) {
                     return multi_dot_call($datum, $m[1]);
                 }, $this->format);
 
@@ -597,8 +596,10 @@ class Select2 extends Collection
      * Create data for Array.
      *
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createArray()
+    private function createArray(): void
     {
         $this->makeGroupBy()->makeSearch()->normalize();
     }
@@ -607,9 +608,10 @@ class Select2 extends Collection
      * Create data for Builder.
      *
      * @return void
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createBuilder()
+    private function createBuilder(): void
     {
         $class = get_class($this->data->getModel());
 
@@ -622,9 +624,11 @@ class Select2 extends Collection
      * Create data for Relation.
      *
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    private function createRelation()
+    private function createRelation(): void
     {
         $this->createBuilder();
     }
@@ -633,9 +637,10 @@ class Select2 extends Collection
      * Create data for Relation.
      *
      * @return void
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createCollection()
+    private function createCollection(): void
     {
         $class = get_class($this->data);
 
@@ -648,10 +653,10 @@ class Select2 extends Collection
      * @param  string  $cols
      * @return $this
      */
-    public function searchBy(string $cols)
+    public function searchBy(string $cols): static
     {
         foreach (explode(':', $cols) as $item) {
-            if (array_search($item, $this->columns) === false && array_search($item, $this->search_columns) === false) {
+            if (!in_array($item, $this->columns) && !in_array($item, $this->search_columns)) {
                 $this->search_columns[] = $item;
             }
         }
@@ -663,7 +668,7 @@ class Select2 extends Collection
      * @param  int  $options
      * @return string
      */
-    public function toJson($options = 0)
+    public function toJson($options = 0): string
     {
         $this->items = $this->toArray();
 
@@ -673,7 +678,7 @@ class Select2 extends Collection
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $return = [
             'results' => $this->no_select ? array_merge([['id' => '', 'text' => $this->no_select]],
@@ -690,7 +695,7 @@ class Select2 extends Collection
     /**
      * @return Collection
      */
-    public function getValueData()
+    public function getValueData(): mixed
     {
         return $this->value_data;
     }
