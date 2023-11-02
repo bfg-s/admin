@@ -29,6 +29,7 @@
                         @click="show=false"
                         @keyup="key_up_nav"
                     >
+                        <i x-bind:class="item.icon + ` nav-icon`"></i>
                         <span x-html="item.inner.replace(/p\>/g, 'span>')"></span>
                         <strong>(<span x-text="item.total"></span>)</strong>
                     </a>

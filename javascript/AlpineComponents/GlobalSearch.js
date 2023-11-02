@@ -16,7 +16,12 @@ Alpine.data('globalSearch', () => ({
             menu.querySelectorAll('a[href^="http"]')
                 .forEach((obj) => {
                     if (obj.dataset.ignore !== '1') {
-                        this.links.push({href: obj.href, inner: obj.innerHTML});
+
+                        this.links.push({
+                            href: obj.href,
+                            inner: this.strip_tags(obj.innerHTML).trim(),
+                            icon: obj.querySelector('i').getAttribute('class')
+                        });
                     }
                 });
 
@@ -48,7 +53,11 @@ Alpine.data('globalSearch', () => ({
                 $('.global_search_input_focus').focus();
             }
         });
+
         document.addEventListener('click', this.hideResult);
+    },
+    strip_tags( str ){
+        return str.replace(/<\/?[^>]+>/gi, '');
     },
     destroy() {
         document.removeEventListener('click', this.hideResult);
@@ -124,6 +133,7 @@ Alpine.data('globalSearch', () => ({
                         if (r.total) {
                             const urlObj = new URL(link.href);
                             this.items.push({
+                                icon: link.icon,
                                 inner: link.inner,
                                 href: `${urlObj.origin}${urlObj.pathname}?q=${this.q}`,
                                 total: r.total
