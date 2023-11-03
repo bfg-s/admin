@@ -14,10 +14,6 @@ class GridRowComponent extends Component
      */
     protected function mount(): void
     {
-        $this->newExplainForce($this->delegates);
-        $this->newExplainForce($this->force_delegates);
-//        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
-//            $this->model($this->parent->model);
-//        }
+
     }
 }
