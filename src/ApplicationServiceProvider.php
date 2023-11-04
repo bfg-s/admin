@@ -36,7 +36,6 @@ class ApplicationServiceProvider extends ExtendProvider
         'admin-asset/plugins/sparklines/sparkline.js',
         'admin-asset/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
         'admin-asset/plugins/daterangepicker/daterangepicker.js',
-        'admin-asset/plugins/sweetalert2/sweetalert2.min.js',
         'admin-asset/plugins/select2/js/select2.full.min.js',
 
         'admin/plugins/jquery-validation/jquery.validate.min.js',
@@ -94,7 +93,6 @@ class ApplicationServiceProvider extends ExtendProvider
         'admin-asset/plugins/select2/css/select2.min.css',
         'admin-asset/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css',
 
-        'admin-asset/plugins/sweetalert2/sweetalert2.css',
         'admin-asset/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
         'admin-asset/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'admin-asset/plugins/daterangepicker/daterangepicker.css',

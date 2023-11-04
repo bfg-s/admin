@@ -24,7 +24,7 @@ window.libs['submit'] = function ($text = 'Saving...') {
 
     if (parent) {
 
-        if (parent.executors && parent.executors['valid'] && !$(parent).valid()) {
+        if (!$(parent).valid()) {
             return false;
         }
 

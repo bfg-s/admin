@@ -276,7 +276,7 @@ class UserController extends Controller
                         $card->tab(
                             $tab->active(request()->has('adminlog1_per_page') || request()->has('adminlog1_page')),
                             $tab->icon_history()->title('admin.timeline'),
-                            $tab->with(fn(TabContentComponent $content) => static::timelineComponent(
+                            $tab->use(fn(TabContentComponent $content) => static::timelineComponent(
                                 $content,
                                 $this->model()->logs(),
                                 $this
@@ -334,6 +334,7 @@ class UserController extends Controller
             $timeline->set_title(function (AdminLog $log) {
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             }),
+            $timeline->set_icon(fn (AdminLog $log) => $log->icon),
             $timeline->set_body(function (TimelineComponent $timelineComponent, AdminLog $log) {
                 return ModelInfoTableComponent::create()->model($log)->use(function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();

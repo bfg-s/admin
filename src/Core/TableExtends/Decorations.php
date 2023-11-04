@@ -150,7 +150,7 @@ class Decorations
      */
     public function badge_number($value): string
     {
-        return $this->badge($value, [$value <= 0 ? 'danger' : 'success']);
+        return $this->badge($value ?: 0, [$value <= 0 ? 'danger' : 'success']);
     }
 
     /**

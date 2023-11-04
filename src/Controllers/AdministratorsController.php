@@ -152,6 +152,16 @@ class AdministratorsController extends Controller
                     $modelInfoTable->row('admin.email_address', 'email'),
                     $modelInfoTable->row('admin.login_name', 'login'),
                     $modelInfoTable->row('admin.name', 'name'),
+                    $modelInfoTable->row(
+                        'admin.activity',
+                        fn (AdminUser $user) => $user->logs()->count()
+                    )->badge_number,
+                    $modelInfoTable->row(
+                        'admin.day_activity',
+                        fn (AdminUser $user)
+                        => $user->logs()->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                            ->count()
+                    )->badge_number,
                     $modelInfoTable->at(),
                 )
             )

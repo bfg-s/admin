@@ -297,15 +297,12 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete_forever')])->setDatas([
-                'click' => 'alert::confirm',
-                'params' => [
-                    __(
-                        'admin.delete_forever_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
-                    ),
-                    $link.'?force=1 >> $jax.del',
-                ],
+            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete_forever')])->on_click('admin::delete_item', [
+                __(
+                    'admin.delete_forever_subject',
+                    ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                ),
+                $link.'?force=1'
             ])->setTitleIf($title === '', __('admin.delete_forever'));
         }
 
@@ -338,15 +335,12 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('admin.restore')])->setDatas([
-                'click' => 'alert::confirm',
-                'params' => [
-                    __(
-                        'admin.restore_subject',
-                        ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
-                    ),
-                    $link.'?restore=1 >> $jax.del',
-                ],
+            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('admin.restore')])->on_click('admin::delete_item', [
+                __(
+                    'admin.restore_subject',
+                    ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
+                ),
+                $link.'?restore=1'
             ])->setTitleIf($title === '', __('admin.restore'));
         }
 

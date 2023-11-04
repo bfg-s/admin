@@ -76,9 +76,7 @@ class TimelineComponent extends Component
      */
     public function set_icon(callable|string $icon): static
     {
-        if (is_string($icon) || is_embedded_call($icon)) {
-            $this->icon = $icon;
-        }
+        $this->icon = $icon;
 
         return $this;
     }
@@ -172,7 +170,7 @@ class TimelineComponent extends Component
             'paginate' => $paginate = $this->getPaginate(),
             'paginateFooter' => $this->paginateFooter($paginate),
             'icon' => function ($model) {
-                return $this->callCallableExtender('icon', $model, $this, 'fas fa-lightbulb bg-blue');
+                return $this->callCallableExtender('icon', $model, $this);
             },
             'title' => function ($model) {
                 return $this->callCallableExtender('title', $model, $this);

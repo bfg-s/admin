@@ -92,19 +92,12 @@ class Authenticate
             return redirect()->route('admin.profile');
         }
 
-        admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'));
-
         /** @var Response $response */
         $response = $next($request);
 
-//        if ($response instanceof Response) {
-//
-//            if ($areaResponse = $this->watchAreas($request, $response)) {
-//                $response = $areaResponse;
-//            } else if ($modalResponse = $this->watchModal($request, $response)) {
-//                $response = $modalResponse;
-//            }
-//        }
+        if ($request->isMethod('get') || $request->isMethod('head')) {
+            admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'), 'fas fa-file-download');
+        }
 
         return $response;
     }

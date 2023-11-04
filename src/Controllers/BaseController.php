@@ -2,7 +2,6 @@
 
 namespace Admin\Controllers;
 
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -120,7 +119,7 @@ abstract class BaseController extends Controller
     /**
      * Get menu model.
      *
-     * @return CurrentModel|Product|User|Model|string|null
+     * @return CurrentModel|User|Model|string|null
      */
     public function model()
     {

@@ -72,14 +72,16 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        $modal = ModalComponent::$list[request('_modal')] ?? null;
+        $modalName = request('_modal');
+
+        $modal = ModalComponent::$list[$modalName] ?? null;
 
         if ($modal) {
             if ($request->has('_modal_submit')) {
                 return $modal->submitEvent ? app()->call($modal->submitEvent) : [];
             }
 
-            admin_log_warning('Call executing', "Load modal", 'fas fa-exchange-alt');
+            admin_log_warning('Load modal', $modalName, 'far fa-window-restore');
 
             return [
                 'size' => $modal->size,
@@ -110,7 +112,11 @@ class SystemController extends Controller
 
         $prepared = new PrepareExport($request->model, $request->ids, $request->order, $request->order_type, $request->table);
 
-        return Excel::download($prepared, class_basename($request->model) . '_' . now()->format('Y_m_d_His').'.xlsx');
+        $fileName = class_basename($request->model) . '_' . now()->format('Y_m_d_His').'.xlsx';
+
+        admin_log_warning('Export', "To [$fileName] excel", 'far fa-file-excel');
+
+        return Excel::download($prepared, $fileName);
     }
 
     /**
@@ -129,7 +135,11 @@ class SystemController extends Controller
 
         $prepared = new PrepareExport($request->model, $request->ids, $request->order, $request->order_type, $request->table);
 
-        return Excel::download($prepared, class_basename($request->model).'_'.now()->format('Y_m_d_His').'.csv');
+        $fileName = class_basename($request->model).'_'.now()->format('Y_m_d_His').'.csv';
+
+        admin_log_warning('Export', "To [$fileName] csv", 'fas fa-file-csv');
+
+        return Excel::download($prepared, $fileName);
     }
 
     /**
@@ -138,12 +148,17 @@ class SystemController extends Controller
      */
     public function toggle_dark(Respond $respond): Respond
     {
+        $status = (int) !admin_repo()->isDarkMode;
         Cookie::queue(
-            'admin-dark-mode',
-            (int) !admin_repo()->isDarkMode,
-            time() * 2
+            'admin-dark-mode', $status, time() * 2
         );
         $respond->reboot();
+
+        if ($status) {
+            admin_log_warning('Theme', "Switch on dark mode", 'fas fa-adjust');
+        } else {
+            admin_log_warning('Theme', "Switch on light mode", 'fas fa-sun');
+        }
 
         return $respond;
     }
@@ -167,11 +182,15 @@ class SystemController extends Controller
             && $request->field_name
             && ($find = $request->model::find($request->id))
         ) {
+            $oldValue = $find->{$request->field_name};
+
             $find->{$request->field_name} = $request->val;
 
             if ($find->save()) {
+                admin_log_warning('Save custom field', "[$request->field_name] from [$oldValue] to [$request->val]", 'fas fa-save');
                 $respond->put('alert::success', __('admin.saved_successfully'))->reload();
             } else {
+                admin_log_danger('Decline custom save field', "[$request->field_name] from [$oldValue] to [$request->val]", 'fas fa-save');
                 $respond->put('alert::error', __('admin.unknown_error'));
             }
         }
@@ -193,6 +212,9 @@ class SystemController extends Controller
         $this->refererEmit();
 
         if (isset(static::$callbacks[$request->key])) {
+
+            admin_log_warning('Call callback', $request->key, 'fas fa-balance-scale-right');
+
             app()->call(static::$callbacks[$request->key], $request->parameters);
         } else {
             $respond->toast_error(__('admin.callback_not_found'));
@@ -223,8 +245,10 @@ class SystemController extends Controller
                 }
             }
             if ($success) {
+                admin_log_warning('Delete', "[$request->class] for ids [".json_encode($request->ids)."]", 'fas fa-trash-alt');
                 $respond->put('alert::success', __('admin.successfully_deleted'))->reload();
             } else {
+                admin_log_danger('Error delete', "[$request->class] for ids [".json_encode($request->ids)."]", 'fas fa-trash-alt');
                 $respond->put('alert::error', __('admin.unknown_error'));
             }
         } else {
@@ -260,6 +284,7 @@ class SystemController extends Controller
                     }
                 }
             });
+            admin_log_warning('Nested save', "For [$request->model]", 'fas fa-network-wired');
             static::$i = 0;
             $respond->toast_success(__('admin.saved_successfully'));
         }

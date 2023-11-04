@@ -40,6 +40,7 @@ class AdminLteTheme extends Theme
     protected array $styles = [
         'admin-asset/css/adminlte.min.css',
         'admin/css/dark.css',
+        'admin-asset/plugins/sweetalert2/sweetalert2.css',
         'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
     ];
 
@@ -50,6 +51,7 @@ class AdminLteTheme extends Theme
         'admin-asset/plugins/jquery/jquery.min.js',
         'admin/plugins/jquery-ui.js',
         'admin-asset/plugins/bootstrap/js/bootstrap.bundle.min.js',
+        'admin-asset/plugins/sweetalert2/sweetalert2.min.js',
     ];
 
     /**

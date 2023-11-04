@@ -9,8 +9,10 @@
                 <div class="time-label"><span class="bg-green">{{ $model[$order_field]->toDateTimeString() }}</span>
                 </div>
             @endif
-            @if($icon)
-                <i class="{!! is_callable($icon) ? call_user_func($icon, $model) : $icon !!}"></i>
+                @if($iconShow = (is_callable($icon) ? call_user_func($icon, $model) : $icon))
+                <i class="{!! $iconShow !!}"></i>
+            @else
+                <i class="fas fa-lightbulb bg-blue"></i>
             @endif
             <div class="timeline-item">
                 <span class="time">

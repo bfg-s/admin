@@ -5,7 +5,6 @@ namespace Admin\Controllers;
 use Admin\Components\CardComponent;
 use Admin\Components\Component;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Admin\Respond;
@@ -49,37 +48,6 @@ class Controller extends BaseController
      * @var array
      */
     public array $menu = [];
-
-    /**
-     * Controller constructor.
-     */
-    public function __construct()
-    {
-        $this->makeModelEvents();
-    }
-
-    /**
-     * @return void
-     */
-    private function makeModelEvents(): void
-    {
-        if (
-            property_exists($this, 'model')
-            && class_exists(static::$model)
-        ) {
-            /** @var Model $model */
-            $model = static::$model;
-            $model::created(static function ($model) {
-                admin_log_info('Created model', get_class($model), 'fas fa-plus');
-            });
-            $model::updated(static function ($model) {
-                admin_log_info('Updated model', get_class($model), 'fas fa-highlighter');
-            });
-            $model::deleted(static function ($model) {
-                admin_log_danger('Deleted model', get_class($model), 'fas fa-trash');
-            });
-        }
-    }
 
     /**
      * @param  string  $name

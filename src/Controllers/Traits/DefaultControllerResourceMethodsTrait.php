@@ -118,8 +118,10 @@ trait DefaultControllerResourceMethodsTrait
         $updated = $this->requestToModel($save);
 
         if ($updated) {
+            admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
             Respond::glob()->put('alert::success', __('admin.saved_successfully'));
         } else {
+            admin_log_danger('Update error', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
             Respond::glob()->put('alert::error', __('admin.unknown_error'));
         }
 
@@ -151,8 +153,10 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save);
 
         if ($stored) {
+            admin_log_success('Create successfully', trim(get_class($this->model()), '\\'), 'fas fa-save');
             Respond::glob()->put('alert::success', __('admin.successfully_created'));
         } else {
+            admin_log_danger('Create error', trim(get_class($this->model()), '\\'), 'fas fa-save');
             Respond::glob()->put('alert::error', __('admin.unknown_error'));
         }
 
@@ -178,14 +182,23 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         if ($model) {
+
+            $modelName = trim(get_class($this->model()), '\\');
+            $key = $this->model_primary();
+
             try {
                 if ($restore && $model->restore()) {
+                    admin_log_warning('Successfully restored', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash-restore-alt');
                     Respond::glob()->put('alert::success', __('admin.successfully_restored'));
+                    Respond::glob()->reload();
 
                 } elseif ($force && $model->forceDelete()) {
+                    admin_log_danger('Successfully force deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-eraser');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
+                    Respond::glob()->reload();
 
                 } elseif ($model->delete()) {
+                    admin_log_danger('Successfully deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
 
                 } else {
