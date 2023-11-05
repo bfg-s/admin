@@ -1,9 +1,7 @@
 <?php
 
-use Admin\Controllers\AuthController;
 use Admin\Controllers\DashboardController;
 use Admin\Controllers\UploadController;
-use Admin\Controllers\UserController;
 use Admin\Models\AdminUser;
 
 return [
