@@ -6,6 +6,7 @@ use Bfg\Repository\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Admin\Core\MenuItem;
 use Admin\Exceptions\ShouldBeModelInControllerException;
@@ -250,7 +251,10 @@ class AdminRepository extends Repository
      */
     public function isDarkMode(): bool
     {
-        return request()->cookie('admin-dark-mode', (int) config('admin.dark_mode', true)) == 1;
+        $mode = request()->cookie('admin-dark-mode');
+        $mode = explode("|", Crypt::decryptString($mode))[1] ?? (int) config('admin.dark_mode', true);
+
+        return $mode == 1;
     }
 
     /**

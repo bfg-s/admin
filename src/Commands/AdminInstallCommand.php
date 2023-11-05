@@ -127,11 +127,6 @@ class AdminInstallCommand extends Command
                 $this->info('Add folder [public/admin] to .gitignore');
             }
 
-            if (!str_contains($gitignore, 'public/ljs')) {
-                $add_to_ignore .= "public/ljs\n";
-                $this->info('Add folder [public/ljs] to .gitignore');
-            }
-
             if ($add_to_ignore) {
                 file_put_contents(base_path('.gitignore'), trim($gitignore)."\n".$add_to_ignore);
             }

@@ -190,12 +190,10 @@ trait DefaultControllerResourceMethodsTrait
                 if ($restore && $model->restore()) {
                     admin_log_warning('Successfully restored', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash-restore-alt');
                     Respond::glob()->put('alert::success', __('admin.successfully_restored'));
-                    Respond::glob()->reload();
 
                 } elseif ($force && $model->forceDelete()) {
                     admin_log_danger('Successfully force deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-eraser');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
-                    Respond::glob()->reload();
 
                 } elseif ($model->delete()) {
                     admin_log_danger('Successfully deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash');
@@ -216,7 +214,7 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         return request('_after', 'index') == 'index'
-            ? Respond::glob()->put('ljs.$nav.goTo', admin_repo()->now->getLinkIndex())
+            ? Respond::glob()->put('location', admin_repo()->now->getLinkIndex())
             : Respond::glob()->reload();
     }
 }
