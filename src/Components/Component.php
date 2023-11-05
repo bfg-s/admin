@@ -903,10 +903,6 @@ abstract class Component implements Renderable
 
         $newObj->setParent($this);
 
-        if ($newObj->initModel) {
-            $newObj->model($this->realModel());
-        }
-
         return $newObj;
     }
 

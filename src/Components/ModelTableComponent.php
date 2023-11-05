@@ -175,9 +175,7 @@ class ModelTableComponent extends Component
 
     /**
      * @param  null  $model
-     * @return $this|static
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @return static
      */
     public function model($model = null): static
     {
@@ -187,11 +185,12 @@ class ModelTableComponent extends Component
             $model = null;
         }
 
-        $result = parent::model($model);
+        if ($model) {
 
-        $this->createModel();
+            parent::model($model);
+        }
 
-        return $result;
+        return $this;
     }
 
     /**
@@ -320,6 +319,8 @@ class ModelTableComponent extends Component
      */
     protected function mount(): void
     {
+        $this->createModel();
+
         $this->_build();
     }
 }
