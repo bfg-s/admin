@@ -296,21 +296,13 @@ abstract class Component implements Renderable
     protected bool $isInit = false;
 
     /**
-     * @var bool
-     */
-    public bool $initModel = true;
-
-    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
     {
         $this->page = app(Page::class);
 
-        if ($this->initModel) {
-
-            $this->model();
-        }
+        $this->model($this->page->model());
 
         $this->iSelectModel = false;
 
