@@ -612,3 +612,19 @@ if (! function_exists('body_namespace_element')) {
         return Bfg\Entity\Core\Entities\NamespaceEntity::bodySegment($namespace, $level);
     }
 }
+
+if (!function_exists('remake_lang_url')) {
+    /**
+     * @param  string  $lang
+     * @param  string|null  $url
+     * @return string
+     */
+    function remake_lang_url(string $lang, string $url = null): string
+    {
+        if (!$url) {
+            $url = url()->current();
+        }
+
+        return preg_replace("/(.*:\/\/.*\/)(".App::getLocale().')(.*)/', "$1{$lang}$3", $url);
+    }
+}
