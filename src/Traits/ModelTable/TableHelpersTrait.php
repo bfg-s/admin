@@ -345,7 +345,7 @@ trait TableHelpersTrait
             $class = substr(md5(json_encode($this->model)), 0, 10);
         }
         $this->model_class = $class;
-        $return = $class ? strtolower(class_basename($class)) : $this->getUnique();
+        $return = $class ? strtolower(class_basename($class)) : 'object_'.spl_object_id($this);
         $prep = '';
         if (isset(static::$models[$return])) {
             $prep .= static::$models[$return];

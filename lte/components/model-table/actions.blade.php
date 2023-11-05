@@ -82,7 +82,7 @@
                         data-columns="{{json_encode($all_columns, JSON_UNESCAPED_UNICODE)}}"
                         data-confirm="@lang('admin.delete_selected_rows')"
                         data-warning="@lang('admin.before_need_to_select')"
-                        data-jax="admin.mass_delete"
+                        data-route="{{ route('admin.mass_delete') }}"
                         type="button"
                 ><i class="fas fa-trash"></i>&nbsp; @lang('admin.delete')</button>
                 <hr class="dropdown-divider"/>
