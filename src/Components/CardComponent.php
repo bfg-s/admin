@@ -368,7 +368,7 @@ class CardComponent extends Component
             'model' => admin_repo()->modelNow,
             'title' => $this->title,
             'icon' => $this->icon,
-            'footer' => fn () => $this->table->footer(),
+            'footer' => fn () => $this->table?->footer(),
             'window_controls' => $this->window_controls,
             'groups' => $this->groups,
             'default_tools' => $this->default_tools,
