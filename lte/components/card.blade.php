@@ -36,4 +36,8 @@
     @foreach($contents as $content)
         {!! $content !!}
     @endforeach
+
+    @if($footerResult = $footer())
+        {!! $footerResult !!}
+    @endif
 </div>
