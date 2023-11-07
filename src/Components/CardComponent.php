@@ -208,8 +208,6 @@ class CardComponent extends Component
 
         $this->table->model($this->search_form);
 
-        $this->appEnd($this->table->footer());
-
         $ad = $this->table->getActionData();
 
         if ($ad['show']) {
