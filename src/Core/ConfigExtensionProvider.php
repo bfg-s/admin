@@ -6,6 +6,7 @@ use Closure;
 use Admin\Components\Component;
 use Admin\Components\ModelTableComponent;
 use Admin\ExtendProvider;
+use Illuminate\Routing\RouteRegistrar;
 
 class ConfigExtensionProvider
 {
@@ -38,7 +39,16 @@ class ConfigExtensionProvider
      */
     public function boot()
     {
+        //
+    }
 
+    /**
+     * Register extension routers
+     * @param  RouteRegistrar  $route
+     * @return void
+     */
+    public function routes(RouteRegistrar $route) {
+        //
     }
 
     /**

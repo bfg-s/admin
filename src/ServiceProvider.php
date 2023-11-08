@@ -66,20 +66,29 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register app routes.
          */
         if (is_file(admin_app_path('routes.php'))) {
-            $this->makeRouters()->group(admin_app_path('routes.php'));
+            $this->makeRouter()->group(admin_app_path('routes.php'));
         }
 
         /**
          * Register web routes.
          */
         if (is_file(base_path('routes/admin.php'))) {
-            $this->makeRouters()->group(base_path('routes/admin.php'));
+            $this->makeRouter()->group(base_path('routes/admin.php'));
         }
 
         /**
          * Register Admin basic routes.
          */
-        $this->makeRouters()->group(__DIR__.'/routes.php');
+        $this->makeRouter()->group(__DIR__.'/routes.php');
+
+        $routerForExtensions = $this->makeRouter();
+
+        /**
+         * Register extensions routes
+         */
+        foreach (AdminFacade::extensions() as $extension) {
+            $extension->config()->routes($routerForExtensions);
+        }
 
         /**
          * Register redirecteble route
@@ -184,7 +193,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function makeRouters(): \Illuminate\Routing\RouteRegistrar
+    protected function makeRouter(): \Illuminate\Routing\RouteRegistrar
     {
         $route = Route::domain(config('admin.route.domain', ''))
             ->name(config('admin.route.name'));
