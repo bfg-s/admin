@@ -17,12 +17,12 @@ class ConfigExtensionProvider
     /**
      * @var array
      */
-    protected array $scripts = [];
+    protected $scripts = [];
 
     /**
      * @var array
      */
-    protected array $styles = [];
+    protected $styles = [];
 
     /**
      * ConfigExtensionProvider constructor.
@@ -89,7 +89,7 @@ class ConfigExtensionProvider
      * Get extension styles.
      * @return array
      */
-    public function getStyles()
+    public function getStyles(): array
     {
         return $this->styles;
     }
