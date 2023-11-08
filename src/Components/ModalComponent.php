@@ -444,7 +444,11 @@ class ModalComponent extends Component
 
         $this->delegatesNow($this->modalDelegates);
 
-        if ($request->_modal == $this->modalName || ($request->ajax() && !$request->pjax())) {
+        if (
+            $request->_modal == $this->modalName
+            || ($request->ajax() && !$request->pjax())
+            || $request->_build_modal
+        ) {
 
             if (!$this->body) {
                 $this->body = new ModalBodyComponent();

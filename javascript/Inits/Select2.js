@@ -42,6 +42,8 @@ window.libs['select2::ajax'] =  function () {
                     }
                 });
 
+                new_params['_build_modal'] = 1;
+
                 axios.get(window.location.href, {params: new_params})
                     .then((data) => {
                         let d = data.data.split("\n");
