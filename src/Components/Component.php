@@ -472,6 +472,11 @@ abstract class Component implements Renderable
 
             } else {
 
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                    $name = ":" . $name;
+                }
+
                 $this->attributes[$name] = $value;
             }
         }

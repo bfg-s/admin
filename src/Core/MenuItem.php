@@ -30,7 +30,9 @@ class MenuItem implements ArrayAccess
     protected ?string $head_title = null; // head_title
     protected ?string $main_header = null; // main_header
     protected ?string $nav_bar_view = null; // nav_bar_view
+    protected ?string $nav_bar_vue = null; // nav_bar_vue
     protected ?string $left_nav_bar_view = null; // left_nav_bar_view
+    protected ?string $left_nav_bar_vue = null; // left_nav_bar_vue
 
     protected array|string|null $action = null; // action
     protected ?array $resource = null; // resource
@@ -779,7 +781,6 @@ class MenuItem implements ArrayAccess
         $this->params = $params;
     }
 
-
     public function offsetExists(mixed $offset)
     {
         return property_exists($this, $offset);
@@ -808,5 +809,25 @@ class MenuItem implements ArrayAccess
     public function getDontUseSearch(): ?string
     {
         return $this->dontUseSearch;
+    }
+
+    public function getNavBarVue(): ?string
+    {
+        return $this->nav_bar_vue;
+    }
+
+    public function setNavBarVue(?string $nav_bar_vue): void
+    {
+        $this->nav_bar_vue = $nav_bar_vue;
+    }
+
+    public function getLeftNavBarVue(): ?string
+    {
+        return $this->left_nav_bar_vue;
+    }
+
+    public function setLeftNavBarVue(?string $left_nav_bar_vue): void
+    {
+        $this->left_nav_bar_vue = $left_nav_bar_vue;
     }
 }

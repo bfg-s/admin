@@ -85,11 +85,34 @@ class NavigatorExtensionProvider implements NavigateInterface
     /**
      * @param  string  $view
      * @param  array  $params
+     * @param  bool  $prepend
+     * @return NavGroup|Navigate
+     */
+    public function nav_bar_vue(string $view, array $params = [], bool $prepend = false)
+    {
+        $return = $this->navigate->nav_bar_vue($view, $params, $prepend);
+
+        return $return;
+    }
+
+    /**
+     * @param  string  $view
+     * @param  array  $params
      * @return NavGroup|Navigate
      */
     public function left_nav_bar_view(string $view, array $params = [])
     {
         return $this->navigate->left_nav_bar_view($view, $params);
+    }
+
+    /**
+     * @param  string  $view
+     * @param  array  $params
+     * @return NavGroup|Navigate
+     */
+    public function left_nav_bar_vue(string $view, array $params = [])
+    {
+        return $this->navigate->left_nav_bar_vue($view, $params);
     }
 
     /**

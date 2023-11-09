@@ -278,6 +278,7 @@ class AdminRepository extends Repository
     ): Collection {
         $items = $items !== null ? $items : Navigate::getMaked();
         $result = collect();
+
         foreach ($items as $item) {
             $child = $item['items'] ?? false;
             $menuItem = new MenuItem();
@@ -295,7 +296,9 @@ class AdminRepository extends Repository
             $menuItem->setData($item['data'] ?? null);
             $menuItem->setHeadTitle($item['head_title'] ?? null);
             $menuItem->setNavBarView($item['nav_bar_view'] ?? null);
+            $menuItem->setNavBarVue($item['nav_bar_vue'] ?? null);
             $menuItem->setLeftNavBarView($item['left_nav_bar_view'] ?? null);
+            $menuItem->setLeftNavBarVue($item['left_nav_bar_vue'] ?? null);
             $menuItem->setPrepend($item['prepend'] ?? false);
             $menuItem->setExtension($item['extension'] ?? null);
             $menuItem->setMainHeader($item['main_header'] ?? null);

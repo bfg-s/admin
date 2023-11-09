@@ -72,6 +72,19 @@ class Navigate implements NavigateInterface
     }
 
     /**
+     * @param  string  $class
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function nav_bar_vue(string $class, array $params = [], bool $prepend = false)
+    {
+        self::$items[] = collect(['nav_bar_vue' => $class, 'params' => $params, 'prepend' => $prepend]);
+
+        return $this;
+    }
+
+    /**
      * @param  string  $view
      * @param  array  $params
      * @return $this
@@ -79,6 +92,18 @@ class Navigate implements NavigateInterface
     public function left_nav_bar_view(string $view, array $params = [])
     {
         self::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $class
+     * @param  array  $params
+     * @return $this
+     */
+    public function left_nav_bar_vue(string $class, array $params = [])
+    {
+        self::$items[] = collect(['left_nav_bar_vue' => $class, 'params' => $params]);
 
         return $this;
     }

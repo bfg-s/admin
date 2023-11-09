@@ -2,6 +2,7 @@
 
 namespace Admin\BladeDirectives;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 
 class AttributesBladeDirective
@@ -27,6 +28,9 @@ class AttributesBladeDirective
                 $val = $val->render();
             }
             if (is_array($val)) {
+                $key = ":$key";
+            } else if ($val instanceof Arrayable) {
+                $val = $val->toArray();
                 $key = ":$key";
             }
             $html[] = "$key='".(is_string($val) ? $val : json_encode($val))."'";

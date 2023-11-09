@@ -1,5 +1,5 @@
-window.libs['vueInit'] = (e) => {
-    const $el = e;
+window.libs['vueInit'] = function () {
+    const $el = this.target;
 
     let pjax = '#admin-content';
     let parents = pjax ? $el.closest(pjax) : 0;

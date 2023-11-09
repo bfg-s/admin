@@ -28,6 +28,9 @@
                 {!! new ($menu->getLeftNavBarView())(...$menu->getParams()); !!}
             @endif
         @endforeach
+        @foreach(admin_repo()->menuList->where('left_nav_bar_vue') as $menu)
+            {!! (new ($menu->getLeftNavBarVue()))->attr($menu->getParams()); !!}
+        @endforeach
     </ul>
 
     <!-- SEARCH FORM -->
@@ -62,6 +65,10 @@
             @endif
         @endforeach
 
+        @foreach(admin_repo()->menuList->where('nav_bar_vue')->where('prepend', false) as $menu)
+            {!! (new ($menu->getNavBarVue()))->attr($menu->getParams()); !!}
+        @endforeach
+
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
@@ -79,6 +86,10 @@
             @else
                 {!! new ($menu->getNavBarView())(...$menu->getParams()); !!}
             @endif
+        @endforeach
+
+        @foreach(admin_repo()->menuList->where('nav_bar_vue')->where('prepend', true) as $menu)
+            {!! (new ($menu->getNavBarVue()))->attr($menu->getParams()); !!}
         @endforeach
 
         @if(config('admin.lang_mode', true))
