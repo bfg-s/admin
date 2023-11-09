@@ -24,13 +24,16 @@ class AttributesBladeDirective
     {
         $html = [];
         foreach ($arrayOfAttributes as $key => $val) {
+            if (! is_string($val) && is_callable($val)) {
+                $val = call_user_func($val, $key);
+            }
             if ($val instanceof Renderable) {
                 $val = $val->render();
             }
-            if (is_array($val)) {
-                $key = ":$key";
-            } else if ($val instanceof Arrayable) {
+            if ($val instanceof Arrayable) {
                 $val = $val->toArray();
+            }
+            if (is_array($val)) {
                 $key = ":$key";
             }
             $html[] = "$key='".(is_string($val) ? $val : json_encode($val))."'";
