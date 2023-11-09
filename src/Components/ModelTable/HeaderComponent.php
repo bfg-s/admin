@@ -43,7 +43,9 @@ class HeaderComponent extends Component
 
     protected function mount(): void
     {
-        $this->label = isset($this->viewData['column']['label']) && is_callable($this->viewData['column']['label'])
+        $this->label = isset($this->viewData['column']['label'])
+        && is_callable($this->viewData['column']['label'])
+        && ! is_string($this->viewData['column']['label'])
             ? call_user_func($this->viewData['column']['label'], $this)
             : ($this->viewData['column']['label'] ?? '');
     }
