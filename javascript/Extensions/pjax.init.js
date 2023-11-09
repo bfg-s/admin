@@ -49,6 +49,12 @@ $(document).on('pjax:send', (xhr) => {
     document.body.style.cursor = "progress";
 
     window.Alpine && window.Alpine.deferMutations && window.Alpine.deferMutations();
+
+    if (window.initedVueForPjsxMoveDestroy && Array.isArray(window.initedVueForPjsxMoveDestroy)) {
+        for (let i = 0; i <= window.initedVueForPjsxMoveDestroy.length - 1; i++) {
+            window.initedVueForPjsxMoveDestroy[i].destroy();
+        }
+    }
 });
 
 $(document).on('pjax:beforeReplace', (a, b, c, d) => {

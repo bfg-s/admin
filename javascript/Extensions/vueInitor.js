@@ -1,6 +1,11 @@
+window.initedVueForPjsxMoveDestroy = [];
+
 window.libs['vueInit'] = function () {
     const $el = this.target;
-
+    let destroyable = false;
+    if ($el.closest('[data-update-with-pjax]')) {
+        destroyable = true;
+    }
     let pjax = '#admin-content';
     let parents = pjax ? $el.closest(pjax) : 0;
 
@@ -13,7 +18,7 @@ window.libs['vueInit'] = function () {
 
     try {
 
-        new Vue({
+        const component = new Vue({
             el: $el,
             data() {
 
@@ -47,6 +52,9 @@ window.libs['vueInit'] = function () {
             }
         });
 
+        if (destroyable) {
+            window.initedVueForPjsxMoveDestroy.push(component);
+        }
     } catch (e) {
         console.error(e)
     }
