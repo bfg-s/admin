@@ -3,6 +3,10 @@ import axios from 'axios'
 
 require('./Extensions/initor');
 
+window._dispatch_event = function (name, detail = this) {
+    document.dispatchEvent(new CustomEvent(name, {detail}));
+}
+
 window.Alpine = require('alpinejs/dist/module.cjs').default;
 window.NProgress = require('nprogress/nprogress');
 window.Toast = require("toastr");
@@ -50,6 +54,8 @@ require('./Inits/Cookie');
 require('./Inits/Tpl');
 require('./Inits/Fancy');
 require('./Inits/Doc');
+
+_dispatch_event('admin:init');
 
 Alpine.start();
 
