@@ -159,7 +159,7 @@ if (!function_exists('admin_uri')) {
             $uri = '/'.trim($uri, '/');
         }
 
-        return (config('layout.lang_mode') ? '/'.Layout::nowLang() : '').'/'.trim(config('admin.route.prefix'), '/').$uri;
+        return (config('layout.lang_mode') ? '/'.AdminFacade::nowLang() : '').'/'.trim(config('admin.route.prefix'), '/').$uri;
     }
 }
 
