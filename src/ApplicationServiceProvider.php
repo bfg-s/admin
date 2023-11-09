@@ -71,8 +71,6 @@ class ApplicationServiceProvider extends ExtendProvider
 
         'admin/plugins/ptty.jquery.js',
         'admin/plugins/jquery.lar.pjax.js',
-
-        'admin/js/app.js',
     ];
 
     /**

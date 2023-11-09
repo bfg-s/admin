@@ -41,6 +41,8 @@ class SystemScriptsBladeDirective
 
         $scripts = array_merge($scripts, $theme->getScripts());
 
+        $scripts[] = 'admin/js/app.js';
+
         return implode("\n", array_map(
             fn (string $script) => "<script type=\"text/javascript\" src=\""
                 . (str_starts_with($script, 'https://') || str_starts_with($script, 'http://') ? $script : asset($script))
