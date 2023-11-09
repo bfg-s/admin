@@ -20,18 +20,6 @@ $(document).on('pjax:beforeSend', (event, xhr) => {
     if (token) {
         xhr.setRequestHeader('X-CSRF-TOKEN', token);
     }
-
-    if (window.initedVueForPjsxMoveDestroy && Array.isArray(window.initedVueForPjsxMoveDestroy)) {
-        for (let i = 0; i <= window.initedVueForPjsxMoveDestroy.length - 1; i++) {
-            if (window.initedVueForPjsxMoveDestroy[i]) {
-                if (window.initedVueForPjsxMoveDestroy[i].$el.parentNode) {
-                    window.initedVueForPjsxMoveDestroy[i].$el.parentNode.removeChild(window.initedVueForPjsxMoveDestroy[i].$el);
-                }
-                window.initedVueForPjsxMoveDestroy[i].$destroy();
-            }
-            delete window.initedVueForPjsxMoveDestroy[i];
-        }
-    }
 });
 
 $(document).on('pjax:timeout', (event) => {
@@ -71,6 +59,17 @@ $(document).on('pjax:beforeReplace', (a, b, c, d) => {
 });
 
 $(document).on('pjax:complete', (xhr, req, status) => {
+
+    if (window.initedVueForPjsxMoveDestroy && Array.isArray(window.initedVueForPjsxMoveDestroy)) {
+        for (let i = 0; i <= window.initedVueForPjsxMoveDestroy.length - 1; i++) {
+            if (window.initedVueForPjsxMoveDestroy[i]) {
+                if (window.initedVueForPjsxMoveDestroy[i].$el.parentNode) {
+                    window.initedVueForPjsxMoveDestroy[i].$el.parentNode.removeChild(window.initedVueForPjsxMoveDestroy[i].$el);
+                }
+                window.initedVueForPjsxMoveDestroy[i].$destroy();
+            }
+            delete window.initedVueForPjsxMoveDestroy[i];
+
 
     document.body.style.cursor = "auto";
 
