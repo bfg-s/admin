@@ -18,12 +18,12 @@ class ConfigExtensionProvider
     /**
      * @var array
      */
-    protected $scripts = [];
+    protected array $scripts = [];
 
     /**
      * @var array
      */
-    protected $styles = [];
+    protected array $styles = [];
 
     /**
      * ConfigExtensionProvider constructor.
