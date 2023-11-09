@@ -2,6 +2,9 @@ window.initedVueForPjsxMoveDestroy = [];
 
 window.libs['vueInit'] = function () {
     const $el = this.target;
+    if ($el.__vue) {
+        return ;
+    }
     let destroyable = false;
     if ($el.closest('[data-update-with-pjax]')) {
         destroyable = true;
@@ -38,7 +41,6 @@ window.libs['vueInit'] = function () {
                 if (process.env.NODE_ENV === 'development') {
                     console.log(`Vue component [${this.name}] destroyed!`);
                 }
-                Vue.drop(this.name, 'components');
             },
             errorCaptured(err, vm, info) {
 
@@ -55,6 +57,8 @@ window.libs['vueInit'] = function () {
         if (destroyable) {
             window.initedVueForPjsxMoveDestroy.push(component);
         }
+
+        $el.__vue = component;
     } catch (e) {
         console.error(e)
     }

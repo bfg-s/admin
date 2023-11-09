@@ -109,7 +109,6 @@ window.libs  = {
     },
     html (selector, html) {
         $(selector).html(html);
-        window.updateInits();
     },
     back () {
         window.history.back();
