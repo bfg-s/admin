@@ -448,12 +448,15 @@ class Formatter
     public function to_json($value = null): mixed
     {
         if ($value) {
-            $result = json_decode(
-                htmlspecialchars_decode($value), true
-            );
+            if (is_string($value)) {
 
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $value = $result;
+                $result = json_decode(
+                    htmlspecialchars_decode($value), true
+                );
+
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $value = $result;
+                }
             }
 
             if (is_array($value)) {
