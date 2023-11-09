@@ -686,9 +686,9 @@ abstract class Component implements Renderable
     }
 
     /**
-     * @return Builder|Model|Relation|null
+     * @return mixed
      */
-    public function realModel(): Model|Relation|Builder|null
+    public function realModel(): mixed
     {
         if (
             $this->model instanceof Builder
