@@ -589,7 +589,7 @@ abstract class Component implements Renderable
     public function view($view = null, array $data = [], array $mergeData = []): static
     {
         return $this->appEnd(
-            admin_view($view, $data, $mergeData)
+            str_contains($view, '::') ? view($view, $data, $mergeData) : admin_view($view, $data, $mergeData)
         );
     }
 
