@@ -252,9 +252,11 @@ class AdminRepository extends Repository
     public function isDarkMode(): bool
     {
         $mode = request()->cookie('admin-dark-mode');
-        $mode = $mode
-            ? (explode("|", Crypt::decryptString($mode))[1] ?? (int) config('admin.dark_mode', true))
-            : (int) config('admin.dark_mode', true);
+        if (! is_numeric($mode)) {
+            $mode = $mode
+                ? (explode("|", Crypt::decryptString($mode))[1] ?? (int) config('admin.dark_mode', true))
+                : (int) config('admin.dark_mode', true);
+        }
 
         return $mode == 1;
     }
