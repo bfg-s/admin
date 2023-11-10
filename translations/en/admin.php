@@ -271,4 +271,6 @@ Below is a step-by-step guide to filling out the form:
     'complete' => 'Complete',
     '2fa_enable_before' => 'First, you need to enable two-factor authentication!',
     'you_have_enabled_two_factor_authentication' => 'You have enabled two factor authentication.',
+    'administrators_browser_statistic' => 'Administrators browser statistic',
+    'browser' => 'Browser',
 ];

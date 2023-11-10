@@ -271,4 +271,6 @@ return [
     'complete' => 'Завершено',
     '2fa_enable_before' => 'Для начала вам необходимо включить двухфакторную авторизацию!',
     'you_have_enabled_two_factor_authentication' => 'У вас включена двухфакторная аутентификация.',
+    'administrators_browser_statistic' => 'Статистика браузеров администраторов',
+    'browser' => 'Браузер',
 ];

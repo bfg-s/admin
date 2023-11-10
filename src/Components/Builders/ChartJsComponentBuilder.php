@@ -107,8 +107,8 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param  array  $datasets
-     *
+     * @param  string  $label
+     * @param  array  $dataset
      * @return ChartJsComponentBuilder
      */
     public function simpleDatasets(string $label, array $dataset)
@@ -197,6 +197,14 @@ class ChartJsComponentBuilder
             'type' => $chart['type'],
             'size' => $chart['size'],
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**

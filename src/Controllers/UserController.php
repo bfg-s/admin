@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Components\ChartJsComponent;
 use Admin\Components\Small\DivComponent;
 use Admin\Components\TimelineComponent;
 use Admin\Delegates\Modal;
@@ -224,97 +225,97 @@ class UserController extends Controller
             ->icon_user()
             ->breadcrumb('admin.administrator', 'admin.profile')
             ->row(
-                $row->column(
-                    $column->num(3)->card(
-                        $card
-                            ->title('admin.information')
-                            ->primaryType()
-                            ->card_body()
-                            ->view('controllers.user_portfolio', ['user' => $this->model()])
-                    )
+                $row->column(3)->card(
+                    $card
+                        ->title('admin.information')
+                        ->primaryType()
+                        ->card_body()
+                        ->view('controllers.user_portfolio', ['user' => $this->model()])
                 ),
-                $row->column(
-                    $column->num(9)->card(
-                        $card->title('admin.edit')
-                            ->successType(),
-                        $card->tab(
-                            $tab->right(),
-                            $tab->active(!$request->has('adminlog1_per_page') && !$request->has('adminlog1_page') && !$request->has('q')),
-                            $tab->icon_cogs()->title('admin.settings'),
-                            $tab->form(
-                                $form->vertical(),
-                                $form->image('avatar', 'admin.avatar'),
-                                $form->input('login', 'admin.login_name')
-                                    ->required()
-                                    ->unique(AdminUser::class, 'login', $this->model()->id),
-                                $form->email('email', 'admin.email_address')
-                                    ->required()
-                                    ->unique(AdminUser::class, 'email', $this->model()->id),
-                                $form->input('name', 'admin.name')
-                                    ->required(),
-                                $form->divider(__('admin.password')),
-                                $form->password('password', 'admin.new_password')
-                                    ->confirm(),
-                            )
+                $row->column(9)->card(
+                    $card->title('admin.edit')
+                        ->successType(),
+                    $card->tab(
+                        $tab->right(),
+                        $tab->active(!$request->has('adminlog1_per_page') && !$request->has('adminlog1_page') && !$request->has('q')),
+                        $tab->icon_cogs()->title('admin.settings'),
+                        $tab->form(
+                            $form->vertical(),
+                            $form->image('avatar', 'admin.avatar'),
+                            $form->input('login', 'admin.login_name')
+                                ->required()
+                                ->unique(AdminUser::class, 'login', $this->model()->id),
+                            $form->email('email', 'admin.email_address')
+                                ->required()
+                                ->unique(AdminUser::class, 'email', $this->model()->id),
+                            $form->input('name', 'admin.name')
+                                ->required(),
+                            $form->divider(__('admin.password')),
+                            $form->password('password', 'admin.new_password')
+                                ->confirm(),
+                        )
+                    ),
+                    $card->tab(
+                        $tab->icon_shield_alt()->title('admin.2fa_secure'),
+                        $tab->if(!admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.2fa_secure_not_enable_title')),
+                        $tab->if(admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.you_have_enabled_two_factor_authentication')),
+                        $tab->p()->appEnd(__('admin.2fa_secure_not_enable_info')),
+                        $tab->if(admin()->two_factor_confirmed_at)->buttons(
+                            $buttons->danger()
+                                ->modal('modal-2')
+                                ->text(__('admin.2fa_secure_enable_disable'))
                         ),
-                        $card->tab(
-                            $tab->icon_shield_alt()->title('admin.2fa_secure'),
-                            $tab->if(!admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.2fa_secure_not_enable_title')),
-                            $tab->if(admin()->two_factor_confirmed_at)->h1()->appEnd(__('admin.you_have_enabled_two_factor_authentication')),
-                            $tab->p()->appEnd(__('admin.2fa_secure_not_enable_info')),
-                            $tab->if(admin()->two_factor_confirmed_at)->buttons(
-                                $buttons->danger()
-                                    ->modal('modal-2')
-                                    ->text(__('admin.2fa_secure_enable_disable'))
-                            ),
-                            $tab->if(!admin()->two_factor_confirmed_at)->buttons(
-                                $buttons->primary()
-                                    ->modal()
-                                    ->text(__('admin.2fa_secure_enable_button'))
-                            )
-                        ),
-                        $card->tab(
-                            $tab->active(request()->has('adminlog1_per_page') || request()->has('adminlog1_page')),
-                            $tab->icon_history()->title('admin.timeline'),
-                            $tab->use(fn(TabContentComponent $content) => static::timelineComponent(
-                                $content,
-                                $this->model()->logs(),
-                                $this
-                            ))
-                        ),
-                        $card->tab(
-                            $tab->title('admin.activity')->icon_chart_line(),
-                            $tab->active($request->has('q')),
-                            $tab->chart_js(
-                                $chartJs->model($this->model()->logs())
-                                    ->hasSearch(
-                                        $searchForm->date_range('created_at', 'admin.created_at')
-                                            ->default(implode(' - ', $this->defaultDateRange()))
-                                    )
-                                    ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
-                                    ->groupDataByAt('created_at')
-                                    ->withCollection($logTitles, function ($title) {
-                                        return $this->chart_js->eachPoint($title, static function ($c) use ($title) {
-                                            return $c->where('title', $title)->count();
-                                        });
-                                    })->miniChart(),
-                            )
-                        ),
-                        $card->tab(
-                            $tab->title('admin.day_activity')->icon_chart_line(),
-                            $tab->chart_js(
-                                $chartJs->model($this->model()->logs())
-                                    ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
-                                    ->groupDataByAt('created_at', 'H:i')
-                                    ->withCollection($logTitles, function ($title) {
-                                        return $this->chart_js->eachPoint($title, function ($c) use ($title) {
-                                            return $c->where('title', $title)->count();
-                                        });
-                                    })->miniChart(),
-                            )
-                        ),
-                        $card->footer_form()->withOutRedirectRadios()->setType('edit'),
-                    )
+                        $tab->if(!admin()->two_factor_confirmed_at)->buttons(
+                            $buttons->primary()
+                                ->modal()
+                                ->text(__('admin.2fa_secure_enable_button'))
+                        )
+                    ),
+                    $card->tab(
+                        $tab->active(request()->has('adminlog1_per_page') || request()->has('adminlog1_page')),
+                        $tab->icon_history()->title('admin.timeline'),
+                        $tab->use(fn(TabContentComponent $content) => static::timelineComponent(
+                            $content,
+                            $this->model()->logs(),
+                            $this
+                        ))
+                    ),
+                    $card->tab(
+                        $tab->title('admin.activity')->icon_chart_line(),
+                        $tab->active($request->has('q')),
+                        $tab->chart_js(
+                            $chartJs->model($this->model()->logs())
+                                ->size(150)
+                                ->hasSearch(
+                                    $searchForm->date_range('created_at', 'admin.created_at')
+                                        ->default(implode(' - ', $this->defaultDateRange()))
+                                )->load(function (ChartJsComponent $component) use ($logTitles) {
+                                    $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
+                                        ->groupDataByAt('created_at')
+                                        ->withCollection($logTitles, function ($title) {
+                                            return $this->chart_js->eachPoint($title, static function ($c) use ($title) {
+                                                return $c->where('title', $title)->count();
+                                            });
+                                        })->miniChart();
+                                }),
+                        )
+                    ),
+                    $card->tab(
+                        $tab->title('admin.day_activity')->icon_chart_line(),
+                        $tab->chart_js(
+                            $chartJs->model($this->model()->logs())->size(200)
+                                ->load(function (ChartJsComponent $component) use ($logTitles) {
+                                    $component->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
+                                        ->groupDataByAt('created_at', 'H:i')
+                                        ->withCollection($logTitles, function ($title) {
+                                            return $this->chart_js->eachPoint($title, function ($c) use ($title) {
+                                                return $c->where('title', $title)->count();
+                                            });
+                                        })->miniChart();
+                                }),
+                        )
+                    ),
+                    $card->footer_form()->withOutRedirectRadios()->setType('edit'),
                 )
             );
     }

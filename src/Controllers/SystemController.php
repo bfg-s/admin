@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Components\ChartJsComponent;
 use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
@@ -9,6 +10,7 @@ use Admin\Core\PrepareExport;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
+use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Respond;
@@ -333,6 +335,20 @@ class SystemController extends Controller
         }
 
         return $result;
+    }
+
+    public function load_chart_js(LoadChartJsRequest $request)
+    {
+        $this->refererEmit();
+
+        if (isset(ChartJsComponent::$loadCallBacks[$request->name])) {
+
+            call_user_func(...ChartJsComponent::$loadCallBacks[$request->name]);
+
+            return ChartJsComponent::$loadCallBacks[$request->name][1]->getViewData();
+        }
+
+        return [];
     }
 
     /**

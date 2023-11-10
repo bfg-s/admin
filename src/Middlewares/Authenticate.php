@@ -80,7 +80,11 @@ class Authenticate
         if (
             ! Auth::guard('admin')->guest()
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile')
-            && !\Illuminate\Support\Facades\Route::currentRouteNamed('jax.executor')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.load_modal')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.toggle_dark')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.call_callback')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.load_lives')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.load_chart_js')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile.logout')
             && config('admin.force-2fa')
             && ! admin()->two_factor_confirmed_at
@@ -89,6 +93,8 @@ class Authenticate
                 'respond',
                 Respond::glob()->toast_error([__('admin.2fa_enable_before'), __('admin.error')])->toJson()
             );
+
+
             return redirect()->route('admin.profile');
         }
 

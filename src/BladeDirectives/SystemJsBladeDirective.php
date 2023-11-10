@@ -29,11 +29,6 @@ class SystemJsBladeDirective
 
         $html = [];
 
-        if ($respond = session('respond')) {
-
-            $html[] = "exec($respond)";
-        }
-
         foreach ($extensions as $extension) {
 
             $html[] = $extension->config()->js();
@@ -48,6 +43,7 @@ class SystemJsBladeDirective
 
             $html[] = $themeJs;
         }
+
 
         $separator = ($tag ? "</script>" : "")
             . "\n"

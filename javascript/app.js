@@ -54,6 +54,7 @@ require('./Inits/Cookie');
 require('./Inits/Tpl');
 require('./Inits/Fancy');
 require('./Inits/Doc');
+require('./Inits/Chart');
 
 _dispatch_event('admin:init');
 

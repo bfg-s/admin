@@ -47,6 +47,11 @@ class ChartJsComponent extends Component
     protected string $view = 'chartjs';
 
     /**
+     * @var array
+     */
+    public static array $loadCallBacks = [];
+
+    /**
      * @param  array  $delegates
      * @throws Throwable
      */
@@ -57,6 +62,19 @@ class ChartJsComponent extends Component
         parent::__construct(...$delegates);
 
         $this->builder = new ChartJsComponentBuilder();
+
+        $this->setDatas(['load' => 'chart::js']);
+    }
+
+    /**
+     * @param  callable  $cb
+     * @return $this
+     */
+    public function load(callable $cb): static
+    {
+        static::$loadCallBacks[$this->builder->getName()] = [$cb, $this, $this->model];
+
+        return $this;
     }
 
     /**
@@ -74,25 +92,99 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @param  int  $size
+     * @param  int  $height
+     * @param  int  $width
      * @return $this
      */
-    public function size(int $size): static
+    public function size(int $height, int $width = 400): static
     {
-        $this->size = $size;
+        $this->builder->size(['width' => $width, 'height' => $height]);
 
         return $this;
     }
 
     /**
-     * @param  int  $type
+     * @param  string  $type
      * @return $this
      */
-    public function type(int $type): static
+    public function type(string $type): static
     {
         $this->type = $type;
+        $this->builder->type($type);
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeBar(): static
+    {
+        return $this->type('bar');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeHorizontalBar(): static
+    {
+        return $this->type('horizontalBar');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeBubble(): static
+    {
+        return $this->type('bubble');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeScatter(): static
+    {
+        return $this->type('scatter');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeDoughnut(): static
+    {
+        return $this->type('doughnut');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeLine(): static
+    {
+        return $this->type('line');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typePie(): static
+    {
+        return $this->type('pie');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typePolarArea(): static
+    {
+        return $this->type('polarArea');
+    }
+
+    /**
+     * @return $this
+     */
+    public function typeRadar(): static
+    {
+        return $this->type('radar');
     }
 
     /**
@@ -214,7 +306,7 @@ class ChartJsComponent extends Component
     {
         $this->builder
             ->type($this->type)
-            ->size(['width' => 400, 'height' => $this->size])
+            //->size(['width' => 400, 'height' => $this->size])
             ->labels(collect($this->dataBuilder)->keys()->toArray());
 
         foreach ($this->datasets as $dataset) {
@@ -250,7 +342,7 @@ class ChartJsComponent extends Component
 
         $this->builder
             ->type($this->type)
-            ->size(['width' => 400, 'height' => $this->size])
+            //->size(['width' => 400, 'height' => $this->size])
             ->labels(collect($data[0])->keys()->toArray());
 
         foreach ($data as $key => $datum) {
@@ -260,15 +352,16 @@ class ChartJsComponent extends Component
             } else {
                 $bgColor = $color ?: $this->randColor();
             }
+
             $this->builder->addDataset(
                 [
                     'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
-                    'backgroundColor' => $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
+                    'backgroundColor' => array_is_list($color) ? array_map(fn (array $c) => $this->renderColor($c, '0.31'), $color) : $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
                     'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
                     'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
                     'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    'pointHoverBackgroundColor' => $this->randColor(), //"#fff",
-                    'pointHoverBorderColor' => $this->randColor(),
+                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()), //"#fff",
+                    'pointHoverBorderColor' => $this->renderColor($this->randColor()),
                     'data' => collect($datum)->values()->toArray(),
                 ]
             );
@@ -282,7 +375,7 @@ class ChartJsComponent extends Component
      * @param  int  $max
      * @return array
      */
-    protected function randColor(int $min = 1, int $max = 255): array
+    public function randColor(int $min = 1, int $max = 255): array
     {
         $r1 = rand($min, $max);
         $r2 = rand($min, $max);
@@ -293,10 +386,10 @@ class ChartJsComponent extends Component
 
     /**
      * @param $c
-     * @param $opacity
+     * @param  string  $opacity
      * @return string
      */
-    protected function renderColor($c, $opacity): string
+    public function renderColor($c, string $opacity = '1.0'): string
     {
         return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
     }
@@ -306,7 +399,17 @@ class ChartJsComponent extends Component
      */
     protected function viewData(): array
     {
-        return $this->builder->getParams();
+        return array_merge($this->builder->getParams(), [
+            'loading' => isset(static::$loadCallBacks[$this->builder->getName()])
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function getViewData(): array
+    {
+        return $this->viewData();
     }
 
     /**

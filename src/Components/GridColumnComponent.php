@@ -19,11 +19,15 @@ class GridColumnComponent extends Component
     /**
      * @param  array  $delegates
      */
-    public function __construct(...$delegates)
+    public function __construct(int $num = null, ...$delegates)
     {
         parent::__construct();
 
         $this->explainForce(Explanation::new($delegates));
+
+        if ($num) {
+            $this->num($num);
+        }
     }
 
     /**

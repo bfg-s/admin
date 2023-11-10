@@ -69,7 +69,8 @@ $(document).on('pjax:complete', (xhr, req, status) => {
                 window.initedVueForPjsxMoveDestroy[i].$destroy();
             }
             delete window.initedVueForPjsxMoveDestroy[i];
-
+        }
+    }
 
     document.body.style.cursor = "auto";
 
