@@ -13,6 +13,7 @@ use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\TableActionRequest;
+use Admin\Requests\TranslateRequest;
 use Admin\Respond;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -349,6 +351,13 @@ class SystemController extends Controller
         }
 
         return [];
+    }
+
+    public function translate(TranslateRequest $request)
+    {
+        $tr = new GoogleTranslate();
+
+        return $tr->setTarget($request->toLang == 'ua' ? 'uk' : $request->toLang)->translate($request->data);
     }
 
     /**

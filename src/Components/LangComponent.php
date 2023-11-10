@@ -7,12 +7,42 @@ class LangComponent extends Component
     /**
      * @var string
      */
-    protected string $view = 'content-only';
+    protected string $view = 'lang';
 
     /**
      * @var array|null
      */
     protected ?array $lang_list = null;
+
+    /**
+     * @var array
+     */
+    protected array $insideInputs = [];
+
+    /**
+     * @var string|null
+     */
+    protected ?string $name = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $id = null;
+
+    /**
+     * @var bool
+     */
+    protected ?bool $verticalSet = null;
+
+    /**
+     * @var bool
+     */
+    protected ?bool $reversedSet = null;
+
+    /**
+     * @var int|null
+     */
+    protected ?int $label_width = null;
 
     /**
      * Lang constructor.
@@ -37,27 +67,47 @@ class LangComponent extends Component
 
             if ($inner_input instanceof FormGroupComponent) {
 
-                foreach ($this->lang_list ?: config('layout.languages', []) as $lang) {
+                foreach ($this->lang_list ?: config('admin.languages', []) as $lang) {
                     $input = clone $inner_input;
+                    $input->only_input();
+                    if (! $this->name) {
+                        $this->name = $input->get_title();
+                    }
+                    if (! $this->id) {
+                        $this->id = $input->get_id();
+                    }
+                    if ($this->verticalSet === null) {
+                        $this->verticalSet = $input->get_vertical();
+                    }
+                    if ($this->label_width === null) {
+                        $this->label_width = $input->get_label_width();
+                    }
+                    if ($this->reversedSet === null) {
+                        $this->reversedSet = $input->get_reversed();
+                    }
                     $input->set_name($input->get_name()."[{$lang}]");
                     $input->set_path($input->get_path().".{$lang}");
                     $input->set_id($input->get_id()."_{$lang}");
                     $input->set_title($input->get_title().' ['.strtoupper($lang).']');
-                    $this->appEnd(
-                        $input->render()
-                    );
+                    $this->insideInputs[$lang] = $input;
                 }
 
                 unset($this->contents[$key]);
-
-                //$inner[] = new Content($inn[array_key_last($inn)], $this);
-                //$this->appEnd($inn[array_key_last($inn)]);
-            } else {
-                //$inner[] = new Content($inner_input, $this);
-                $this->appEnd($inner_input);
             }
         }
 
         //$this->content->setItems($inner);
+    }
+
+    protected function viewData(): array
+    {
+        return [
+            'insideInputs' => $this->insideInputs,
+            'name' => $this->name,
+            'id' => $this->id,
+            'vertical' => $this->verticalSet,
+            'label_width' => $this->label_width,
+            'reversed' => $this->reversedSet,
+        ];
     }
 }

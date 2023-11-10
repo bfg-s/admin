@@ -32,7 +32,8 @@
         "almasaeed2010/adminlte": "^3.1.0",
         "barryvdh/laravel-ide-helper": "^v2.12.3",
         "bacon/bacon-qr-code": "^2.0",
-        "pragmarx/google2fa-qrcode": "*"
+        "pragmarx/google2fa-qrcode": "*",
+        "stichoza/google-translate-php": "^v5.1.2"
     },
     "require-dev": {
 

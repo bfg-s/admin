@@ -444,6 +444,30 @@ abstract class FormGroupComponent extends Component
     }
 
     /**
+     * @return bool|null
+     */
+    public function get_vertical(): ?bool
+    {
+        return $this->vertical;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function get_label_width(): ?int
+    {
+        return $this->label_width;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function get_reversed(): ?bool
+    {
+        return $this->reversed;
+    }
+
+    /**
      * @param $id
      * @return $this
      */

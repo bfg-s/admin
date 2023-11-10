@@ -169,3 +169,19 @@ window.libs['admin::model_relation_ordered'] = function (field) {
         }
     });
 };
+
+window.libs['admin::translate'] = function ($props) {
+
+    const field = this.target.closest('.tab-pane');
+    let input = field.querySelector('input');
+    if (! input) {
+        input = field.querySelector('textarea');
+    }
+    if (! input) {
+        input = field.querySelector('select');
+    }
+
+    axios.get($props.route, {params: {toLang: $props.lang, data: $(input).val()}}).then(
+        d => $(input).val(d.data)
+    )
+};

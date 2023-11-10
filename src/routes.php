@@ -29,6 +29,7 @@ Route::group([], function (Router $route) {
     $route->post('nestable_save', [SystemController::class, 'nestable_save'])->name('nestable_save');
     $route->post('load_lives', [SystemController::class, 'load_lives'])->name('load_lives');
     $route->get('load_chart_js', [SystemController::class, 'load_chart_js'])->name('load_chart_js');
+    $route->get('translate', [SystemController::class, 'translate'])->name('translate');
 });
 
 /**
