@@ -13,7 +13,7 @@
             <input
                 type="radio"
                 id="{{ $id ? 'checkbox-'.$id.'-'.$i : 'checkbox-'.$i }}"
-                name="{{ $name }}[]"
+                name="{{ $name }}"
                 value="{{ $value }}"
                 @checked($checked)
             />

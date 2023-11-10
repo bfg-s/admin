@@ -3,6 +3,7 @@
 namespace Admin\Traits\ModelTable;
 
 use Admin\Components\ModelTable\HeaderComponent;
+use Admin\Models\AdminPermission;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Admin\Components\ButtonsComponent;
@@ -295,22 +296,30 @@ trait TableControlsTrait
                         $key = $model->getRouteKey();
 
                         if (!request()->has('show_deleted')) {
+
                             if ($this->get_test_var('control_edit', [$model])) {
-                                $group->resourceEdit($menu->getLinkEdit($key), '');
+                                if (AdminPermission::checkUrl($menu->getLinkEdit($key), 'PUT')) {
+                                    $group->resourceEdit($menu->getLinkEdit($key), '');
+                                }
                             }
 
                             if ($this->get_test_var('control_delete', [$model])) {
-                                $group->resourceDestroy(
-                                    $menu->getLinkDestroy($key),
-                                    '',
-                                    $model->getRouteKeyName(),
-                                    $key,
-                                    ['_after' => 'stay']
-                                );
+                                if (AdminPermission::checkUrl($menu->getLinkDestroy($key), 'DELETE')) {
+
+                                    $group->resourceDestroy(
+                                        $menu->getLinkDestroy($key),
+                                        '',
+                                        $model->getRouteKeyName(),
+                                        $key,
+                                        ['_after' => 'stay']
+                                    );
+                                }
                             }
 
                             if ($this->get_test_var('control_info', [$model])) {
-                                $group->resourceInfo($menu->getLinkShow($key), '');
+                                if (AdminPermission::checkUrl($menu->getLinkShow($key), 'GET')) {
+                                    $group->resourceInfo($menu->getLinkShow($key), '');
+                                }
                             }
                         } else {
                             if ($this->get_test_var('control_restore', [$model])) {

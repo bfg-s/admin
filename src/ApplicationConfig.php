@@ -13,9 +13,6 @@ class ApplicationConfig extends ConfigExtensionProvider
     public function js(): string
     {
         $respond = "";
-        if(session()->has('respond')) {
-            $respond .= 'exec('.session('respond').");\n";
-        }
         if(Respond::glob()->count()) {
             $respond .= 'exec('.Respond::glob()->toJson().");\n";
         }

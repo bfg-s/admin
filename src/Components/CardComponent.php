@@ -2,6 +2,7 @@
 
 namespace Admin\Components;
 
+use Admin\Models\AdminPermission;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\View;
@@ -444,34 +445,48 @@ class CardComponent extends Component
 
                 if ($type === 'create') {
                     if ($test('list')) {
-                        $btn->resourceList();
+                        if (AdminPermission::checkUrl($this->menu->getLinkIndex(), 'GET')) {
+                            $btn->resourceList($this->menu->getLinkIndex());
+                        }
                     }
                 } elseif ($type === 'edit' || $type === 'show') {
 
+                    $key = $this->realModel()->getRouteKey();
+
                     if ($test('list')) {
-                        $btn->resourceList();
+                        if (AdminPermission::checkUrl($this->menu->getLinkIndex(), 'GET')) {
+                            $btn->resourceList($this->menu->getLinkIndex());
+                        }
                     }
 
                     if ($type === 'show') {
                         if ($test('edit')) {
-                            $btn->resourceEdit();
+                            if (AdminPermission::checkUrl($this->menu->getLinkEdit($key), 'PUT')) {
+                                $btn->resourceEdit($this->menu->getLinkEdit($key));
+                            }
                         }
                     }
 
                     if ($type === 'edit') {
                         if ($test('info')) {
-                            $btn->resourceInfo();
+                            if (AdminPermission::checkUrl($this->menu->getLinkShow($key), 'GET')) {
+                                $btn->resourceInfo($this->menu->getLinkShow($key));
+                            }
                         }
                     }
 
                     if ($test('delete')) {
-                        $btn->resourceDestroy();
+                        if (AdminPermission::checkUrl($this->menu->getLinkDestroy($key), 'DELETE')) {
+                            $btn->resourceDestroy($this->menu->getLinkDestroy($key));
+                        }
                     }
                 }
 
                 if ($type !== 'create') {
                     if ($test('add')) {
-                        $btn->resourceAdd();
+                        if (AdminPermission::checkUrl($this->menu->getLinkCreate(), 'POST')) {
+                            $btn->resourceAdd($this->menu->getLinkCreate());
+                        }
                     }
                 }
             }
