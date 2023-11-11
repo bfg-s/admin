@@ -18,6 +18,7 @@ use Admin\Commands\AdminInstallCommand;
 use Admin\Commands\AdminUserCommand;
 use Admin\Facades\AdminFacade;
 use Admin\Middlewares\Authenticate;
+use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Middlewares\DomMiddleware;
 use Admin\Middlewares\LanguageMiddleware;
 use Admin\Repositories\AdminRepository;
@@ -126,6 +127,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             base_path('/vendor/almasaeed2010/adminlte/dist') => public_path('/admin-asset'),
             base_path('/vendor/almasaeed2010/adminlte/plugins') => public_path('/admin-asset/plugins'),
             __DIR__.'/../assets' => public_path('/admin'),
+            __DIR__.'/../assets/js/adminSw.js' => public_path('/adminSw.js'),
         ], ['admin-assets', 'laravel-assets']);
 
         /**
@@ -209,6 +211,8 @@ class ServiceProvider extends ServiceProviderIlluminate
             $route = $route->prefix(config('admin.route.prefix'));
         }
 
+        $middlewares[] = BrowserDetectMiddleware::class;
+
         return $route->middleware($middlewares);
     }
 
@@ -263,6 +267,10 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->mergeConfigFrom(
             __DIR__.'/../config/admin.php',
             'admin'
+        );
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/admin-notification.php',
+            'admin-notification'
         );
 
         /**

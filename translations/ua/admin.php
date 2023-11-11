@@ -274,4 +274,8 @@ return [
     'administrators_browser_statistic' => 'Статистика браузерів адміністраторів',
     'browser' => 'Браузер',
     'translate_field_to_lang' => 'Перекласти :name до :lang',
+    'calendar' => 'Календар',
+    'is_online' => 'В мережі',
+    'the_ogin_user_is_authorized_in_the_system' => 'Користувач :login авторизован в системі',
+    'success' => 'Успіх',
 ];

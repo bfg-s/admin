@@ -274,4 +274,8 @@ Below is a step-by-step guide to filling out the form:
     'administrators_browser_statistic' => 'Administrators browser statistic',
     'browser' => 'Browser',
     'translate_field_to_lang' => 'Translate :name to :LANG',
+    'calendar' => 'Calendar',
+    'is_online' => 'Is online',
+    'the_ogin_user_is_authorized_in_the_system' => 'The :login user is authorized in the system',
+    'success' => 'Success',
 ];

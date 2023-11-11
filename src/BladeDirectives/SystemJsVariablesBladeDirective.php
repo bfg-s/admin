@@ -62,6 +62,7 @@ JS;
             $load_lives = route('admin.load_lives');
             $translate = route('admin.translate');
             $load_chart_js = route('admin.load_chart_js');
+            $update_notification_browser_settings = route('admin.update_notification_browser_settings');
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -74,6 +75,7 @@ window.call_callback = "$call_callback";
 window.load_lives = "$load_lives";
 window.translate = "$translate";
 window.load_chart_js = "$load_chart_js";
+window.update_notification_browser_settings = "$update_notification_browser_settings";
 JS;
         }
     }

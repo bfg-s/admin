@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers\Traits;
 
+use Admin\Repositories\AdminRepository;
 use App;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -117,9 +118,16 @@ trait DefaultControllerResourceMethodsTrait
 
         $updated = $this->requestToModel($save);
 
+
         if ($updated) {
             admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
+            $repo = app(AdminRepository::class);
             Respond::glob()->put('alert::success', __('admin.saved_successfully'));
+            admin()->notifyMe(
+                __('admin.success'),
+                __('admin.saved_successfully'),
+                route($repo->now->getRoute() . '.show', [$this->model()->{$this->model()->getRouteKeyName()}])
+            );
         } else {
             admin_log_danger('Update error', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
             Respond::glob()->put('alert::error', __('admin.unknown_error'));
@@ -153,6 +161,14 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save);
 
         if ($stored) {
+
+            $repo = app(AdminRepository::class);
+            Respond::glob()->put('alert::success', __('admin.saved_successfully'));
+            admin()->notifyMe(
+                __('admin.success'),
+                __('admin.saved_successfully'),
+                route($repo->now->getRoute() . '.show', [$stored->id])
+            );
             admin_log_success('Create successfully', trim(get_class($this->model()), '\\'), 'fas fa-save');
             Respond::glob()->put('alert::success', __('admin.successfully_created'));
         } else {
@@ -194,11 +210,17 @@ trait DefaultControllerResourceMethodsTrait
                 } elseif ($force && $model->forceDelete()) {
                     admin_log_danger('Successfully force deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-eraser');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
-
+                    admin()->notifyMe(
+                        __('admin.success'),
+                        __('admin.successfully_deleted')
+                    );
                 } elseif ($model->delete()) {
                     admin_log_danger('Successfully deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
-
+                    admin()->notifyMe(
+                        __('admin.success'),
+                        __('admin.successfully_deleted')
+                    );
                 } else {
                     Respond::glob()->put('alert::error', __('admin.unknown_error'));
                 }

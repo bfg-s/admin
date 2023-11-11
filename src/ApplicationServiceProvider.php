@@ -38,6 +38,8 @@ class ApplicationServiceProvider extends ExtendProvider
         'admin-asset/plugins/daterangepicker/daterangepicker.js',
         'admin-asset/plugins/select2/js/select2.full.min.js',
 
+        'admin-asset/plugins/fullcalendar/main.js',
+
         'admin/plugins/jquery-validation/jquery.validate.min.js',
 
         'admin/plugins/bootstrap-fileinput/js/plugins/piexif.min.js',
@@ -95,6 +97,8 @@ class ApplicationServiceProvider extends ExtendProvider
         'admin-asset/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
         'admin-asset/plugins/daterangepicker/daterangepicker.css',
         'admin-asset/plugins/chart.js/Chart.min.css',
+
+        'admin-asset/plugins/fullcalendar/main.css',
 
         'admin/plugins/bootstrap-fileinput/css/fileinput.min.css',
         'admin/plugins/bootstrap-fileinput/themes/explorer-fas/theme.css',

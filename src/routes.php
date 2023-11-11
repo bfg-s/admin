@@ -1,6 +1,7 @@
 <?php
 
 use Admin\Controllers\AuthController;
+use Admin\Controllers\CalendarController;
 use Admin\Controllers\DashboardController;
 use Admin\Controllers\SystemController;
 use Admin\Controllers\UploadController;
@@ -30,6 +31,8 @@ Route::group([], function (Router $route) {
     $route->post('load_lives', [SystemController::class, 'load_lives'])->name('load_lives');
     $route->post('load_chart_js', [SystemController::class, 'load_chart_js'])->name('load_chart_js');
     $route->post('translate', [SystemController::class, 'translate'])->name('translate');
+    $route->post('update_notification_browser_settings', [SystemController::class, 'updateNotificationBrowserSettings'])
+        ->name('update_notification_browser_settings');
 });
 
 /**
@@ -40,6 +43,7 @@ Route::group([], function (Router $route) {
     $app_user_controller = admin_app_namespace('Controllers\\UserProfileController');
     $app_upload_controller = admin_app_namespace('Controllers\\UploadController');
     $app_dashboard_controller = admin_app_namespace('Controllers\\DashboardController');
+    $app_calendar_controller = admin_app_namespace('Controllers\\CalendarController');
 
     $route->get('profile', [class_exists($app_user_controller) ? $app_user_controller : UserController::class, 'index'])
         ->name('profile');
@@ -55,6 +59,10 @@ Route::group([], function (Router $route) {
         \Admin\Facades\NavigateFacade::item('admin.dashboard', 'dashboard')
             ->action([class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class, 'index'])
             ->icon_tachometer_alt();
+
+        \Admin\Facades\NavigateFacade::item('admin.calendar', 'calendar')
+            ->action([class_exists($app_calendar_controller) ? $app_calendar_controller : CalendarController::class, 'index'])
+            ->icon_calendar();
     }
 
     $route->namespace(admin_app_namespace('Controllers'))->group(static function (Router $route) {

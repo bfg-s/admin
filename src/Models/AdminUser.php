@@ -43,6 +43,7 @@ use Laravel\Fortify\Fortify;
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection|\Admin\Models\AdminRole[] $roles
+ * @property-read Collection|\Admin\Models\AdminBrowser[] $browsers
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser makeDumpedModel()
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser newModelQuery()
@@ -104,6 +105,14 @@ class AdminUser extends Model implements AuthenticatableContract
     ];
 
     /**
+     * @return HasMany
+     */
+    public function browsers(): HasMany
+    {
+        return $this->hasMany(AdminBrowser::class, 'admin_user_id', 'id');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function roles(): BelongsToMany
@@ -126,5 +135,16 @@ class AdminUser extends Model implements AuthenticatableContract
     public function getAvatarAttribute($avatar): string
     {
         return $avatar ?: 'admin/img/user.jpg';
+    }
+
+    /**
+     * @param  string  $title
+     * @param  string  $body
+     * @param  string|null  $url
+     * @return void
+     */
+    public function notifyMe(string $title, string $body, string $url = null): void
+    {
+        sendAdminNotification($this, $title, $body, $url);
     }
 }

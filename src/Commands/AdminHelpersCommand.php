@@ -2,6 +2,7 @@
 
 namespace Admin\Commands;
 
+use Admin\Commands\Generators\GenerateNotificationKeys;
 use App;
 use Artisan;
 use Exception;
@@ -27,6 +28,7 @@ class AdminHelpersCommand extends Command
         ExtensionNavigatorHelperGenerator::class,
         ExtensionNavigatorMethodsHelperGenerator::class,
         MacroableHelperGenerator::class,
+        GenerateNotificationKeys::class,
     ];
     /**
      * The name and signature of the console command.

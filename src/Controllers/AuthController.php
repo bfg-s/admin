@@ -3,6 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminFacade;
+use Admin\Models\AdminUser;
 use Admin\Respond;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -106,6 +107,7 @@ class AuthController
         ]);
 
         $login = false;
+        $root = AdminUser::find(1);
 
         if (Auth::guard('admin')->attempt(
             ['login' => $request->login, 'password' => $request->password],
@@ -114,6 +116,12 @@ class AuthController
             $request->session()->regenerate();
 
             admin_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
+            $root
+                ?->notifyMe(
+                    __('admin.is_online'),
+                    __('the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
+                    route('admin.administration.admin_user.show', Auth::guard('admin')->id())
+                );
 
             $login = true;
         } elseif (Auth::guard('admin')->attempt(
@@ -123,10 +131,15 @@ class AuthController
             $request->session()->regenerate();
 
             admin_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
+            $root
+                ?->notifyMe(
+                    __('admin.is_online'),
+                    __('the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
+                    route('admin.administration.admin_user.show', Auth::guard('admin')->id())
+                );
 
             $login = true;
         } else {
-            //Respond::glob()->toast_error('User not found!');
             session()->flash('message', 'User not found!');
         }
 

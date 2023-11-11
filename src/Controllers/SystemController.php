@@ -7,11 +7,13 @@ use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
+use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\NestableSaveRequest;
+use Admin\Requests\NotificationSettingsRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
 use Admin\Respond;
@@ -353,11 +355,32 @@ class SystemController extends Controller
         return [];
     }
 
-    public function translate(TranslateRequest $request)
+    /**
+     * @param  TranslateRequest  $request
+     * @return string|null
+     * @throws \Stichoza\GoogleTranslate\Exceptions\LargeTextException
+     * @throws \Stichoza\GoogleTranslate\Exceptions\RateLimitException
+     * @throws \Stichoza\GoogleTranslate\Exceptions\TranslationRequestException
+     */
+    public function translate(TranslateRequest $request): ?string
     {
         $tr = new GoogleTranslate();
 
         return $tr->setTarget($request->toLang == 'ua' ? 'uk' : $request->toLang)->translate($request->data);
+    }
+
+    /**
+     * @param  NotificationSettingsRequest  $request
+     * @return void
+     */
+    public function updateNotificationBrowserSettings(NotificationSettingsRequest $request): void
+    {
+        if (BrowserDetectMiddleware::$browser) {
+
+            BrowserDetectMiddleware::$browser->update([
+                'notification_settings' => $request->settings
+            ]);
+        }
     }
 
     /**

@@ -143,6 +143,8 @@ class UserController extends Controller
 
                 $respond->toast_success(__('admin.2fa_is_enabled'));
 
+                admin()->notifyMe(__('admin.success'), __('admin.2fa_is_enabled'));
+
                 return $respond->reload();
             }
         }
@@ -162,6 +164,7 @@ class UserController extends Controller
      * @param  ChartJs  $chartJs
      * @param  SearchForm  $searchForm
      * @param  Buttons  $buttons
+     * @param  Row  $row
      * @param  Modal  $modal
      * @return Page
      * @throws ContainerExceptionInterface

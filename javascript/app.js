@@ -1,9 +1,11 @@
 import 'nprogress/nprogress.css';
 import axios from 'axios'
 
-navigator.serviceWorker.register('/admin/js/adminSw.js');
+navigator.serviceWorker.register('/adminSw.js');
 
 function enableNotifications () {
+    if (Notification.permission !== 'granted') {
+    }
     Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
             // get service worker
@@ -12,7 +14,13 @@ function enableNotifications () {
                 sw.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: document.querySelector('[name="notification-server-key"]').getAttribute('content')
-                })
+                }).then(subscription => {
+                    //console.log(JSON.stringify(subscription))
+                    axios.post(window.update_notification_browser_settings, {
+                        settings: subscription,
+                        _token: exec('token')
+                    })
+                });
             });
         }
     });
@@ -74,6 +82,7 @@ require('./Inits/Tpl');
 require('./Inits/Fancy');
 require('./Inits/Doc');
 require('./Inits/Chart');
+require('./Inits/Calendar');
 
 _dispatch_event('admin:init');
 
