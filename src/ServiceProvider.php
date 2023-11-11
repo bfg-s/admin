@@ -117,7 +117,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         $this->publishes([
             __DIR__.'/../translations/en' => lang_path('en'),
             __DIR__.'/../translations/ru' => lang_path('ru'),
-            __DIR__.'/../translations/ua' => lang_path('ua'),
+            __DIR__.'/../translations/uk' => lang_path('uk'),
         ], ['admin-lang', 'laravel-assets']);
 
         /**
