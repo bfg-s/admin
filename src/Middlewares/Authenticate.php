@@ -27,6 +27,8 @@ class Authenticate
      */
     protected static $menu;
 
+    protected static bool $alreadyPost = false;
+
     /**
      * Handle an incoming request.
      *
@@ -38,6 +40,11 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
+        if (! static::$alreadyPost) {
+
+            static::$alreadyPost = ! ($request->isMethod('get') || $request->isMethod('head'));
+        }
+
         if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
             session()->flash('respond', Respond::glob()->toJson());
 
@@ -98,10 +105,12 @@ class Authenticate
             return redirect()->route('admin.profile');
         }
 
+
         /** @var Response $response */
         $response = $next($request);
 
-        if ($request->isMethod('get') || $request->isMethod('head')) {
+        if (! static::$alreadyPost) {
+
             admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'), 'fas fa-file-download');
         }
 

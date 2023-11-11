@@ -50,6 +50,14 @@ abstract class Theme
     protected string $slug;
 
     /**
+     * @return array
+     */
+    public function metas(): array
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     public function getName(): string

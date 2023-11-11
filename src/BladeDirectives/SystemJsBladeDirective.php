@@ -49,6 +49,7 @@ class SystemJsBladeDirective
             $html[] = $themeJs;
         }
 
+        $html[] = 'document.querySelector(\'[name="csrf-token"]\').setAttribute("content", "'.csrf_token().'")';
 
         $separator = ($tag ? "</script>" : "")
             . "\n"

@@ -170,7 +170,7 @@ window.libs['admin::model_relation_ordered'] = function (field) {
     });
 };
 
-window.libs['admin::translate'] = function ($props) {
+window.libs['admin::translate'] = function (toLang) {
 
     const field = this.target.closest('.tab-pane');
     let input = field.querySelector('input');
@@ -181,7 +181,7 @@ window.libs['admin::translate'] = function ($props) {
         input = field.querySelector('select');
     }
 
-    axios.get($props.route, {params: {toLang: $props.lang, data: $(input).val()}}).then(
+    axios.post(window.translate, {toLang, data: $(input).val(), _token: exec('token')}).then(
         d => $(input).val(d.data)
     )
 };

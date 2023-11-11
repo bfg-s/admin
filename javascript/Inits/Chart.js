@@ -14,7 +14,7 @@ window.libs['chart::js'] = function ($parameters) {
 
         $(`#${$parameters.loaderId}`).show();
 
-        axios.get($parameters.load_url + location.search, {params: {name: $parameters.name, _build_modal: 1}})
+        axios.post(window.load_chart_js + location.search, {name: $parameters.name, _build_modal: 1, _token: exec('token')})
             .then(d => {
                 const data = d.data;
 

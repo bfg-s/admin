@@ -129,6 +129,14 @@ class ConfigExtensionProvider
     }
 
     /**
+     * @return array
+     */
+    public function metas(): array
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     public function js(): string

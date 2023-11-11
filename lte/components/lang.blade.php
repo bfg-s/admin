@@ -22,7 +22,7 @@
                     <div class="">
                         {!! $input !!}
                     </div>
-                    <button type="button" class="btn btn-link" data-click="admin::translate" data-params="{{ json_encode(['lang' => $lang, 'route' => route('admin.translate')]) }}"><i class="fas fa-language"></i> Translate {{ $name }} to {{ strtoupper($lang) }}</button>
+                    <button type="button" class="btn btn-link" data-click="admin::translate" data-params="{{ $lang }}"><i class="fas fa-language"></i> @lang('translate_field_to_lang', ['name' => $name, 'lang' => strtoupper($lang)])</button>
                 </div>
             @endforeach
         </div>

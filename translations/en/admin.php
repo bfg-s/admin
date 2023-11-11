@@ -273,4 +273,5 @@ Below is a step-by-step guide to filling out the form:
     'you_have_enabled_two_factor_authentication' => 'You have enabled two factor authentication.',
     'administrators_browser_statistic' => 'Administrators browser statistic',
     'browser' => 'Browser',
+    'translate_field_to_lang' => 'Translate :name to :LANG',
 ];

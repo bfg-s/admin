@@ -24,7 +24,6 @@
         'labels' => $labels,
         'datasets' => $datasets,
         'options' => $optionsRaw ?: $options,
-        'load_url' => route('admin.load_chart_js'),
         'name' => $element,
         'loading' => $loading,
         'loaderId' => $element . 'Loader',

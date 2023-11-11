@@ -60,6 +60,8 @@ JS;
             $custom_save = route('admin.custom_save');
             $call_callback = route('admin.call_callback');
             $load_lives = route('admin.load_lives');
+            $translate = route('admin.translate');
+            $load_chart_js = route('admin.load_chart_js');
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -70,6 +72,8 @@ window.export_csv = "$export_csv";
 window.custom_save = "$custom_save";
 window.call_callback = "$call_callback";
 window.load_lives = "$load_lives";
+window.translate = "$translate";
+window.load_chart_js = "$load_chart_js";
 JS;
         }
     }

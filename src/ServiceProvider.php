@@ -7,6 +7,7 @@ use Admin\BladeDirectives\AttributesBladeDirective;
 use Admin\BladeDirectives\SystemCssBladeDirective;
 use Admin\BladeDirectives\SystemJsBladeDirective;
 use Admin\BladeDirectives\SystemJsVariablesBladeDirective;
+use Admin\BladeDirectives\SystemMetasBladeDirective;
 use Admin\BladeDirectives\SystemScriptsBladeDirective;
 use Admin\BladeDirectives\SystemStylesBladeDirective;
 use Admin\BladeDirectives\UpdateWithPjaxBladeDirective;
@@ -180,6 +181,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         Blade::directive('adminSystemCss', [SystemCssBladeDirective::class, 'directive']);
         Blade::directive('adminSystemScripts', [SystemScriptsBladeDirective::class, 'directive']);
         Blade::directive('adminSystemStyles', [SystemStylesBladeDirective::class, 'directive']);
+        Blade::directive('adminSystemMetas', [SystemMetasBladeDirective::class, 'directive']);
         Blade::directive('updateWithPjax', [UpdateWithPjaxBladeDirective::class, 'directive']);
 
         /**

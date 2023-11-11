@@ -23,4 +23,16 @@ class ApplicationConfig extends ConfigExtensionProvider
             return (string) $respond;
         }
     }
+
+    /**
+     * @return string[]
+     */
+    public function metas(): array
+    {
+        return [
+            '<meta name="csrf-token" content="'.csrf_token().'">',
+            '<meta name="puller-guard" content="admin">',
+            '<meta name="notification-server-key" content="admin">'
+        ];
+    }
 }

@@ -273,4 +273,5 @@ return [
     'you_have_enabled_two_factor_authentication' => 'У вас включено двофакторну автентифікацію.',
     'administrators_browser_statistic' => 'Статистика браузерів адміністраторів',
     'browser' => 'Браузер',
+    'translate_field_to_lang' => 'Перекласти :name до :lang',
 ];

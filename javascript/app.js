@@ -1,6 +1,25 @@
 import 'nprogress/nprogress.css';
 import axios from 'axios'
 
+navigator.serviceWorker.register('/admin/js/adminSw.js');
+
+function enableNotifications () {
+    Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+            // get service worker
+            navigator.serviceWorker.ready.then(sw => {
+                // subscrie
+                sw.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: document.querySelector('[name="notification-server-key"]').getAttribute('content')
+                })
+            });
+        }
+    });
+}
+
+enableNotifications();
+
 require('./Extensions/initor');
 
 window._dispatch_event = function (name, detail = this) {
