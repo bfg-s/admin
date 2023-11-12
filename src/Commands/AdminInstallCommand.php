@@ -3,7 +3,6 @@
 namespace Admin\Commands;
 
 use Admin\ApplicationConfig;
-use Admin\Models\AdminEventTemplate;
 use App\Admin\Delegates\CommonTrait;
 use File;
 use Illuminate\Console\Command;
@@ -196,31 +195,6 @@ class AdminInstallCommand extends Command
 
         if ($make_seeds) {
             $this->call('admin:extension', ['--reinstall' => true, '--yes' => true, '--force' => true]);
-        }
-
-        if (! AdminEventTemplate::count()) {
-            foreach (AdminUser::all() as $user) {
-                $user->eventsTemplates()->create([
-                    'name' => 'Lunch',
-                    'color' => 'bg-info'
-                ]);
-                $user->eventsTemplates()->create([
-                    'name' => 'Go home',
-                    'color' => 'bg-warning'
-                ]);
-                $user->eventsTemplates()->create([
-                    'name' => 'Add a new image',
-                    'color' => 'bg-danger'
-                ]);
-                $user->eventsTemplates()->create([
-                    'name' => 'Add a new post',
-                    'color' => 'bg-primary'
-                ]);
-                $user->eventsTemplates()->create([
-                    'name' => 'Add a new product',
-                    'color' => 'bg-success'
-                ]);
-            }
         }
 
         $this->info('Bfg Admin Installed');

@@ -387,27 +387,6 @@ class SystemController extends Controller
         }
     }
 
-    /**
-     * @param  NewEventTemplateRequest  $request
-     * @return Model
-     */
-    public function addNewEventTemplate(NewEventTemplateRequest $request): Model
-    {
-        return admin()->eventsTemplates()->create([
-            'name' => $request->name,
-            'color' => $request->color,
-        ]);
-    }
-
-    /**
-     * @param  DropEventTemplateRequest  $request
-     * @return int|null
-     */
-    public function dropEventTemplate(DropEventTemplateRequest $request): ?int
-    {
-        return admin()->eventsTemplates()->find($request->id)?->delete();
-    }
-
     public function calendarData()
     {
         return admin()->events;
@@ -433,10 +412,6 @@ class SystemController extends Controller
         $end = $request->end
             ? Carbon::parse($request->end)
             : ($start->hour ? Carbon::parse($request->start)->addHour() : Carbon::parse($request->start));
-
-//        if ($end->hour === 0) {
-//            $end = $end->endOfDay();
-//        }
 
         $data['start'] = Carbon::parse($start)->setTimezone('UTC');
         $data['end'] = Carbon::parse($end)->setTimezone('UTC');

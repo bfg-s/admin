@@ -71,7 +71,7 @@ window.libs['calendar'] = function () {
             });
 
             if (formValues) {
-                //console.log(start, end);
+
                 axios.post(window.calendar_event, {
                     title: formValues.title,
                     description: formValues.desc,
@@ -91,7 +91,6 @@ window.libs['calendar'] = function () {
         },
         eventClick: function (info) {
             info.jsEvent.preventDefault();
-            //info.el.style.borderColor = 'red';
 
             Swal.fire({
                 title: info.event.title,
@@ -114,9 +113,8 @@ window.libs['calendar'] = function () {
             });
         },
         editable  : true,
-        droppable : false, // this allows things to be dropped onto the calendar !!!
+        droppable : false,
         eventDrop: function(info) {
-            //console.log('eventDrop', info.event.toJSON());
 
             axios.post(window.calendar_event, {
                 id: info.event.toJSON().id,
@@ -132,7 +130,6 @@ window.libs['calendar'] = function () {
             })
         },
         eventResize: function(info) {
-            //console.log('eventResize', info.event.toJSON());
 
             axios.post(window.calendar_event, {
                 id: info.event.toJSON().id,
@@ -160,73 +157,9 @@ window.libs['calendar'] = function () {
                 textColor: lastData.textColor,
                 start: info.dateStr,
                 _token: exec('token')
-            });//.then(d => calendar.refetchEvents())
+            });
         }
     });
 
     calendar.render();
-
-    let currColor = 'text-primary' //Red by default
-    $('#color-chooser > li > a').click(function (e) {
-        e.preventDefault()
-        currColor = $(this).attr('class')
-        const addNewEvent = $('#add-new-event');
-        addNewEvent.removeClass('btn-warning');
-        addNewEvent.removeClass('btn-success');
-        addNewEvent.removeClass('btn-danger');
-        addNewEvent.removeClass('btn-muted');
-        addNewEvent.removeClass('btn-primary');
-        addNewEvent.addClass(
-            currColor.replace('text-', 'btn-')
-        )
-    })
-    $('#add-new-event').click(function (e) {
-        e.preventDefault()
-        const newEvent = $('#new-event');
-        let val = newEvent.val()
-        if (val.length === 0) {
-            return
-        }
-        let event = $('<div />');
-        let color = currColor.replace('text-', 'bg-');
-        event.css({
-            'color'           : '#fff'
-        }).addClass(color).addClass('external-event')
-        axios.post(window.add_new_event_template, {_token: exec('token'), name: val, color}).then(d => {
-            event[0].innerHTML = val + '<div class="float-right">' +
-                '                    <a href="javascript:void(0)" data-click="calendar::events_template_delete" data-params="'+d.data.id+'" class="btn btn-link btn-sm p-0"><i class="fas fa-trash"></i></a>' +
-                '                </div>';
-            $('#external-events').prepend(event)
-            ini_events(event)
-        });
-        newEvent.val('')
-    })
-};
-
-window.libs['calendar::events_template_delete'] = function ($id) {
-    const obj = this.target.closest('.external-event');
-    axios.delete(window.drop_event_template, {params: {_token: exec('token'), id: $id}}).then(d => {
-        if (d.data) {
-            obj.remove();
-        }
-    });
-};
-
-window.libs['calendar::events'] = function () {
-
-    const Draggable = FullCalendar.Draggable;
-
-    new Draggable(this.target, {
-        itemSelector: '.external-event',
-        eventData: function(eventEl) {
-            lastData = {
-                title: eventEl.innerText,
-                backgroundColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
-                borderColor: window.getComputedStyle( eventEl ,null).getPropertyValue('background-color'),
-                textColor: window.getComputedStyle( eventEl ,null).getPropertyValue('color'),
-            };
-
-            return lastData;
-        }
-    });
 };

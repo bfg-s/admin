@@ -34,10 +34,6 @@ Route::group([], function (Router $route) {
     $route->post('calendar_data', [SystemController::class, 'calendarData'])->name('calendar_data');
     $route->post('calendar_event', [SystemController::class, 'calendarEvent'])->name('calendar_event');
     $route->delete('drop_event', [SystemController::class, 'dropEvent'])->name('drop_event');
-    $route->post('add_new_event_template', [SystemController::class, 'addNewEventTemplate'])
-        ->name('add_new_event_template');
-    $route->delete('drop_event_template', [SystemController::class, 'dropEventTemplate'])
-        ->name('drop_event_template');
     $route->post('update_notification_browser_settings', [SystemController::class, 'updateNotificationBrowserSettings'])
         ->name('update_notification_browser_settings');
 });
