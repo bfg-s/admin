@@ -83,9 +83,7 @@ class DashboardController extends Controller
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
 
-                                $adminLogs = Admin\Models\AdminLog::all(['user_agent'])->map(
-                                    fn (Admin\Models\AdminLog $log) => getBrowserDetails($log->user_agent)
-                                )->groupBy('name')->map(
+                                $adminLogs = Admin\Models\AdminBrowser::all(['name'])->groupBy('name')->map(
                                     fn (Collection $collection) => $collection->count()
                                 );
                                 $component->customChart(__('admin.browser'), [$adminLogs->toArray()], $adminLogs->map(
@@ -102,7 +100,7 @@ class DashboardController extends Controller
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
 
-                                $adminLogs = Admin\Models\AdminLog::all(['title'])->map(
+                                $adminLogs = admin()->logs()->get(['title'])->map(
                                     fn (Admin\Models\AdminLog $log) => ['name' => $log->title]
                                 )->groupBy('name')->map(
                                     fn (Collection $collection) => $collection->count()

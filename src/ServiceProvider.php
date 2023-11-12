@@ -15,6 +15,7 @@ use Admin\Commands\AdminControllerCommand;
 use Admin\Commands\AdminExtensionCommand;
 use Admin\Commands\AdminHelpersCommand;
 use Admin\Commands\AdminInstallCommand;
+use Admin\Commands\AdminSendEventsCommand;
 use Admin\Commands\AdminUserCommand;
 use Admin\Facades\AdminFacade;
 use Admin\Middlewares\Authenticate;
@@ -43,6 +44,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         AdminUserCommand::class,
         AdminExtensionCommand::class,
         AdminHelpersCommand::class,
+        AdminSendEventsCommand::class,
     ];
 
     /**

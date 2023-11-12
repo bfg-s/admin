@@ -63,6 +63,11 @@ JS;
             $translate = route('admin.translate');
             $load_chart_js = route('admin.load_chart_js');
             $update_notification_browser_settings = route('admin.update_notification_browser_settings');
+            $add_new_event_template = route('admin.add_new_event_template');
+            $drop_event_template = route('admin.drop_event_template');
+            $calendar_data = route('admin.calendar_data');
+            $calendar_event = route('admin.calendar_event');
+            $drop_event = route('admin.drop_event');
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -76,6 +81,11 @@ window.load_lives = "$load_lives";
 window.translate = "$translate";
 window.load_chart_js = "$load_chart_js";
 window.update_notification_browser_settings = "$update_notification_browser_settings";
+window.add_new_event_template = "$add_new_event_template";
+window.drop_event_template = "$drop_event_template";
+window.calendar_data = "$calendar_data";
+window.calendar_event = "$calendar_event";
+window.drop_event = "$drop_event";
 JS;
         }
     }

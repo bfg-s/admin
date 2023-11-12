@@ -1,11 +1,14 @@
 <div class="card-body">
 
     <div id="external-events" data-load="calendar::events">
-        <div class="external-event bg-success">Lunch</div>
-        <div class="external-event bg-warning">Go home</div>
-        <div class="external-event bg-info">Do homework</div>
-        <div class="external-event bg-primary">Work on UI design</div>
-        <div class="external-event bg-danger">Sleep tight</div>
+        @foreach(admin()->eventsTemplates()->orderByDesc('id')->get() as $eventTemplate)
+            <div class="external-event {{ $eventTemplate->color }}">
+                {{ $eventTemplate->name }}
+                <div class="float-right">
+                    <a href="javascript:void(0)" data-click="calendar::events_template_delete" data-params="{{ $eventTemplate->id }}" class="btn btn-link btn-sm p-0"><i class="fas fa-trash"></i></a>
+                </div>
+            </div>
+        @endforeach
         <div class="checkbox">
             <label for="drop-remove">
                 <input type="checkbox" id="drop-remove">

@@ -4,26 +4,31 @@ import axios from 'axios'
 navigator.serviceWorker.register('/adminSw.js');
 
 function enableNotifications () {
-    if (Notification.permission !== 'granted') {
-    }
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            // get service worker
-            navigator.serviceWorker.ready.then(sw => {
-                // subscrie
-                sw.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: document.querySelector('[name="notification-server-key"]').getAttribute('content')
-                }).then(subscription => {
-                    //console.log(JSON.stringify(subscription))
-                    axios.post(window.update_notification_browser_settings, {
-                        settings: subscription,
-                        _token: exec('token')
-                    })
-                });
+    const componentWithKey = document.querySelector('[name="notification-server-key"]');
+
+    if (componentWithKey) {
+        const key = componentWithKey.getAttribute('content');
+        if (key) { //  && Notification.permission !== 'granted'
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    // get service worker
+                    navigator.serviceWorker.ready.then(sw => {
+                        // subscrie
+                        sw.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: key
+                        }).then(subscription => {
+                            //console.log(JSON.stringify(subscription))
+                            axios.post(window.update_notification_browser_settings, {
+                                settings: subscription,
+                                _token: exec('token')
+                            })
+                        });
+                    });
+                }
             });
         }
-    });
+    }
 }
 
 enableNotifications();

@@ -31,7 +31,7 @@ class ApplicationConfig extends ConfigExtensionProvider
     {
         return [
             '<meta name="csrf-token" content="'.csrf_token().'">',
-            '<meta name="notification-server-key" content="'.config('admin-notification.public-key').'">'
+            config('admin.calendar') ? '<meta name="notification-server-key" content="'.config('admin-notification.public-key').'">' : ''
         ];
     }
 }

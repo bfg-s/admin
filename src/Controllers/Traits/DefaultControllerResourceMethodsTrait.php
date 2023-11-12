@@ -120,14 +120,15 @@ trait DefaultControllerResourceMethodsTrait
 
 
         if ($updated) {
-            admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
             $repo = app(AdminRepository::class);
-            Respond::glob()->put('alert::success', __('admin.saved_successfully'));
             admin()->notifyMe(
-                __('admin.success'),
                 __('admin.saved_successfully'),
+                trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'),
                 route($repo->now->getRoute() . '.show', [$this->model()->{$this->model()->getRouteKeyName()}])
             );
+            admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
+
+            Respond::glob()->put('alert::success', __('admin.saved_successfully'));
         } else {
             admin_log_danger('Update error', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
             Respond::glob()->put('alert::error', __('admin.unknown_error'));
@@ -165,8 +166,8 @@ trait DefaultControllerResourceMethodsTrait
             $repo = app(AdminRepository::class);
             Respond::glob()->put('alert::success', __('admin.saved_successfully'));
             admin()->notifyMe(
-                __('admin.success'),
                 __('admin.saved_successfully'),
+                trim(get_class($this->model()), '\\'),
                 route($repo->now->getRoute() . '.show', [$stored->id])
             );
             admin_log_success('Create successfully', trim(get_class($this->model()), '\\'), 'fas fa-save');
@@ -211,15 +212,15 @@ trait DefaultControllerResourceMethodsTrait
                     admin_log_danger('Successfully force deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-eraser');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
                     admin()->notifyMe(
-                        __('admin.success'),
-                        __('admin.successfully_deleted')
+                        __('admin.successfully_deleted'),
+                        $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key
                     );
                 } elseif ($model->delete()) {
                     admin_log_danger('Successfully deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
                     admin()->notifyMe(
-                        __('admin.success'),
-                        __('admin.successfully_deleted')
+                        __('admin.successfully_deleted'),
+                        $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key
                     );
                 } else {
                     Respond::glob()->put('alert::error', __('admin.unknown_error'));

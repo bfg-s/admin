@@ -1,7 +1,7 @@
-function _call (execute, target, ...params) {
+function _call (execute, target, event, ...params) {
     if (Array.isArray(execute)) {
         for (let i = 0; i <= (execute.length - 1); i++) {
-            _call(execute[i], target);
+            _call(execute[i], target, event);
         }
     } else if (typeof execute === 'object') {
         const listKeys = Object.keys(execute);
@@ -9,9 +9,9 @@ function _call (execute, target, ...params) {
             const key = listKeys[i];
             const val = execute[key];
             if (Array.isArray(val)) {
-                _call(key, target, ...val);
+                _call(key, target, event, ...val);
             } else {
-                _call(key, target, val);
+                _call(key, target, event, val);
             }
         }
     } else if (typeof execute === 'string') {
@@ -22,7 +22,7 @@ function _call (execute, target, ...params) {
 
         if (typeof executeFunction === 'function') {
 
-            return executeFunction.bind({target: target})(...params);
+            return executeFunction.bind({target, event})(...params);
         } else {
             console.error(`Function [${execute}] not found in library!`);
         }
@@ -64,7 +64,7 @@ window.updateInits = () => {
 
             }
 
-            _call(fn, e, ...params);
+            _call(fn, e, null, ...params);
 
             e.dataLoaded = true;
         }
@@ -83,7 +83,7 @@ $(document).on('click', '[data-click]', function (e) {
     if (typeof params === 'string') {
         try {
             params = JSON.parse(params);
-        } catch (e) {
+        } catch (err) {
             params = String(params).split('&&');
         }
     }
@@ -96,18 +96,18 @@ $(document).on('click', '[data-click]', function (e) {
     for (let i = 0; i <=  params.length - 1; i++) {
         try {
             params[i] = JSON.parse(params[i]);
-        }  catch (e) {
+        }  catch (err) {
 
         }
     }
 
     try {
         fn = JSON.parse(fn);
-    }  catch (e) {
+    }  catch (err) {
 
     }
 
-    _call(fn, target, ...params);
+    _call(fn, target, e, ...params);
 });
 
 
@@ -124,7 +124,7 @@ $(document).on('change', '[data-change]', function (e) {
     if (typeof params === 'string') {
         try {
             params = JSON.parse(params);
-        } catch (e) {
+        } catch (err) {
             params = String(params).split('&&');
         }
     }
@@ -137,16 +137,16 @@ $(document).on('change', '[data-change]', function (e) {
     for (let i = 0; i <=  params.length - 1; i++) {
         try {
             params[i] = JSON.parse(params[i]);
-        }  catch (e) {
+        }  catch (err) {
 
         }
     }
 
     try {
         fn = JSON.parse(fn);
-    }  catch (e) {
+    }  catch (err) {
 
     }
 
-    _call(fn, target, ...params);
+    _call(fn, target, e, ...params);
 });

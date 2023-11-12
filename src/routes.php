@@ -31,6 +31,13 @@ Route::group([], function (Router $route) {
     $route->post('load_lives', [SystemController::class, 'load_lives'])->name('load_lives');
     $route->post('load_chart_js', [SystemController::class, 'load_chart_js'])->name('load_chart_js');
     $route->post('translate', [SystemController::class, 'translate'])->name('translate');
+    $route->post('calendar_data', [SystemController::class, 'calendarData'])->name('calendar_data');
+    $route->post('calendar_event', [SystemController::class, 'calendarEvent'])->name('calendar_event');
+    $route->delete('drop_event', [SystemController::class, 'dropEvent'])->name('drop_event');
+    $route->post('add_new_event_template', [SystemController::class, 'addNewEventTemplate'])
+        ->name('add_new_event_template');
+    $route->delete('drop_event_template', [SystemController::class, 'dropEventTemplate'])
+        ->name('drop_event_template');
     $route->post('update_notification_browser_settings', [SystemController::class, 'updateNotificationBrowserSettings'])
         ->name('update_notification_browser_settings');
 });
@@ -58,11 +65,16 @@ Route::group([], function (Router $route) {
 
         \Admin\Facades\NavigateFacade::item('admin.dashboard', 'dashboard')
             ->action([class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class, 'index'])
-            ->icon_tachometer_alt();
+            ->icon_tachometer_alt()
+            ->dontUseSearch();
 
-        \Admin\Facades\NavigateFacade::item('admin.calendar', 'calendar')
-            ->action([class_exists($app_calendar_controller) ? $app_calendar_controller : CalendarController::class, 'index'])
-            ->icon_calendar();
+        if (config('admin.calendar')) {
+
+            \Admin\Facades\NavigateFacade::item('admin.calendar', 'calendar')
+                ->action([class_exists($app_calendar_controller) ? $app_calendar_controller : CalendarController::class, 'index'])
+                ->icon_calendar()
+                ->dontUseSearch();
+        }
     }
 
     $route->namespace(admin_app_namespace('Controllers'))->group(static function (Router $route) {

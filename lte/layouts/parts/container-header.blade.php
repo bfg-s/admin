@@ -31,6 +31,9 @@
             @php($first = admin_repo()->menuList->first())
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item active">
+                        {{ config('app.name') }}
+                    </li>
                     @if (isset($breadcrumb) && is_array($breadcrumb) && count($breadcrumb))
                         @foreach($breadcrumb as $item)
                             @if (is_array($item))
@@ -48,15 +51,12 @@
                             @endif
                         @endforeach
                     @else
-                        @if (admin_repo()->nowParents->count() && $first['id'] !== $menu->getId())
-                            <li class="breadcrumb-item active">
-                                {{ config('app.name') }}
-                            </li>
-                            @if ($first['title'])
-                                <li class="breadcrumb-item">
-                                        {!! __($first['title']) !!}
-                                </li>
-                            @endif
+                        @if (admin_repo()->nowParents->count())
+{{--                            @if ($first['title'])--}}
+{{--                                <li class="breadcrumb-item">--}}
+{{--                                        {!! __($first['title']) !!}--}}
+{{--                                </li>--}}
+{{--                            @endif--}}
                             @foreach(admin_repo()->nowParents->reverse() as $item)
                                 <li class="breadcrumb-item {{$loop->last ? '' : 'active'}}">
                                     {!! __($item['title']) !!}

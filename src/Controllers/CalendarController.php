@@ -36,17 +36,18 @@ class CalendarController extends Controller
         Admin\Delegates\Column $column,
     ) {
         return $page->row(
-            $row->column(3)->row(
-                $row->column(12)->card(
-                    $card->title('Draggable Events'),
-                    $card->view('controllers.calendar-events'),
-                ),
-                $row->column(12)->card(
-                    $card->title('Create Event'),
-                    $card->view('controllers.calendar-create-event'),
-                ),
-            ),
-            $row->column(9)->card(
+//            $row->column(3)->row(
+//                $row->addClass('sticky-top'),
+//                $row->column(12)->card(
+//                    $card->title('Events'),
+//                    $card->view('controllers.calendar-events'),
+//                ),
+//                $row->column(12)->card(
+//                    $card->title('Create Event'),
+//                    $card->view('controllers.calendar-create-event'),
+//                ),
+//            ),
+            $row->column(12)->card(
                 $card->title(__('admin.user_statistics')),
                 $card->card_body(
                     $cardBody->div()->setDatas(['load' => 'calendar'])

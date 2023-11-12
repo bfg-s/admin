@@ -44,6 +44,8 @@ use Laravel\Fortify\Fortify;
  * @property-read int|null $notifications_count
  * @property-read Collection|\Admin\Models\AdminRole[] $roles
  * @property-read Collection|\Admin\Models\AdminBrowser[] $browsers
+ * @property-read Collection|\Admin\Models\AdminEventTemplate[] $eventsTemplates
+ * @property-read Collection|\Admin\Models\AdminEvent[] $events
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser makeDumpedModel()
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser newModelQuery()
@@ -110,6 +112,22 @@ class AdminUser extends Model implements AuthenticatableContract
     public function browsers(): HasMany
     {
         return $this->hasMany(AdminBrowser::class, 'admin_user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function eventsTemplates(): HasMany
+    {
+        return $this->hasMany(AdminEventTemplate::class, 'admin_user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(AdminEvent::class, 'admin_user_id', 'id');
     }
 
     /**

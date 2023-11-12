@@ -8,15 +8,19 @@ use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
 use Admin\Middlewares\BrowserDetectMiddleware;
+use Admin\Requests\CalendarEventRequest;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
+use Admin\Requests\DropEventTemplateRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\NestableSaveRequest;
+use Admin\Requests\NewEventTemplateRequest;
 use Admin\Requests\NotificationSettingsRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
 use Admin\Respond;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
@@ -381,6 +385,78 @@ class SystemController extends Controller
                 'notification_settings' => $request->settings
             ]);
         }
+    }
+
+    /**
+     * @param  NewEventTemplateRequest  $request
+     * @return Model
+     */
+    public function addNewEventTemplate(NewEventTemplateRequest $request): Model
+    {
+        return admin()->eventsTemplates()->create([
+            'name' => $request->name,
+            'color' => $request->color,
+        ]);
+    }
+
+    /**
+     * @param  DropEventTemplateRequest  $request
+     * @return int|null
+     */
+    public function dropEventTemplate(DropEventTemplateRequest $request): ?int
+    {
+        return admin()->eventsTemplates()->find($request->id)?->delete();
+    }
+
+    public function calendarData()
+    {
+        return admin()->events;
+    }
+
+    public function calendarEvent(CalendarEventRequest $request)
+    {
+        $data = [];
+
+        if ($request->title) {
+            $data['title'] = $request->title;
+        }
+
+        if ($request->description) {
+            $data['description'] = $request->description == 'null' ? null : $request->description;
+        }
+
+        if ($request->url) {
+            $data['url'] = $request->url == 'null' ? null : $request->url;
+        }
+
+        $start = Carbon::parse($request->start);
+        $end = $request->end
+            ? Carbon::parse($request->end)
+            : ($start->hour ? Carbon::parse($request->start)->addHour() : Carbon::parse($request->start));
+
+//        if ($end->hour === 0) {
+//            $end = $end->endOfDay();
+//        }
+
+        $data['start'] = Carbon::parse($start)->setTimezone('UTC');
+        $data['end'] = Carbon::parse($end)->setTimezone('UTC');
+
+        if ($request->id) {
+            $result = admin()->events()->find($request->id);
+            $result?->update($data);
+            return $result;
+        } else {
+            return admin()->events()->create($data);
+        }
+    }
+
+    /**
+     * @param  DropEventTemplateRequest  $request
+     * @return int|null
+     */
+    public function dropEvent(DropEventTemplateRequest $request): ?int
+    {
+        return admin()->events()->find($request->id)?->delete();
     }
 
     /**

@@ -36,7 +36,7 @@ $(document).on("pjax:popstate", () => {
     $(document).on("pjax:end", (event) => {
 
         $(event.target).find("script[data-exec-on-popstate]").each(function () {
-            console.log(1);
+
             $.globalEval(this.text || this.textContent || this.innerHTML || '');
         });
     });
@@ -59,7 +59,6 @@ $(document).on('pjax:beforeReplace', (a, b, c, d) => {
 });
 
 $(document).on('pjax:complete', (xhr, req, status) => {
-    console.log(2);
     if (window.initedVueForPjsxMoveDestroy && Array.isArray(window.initedVueForPjsxMoveDestroy)) {
         for (let i = 0; i <= window.initedVueForPjsxMoveDestroy.length - 1; i++) {
             if (window.initedVueForPjsxMoveDestroy[i]) {

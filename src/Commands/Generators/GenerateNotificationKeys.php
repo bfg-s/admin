@@ -22,18 +22,23 @@ class GenerateNotificationKeys implements AdminHelpGeneratorInterface
     public function handle(Command $command)
     {
         try {
-            $result = VAPID::createVapidKeys();
-
             $input = file_get_contents(app()->environmentFilePath());
+
+            if (
+                ! str_contains($input, 'ADMIN_NOTIFICATION_PUBLIC_KEY')
+                || ! str_contains($input, 'ADMIN_NOTIFICATION_PRIVATE_KEY')
+            ) {
+                $result = VAPID::createVapidKeys();
+            }
 
             $edited = false;
 
-            if (! str_contains($input, 'ADMIN_NOTIFICATION_PUBLIC_KEY')) {
+            if (! str_contains($input, 'ADMIN_NOTIFICATION_PUBLIC_KEY') && isset($result)) {
                 $input .= "\nADMIN_NOTIFICATION_PUBLIC_KEY=" . $result['publicKey'];
                 $edited = true;
             }
 
-            if (! str_contains($input, 'ADMIN_NOTIFICATION_PRIVATE_KEY')) {
+            if (! str_contains($input, 'ADMIN_NOTIFICATION_PRIVATE_KEY') && isset($result)) {
                 $input .= "\nADMIN_NOTIFICATION_PRIVATE_KEY=" . $result['privateKey']."\n";
                 $edited = true;
             }

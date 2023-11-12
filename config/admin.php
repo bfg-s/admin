@@ -68,6 +68,11 @@ return [
     'force-2fa' => false,
 
     /**
+     * Enable calendar in to admin and enable Service Worker notifications
+     */
+    'calendar' => true,
+
+    /**
      * Authentication settings for all admin pages. Include an authentication
      * guard and a user provider setting of authentication driver.
      */
