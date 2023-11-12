@@ -231,7 +231,6 @@ return [
     'instructions' => 'Instructions',
     'group' => 'Group',
     'type' => 'Type',
-
     'permission_instruction_title_1' => 'A tool for controlling and issuing access to certain administration roles. Rights are granted as follows:',
     'permission_instruction_body_1' => 'Consider the example of the Administration tool, go to this page and look at the url, for example, there is such a `'.url(config('admin.route.prefix') . '/administration/admin_user').'`, In order to close access to this page, you must do the following:',
     'permission_instruction_title_2' => 'Go to `Administration/Permissions` and click on the `Add` button. Below is a step-by-step guide to filling out the form:',
@@ -246,9 +245,6 @@ return [
 3. `State` - Here we indicate the behavior of our new rule, it will either deny access or open it, in our case we need to close it, so we select the `Close` item.
 4. `Role` - Specify which role this rule is for. In our case, we select the `Moderator`.
 5. `Active` - The current state of the rule, it can be turned off and it will not be taken into account.",
-
-
-
     '2fa_secure' => '2fa Secure',
     '2fa_secure_not_enable_title' => 'You have not enabled two factor authentication.',
     '2fa_secure_not_enable_info' => "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.",
@@ -275,4 +271,6 @@ return [
     'the_ogin_user_is_authorized_in_the_system' => 'The :login user is authorized in the system',
     'success' => 'Success',
     'instruction' => 'Instruction',
+    'month_calendar_events' => 'Month calendar events',
+    'calendar_events' => 'Calendar events',
 ];

@@ -239,7 +239,7 @@ class ChartJsComponent extends Component
     {
         return $this->prepareData(static function ($model) use ($atColumn, $format) {
             return ($model instanceof Collection ? $model : $model->get())
-                ->groupBy(static function (Model $model) use ($atColumn, $format) {
+                ->sortBy($atColumn)->groupBy(static function (Model $model) use ($atColumn, $format) {
                 return ($model->{$atColumn} instanceof Carbon ? $model->{$atColumn} : Carbon::parse($model->{$atColumn}))->format($format);
             });
         });
