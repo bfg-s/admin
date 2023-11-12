@@ -167,7 +167,7 @@ class AdminRepository extends Repository
             }
             $all = $request->query();
             foreach ($all as $key => $item) {
-                if (str_starts_with($key, '_') || $key == 'format' || $key == 'q') {
+                if (str_starts_with($key, '_') || $key == 'format') {
                     unset($all[$key]);
                 }
             }
