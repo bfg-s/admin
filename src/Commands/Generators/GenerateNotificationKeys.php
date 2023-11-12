@@ -2,14 +2,9 @@
 
 namespace Admin\Commands\Generators;
 
-use Admin\Page;
-use ErrorException;
 use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\ClassEntity;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Minishlink\WebPush\VAPID;
-use ReflectionClass;
 
 class GenerateNotificationKeys implements AdminHelpGeneratorInterface
 {

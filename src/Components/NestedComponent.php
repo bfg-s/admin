@@ -2,7 +2,6 @@
 
 namespace Admin\Components;
 
-use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -264,7 +263,6 @@ class NestedComponent extends Component
         }
 
         $this->model = $this->model->get();
-        $this->model = $this->maxDepth > 1 ? $this->model->whereNull($this->parent_field) : $this->model;
 
         $this->attr('data-order-field', $this->order_by_field);
     }
@@ -280,6 +278,7 @@ class NestedComponent extends Component
             'cc' => $this->custom_controls,
             'menu' => $this->menu,
             'title_field' => $this->title_field,
+            'parent_field' => $this->parent_field,
             'maxDepth' => $this->maxDepth,
             'buttons' => function ($item, $cc_access, $cc) {
                 $group = ButtonsComponent::create();
