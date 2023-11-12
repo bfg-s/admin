@@ -120,7 +120,7 @@ class DashboardController extends Controller
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
 
-                                $adminLogs = admin()->logs()->get(['title'])->map(
+                                $adminLogs = admin()->logs()->where('title', '!=', 'Loaded page')->get(['title'])->map(
                                     fn (Admin\Models\AdminLog $log) => ['name' => $log->title]
                                 )->groupBy('name')->map(
                                     fn (Collection $collection) => $collection->count()
