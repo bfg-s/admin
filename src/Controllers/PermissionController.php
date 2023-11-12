@@ -2,6 +2,7 @@
 
 namespace Admin\Controllers;
 
+use Admin\Delegates\Accordion;
 use Admin\Delegates\Alert;
 use Illuminate\Support\Str;
 use Lang;
@@ -68,9 +69,10 @@ class PermissionController extends Controller
      * @param  Page  $page
      * @param  Card  $card
      * @param  Form  $form
+     * @param  Accordion  $accordion
      * @return Page
      */
-    public function matrix(Page $page, Card $card, Form $form)
+    public function matrix(Page $page, Card $card, Form $form, Accordion $accordion)
     {
         return $page
             ->card(
@@ -93,8 +95,14 @@ class PermissionController extends Controller
                     $form->ifEdit()->info_updated_at(),
                     $form->ifEdit()->info_created_at(),
                 ),
-                $card->card_body()->p()->appEnd(Str::markdown(__('admin.permission_instruction'))),
                 $card->footer_form(),
+            )->divider(__('admin.instruction'))->accordion(
+                $accordion->body(Str::markdown(__('admin.permission_instruction_title_1')))
+                    ->text(Str::markdown(__('admin.permission_instruction_body_1')))
+                    ->successType(),
+                $accordion->body(Str::markdown(__('admin.permission_instruction_title_2')))
+                    ->text(Str::markdown(__('admin.permission_instruction_body_2')))
+                    ->dangerType(),
             );
     }
 
@@ -102,9 +110,10 @@ class PermissionController extends Controller
      * @param  Page  $page
      * @param  Card  $card
      * @param  ModelInfoTable  $modelInfoTable
+     * @param  Alert  $alert
      * @return Page
      */
-    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable, Alert $alert)
+    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable, Alert $alert): Page
     {
         return $page
             ->card(

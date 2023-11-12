@@ -171,6 +171,7 @@ abstract class Component implements Renderable
         'divider' => DividerComponent::class,
         'template' => TemplateComponent::class,
         'template_area' => TemplateAreaComponent::class,
+        'accordion' => AccordionComponent::class,
 
         /**
          * Small components
