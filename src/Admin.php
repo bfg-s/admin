@@ -262,10 +262,15 @@ class Admin
             $select = $segment;
         } else if (request()->cookie('lang')) {
             $lang = request()->cookie('lang');
-            $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
 
-            if (in_array($lang, config('layout.languages'))) {
+            if (in_array($lang, config('admin.languages', ['en', 'uk', 'ru']))) {
                 $select = $lang;
+            } else {
+                $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
+
+                if (in_array($lang, config('layout.languages'))) {
+                    $select = $lang;
+                }
             }
         }
 

@@ -28,6 +28,7 @@ use Illuminate\Routing\RouteRegistrar;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -66,6 +67,8 @@ class ServiceProvider extends ServiceProviderIlluminate
      */
     public function boot(): void
     {
+        URL::defaults(['adminLang' => AdminFacade::nowLang()]);
+
         /**
          * Register app routes.
          */
@@ -207,7 +210,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         $middlewares = ['web', 'admin-auth', DomMiddleware::class];
 
         if (config('admin.lang_mode', true)) {
-            $route = $route->prefix(AdminFacade::nowLang() . '/' . config('admin.route.prefix'));
+            $route = $route->prefix('{adminLang}/' . config('admin.route.prefix'));
             $middlewares[] = LanguageMiddleware::class;
         } else {
             $route = $route->prefix(config('admin.route.prefix'));
