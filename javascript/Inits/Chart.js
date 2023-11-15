@@ -13,7 +13,7 @@ window.libs['chart::js'] = function ($parameters) {
     if ($parameters.loading) {
 
         $(`#${$parameters.loaderId}`).show();
-        NProgress.start();
+
         axios.post(window.load_chart_js + location.search, {name: $parameters.name, _build_modal: 1, _token: exec('token')})
             .then(d => {
                 const data = d.data;
@@ -24,8 +24,6 @@ window.libs['chart::js'] = function ($parameters) {
                 chart.options = data.options;
                 chart.update();
                 $(`#${$parameters.loaderId}`).hide();
-            }).finally(d => {
-            NProgress.done();
-        });
+            });
     }
 };

@@ -112,7 +112,6 @@ Alpine.data('adminModals', (load_modal) => ({
             } else {
                 this.loading = true;
                 let modal = el.modal;
-                NProgress.start();
                 axios.post(this.load_modal,  {
                     _modal: modal.handle,
                     _modal_id: modal.key,
@@ -124,8 +123,6 @@ Alpine.data('adminModals', (load_modal) => ({
                     exec(data);
                     this.loading = false;
                     this[after](key);
-                }).finally(d => {
-                    NProgress.done();
                 });
             }
         }
@@ -138,7 +135,7 @@ Alpine.data('adminModals', (load_modal) => ({
                 modal.params = {};
             }
             this.loading = true;
-            NProgress.start();
+
             axios.post(this.load_modal,  {
                 _modal: modal.handle,
                 _modal_id: modal.key,
@@ -180,7 +177,6 @@ Alpine.data('adminModals', (load_modal) => ({
                 if (this.refresh_events[key]) {
                     this.refresh_events[key].addEventListener('click', this.refresh.bind(this));
                 }
-                NProgress.done();
             });
         }
     },

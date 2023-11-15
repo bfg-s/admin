@@ -19,12 +19,9 @@ function enableNotifications () {
                             applicationServerKey: key
                         }).then(subscription => {
                             //console.log(JSON.stringify(subscription))
-                            NProgress.start();
                             axios.post(window.update_notification_browser_settings, {
                                 settings: subscription,
                                 _token: exec('token')
-                            }).finally(d => {
-                                NProgress.done();
                             })
                         });
                     });
