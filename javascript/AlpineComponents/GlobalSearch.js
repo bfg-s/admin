@@ -123,7 +123,7 @@ Alpine.data('globalSearch', () => ({
         if (this.q.length) {
 
             this.links.forEach((link, ind) => {
-
+                NProgress.start();
                 axios.get(String(link.href), {
                     params: {q: this.q, format: 'json'}
                 }).then((r) => {
@@ -157,6 +157,8 @@ Alpine.data('globalSearch', () => ({
                             this.created_with_q = false;
                         }
                         this.rc++;
+                    }).finally(d => {
+                        NProgress.done();
                     });
             });
         }

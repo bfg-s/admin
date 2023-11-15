@@ -71,7 +71,7 @@ window.libs['calendar'] = function () {
             });
 
             if (formValues) {
-
+                NProgress.start();
                 axios.post(window.calendar_event, {
                     title: formValues.title,
                     description: formValues.desc,
@@ -86,6 +86,8 @@ window.libs['calendar'] = function () {
                     } else {
                         Swal.fire('Error', '', 'error');
                     }
+                }).finally(d => {
+                    NProgress.done();
                 })
             }
         },
@@ -103,11 +105,14 @@ window.libs['calendar'] = function () {
                 confirmButtonText: 'Delete event',
             }).then(r => {
                 if (r.isConfirmed) {
+                    NProgress.start();
                     axios.delete(window.drop_event, {params: {
                         _token: exec('token'),
                         id: info.event.toJSON().id,
                     }}).then(d => {
                         calendar.refetchEvents();
+                    }).finally(d => {
+                        NProgress.done();
                     })
                 }
             });
@@ -115,7 +120,7 @@ window.libs['calendar'] = function () {
         editable  : true,
         droppable : false,
         eventDrop: function(info) {
-
+            NProgress.start();
             axios.post(window.calendar_event, {
                 id: info.event.toJSON().id,
                 start: info.event.toJSON().start,
@@ -127,10 +132,12 @@ window.libs['calendar'] = function () {
                 } else {
                     Swal.fire('Error', '', 'error');
                 }
+            }).finally(d => {
+                NProgress.done();
             })
         },
         eventResize: function(info) {
-
+            NProgress.start();
             axios.post(window.calendar_event, {
                 id: info.event.toJSON().id,
                 start: info.event.toJSON().start,
@@ -142,6 +149,8 @@ window.libs['calendar'] = function () {
                 } else {
                     Swal.fire('Error', '', 'error');
                 }
+            }).finally(d => {
+                NProgress.done();
             })
         },
         drop: function(info) {
@@ -149,7 +158,7 @@ window.libs['calendar'] = function () {
                 info.draggedEl.querySelector('[data-click="calendar::events_template_delete"]').click();
                 $(checkbox).prop('checked', false);
             }
-            console.log('drop', info, lastData, this);
+            NProgress.start();
             axios.post(window.calendar_event, {
                 title: lastData.title,
                 backgroundColor: lastData.backgroundColor,
@@ -157,6 +166,8 @@ window.libs['calendar'] = function () {
                 textColor: lastData.textColor,
                 start: info.dateStr,
                 _token: exec('token')
+            }).finally(d => {
+                NProgress.done();
             });
         }
     });

@@ -43,7 +43,7 @@ window.libs['select2::ajax'] =  function () {
                 });
 
                 new_params['_build_modal'] = 1;
-
+                NProgress.start();
                 axios.get(window.location.href, {params: new_params})
                     .then((data) => {
                         let d = data.data.split("\n");
@@ -54,7 +54,9 @@ window.libs['select2::ajax'] =  function () {
 
                         }
                         success(d);
-                    }).catch(() => failure());
+                    }).catch(() => failure()).finally(d => {
+                    NProgress.done();
+                });
             }
         }
     });

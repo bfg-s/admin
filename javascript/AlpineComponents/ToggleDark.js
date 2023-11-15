@@ -5,8 +5,11 @@ Alpine.data('toggleDark', (url) => ({
     },
 
     toggle () {
+        NProgress.start();
         axios.post(this.url, {
             _token: exec('token')
-        }).then(data => exec(data.data));
+        }).then(data => exec(data.data)).finally(d => {
+            NProgress.done();
+        });
     }
 }));

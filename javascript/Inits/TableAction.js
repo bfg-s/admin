@@ -39,6 +39,7 @@ window.libs['table_action'] = function () {
                     exec(commandJson);
                 }, 100);
             } else {
+                NProgress.start();
                 axios.post(target.dataset.route, {
                     _token: exec('token'),
                     class: target.dataset.object,
@@ -48,6 +49,8 @@ window.libs['table_action'] = function () {
                     orderType: target.dataset.orderType
                 }).then(data => {
                     exec(data.data);
+                }).finally(d => {
+                    NProgress.done();
                 })
             }
             setTimeout(() => {

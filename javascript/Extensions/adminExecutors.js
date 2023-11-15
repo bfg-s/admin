@@ -68,6 +68,7 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
                 params[name] = value;
         });
 
+        NProgress.start();
         axios.post(window.load_lives, {
             _token: exec('token'),
             ...params
@@ -84,7 +85,9 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
                 });
                 window.updateInits();
             }
-        }));
+        })).finally(d => {
+            NProgress.done();
+        });
     }
 };
 
@@ -104,6 +107,7 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
             val = $(`#${inputId}`).val();
         }
 
+        NProgress.start();
         axios.post(window.custom_save, {
             _token: exec('token'),
             model: model,
@@ -112,23 +116,31 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
             val: val
         }).then(data => {
             exec(data.data);
+        }).finally(d => {
+            NProgress.done();
         });
     }, 100);
 };
 
 window.libs['admin::call_callback'] = function (key, parameters) {
+    NProgress.start();
     axios.post(window.call_callback, {
         _token: exec('token'), key, parameters
     }).then(data => {
         exec(data.data);
+    }).finally(d => {
+        NProgress.done();
     })
 };
 
 window.libs['admin::delete_item'] = function (title, url) {
 
     exec('alert::confirm', title, () => {
+        NProgress.start();
         axios.delete(url).then(data => {
             exec(data.data);
+        }).finally(d => {
+            NProgress.done();
         });
     });
 }
@@ -181,7 +193,10 @@ window.libs['admin::translate'] = function (toLang) {
         input = field.querySelector('select');
     }
 
+    NProgress.start();
     axios.post(window.translate, {toLang, data: $(input).val(), _token: exec('token')}).then(
         d => $(input).val(d.data)
-    )
+    ).finally(d => {
+        NProgress.done();
+    })
 };

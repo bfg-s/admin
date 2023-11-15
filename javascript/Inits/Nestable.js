@@ -3,7 +3,7 @@ window.libs['nestable'] = function () {
         maxDepth: this.target.dataset.maxDepth ? this.target.dataset.maxDepth : 15
     }).on('change', (e) => {
         let list = $(e.target);
-
+        NProgress.start();
         axios.post(e.target.dataset.route, {
             _token: exec('token'),
             model: e.target.dataset.model,
@@ -13,6 +13,8 @@ window.libs['nestable'] = function () {
             order_field: e.target.dataset.orderField,
         }).then(data => {
             exec(data.data);
+        }).finally(d => {
+            NProgress.done();
         });
     });
 
