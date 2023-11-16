@@ -109,7 +109,7 @@ $(document).on('pjax:start', function (event) {
     $(tooltip_selector).tooltip('dispose');
 });
 
-window.NProgress.configure({parent: '#admin-content'});
+window.NProgress.configure({parent: '.loadedContent'});
 
 $(document).on('change', '[name]', (e) => {
     let obj = e.target;

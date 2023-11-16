@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav @class(['main-header', 'navbar', 'navbar-expand', 'navbar-dark' => admin_repo()->isDarkMode, 'navbar-white navbar-light' => !admin_repo()->isDarkMode])>
+<nav @class(['main-header loadedContent', 'navbar', 'navbar-expand', 'navbar-dark' => admin_repo()->isDarkMode, 'navbar-white navbar-light' => !admin_repo()->isDarkMode])>
     <!-- Left navbar links -->
     <ul class="navbar-nav" @updateWithPjax>
         <li class="nav-item">
