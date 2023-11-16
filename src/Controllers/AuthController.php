@@ -119,7 +119,7 @@ class AuthController
             $root
                 ?->notifyMe(
                     __('admin.is_online'),
-                    __('the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
+                    __('admin.the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
                     route('admin.administration.admin_user.show', Auth::guard('admin')->id())
                 );
 
@@ -134,7 +134,7 @@ class AuthController
             $root
                 ?->notifyMe(
                     __('admin.is_online'),
-                    __('the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
+                    __('admin.the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
                     route('admin.administration.admin_user.show', Auth::guard('admin')->id())
                 );
 
