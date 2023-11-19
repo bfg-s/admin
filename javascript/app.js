@@ -1,12 +1,14 @@
 import 'nprogress/nprogress.css';
 import axios from 'axios'
 
-navigator.serviceWorker.register('/adminSw.js');
+if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/adminSw.js');
+}
 
 function enableNotifications () {
     const componentWithKey = document.querySelector('[name="notification-server-key"]');
 
-    if (componentWithKey) {
+    if (componentWithKey && navigator.serviceWorker) {
         const key = componentWithKey.getAttribute('content');
         if (key) { //  && Notification.permission !== 'granted'
             Notification.requestPermission().then(permission => {
