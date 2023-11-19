@@ -202,7 +202,7 @@ class DashboardController extends Controller
             __('admin.admin_version') => '<span class="badge badge-dark">v'.versionString(Admin::version()).'</span>',
             __('admin.timezone') => config('app.timezone'),
             __('admin.language') => config('app.locale'),
-            __('admin.languages_involved') => implode(', ', config('layout.languages')),
+            __('admin.languages_involved') => implode(', ', config('admin.languages')),
             __('admin.env') => config('app.env'),
             __('admin.url') => config('app.url'),
             __('admin.users') => number_format($user_model::count(), 0, '', ','),
