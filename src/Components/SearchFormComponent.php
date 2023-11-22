@@ -30,6 +30,7 @@ use Admin\Traits\SearchFormConditionRulesTrait;
 use Admin\Traits\SearchFormHelpersTrait;
 
 /**
+ * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
  * @mixin SearchFormComponentMethods
  * @mixin SearchFormComponentFields
  */
