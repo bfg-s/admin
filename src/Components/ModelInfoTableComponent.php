@@ -11,6 +11,7 @@ use Admin\Controllers\Controller;
 use Throwable;
 
 /**
+ * @methods Admin\Components\ModelTableComponent::$extensions (...$params) static
  * @mixin ModelInfoTableComponentFields
  * @mixin ModelInfoTableComponentMethods
  */

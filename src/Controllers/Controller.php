@@ -223,4 +223,15 @@ class Controller extends BaseController
 
         return request($path, $default);
     }
+
+    public static function getHelpMethodList()
+    {
+        $result = self::$explanation_list;
+        foreach ($result as $key => $extension) {
+            $result[$key.'_by_request'] = $extension;
+            $result[$key.'_by_default'] = $extension;
+        }
+
+        return $result;
+    }
 }

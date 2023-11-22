@@ -20,6 +20,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
+ * @methods static::$extensions (...$params) static
  * @mixin ModelTableComponentFields
  * @mixin ModelTableComponentMethods
  * @property-read ModelTableComponent $sort
