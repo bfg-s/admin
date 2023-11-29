@@ -51,6 +51,7 @@ JS;
                 'login' => admin()->login,
                 'email' => admin()->email,
                 'name' => admin()->name,
+                'avatar' => admin()->avatar,
                 'roles' => admin()->roles,
             ]);
             $home = route('admin.home');
