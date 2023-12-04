@@ -70,7 +70,7 @@ return [
     /**
      * Enable calendar in to admin and enable Service Worker notifications
      */
-    'calendar' => true,
+    'calendar' => false,
 
     /**
      * Authentication settings for all admin pages. Include an authentication
