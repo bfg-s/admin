@@ -6,6 +6,8 @@ use Closure;
 use Admin\Components\Component;
 use Admin\Components\ModelTableComponent;
 use Admin\ExtendProvider;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\RouteRegistrar;
 
 class ConfigExtensionProvider
@@ -154,5 +156,26 @@ JS;
         return <<<CSS
 
 CSS;
+    }
+
+    /**
+     * Register response callback
+     * @param  Request  $request
+     * @return void
+     */
+    public function middleware(Request $request): void
+    {
+        //
+    }
+
+    /**
+     * Register response callback
+     * @param  Response  $response
+     * @return Response
+     */
+    public function response(Response $response): Response
+    {
+
+        return $response;
     }
 }

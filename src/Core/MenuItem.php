@@ -4,11 +4,12 @@ namespace Admin\Core;
 
 use App;
 use ArrayAccess;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Admin\ExtendProvider;
 
-class MenuItem implements ArrayAccess
+class MenuItem implements ArrayAccess, Arrayable
 {
     protected ?int $id = null; // id
     protected ?int $parent_id = null; // parent_id
@@ -51,6 +52,26 @@ class MenuItem implements ArrayAccess
     protected bool $target = false; // target
     protected bool $active = false; // active
     protected bool $prepend = false; // prepend
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array<TKey, TValue>
+     */
+    public function toArray(): array
+    {
+        $data = [];
+        foreach (get_object_vars($this) as $key => $value) {
+            if ($value !== null && $value !== '' && $value !== [] && ! is_object($value)) {
+                if ($key === 'title') {
+                    $data[$key] = __($value);
+                } else {
+                    $data[$key] = $value;
+                }
+            }
+        }
+        return $data;
+    }
 
     /**
      * @return int|null

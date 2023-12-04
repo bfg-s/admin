@@ -12,11 +12,11 @@ window.libs['str::to_slug'] = function (str, separator = '_') {
 };
 
 window.libs['str::to_st'] = function (str, separator = '_') {
-    return window.libs['str::to_translit'](window.libs['str::to_slug'](str, separator));
+    return window.libs['str::to_translit'].bind(this)(window.libs['str::to_slug'](str, separator));
 };
 
 window.libs['str::slug'] = function (set_to = null, separator = '_') {
-    let str = window.libs['str::translit']();
+    let str = window.libs['str::translit'].bind(this)();
     let result = window.libs['str::to_slug'](str);
 
     if (set_to) {
@@ -56,6 +56,7 @@ window.libs['str::to_translit'] = function (str) {
 };
 
 window.libs['str::translit'] = function (set_to = null) {
+
     let str = this.target.value;
     let result = window.libs['str::to_translit'](str);
 

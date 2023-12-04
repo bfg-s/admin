@@ -2,6 +2,7 @@
 
 namespace Admin\Middlewares;
 
+use Admin\Facades\AdminFacade;
 use Cache;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
@@ -105,6 +106,13 @@ class Authenticate
             return redirect()->route('admin.profile');
         }
 
+        if (static::$access) {
+
+            foreach (AdminFacade::extensions() as $extension) {
+                $extension->config()->middleware($request);
+            }
+        }
+
 
         /** @var Response $response */
         $response = $next($request);
@@ -112,6 +120,13 @@ class Authenticate
         if (! static::$alreadyPost) {
 
             admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'), 'fas fa-file-download');
+        }
+
+        if ($response instanceof Response) {
+
+            foreach (AdminFacade::extensions() as $extension) {
+                $response = $extension->config()->response($response);
+            }
         }
 
         return $response;

@@ -71,82 +71,63 @@ window.updateInits = () => {
     })
 };
 
-$(document).on('click', '[data-click]', function (e) {
-    let target = e.target;
-    if (! target.dataset.click) {
-        target = target.closest('[data-click]');
-    }
-    const data = target.dataset;
-    let fn = data.click;
-    let params = data.params ?? [];
+[
+    'click',
+    'hover',
+    'change',
+    'keyup',
+    'keypress',
+    'keydown',
+    'input',
+    'focus',
+    'blur',
+    'dblclick',
+    'submit',
+    'formchange',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'mousewheel',
+].forEach(eventName => {
+    $(document).on(eventName, `[data-${eventName}]`, function (e) {
 
-    if (typeof params === 'string') {
-        try {
-            params = JSON.parse(params);
-        } catch (err) {
-            params = String(params).split('&&');
+        let target = e.target;
+        if (! target.dataset[eventName]) {
+            target = target.closest(`[data-${eventName}]`);
         }
-    }
+        const data = target.dataset;
+        let fn = data[eventName];
+        let params = data.params ?? [];
 
-    if (! Array.isArray(params)) {
+        if (typeof params === 'string') {
+            try {
+                params = JSON.parse(params);
+            } catch (err) {
+                params = String(params).split('&&');
+            }
+        }
 
-        params = [params];
-    }
+        if (! Array.isArray(params)) {
 
-    for (let i = 0; i <=  params.length - 1; i++) {
+            params = [params];
+        }
+
+        for (let i = 0; i <=  params.length - 1; i++) {
+            try {
+                params[i] = JSON.parse(params[i]);
+            }  catch (err) {
+
+            }
+        }
+
         try {
-            params[i] = JSON.parse(params[i]);
+            fn = JSON.parse(fn);
         }  catch (err) {
 
         }
-    }
 
-    try {
-        fn = JSON.parse(fn);
-    }  catch (err) {
-
-    }
-
-    _call(fn, target, e, ...params);
-});
-
-
-$(document).on('change', '[data-change]', function (e) {
-
-    let target = e.target;
-    if (! target.dataset.change) {
-        target = target.closest('[data-change]');
-    }
-    const data = target.dataset;
-    let fn = data.change;
-    let params = data.params ?? [];
-
-    if (typeof params === 'string') {
-        try {
-            params = JSON.parse(params);
-        } catch (err) {
-            params = String(params).split('&&');
-        }
-    }
-
-    if (! Array.isArray(params)) {
-
-        params = [params];
-    }
-
-    for (let i = 0; i <=  params.length - 1; i++) {
-        try {
-            params[i] = JSON.parse(params[i]);
-        }  catch (err) {
-
-        }
-    }
-
-    try {
-        fn = JSON.parse(fn);
-    }  catch (err) {
-
-    }
-
-    _call(fn, target, e, ...params);
+        _call(fn, target, e, ...params);
+    });
 });
