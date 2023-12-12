@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var Builder|Model|Relation|null
+ */
+
 namespace Admin\Components;
 
 use Admin\BladeDirectives\SystemCssBladeDirective;
@@ -79,9 +83,9 @@ use Illuminate\View\View;
 use Throwable;
 
 /**
- * @methods static::$inputs
- * @mixin Components
- * @mixin ComponentMethods
+ * Renders the component and returns the rendered HTML markup.
+ *
+ * @return View|string The rendered HTML markup.
  */
 abstract class Component implements Renderable
 {
@@ -95,11 +99,15 @@ abstract class Component implements Renderable
     use Conditionable;
 
     /**
+     * The value represents the HTML element to be used. It defaults to 'div' if not specified.
+     *
      * @var string
      */
     protected $element = 'div';
 
     /**
+     * Array of input types and their corresponding classes.
+     *
      * @var array
      */
     public static array $inputs = [
@@ -140,7 +148,11 @@ abstract class Component implements Renderable
     ];
 
     /**
-     * @var array|string[]
+     * An associative array that maps component names to their corresponding class names.
+     * The keys represent the component names, and the values represent the class names.
+     * Each component class is responsible for rendering the HTML markup for that component.
+     *
+     * @var array $components
      */
     public static array $components = [
         'row' => GridRowComponent::class,
@@ -196,21 +208,33 @@ abstract class Component implements Renderable
 
     /**
      * @var array
+     * @desc The variable $scripts holds an array of scripts.
+     *       Each element in the array represents a script file path or URL.
+     *       This variable is used to store and manage a collection of scripts that will be included in the application.
+     *       The array can be empty or can contain multiple elements.
+     *       Each element should be a string representing the path or URL of a script.
+     *       Example:
+     *           $scripts = [
+     *               'js/script1.js',
+     *               'https://external-site.com/script2.js',
+     *               '/path/to/script3.js',
+     *           ];
      */
     protected static array $scripts = [];
 
     /**
-     * @var array
+     * @var array $styles
+     * Contains an array of styles.
      */
     protected static array $styles = [];
 
     /**
-     * @var string|null
+     * @var array|null $regInputs A variable to store registered input data.
      */
     protected static $regInputs = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $class = null;
 

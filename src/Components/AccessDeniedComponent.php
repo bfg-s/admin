@@ -2,6 +2,11 @@
 
 namespace Admin\Components;
 
+/**
+ * Class AccessDeniedComponent
+ *
+ * Represents a component that displays an access denied alert.
+ */
 class AccessDeniedComponent extends Component
 {
     /**
