@@ -85,6 +85,9 @@ use Throwable;
 /**
  * Renders the component and returns the rendered HTML markup.
  *
+ * @methods static::$inputs
+ * @mixin ComponentMethods
+ *
  * @return View|string The rendered HTML markup.
  */
 abstract class Component implements Renderable
