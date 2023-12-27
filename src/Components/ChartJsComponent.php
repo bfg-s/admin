@@ -338,11 +338,10 @@ class ChartJsComponent extends Component
     {
         $isDataList = array_is_list($data);
         $isColorList = $color && isset($color[0]) && is_array($color[0]);
-        $data = ! $isDataList ? [$data] : $data;
+        $data = ! $isDataList || $data === [] ? [$data] : $data;
 
         $this->builder
             ->type($this->type)
-            //->size(['width' => 400, 'height' => $this->size])
             ->labels(collect($data[0])->keys()->toArray());
 
         foreach ($data as $key => $datum) {
