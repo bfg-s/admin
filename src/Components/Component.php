@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @var Builder|Model|Relation|null
- */
-
 namespace Admin\Components;
 
 use Admin\BladeDirectives\SystemCssBladeDirective;
@@ -90,7 +86,7 @@ use Throwable;
  *
  * @return View|string The rendered HTML markup.
  */
-abstract class Component implements Renderable
+abstract class Component extends ComponentInputs
 {
     use FieldMassControlTrait;
     use BuildHelperTrait;
@@ -107,48 +103,6 @@ abstract class Component implements Renderable
      * @var string
      */
     protected $element = 'div';
-
-    /**
-     * Array of input types and their corresponding classes.
-     *
-     * @var array
-     */
-    public static array $inputs = [
-        'input' => Input::class,
-        'password' => PasswordInput::class,
-        'email' => EmailInput::class,
-        'number' => NumberInput::class,
-        'numeric' => NumericInput::class,
-        'amount' => AmountInput::class,
-        'file' => FileInput::class,
-        'image' => ImageInput::class,
-        'switcher' => SwitcherInput::class,
-        'date_range' => DateRangeInput::class,
-        'date_time_range' => DateTimeRangeInput::class,
-        'date' => DateInput::class,
-        'date_time' => DateTimeInput::class,
-        'time' => TimeInput::class,
-        'icon' => IconInput::class,
-        'color' => ColorInput::class,
-        'select' => SelectInput::class,
-        'dual_select' => DualSelectInput::class,
-        'multi_select' => MultiSelectInput::class,
-        'select_tags' => SelectTagsInput::class,
-        'textarea' => TextareaInput::class,
-        'ckeditor' => CKEditorInput::class,
-        'mdeditor' => MDEditorInput::class,
-        'checks' => ChecksInput::class,
-        'radios' => RadiosInput::class,
-        'codemirror' => CodeMirrorInput::class,
-        'info' => InfoInput::class,
-        'info_id' => InfoIdInput::class,
-        'info_created_at' => InfoCreatedAtInput::class,
-        'info_updated_at' => InfoUpdatedAtInput::class,
-        'rating' => RatingInput::class,
-        'hidden' => HiddenInput::class,
-        'autocomplete' => AutocompleteInput::class,
-        'slider' => SliderInput::class,
-    ];
 
     /**
      * An associative array that maps component names to their corresponding class names.
