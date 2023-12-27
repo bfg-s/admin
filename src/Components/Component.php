@@ -85,7 +85,7 @@ use Throwable;
 /**
  * Renders the component and returns the rendered HTML markup.
  *
- * @methods static::$inputs
+ * @methods static::$components
  * @mixin ComponentMethods
  *
  * @return View|string The rendered HTML markup.
