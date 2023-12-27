@@ -355,11 +355,13 @@ class ChartJsComponent extends Component
             $this->builder->addDataset(
                 [
                     'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
-                    'backgroundColor' => array_is_list($color) ? array_map(fn (array $c) => $this->renderColor($c, '0.31'), $color) : $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
-                    'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()), //"#fff",
+                    'backgroundColor' => array_is_list($color) && isset($color[0]) && is_array($color[0])
+                        ? array_map(fn (array $c) => $this->renderColor($c, '0.31'), $color)
+                        : $this->renderColor($bgColor, '0.31'),
+                    'borderColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointBorderColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()),
                     'pointHoverBorderColor' => $this->renderColor($this->randColor()),
                     'data' => collect($datum)->values()->toArray(),
                 ]
