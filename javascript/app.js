@@ -1,40 +1,6 @@
 import 'nprogress/nprogress.css';
 import axios from 'axios'
 
-if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('/adminSw.js');
-}
-
-function enableNotifications () {
-    const componentWithKey = document.querySelector('[name="notification-server-key"]');
-
-    if (componentWithKey && navigator.serviceWorker) {
-        const key = componentWithKey.getAttribute('content');
-        if (key) { //  && Notification.permission !== 'granted'
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    // get service worker
-                    navigator.serviceWorker.ready.then(sw => {
-                        // subscrie
-                        sw.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: key
-                        }).then(subscription => {
-                            //console.log(JSON.stringify(subscription))
-                            axios.post(window.update_notification_browser_settings, {
-                                settings: subscription,
-                                _token: exec('token')
-                            })
-                        });
-                    });
-                }
-            });
-        }
-    }
-}
-
-enableNotifications();
-
 require('./Extensions/initor');
 
 window._dispatch_event = function (name, detail = this) {

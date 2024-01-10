@@ -116,12 +116,6 @@ class AuthController
             $request->session()->regenerate();
 
             admin_log_success('Was authorized using login', $request->login, 'fas fa-sign-in-alt');
-            $root
-                ?->notifyMe(
-                    __('admin.is_online'),
-                    __('admin.the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
-                    route('admin.administration.admin_user.show', Auth::guard('admin')->id())
-                );
 
             $login = true;
         } elseif (Auth::guard('admin')->attempt(
@@ -131,12 +125,6 @@ class AuthController
             $request->session()->regenerate();
 
             admin_log_success('Was authorized using E-Mail', $request->login, 'fas fa-at');
-            $root
-                ?->notifyMe(
-                    __('admin.is_online'),
-                    __('admin.the_ogin_user_is_authorized_in_the_system', ['login' => $request->login]),
-                    route('admin.administration.admin_user.show', Auth::guard('admin')->id())
-                );
 
             $login = true;
         } else {

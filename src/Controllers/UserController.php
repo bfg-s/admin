@@ -143,8 +143,6 @@ class UserController extends Controller
 
                 $respond->toast_success(__('admin.2fa_is_enabled'));
 
-                admin()->notifyMe(__('admin.success'), __('admin.2fa_is_enabled'));
-
                 return $respond->reload();
             }
         }

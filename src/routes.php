@@ -1,7 +1,6 @@
 <?php
 
 use Admin\Controllers\AuthController;
-use Admin\Controllers\CalendarController;
 use Admin\Controllers\DashboardController;
 use Admin\Controllers\SystemController;
 use Admin\Controllers\UploadController;
@@ -63,14 +62,6 @@ Route::group([], function (Router $route) {
             ->action([class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class, 'index'])
             ->icon_tachometer_alt()
             ->dontUseSearch();
-
-        if (config('admin.calendar')) {
-
-            \Admin\Facades\NavigateFacade::item('admin.calendar', 'calendar')
-                ->action([class_exists($app_calendar_controller) ? $app_calendar_controller : CalendarController::class, 'index'])
-                ->icon_calendar()
-                ->dontUseSearch();
-        }
     }
 
     $route->namespace(admin_app_namespace('Controllers'))->group(static function (Router $route) {

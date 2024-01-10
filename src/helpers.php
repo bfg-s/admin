@@ -629,39 +629,6 @@ if (!function_exists('remake_lang_url')) {
     }
 }
 
-if (!function_exists('sendAdminNotification')) {
-
-    function sendAdminNotification (AdminUser $user, string $title, string $body, string $url = null): void
-    {
-        if (config('admin-notification.public-key') && config('admin-notification.private-key')) {
-            $auth = [
-                'VAPID' => [
-                    'subject' => 'mailto:' . $user->email,
-                    'publicKey' => config('admin-notification.public-key'),
-                    'privateKey' => config('admin-notification.private-key'),
-                ],
-            ];
-
-            $webPush = new \Minishlink\WebPush\WebPush($auth);
-
-            foreach ($user->browsers()->whereNotNull('notification_settings')->get() as $browser) {
-
-                try {
-
-                    $result = $webPush->sendOneNotification(
-                        \Minishlink\WebPush\Subscription::create($browser->notification_settings),
-                        json_encode(['title' => $title, 'body' => $body, 'url' => $url]),
-                        ['TTL' => 5000]
-                    );
-                } catch (Throwable $t) {
-
-                }
-            }
-        }
-    }
-}
-
-
 if (!function_exists('getBrowserDetails')) {
     /**
      * @param $u_agent

@@ -66,7 +66,7 @@ class DashboardController extends Controller
                                     $searchForm->date_range('created_at', 'admin.created_at')
                                         ->default(implode(' - ', $this->defaultDateRange()))
                                 )
-                                ->size(config('admin.calendar') ? 150 : 300)
+                                ->size(300)
                                 ->load(function (Admin\Components\ChartJsComponent $component) {
 
                                     $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
@@ -77,23 +77,6 @@ class DashboardController extends Controller
                         )
                     )
                 ),
-                $row->if(config('admin.calendar'))->column(12)->card(
-                    $card->title(__('admin.month_calendar_events')),
-                    $card->card_body(
-                        $cardBody->chart_js(
-                            $chartJs->model(admin()->events())
-                                ->size(150)
-                                ->typeBar()
-                                ->load(function (Admin\Components\ChartJsComponent $component) {
-
-                                    $component->setDefaultDataBetween('start', now()->subMonth()->toDateString(), now()->addDay()->toDateString())
-                                        ->groupDataByAt('start')
-                                        ->eachPointCount(__('admin.calendar_events'))
-                                        ->miniChart();
-                                }),
-                        )
-                    )
-                )
             ),
             $row->column(4, $column->addClass('d-flex'))->row(
                 $row->column(12, $column->addClass('d-flex'))->card(

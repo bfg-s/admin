@@ -145,15 +145,4 @@ class AdminUser extends Model implements AuthenticatableContract
     {
         return $avatar ?: 'admin/img/user.jpg';
     }
-
-    /**
-     * @param  string  $title
-     * @param  string  $body
-     * @param  string|null  $url
-     * @return void
-     */
-    public function notifyMe(string $title, string $body, string $url = null): void
-    {
-        sendAdminNotification($this, $title, $body, $url);
-    }
 }

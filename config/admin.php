@@ -51,7 +51,6 @@ return [
         'domain' => '',
         'prefix' => 'bfg',
         'name' => 'admin.',
-        'layout' => 'admin_layout',
     ],
 
     /**
@@ -66,11 +65,6 @@ return [
      * Use force 2fa for all admin users
      */
     'force-2fa' => false,
-
-    /**
-     * Enable calendar in to admin and enable Service Worker notifications
-     */
-    'calendar' => false,
 
     /**
      * Authentication settings for all admin pages. Include an authentication
