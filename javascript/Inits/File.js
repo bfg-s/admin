@@ -1,5 +1,13 @@
 const merge = require("lodash/merge");
 
+function isJson (json) {
+    try {
+        return JSON.parse(json);
+    } catch (e) {
+        return false;
+    }
+}
+
 window.libs['file'] = function ($options = {}) {
     if (!this.target) {
 
@@ -17,9 +25,25 @@ window.libs['file'] = function ($options = {}) {
     if (this.target.getAttribute('value')) {
 
         let img = this.target.getAttribute('value');
-        img = String(img).indexOf('http') === 0 ? img : (String(img).indexOf('/') === 0 ? img : `/${img}`);
-        $add.initialPreview = `<img src="${img}" class="file-preview-image kv-preview-data" style="width:auto;height:auto;max-width:100%;max-height:100%;" />`;
-        $add.initialCaption = this.target.getAttribute('value');
+        let json = isJson(img);
+
+        if (json) {
+            img = JSON.parse(img);
+            Object.values(img).forEach((v) => {
+                const img = String(v).indexOf('http') === 0 ? v : (String(v).indexOf('/') === 0 ? v : `/${v}`);
+                $add.initialPreview = $add.initialPreview || [];
+                $add.initialCaption = $add.initialCaption || [];
+                $add.initialPreview.push(`<img src="${img}" class="file-preview-image kv-preview-data" style="width:auto;height:auto;max-width:100%;max-height:100%;" />`);
+                $add.initialCaption.push(v);
+                $add.initialPreviewCount = $add.initialPreview.length;
+            });
+        } else {
+
+            img = String(img).indexOf('http') === 0 ? img : (String(img).indexOf('/') === 0 ? img : `/${img}`);
+            $add.initialPreview = `<img src="${img}" class="file-preview-image kv-preview-data" style="width:auto;height:auto;max-width:100%;max-height:100%;" />`;
+            $add.initialCaption = this.target.getAttribute('value');
+            $add.initialPreviewCount = 1;
+        }
     }
 
     return $(this.target).fileinput(merge({

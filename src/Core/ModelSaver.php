@@ -158,6 +158,10 @@ class ModelSaver
         foreach ($this->data as $key => $datum) {
             if ($datum instanceof UploadedFile) {
                 $data[$key] = AdminFileStorage::makeFile($datum);
+            } else if (is_array($datum) && isset($datum[0]) && $datum[0] instanceof UploadedFile) {
+                foreach ($datum as $keyData => $item) {
+                    $data[$key][$keyData] = AdminFileStorage::makeFile($item);
+                }
             } else {
                 $data[$key] = $datum;
             }

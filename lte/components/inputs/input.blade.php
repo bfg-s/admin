@@ -4,7 +4,7 @@
     name="{{ $name }}"
     placeholder="{{ $placeholder }}"
     @class(['is-invalid' => $has_bug, 'form-control' => $form_control])
-    value="{{ $value }}"
+    value="{{ is_array($value) ? json_encode($value) : $value }}"
     @attributes($attributes)
     @checked($checked)
     @if($autocomplete)
