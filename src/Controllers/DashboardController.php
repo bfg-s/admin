@@ -55,8 +55,8 @@ class DashboardController extends Controller
                     ->perYear()
                     ->total()
             ),
-            $row->column(8, $column->addClass('d-flex'))->row(
-                $row->addClass('w-100'),
+            $row->column(8)->row(
+                //$row->addClass('w-100'),
                 $row->column(12)->card(
                     $card->title(__('admin.user_statistics')),
                     $card->card_body(
@@ -78,7 +78,8 @@ class DashboardController extends Controller
                     )
                 ),
             ),
-            $row->column(4, $column->addClass('d-flex'))->row(
+            $row->column(4)->row(
+                $row->addClass('h-100'),
                 $row->column(12, $column->addClass('d-flex'))->card(
                     $card->title(__('admin.administrators_browser_statistic')),
                     $card->card_body(
