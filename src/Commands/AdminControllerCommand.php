@@ -2,6 +2,7 @@
 
 namespace Admin\Commands;
 
+use Admin\Delegates\Tab;
 use Illuminate\Console\Command;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin\Delegates\Card;
@@ -11,6 +12,8 @@ use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Page;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -55,7 +58,7 @@ class AdminControllerCommand extends Command
             $resource = true;
         }
 
-        if (!preg_match('/Controller$/', $name)) {
+        if (! str_ends_with($name, 'Controller')) {
             $name .= 'Controller';
         }
 
@@ -89,8 +92,10 @@ class AdminControllerCommand extends Command
             $class->use(class_exists(\App\Admin\Delegates\SearchForm::class) ? \App\Admin\Delegates\SearchForm::class : SearchForm::class);
             $class->use(class_exists(\App\Admin\Delegates\ModelTable::class) ? \App\Admin\Delegates\ModelTable::class : ModelTable::class);
             $class->use(class_exists(\App\Admin\Delegates\ModelInfoTable::class) ? \App\Admin\Delegates\ModelInfoTable::class : ModelInfoTable::class);
+            $class->use(class_exists(\App\Admin\Delegates\Tab::class) ? \App\Admin\Delegates\Tab::class : Tab::class);
 
             $class->prop('static:model');
+            $model_namespace = null;
 
             if ($model) {
                 if (class_exists($model)) {
@@ -113,21 +118,33 @@ class AdminControllerCommand extends Command
                 }
             }
 
+            $fillables = $model_namespace ? (new ($model_namespace))->getFillable() : [];
+
             if (in_array('index', $only) && $model) {
-                $class->method('index')
+                $method = $class->method('index')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')
                     ->param('searchForm', null, 'SearchForm')
                     ->param('modelTable', null, 'ModelTable')
                     ->line('return $page->card(')
                     ->tab('$card->search_form(')
-                    ->tab('    $searchForm->id(),')
-                    ->tab('    $searchForm->at(),')
+                    ->tab('    $searchForm->id(),');
+
+                foreach ($fillables as $item) {
+                    $label = Str::title(str_replace('_', ' ', Str::snake($item)));
+                    $method->tab("    \$searchForm->input('$item', '$label'),");
+                }
+
+                $method->tab('    $searchForm->at(),')
                     ->tab('),')
-                    ->tab('$card->model_table(')
-                    ->tab('    $modelTable->id(),')
-                    ->tab('    $modelTable->at(),')
-                    ->tab('),')
+                    ->tab('$card->statisticBody(');
+
+                foreach ($fillables as $item) {
+                    $label = Str::title(str_replace('_', ' ', Str::snake($item)));
+                    $method->tab("    \$modelTable->col('$label', '$item')->sort(),");
+                }
+
+                $method->tab('),')
                     ->line(');')
                     ->doc(static function ($doc) {
                         /** @var DocumentorEntity $doc */
@@ -139,15 +156,20 @@ class AdminControllerCommand extends Command
                     })->returnType('Page');
             }
             if (in_array('matrix', $only) && $model) {
-                $class->method('matrix')
+                $method = $class->method('matrix')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')
                     ->param('form', null, 'Form')
+                    ->param('tab', null, 'Tab')
                     ->line('return $page->card(')
                     ->tab('$card->form(')
-                    ->tab('    $form->ifEdit()->info_id(),')
-                    ->tab('    $form->ifEdit()->info_updated_at(),')
-                    ->tab('    $form->ifEdit()->info_created_at(),')
+                    ->tab('    $form->tabGeneral(');
+                foreach ($fillables as $item) {
+                    $label = Str::title(str_replace('_', ' ', Str::snake($item)));
+                    $method->tab("      \$tab->input('$item', '$label'),");
+                }
+
+                $method->tab('    ),')
                     ->tab('),')
                     ->tab('$card->footer_form(),')
                     ->line(');')
@@ -156,18 +178,25 @@ class AdminControllerCommand extends Command
                         $doc->tagParam('Page', 'page');
                         $doc->tagParam('Card', 'card');
                         $doc->tagParam('Form', 'form');
+                        $doc->tagParam('Tab', 'tab');
                         $doc->tagReturn('Page');
                     })->returnType('Page');
             }
             if (in_array('show', $only) && $model) {
-                $class->method('show')
+                $method = $class->method('show')
                     ->param('page', null, 'Page')
                     ->param('card', null, 'Card')
                     ->param('modelInfoTable', null, 'ModelInfoTable')
                     ->line('return $page->card(')
                     ->tab('$card->model_info_table(')
-                    ->tab('    $modelInfoTable->id(),')
-                    ->tab('    $modelInfoTable->at(),')
+                    ->tab('    $modelInfoTable->id(),');
+
+                foreach ($fillables as $item) {
+                    $label = Str::title(str_replace('_', ' ', Str::snake($item)));
+                    $method->tab("    \$modelInfoTable->row('$label', '$item'),");
+                }
+
+                $method->tab('    $modelInfoTable->at(),')
                     ->tab('),')
                     ->line(');')
                     ->doc(static function ($doc) {
