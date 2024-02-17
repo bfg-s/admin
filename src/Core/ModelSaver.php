@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Admin\Models\AdminFileStorage;
+use Intervention\Image\ImageManager;
 
 class ModelSaver
 {
@@ -67,20 +68,6 @@ class ModelSaver
     protected static array $on_deleted = [];
 
     /**
-     * Save model.
-     *
-     * @var Model|null
-     */
-    protected mixed $model = null;
-
-    /**
-     * Save data.
-     *
-     * @var array
-     */
-    protected array $data = [];
-
-    /**
      * @var bool
      */
     protected bool $has_delete = false;
@@ -91,26 +78,20 @@ class ModelSaver
     protected mixed $src = null;
 
     /**
-     * @var object|null
-     */
-    protected ?object $eventsObject;
-
-    /**
      * @param  string|Model  $model
      * @param  array  $data
      * @param  object|null  $eventsObject
+     * @param  array  $imageModifiers
      */
-    public function __construct(mixed $model, array $data, object $eventsObject = null)
-    {
+    public function __construct(
+        protected mixed $model,
+        protected array $data,
+        protected ?object $eventsObject = null,
+        protected array $imageModifiers = [],
+    ) {
         if (is_string($model)) {
-            $model = new $model();
+            $this->model = new $model();
         }
-
-        $this->model = $model;
-
-        $this->data = $data;
-
-        $this->eventsObject = $eventsObject;
     }
 
     /**
@@ -118,11 +99,12 @@ class ModelSaver
      * @param  SaveModel  $model
      * @param  array  $data
      * @param  object|null  $eventsObject
+     * @param  array  $imageModifiers
      * @return SaveModel|bool|Model|mixed|string
      */
-    public static function do($model, array $data, object $eventsObject = null)
+    public static function do($model, array $data, object $eventsObject = null, array $imageModifiers = [])
     {
-        return (new static($model, $data, $eventsObject))->save();
+        return (new static($model, $data, $eventsObject, $imageModifiers))->save();
     }
 
     /**
@@ -158,9 +140,23 @@ class ModelSaver
         foreach ($this->data as $key => $datum) {
             if ($datum instanceof UploadedFile) {
                 $data[$key] = AdminFileStorage::makeFile($datum);
+                if (isset($this->imageModifiers[$key])) {
+                    $image = ImageManager::imagick()->read(public_path($data[$key]));
+                    foreach ($this->imageModifiers[$key] as $imageModifier) {
+                        $image->{$imageModifier[0]}(...$imageModifier[1]);
+                    }
+                    $image->save(public_path($data[$key]));
+                }
             } else if (is_array($datum) && isset($datum[0]) && $datum[0] instanceof UploadedFile) {
                 foreach ($datum as $keyData => $item) {
                     $data[$key][$keyData] = AdminFileStorage::makeFile($item);
+                    if (isset($this->imageModifiers[$key])) {
+                        $image = ImageManager::imagick()->read(public_path($data[$key][$keyData]));
+                        foreach ($this->imageModifiers[$key] as $imageModifier) {
+                            $image->{$imageModifier[0]}(...$imageModifier[1]);
+                        }
+                        $image->save(public_path($data[$key][$keyData]));
+                    }
                 }
             } else {
                 $data[$key] = $datum;

@@ -179,7 +179,11 @@ class AdminFileStorage extends Model
      */
     public function getFileNameAttribute($value): ?string
     {
-        return $value ? Storage::disk($this->driver)->url($value) : null;
+        return $value ? str_replace(
+            public_path(),
+            '',
+            Storage::disk($this->driver)->path($value)
+        ) : null;
     }
 
     /**

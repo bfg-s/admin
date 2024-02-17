@@ -99,7 +99,7 @@ abstract class BaseController extends Controller
      * @param  array|null  $data
      * @return bool|void
      */
-    public function requestToModel(array $data = null)
+    public function requestToModel(array $data = null, array $imageModifiers = [])
     {
         $save = $data ?? request()->all();
 
@@ -113,7 +113,9 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $this->model() ? ModelSaver::do($this->model(), $save, $this) : false;
+        return $this->model()
+            ? ModelSaver::do($this->model(), $save, $this, $imageModifiers)
+            : false;
     }
 
     /**

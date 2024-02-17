@@ -6,6 +6,7 @@ use Admin\Repositories\AdminRepository;
 use App;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Admin\Respond;
@@ -105,9 +106,13 @@ trait DefaultControllerResourceMethodsTrait
     public function update_default(array $data = null)
     {
         if (method_exists($this, 'edit')) {
-            embedded_call([$this, 'edit']);
+            $result = embedded_call([$this, 'edit']);
         } else {
-            embedded_call([$this, 'edit_default']);
+            $result = embedded_call([$this, 'edit_default']);
+        }
+
+        while ($result instanceof Renderable) {
+            $result = $result->render();
         }
 
         $save = $data ?? request()->all();
@@ -116,8 +121,7 @@ trait DefaultControllerResourceMethodsTrait
             return $back;
         }
 
-        $updated = $this->requestToModel($save);
-
+        $updated = $this->requestToModel($save, static::$imageModifiers);
 
         if ($updated) {
             admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
@@ -141,9 +145,13 @@ trait DefaultControllerResourceMethodsTrait
     public function store_default(array $data = null)
     {
         if (method_exists($this, 'create')) {
-            embedded_call([$this, 'create']);
+            $result = embedded_call([$this, 'create']);
         } else {
-            embedded_call([$this, 'create_default']);
+            $result = embedded_call([$this, 'create_default']);
+        }
+
+        while ($result instanceof Renderable) {
+            $result = $result->render();
         }
 
         $save = $data ?? request()->all();
@@ -152,7 +160,7 @@ trait DefaultControllerResourceMethodsTrait
             return $back;
         }
 
-        $stored = $this->requestToModel($save);
+        $stored = $this->requestToModel($save, static::$imageModifiers);
 
         if ($stored) {
 

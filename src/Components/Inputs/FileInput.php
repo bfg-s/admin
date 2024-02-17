@@ -27,7 +27,7 @@ class FileInput extends Input
     protected function after_construct(): void
     {
         if ($this->name && str_ends_with($this->name, '[]')) {
-            //$this->data['load'] = 'multifile';
+
             $this->attr('multiple', true);
         }
     }

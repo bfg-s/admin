@@ -44,10 +44,13 @@ trait RulesBackTrait
     {
         if ($this->admin_controller) {
             /** @var Controller $controller */
+            $arr = str_ends_with($this->name, '[]') ? '.' : '';
             $controller = $this->controller;
-            $controller::$rules[$this->path][] = $rule;
+            $controller::$rules[$this->path . $arr][] = $rule;
             if ($message && is_string($rule)) {
-                $controller::$rule_messages["{$this->path}.{$rule}"] = $message;
+                $controller::$rule_messages[
+                    "{$this->path}{$arr}.{$rule}"
+                ] = $message;
             }
         }
 

@@ -33,6 +33,11 @@ class Controller extends BaseController
     /**
      * @var array
      */
+    public static array $imageModifiers = [];
+
+    /**
+     * @var array
+     */
     public static array $rule_messages = [];
 
     /**
