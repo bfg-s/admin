@@ -141,6 +141,9 @@ window.libs['table_action::exportToExcel'] = function () {
         }
 
     })
+    .catch((data) => {
+        exec("toast::error", data.response.data.message);
+    })
     .finally(() => {
         NProgress.done()
     });
@@ -152,7 +155,7 @@ window.libs['table_action::exportToCsv'] = function () {
     exec("toast::success", "Downloading...");
     axios.post(window.export_csv, {
         _token: exec('token'),
-        model: thid.target.dataset.object,
+        model: this.target.dataset.object,
         ids: ids,
         order: this.target.dataset.order,
         order_type: this.target.dataset.orderType,
@@ -176,6 +179,9 @@ window.libs['table_action::exportToCsv'] = function () {
                 document.body.removeChild(downloadLink);
             }
         }
+    })
+    .catch((data) => {
+        exec("toast::error", data.response.data.message);
     })
     .finally(() => {
         NProgress.done()

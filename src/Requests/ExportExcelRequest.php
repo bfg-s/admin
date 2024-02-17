@@ -2,6 +2,7 @@
 
 namespace Admin\Requests;
 
+use Admin\Facades\AdminFacade;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**

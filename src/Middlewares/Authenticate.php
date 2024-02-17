@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Admin\Respond;
 use Admin\Boot;
@@ -151,6 +152,10 @@ class Authenticate
         foreach ($excepts as $except) {
             if ($except !== '/') {
                 $except = trim($except, '/');
+            }
+
+            if (config('admin.lang_mode') && !str_starts_with($except, App::getLocale())) {
+                $except = App::getLocale(). '/' . $except;
             }
 
             if ($request->is($except)) {
