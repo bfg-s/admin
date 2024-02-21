@@ -79,12 +79,14 @@ class InputSelect2 extends Component
         foreach ($data as $key => $val) {
             $this->optionsPrint[(string) $key] = $val;
 
-            if (is_array($select) && (in_array($key, $select))) {
-                $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
-            } elseif ($this->paramEq($select) === $this->paramEq($key)) {
-                $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
-            } elseif ($this->paramEq($this->value) === $this->paramEq($key)) {
-                $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+            if (is_string($key) || is_numeric($key)) {
+                if (is_array($select) && (in_array($key, $select))) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                } elseif ($this->paramEq($select) === $this->paramEq($key)) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                } elseif ($this->paramEq($this->value) === $this->paramEq($key)) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                }
             }
         }
 
