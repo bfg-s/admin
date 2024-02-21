@@ -89,7 +89,7 @@ window.libs['file'] = function ($options = {}) {
             }
         });
 
-        if (fileList.length > 1) {
+        if (fileList.length > 1 && a.target.dataset.id && a.target.dataset.field && a.target.dataset.model) {
             axios.post(window.save_image_order, {
                 _token: exec('token'),
                 id: a.target.dataset.id,
