@@ -44,7 +44,11 @@ class Input extends FormGroupComponent
             'placeholder' => $this->title,
             'value' => $this->value,
             'rules' => $this->rules,
-            'datas' => $this->data,
+            'datas' => array_merge($this->data, [
+                'id' => $this->model->id,
+                'model' => get_class($this->model),
+                'field' => $this->path,
+            ]),
             'has_bug' => $this->has_bug,
             'autocomplete' => $this->autocomplete,
             'form_control' => $this->form_control,

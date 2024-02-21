@@ -17,6 +17,7 @@ use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\NewEventTemplateRequest;
 use Admin\Requests\NotificationSettingsRequest;
+use Admin\Requests\SaveImageOrderRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
 use Admin\Respond;
@@ -432,6 +433,27 @@ class SystemController extends Controller
     public function dropEvent(DropEventTemplateRequest $request): ?int
     {
         return admin()->events()->find($request->id)?->delete();
+    }
+
+    /**
+     * @param  SaveImageOrderRequest  $request
+     * @param  Respond  $respond
+     * @return Respond
+     */
+    public function saveImageOrder(SaveImageOrderRequest $request, Respond $respond): Respond
+    {
+        $model = $request->model::find($request->id);
+
+        if ($model) {
+
+            $model->update([
+                $request->field => $request->fileList
+            ]);
+
+            $respond->toast_success(__('admin.success'));
+        }
+
+        return $respond;
     }
 
     /**
