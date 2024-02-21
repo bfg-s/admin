@@ -83,7 +83,6 @@ window.libs['file'] = function ($options = {}) {
                 const img = $(this).find('img');
                 const src = img.attr('src');
                 if (! img[0].dataset.img) {
-                    console.log(img[0]);
                     fileList.push(src);
                 }
             }
