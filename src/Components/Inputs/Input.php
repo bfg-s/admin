@@ -45,8 +45,8 @@ class Input extends FormGroupComponent
             'value' => $this->value,
             'rules' => $this->rules,
             'datas' => array_merge($this->data, [
-                'id' => $this->model->id,
-                'model' => get_class($this->model),
+                'id' => $this->model?->id,
+                'model' => $this->model ? get_class($this->model) : null,
                 'field' => $this->path,
             ]),
             'has_bug' => $this->has_bug,

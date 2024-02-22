@@ -67,7 +67,17 @@ window.libs['file'] = function ($options = {}) {
     return $(this.target).fileinput(merge({
         'theme': 'explorer-fas',
         overwriteInitial: true,
-        showUpload: false
+        initialPreviewShowDelete: true,
+        deleteUrl: window.delete_ordered_image, // + '?_token=' + exec('token'),
+        deleteExtraData: {
+            _token: exec('token'),
+            id: this.target.dataset.id,
+            field: this.target.dataset.field,
+            model: this.target.dataset.model,
+        },
+        showUpload: false,
+        cancelLabel: window.langs.cancel,
+        browseLabel: window.langs.browse,
     }, $add, $options)).on('fileclear', (a) => {
         let empty = document.createElement('INPUT');
         empty.setAttribute('type', 'hidden');
@@ -99,5 +109,36 @@ window.libs['file'] = function ($options = {}) {
                 exec(data.data);
             }));
         }
+    }).on('filedeleted', function(a, key, jqXHR, data) {
+
+        setTimeout(() => {
+
+            const fileList = [];
+            $(a.target).parents('.file-input').find('.file-preview-frame').each(function () {
+                if (! $(this).hasClass('kv-zoom-thumb')) {
+                    const img = $(this).find('img');
+                    const src = img.attr('src');
+                    if (! img[0].dataset.img) {
+                        fileList.push(src);
+                    }
+                }
+            });
+
+            axios.post(window.save_image_order, {
+                _token: exec('token'),
+                id: a.target.dataset.id,
+                field: a.target.dataset.field,
+                model: a.target.dataset.model,
+                fileList: fileList,
+            }).then((data => {
+                exec(data.data);
+            }));
+
+        }, 400);
+
+    }).on('filedeleteerror', function(event, data, msg) {
+        console.log('File delete error');
+        // get message
+        alert(msg);
     });
 };

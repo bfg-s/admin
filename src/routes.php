@@ -33,6 +33,7 @@ Route::group([], function (Router $route) {
     $route->post('calendar_data', [SystemController::class, 'calendarData'])->name('calendar_data');
     $route->post('calendar_event', [SystemController::class, 'calendarEvent'])->name('calendar_event');
     $route->post('save_image_order', [SystemController::class, 'saveImageOrder'])->name('save_image_order');
+    $route->post('delete_ordered_image', [SystemController::class, 'deleteOrderedImage'])->name('delete_ordered_image');
     $route->delete('drop_event', [SystemController::class, 'dropEvent'])->name('drop_event');
     $route->post('update_notification_browser_settings', [SystemController::class, 'updateNotificationBrowserSettings'])
         ->name('update_notification_browser_settings');

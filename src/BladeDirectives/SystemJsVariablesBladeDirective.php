@@ -68,6 +68,8 @@ JS;
             $calendar_data = route('admin.calendar_data');
             $calendar_event = route('admin.calendar_event');
             $drop_event = route('admin.drop_event');
+            $delete_ordered_image = route('admin.delete_ordered_image');
+            $langs = json_encode(__('admin'));
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
@@ -85,6 +87,8 @@ window.update_notification_browser_settings = "$update_notification_browser_sett
 window.calendar_data = "$calendar_data";
 window.calendar_event = "$calendar_event";
 window.drop_event = "$drop_event";
+window.delete_ordered_image = "$delete_ordered_image";
+window.langs = $langs;
 JS;
         }
     }

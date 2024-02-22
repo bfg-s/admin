@@ -273,4 +273,5 @@ return [
     'instruction' => 'Instruction',
     'month_calendar_events' => 'Month calendar events',
     'calendar_events' => 'Calendar events',
+    'browse' => 'Browse...',
 ];

@@ -456,6 +456,13 @@ class SystemController extends Controller
         return $respond;
     }
 
+    public function deleteOrderedImage()
+    {
+        //dd(request()->all());
+
+        return response()->json(['success' => true]);
+    }
+
     /**
      * @return void
      */

@@ -6,7 +6,7 @@ window.libs['alert::input'] = function (title, exec = null) {
             autocapitalize: 'off'
         },
         showCancelButton: true,
-        confirmButtonText: 'OK'
+        confirmButtonText: window.langs.yes,
     }).then((state) => {
 
         if (exec) {
@@ -24,7 +24,8 @@ window.libs['alert::confirm'] = function (title, success = "", cancel = "", opti
         type: 'question',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes',
+        confirmButtonText: window.langs.yes,
+        cancelButtonText: window.langs.cancel,
         ...options
     }).then((result) => {
 
