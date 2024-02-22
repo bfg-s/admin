@@ -30,7 +30,7 @@ class Card extends Delegator
         $chartJs = new ChartJs();
 
         return [
-            $this->ifNotQuery('chart')->buttons()->warning(['fas fa-chart-line', 'Statistic'])
+            $this->ifNotQuery('chart')->buttons()->warning(['fas fa-chart-line', __('admin.statistic')])
                 ->switchQuery('chart'),
             $this->ifQuery('chart')->buttons()->secondary(['fas fa-table', __('admin.list')])
                 ->switchQuery('chart'),
@@ -67,7 +67,7 @@ class Card extends Delegator
             $this->ifNotQuery('screen', 1)->buttons()->info(['fas fa-stream', __('admin.sort')])
                 ->setQuery('screen', 1),
 
-            $this->ifNotQuery('screen', 2)->buttons()->warning(['fas fa-chart-line', 'Statistic'])
+            $this->ifNotQuery('screen', 2)->buttons()->warning(['fas fa-chart-line', __('admin.statistic')])
                 ->setQuery('screen', 2),
 
             $this->ifQuery('screen')->buttons()->secondary(['fas fa-table', __('admin.list')])

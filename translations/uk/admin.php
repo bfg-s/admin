@@ -274,4 +274,5 @@ return [
     'month_calendar_events' => 'Місячний календар подій',
     'calendar_events' => 'Календар подій',
     'browse' => 'Перегляд...',
+    'statistic' => 'Статистика',
 ];
