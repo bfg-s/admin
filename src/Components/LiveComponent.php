@@ -35,6 +35,20 @@ class LiveComponent extends Component
     }
 
     /**
+     * @param $renderedView
+     * @return string
+     */
+    protected function afterRenderEvent($renderedView): string
+    {
+        $pattern = '/<div[^>]*>(.*)<\/div>\s*<\/div>/s';
+        preg_match($pattern, $renderedView, $matches);
+        $contentInsideDiv = $matches[1] ?? '';
+        $pattern = '/<div([^>]*)>/';
+        $replacement = '<div$1 data-hash="'.sha1($contentInsideDiv).'">';
+        return preg_replace($pattern, $replacement, $renderedView, 1);
+    }
+
+    /**
      * @return string[]
      */
     protected function viewData(): array

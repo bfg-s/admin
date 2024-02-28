@@ -313,6 +313,7 @@ abstract class Component extends ComponentInputs
 
     /**
      * @return View|string
+     * @throws Throwable
      */
     public function render(): View|string
     {
@@ -337,12 +338,23 @@ abstract class Component extends ComponentInputs
             call_user_func($item, $this);
         }
 
-        return admin_view('components.' . $this->view, array_merge([
+        $renderedView = admin_view('components.' . $this->view, array_merge([
             'contents' => $this->contents,
             'classes' => $this->classes,
             'element' => $this->element,
             'attributes' => $this->attributes,
-        ], $this->viewData()));
+        ], $this->viewData()))->render();
+
+        return $this->afterRenderEvent($renderedView);
+    }
+
+    /**
+     * @param $renderedView
+     * @return string
+     */
+    protected function afterRenderEvent($renderedView): string
+    {
+        return $renderedView;
     }
 
     /**

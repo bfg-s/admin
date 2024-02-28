@@ -60,10 +60,17 @@ class SystemController extends Controller
 
         foreach (LiveComponent::$list as $area => $item) {
 
-            $content = $item->render()->render();
+            $content = $item->render();
+
+            $pattern = '/<div[^>]*>(.*)<\/div>\s*<\/div>/s';
+
+            preg_match($pattern, $content, $matches);
+
+            $contentInsideDiv = $matches[1] ?? '';
+
             $result_areas[$area] = [
-                'hash' => sha1($content),
-                'content' => $content,
+                'hash' => sha1($contentInsideDiv),
+                'content' => $contentInsideDiv,
             ];
         }
 
