@@ -2,7 +2,10 @@
 
 namespace Admin;
 
+use Admin\Facades\AdminFacade;
 use Exception;
+
+use Illuminate\Support\Facades\App;
 
 use function config;
 
@@ -133,6 +136,16 @@ class ApplicationServiceProvider extends ExtendProvider
 
         $this->config()
             ->mergeScripts($this->defaultScripts);
+
+        $validationLocalizationFile = 'admin/plugins/jquery-validation/localization/messages_'
+            . strtolower(AdminFacade::nowLang())
+            . '.min.js';
+
+        if (is_file(public_path($validationLocalizationFile))) {
+
+            $this->config()
+                ->mergeScripts([$validationLocalizationFile]);
+        }
 
         $this->config()
             ->mergeStyles($this->defaultStyles);
