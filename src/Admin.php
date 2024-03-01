@@ -268,7 +268,7 @@ class Admin
             } else {
                 $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
 
-                if (in_array($lang, config('layout.languages'))) {
+                if (in_array($lang, config('admin.languages'))) {
                     $select = $lang;
                 }
             }
