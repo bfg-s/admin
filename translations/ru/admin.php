@@ -275,4 +275,9 @@ return [
     'calendar_events' => 'Календарь событий',
     'browse' => 'Обзор...',
     'statistic' => 'Статистика',
+    'export_to_excel' => 'Экспорт в Excel',
+    'export_to_csv' => 'Экспорт в CSV',
+    'invert_selections' => 'Инвертировать выбор',
+    'select_all' => 'Выбрать все',
+    'unselect_all' => 'Снять выделение',
 ];

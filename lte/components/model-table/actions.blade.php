@@ -34,7 +34,7 @@
                         data-order-type="{{$select_type}}"
                         data-click="table_action::exportToExcel"
                         name="select_{{$table_id}}">
-                    <i class="fas fa-file-excel"></i> Export to Excel
+                    <i class="fas fa-file-excel"></i> @lang('admin.export_to_excel')
                 </button>
                 <button
                     class="dropdown-item"
@@ -45,7 +45,7 @@
                     data-order-type="{{$select_type}}"
                     data-click="table_action::exportToCsv"
                     name="select_{{$table_id}}">
-                    <i class="fas fa-file-csv"></i> Export to CSV
+                    <i class="fas fa-file-csv"></i> @lang('admin.export_to_csv')
                 </button>
                 @if(count($actions) || $hasDelete)
                     <hr class="dropdown-divider"/>
@@ -91,17 +91,17 @@
                 <button class="dropdown-item" type="button" data-table="{{$table_id}}"
                         data-click="table_list::invertChildCheckboxes"
                         name="select_{{$table_id}}">
-                    <i class="fas fa-vote-yea"></i> Invert selections
+                    <i class="fas fa-vote-yea"></i> @lang('admin.invert_selections')
                 </button>
                 <button class="dropdown-item" type="button" data-table="{{$table_id}}"
                         data-click="table_list::checkChildCheckboxes"
                         name="select_{{$table_id}}">
-                    <i class="far fa-check-square icon"></i> Select all
+                    <i class="far fa-check-square icon"></i> @lang('admin.select_all')
                 </button>
                 <button class="dropdown-item" type="button" data-table="{{$table_id}}"
                         data-click="table_list::uncheckChildCheckboxes"
                         name="select_{{$table_id}}">
-                    <i class="far fa-square"></i> Unselect all
+                    <i class="far fa-square"></i> @lang('admin.unselect_all')
                 </button>
             @endif
         </div>

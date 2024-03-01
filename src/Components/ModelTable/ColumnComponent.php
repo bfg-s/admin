@@ -40,9 +40,7 @@ class ColumnComponent extends Component
      */
     protected function viewData(): array
     {
-        return array_merge([
-            'component' => $this
-        ], $this->viewData);
+        return $this->viewData;
     }
 
     /**

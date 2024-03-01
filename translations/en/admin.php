@@ -275,4 +275,9 @@ return [
     'calendar_events' => 'Calendar events',
     'browse' => 'Browse...',
     'statistic' => 'Statistic',
+    'export_to_excel' => 'Export to Excel',
+    'export_to_csv' => 'Export to CSV',
+    'invert_selections' => 'Invert selections',
+    'select_all' => 'Select all',
+    'unselect_all' => 'Unselect all',
 ];
