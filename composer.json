@@ -34,7 +34,6 @@
         "bacon/bacon-qr-code": "^2.0",
         "pragmarx/google2fa-qrcode": "*",
         "stichoza/google-translate-php": "^v5.1.2",
-        "minishlink/web-push": "^v8.0",
         "intervention/image": "^3.3"
     },
     "require-dev": {

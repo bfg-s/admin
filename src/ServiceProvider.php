@@ -270,10 +270,6 @@ class ServiceProvider extends ServiceProviderIlluminate
             __DIR__.'/../config/admin.php',
             'admin'
         );
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/admin-notification.php',
-            'admin-notification'
-        );
 
         /**
          * Register admin middleware.
