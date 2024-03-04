@@ -52,6 +52,7 @@ class MenuItem implements ArrayAccess, Arrayable
     protected bool $target = false; // target
     protected bool $active = false; // active
     protected bool $prepend = false; // prepend
+    protected bool $targetBlank = false; // target blank
 
     /**
      * Get the instance as an array.
@@ -850,5 +851,15 @@ class MenuItem implements ArrayAccess, Arrayable
     public function setLeftNavBarVue(?string $left_nav_bar_vue): void
     {
         $this->left_nav_bar_vue = $left_nav_bar_vue;
+    }
+
+    public function isTargetBlank(): bool
+    {
+        return $this->targetBlank;
+    }
+
+    public function setTargetBlank(bool $targetBlank): void
+    {
+        $this->targetBlank = $targetBlank;
     }
 }

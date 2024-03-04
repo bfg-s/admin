@@ -14,6 +14,7 @@
         <li class="nav-item {{ $hasChild && $selected ? 'menu-open' : '' }}">
 
             <a href="{{$menu->getLink() ?: 'javascript:void(0)'}}"
+               @if($menu->isTargetBlank()) target="_blank" @endif
                @if($menu->getDontUseSearch()) data-ignore="1" @endif
                @if($menu->isTarget()) target="_blank"
                @endif class="nav-link {{ !$hasChild ? ($selected ? 'active' : '') : ( !isset($nes) && $selected ? 'active' : '' ) }} {{ $hasChild ? 'has-treeview' : '' }}">

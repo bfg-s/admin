@@ -69,10 +69,11 @@ JS;
             $calendar_event = route('admin.calendar_event');
             $drop_event = route('admin.drop_event');
             $delete_ordered_image = route('admin.delete_ordered_image');
-            $langs = json_encode(__('admin'));
+            $langs = json_encode(__('admin'), JSON_UNESCAPED_UNICODE);
             return <<<JS
 window.darkMode = $dark;
 window.admin = $admin;
+window.langs = $langs;
 window.home = "$home";
 window.uploader = "$uploader";
 window.export_excel = "$export_excel";
@@ -88,7 +89,6 @@ window.calendar_data = "$calendar_data";
 window.calendar_event = "$calendar_event";
 window.drop_event = "$drop_event";
 window.delete_ordered_image = "$delete_ordered_image";
-window.langs = $langs;
 JS;
         }
     }

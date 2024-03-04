@@ -22,8 +22,8 @@ class NavItem implements Arrayable
     /**
      * NavItem constructor.
      * @param  string|null  $title
-     * @param  string  $route
-     * @param  string|Closure|array|null  $action
+     * @param  string|null  $route
+     * @param  null  $action
      */
     public function __construct(string $title = null, string $route = null, $action = null)
     {
@@ -37,7 +37,7 @@ class NavItem implements Arrayable
      * @param  string|Closure|array  $action
      * @return $this
      */
-    public function action($action)
+    public function action($action): static
     {
         if ($action !== null) {
             $this->items['action'] = $action;
@@ -60,7 +60,7 @@ class NavItem implements Arrayable
      * @param  string|null  $title
      * @return $this
      */
-    public function head_title(string $title = null)
+    public function head_title(string $title = null): static
     {
         if ($title !== null) {
             $this->items['head_title'] = $title;
@@ -77,7 +77,7 @@ class NavItem implements Arrayable
      * @param  string|null  $link
      * @return $this
      */
-    public function link(string $link = null)
+    public function link(string $link = null): static
     {
         if ($link !== null) {
             $this->items['link'] = $link;
@@ -87,10 +87,20 @@ class NavItem implements Arrayable
     }
 
     /**
+     * @return $this
+     */
+    public function targetBlank(): static
+    {
+        $this->items['target_blank'] = true;
+
+        return $this;
+    }
+
+    /**
      * @param ...$methods
      * @return $this
      */
-    public function only(...$methods)
+    public function only(...$methods): static
     {
         if ($methods && isset($this->items['resource'])) {
             $this->items['resource_only'] = $methods;
@@ -103,7 +113,7 @@ class NavItem implements Arrayable
      * @param ...$methods
      * @return $this
      */
-    public function except(...$methods)
+    public function except(...$methods): static
     {
         if ($methods && isset($this->items['resource'])) {
             $this->items['resource_except'] = $methods;
@@ -116,7 +126,7 @@ class NavItem implements Arrayable
      * @param  string|null  $where
      * @return $this
      */
-    public function where(string $where = null)
+    public function where(string $where = null): static
     {
         if ($where !== null) {
             $this->items['where'] = $where;
@@ -129,7 +139,7 @@ class NavItem implements Arrayable
      * @param  string|null  $method
      * @return $this
      */
-    public function method(string $method = null)
+    public function method(string $method = null): static
     {
         if ($method !== null) {
             $this->items['method'] = strtolower($method);
@@ -142,7 +152,7 @@ class NavItem implements Arrayable
      * @param  string|null  $view
      * @return $this
      */
-    public function view(string $view = null)
+    public function view(string $view = null): static
     {
         if ($view !== null) {
             $this->items['view'] = $view;
@@ -157,7 +167,7 @@ class NavItem implements Arrayable
      * @param  array  $options
      * @return $this
      */
-    public function resource(string $name, string $resource, array $options = [])
+    public function resource(string $name, string $resource, array $options = []): static
     {
         $this->items['resource'] = ['name' => $name, 'action' => '\\'.$resource, 'options' => $options];
 
@@ -177,7 +187,7 @@ class NavItem implements Arrayable
     /**
      * @return $this
      */
-    public function ignored()
+    public function ignored(): static
     {
         $this->items['ignored'] = true;
 
@@ -187,7 +197,7 @@ class NavItem implements Arrayable
     /**
      * @return $this
      */
-    public function has_rout()
+    public function has_rout(): static
     {
         $this->items['ignored'] = true;
 
@@ -198,7 +208,7 @@ class NavItem implements Arrayable
      * @param  array  $route_params
      * @return $this
      */
-    public function params(array $route_params)
+    public function params(array $route_params): static
     {
         $this->items['route_params'] = $route_params;
 
@@ -209,7 +219,7 @@ class NavItem implements Arrayable
      * @param  callable  $callable
      * @return $this
      */
-    public function link_params(callable $callable)
+    public function link_params(callable $callable): static
     {
         $this->items['link_params'] = $callable;
 
@@ -220,7 +230,7 @@ class NavItem implements Arrayable
      * @param $model
      * @return $this
      */
-    public function model($model)
+    public function model($model): static
     {
         $this->items['model'] = $model;
 
@@ -228,10 +238,10 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  string|array  $action
+     * @param  array|string  $action
      * @return $this
      */
-    public function post($action = 'Controller@update')
+    public function post(array|string $action = 'Controller@update'): static
     {
         $this->items['post'] = $action;
 
@@ -239,10 +249,10 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  string|array  $action
+     * @param  array|string  $action
      * @return $this
      */
-    public function delete($action = 'Controller@destroy')
+    public function delete(array|string $action = 'Controller@destroy'): static
     {
         $this->items['delete'] = $action;
 
@@ -253,7 +263,7 @@ class NavItem implements Arrayable
      * @param  array  $params
      * @return $this
      */
-    public function badge_params(array $params)
+    public function badge_params(array $params): static
     {
         if ($this->items['badge']) {
             $this->items['badge']['params'] = $params;
@@ -263,9 +273,9 @@ class NavItem implements Arrayable
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items;
     }

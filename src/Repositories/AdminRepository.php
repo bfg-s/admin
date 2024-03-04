@@ -311,16 +311,22 @@ class AdminRepository extends Repository
             $menuItem->setLinkParams($item['link_params'] ?? null);
             $menuItem->setDontUseSearch($item['dontUseSearch'] ?? null);
             $menuItem->setParams($item['params'] ?? null);
+            $menuItem->setTargetBlank($item['target_blank'] ?? false);
             $menuItem->mergeRoles($item['roles'] ?? []);
             $menuItem->mergeRoles($parent?->getRoles());
             $menuItem->insertParentRouteName($parent?->getRoute() ?: 'admin');
             $menuItem->setCurrentRoute($this->currentQueryField);
             $menuItem->setTarget();
-            if ($menuItem->getAction()) {
+            if ($item['link'] ?? null) {
+                $menuItem->setLink($item['link']);
+                $menuItem->setSelected(false);
+            } else if ($menuItem->getAction()) {
                 $menuItem->mergeRouteParams($this->getQuery($menuItem->getRoute()));
                 $menuItem->setLink();
                 $menuItem->setController();
                 $menuItem->setCurrent($menuItem->getRoute() == $this->currentQueryField);
+                $menuItem->setModelClass();
+                $menuItem->setSelected();
             } elseif ($menuItem->getResource()) {
                 $menuItem->setRouteParams(
                     array_callable_results($menuItem->getRouteParams() ?? [], $menuItem)
@@ -338,10 +344,10 @@ class AdminRepository extends Repository
                 $menuItem->setController(
                     $menuItem->getResourceAction()
                 );
-            }
 
-            $menuItem->setModelClass();
-            $menuItem->setSelected();
+                $menuItem->setModelClass();
+                $menuItem->setSelected();
+            }
 
             if (!$menuItem->isActive()) {
                 $menuItem->setActive(
