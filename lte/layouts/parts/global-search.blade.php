@@ -2,9 +2,9 @@
     <div class="input-group input-group-sm">
         <input
             x-model="q"
-            aria-label="Search"
+            aria-label="@lang('admin.search')"
             class="form-control form-control-navbar global_search_input_focus"
-            placeholder="Search"
+            placeholder="@lang('admin.search')..."
             type="search"
             @blur="blur"
             @mouseup="show_if_has"
