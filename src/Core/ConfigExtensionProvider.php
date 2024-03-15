@@ -58,7 +58,7 @@ class ConfigExtensionProvider
      * @param  Closure  $call
      * @return $this
      */
-    public function tableExtension(string $name, Closure $call): static
+    public function registerModelTableExtension(string $name, Closure $call): static
     {
         ModelTableComponent::addExtension($name, $call);
 
@@ -69,7 +69,7 @@ class ConfigExtensionProvider
      * @param  string  $class
      * @return $this
      */
-    public function tableExtensionClass(string $class): static
+    public function registerModelTableExtensionClass(string $class): static
     {
         ModelTableComponent::addExtensionClass($class);
 
@@ -81,9 +81,16 @@ class ConfigExtensionProvider
      * @param  string  $class
      * @return $this
      */
-    public function formField(string $name, string $class): static
+    public function registerFormComponent(string $name, string $class): static
     {
         Component::registerFormComponent($name, $class);
+
+        return $this;
+    }
+
+    public function registerComponent(string $name, string $class): static
+    {
+        Component::registerComponent($name, $class);
 
         return $this;
     }

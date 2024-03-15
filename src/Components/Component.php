@@ -946,6 +946,18 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Register a new component.
+     *
+     * @param  string  $name
+     * @param  string  $class
+     * @return void
+     */
+    public static function registerComponent(string $name, string $class): void
+    {
+        static::$components[$name] = $class;
+    }
+
+    /**
      * @param  string  $name
      * @return $this
      */

@@ -128,7 +128,7 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        $prepared = new PrepareExport($request->model, $request->ids, $request->order, $request->order_type, $request->table);
+        $prepared = new PrepareExport($request->model, $request->ids ?: [], $request->order, $request->order_type, $request->table);
 
         $fileName = class_basename($request->model) . '_' . now()->format('Y_m_d_His').'.xlsx';
 

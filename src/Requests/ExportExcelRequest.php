@@ -31,7 +31,7 @@ class ExportExcelRequest extends FormRequest
     {
         return [
             'model' => 'required|string',
-            'ids' => 'required|array',
+            'ids' => 'nullable|array',
             'order' => 'required|string',
             'order_type' => 'required|string',
             'table' => 'required|string',

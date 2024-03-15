@@ -114,10 +114,6 @@ trait NavDefaultTools
     {
         $extensions = Admin::$nav_extensions;
 
-        if (count($extensions) > 1) {
-            $this->menu_header('admin.extensions');
-        }
-
         foreach ($extensions as $key => $extension) {
             if ($key === 'application') {
                 continue;
