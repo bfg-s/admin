@@ -2,18 +2,35 @@
 
 namespace Admin\Delegates;
 
-use App\Admin\Delegates\ChartJs;
-use App\Admin\Delegates\ModelTable;
-use App\Admin\Delegates\StatisticPeriod;
 use Admin\Components\CardComponent;
 use Admin\Core\Delegator;
+use Illuminate\Support\Traits\Macroable;
 
 /**
  * @mixin CardComponent
+ * @mixin MacroMethodsForCard
  */
 class Card extends Delegator
 {
+    use Macroable;
+
     protected $class = CardComponent::class;
+
+    public function __call($method, $parameters)
+    {
+        if (static::hasMacro($method)) {
+
+            $macro = static::$macros[$method];
+
+            if ($macro instanceof \Closure) {
+                $macro = $macro->bindTo($this, static::class);
+            }
+
+            return $macro(...$parameters);
+        }
+
+        return parent::__call($method, $parameters);
+    }
 
     public function defaultDateRange(): array
     {

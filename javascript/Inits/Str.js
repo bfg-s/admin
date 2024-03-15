@@ -22,12 +22,18 @@ window.libs['str::slug'] = function (set_to = null, separator = '_') {
     if (set_to) {
 
         $(set_to).val(result);
-    } else {
-
-        $(this.target).val(result);
     }
 
     return result;
+};
+
+window.libs['str::copy'] = function (set_to = null, separator = '_') {
+    let str = this.target.value;
+
+    if (set_to) {
+
+        $(set_to).val(str);
+    }
 };
 
 window.libs['str::to_translit'] = function (str) {

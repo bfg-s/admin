@@ -59,6 +59,7 @@ use Admin\Core\Delegate;
 use Admin\Core\MenuItem;
 use Admin\Explanation;
 use Admin\Page;
+use Admin\Respond;
 use Admin\Traits\AlpineInjectionTrait;
 use Admin\Traits\BootstrapClassHelpers;
 use Admin\Traits\BuildHelperTrait;
@@ -470,8 +471,18 @@ abstract class Component extends ComponentInputs
                     $value = json_encode($value);
                     $name = ":" . $name;
                 }
+                $added = false;
+                if ($value instanceof Respond) {
+                    if (isset($this->attributes[$name])) {
+                    //dd($this->attributes[$name], $value);
+                        $this->attributes[$name] = $this->attributes[$name]->merge($value);
+                        $added = true;
+                    }
+                }
 
-                $this->attributes[$name] = $value;
+                if (! $added) {
+                    $this->attributes[$name] = $value;
+                }
             }
         }
 

@@ -280,4 +280,5 @@ return [
     'invert_selections' => 'Інвертувати вибір',
     'select_all' => 'Вибрати все',
     'unselect_all' => 'Скасувати вибір',
+    'general' => 'Загальне',
 ];

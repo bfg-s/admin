@@ -19,7 +19,7 @@ class Admin
     /**
      * @var string
      */
-    public static string $version = '5.0.0';
+    public static string $version = '6.0.0';
 
     /**
      * @var Theme[]
@@ -63,19 +63,6 @@ class Admin
      * @var string
      */
     public string $theme = 'admin-lte';
-
-    /**
-     * @var array
-     */
-    protected array $content_segments = [
-        'app_end_wrapper' => [],
-        'prep_end_wrapper' => [
-            //['component' => Navigator::class, 'params' => []],
-            ['component' => ModalCollection::class, 'params' => []],
-        ],
-        'app_end_content' => [],
-        'prep_end_content' => [],
-    ];
 
     /**
      * Configure instance in constructor

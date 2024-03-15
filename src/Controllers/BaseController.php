@@ -103,12 +103,13 @@ abstract class BaseController extends Controller
     {
         $save = $data ?? request()->all();
 
+        $alreadyCached = [];
+
         foreach (static::$crypt_fields as $crypt_field) {
             if (array_key_exists($crypt_field, $save)) {
-                if ($save[$crypt_field]) {
+                if ($save[$crypt_field] && !isset($alreadyCached[$crypt_field])) {
                     $save[$crypt_field] = bcrypt($save[$crypt_field]);
-                } else {
-                    unset($save[$crypt_field]);
+                    $alreadyCached[$crypt_field] = $crypt_field;
                 }
             }
         }

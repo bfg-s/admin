@@ -2,13 +2,12 @@
 
 namespace Admin\Commands\Generators;
 
+use Admin\Facades\AdminFacade;
 use Illuminate\Console\Command;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
-use Admin;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Admin\Navigate;
 use ReflectionClass;
-use ReflectionException;
 
 class ExtensionNavigatorMethodsHelperGenerator implements AdminHelpGeneratorInterface
 {
@@ -47,10 +46,20 @@ class ExtensionNavigatorMethodsHelperGenerator implements AdminHelpGeneratorInte
             $ret = pars_return_from_doc($method->getDocComment());
 
             $doc->tagMethod(
-                'self|static|'.($ret ? $ret : '\\'.Navigate::class),
+                'self|static|'.($ret ?: '\\'.Navigate::class),
                 $method->getName().'('.refl_params_entity($method->getParameters()).')',
                 pars_description_from_doc($method->getDocComment())
             );
+        }
+
+        foreach (AdminFacade::extensions() as $extension) {
+            if ($extension::$slug !== 'application') {
+                $doc->tagMethod(
+                    'self|static|'.'\\'.Navigate::class,
+                    $extension::$slug.'()',
+                    'Extension menu'
+                );
+            }
         }
     }
 }

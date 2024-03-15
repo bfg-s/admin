@@ -84,7 +84,7 @@ class Input extends FormGroupComponent
      */
     public function duplication(string $to): static
     {
-        $this->on_keyup('$::val', "{$to} && >>$:val");
+        $this->on_keyup('str::copy', $to);
 
         return $this;
     }

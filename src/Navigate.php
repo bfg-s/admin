@@ -227,6 +227,7 @@ class Navigate implements NavigateInterface
     /**
      * @param $name
      * @param $arguments
+     * @return Navigate
      */
     public function __call($name, $arguments)
     {
@@ -239,5 +240,7 @@ class Navigate implements NavigateInterface
 
             unset(Admin::$nav_extensions[$name]);
         }
+
+        return $this;
     }
 }

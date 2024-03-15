@@ -280,4 +280,5 @@ return [
     'invert_selections' => 'Invert selections',
     'select_all' => 'Select all',
     'unselect_all' => 'Unselect all',
+    'general' => 'General',
 ];

@@ -4,6 +4,7 @@ namespace Admin\Core;
 
 use Admin\Components\LangComponent;
 use Admin\Page;
+use Closure;
 
 /**
  * @property-read LangComponent|static $lang
@@ -19,9 +20,20 @@ abstract class Delegator
 
     protected $condition = true;
 
-    public function __call(string $name, array $arguments)
+    public function __call($method, $parameters)
     {
-        $result = (new Delegate($this->class, $this->condition))->__call($name, $arguments);
+        if (static::hasMacro($method)) {
+
+            $macro = static::$macros[$method];
+
+            if ($macro instanceof Closure) {
+                $macro = $macro->bindTo($this, static::class);
+            }
+
+            return $macro(...$parameters);
+        }
+
+        $result = (new Delegate($this->class, $this->condition))->__call($method, $parameters);
         $this->condition = true;
 
         return $result;

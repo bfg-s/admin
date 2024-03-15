@@ -65,7 +65,11 @@ class AdminInstallCommand extends Command
             ]);
         }
 
-        $base_dirs = ['/', '/Controllers', '/Delegates'];
+        $base_dirs = [
+            '/',
+            '/Controllers',
+            //'/Delegates'
+        ];
 
         foreach ($base_dirs as $base_dir) {
             if (!is_dir($dir = admin_app_path($base_dir))) {
@@ -143,34 +147,34 @@ class AdminInstallCommand extends Command
             $this->info("File {$controller} created!");
         }
 
-        $delegates = admin_app_path('Delegates');
-
-        $currentDelegates = File::allFiles(__DIR__.'/../Delegates');
-
-        if (!trait_exists(CommonTrait::class)) {
-            $file = admin_app_path('Delegates/CommonTrait.php');
-            $pageClass = class_entity('CommonTrait')->traitObject();
-            $pageClass->namespace(admin_app_namespace('Delegates'));
-            $pageClass->doc(function ($doc) {
-            });
-            file_put_contents($file, $pageClass->wrap('php')->render());
-            $this->info('Common delegate created!');
-        }
-
-        foreach ($currentDelegates as $currentDelegate) {
-            $file = $delegates.'/'.$currentDelegate->getFilename();
-            if (!is_file($file)) {
-                $parentClass = class_in_file($currentDelegate->getPathname());
-                $class = class_basename($parentClass);
-                $delegateClass = class_entity($class);
-                $delegateClass->namespace(admin_app_namespace('Delegates'));
-                $delegateClass->use("$parentClass as Admin$class");
-                $delegateClass->extend("Admin$class");
-                $delegateClass->addTrait('CommonTrait');
-                file_put_contents($file, $delegateClass->wrap('php')->render());
-                $this->info("Delegate {$class} created!");
-            }
-        }
+//        $delegates = admin_app_path('Delegates');
+//
+//        $currentDelegates = File::allFiles(__DIR__.'/../Delegates');
+//
+//        if (!trait_exists(CommonTrait::class)) {
+//            $file = admin_app_path('Delegates/CommonTrait.php');
+//            $pageClass = class_entity('CommonTrait')->traitObject();
+//            $pageClass->namespace(admin_app_namespace('Delegates'));
+//            $pageClass->doc(function ($doc) {
+//            });
+//            file_put_contents($file, $pageClass->wrap('php')->render());
+//            $this->info('Common delegate created!');
+//        }
+//
+//        foreach ($currentDelegates as $currentDelegate) {
+//            $file = $delegates.'/'.$currentDelegate->getFilename();
+//            if (!is_file($file)) {
+//                $parentClass = class_in_file($currentDelegate->getPathname());
+//                $class = class_basename($parentClass);
+//                $delegateClass = class_entity($class);
+//                $delegateClass->namespace(admin_app_namespace('Delegates'));
+//                $delegateClass->use("$parentClass as Admin$class");
+//                $delegateClass->extend("Admin$class");
+//                $delegateClass->addTrait('CommonTrait');
+//                file_put_contents($file, $delegateClass->wrap('php')->render());
+//                $this->info("Delegate {$class} created!");
+//            }
+//        }
 
         $this->call('vendor:publish', [
             '--tag' => 'admin-lang',
