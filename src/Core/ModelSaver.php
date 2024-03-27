@@ -144,6 +144,9 @@ class ModelSaver
     {
         $data = [];
         foreach ($this->data as $key => $datum) {
+            if ($datum === '[]') {
+                $datum = [];
+            }
             if ($datum instanceof UploadedFile) {
                 $data[$key] = AdminFileStorage::makeFile($datum);
                 if (isset($this->imageModifiers[$key])) {

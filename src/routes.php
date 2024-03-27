@@ -47,7 +47,6 @@ Route::group([], function (Router $route) {
     $app_user_controller = admin_app_namespace('Controllers\\UserProfileController');
     $app_upload_controller = admin_app_namespace('Controllers\\UploadController');
     $app_dashboard_controller = admin_app_namespace('Controllers\\DashboardController');
-    $app_calendar_controller = admin_app_namespace('Controllers\\CalendarController');
 
     $route->get('profile', [class_exists($app_user_controller) ? $app_user_controller : UserController::class, 'index'])
         ->name('profile');
@@ -57,6 +56,8 @@ Route::group([], function (Router $route) {
         ->name('profile.logout');
     $route->post('uploader', [class_exists($app_upload_controller) ? $app_upload_controller : UploadController::class, 'index'])
         ->name('uploader');
+    $route->post('uploader_drop', [class_exists($app_upload_controller) ? $app_upload_controller : UploadController::class, 'drop'])
+        ->name('uploader_drop');
 
     if (config('admin.home-route', 'admin.dashboard') === 'admin.dashboard') {
 

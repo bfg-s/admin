@@ -1,28 +1,34 @@
 <template>
-    <div class="file-browser">
+    <div
+        :class="{'file-browser': true, 'add-files-dropped' : move}"
+        @dragover.prevent="handleDragOver"
+        @dragleave.prevent="move=false"
+        @drop.prevent="handleDrop"
+    >
         <draggable v-model="values" @start="drag=true" @end="drag=false" class="file-browser-previews" handle=".move-handle">
-            <div v-for="(val, valIndex) in values" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
+            <div v-for="(val, valIndex) in values" v-if="! dropIndexes[valIndex]" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
                 <img :src="val"  :alt="val"/>
                 <div class="file-browser-preview-controls">
                     <div class="file-browser-preview-control-btn" @click="preview(val)">
                         <i class="fas fa-eye"></i>
                     </div>
-                    <div class="file-browser-preview-control-btn">
+                    <div class="file-browser-preview-control-btn" @click="drop(val, valIndex)">
                         <i class="fas fa-trash-alt"></i>
                     </div>
                 </div>
             </div>
-            <div class="file-browser-preview file-browser-add" :key="`preview-add`">
+            <div class="file-browser-preview file-browser-add" :key="`preview-add`" @click="open">
                 <i class="fas fa-plus-circle"></i>
             </div>
         </draggable>
 
 
         <template v-for="(val, valIndex) in values">
-            <input type="hidden" :name="`${fieldName}${!String(fieldName).endsWith('[]') ? '[]':''}`" :value="val" :key="`hidden-${valIndex}`" />
+            <input v-if="! dropIndexes[valIndex]" type="hidden" :name="`${fieldName}${!String(fieldName).endsWith('[]') ? '[]':''}`" :value="val" :key="`hidden-${valIndex}`" />
         </template>
-
+        <input v-if="! values.length" :name="fieldName.replace(/\[]$/, '')" value="[]" type="hidden" />
         <i class="fas fa-cloud-download-alt file-browser-logo-download"></i>
+        <input type="file" ref="file" style="display: none" @change="previewFiles" multiple accept="image/*" />
     </div>
 </template>
 
@@ -42,12 +48,22 @@ export default {
             values: Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []),
             drag: false,
             dark: window.darkMode,
+            dropIndexes: {},
+            move: false
         }
     },
     mounted() {
-        console.log(this.fieldName, this.values);
+        //console.log(this.fieldName, this.values);
     },
     methods: {
+        handleDragOver(event) {
+            this.move = true;
+        },
+        async handleDrop(event) {
+            const files = event.dataTransfer.files;
+            await this.uploadImages(files);
+            this.move = false;
+        },
         preview (img) {
             let images = [];
             this.values.forEach((val) => {
@@ -63,6 +79,56 @@ export default {
                 },
                 ...images
             ]);
+        },
+        open () {
+            this.$refs.file.click();
+        },
+        async previewFiles(event) {
+            const files = event.target.files;
+            await this.uploadImages(files);
+        },
+        async uploadImages (files) {
+            const loadedFiles = [];
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].type.startsWith('image/')) {
+                    loadedFiles.push(files[i]);
+                }
+            }
+
+            for (let i = 0; i < loadedFiles.length; i++) {
+                const formData = new FormData();
+                formData.append('upload', loadedFiles[i]);
+
+                try {
+                    const response = await axios.post(window.uploader, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+
+                    if (response.data && response.data.file) {
+                        this.values.push(response.data.file);
+                    }
+                } catch (error) {
+                    console.error(`Произошла ошибка при отправке файла ${i+1}`, error);
+                    break;
+                }
+            }
+        },
+        drop (file, valIndex) {
+            //this.$set(this.dropIndexes, valIndex, true);
+            //this.dropIndexes[valIndex] = true;
+            //console.log(this.dropIndexes);
+            axios.post(window.uploader_drop, {
+                file
+            }).then((response) => {
+                if (response.data.drop) {
+                    this.values = this.values
+                        .filter((val, index) => index !== valIndex);
+                }
+            }).catch((error) => {
+                console.error('Произошла ошибка при удалении файла', error);
+            });
         }
     }
 }
@@ -132,6 +198,12 @@ export default {
     }
     .file-browser-add i {
         font-size: 80px;
+        opacity: 0.2;
+    }
+    .add-files-dropped {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .add-files-dropped .file-browser-preview {
         opacity: 0.2;
     }
 </style>
