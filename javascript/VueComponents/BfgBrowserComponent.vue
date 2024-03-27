@@ -118,11 +118,9 @@ export default {
             //console.log(this.dropIndexes);
             axios.post(window.uploader_drop, {
                 file
-            }).then((response) => {
-                if (response.data.drop) {
-                    this.values = this.values
-                        .filter((val, index) => index !== valIndex);
-                }
+            }).then(() => {
+                this.values = this.values
+                    .filter((val, index) => index !== valIndex);
             }).catch((error) => {
                 console.error('Произошла ошибка при удалении файла', error);
             });
