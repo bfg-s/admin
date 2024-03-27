@@ -144,7 +144,7 @@ class ModelSaver
     {
         $data = [];
         foreach ($this->data as $key => $datum) {
-            if ($datum === '[]') {
+            if ($datum === '[__EMPTY_ARRAY__]') {
                 $datum = [];
             }
             if ($datum instanceof UploadedFile) {

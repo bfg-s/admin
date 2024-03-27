@@ -1,13 +1,13 @@
 <template>
     <div
         :class="{'file-browser': true, 'add-files-dropped' : move}"
-        @dragover.prevent="handleDragOver"
+        @dragover.prevent="move=true"
         @dragleave.prevent="move=false"
         @drop.prevent="handleDrop"
     >
         <draggable v-model="values" @start="drag=true" @end="drag=false" class="file-browser-previews" handle=".move-handle">
             <div v-for="(val, valIndex) in values" v-if="! dropIndexes[valIndex]" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
-                <img :src="val"  :alt="val"/>
+                <img :src="val" :alt="val"/>
                 <div class="file-browser-preview-controls">
                     <div class="file-browser-preview-control-btn" @click="preview(val)">
                         <i class="fas fa-eye"></i>
@@ -26,7 +26,7 @@
         <template v-for="(val, valIndex) in values">
             <input v-if="! dropIndexes[valIndex]" type="hidden" :name="`${fieldName}${!String(fieldName).endsWith('[]') ? '[]':''}`" :value="val" :key="`hidden-${valIndex}`" />
         </template>
-        <input v-if="! values.length" :name="fieldName.replace(/\[]$/, '')" value="[]" type="hidden" />
+        <input v-if="! values.length" :name="fieldName.replace(/\[]$/, '')" value="[__EMPTY_ARRAY__]" type="hidden" />
         <i class="fas fa-cloud-download-alt file-browser-logo-download"></i>
         <input type="file" ref="file" style="display: none" @change="previewFiles" multiple accept="image/*" />
     </div>
@@ -56,9 +56,6 @@ export default {
         //console.log(this.fieldName, this.values);
     },
     methods: {
-        handleDragOver(event) {
-            this.move = true;
-        },
         async handleDrop(event) {
             const files = event.dataTransfer.files;
             await this.uploadImages(files);
