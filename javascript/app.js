@@ -21,6 +21,8 @@ document.addEventListener('alpine:init', () => {
     require('./AlpineComponents/ToggleDark');
 });
 
+window.Vue.component('bfg-browser-component', require('./VueComponents/BfgBrowserComponent.vue').default);
+
 $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
 
 require('./Extensions/executor');

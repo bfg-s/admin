@@ -104,6 +104,8 @@ trait FieldMassControlTrait
             if ($class instanceof FormGroupComponent) {
                 $class->set_parent($this);
 
+                $class->model($this->model);
+
                 if ($this->vertical) {
                     $class->vertical();
                 }

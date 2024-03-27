@@ -24,16 +24,29 @@ trait ModelRelationBuilderTrait
      */
     protected function _build()
     {
-        $old_model_form = $this->page->model();
+//        $old_model_form = $this->page->model();
 
-        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group, Model $model) {
-            $k = $model->{$model->getKeyName()};
-            $n = $group->get_name();
-            $m = [];
-            preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $n, $m);
-            $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2] ?? ''));
-            $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
-        };
+        //dd($this->parent);
+
+//        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group, Model $model) {
+//            $k = $model->{$model->getKeyName()};
+//            $n = $group->get_name();
+//            $m = [];
+//            preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $n, $m);
+//            if ($this->parentKey) {
+//                $group->set_name("{$this->parentKey}[{$this->relation_name}][{$k}][{$m[1]}]".($m[2] ?? ''));
+//                $group->set_id("{$this->parentKey}_{$this->relation_name}_{$group->get_id()}_{$k}");
+//            } else {
+//                $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2] ?? ''));
+//                $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
+//            }
+//        };
+//
+//        Component::$construct_modify['build_relation'] = function (Component $component) {
+//            if ($component instanceof ModelRelationComponent) {
+//                $component->setParentKey($this->relation_name);
+//            }
+//        };
 
         if (! $this->ordered) {
             $datas = $this->relation->get();
@@ -41,12 +54,21 @@ trait ModelRelationBuilderTrait
             $datas = $this->relation->orderBy($this->ordered)->get();
         }
 
+//        $hasParent = count($this->deepNames()) > 1;
+
         $i = 0;
+
+        $preventModel = $this->page->getModel();
+        $preventModelThis = $this->model;
+
+        //dump(spl_object_id($preventModelThis) . ' - ' . get_class($preventModelThis));
 
         /** @var Model $item */
         foreach ($datas as $item) {
 
             $this->page->model($item);
+            $this->model($item);
+//            $this->parent->model($item);
 
             $container = $this->createComponent(
                 ModelRelationContainerComponent::class,
@@ -54,15 +76,21 @@ trait ModelRelationBuilderTrait
                 $item->{$item->getKeyName()}
             )->setOrdered($this->ordered);
 
+            $container->model($item);
+
+            $deepNames = $this->deepNames();
+
+            $nameStart = $this->namesToString($deepNames);
+
             $container->view('components.inputs.hidden', [
-                'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}."][{$item->getKeyName()}]",
+                'name' => "{$nameStart}[{$item->getKeyName()}]",
                 'value' => $item->{$item->getKeyName()}
             ]);
 
             if ($this->ordered) {
 
                 $container->view('components.inputs.hidden', [
-                    'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}."][{$this->ordered}]",
+                    'name' => "{$nameStart}[{$this->ordered}]",
                     'value' => $item->{$this->ordered} ?: $i,
                     'classes' => ['ordered-field']
                 ]);
@@ -74,13 +102,17 @@ trait ModelRelationBuilderTrait
                 'template_content',
                 'template_content'
             );
-            $container->appEnd($this->last_content);
+
+            //$this->last_content->model($item);
+
             $this->_call_tpl($this->last_content, $item, $this);
+
+            $container->appEnd($this->last_content);
+
             if ($this->last_content->get_test_var('control_group', [$item])) {
                 $del = $this->last_content->get_test_var('control_delete', [$item]);
 
                 if ($del || $this->last_content->hasControls()) {
-
 
                     if ($del) {
                         $buttonsDel = $this->createComponent(ButtonsComponent::class)
@@ -89,7 +121,7 @@ trait ModelRelationBuilderTrait
                             ->on_click('admin::drop_relation', [
                                 admin_view('components.inputs.hidden', [
                                     'classes' => ['delete_field'],
-                                    'name' => "{$this->relation_name}[".$item->{$item->getKeyName()}.']['.ModelSaver::DELETE_FIELD.']',
+                                    'name' => "{$nameStart}[".ModelSaver::DELETE_FIELD.']',
                                     'value' => $item->{$item->getKeyName()}
                                 ])->render(),
                             ]);
@@ -111,10 +143,13 @@ trait ModelRelationBuilderTrait
                 }
             }
 
-            $this->appEnd($container);
+            $this->appEnd($container->render());
 
             $i++;
         }
+
+        $this->page->model($preventModel);
+        $this->model($preventModelThis);
 
         if (!$datas->count() && $this->on_empty) {
             $container = $this->createComponent(
@@ -136,13 +171,30 @@ trait ModelRelationBuilderTrait
             $this->appEnd($container);
         }
 
-        $this->page->model($old_model_form);
+        //dump(spl_object_id($preventModelThis) . ' - ' . get_class($preventModelThis));
 
-        unset(FormGroupComponent::$construct_modify['build_relation']);
+        $this->__btn();
 
-        $this->_btn();
+//        unset(
+//            FormGroupComponent::$construct_modify['build_relation'],
+//            Component::$construct_modify['build_relation'],
+//        );
 
         ModelRelationComponent::$fm = $this->fm_old;
+    }
+
+    protected function namesToString($array): string
+    {
+        if (empty($array)) {
+            return '';
+        }
+
+        $firstElement = array_shift($array);
+        $formattedElements = array_map(function($item) {
+            return sprintf('[%s]', $item);
+        }, $array);
+
+        return $firstElement . implode('', $formattedElements);
     }
 
     /**
@@ -161,18 +213,31 @@ trait ModelRelationBuilderTrait
      * Build relation template maker button.
      * @return void
      */
-    protected function _btn()
+    protected function __btn()
     {
-        $old_model_form = $this->page->model();
+//        $old_model_form = $this->page->model();
 
-        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group) {
-            $m = [];
-            preg_match('/([a-zA-Z\-_]+)(\[.*])?/', $group->get_name(), $m);
-            $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2] ?? ''));
-            $group->force_set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
-        };
+        FormGroupComponent::$tpl = true;
+        ModelRelationComponent::$tpl = true;
+//        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group) {
+//            $m = [];
+//            preg_match('/([a-zA-Z\-_]+)(\[.*])?/', $group->get_name(), $m);
+//            if ($this->parentKey) {
+//                $group->set_name("{$this->parentKey}[{$this->relation_name}][{__id__}][{$m[1]}]".($m[2] ?? ''));
+//                $group->force_set_id("{__id__}_{$this->parentKey}_{$this->relation_name}_{$group->get_id()}");
+//            } else {
+//                $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2] ?? ''));
+//                $group->force_set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
+//            }
+//        };
+//
+//        Component::$construct_modify['build_relation'] = function (Component $component) {
+//            if ($component instanceof ModelRelationComponent) {
+//                $component->setParentKey($this->relation_name);
+//            }
+//        };
 
-        $this->page->model(new ($this->page->model()));
+        //$this->page->model(new ($this->page->model()));
 
         $container = $this->createComponent(
             ModelRelationContainerComponent::class,
@@ -180,10 +245,16 @@ trait ModelRelationBuilderTrait
             'template_container'
         )->setOrdered($this->ordered);
 
+        //dump($this->deepNames(), $this->parent->parent);
+
         if ($this->ordered) {
 
+            $deepNames = $this->deepNames();
+
+            $nameStart = $this->namesToString($deepNames);
+
             $container->view('components.inputs.hidden', [
-                'name' => "{$this->relation_name}[{__id__}][{$this->ordered}]",
+                'name' => "{$nameStart}[{__id__}][{$this->ordered}]",
                 'value' => '{__val__}',
                 'classes' => ['ordered-field']
             ]);
@@ -196,10 +267,14 @@ trait ModelRelationBuilderTrait
             'template_content'
         );
 
+        //$this->page->model($this->relation->getQuery()->getModel());
+        //$this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
+
+        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
+
         $container->appEnd($this->last_content);
-        $this->page->model($this->relation->getQuery()->getModel());
-        $this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
-        $this->page->model(new ($this->page->model()));
+
+        //$this->page->model(new ($this->page->model()));
         if (!$this->last_content->get_test_var('control_create')) {
             return '';
         }
@@ -207,8 +282,11 @@ trait ModelRelationBuilderTrait
         $buttons->warning(['fas fa-minus', __('admin.remove')])->on_click('admin::drop_relation_tpl');
         $container->setButtons($buttons);
 
-        $this->page->model($old_model_form);
-        unset(FormGroupComponent::$construct_modify['build_relation']);
+        //$this->page->model($old_model_form);
+//        unset(
+//            FormGroupComponent::$construct_modify['build_relation'],
+//            Component::$construct_modify['build_relation'],
+//        );
 
         $this->buttons = $this->createComponent(ButtonsComponent::class)
             ->success(['fas fa-plus', __('admin.add')])
@@ -221,6 +299,22 @@ trait ModelRelationBuilderTrait
 
         $row->template("relation_{$this->relation_name}_template")
             ->appEnd($container);
+
+
+//        foreach ($this->contents as $key => $content) {
+//            $this->contents[$key] = $content->render();
+//        }
+
+//        $key = array_key_last($this->contents);
+//        if (isset($this->contents[$key])) {
+//            $this->contents[$key] = $this->contents[$key]->render();
+//        }
+        //dump($this->contents);
+        //dump($this->contents[array_key_last($this->contents)]);
+
+
+        FormGroupComponent::$tpl = false;
+        ModelRelationComponent::$tpl = false;
     }
 
     /**

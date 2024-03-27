@@ -45,13 +45,12 @@ trait RulesBackTrait
         if ($this->admin_controller) {
             /** @var Controller $controller */
             $arr = str_ends_with($this->name, '[]') ? '.' : '';
+            $deepPaths = $this->deepPaths();
+            $ruleKey = implode('.', $deepPaths) . $arr;
             $controller = $this->controller;
-            $controller::$rules[$this->path . $arr][] = $rule;
-            if ($message && is_string($rule)) {
-                $controller::$rule_messages[
-                    "{$this->path}{$arr}.{$rule}"
-                ] = $message;
-            }
+
+            $controller::setGlobalRule($ruleKey, $rule);
+            $controller::setGlobalRuleMessage($ruleKey, $rule, $message);
         }
 
         return $this;

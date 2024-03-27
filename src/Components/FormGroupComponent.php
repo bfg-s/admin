@@ -151,8 +151,9 @@ abstract class FormGroupComponent extends Component
 
         $this->title = $title ? __($title) : $title;
         $this->name = $name;
-        $this->field_id = 'input_'.Str::slug($this->name, '_');
-        $this->path = trim(str_replace(['[', ']'], '.', str_replace('[]', '', $name)), '.');
+
+        $this->field_id = 'input_'.$this->convertBracketsToUnderscore($name);
+        $this->path = $this->convertBracketsToUnderscore($name, '.');
         $this->errors = request()->session()->get('errors') ?: new ViewErrorBag();
         $this->has_bug = $this->errors->getBag('default')->has($name);
         if (Route::current()) {
@@ -170,6 +171,15 @@ abstract class FormGroupComponent extends Component
                 call_user_func($item, $this, $this->model);
             }
         }
+    }
+
+    protected function convertBracketsToUnderscore($str, string $delimiter = "_"): string
+    {
+        return str_replace(
+            ["{$delimiter}{$delimiter}", '{_id_}'],
+            [$delimiter, ''],
+            trim(str_replace(['[', ']'], $delimiter, str_replace('[]', '', $str)), $delimiter)
+        );
     }
 
     /**
@@ -243,6 +253,19 @@ abstract class FormGroupComponent extends Component
         return $this;
     }
 
+    public function deepName(array $names): string|null
+    {
+        return $this->name;
+    }
+
+    public function deepPath(array $paths): string|null
+    {
+        return $this->path;
+    }
+
+    static bool $tpl = false;
+    protected bool $deep = false;
+
     /**
      * @param  Component  $parent
      * @return $this
@@ -251,7 +274,63 @@ abstract class FormGroupComponent extends Component
     {
         $this->parent_field = $parent;
 
+        $deepNames = $this->deepNames();
+        $name = $this->namesToString($deepNames);
+
+        $this->set_name($name . (str_ends_with($this->get_name(), '[]') ? '[]' : ''));
+        $this->set_id('input_'.$this->convertBracketsToUnderscore($name));
+
+
+//        if ($parent instanceof ModelRelationContentComponent) {
+//            if ($parent->parent instanceof ModelRelationComponent) {
+//
+//
+////dd($deepNames);
+//                $this->deep = count($deepNames) > 1;
+////dump($parent->parent->model);
+//                $names = array_merge(
+//                    [$deepNames[0]],
+//                    count($deepNames) > 1 || (! static::$tpl && count($deepNames) != 1) && $parent->parent->model->id ? [$parent->parent->model->id] : [],
+//                    count($deepNames) == 1 && $parent->model->id ? [$parent->model->id] : [],
+//                    count($deepNames) == 1 && static::$tpl ? ['{__id__}'] : [],
+//                    array_slice($deepNames, 1),
+//                    count($deepNames) > 1 && static::$tpl ? ['{__id__}'] : [],
+//                    count($deepNames) > 1 && $parent->model->id ? [$parent->model->id] : [],
+//                    $this->parseStringToArray($this->name),
+//                );
+//
+//                $this->set_name($this->namesToString($names) . (str_ends_with($this->get_name(), '[]') ? '[]' : ''));
+//                $this->set_id('input_'.$this->convertBracketsToUnderscore($this->name));
+//            }
+//        }
+
         return $this;
+    }
+
+    /**
+     * @return Component|null
+     */
+    public function getParent(): ?Component
+    {
+        return $this->parent_field;
+    }
+
+    /**
+     * @param $array
+     * @return string
+     */
+    protected function namesToString($array): string
+    {
+        if (empty($array)) {
+            return '';
+        }
+
+        $firstElement = array_shift($array);
+        $formattedElements = array_map(function($item) {
+            return sprintf('[%s]', $item);
+        }, $array);
+
+        return $firstElement . implode('', $formattedElements);
     }
 
     /**
@@ -614,6 +693,7 @@ abstract class FormGroupComponent extends Component
         if ($this->value !== null) {
             return $this->value;
         }
+
         $val = old($this->path);
         if (!$val) {
             $val = request($this->path) ?: null;

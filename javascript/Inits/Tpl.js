@@ -65,8 +65,8 @@ window.libs['tpl::copyTo'] = function ($tpl, $to = $tpl, $before = null) {
     }
 };
 
-window.libs['tpl::get_tpl'] = function ($tpl) {
-    let template = document.querySelector(`template[data-tpl="${$tpl}"]`);
+window.libs['tpl::get_tpl'] = function ($tpl, root = document) {
+    let template = root.querySelector(`template[data-tpl="${$tpl}"]`);
 
     if (template) {
 

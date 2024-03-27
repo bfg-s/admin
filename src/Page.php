@@ -398,4 +398,9 @@ class Page extends Container
             return $this;
         };
     }
+
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
 }

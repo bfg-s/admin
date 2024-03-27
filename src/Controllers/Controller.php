@@ -28,7 +28,7 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public static array $rules = [];
+    protected static array $rules = [];
 
     /**
      * @var array
@@ -38,7 +38,7 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public static array $rule_messages = [];
+    protected static array $rule_messages = [];
 
     /**
      * @var array
@@ -238,5 +238,29 @@ class Controller extends BaseController
         }
 
         return $result;
+    }
+
+    /**
+     * @param  string  $key
+     * @param  mixed  $rule
+     * @return void
+     */
+    public static function setGlobalRule(string $key, mixed $rule): void
+    {
+        static::$rules[$key][] = $rule;
+    }
+
+    /**
+     * @param  string  $key
+     * @param  mixed  $rule
+     * @param  string|null  $message
+     * @return void
+     */
+    public static function setGlobalRuleMessage(string $key, mixed $rule, ?string $message): void
+    {
+        if ($message && is_string($rule)) {
+
+            static::$rule_messages["{$key}.{$rule}"] = $message;
+        }
     }
 }

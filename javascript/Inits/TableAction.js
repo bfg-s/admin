@@ -121,10 +121,13 @@ window.libs['table_action::exportToExcel'] = function () {
         table: this.target.dataset.table,
     }).then((data) => {
 
-        exec("toast::success", "Saving...");
 
         let contentDispo = data.headers.get('content-disposition');
+
         if (contentDispo) {
+
+            exec("toast::success", "Saving...");
+
             let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
             let blob = data.data;
             if (window.navigator.msSaveOrOpenBlob) {
@@ -139,7 +142,6 @@ window.libs['table_action::exportToExcel'] = function () {
                 document.body.removeChild(downloadLink);
             }
         }
-
     })
     .catch((data) => {
         exec("toast::error", data.response.data.message);
@@ -161,10 +163,13 @@ window.libs['table_action::exportToCsv'] = function () {
         order_type: this.target.dataset.orderType,
         table: this.target.dataset.table,
     }).then((data) => {
-        exec("toast::success", "Saving...");
 
         let contentDispo = data.headers.get('content-disposition');
+
         if (contentDispo) {
+
+            exec("toast::success", "Saving...");
+
             let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
             let blob = data.data;
             if (window.navigator.msSaveOrOpenBlob) {

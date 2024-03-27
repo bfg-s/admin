@@ -3,16 +3,16 @@ window.libs['admin::flash_document'] = function (changed_name = null, changed_va
 };
 
 window.libs['admin::drop_relation_tpl'] = function () {
-    if (($(this.target).parents('[data-relation-path]').find('.template_container').length - 1) <= 0) {
-        let container = $(this.target).parents('[data-relation-path]');
+    if (($(this.target).closest('[data-relation-path]').find('.template_container').length - 1) <= 0) {
+        let container = $(this.target).closest('[data-relation-path]');
         container.find('.template_empty_container').show();
     }
 
-    $(this.target).parents('.template_container').remove();
+    $(this.target).closest('.template_container').remove();
 };
 
 window.libs['admin::drop_relation'] = function (field_name) {
-    let container = $(this.target).parents('.template_container');
+    let container = $(this.target).closest('.template_container');
     container.find('.control_relation').hide();
     container.find('.template_content').hide();
     container.find('.return_relation').show();
@@ -20,7 +20,7 @@ window.libs['admin::drop_relation'] = function (field_name) {
 };
 
 window.libs['admin::return_relation'] = function () {
-    let container = $(this.target).parents('.template_container');
+    let container = $(this.target).closest('.template_container');
     container.find('.control_relation').show();
     container.find('.template_content').show();
     container.find('.return_relation').hide();
@@ -29,9 +29,8 @@ window.libs['admin::return_relation'] = function () {
 
 window.libs['admin::add_relation_tpl'] = function (path) {
     let area = `relation_${path}_template`,
-        // id = (new Date).getTime(),
-        tpl = exec("tpl::get_tpl", area),
-        zone = document.querySelector(`[data-tpl="${area}"]`),
+        tpl = exec("tpl::get_tpl", area, $(this.target).closest('[data-relation]')[0]),
+        zone = $(this.target).closest('[data-relation]')[0].querySelector(`[data-tpl="${area}"]`),
         id = zone ? `new_` + (zone.childElementCount + 1) : (new Date).getTime();
 
     const all = zone.querySelectorAll('.template_container');

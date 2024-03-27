@@ -77,17 +77,63 @@ class ModelRelationComponent extends Component
      */
     public function __construct($relationName, ...$delegates)
     {
-        parent::__construct();
-
         if (is_array($relationName)) {
             $this->relation_name = $relationName[0];
-            $this->relation = $this->model->{$relationName[1]}();
+            $modelRelationName = $relationName[1];
         } else {
             $this->relation_name = $relationName;
-            $this->relation = $this->model->{$relationName}();
+            $modelRelationName = $relationName;
         }
 
+        parent::__construct();
+
+        $this->relation = $this->model->{$modelRelationName}();
+
         $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
+
+        $this->_construct();
+    }
+
+    public function getRelationName(): ?string
+    {
+        return $this->relation_name;
+    }
+
+    static bool $tpl = false;
+
+    public function deepName(array $names): string|null
+    {
+        if (static::$tpl) {
+            if (count($names) <= 1) {
+                $return = $this->relation_name . '[{__id__}]';
+            } else {
+                $return = $this->relation_name
+                    . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+            }
+        } else {
+            $return = $this->relation_name
+                . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+        }
+
+        return $return;
+    }
+
+    public function deepPath(array $paths): string|null
+    {
+        return $this->relation_name . '.*';
+    }
+
+    /**
+     * @param  Component  $component
+     * @return $this
+     */
+    public function setParent(Component $component): static
+    {
+//        if ($component instanceof ModelRelationContentComponent) {
+//
+//        }
+//            dump($component::class);
+        return parent::setParent($component);
     }
 
     /**

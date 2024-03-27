@@ -68,6 +68,11 @@ class ModelSaver
     protected static array $on_deleted = [];
 
     /**
+     * @var array
+     */
+    protected static array $modelsProcessed = [];
+
+    /**
      * @var bool
      */
     protected bool $has_delete = false;
@@ -126,9 +131,10 @@ class ModelSaver
             } else {
                 return $this->create_model($data, $add);
             }
-        } else {
+        } else if ($data || $add) {
             return $this->create_model($data, $add);
         }
+        return false;
     }
 
     /**
@@ -295,6 +301,8 @@ class ModelSaver
 
         $result = $this->model->update(array_merge($data, $event_data));
 
+        static::$modelsProcessed[get_class($this->model)][] = $this->model;
+
         if ($result) {
             $this->call_on('on_saved', $this->data, $result);
             $this->call_on('on_updated', $this->data, $result);
@@ -426,6 +434,8 @@ class ModelSaver
         $data_for_create = array_merge($data, $event_data);
 
         $this->model = $this->model->create($data_for_create);
+
+        static::$modelsProcessed[get_class($this->model)][] = $this->model;
 
         if ($this->src instanceof HasOne) {
             $local_parent_relation = $this->src->getLocalKeyName();
@@ -629,5 +639,14 @@ class ModelSaver
     public static function on_deleted(callable|string $model, callable $call = null): void
     {
         static::on('deleted', $model, $call);
+    }
+
+    /**
+     * @param  string  $class
+     * @return Collection|Model[]
+     */
+    public static function modelProcessed(string $class): Collection
+    {
+        return collect(static::$modelsProcessed[$class] ?? []);
     }
 }

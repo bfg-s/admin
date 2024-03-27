@@ -279,6 +279,11 @@ abstract class Component extends ComponentInputs
     protected bool $isInit = false;
 
     /**
+     * @var array
+     */
+    public static array $construct_modify = [];
+
+    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -286,6 +291,12 @@ abstract class Component extends ComponentInputs
         $this->page = app(Page::class);
 
         $this->model($this->page->model());
+
+        foreach (self::$construct_modify as $item) {
+            if (is_callable($item)) {
+                call_user_func($item, $this, $this->model);
+            }
+        }
 
         $this->iSelectModel = false;
 
@@ -691,6 +702,17 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * @param $model
+     * @return $this
+     */
+    public function simpleSetModel($model): static
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function realModel(): mixed
@@ -910,6 +932,8 @@ abstract class Component extends ComponentInputs
     {
         /** @var Component $newObj */
         $newObj = new $componentClass(...$arguments);
+
+        $newObj->simpleSetModel($this->model);
 
         $newObj->setParent($this);
 
@@ -1176,5 +1200,85 @@ CSS;
         }
 
         return $this;
+    }
+
+    public function getParent(): ?Component
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @return array
+     */
+    public function deepNames(): array
+    {
+        $names = [];
+        $parent = $this;
+        do {
+            if (method_exists($parent, 'deepName')) {
+                $parentNames = array_reverse(array_filter($this->parseStringToArray($parent->deepName($names))));
+                $names = array_merge($names, $parentNames);
+            }
+            $parent = $parent->getParent();
+        } while ($parent);
+
+        return collect($names)->reverse()->filter()->values()->all();
+    }
+
+    /**
+     * @return array
+     */
+    public function deepPaths(): array
+    {
+        $paths = [];
+        $parent = $this;
+        do {
+            if (method_exists($parent, 'deepName')) {
+                $parentPaths = array_reverse(array_filter(explode('.', $parent->deepPath($paths))));
+                $paths = array_merge($paths, $parentPaths);
+            }
+            $parent = $parent->getParent();
+        } while ($parent);
+
+        return collect($paths)->reverse()->filter()->values()->all();
+    }
+
+    /**
+     * @param $str
+     * @return array
+     */
+    protected function parseStringToArray($str): array
+    {
+        $arr = explode('[', $str);
+        return array_map(function ($s) {
+            return trim(trim(trim($s), '[]'));
+        }, $arr);
+    }
+
+    /**
+     * @param  array  $names
+     * @return string|null
+     */
+    public function deepName(array $names): string|null
+    {
+        return null;
+    }
+
+    /**
+     * @param  array  $paths
+     * @return string|null
+     */
+    public function deepPath(array $paths): string|null
+    {
+        return null;
+    }
+
+    /**
+     * @param  string  $name
+     * @return string
+     */
+    public function applyName(string $name): string
+    {
+        return $name;
     }
 }
