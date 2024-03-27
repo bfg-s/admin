@@ -458,9 +458,9 @@ class ImageInput extends FileInput
         if ($this->admin_controller) {
             /** @var Controller $controller */
             $controller = $this->controller;
-            $controller::$imageModifiers[$this->path][] = [$name, $attributes];
+            $controller::addImageModifier($this->path, $name, $attributes);
         }
-//dd($controller::$imageModifiers);
+
         return $this;
     }
 }

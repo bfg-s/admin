@@ -2,6 +2,7 @@
 
 namespace Admin\Components\Inputs;
 
+use Admin\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 class PasswordInput extends Input
@@ -27,10 +28,11 @@ class PasswordInput extends Input
      */
     public function confirm(string $label = null): static
     {
+        /** @var Controller $controller */
         $controller = Route::current()->controller;
         if (property_exists($controller, 'crypt_fields')) {
 
-            $controller::$crypt_fields[] = $this->name;
+            $controller::addCryptField($this->name);
         }
 
         $this->is_equal_to("#input_{$this->name}_confirmation")->confirmed()->crypt();

@@ -279,11 +279,6 @@ abstract class Component extends ComponentInputs
     protected bool $isInit = false;
 
     /**
-     * @var array
-     */
-    public static array $construct_modify = [];
-
-    /**
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -291,12 +286,6 @@ abstract class Component extends ComponentInputs
         $this->page = app(Page::class);
 
         $this->model($this->page->model());
-
-        foreach (self::$construct_modify as $item) {
-            if (is_callable($item)) {
-                call_user_func($item, $this, $this->model);
-            }
-        }
 
         $this->iSelectModel = false;
 

@@ -33,7 +33,7 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public static array $imageModifiers = [];
+    protected static array $imageModifiers = [];
 
     /**
      * @var array
@@ -43,10 +43,13 @@ class Controller extends BaseController
     /**
      * @var array
      */
-    public static array $crypt_fields = [
+    protected static array $crypt_fields = [
         'password',
     ];
 
+    /**
+     * @var bool
+     */
     protected static bool $started = false;
 
     /**
@@ -262,5 +265,25 @@ class Controller extends BaseController
 
             static::$rule_messages["{$key}.{$rule}"] = $message;
         }
+    }
+
+    /**
+     * @param  string  $path
+     * @param  string  $name
+     * @param  array  $attributes
+     * @return void
+     */
+    public static function addImageModifier(string $path, string $name, array $attributes = []): void
+    {
+        static::$imageModifiers[$path][] = [$name, $attributes];
+    }
+
+    /**
+     * @param  string  $fieldName
+     * @return void
+     */
+    public static function addCryptField(string $fieldName): void
+    {
+        static::$crypt_fields[] = $fieldName;
     }
 }

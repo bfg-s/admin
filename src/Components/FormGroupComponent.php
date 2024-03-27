@@ -19,11 +19,6 @@ abstract class FormGroupComponent extends Component
     use FontAwesome;
 
     /**
-     * @var array
-     */
-    public static array $construct_modify = [];
-
-    /**
      * @var string|null
      */
     protected ?string $title = null;
@@ -165,19 +160,18 @@ abstract class FormGroupComponent extends Component
         }
         $this->model = $this->page->model();
         $this->after_construct();
-
-        foreach (self::$construct_modify as $item) {
-            if (is_callable($item)) {
-                call_user_func($item, $this, $this->model);
-            }
-        }
     }
 
+    /**
+     * @param $str
+     * @param  string  $delimiter
+     * @return string
+     */
     protected function convertBracketsToUnderscore($str, string $delimiter = "_"): string
     {
         return str_replace(
-            ["{$delimiter}{$delimiter}", '{_id_}'],
-            [$delimiter, ''],
+            ["{$delimiter}{$delimiter}", '{__id__}', '{_id_}'],
+            [$delimiter, '', ''],
             trim(str_replace(['[', ']'], $delimiter, str_replace('[]', '', $str)), $delimiter)
         );
     }
@@ -253,18 +247,23 @@ abstract class FormGroupComponent extends Component
         return $this;
     }
 
+    /**
+     * @param  array  $names
+     * @return string|null
+     */
     public function deepName(array $names): string|null
     {
         return $this->name;
     }
 
+    /**
+     * @param  array  $paths
+     * @return string|null
+     */
     public function deepPath(array $paths): string|null
     {
         return $this->path;
     }
-
-    static bool $tpl = false;
-    protected bool $deep = false;
 
     /**
      * @param  Component  $parent
@@ -279,30 +278,6 @@ abstract class FormGroupComponent extends Component
 
         $this->set_name($name . (str_ends_with($this->get_name(), '[]') ? '[]' : ''));
         $this->set_id('input_'.$this->convertBracketsToUnderscore($name));
-
-
-//        if ($parent instanceof ModelRelationContentComponent) {
-//            if ($parent->parent instanceof ModelRelationComponent) {
-//
-//
-////dd($deepNames);
-//                $this->deep = count($deepNames) > 1;
-////dump($parent->parent->model);
-//                $names = array_merge(
-//                    [$deepNames[0]],
-//                    count($deepNames) > 1 || (! static::$tpl && count($deepNames) != 1) && $parent->parent->model->id ? [$parent->parent->model->id] : [],
-//                    count($deepNames) == 1 && $parent->model->id ? [$parent->model->id] : [],
-//                    count($deepNames) == 1 && static::$tpl ? ['{__id__}'] : [],
-//                    array_slice($deepNames, 1),
-//                    count($deepNames) > 1 && static::$tpl ? ['{__id__}'] : [],
-//                    count($deepNames) > 1 && $parent->model->id ? [$parent->model->id] : [],
-//                    $this->parseStringToArray($this->name),
-//                );
-//
-//                $this->set_name($this->namesToString($names) . (str_ends_with($this->get_name(), '[]') ? '[]' : ''));
-//                $this->set_id('input_'.$this->convertBracketsToUnderscore($this->name));
-//            }
-//        }
 
         return $this;
     }
@@ -380,7 +355,8 @@ abstract class FormGroupComponent extends Component
     public function crypt(): static
     {
         if ($this->admin_controller) {
-            $this->controller::$crypt_fields[] = $this->name;
+
+            $this->controller::addCryptField($this->name);
         }
 
         return $this;

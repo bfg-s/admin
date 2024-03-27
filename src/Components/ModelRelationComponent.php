@@ -72,6 +72,11 @@ class ModelRelationComponent extends Component
     protected ?string $ordered = null;
 
     /**
+     * @var bool
+     */
+    protected static bool $tplMode = false;
+
+    /**
      * @param  array|string  $relationName
      * @param  mixed  ...$delegates
      */
@@ -90,20 +95,32 @@ class ModelRelationComponent extends Component
         $this->relation = $this->model->{$modelRelationName}();
 
         $this->innerDelegates = array_merge($this->innerDelegates, $delegates);
-
-        $this->_construct();
     }
 
+    /**
+     * @return string|null
+     */
     public function getRelationName(): ?string
     {
         return $this->relation_name;
     }
 
-    static bool $tpl = false;
+    /**
+     * @param  bool  $state
+     * @return void
+     */
+    public static function templateMode(bool $state): void
+    {
+        static::$tplMode = $state;
+    }
 
+    /**
+     * @param  array  $names
+     * @return string|null
+     */
     public function deepName(array $names): string|null
     {
-        if (static::$tpl) {
+        if (static::$tplMode) {
             if (count($names) <= 1) {
                 $return = $this->relation_name . '[{__id__}]';
             } else {

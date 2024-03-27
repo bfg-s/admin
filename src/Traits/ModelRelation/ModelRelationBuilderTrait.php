@@ -3,16 +3,14 @@
 namespace Admin\Traits\ModelRelation;
 
 use Admin\Components\Component;
-use Admin\Components\DividerComponent;
 use Admin\Components\ModelRelationContainerComponent;
 use Illuminate\Database\Eloquent\Model;
 use Admin\Components\ButtonsComponent;
-use Admin\Components\FormGroupComponent;
-use Admin\Components\GridColumnComponent;
 use Admin\Components\ModelRelationComponent;
 use Admin\Components\ModelRelationContentComponent;
 use Admin\Core\ModelSaver;
 use Admin\Explanation;
+use Throwable;
 
 /**
  * @mixin Component
@@ -21,54 +19,26 @@ trait ModelRelationBuilderTrait
 {
     /**
      * Build relation rows.
+     * @throws Throwable
      */
-    protected function _build()
+    protected function _build(): void
     {
-//        $old_model_form = $this->page->model();
-
-        //dd($this->parent);
-
-//        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group, Model $model) {
-//            $k = $model->{$model->getKeyName()};
-//            $n = $group->get_name();
-//            $m = [];
-//            preg_match('/([a-zA-Z\-\_]+)(\[.*\])?/', $n, $m);
-//            if ($this->parentKey) {
-//                $group->set_name("{$this->parentKey}[{$this->relation_name}][{$k}][{$m[1]}]".($m[2] ?? ''));
-//                $group->set_id("{$this->parentKey}_{$this->relation_name}_{$group->get_id()}_{$k}");
-//            } else {
-//                $group->set_name("{$this->relation_name}[{$k}][{$m[1]}]".($m[2] ?? ''));
-//                $group->set_id("{$this->relation_name}_{$group->get_id()}_{$k}");
-//            }
-//        };
-//
-//        Component::$construct_modify['build_relation'] = function (Component $component) {
-//            if ($component instanceof ModelRelationComponent) {
-//                $component->setParentKey($this->relation_name);
-//            }
-//        };
-
         if (! $this->ordered) {
             $datas = $this->relation->get();
         } else {
             $datas = $this->relation->orderBy($this->ordered)->get();
         }
 
-//        $hasParent = count($this->deepNames()) > 1;
-
         $i = 0;
 
         $preventModel = $this->page->getModel();
         $preventModelThis = $this->model;
-
-        //dump(spl_object_id($preventModelThis) . ' - ' . get_class($preventModelThis));
 
         /** @var Model $item */
         foreach ($datas as $item) {
 
             $this->page->model($item);
             $this->model($item);
-//            $this->parent->model($item);
 
             $container = $this->createComponent(
                 ModelRelationContainerComponent::class,
@@ -103,9 +73,7 @@ trait ModelRelationBuilderTrait
                 'template_content'
             );
 
-            //$this->last_content->model($item);
-
-            $this->_call_tpl($this->last_content, $item, $this);
+            $this->applyTemplate();
 
             $container->appEnd($this->last_content);
 
@@ -166,23 +134,20 @@ trait ModelRelationBuilderTrait
                 'template_empty_content'
             );
 
-            $this->_call_empty_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
+            $this->callEmptyTemplate($this->last_content, $this->relation->getQuery()->getModel(), $this);
             $container->appEnd($this->last_content);
             $this->appEnd($container);
         }
 
-        //dump(spl_object_id($preventModelThis) . ' - ' . get_class($preventModelThis));
-
-        $this->__btn();
-
-//        unset(
-//            FormGroupComponent::$construct_modify['build_relation'],
-//            Component::$construct_modify['build_relation'],
-//        );
+        $this->generateButton();
 
         ModelRelationComponent::$fm = $this->fm_old;
     }
 
+    /**
+     * @param $array
+     * @return string
+     */
     protected function namesToString($array): string
     {
         if (empty($array)) {
@@ -198,54 +163,18 @@ trait ModelRelationBuilderTrait
     }
 
     /**
-     * @param  mixed  ...$params
-     * @return void
-     */
-    protected function _call_tpl(...$params)
-    {
-        /**
-         * Required Force.
-         */
-        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
-    }
-
-    /**
      * Build relation template maker button.
      * @return void
      */
-    protected function __btn()
+    protected function generateButton(): void
     {
-//        $old_model_form = $this->page->model();
-
-        FormGroupComponent::$tpl = true;
-        ModelRelationComponent::$tpl = true;
-//        FormGroupComponent::$construct_modify['build_relation'] = function (FormGroupComponent $group) {
-//            $m = [];
-//            preg_match('/([a-zA-Z\-_]+)(\[.*])?/', $group->get_name(), $m);
-//            if ($this->parentKey) {
-//                $group->set_name("{$this->parentKey}[{$this->relation_name}][{__id__}][{$m[1]}]".($m[2] ?? ''));
-//                $group->force_set_id("{__id__}_{$this->parentKey}_{$this->relation_name}_{$group->get_id()}");
-//            } else {
-//                $group->set_name("{$this->relation_name}[{__id__}][{$m[1]}]".($m[2] ?? ''));
-//                $group->force_set_id("{__id__}_{$this->relation_name}_{$group->get_id()}");
-//            }
-//        };
-//
-//        Component::$construct_modify['build_relation'] = function (Component $component) {
-//            if ($component instanceof ModelRelationComponent) {
-//                $component->setParentKey($this->relation_name);
-//            }
-//        };
-
-        //$this->page->model(new ($this->page->model()));
+        ModelRelationComponent::templateMode(true);
 
         $container = $this->createComponent(
             ModelRelationContainerComponent::class,
             $this->relation_name,
             'template_container'
         )->setOrdered($this->ordered);
-
-        //dump($this->deepNames(), $this->parent->parent);
 
         if ($this->ordered) {
 
@@ -267,26 +196,16 @@ trait ModelRelationBuilderTrait
             'template_content'
         );
 
-        //$this->page->model($this->relation->getQuery()->getModel());
-        //$this->_call_tpl($this->last_content, $this->relation->getQuery()->getModel(), $this);
-
-        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
+        $this->applyTemplate();
 
         $container->appEnd($this->last_content);
 
-        //$this->page->model(new ($this->page->model()));
         if (!$this->last_content->get_test_var('control_create')) {
-            return '';
+            return ;
         }
         $buttons = $this->createComponent(ButtonsComponent::class);
         $buttons->warning(['fas fa-minus', __('admin.remove')])->on_click('admin::drop_relation_tpl');
         $container->setButtons($buttons);
-
-        //$this->page->model($old_model_form);
-//        unset(
-//            FormGroupComponent::$construct_modify['build_relation'],
-//            Component::$construct_modify['build_relation'],
-//        );
 
         $this->buttons = $this->createComponent(ButtonsComponent::class)
             ->success(['fas fa-plus', __('admin.add')])
@@ -301,30 +220,26 @@ trait ModelRelationBuilderTrait
             ->appEnd($container);
 
 
-//        foreach ($this->contents as $key => $content) {
-//            $this->contents[$key] = $content->render();
-//        }
+        ModelRelationComponent::templateMode(false);
+    }
 
-//        $key = array_key_last($this->contents);
-//        if (isset($this->contents[$key])) {
-//            $this->contents[$key] = $this->contents[$key]->render();
-//        }
-        //dump($this->contents);
-        //dump($this->contents[array_key_last($this->contents)]);
-
-
-        FormGroupComponent::$tpl = false;
-        ModelRelationComponent::$tpl = false;
+    /**
+     * @return void
+     */
+    protected function applyTemplate(): void
+    {
+        /**
+         * Required Force.
+         */
+        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
     }
 
     /**
      * @param  mixed  ...$params
      * @return mixed
      */
-    protected function _call_empty_tpl(...$params): mixed
+    protected function callEmptyTemplate(...$params): mixed
     {
-        $return = call_user_func($this->on_empty, ...$params);
-
-        return $return;
+        return call_user_func($this->on_empty, ...$params);
     }
 }
