@@ -23,7 +23,6 @@ class PercentInput extends Input
             'digits' => 2,
             'min' => 0,
             'max' => 100,
-            //'suffix' => " %",
             'digitsOptional' => false,
             'placeholder' => "0",
             'radixPoint' => ".",

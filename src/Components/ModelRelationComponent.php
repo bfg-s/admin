@@ -5,6 +5,7 @@ namespace Admin\Components;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Admin\Traits\ModelRelation\ModelRelationBuilderTrait;
 use Admin\Traits\ModelRelation\ModelRelationHelpersTrait;
+use Throwable;
 
 class ModelRelationComponent extends Component
 {
@@ -141,19 +142,6 @@ class ModelRelationComponent extends Component
     }
 
     /**
-     * @param  Component  $component
-     * @return $this
-     */
-    public function setParent(Component $component): static
-    {
-//        if ($component instanceof ModelRelationContentComponent) {
-//
-//        }
-//            dump($component::class);
-        return parent::setParent($component);
-    }
-
-    /**
      * @param  string|null  $title
      * @return static
      */
@@ -188,6 +176,7 @@ class ModelRelationComponent extends Component
 
     /**
      * @return void
+     * @throws Throwable
      */
     protected function mount(): void
     {
@@ -196,7 +185,7 @@ class ModelRelationComponent extends Component
         } else {
             $this->fm_old = self::$fm;
             self::$fm = $this->relation;
-            $this->_build();
+            $this->buildNestedTemplate();
             $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->relation_name]);
         }
     }

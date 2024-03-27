@@ -21,7 +21,7 @@ trait ModelRelationBuilderTrait
      * Build relation rows.
      * @throws Throwable
      */
-    protected function _build(): void
+    protected function buildNestedTemplate(): void
     {
         if (! $this->ordered) {
             $datas = $this->relation->get();
