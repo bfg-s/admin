@@ -2,6 +2,8 @@
 
 namespace Admin\Components\Inputs;
 
+use Illuminate\View\View;
+
 class NumericInput extends Input
 {
     /**
@@ -10,10 +12,33 @@ class NumericInput extends Input
     protected ?string $icon = 'fas fa-hashtag';
 
     /**
-     * @var string[]
+     * @var int
      */
-    protected array $data = [
-        'load' => 'mask',
-        'load-params' => '-{0,1}9{0,}',
-    ];
+    protected int $digits = 2;
+
+    /**
+     * @return View
+     */
+    public function field(): View
+    {
+        $this->mask('decimal', [
+            'radixPoint' => '.',
+            'digits' => $this->digits,
+            'repeat' => 10,
+            'rightAlign' => false
+        ]);
+
+        return parent::field();
+    }
+
+    /**
+     * @param  int  $digits
+     * @return $this
+     */
+    public function setDigits(int $digits): static
+    {
+        $this->digits = $digits;
+
+        return $this;
+    }
 }

@@ -90,12 +90,13 @@ class Input extends FormGroupComponent
     }
 
     /**
-     * @param  string  $mask
+     * @param  mixed  $mask
+     * @param  array  $options
      * @return $this
      */
-    public function mask(string $mask): static
+    public function mask(mixed $mask, array $options = []): static
     {
-        $this->on_load('mask', $mask);
+        $this->on_load('mask', [$mask, $options]);
 
         return $this;
     }
