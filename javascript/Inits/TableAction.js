@@ -111,7 +111,8 @@ function downloadBlob(blob, name = 'file.txt') {
 window.libs['table_action::exportToExcel'] = function () {
     let ids = selectedIds(this.target);
     NProgress.start();
-    exec("toast::success", "Downloading...");
+    if (window.langs.downloading_excel)
+        exec("toast::success", window.langs.downloading_excel);
     axios.post(window.export_excel, {
         _token: exec('token'),
         model: this.target.dataset.object,
@@ -125,8 +126,6 @@ window.libs['table_action::exportToExcel'] = function () {
         let contentDispo = data.headers.get('content-disposition');
 
         if (contentDispo) {
-
-            exec("toast::success", "Saving...");
 
             let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
             let blob = data.data;
@@ -154,7 +153,8 @@ window.libs['table_action::exportToExcel'] = function () {
 window.libs['table_action::exportToCsv'] = function () {
     let ids = selectedIds(this.target);
     NProgress.start();
-    exec("toast::success", "Downloading...");
+    if (window.langs.downloading_csv)
+        exec("toast::success", window.langs.downloading_csv);
     axios.post(window.export_csv, {
         _token: exec('token'),
         model: this.target.dataset.object,
@@ -167,8 +167,6 @@ window.libs['table_action::exportToCsv'] = function () {
         let contentDispo = data.headers.get('content-disposition');
 
         if (contentDispo) {
-
-            exec("toast::success", "Saving...");
 
             let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
             let blob = data.data;

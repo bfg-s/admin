@@ -281,4 +281,6 @@ return [
     'select_all' => 'Select all',
     'unselect_all' => 'Unselect all',
     'general' => 'General',
+    'downloading_excel' => 'Downloading excel...',
+    'downloading_csv' => 'Downloading csv...',
 ];

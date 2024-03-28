@@ -281,4 +281,6 @@ return [
     'select_all' => 'Выбрать все',
     'unselect_all' => 'Снять выделение',
     'general' => 'Общее',
+    'downloading_excel' => 'Загрузка excel...',
+    'downloading_csv' => 'Загрузка csv...',
 ];

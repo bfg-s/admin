@@ -8,6 +8,8 @@ use Admin\Core\Select2;
 use Admin\Page;
 use App;
 use Illuminate\Contracts\Support\Arrayable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 
 class SelectInput extends FormGroupComponent
@@ -61,6 +63,16 @@ class SelectInput extends FormGroupComponent
     public static mixed $json = null;
 
     /**
+     * @var string|null
+     */
+    protected ?string $orderBy = null;
+
+    /**
+     * @var string
+     */
+    protected string $orderType = 'ASC';
+
+    /**
      * @return mixed
      * @throws ReflectionException
      */
@@ -87,8 +99,32 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * @param  string  $field
+     * @param  string  $type
+     * @return $this
+     */
+    public function orderBy(string $field, string $type = 'ASC'): static
+    {
+        $this->orderBy = $field;
+        $this->orderType = $type;
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $field
+     * @return $this
+     */
+    public function orderByDesc(string $field): static
+    {
+        return $this->orderBy($field, 'DESC');
+    }
+
+    /**
      * @return void
      * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function loadSubject(): void
     {
@@ -98,7 +134,9 @@ class SelectInput extends FormGroupComponent
             $this->value,
             $this->nullable ? $this->title : null,
             $this->field_id.'_',
-            $this->load_where
+            $this->load_where,
+            $this->orderBy,
+            $this->orderType
         );
 
         $r_name = $selector->getName();

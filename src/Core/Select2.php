@@ -79,7 +79,7 @@ class Select2 extends Collection
     /**
      * @var string
      */
-    private $name = 'select2_page';
+    private string $name = 'select2_page';
 
     /**
      * @var Collection
@@ -102,6 +102,16 @@ class Select2 extends Collection
     protected array $relations = [];
 
     /**
+     * @var string|null
+     */
+    protected ?string $orderBy = null;
+
+    /**
+     * @var string
+     */
+    protected string $orderType = 'ASC';
+
+    /**
      * Select2 constructor.
      *
      * @param  null  $data
@@ -110,7 +120,8 @@ class Select2 extends Collection
      * @param  string|null  $no_select
      * @param  string|null  $prefix
      * @param  null  $where
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct(
         $data = null,
@@ -119,8 +130,13 @@ class Select2 extends Collection
         string $no_select = null,
         string $prefix = null,
         $where = null,
+        $orderBy = null,
+        $orderType = 'ASC',
     ) {
         parent::__construct([]);
+
+        $this->orderBy = $orderBy;
+        $this->orderType = $orderType;
 
         if (is_embedded_call($where)) {
             $this->where = $where;
@@ -151,7 +167,7 @@ class Select2 extends Collection
      * @param $value
      * @return $this
      */
-    public function val($value)
+    public function val($value): static
     {
         $this->value = $value;
 
@@ -162,7 +178,7 @@ class Select2 extends Collection
      * @param  string  $format
      * @return $this
      */
-    public function format(string $format = '{id}) {name}')
+    public function format(string $format = '{id}) {name}'): static
     {
         $this->format = $format;
 
@@ -185,7 +201,7 @@ class Select2 extends Collection
      * @param  string  $text
      * @return $this
      */
-    public function no_select(string $text)
+    public function no_select(string $text): static
     {
         $this->no_select = $text;
 
@@ -195,9 +211,10 @@ class Select2 extends Collection
     /**
      * @param $data
      * @return $this
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function data($data)
+    public function data($data): static
     {
         if (is_string($data)) {
             $data = new $data;
@@ -216,9 +233,10 @@ class Select2 extends Collection
 
     /**
      * Create selection data.
-     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createData()
+    private function createData(): void
     {
         //Arrayable|array|Model|Builder|Relation|Collection|LengthAwarePaginator
 
@@ -256,11 +274,11 @@ class Select2 extends Collection
     }
 
     /**
-     * @return Select2
+     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function makePaginator(): Select2
+    private function makePaginator(): void
     {
         $this->makeSearch()->makeGroupBy();
 
@@ -268,7 +286,7 @@ class Select2 extends Collection
             $this->makeValue($this->data);
 
             if (!request()->has($this->getName())) {
-                return $this;
+                return;
             }
 
             if ($this->where) {
@@ -281,6 +299,9 @@ class Select2 extends Collection
                 foreach ($this->relations as $full => $relation) {
                     $this->data = $this->data->with($relation[0]);
                 }
+                if ($this->orderBy) {
+                    $this->data = $this->data->orderBy($this->orderBy, $this->orderType);
+                }
                 $this->data = $this->data->paginate($this->paginate_peg_page, ['*'], $this->getName().'_page');
             } else {
                 $this->data = collect([])->paginate($this->paginate_peg_page, $this->getName().'_page');
@@ -291,7 +312,7 @@ class Select2 extends Collection
             $this->makeValue($this->data);
 
             if (!request()->has($this->getName())) {
-                return $this;
+                return;
             }
 
             if ($this->where) {
@@ -308,14 +329,12 @@ class Select2 extends Collection
 
             $this->normalize();
         }
-
-        return $this;
     }
 
     /**
      * @return $this
      */
-    private function makeGroupBy()
+    private function makeGroupBy(): static
     {
         if ($this->group_by) {
             if (is_array($this->data)) {
@@ -333,7 +352,7 @@ class Select2 extends Collection
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    private function makeSearch()
+    private function makeSearch(): static
     {
         $q = request()->get($this->getName().'_q', false);
 
@@ -350,10 +369,10 @@ class Select2 extends Collection
                         $find = !$q;
 
                         if (is_string($item)) {
-                            $find = (strpos($item, $q) !== false);
+                            $find = str_contains($item, $q);
                         } else {
                             foreach ($this->columns as $column) {
-                                $find = (strpos($item[$column], $q) !== false);
+                                $find = str_contains($item[$column], $q);
                             }
                         }
 
@@ -365,10 +384,10 @@ class Select2 extends Collection
                             $find = !$q;
 
                             if (is_string($item)) {
-                                $find = strpos($item, $q) !== false;
+                                $find = str_contains($item, $q);
                             } else {
                                 foreach ($this->columns as $column) {
-                                    $find = strpos($item[$column], $q) !== false;
+                                    $find = str_contains($item[$column], $q);
                                 }
                             }
 
@@ -385,7 +404,7 @@ class Select2 extends Collection
             } elseif ($this->data instanceof Model || $this->data instanceof Relation || $this->data instanceof Builder) {
                 $this->data = $this->data->where(function ($query) use ($q) {
                     foreach (array_merge($this->columns, $this->search_columns) as $key => $column) {
-                        if (strpos($column, '.') === false) {
+                        if (!str_contains($column, '.')) {
                             $query->orWhere($column, 'like', "%{$q}%");
                         }
                     }
@@ -396,11 +415,18 @@ class Select2 extends Collection
                         );
                     }
                 });
+
+                if ($this->orderBy) {
+
+                    $this->data = $this->data->orderBy($this->orderBy, $this->orderType);
+                }
             }
 
             if ($cacheColumns) {
                 $this->columns = $cacheColumns;
             }
+
+            //var_dump($this->orderBy); die;
         }
 
         return $this;
@@ -409,15 +435,15 @@ class Select2 extends Collection
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->prefix ? $this->prefix.$this->name : '';
     }
 
     /**
-     * @param  Builder|Collection  $data
+     * @param $dataInsert
      */
-    private function makeValue($dataInsert)
+    private function makeValue($dataInsert): void
     {
         $data = clone $dataInsert;
 
@@ -444,7 +470,7 @@ class Select2 extends Collection
                         $data = $data->get();
                     }
                     $result = [];
-                    $lang = App::getLocale();
+
                     /** @var Model $d */
                     foreach ($data as $d) {
 
@@ -465,7 +491,7 @@ class Select2 extends Collection
     /**
      * @return string
      */
-    public function getKeyColumn()
+    public function getKeyColumn(): string
     {
         return $this->columns[0] ?? 'id';
     }
@@ -473,7 +499,7 @@ class Select2 extends Collection
     /**
      * @return string
      */
-    public function getTextColumn()
+    public function getTextColumn(): string
     {
         return $this->columns[1] ?? 'id';
     }
@@ -483,7 +509,7 @@ class Select2 extends Collection
      *
      * @return void
      */
-    private function createLengthAwarePaginator()
+    private function createLengthAwarePaginator(): void
     {
         $this->pagination = true;
 
@@ -499,11 +525,11 @@ class Select2 extends Collection
     /**
      * Normalize data for select2 request.
      */
-    private function normalize()
+    private function normalize(): void
     {
-        $field_id = isset($this->columns[0]) ? $this->columns[0] : 'id';
+        $field_id = $this->getKeyColumn();
 
-        $field_text = isset($this->columns[1]) ? $this->columns[1] : $field_id;
+        $field_text = $this->getTextColumn();
 
         $groups = [];
 
@@ -584,8 +610,10 @@ class Select2 extends Collection
      * Create data for Arrayable.
      *
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function createArrayable()
+    private function createArrayable(): void
     {
         $this->data = $this->data->toArray();
 
@@ -626,7 +654,6 @@ class Select2 extends Collection
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
      */
     private function createRelation(): void
     {

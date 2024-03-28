@@ -1,8 +1,8 @@
 <template>
     <div
         :class="{'file-browser': true, 'add-files-dropped' : move}"
-        @dragover.prevent="move=true"
-        @dragleave.prevent="move=false"
+        @dragover.prevent="theDrugOver"
+        @dragleave.prevent="theDrugLive"
         @drop.prevent="handleDrop"
     >
         <draggable v-model="values" @start="drag=true" @end="drag=false" class="file-browser-previews" handle=".move-handle">
@@ -34,6 +34,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import {debounce} from "lodash";
 export default {
     name: "bfg-browser-component",
     components: {
@@ -53,9 +54,17 @@ export default {
         }
     },
     mounted() {
-        //console.log(this.fieldName, this.values);
+
     },
     methods: {
+        theDrugLive: debounce(function() {
+            this.move = false;
+        }, 300),
+        theDrugOver (event) {
+            if (event.dataTransfer.types.includes('Files')) {
+                this.move = true;
+            }
+        },
         async handleDrop(event) {
             const files = event.dataTransfer.files;
             await this.uploadImages(files);

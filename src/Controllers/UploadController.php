@@ -29,12 +29,15 @@ class UploadController extends Controller
             ]);
         }
 
-        if ($request->hasFile('upload') && $file = AdminFileStorage::makeFile($request->file('upload'))) {
-            return response()->json([
-                'url' => asset($file),
-                'file' => $file,
-                'uploaded' => 1,
-            ]);
+        if ($request->hasFile('upload')) {
+            if ($file = AdminFileStorage::makeFile($request->file('upload'))) {
+
+                return response()->json([
+                    'url' => asset($file),
+                    'file' => $file,
+                    'uploaded' => 1,
+                ]);
+            }
         }
 
         return response()->json([
