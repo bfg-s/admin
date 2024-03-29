@@ -218,7 +218,7 @@ class AdminRepository extends Repository
      */
     public function nowParents(): Collection
     {
-        return collect($this->now ? $this->getParents($this->now) : []);
+        return collect($this->getParents($this->now));
     }
 
     /**
@@ -286,7 +286,7 @@ class AdminRepository extends Repository
             $menuItem = new MenuItem();
             $result->push($menuItem);
 
-            $menuItem->setId(static::$cache['menu_item_counter']);
+            $menuItem->setId(spl_object_id($menuItem));
             $menuItem->setParentId($parent?->getId() ?: 0);
             $menuItem->setRoute($item['route'] ?? null);
             $menuItem->setTitle($item['title'] ?? null);
@@ -372,8 +372,6 @@ class AdminRepository extends Repository
 
                 $result = $result->merge($childList);
             }
-
-            static::$cache['menu_item_counter']++;
         }
         return $result;
     }

@@ -19,7 +19,7 @@ class Admin
     /**
      * @var string
      */
-    public static string $version = '6.0.0';
+    public static string $version = '6.1.0';
 
     /**
      * @var Theme[]
