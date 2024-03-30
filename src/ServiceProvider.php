@@ -285,6 +285,13 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Setup auth and disc configuration.
          */
         $this->loadAuthAndDiscConfig();
+
+        /**
+         * Register duck test class
+         */
+        if ($this->app->environment('local', 'testing')) {
+            $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
+        }
     }
 
     /**

@@ -8,7 +8,8 @@
         @endphp
         @if($val)
             <li class="breadcrumb-item">
-                <a href="{{ urlWithGet([], [$formGroup->get_path()]) }}" title="{{ __('admin.cancel') . ': ' . $formGroup->get_title() }}">
+                <a href="{{ admin_url_with_get([], [$formGroup->get_path()]) }}"
+                   title="{{ __('admin.cancel') . ': ' . $formGroup->get_title() }}">
                     <i class="fas fa-window-close text-danger"></i>
                 </a>
                 {{ $formGroup->get_title().': '.$val }}

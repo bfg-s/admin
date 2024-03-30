@@ -2,7 +2,9 @@
 
 namespace Admin\Core;
 
+use Admin\Components\AccessDeniedComponent;
 use Admin\Components\Component;
+use Admin\Middlewares\Authenticate;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use Admin\Interfaces\SegmentContainerInterface;
@@ -162,6 +164,12 @@ abstract class Container implements SegmentContainerInterface
      */
     public function render(): View
     {
+        if (! Authenticate::$access) {
+            $this->contents = [
+                AccessDeniedComponent::create()
+            ];
+        }
+
         return admin_view('container', [
             'contents' => $this->contents,
             'page_info' => $this->page_title,

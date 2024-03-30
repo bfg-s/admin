@@ -16,7 +16,13 @@
                             @elseif($menu && $menu->getIcon())
                                 <i class="{{$menu->getIcon()}}"></i>
                             @endif
-                            {!! __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu?->getHeadTitle() ?? ($menu?->getTitle() ?? 'Blank page')))) !!}
+                            @php
+                                $result = __($page_info['head_title'] ?? ($page_info['title'] ?? ($menu?->getHeadTitle() ?? ($menu?->getTitle() ?? 'Blank page'))));
+                                if (is_array($result)) {
+                                    $result = $page_info['head_title'] ?? ($page_info['title'] ?? ($menu?->getHeadTitle() ?? ($menu?->getTitle() ?? 'Blank page')));
+                                }
+                            @endphp
+                            {!! $result !!}
                         @else
                             @if($menu && $menu->getIcon()) <i class="{{$menu->getIcon()}}"></i>  @endif {{__($page_info)}}
                         @endif

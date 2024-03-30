@@ -107,7 +107,6 @@ class AuthController
         ]);
 
         $login = false;
-        $root = AdminUser::find(1);
 
         if (Auth::guard('admin')->attempt(
             ['login' => $request->login, 'password' => $request->password],

@@ -218,7 +218,7 @@ class AdminRepository extends Repository
      */
     public function nowParents(): Collection
     {
-        return collect($this->getParents($this->now));
+        return collect($this->now ? $this->getParents($this->now) : []);
     }
 
     /**

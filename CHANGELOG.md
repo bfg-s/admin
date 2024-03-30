@@ -17,6 +17,7 @@ In this version, a lot was added, a little changed and a little corrected.
 * Extension provider helpers for extend the core.
 * IDE helpers for extensions in navigation.
 * Macroable for all default delegates and helper for them.
+* Tests.
 
 ### Changed
 * Download excel and csv notification has been changed.
@@ -28,6 +29,8 @@ In this version, a lot was added, a little changed and a little corrected.
 * Breadcrumbs for the navigation have been fixed.
 * Masks for amount and numeric fields have been fixed.
 * Fix duplication in form input.
+* Access denied for the navigation has been fixed.
+* Admin user profile has been fixed.
 
 ## [6.0.0] - 2024-03-15
 

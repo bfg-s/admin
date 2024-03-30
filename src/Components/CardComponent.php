@@ -431,9 +431,9 @@ class CardComponent extends Component
                 if ($model && property_exists($model, 'forceDeleting')) {
                     if (!request()->has('show_deleted')) {
                         $this->buttons()->dark('fas fa-trash')
-                            ->on_click('location', urlWithGet(['show_deleted' => 1]))->setTitle(__('admin.deleted'));
+                            ->on_click('location', admin_url_with_get(['show_deleted' => 1]))->setTitle(__('admin.deleted'));
                     } else {
-                        $this->buttons()->resourceList(urlWithGet([], ['show_deleted']));
+                        $this->buttons()->resourceList(admin_url_with_get([], ['show_deleted']));
                     }
                 }
             }

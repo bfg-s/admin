@@ -136,7 +136,7 @@ class ButtonComponent extends Component
      */
     public function query(array $params = [], array $unset = []): static
     {
-        $this->on_click('location', urlWithGet($params, $unset));
+        $this->on_click('location', admin_url_with_get($params, $unset));
 
         return $this;
     }

@@ -8,12 +8,12 @@
 
         <li class="nav-item">
             <a class="nav-link" data-click="back" title="@lang('admin.back')" href="javascript:void(0)"><i
-                        class="fas fa-arrow-left"></i></a>
+                    class="fas fa-arrow-left"></i></a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link" data-click="reload" title="@lang('admin.refresh')" href="javascript:void(0)"><i
-                        class="fas fa-redo-alt"></i></a>
+                    class="fas fa-redo-alt"></i></a>
         </li>
         @if(admin_repo()->getCurrentQuery && count(admin_repo()->getCurrentQuery))
             <li class="nav-item">
@@ -45,7 +45,7 @@
                 $counter = isset($badge['instructions']) && $badge['instructions'] ?
                     eloquent_instruction($badge['text'], $badge['instructions'])->count() :
                     $badge['text'];
-                $link = $menu->getLink() ? (isset($badge['params']) ? makeUrlWithParams($menu->getLink(), $badge['params']) : $menu->getLink()) : 'javascript:void(0)';
+                $link = $menu->getLink() ? (isset($badge['params']) ? admin_make_url_with_params($menu->getLink(), $badge['params']) : $menu->getLink()) : 'javascript:void(0)';
             @endphp
             @if($counter)
                 <li class="nav-item">
@@ -77,7 +77,7 @@
 
         <li>
             <a class="nav-link" target="_blank" href="{{url('/')}}" title="{{__('admin.open_homepage_in_new_tab')}}"><i
-                        class="fas fa-external-link-square-alt"></i></a>
+                    class="fas fa-external-link-square-alt"></i></a>
         </li>
 
         @foreach(admin_repo()->menuList->where('nav_bar_view')->where('prepend', true) as $menu)

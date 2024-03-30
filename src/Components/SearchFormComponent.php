@@ -259,7 +259,7 @@ class SearchFormComponent extends Component
      */
     protected function viewData(): array
     {
-        $action = urlWithGet([], ['q', 'page']);
+        $action = admin_url_with_get([], ['q', 'page']);
 
         return [
             'chunks' => collect($this->fields)->chunk(3),

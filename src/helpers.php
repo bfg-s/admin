@@ -127,10 +127,13 @@ if (!function_exists('admin_controller_model')) {
      */
     function admin_controller_model(): string
     {
-        $class = Str::parseCallback(Route::currentRouteAction())[0];
+        if($action = Route::currentRouteAction()) {
 
-        if (property_exists($class, 'model')) {
-            return $class::$model;
+            $class = Str::parseCallback($action)[0];
+
+            if (property_exists($class, 'model')) {
+                return $class::$model;
+            }
         }
 
         return '';
@@ -152,6 +155,8 @@ if (!function_exists('admin_uri')) {
     /**
      * @param  string  $uri
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     function admin_uri(string $uri = ''): string
     {
@@ -184,7 +189,7 @@ if (!function_exists('admin_user')) {
      */
     function admin_user(): AdminUser
     {
-        return Admin::user() ?? new AdminUser();
+        return AdminFacade::user() ?? new AdminUser();
     }
 }
 
@@ -194,17 +199,17 @@ if (!function_exists('admin')) {
      */
     function admin(): AdminUser
     {
-        return Admin::user() ?? new AdminUser();
+        return AdminFacade::user() ?? new AdminUser();
     }
 }
 
-if (!function_exists('versionString')) {
+if (!function_exists('admin_version_string')) {
     /**
      * @param $version
      * @param  string  $delimiter
      * @return string
      */
-    function versionString($version, string $delimiter = '.'): string
+    function admin_version_string($version, string $delimiter = '.'): string
     {
         $version = explode($delimiter, $version);
 
@@ -225,23 +230,23 @@ if (!function_exists('resource_name')) {
      * @param  string  $append
      * @return string
      */
-    function resource_name(string $append = '')
+    function resource_name(string $append = ''): string
     {
         return preg_replace(
                 '/(.*)\.(store|index|create|show|update|destroy|edit)$/',
                 '$1',
-                Route::currentRouteName()
+                Route::currentRouteName() ?: ''
             ).$append;
     }
 }
 
-if (!function_exists('makeUrlWithParams')) {
+if (!function_exists('admin_make_url_with_params')) {
     /**
      * @param  string  $url
      * @param  array  $params
      * @return string
      */
-    function makeUrlWithParams(string $url, array $params)
+    function admin_make_url_with_params(string $url, array $params = []): string
     {
         $params = http_build_query($params);
         $d = !str_contains($url, '?') ? '?' : '&';
@@ -250,13 +255,13 @@ if (!function_exists('makeUrlWithParams')) {
     }
 }
 
-if (!function_exists('urlWithGet')) {
+if (!function_exists('admin_url_with_get')) {
     /**
      * @param  array  $params
      * @param  array  $unset
      * @return string
      */
-    function urlWithGet(array $params = [], array $unset = [])
+    function admin_url_with_get(array $params = [], array $unset = []): string
     {
         $url = explode('?', url()->current())[0];
 
@@ -282,7 +287,7 @@ if (!function_exists('admin_model_type')) {
      * @param  string|null  $type
      * @return bool|string|null
      */
-    function admin_model_type(string $type = null)
+    function admin_model_type(string $type = null): bool|string|null
     {
         $menu_type = admin_repo()->type;
 
@@ -299,7 +304,7 @@ if (!function_exists('admin_model')) {
      * @param  string|null  $path
      * @return Model|mixed|string|null
      */
-    function admin_model(string $path = null)
+    function admin_model(string $path = null): mixed
     {
         $model = admin_repo()->modelNow;
 
@@ -319,7 +324,7 @@ if (!function_exists('admin_now')) {
     /**
      * @return MenuItem|null
      */
-    function admin_now()
+    function admin_now(): ?MenuItem
     {
         return admin_repo()->now;
     }
@@ -327,9 +332,9 @@ if (!function_exists('admin_now')) {
 
 if (!function_exists('admin_page')) {
     /**
-     * @return array|array|null
+     * @return Page
      */
-    function admin_page()
+    function admin_page(): Page
     {
         return app(Page::class);
     }
@@ -341,7 +346,7 @@ if (!function_exists('array_callable_results')) {
      * @param  mixed  ...$callable_params
      * @return array
      */
-    function array_callable_results(array $array, ...$callable_params)
+    function array_callable_results(array $array, ...$callable_params): array
     {
         foreach ($array as $key => $item) {
             if ($item instanceof Closure) {
@@ -359,7 +364,7 @@ if (!function_exists('check_referer')) {
      * @param  string|null  $url
      * @return bool
      */
-    function check_referer(string $method = 'GET', string $url = null)
+    function check_referer(string $method = 'GET', string $url = null): bool
     {
         $referer = request()->headers->get('referer');
 

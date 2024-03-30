@@ -2,6 +2,8 @@
 
 namespace Admin\Controllers;
 
+use Admin\Delegates\Column;
+use Admin\Delegates\Row;
 use App;
 use Composer\Composer;
 use DB;
@@ -33,6 +35,8 @@ class DashboardController extends Controller
      * @param  StatisticPeriod  $statisticPeriod
      * @param  ChartJs  $chartJs
      * @param  SearchForm  $searchForm
+     * @param  Row  $row
+     * @param  Column  $column
      * @return Page|mixed
      */
     public function index(
@@ -44,7 +48,7 @@ class DashboardController extends Controller
         SearchForm $searchForm,
         Admin\Delegates\Row $row,
         Admin\Delegates\Column $column,
-    ) {
+    ): mixed {
         return $page->row(
             $row->column(12)->statistic_period(
                 $statisticPeriod->model(config('auth.providers.users.model'))
@@ -150,7 +154,7 @@ class DashboardController extends Controller
     /**
      * @return array
      */
-    public function environmentInfo()
+    public function environmentInfo(): array
     {
         $mods = get_loaded_extensions();
 
@@ -163,7 +167,7 @@ class DashboardController extends Controller
         }
 
         return [
-            __('admin.php_version') => '<span class="badge badge-dark">v'.versionString(PHP_VERSION).'</span>',
+            __('admin.php_version') => '<span class="badge badge-dark">v'.admin_version_string(PHP_VERSION).'</span>',
             __('admin.php_modules') => implode(', ', $mods),
             __('admin.cgi') => php_sapi_name(),
             __('admin.os') => php_uname(),
@@ -176,14 +180,14 @@ class DashboardController extends Controller
     /**
      * @return array
      */
-    public function laravelInfo()
+    public function laravelInfo(): array
     {
         $user_model = config('auth.providers.users.model');
         $admin_user_model = config('admin.auth.providers.admin.model');
 
         return [
-            __('admin.laravel_version') => '<span class="badge badge-dark">v'.versionString(App::version()).'</span>',
-            __('admin.admin_version') => '<span class="badge badge-dark">v'.versionString(Admin::version()).'</span>',
+            __('admin.laravel_version') => '<span class="badge badge-dark">v'.admin_version_string(App::version()).'</span>',
+            __('admin.admin_version') => '<span class="badge badge-dark">v'.admin_version_string(Admin::version()).'</span>',
             __('admin.timezone') => config('app.timezone'),
             __('admin.language') => config('app.locale'),
             __('admin.languages_involved') => implode(', ', config('admin.languages')),
@@ -191,10 +195,6 @@ class DashboardController extends Controller
             __('admin.url') => config('app.url'),
             __('admin.users') => number_format($user_model::count(), 0, '', ','),
             __('admin.admin_users') => number_format($admin_user_model::count(), 0, '', ','),
-//            '' => function (Component $component) {
-//                $component->_addClass(['table-secondary']);
-//                $component->_find('th')->h6(['m-0'], __('admin.drivers'));
-//            },
             __('admin.broadcast_driver') => '<span class="badge badge-secondary">'.config('broadcasting.default').'</span>',
             __('admin.cache_driver') => '<span class="badge badge-secondary">'.config('cache.default').'</span>',
             __('admin.session_driver') => '<span class="badge badge-secondary">'.config('session.driver').'</span>',
@@ -208,14 +208,10 @@ class DashboardController extends Controller
     /**
      * @return array
      */
-    public function composerInfo()
+    public function composerInfo(): array
     {
         $return = [
-            __('admin.composer_version') => '<span class="badge badge-dark">v'.versionString(Composer::getVersion()).'</span>',
-//            '' => static function (Component $component) {
-//                $component->_addClass(['table-secondary']);
-//                $component->_find('th')->h6(['m-0'], __('admin.required'));
-//            },
+            __('admin.composer_version') => '<span class="badge badge-dark">v'.admin_version_string(Composer::getVersion()).'</span>',
         ];
 
         $json = file_get_contents(base_path('composer.json'));
@@ -232,21 +228,17 @@ class DashboardController extends Controller
     /**
      * @return array
      */
-    public function databaseInfo()
+    public function databaseInfo(): array
     {
         /** @var PDO $pdo */
         $pdo = DB::query('SHOW VARIABLES')->getConnection()->getPdo();
 
         return [
-            __('admin.server_version') => '<span class="badge badge-dark">v'.versionString($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
+            __('admin.server_version') => '<span class="badge badge-dark">v'.admin_version_string($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
             __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION) . ' ',
             __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO) . ' ',
             __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS) . ' ',
             __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) . ' ',
-//            '' => static function (Component $component) {
-//                $component->_addClass(['table-secondary']);
-//                $component->_find('th')->h6(['m-0'], __('admin.connection_info'));
-//            },
             __('admin.db_driver') => config('database.default'),
             __('admin.database') => env('DB_DATABASE'),
             __('admin.user') => env('DB_USERNAME') . ' ',

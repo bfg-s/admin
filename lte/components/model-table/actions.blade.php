@@ -15,7 +15,7 @@
                 @foreach($all_columns as $column)
                     @if($column['key'])
                         <button class="dropdown-item" type="button" data-click="location"
-                                data-params="{{urlWithGet([$column['key'] => (int)$column['hide']])}}">
+                                data-params="{{admin_url_with_get([$column['key'] => (int)$column['hide']])}}">
                             <i class="fas fa-border-{{!$column['hide'] ? 'all':'none'}}"></i> {{__(!$column['hide']? 'admin.hide':'admin.show')}}
                             "{{$column['label']}}"
                         </button>
@@ -37,14 +37,14 @@
                     <i class="fas fa-file-excel"></i> @lang('admin.export_to_excel')
                 </button>
                 <button
-                    class="dropdown-item"
-                    type="button"
-                    data-table="{{$table_id}}"
-                    data-object="{{$object}}"
-                    data-order="{{$order_field}}"
-                    data-order-type="{{$select_type}}"
-                    data-click="table_action::exportToCsv"
-                    name="select_{{$table_id}}">
+                        class="dropdown-item"
+                        type="button"
+                        data-table="{{$table_id}}"
+                        data-object="{{$object}}"
+                        data-order="{{$order_field}}"
+                        data-order-type="{{$select_type}}"
+                        data-click="table_action::exportToCsv"
+                        name="select_{{$table_id}}">
                     <i class="fas fa-file-csv"></i> @lang('admin.export_to_csv')
                 </button>
                 @if(count($actions) || $hasDelete)
@@ -66,8 +66,12 @@
                             data-command-json="{{$action['jax']}}"
                             type="button"
                     >
-                        @if(isset($action['icon']) && $action['icon']) <i class="{{$action['icon']}}"></i>&nbsp;@endif
-                        @if(isset($action['title']) && $action['title']) @lang($action['title']) @endif
+                        @if(isset($action['icon']) && $action['icon'])
+                            <i class="{{$action['icon']}}"></i>&nbsp;
+                        @endif
+                        @if(isset($action['title']) && $action['title'])
+                            @lang($action['title'])
+                        @endif
                     </button>
                 @endforeach
                 <hr class="dropdown-divider"/>
