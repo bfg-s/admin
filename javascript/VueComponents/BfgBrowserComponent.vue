@@ -7,7 +7,7 @@
     >
         <draggable v-model="values" @start="drag=true" @end="drag=false" class="file-browser-previews" handle=".move-handle">
             <div v-for="(val, valIndex) in values" v-if="! dropIndexes[valIndex]" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
-                <img :src="val" :alt="val"/>
+                <img :src="String(val).startsWith('/') ? val : `/${val}`" :alt="val"/>
                 <div class="file-browser-preview-controls">
                     <div class="file-browser-preview-control-btn" @click="preview(val)">
                         <i class="fas fa-eye"></i>
