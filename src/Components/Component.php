@@ -922,8 +922,6 @@ abstract class Component extends ComponentInputs
         /** @var Component $newObj */
         $newObj = new $componentClass(...$arguments);
 
-        $newObj->simpleSetModel($this->model);
-
         $newObj->setParent($this);
 
         return $newObj;
