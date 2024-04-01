@@ -289,7 +289,10 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register duck test class
          */
-        if ($this->app->environment('local', 'testing')) {
+        if (
+            $this->app->environment('local', 'testing')
+            && class_exists(\Laravel\Dusk\DuskServiceProvider::class)
+        ) {
             $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
         }
     }
