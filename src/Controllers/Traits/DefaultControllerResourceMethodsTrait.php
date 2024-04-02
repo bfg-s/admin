@@ -118,7 +118,7 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         $save = $data ?? request()->all();
-//dd(static::$rules);
+
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
             return $back;
         }

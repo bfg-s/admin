@@ -283,4 +283,5 @@ return [
     'general' => 'Загальне',
     'downloading_excel' => 'Завантаження Excel...',
     'downloading_csv' => 'Завантаження CSV...',
+    'documentation' => 'Документація',
 ];

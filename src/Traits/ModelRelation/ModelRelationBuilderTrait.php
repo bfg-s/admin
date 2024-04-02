@@ -165,6 +165,7 @@ trait ModelRelationBuilderTrait
     /**
      * Build relation template maker button.
      * @return void
+     * @throws Throwable
      */
     protected function generateButton(): void
     {
@@ -184,7 +185,6 @@ trait ModelRelationBuilderTrait
         )->setOrdered($this->ordered);
 
         $container->model($emptyModel);
-        //dump($this->relation);
 
         if ($this->ordered) {
 

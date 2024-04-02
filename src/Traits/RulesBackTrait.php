@@ -48,7 +48,7 @@ trait RulesBackTrait
             $deepPaths = $this->deepPaths();
             $ruleKey = implode('.', $deepPaths) . $arr;
             $controller = $this->controller;
-//dump($ruleKey);
+
             $controller::setGlobalRule($ruleKey, $rule);
             $controller::setGlobalRuleMessage($ruleKey, $rule, $message);
         }

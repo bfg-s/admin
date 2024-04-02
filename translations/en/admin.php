@@ -283,4 +283,5 @@ return [
     'general' => 'General',
     'downloading_excel' => 'Downloading excel...',
     'downloading_csv' => 'Downloading csv...',
+    'documentation' => 'Documentation',
 ];

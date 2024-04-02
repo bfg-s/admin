@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 * Numerated ids for input fields is field if arrayable.
+* Documentation button in header for root users.
 ### Changed
 * Removed all unnecessary links that remained from the removed functionality.
 ### Fixed
