@@ -16,7 +16,15 @@ window.libs['select2::ajax'] =  function () {
                 let name = target.dataset.selectName;
                 let whereHas = target.dataset.withWhere;
 
+                const formData = new FormData();
+                formData.append('_token', exec('token'));
+                formData.append('_select2_name', name);
+                formData.append(name, true);
+                formData.append(`${name}_q`, params.data.q ? params.data.q : '');
+                formData.append(`${name}_page`, params.data.page ? params.data.page : 1);
+
                 let new_params = {
+                    _slect2_name: name,
                     [name]: true,
                     [`${name}_q`]: params.data.q ? params.data.q : '',
                     [`${name}_page`]: params.data.page ? params.data.page : 1
@@ -31,29 +39,29 @@ window.libs['select2::ajax'] =  function () {
                             form[i.name] = i.value;
                         })
                     }
-                    new_params[`${name}_form`] = form;
+                    formData.append(`${name}_form`, form);
                 }
 
                 let data = $(":input").serializeArray();
 
                 data.map(({name, value}) => {
                     if (String(name)[0] !== '_') {
-                        new_params[name] = value;
+                        formData.append(name, value);
                     }
                 });
 
-                new_params['_build_modal'] = 1;
+                formData.append('_build_modal', 1);
 
-                axios.get(window.location.href, {params: new_params})
+                axios.post(window.load_select2, formData)
                     .then((data) => {
-                        let d = data.data.split("\n");
-                        d = d[d.length-1].trim();
-                        try {
-                            d = JSON.parse(d);
-                        } catch (e) {
-
-                        }
-                        success(d);
+                        // let d = data.data.split("\n");
+                        // d = d[d.length-1].trim();
+                        // try {
+                        //     d = JSON.parse(d);
+                        // } catch (e) {
+                        //
+                        // }
+                        success(data.data);
                     }).catch(() => failure());
             }
         }

@@ -116,6 +116,14 @@ class ModelRelationComponent extends Component
     }
 
     /**
+     * @return bool
+     */
+    public static function isTemplateMode(): bool
+    {
+        return static::$tplMode;
+    }
+
+    /**
      * @param  array  $names
      * @return string|null
      */
@@ -125,8 +133,13 @@ class ModelRelationComponent extends Component
             if (count($names) <= 1) {
                 $return = $this->relation_name . '[{__id__}]';
             } else {
-                $return = $this->relation_name
-                    . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+                if (! $this->model->exists) {
+                    $return = $this->relation_name . '[{__id__}]';
+                } else {
+
+                    $return = $this->relation_name
+                        . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+                }
             }
         } else {
             $return = $this->relation_name

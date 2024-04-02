@@ -60,18 +60,17 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
         data.push({name: '_changed_field', value: changed_name});
         data.push({name: '_changed_value', value: changed_value});
 
-        let params = {};
+        const formData = new FormData();
+        formData.append('_token', exec('token'));
 
         data.map(({name, value}, key) => {
-            if (name.indexOf("q[") !== 0 && name !== '_method')
-                params[name] = value;
+
+            if (name.indexOf("q[") !== 0 && name !== '_method') {
+                formData.append(name, value);
+            }
         });
 
-        NProgress.start();
-        axios.post(window.load_lives, {
-            _token: exec('token'),
-            ...params
-        }).then((data => {
+        axios.post(window.load_lives, formData).then((data => {
             let content = data.data;
             if (typeof content === 'object') {
                 Object.keys(content).map((key) => {
@@ -85,7 +84,7 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
                 window.updateInits();
             }
         })).finally(d => {
-            NProgress.done();
+
         });
     }
 };

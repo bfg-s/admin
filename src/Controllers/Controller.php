@@ -13,8 +13,6 @@ use Admin\Core\Delegate;
 use Admin\Exceptions\NotFoundExplainForControllerException;
 use Admin\Explanation;
 use Admin\Page;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 use function redirect;
 
@@ -94,8 +92,6 @@ class Controller extends BaseController
 
     /**
      * @return Application|RedirectResponse|Redirector|Respond
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function returnTo(): mixed
     {
@@ -213,7 +209,7 @@ class Controller extends BaseController
             return in_array($val, $need_value);
         }
 
-        return $need_value == (is_bool($need_value) ? (bool) $val : $val);
+        return $need_value == (! is_bool($need_value) ? (bool) $val : $val);
     }
 
     /**
@@ -250,7 +246,13 @@ class Controller extends BaseController
      */
     public static function setGlobalRule(string $key, mixed $rule): void
     {
-        static::$rules[$key][] = $rule;
+        if (is_string($rule) && isset(static::$rules[$key])) {
+            if (! in_array($rule, static::$rules[$key])) {
+                static::$rules[$key][] = $rule;
+            }
+        } else {
+            static::$rules[$key][] = $rule;
+        }
     }
 
     /**

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.1] - 2024-04-02
+
+### Added
+* Numerated ids for input fields is field if arrayable.
+### Changed
+* Removed all unnecessary links that remained from the removed functionality.
+### Fixed
+* Live loads document to form data.
+* Your own controller for `Select2` for individual loading of option lists.
+* `Select2` load with form data.
+* `withCollection` in component.
+* `ModelRelation` deep template for nested `ModelRelation` components.
+
 ## [6.1.0] - 2024-03-30
 
 In this version, a lot was added, a little changed and a little corrected.
@@ -13,7 +26,7 @@ In this version, a lot was added, a little changed and a little corrected.
 * Multi nested for model relation component.
 * Image browser for form component.
 * Percent input for form component.
-* Order by for Select2 load component option.
+* Order by for `Select2` load component option.
 * Extension provider helpers for extend the core.
 * IDE helpers for extensions in navigation.
 * Macroable for all default delegates and helper for them.
@@ -22,7 +35,7 @@ In this version, a lot was added, a little changed and a little corrected.
 ### Changed
 * Download excel and csv notification has been changed.
 * Refactor base controller static properties.
-* Remove header "Extensions" in the navigation.
+* Remove header `Extensions` in the navigation.
 * Remove delegates by default.
 
 ### Fixed

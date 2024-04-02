@@ -170,11 +170,21 @@ trait ModelRelationBuilderTrait
     {
         ModelRelationComponent::templateMode(true);
 
+        $emptyModel = new ($this->relation->getRelated());
+        $preventModel = $this->page->getModel();
+        $preventModelThis = $this->model;
+
+        $this->page->model($emptyModel);
+        $this->model($emptyModel);
+
         $container = $this->createComponent(
             ModelRelationContainerComponent::class,
             $this->relation_name,
             'template_container'
         )->setOrdered($this->ordered);
+
+        $container->model($emptyModel);
+        //dump($this->relation);
 
         if ($this->ordered) {
 
@@ -195,6 +205,8 @@ trait ModelRelationBuilderTrait
             'template_content',
             'template_content'
         );
+
+        $this->last_content->model($emptyModel);
 
         $this->applyTemplate();
 
@@ -217,8 +229,10 @@ trait ModelRelationBuilderTrait
         $row = $this->row();
 
         $row->template("relation_{$this->relation_name}_template")
-            ->appEnd($container);
+            ->appEnd($container->render());
 
+        $this->page->model($preventModel);
+        $this->model($preventModelThis);
 
         ModelRelationComponent::templateMode(false);
     }

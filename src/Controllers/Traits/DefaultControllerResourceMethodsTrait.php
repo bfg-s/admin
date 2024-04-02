@@ -28,6 +28,8 @@ trait DefaultControllerResourceMethodsTrait
      * @param  SearchForm  $searchForm
      * @param  ModelTable  $modelTable
      * @return Page
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index_default(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
     {
@@ -116,7 +118,7 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         $save = $data ?? request()->all();
-
+//dd(static::$rules);
         if ($back = back_validate($save, static::$rules, static::$rule_messages)) {
             return $back;
         }

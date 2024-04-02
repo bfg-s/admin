@@ -65,10 +65,7 @@ JS;
             $save_image_order = route('admin.save_image_order');
             $translate = route('admin.translate');
             $load_chart_js = route('admin.load_chart_js');
-            $update_notification_browser_settings = route('admin.update_notification_browser_settings');
-            $calendar_data = route('admin.calendar_data');
-            $calendar_event = route('admin.calendar_event');
-            $drop_event = route('admin.drop_event');
+            $load_select2 = route('admin.load_select2');
             $delete_ordered_image = route('admin.delete_ordered_image');
             $langs = json_encode(__('admin'), JSON_UNESCAPED_UNICODE);
             return <<<JS
@@ -86,10 +83,7 @@ window.load_lives = "$load_lives";
 window.save_image_order = "$save_image_order";
 window.translate = "$translate";
 window.load_chart_js = "$load_chart_js";
-window.update_notification_browser_settings = "$update_notification_browser_settings";
-window.calendar_data = "$calendar_data";
-window.calendar_event = "$calendar_event";
-window.drop_event = "$drop_event";
+window.load_select2 = "$load_select2";
 window.delete_ordered_image = "$delete_ordered_image";
 JS;
         }

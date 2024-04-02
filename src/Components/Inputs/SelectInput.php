@@ -73,6 +73,11 @@ class SelectInput extends FormGroupComponent
     protected string $orderType = 'ASC';
 
     /**
+     * @var array
+     */
+    public static array $loadCallBacks = [];
+
+    /**
      * @return mixed
      * @throws ReflectionException
      */
@@ -141,11 +146,7 @@ class SelectInput extends FormGroupComponent
 
         $r_name = $selector->getName();
 
-        if (request()->has($r_name)) {
-            echo "\n" . $selector->toJson(JSON_UNESCAPED_UNICODE);
-            http_response_code(200);
-            die;
-        }
+        static::$loadCallBacks[$r_name] = $selector;
 
         $this->data['select-name'] = $r_name;
 

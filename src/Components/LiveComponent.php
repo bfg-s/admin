@@ -31,7 +31,7 @@ class LiveComponent extends Component
     {
         parent::__construct();
 
-        $this->forceDelegates(...$delegates);
+        $this->force_delegates = $delegates;
     }
 
     /**

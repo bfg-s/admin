@@ -3,6 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
+use Admin\Components\Inputs\SelectInput;
 use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
@@ -14,6 +15,7 @@ use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\DropEventTemplateRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
+use Admin\Requests\LoadSelect2Request;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\NewEventTemplateRequest;
 use Admin\Requests\NotificationSettingsRequest;
@@ -367,6 +369,18 @@ class SystemController extends Controller
         return [];
     }
 
+    public function load_select2(LoadSelect2Request $request)
+    {
+        $this->refererEmit();
+
+        if (isset(SelectInput::$loadCallBacks[$request->_select2_name])) {
+
+            return SelectInput::$loadCallBacks[$request->_select2_name]->toJson(JSON_UNESCAPED_UNICODE);
+        }
+
+        return [];
+    }
+
     /**
      * @param  TranslateRequest  $request
      * @return string|null
@@ -379,67 +393,6 @@ class SystemController extends Controller
         $tr = new GoogleTranslate();
 
         return $tr->setTarget($request->toLang == 'ua' ? 'uk' : $request->toLang)->translate($request->data);
-    }
-
-    /**
-     * @param  NotificationSettingsRequest  $request
-     * @return void
-     */
-    public function updateNotificationBrowserSettings(NotificationSettingsRequest $request): void
-    {
-        if (BrowserDetectMiddleware::$browser) {
-
-            BrowserDetectMiddleware::$browser->update([
-                'notification_settings' => $request->settings
-            ]);
-        }
-    }
-
-    public function calendarData()
-    {
-        return admin()->events;
-    }
-
-    public function calendarEvent(CalendarEventRequest $request)
-    {
-        $data = [];
-
-        if ($request->title) {
-            $data['title'] = $request->title;
-        }
-
-        if ($request->description) {
-            $data['description'] = $request->description == 'null' ? null : $request->description;
-        }
-
-        if ($request->url) {
-            $data['url'] = $request->url == 'null' ? null : $request->url;
-        }
-
-        $start = Carbon::parse($request->start);
-        $end = $request->end
-            ? Carbon::parse($request->end)
-            : ($start->hour ? Carbon::parse($request->start)->addHour() : Carbon::parse($request->start));
-
-        $data['start'] = Carbon::parse($start)->setTimezone('UTC');
-        $data['end'] = Carbon::parse($end)->setTimezone('UTC');
-
-        if ($request->id) {
-            $result = admin()->events()->find($request->id);
-            $result?->update($data);
-            return $result;
-        } else {
-            return admin()->events()->create($data);
-        }
-    }
-
-    /**
-     * @param  DropEventTemplateRequest  $request
-     * @return int|null
-     */
-    public function dropEvent(DropEventTemplateRequest $request): ?int
-    {
-        return admin()->events()->find($request->id)?->delete();
     }
 
     /**
@@ -465,8 +418,6 @@ class SystemController extends Controller
 
     public function deleteOrderedImage()
     {
-        //dd(request()->all());
-
         return response()->json(['success' => true]);
     }
 

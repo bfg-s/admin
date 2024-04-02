@@ -323,17 +323,29 @@ class ModelSaver
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-                            $param = collect($param)->filter(static function ($i) {
-                                return !isset($i[static::DELETE_FIELD]);
-                            })->map(static function ($i) {
-                                $lk = array_key_last($i);
+                            //if ($fk != 0) {
+                                //$param = collect($param)->collapse()->values()->toArray();
 
-                                return $i[$lk];
-                            })->values()->toArray();
+                            //} else {
+
+                                $param = collect($param)->filter(static function ($i) {
+                                    return !isset($i[static::DELETE_FIELD]);
+                                })->map(static function ($i) {
+                                    $lk = array_key_last($i);
+
+                                    return $i[$lk];
+                                })->values()->toArray();
+                            //}
+                        }
+
+                        if ($key == 'categoryPropertyValues') {
+
+                            dd($key, $param, $fk);
                         }
 
                         $builder->sync($param);
                     } elseif ($builder instanceof HasMany || $builder instanceof MorphMany || $builder instanceof MorphToMany) {
+
                         if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
@@ -362,57 +374,6 @@ class ModelSaver
         }
 
         return $result;
-    }
-
-    /**
-     * @param  string  $name
-     * @param  mixed  ...$params
-     * @return array
-     */
-    protected function call_on(string $name, ...$params): array
-    {
-        $events = static::$$name;
-        $model = $this->getModel();
-        $class = $model ? get_class($model) : false;
-
-        $result = [];
-
-        if ($class && isset($events[$class])) {
-            foreach ($events[$class] as $item) {
-                $r = call_user_func_array($item, $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        if (
-            $this->eventsObject
-            && $model
-            && method_exists($this->eventsObject, $name)
-            && property_exists($this->eventsObject, 'model')
-        ) {
-            $controllerModel = $this->eventsObject::$model;
-            if ($controllerModel == $class) {
-                $r = call_user_func_array([$this->eventsObject, $name], $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $src
-     * @return $this
-     */
-    public function setSrc($src): static
-    {
-        $this->src = $src;
-
-        return $this;
     }
 
     /**
@@ -517,6 +478,57 @@ class ModelSaver
         } else {
             return $this->model;
         }
+    }
+
+    /**
+     * @param  string  $name
+     * @param  mixed  ...$params
+     * @return array
+     */
+    protected function call_on(string $name, ...$params): array
+    {
+        $events = static::$$name;
+        $model = $this->getModel();
+        $class = $model ? get_class($model) : false;
+
+        $result = [];
+
+        if ($class && isset($events[$class])) {
+            foreach ($events[$class] as $item) {
+                $r = call_user_func_array($item, $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        if (
+            $this->eventsObject
+            && $model
+            && method_exists($this->eventsObject, $name)
+            && property_exists($this->eventsObject, 'model')
+        ) {
+            $controllerModel = $this->eventsObject::$model;
+            if ($controllerModel == $class) {
+                $r = call_user_func_array([$this->eventsObject, $name], $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $src
+     * @return $this
+     */
+    public function setSrc($src): static
+    {
+        $this->src = $src;
+
+        return $this;
     }
 
     /**

@@ -815,7 +815,15 @@ abstract class Component extends ComponentInputs
     public function withCollection($collection, callable $callback): static
     {
         foreach ($collection as $key => $item) {
-            $this->with(fn() => call_user_func($callback, $item, $key));
+
+            $result = call_user_func($callback, $item, $key);
+
+            if ($result && is_array($result)) {
+
+                $this->forceDelegateNow(
+                    ...$result
+                );
+            }
         }
 
         return $this;
@@ -1201,6 +1209,7 @@ CSS;
     {
         $names = [];
         $parent = $this;
+
         do {
             if (method_exists($parent, 'deepName')) {
                 $parentNames = array_reverse(array_filter($this->parseStringToArray($parent->deepName($names))));

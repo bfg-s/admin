@@ -133,6 +133,11 @@ abstract class FormGroupComponent extends Component
     protected string $view = 'content-only';
 
     /**
+     * @var int
+     */
+    protected static int $counter = 0;
+
+    /**
      * FormGroup constructor.
      * @param  string  $name
      * @param  string|null  $title
@@ -276,8 +281,10 @@ abstract class FormGroupComponent extends Component
         $deepNames = $this->deepNames();
         $name = $this->namesToString($deepNames);
 
-        $this->set_name($name . (str_ends_with($this->get_name(), '[]') ? '[]' : ''));
-        $this->set_id('input_'.$this->convertBracketsToUnderscore($name));
+        $isArrayable = str_ends_with($this->get_name(), '[]');
+
+        $this->set_name($name . ($isArrayable ? '[]' : ''));
+        $this->set_id('input_'.$this->convertBracketsToUnderscore($name).($isArrayable ? '_'.static::$counter++ : ''));
 
         return $this;
     }
@@ -559,7 +566,7 @@ abstract class FormGroupComponent extends Component
     public function set_name(string $name): static
     {
         $this->name = $name;
-
+//dump($name);
         return $this;
     }
 
