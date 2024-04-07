@@ -1,6 +1,6 @@
 const unescape = require("lodash/unescape");
 const merge = require("lodash/merge");
-window.libs['md::simple'] = function ($options = {}) {
+window.libs['md::simple'] = async function ($options = {}) {
     if (!this.target.id) {
 
         this.target.id = new Date() / 1
@@ -8,6 +8,8 @@ window.libs['md::simple'] = function ($options = {}) {
 
     let data = unescape(this.target.innerHTML);
     this.target.innerText = "";
+
+    const token = exec('token');
 
     return editormd(this.target.id, merge({
         width: "100%",
@@ -28,6 +30,6 @@ window.libs['md::simple'] = function ($options = {}) {
         htmlDecode: "style,script,iframe|on*",
         imageUpload: true,
         imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL: window.uploader + '?_token=' + exec('token')
+        imageUploadURL: window.uploader + '?_token=' + token
     }, $options, this.target.dataset));
 };

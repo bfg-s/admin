@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Core\TableExtends;
 
 use Admin\Components\Inputs\SwitcherInput;
@@ -122,7 +124,7 @@ class Editables
         Model|array $model = null,
         $field = null,
         $title = null
-    ): string {
+    ): AComponent|string {
         return $this->editable($value, $model, $title, $field, 'text');
     }
 
@@ -140,7 +142,7 @@ class Editables
         Model|array $model = null,
         $field = null,
         $title = null
-    ): string {
+    ): AComponent|string {
         return $this->editable($value, $model, $title, $field, 'textarea');
     }
 
@@ -152,7 +154,7 @@ class Editables
      * @param $type
      * @return string
      */
-    protected function editable($value, Model|array $model, $title, $field, $type): string
+    protected function editable($value, Model|array $model, $title, $field, $type): AComponent|string
     {
         $now = admin_now();
 

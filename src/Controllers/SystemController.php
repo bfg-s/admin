@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
@@ -107,7 +109,7 @@ class SystemController extends Controller
                 'size' => $modal->size,
                 'backdrop' => $modal->backdrop,
                 'temporary' => $modal->temporary,
-                'content' => $modal->getRenderedView()->render(),
+                'content' => $modal->getRenderedView(),
             ];
         }
 

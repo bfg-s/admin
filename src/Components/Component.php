@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Admin\BladeDirectives\SystemCssBladeDirective;
@@ -1212,13 +1214,23 @@ CSS;
 
         do {
             if (method_exists($parent, 'deepName')) {
-                $parentNames = array_reverse(array_filter($this->parseStringToArray($parent->deepName($names))));
+                $parentNames = array_reverse(
+                    array_filter(
+                        $this->parseStringToArray(
+                            $parent->deepName($names) ?: ''
+                        )
+                    )
+                );
                 $names = array_merge($names, $parentNames);
             }
             $parent = $parent->getParent();
         } while ($parent);
 
-        return collect($names)->reverse()->filter()->values()->all();
+        return collect($names)
+            ->reverse()
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
@@ -1230,20 +1242,28 @@ CSS;
         $parent = $this;
         do {
             if (method_exists($parent, 'deepName')) {
-                $parentPaths = array_reverse(array_filter(explode('.', $parent->deepPath($paths))));
+                $parentPaths = array_reverse(
+                    array_filter(
+                        explode('.', $parent->deepPath($paths) ?: '')
+                    )
+                );
                 $paths = array_merge($paths, $parentPaths);
             }
             $parent = $parent->getParent();
         } while ($parent);
 
-        return collect($paths)->reverse()->filter()->values()->all();
+        return collect($paths)
+            ->reverse()
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
-     * @param $str
+     * @param  string  $str
      * @return array
      */
-    protected function parseStringToArray($str): array
+    protected function parseStringToArray(string $str): array
     {
         $arr = explode('[', $str);
         return array_map(function ($s) {

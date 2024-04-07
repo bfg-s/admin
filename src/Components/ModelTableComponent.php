@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Admin\Middlewares\DomMiddleware;
@@ -120,11 +122,14 @@ class ModelTableComponent extends Component
 
     /**
      * @param ...$delegates
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function __construct(...$delegates)
     {
+        $this->per_page = config('admin.model-table-component.per_page', $this->per_page);
+        $this->per_pages = config('admin.model-table-component.per_pages', $this->per_pages);
+        $this->order_field = config('admin.model-table-component.order_field', $this->order_field);
+        $this->order_type = config('admin.model-table-component.order_type', $this->order_type);
+
         parent::__construct();
 
         if (request()->has($this->model_name)) {

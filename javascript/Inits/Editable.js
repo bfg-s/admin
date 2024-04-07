@@ -1,4 +1,6 @@
-window.libs['editable'] = function () {
+window.libs['editable'] = async function () {
+
+    const token = exec('token');
 
     return $(this.target).editable({
         // ajaxOptions: {
@@ -6,7 +8,7 @@ window.libs['editable'] = function () {
         // },
         highlight: false,
         params: (params) => {
-            return {[params.name]: params.value, __only_has: true, _token: exec('token')};
+            return {[params.name]: params.value, __only_has: true, _token: token};
         },
         display: function () {
             //$(this).html('<i class="fas fa-pencil-alt"></i>')

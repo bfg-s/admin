@@ -26,7 +26,7 @@ function isElementVisible(el) {
     );
 }
 
-window.libs['file'] = function ($options = {}) {
+window.libs['file'] = async function ($options = {}) {
     if (!this.target) {
 
         console.error("Target not fount for Bootstrap Switch!");
@@ -63,14 +63,14 @@ window.libs['file'] = function ($options = {}) {
             $add.initialPreviewCount = 1;
         }
     }
-
+    const token = exec('token');
     return $(this.target).fileinput(merge({
         'theme': 'explorer-fas',
         overwriteInitial: true,
         initialPreviewShowDelete: true,
-        deleteUrl: window.delete_ordered_image, // + '?_token=' + exec('token'),
+        deleteUrl: window.delete_ordered_image,
         deleteExtraData: {
-            _token: exec('token'),
+            _token: token,
             id: this.target.dataset.id,
             field: this.target.dataset.field,
             model: this.target.dataset.model,
@@ -86,7 +86,7 @@ window.libs['file'] = function ($options = {}) {
         a.target.parentNode.append(empty);
     }).on('input', (a) => {
         $(`[type="hidden"][name="${a.target.name}"]`).remove();
-    }).on('filesorted', (a, params) => {
+    }).on('filesorted', async (a, params) => {
         const fileList = [];
         $(a.target).parents('.file-input').find('.file-preview-frame').each(function () {
             if (! $(this).hasClass('kv-zoom-thumb')) {
@@ -99,8 +99,9 @@ window.libs['file'] = function ($options = {}) {
         });
 
         if (fileList.length > 1 && a.target.dataset.id && a.target.dataset.field && a.target.dataset.model) {
+            const token = exec('token');
             axios.post(window.save_image_order, {
-                _token: exec('token'),
+                _token: token,
                 id: a.target.dataset.id,
                 field: a.target.dataset.field,
                 model: a.target.dataset.model,
@@ -111,7 +112,7 @@ window.libs['file'] = function ($options = {}) {
         }
     }).on('filedeleted', function(a, key, jqXHR, data) {
 
-        setTimeout(() => {
+        setTimeout(async () => {
 
             const fileList = [];
             $(a.target).parents('.file-input').find('.file-preview-frame').each(function () {
@@ -123,9 +124,9 @@ window.libs['file'] = function ($options = {}) {
                     }
                 }
             });
-
+            const token = exec('token');
             axios.post(window.save_image_order, {
-                _token: exec('token'),
+                _token: token,
                 id: a.target.dataset.id,
                 field: a.target.dataset.field,
                 model: a.target.dataset.model,

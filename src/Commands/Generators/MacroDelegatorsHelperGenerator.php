@@ -1,26 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Commands\Generators;
 
 use App\Admin\Delegates\ModelInfoTable;
 use App\Admin\Delegates\ModelTable;
 use App\Admin\Delegates\SearchForm;
-use Closure;
 use File;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
-use Illuminate\Support\Traits\Macroable;
 use Log;
 use Admin;
-use Admin\Controllers\Controller;
-use Admin\Core\Delegate;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
-use Admin\Page;
 use ReflectionClass;
-use ReflectionFunction;
-use ReflectionMethod;
-use ReflectionProperty;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;

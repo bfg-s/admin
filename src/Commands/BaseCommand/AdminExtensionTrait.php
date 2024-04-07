@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Commands\BaseCommand;
 
-use Composer\Json\JsonFormatter;
 use Admin\Admin;
+use Admin\Core\JsonFormatter;
 use Illuminate\Support\Str;
 
 trait AdminExtensionTrait

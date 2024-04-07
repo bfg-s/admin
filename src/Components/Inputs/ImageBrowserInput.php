@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components\Inputs;
 
 use Admin\Components\FormGroupComponent;
-use Admin\Components\Inputs\Vue\BrowserVue;
+use Admin\Components\Inputs\Vue\ImageBrowserVue;
 use Illuminate\View\View;
 
 class ImageBrowserInput extends FormGroupComponent
@@ -29,7 +31,7 @@ class ImageBrowserInput extends FormGroupComponent
      */
     public function field(): string
     {
-        return (new BrowserVue)
+        return (new ImageBrowserVue)
             ->attr('value', $this->value)
             ->attr('field-name', $this->name)
             ->render();

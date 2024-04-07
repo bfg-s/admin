@@ -4,13 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.2] - 2024-04-07
+
+Flow bug fixed.
+
+### Added
+* Fine-tuning the default model table component in admin configs.
+* Fine-tuning the default nested component in admin configs.
+* Fine-tuning the default timeline component in admin configs.
+* Strict types for all classes.
+* Tests.
+
+### Fixed
+* Lang vertical align for form fields.
+* Tabs of Lang component in model relation.
+* Hidden order field in model relation ordered mode.
+* Ukrainian language renamed from `ua` to `uk`.
+* Modal load content.
+* Modal form submit.
+
 ## [6.1.1] - 2024-04-02
+
+A version aimed at correcting inputs.
 
 ### Added
 * Numerated ids for input fields is field if arrayable.
 * Documentation button in header for root users.
+
 ### Changed
 * Removed all unnecessary links that remained from the removed functionality.
+
 ### Fixed
 * Live loads document to form data.
 * Your own controller for `Select2` for individual loading of option lists.

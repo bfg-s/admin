@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Components;
+declare(strict_types=1);
 
-use Closure;
+namespace Admin\Components;
 
 class ModelRelationContainerComponent extends Component
 {
@@ -61,7 +61,7 @@ class ModelRelationContainerComponent extends Component
      * @param  string  $name
      * @param ...$delegates
      */
-    public function __construct(string $relation, string $name, ...$delegates)
+    public function __construct(string $relation, string|int $name, ...$delegates)
     {
         parent::__construct(...$delegates);
 

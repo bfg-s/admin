@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +25,12 @@ class TimelineComponent extends Component
     /**
      * @var callable|string|null
      */
-    protected $icon = 'icon';
+    protected $icon_field = 'icon';
 
     /**
      * @var callable|string|null
      */
-    protected $title = 'title';
+    protected $title_field = 'title';
 
     /**
      * @var callable|string|null
@@ -71,12 +73,27 @@ class TimelineComponent extends Component
     protected bool $full_body = false;
 
     /**
+     * @param ...$delegates
+     */
+    public function __construct(...$delegates)
+    {
+        $this->per_page = config('admin.timeline-component.per_page', $this->per_page);
+        $this->per_pages = config('admin.timeline-component.per_pages', $this->per_pages);
+        $this->order_field = config('admin.timeline-component.order_field', $this->order_field);
+        $this->order_type = config('admin.timeline-component.order_type', $this->order_type);
+        $this->icon_field = config('admin.timeline-component.icon_field', $this->icon_field);
+        $this->title_field = config('admin.timeline-component.title_field', $this->title_field);
+
+        parent::__construct($delegates);
+    }
+
+    /**
      * @param  callable|string  $icon
      * @return $this
      */
     public function set_icon(callable|string $icon): static
     {
-        $this->icon = $icon;
+        $this->icon_field = $icon;
 
         return $this;
     }
@@ -88,7 +105,7 @@ class TimelineComponent extends Component
     public function set_title(callable|string $title): static
     {
         if (is_string($title) || is_embedded_call($title)) {
-            $this->title = $title;
+            $this->title_field = $title;
         }
 
         return $this;
@@ -170,10 +187,10 @@ class TimelineComponent extends Component
             'paginate' => $paginate = $this->getPaginate(),
             'paginateFooter' => $this->paginateFooter($paginate),
             'icon' => function ($model) {
-                return $this->callCallableExtender('icon', $model, $this);
+                return $this->callCallableExtender('icon_field', $model, $this);
             },
             'title' => function ($model) {
-                return $this->callCallableExtender('title', $model, $this);
+                return $this->callCallableExtender('title_field', $model, $this);
             },
             'body' => function ($model) {
                 return $this->callCallableExtender('body', $model, $this);

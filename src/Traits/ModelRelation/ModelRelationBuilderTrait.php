@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Traits\ModelRelation;
 
 use Admin\Components\Component;
+use Admin\Components\LangComponent;
 use Admin\Components\ModelRelationContainerComponent;
 use Illuminate\Database\Eloquent\Model;
 use Admin\Components\ButtonsComponent;
@@ -170,6 +173,7 @@ trait ModelRelationBuilderTrait
     protected function generateButton(): void
     {
         ModelRelationComponent::templateMode(true);
+        LangComponent::templateMode(true);
 
         $emptyModel = new ($this->relation->getRelated());
         $preventModel = $this->page->getModel();
@@ -193,7 +197,7 @@ trait ModelRelationBuilderTrait
             $nameStart = $this->namesToString($deepNames);
 
             $container->view('components.inputs.hidden', [
-                'name' => "{$nameStart}[{__id__}][{$this->ordered}]",
+                'name' => "{$nameStart}[{$this->ordered}]",
                 'value' => '{__val__}',
                 'classes' => ['ordered-field']
             ]);
@@ -235,6 +239,7 @@ trait ModelRelationBuilderTrait
         $this->model($preventModelThis);
 
         ModelRelationComponent::templateMode(false);
+        LangComponent::templateMode(false);
     }
 
     /**

@@ -1,4 +1,4 @@
-window.libs['chart::js'] = function ($parameters) {
+window.libs['chart::js'] = async function ($parameters) {
 
     const ctx = this.target;
     const chart = new Chart(ctx, {
@@ -13,8 +13,8 @@ window.libs['chart::js'] = function ($parameters) {
     if ($parameters.loading) {
 
         $(`#${$parameters.loaderId}`).show();
-
-        axios.post(window.load_chart_js + location.search, {name: $parameters.name, _build_modal: 1, _token: exec('token')})
+        const token = exec('token');
+        axios.post(window.load_chart_js + location.search, {name: $parameters.name, _build_modal: 1, _token: token})
             .then(d => {
                 const data = d.data;
 

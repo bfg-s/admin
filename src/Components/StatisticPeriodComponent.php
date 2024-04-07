@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Admin\Traits\FontAwesome;
@@ -102,7 +104,7 @@ class StatisticPeriodComponent extends Component
     {
         $this->column()
             ->info_box(
-                __('admin.statistic_total', ['entity' => mb_strtolower($this->entity)]),
+                __('admin.statistic_total', ['entity' => mb_strtolower($this->entity ?: '')]),
                 $this->model->count().' ',
                 $this->icon
             )->primaryType();

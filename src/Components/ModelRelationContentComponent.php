@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Components;
+declare(strict_types=1);
 
-use Closure;
+namespace Admin\Components;
 
 class ModelRelationContentComponent extends Component
 {

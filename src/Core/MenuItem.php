@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Core;
 
 use App;
@@ -21,7 +23,6 @@ class MenuItem implements ArrayAccess, Arrayable
     protected ?string $route = null; // route
     protected ?string $icon = null; // icon
     protected ?string $resource_route = null;
-    protected ?string $dontUseSearch = null;
     protected ?string $link = null; // link
     protected ?string $type = null; // current.type
     protected ?string $controller = null; // controller
@@ -47,6 +48,7 @@ class MenuItem implements ArrayAccess, Arrayable
 
     protected mixed $model = null; // model
 
+    protected bool $dontUseSearch = false;
     protected bool $selected = false; // selected
     protected bool $current = false; // current
     protected bool $target = false; // target
@@ -290,7 +292,7 @@ class MenuItem implements ArrayAccess, Arrayable
     public function setTarget(?bool $target = null): void
     {
         $target = $target === null
-            ? str_starts_with($this->link, 'http')
+            ? str_starts_with($this->link ?: '', 'http')
             : $target;
 
         $this->target = $target;
@@ -524,7 +526,7 @@ class MenuItem implements ArrayAccess, Arrayable
     public function insertParentRouteName(?string $routeName)
     {
         if ($routeName) {
-            if (str_replace(['{', '?', '}'], '', $this->route) !== $this->route) {
+            if (str_replace(['{', '?', '}'], '', $this->route ?: '') != $this->route) {
                 $this->setRoute($routeName);
             } else {
                 $routePath = $this->getResourceName()
@@ -823,12 +825,12 @@ class MenuItem implements ArrayAccess, Arrayable
         $this->{$offset} = null;
     }
 
-    public function setDontUseSearch(?string $dontUseSearch): void
+    public function setDontUseSearch(bool $dontUseSearch): void
     {
         $this->dontUseSearch = $dontUseSearch;
     }
 
-    public function getDontUseSearch(): ?string
+    public function getDontUseSearch(): bool
     {
         return $this->dontUseSearch;
     }

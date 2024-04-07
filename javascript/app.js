@@ -57,7 +57,6 @@ require('./Inits/Tpl');
 require('./Inits/Fancy');
 require('./Inits/Doc');
 require('./Inits/Chart');
-require('./Inits/Calendar');
 
 _dispatch_event('admin:init');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components\Inputs;
 
 use Admin\Components\Inputs\Parts\InputRadioBox;

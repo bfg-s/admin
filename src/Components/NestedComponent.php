@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -70,7 +72,7 @@ class NestedComponent extends Component
     /**
      * @var int
      */
-    private int $maxDepth = 5;
+    private int $max_depth = 5;
 
     /**
      * Col constructor.
@@ -78,6 +80,12 @@ class NestedComponent extends Component
      */
     public function __construct(...$delegates)
     {
+        $this->title_field = config('admin.nested-component.title_field', $this->title_field);
+        $this->parent_field = config('admin.nested-component.parent_field', $this->parent_field);
+        $this->order_by_field = config('admin.nested-component.order_by_field', $this->order_by_field);
+        $this->order_by_type = config('admin.nested-component.order_by_type', $this->order_by_type);
+        $this->max_depth = config('admin.nested-component.max_depth', $this->max_depth);
+
         $this->controls =
         $this->info_control =
         $this->delete_control =
@@ -162,7 +170,7 @@ class NestedComponent extends Component
      */
     public function maxDepth(int $depth): static
     {
-        $this->maxDepth = $depth;
+        $this->max_depth = $depth;
 
         return $this;
     }
@@ -246,17 +254,17 @@ class NestedComponent extends Component
         if ($model) {
             $fillable = $model->getFillable();
             if (!in_array($this->parent_field, $fillable)) {
-                $this->maxDepth = 1;
+                $this->max_depth = 1;
             }
             if (in_array($this->order_by_field, $fillable)) {
                 $hasOrder = true;
             }
             $this->setDatas(['model' => get_class($model)]);
         } else {
-            $this->maxDepth = 1;
+            $this->max_depth = 1;
         }
 
-        $this->setDatas(['max-depth' => $this->maxDepth, 'parent' => $this->parent_field]);
+        $this->setDatas(['max-depth' => $this->max_depth, 'parent' => $this->parent_field]);
 
         if ($hasOrder) {
             $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type);
@@ -279,7 +287,7 @@ class NestedComponent extends Component
             'menu' => $this->menu,
             'title_field' => $this->title_field,
             'parent_field' => $this->parent_field,
-            'maxDepth' => $this->maxDepth,
+            'maxDepth' => $this->max_depth,
             'buttons' => function ($item, $cc_access, $cc) {
                 $group = ButtonsComponent::create();
                 $model = $item;

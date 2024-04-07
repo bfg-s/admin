@@ -24,7 +24,7 @@ return [
     /**
      * Supported languages
      */
-    'languages' => ['en', 'ua', 'ru'],
+    'languages' => ['en', 'uk', 'ru'],
 
     /**
      * Default home route
@@ -112,6 +112,39 @@ return [
             'visibility' => 'public',
             'url' => env('APP_URL').'/uploads',
         ],
+    ],
+
+    /**
+     * Fine-tuning the default model table component.
+     */
+    'model-table-component' => [
+        'per_page' => 15,
+        'per_pages' => [10, 15, 20, 50, 100, 500, 1000],
+        'order_field' => 'id',
+        'order_type' => 'desc',
+    ],
+
+    /**
+     * Fine-tuning the default nested component.
+     */
+    'nested-component' => [
+        'title_field' => 'name',
+        'parent_field' => 'parent_id',
+        'order_by_field' => 'order',
+        'order_by_type' => 'asc',
+        'max_depth' => 5,
+    ],
+
+    /**
+     * Fine-tuning the default timeline component.
+     */
+    'timeline-component' => [
+        'per_page' => 15,
+        'per_pages' => [10, 15, 20, 50, 100],
+        'icon_field' => 'icon',
+        'title_field' => 'title',
+        'order_field' => 'created_at',
+        'order_type' => 'desc',
     ],
 
     /**

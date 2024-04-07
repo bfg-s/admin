@@ -9,7 +9,7 @@
     <a href="{{ admin_url_with_get([
             $model_name => $column['sort'],
             $model_name.'_type' => $now ? ($select === 'desc' ? 'asc' : 'desc') : 'asc',
-        ]) }}">
+        ]) }}" data-sort="{{ $column['sort'] }}">
         <i class="fas fa-sort-amount-{{ $type }} d-none d-sm-inline"></i>
         <span @class(['text-bold' => $now, 'text-body'])>{{ $column['label'] }}</span>
     </a>

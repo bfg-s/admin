@@ -1,4 +1,4 @@
-window.libs['ckeditor'] = function ($options = {}) {
+window.libs['ckeditor'] = async function ($options = {}) {
     if (!this.target) {
 
         console.log("Target not fount for CKEditor!");
@@ -15,9 +15,9 @@ window.libs['ckeditor'] = function ($options = {}) {
 
         $options.plugin = [];
     }
-
+    const token = exec('token');
     $options.ckfinder = {
-        uploadUrl: window.uploader + '?_token=' + exec('token'),
+        uploadUrl: window.uploader + '?_token=' + token,
         options: {
             resourceType: 'Images'
         }

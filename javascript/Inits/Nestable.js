@@ -1,11 +1,12 @@
 window.libs['nestable'] = function () {
     let result = $(this.target).nestable({
         maxDepth: this.target.dataset.maxDepth ? this.target.dataset.maxDepth : 15
-    }).on('change', (e) => {
+    }).on('change', async (e) => {
         let list = $(e.target);
         NProgress.start();
+        const token = exec('token');
         axios.post(e.target.dataset.route, {
-            _token: exec('token'),
+            _token: token,
             model: e.target.dataset.model,
             depth: e.target.dataset.maxDepth,
             data: list.nestable('serialize'),

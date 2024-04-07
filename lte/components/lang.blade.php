@@ -5,9 +5,9 @@
     data-vertical="@json($vertical)"
 >
     @if(!$reversed)
-        <label for="input_updated_at" @class(['col-sm-' . $label_width => ! $vertical, 'col-sm-12' => $vertical])>{{ $name }}</label>
+        <label for="input_updated_at" @class(['col-sm-' . $label_width => ! $vertical])>{{ $name }}</label>
     @endif
-    <div @class(['col-sm-' . (12 - $label_width) => !$vertical, 'col-sm-12' => $vertical])>
+    <div @class(['col-sm-' . (12 - $label_width) => !$vertical, 'col-sm-12 pl-0' => $vertical])>
 
         <ul class="nav nav-tabs" id="{{ $id }}-tab" role="tablist">
             @foreach($insideInputs as $lang => $input)
@@ -22,12 +22,12 @@
                     <div class="">
                         {!! $input !!}
                     </div>
-                    <button type="button" class="btn btn-link" data-click="admin::translate" data-params="{{ $lang }}"><i class="fas fa-language"></i> @lang('translate_field_to_lang', ['name' => $name, 'lang' => strtoupper($lang)])</button>
+                    <button type="button" class="btn btn-link" data-click="admin::translate" data-params="{{ $lang }}"><i class="fas fa-language"></i> @lang('admin.translate_field_to_lang', ['name' => $name, 'lang' => strtoupper($lang)])</button>
                 </div>
             @endforeach
         </div>
     </div>
     @if($reversed)
-        <label for="input_updated_at" @class(['col-sm-' . $label_width => ! $vertical, 'col-sm-12' => $vertical])>{{ $name }}</label>
+        <label for="input_updated_at" @class(['col-sm-' . $label_width => ! $vertical])>{{ $name }}</label>
     @endif
 </div>

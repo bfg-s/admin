@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Admin\Core\PrepareExport;
@@ -24,7 +26,6 @@ use Admin\Components\SearchFields\SelectSearchInput;
 use Admin\Components\SearchFields\SelectTagsSearchField;
 use Admin\Components\SearchFields\SwitcherSearchField;
 use Admin\Components\SearchFields\TimeFieldSearchField;
-use Admin\Controllers\Controller;
 use Admin\Explanation;
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Admin\Traits\SearchFormHelpersTrait;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Repositories;
 
 use Bfg\Repository\Repository;
@@ -48,7 +50,7 @@ class AdminRepository extends Repository
     {
         $return = $this->menuList->where('route', '=', $this->currentQueryField)->first();
         if (!$return) {
-            $route = preg_replace('/\.[a-zA-Z0-9_\-]+$/', '', $this->currentQueryField);
+            $route = preg_replace('/\.[a-zA-Z0-9_\-]+$/', '', $this->currentQueryField ?: '');
             $return = $this->menuList->where('route', '=', $route)->first();
         }
         return $return;
@@ -292,7 +294,7 @@ class AdminRepository extends Repository
             $menuItem->setTitle($item['title'] ?? null);
             $menuItem->setAction($item['action'] ?? null);
             $menuItem->setActive($item['active'] ?? false);
-            $menuItem->setPost($item['post'] ?? false);
+            $menuItem->setPost($item['post'] ?? null);
             $menuItem->setIcon($item['icon'] ?? null);
             $menuItem->setBadge($item['badge'] ?? null);
             $menuItem->setData($item['data'] ?? null);
@@ -309,7 +311,7 @@ class AdminRepository extends Repository
             $menuItem->setResourceOnly($item['resource_only'] ?? null);
             $menuItem->setResourceExcept($item['resource_except'] ?? null);
             $menuItem->setLinkParams($item['link_params'] ?? null);
-            $menuItem->setDontUseSearch($item['dontUseSearch'] ?? null);
+            $menuItem->setDontUseSearch($item['dontUseSearch'] ?? false);
             $menuItem->setParams($item['params'] ?? null);
             $menuItem->setTargetBlank($item['target_blank'] ?? false);
             $menuItem->mergeRoles($item['roles'] ?? []);
@@ -332,10 +334,10 @@ class AdminRepository extends Repository
                     array_callable_results($menuItem->getRouteParams() ?? [], $menuItem)
                 );
                 $menuItem->setType(
-                    str_replace($menuItem->getRoute().'.', '', $this->currentQueryField)
+                    str_replace($menuItem->getRoute().'.', '', $this->currentQueryField ?: '')
                 );
                 $menuItem->setCurrent(
-                    str_replace('.'.$menuItem->getType(), '', $this->currentQueryField)
+                    str_replace('.'.$menuItem->getType(), '', $this->currentQueryField ?: '')
                     == $menuItem->getRoute()
                 );
                 $menuItem->setLink(

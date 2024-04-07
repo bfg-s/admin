@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Commands\Generators;
 
 use Admin\Page;
 use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\ClassEntity;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use ReflectionClass;

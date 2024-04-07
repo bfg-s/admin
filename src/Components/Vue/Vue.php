@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components\Vue;
 
 use Admin\Components\Component;
@@ -33,6 +35,4 @@ abstract class Vue extends Component
 
         $this->attr('data-load', 'vueInit');
     }
-
-
 }

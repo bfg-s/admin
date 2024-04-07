@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 class LangComponent extends Component
@@ -45,6 +47,16 @@ class LangComponent extends Component
     protected ?int $label_width = null;
 
     /**
+     * @var int
+     */
+    protected static int $counter = 0;
+
+    /**
+     * @var bool
+     */
+    protected static bool $tplMode = false;
+
+    /**
      * Lang constructor.
      * @param  array|null  $lang_list
      */
@@ -56,14 +68,20 @@ class LangComponent extends Component
     }
 
     /**
+     * @param  bool  $state
+     * @return void
+     */
+    public static function templateMode(bool $state): void
+    {
+        static::$tplMode = $state;
+    }
+
+    /**
      * @return void
      */
     protected function mount(): void
     {
-        //$inner = [];
-
         foreach ($this->contents as $key => $inner_input) {
-            //$inner_input = $inner_input->getOriginalValue();
 
             if ($inner_input instanceof FormGroupComponent) {
 
@@ -74,7 +92,10 @@ class LangComponent extends Component
                         $this->name = $input->get_title();
                     }
                     if (! $this->id) {
-                        $this->id = $input->get_id();
+                        $this->id = $input->get_id()
+                            . '_lang'
+                            . self::$counter++
+                            . (static::$tplMode ? '{__val__}' : '');
                     }
                     if ($this->verticalSet === null) {
                         $this->verticalSet = $input->get_vertical();
@@ -95,10 +116,11 @@ class LangComponent extends Component
                 unset($this->contents[$key]);
             }
         }
-
-        //$this->content->setItems($inner);
     }
 
+    /**
+     * @return array
+     */
     protected function viewData(): array
     {
         return [

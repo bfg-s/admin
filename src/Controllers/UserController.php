@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
@@ -107,7 +109,9 @@ class UserController extends Controller
 
         return [
             $form->p(__('admin.2fa_auth_finish_msg')),
-            str_contains($qr_code, '</svg>') ? $form->center()->appEnd($qr_code) : $form->center()->img()->attr(['src' => $qr_code]),
+            str_contains($qr_code, '</svg>')
+                ? $form->center()->attr('data-2fa-qr')->appEnd($qr_code)
+                : $form->center()->attr('data-2fa-qr')->img()->attr(['src' => $qr_code]),
             $form->p(),
             $form->p()->appEnd(__('admin.2fa_auth_finish_msg2')),
             $form->input('otp', ''),
@@ -264,11 +268,13 @@ class UserController extends Controller
                         $tab->if(admin()->two_factor_confirmed_at)->buttons(
                             $buttons->danger()
                                 ->modal('modal-2')
+                                ->attr('data-2fa-disable')
                                 ->text(__('admin.2fa_secure_enable_disable'))
                         ),
                         $tab->if(!admin()->two_factor_confirmed_at)->buttons(
                             $buttons->primary()
                                 ->modal()
+                                ->attr('data-2fa-enable')
                                 ->text(__('admin.2fa_secure_enable_button'))
                         )
                     ),

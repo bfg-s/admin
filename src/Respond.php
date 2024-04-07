@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin;
 
 use Illuminate\Contracts\Support\Htmlable;

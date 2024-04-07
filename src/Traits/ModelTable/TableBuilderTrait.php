@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Traits\ModelTable;
 
 use Admin\Components\ModelTable\BodyComponent;
@@ -64,11 +66,11 @@ trait TableBuilderTrait
     /**
      * @param  HeadComponent  $head
      * @param  array  $column
-     * @param  string  $key
+     * @param  string|int  $key
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function makeHeadTH(HeadComponent $head, array $column, string $key): void
+    protected function makeHeadTH(HeadComponent $head, array $column, string|int $key): void
     {
         $select = request()->get($this->model_name.'_type', $this->order_type);
         $now = request()->get($this->model_name, $this->order_field) == $column['sort'];

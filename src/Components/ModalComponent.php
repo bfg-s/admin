@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 use Illuminate\View\View;
 use ReflectionException;
+use Throwable;
 
 class ModalComponent extends Component
 {
@@ -465,6 +468,7 @@ class ModalComponent extends Component
 
     /**
      * @return View|string
+     * @throws Throwable
      */
     public function render(): View|string
     {

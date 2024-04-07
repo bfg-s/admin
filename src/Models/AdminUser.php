@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Models;
 
 use BaconQrCode\Renderer\Color\Rgb;

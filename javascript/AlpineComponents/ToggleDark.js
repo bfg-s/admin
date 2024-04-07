@@ -4,10 +4,11 @@ Alpine.data('toggleDark', (url) => ({
         const $this = $(this.$el);
     },
 
-    toggle () {
+    async toggle () {
         NProgress.start();
+        const token = exec('token');
         axios.post(this.url, {
-            _token: exec('token')
+            _token: token
         }).then(data => exec(data.data)).finally(d => {
             NProgress.done();
         });

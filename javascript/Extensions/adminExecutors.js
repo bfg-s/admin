@@ -52,16 +52,16 @@ window.libs['admin::add_relation_tpl'] = function (path) {
     container.find('.template_empty_container').hide();
 };
 
-window.libs['flash_document'] = function (changed_name = null, changed_value = null) {
+window.libs['flash_document'] = async function (changed_name = null, changed_value = null) {
     let data = $(":input").serializeArray();
     let lives = $('.__live__');
     if (lives[0]) {
         lives.each((i, o) => data.push({name: '_areas[]', value: o.getAttribute('id')}));
         data.push({name: '_changed_field', value: changed_name});
         data.push({name: '_changed_value', value: changed_value});
-
+        const token = exec('token');
         const formData = new FormData();
-        formData.append('_token', exec('token'));
+        formData.append('_token', token);
 
         data.map(({name, value}, key) => {
 
@@ -89,13 +89,13 @@ window.libs['flash_document'] = function (changed_name = null, changed_value = n
     }
 };
 
-window.libs['custom_save'] = function (model, id, field, inputId) {
+window.libs['custom_save'] = async function (model, id, field, inputId) {
 
     const e = $(`#${inputId}`)[0];
 
     let val = null;
 
-    setTimeout(() => {
+    setTimeout(async () => {
 
         if (e.nodeName === 'INPUT' && e.getAttribute('type') === 'checkbox') {
             val = !! Number($(`#${inputId}`).parents('.bootstrap-switch-mini').find(`[name="${e.name}"]`).last().val());
@@ -104,10 +104,10 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
         } else {
             val = $(`#${inputId}`).val();
         }
-
+        const token = exec('token');
         NProgress.start();
         axios.post(window.custom_save, {
-            _token: exec('token'),
+            _token: token,
             model: model,
             id: id,
             field_name: field,
@@ -120,10 +120,11 @@ window.libs['custom_save'] = function (model, id, field, inputId) {
     }, 100);
 };
 
-window.libs['admin::call_callback'] = function (key, parameters) {
+window.libs['admin::call_callback'] = async function (key, parameters) {
     NProgress.start();
+    const token = exec('token');
     axios.post(window.call_callback, {
-        _token: exec('token'), key, parameters
+        _token: token, key, parameters
     }).then(data => {
         exec(data.data);
     }).finally(d => {
@@ -180,7 +181,7 @@ window.libs['admin::model_relation_ordered'] = function (field) {
     });
 };
 
-window.libs['admin::translate'] = function (toLang) {
+window.libs['admin::translate'] = async function (toLang) {
 
     const field = this.target.closest('.tab-pane');
     let input = field.querySelector('input');
@@ -190,9 +191,9 @@ window.libs['admin::translate'] = function (toLang) {
     if (! input) {
         input = field.querySelector('select');
     }
-
+    const token = exec('token');
     NProgress.start();
-    axios.post(window.translate, {toLang, data: $(input).val(), _token: exec('token')}).then(
+    axios.post(window.translate, {toLang, data: $(input).val(), _token: token}).then(
         d => $(input).val(d.data)
     ).finally(d => {
         NProgress.done();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Core;
 
 use DB;
@@ -323,10 +325,9 @@ class ModelSaver
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-                            //if ($fk != 0) {
-                                //$param = collect($param)->collapse()->values()->toArray();
-
-                            //} else {
+                            if ($fk != 0) {
+                                $param = collect($param)->collapse()->values()->toArray();
+                            } else {
 
                                 $param = collect($param)->filter(static function ($i) {
                                     return !isset($i[static::DELETE_FIELD]);
@@ -335,12 +336,7 @@ class ModelSaver
 
                                     return $i[$lk];
                                 })->values()->toArray();
-                            //}
-                        }
-
-                        if ($key == 'categoryPropertyValues') {
-
-                            dd($key, $param, $fk);
+                            }
                         }
 
                         $builder->sync($param);
@@ -432,13 +428,17 @@ class ModelSaver
                         $fv = $param[$fk];
 
                         if (is_array($fv)) {
-                            $param = collect($param)->filter(static function ($i) {
-                                return !isset($i[static::DELETE_FIELD]);
-                            })->map(static function ($i) {
-                                $lk = array_key_last($i);
+                            if ($fk != 0) {
+                                $param = collect($param)->collapse()->values()->toArray();
+                            } else {
+                                $param = collect($param)->filter(static function ($i) {
+                                    return !isset($i[static::DELETE_FIELD]);
+                                })->map(static function ($i) {
+                                    $lk = array_key_last($i);
 
-                                return $i[$lk];
-                            })->values()->toArray();
+                                    return $i[$lk];
+                                })->values()->toArray();
+                            }
                         }
 
                         $builder->sync($param);

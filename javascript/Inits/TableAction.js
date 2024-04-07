@@ -15,14 +15,14 @@ function selectedIds(target) {
 }
 
 
-window.libs['table_action'] = function () {
+window.libs['table_action'] = async function () {
     const target = this.target;
     let ids = selectedIds(this.target);
     let commandJson = target.dataset.commandJson ? JSON.parse(target.dataset.commandJson) : null;
 
     if ((ids.length || !target.dataset.warning) && (target.dataset.route || commandJson)) {
 
-        let call_jax = () => {
+        let call_jax = async () => {
             if (commandJson) {
                 let key = Object.keys(commandJson)[0];
                 if (Array.isArray(commandJson[key][1])) {
@@ -39,9 +39,10 @@ window.libs['table_action'] = function () {
                     exec(commandJson);
                 }, 100);
             } else {
+                const token = exec('token');
                 NProgress.start();
                 axios.post(target.dataset.route, {
-                    _token: exec('token'),
+                    _token: token,
                     class: target.dataset.object,
                     ids: ids,
                     columns: columns(target),
@@ -108,13 +109,14 @@ function downloadBlob(blob, name = 'file.txt') {
 }
 
 
-window.libs['table_action::exportToExcel'] = function () {
+window.libs['table_action::exportToExcel'] = async function () {
     let ids = selectedIds(this.target);
     NProgress.start();
     if (window.langs.downloading_excel)
         exec("toast::success", window.langs.downloading_excel);
+    const token = exec('token');
     axios.post(window.export_excel, {
-        _token: exec('token'),
+        _token: token,
         model: this.target.dataset.object,
         ids: ids,
         order: this.target.dataset.order,
@@ -150,13 +152,14 @@ window.libs['table_action::exportToExcel'] = function () {
     });
 };
 
-window.libs['table_action::exportToCsv'] = function () {
+window.libs['table_action::exportToCsv'] = async function () {
     let ids = selectedIds(this.target);
     NProgress.start();
     if (window.langs.downloading_csv)
         exec("toast::success", window.langs.downloading_csv);
+    const token = exec('token');
     axios.post(window.export_csv, {
-        _token: exec('token'),
+        _token: token,
         model: this.target.dataset.object,
         ids: ids,
         order: this.target.dataset.order,

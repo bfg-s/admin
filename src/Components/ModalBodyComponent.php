@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Admin\Components;
 
 class ModalBodyComponent extends Component
@@ -21,7 +23,7 @@ class ModalBodyComponent extends Component
 
         $form->vertical()->attr('target');
         if (request()->has('_modal_id')) {
-            $form->setOnSubmit("event.preventDefault();'modal:submit'.exec('".request()->get('_modal_id')."');return false;");
+            $form->setOnSubmit("event.preventDefault();exec('modal:submit', '".request()->get('_modal_id')."');return false;");
         } else {
             $form->setOnSubmit("event.preventDefault();return false;");
         }

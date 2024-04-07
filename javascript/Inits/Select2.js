@@ -5,19 +5,19 @@ window.libs['select2::init'] = function (...args) {
     return undefined;
 };
 
-window.libs['select2::ajax'] =  function () {
+window.libs['select2::ajax'] = function () {
     let target = this.target;
 
     return $(target).select2({
         theme: target.dataset.theme ? target.dataset.theme : 'default',
         ajax: {
-            transport: (params, success, failure) => {
+            transport: async (params, success, failure) => {
 
                 let name = target.dataset.selectName;
                 let whereHas = target.dataset.withWhere;
-
+                const token = exec('token');
                 const formData = new FormData();
-                formData.append('_token', exec('token'));
+                formData.append('_token', token);
                 formData.append('_select2_name', name);
                 formData.append(name, true);
                 formData.append(`${name}_q`, params.data.q ? params.data.q : '');
