@@ -24,6 +24,7 @@ Flow bug fixed.
 * Modal form submit.
 * Image browser component, the picture review didn't work.
 * Ide-Helper for macroable.
+* isModelInput for controller.
 
 ## [6.1.1] - 2024-04-02
 

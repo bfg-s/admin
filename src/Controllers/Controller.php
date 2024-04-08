@@ -211,7 +211,7 @@ class Controller extends BaseController
             return in_array($val, $need_value);
         }
 
-        return $need_value == (! is_bool($need_value) ? (bool) $val : $val);
+        return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
     /**
