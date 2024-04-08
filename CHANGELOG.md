@@ -23,6 +23,7 @@ Flow bug fixed.
 * Modal load content.
 * Modal form submit.
 * Image browser component, the picture review didn't work.
+* Ide-Helper for macroable.
 
 ## [6.1.1] - 2024-04-02
 

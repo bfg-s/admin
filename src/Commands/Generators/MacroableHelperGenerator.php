@@ -123,15 +123,18 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                 ];
             }
 
-            foreach ($this->get_variables($doc, 'methods') as $method) {
-                $macroable_classes[$ns][] = [
-                    'type' => 'methods',
-                    'class' => $class,
-                    'name' => class_basename($class),
-                    'doc' => $doc,
-                    'methods' => $method,
-                    'ref' => $refl,
-                ];
+            if ($doc !== false) {
+
+                foreach ($this->get_variables($doc, 'methods') as $method) {
+                    $macroable_classes[$ns][] = [
+                        'type' => 'methods',
+                        'class' => $class,
+                        'name' => class_basename($class),
+                        'doc' => $doc,
+                        'methods' => $method,
+                        'ref' => $refl,
+                    ];
+                }
             }
         }
 
