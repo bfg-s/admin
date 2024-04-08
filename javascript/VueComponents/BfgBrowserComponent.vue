@@ -71,8 +71,11 @@ export default {
             this.move = false;
         },
         preview (img) {
+            img = String(img).startsWith('/') ? img : `/${img}`;
+
             let images = [];
             this.values.forEach((val) => {
+                val = String(val).startsWith('/') ? val : `/${val}`;
                 if (val !== img) {
                     images.push({
                         src: val,
@@ -122,9 +125,7 @@ export default {
             }
         },
         drop (file, valIndex) {
-            //this.$set(this.dropIndexes, valIndex, true);
-            //this.dropIndexes[valIndex] = true;
-            //console.log(this.dropIndexes);
+
             axios.post(window.uploader_drop, {
                 file
             }).then(() => {

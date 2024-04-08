@@ -22,6 +22,7 @@ Flow bug fixed.
 * Ukrainian language renamed from `ua` to `uk`.
 * Modal load content.
 * Modal form submit.
+* Image browser component, the picture review didn't work.
 
 ## [6.1.1] - 2024-04-02
 
