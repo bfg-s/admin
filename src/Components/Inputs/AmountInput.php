@@ -18,6 +18,10 @@ class AmountInput extends Input
      */
     protected function after_construct(): void
     {
-        $this->mask('currency', ['rightAlign' => false]);
+        $this->mask('currency', [
+            'rightAlign' => false,
+            'radixPoint' => ".",
+            'groupSeparator' => "",
+        ]);
     }
 }

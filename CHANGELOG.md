@@ -25,6 +25,7 @@ Flow bug fixed.
 * Image browser component, the picture review didn't work.
 * Ide-Helper for macroable.
 * isModelInput for controller.
+* Fixed AmountInput mask, without commas.
 
 ## [6.1.1] - 2024-04-02
 
