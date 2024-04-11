@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.1.2] - 2024-04-07
+## [6.1.2] - 2024-04-11
 
 Flow bug fixed.
 
@@ -26,6 +26,7 @@ Flow bug fixed.
 * Ide-Helper for macroable.
 * isModelInput for controller.
 * Fixed AmountInput mask, without commas.
+* Fixed depth in system nestable_collapse. 
 
 ## [6.1.1] - 2024-04-02
 

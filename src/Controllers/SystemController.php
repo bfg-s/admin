@@ -316,7 +316,7 @@ class SystemController extends Controller
 
     /**
      * @param  array  $data
-     * @param  int  $depth
+     * @param  int|string  $depth
      * @param  string|null  $parent_field
      * @param  null  $parent
      * @param  string  $order_field
@@ -324,7 +324,7 @@ class SystemController extends Controller
      */
     private function nestable_collapse(
         array $data,
-        int $depth,
+        int|string $depth,
         string $parent_field = null,
         $parent = null,
         string $order_field = 'order'
