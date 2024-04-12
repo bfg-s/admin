@@ -35,7 +35,7 @@
             <div class="col-sm-{{ $label_width }}"></div>
         @endif
         <small @class(['text-primary invalid-feedback d-block', 'col-sm-' . $group_width => ! $vertical])>
-            <i class="fas fa-info-circle"></i> {!! $info !!}
+            <i class="fas fa-info-circle"></i> {!! __($info) !!}
         </small>
     @endif
     @if($name && $errors && $hasError)

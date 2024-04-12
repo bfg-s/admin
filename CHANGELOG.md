@@ -27,6 +27,7 @@ Flow bug fixed.
 * isModelInput for controller.
 * Fixed AmountInput mask, without commas.
 * Fixed depth in system nestable_collapse. 
+* Info for input wrap in lang.
 
 ## [6.1.1] - 2024-04-02
 
