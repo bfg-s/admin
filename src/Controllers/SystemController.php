@@ -221,11 +221,11 @@ class SystemController extends Controller
     }
 
     /**
-     * @param  int  $key
-     * @param  array  $parameters
-     * @return array|void
+     * @param  CallCallbackRequest  $request
+     * @param  Respond  $respond
+     * @return Respond|array
      */
-    public function call_callback(CallCallbackRequest $request, Respond $respond)
+    public function call_callback(CallCallbackRequest $request, Respond $respond): Respond|array
     {
         if (!check_referer()) {
             return [];
@@ -235,7 +235,7 @@ class SystemController extends Controller
 
         if (isset(static::$callbacks[$request->key])) {
 
-            admin_log_warning('Call callback', $request->key, 'fas fa-balance-scale-right');
+            admin_log_warning('Call callback', (string) $request->key, 'fas fa-balance-scale-right');
 
             app()->call(static::$callbacks[$request->key], $request->parameters);
         } else {
@@ -246,12 +246,11 @@ class SystemController extends Controller
     }
 
     /**
-     * @param  string  $class
-     * @param  array  $ids
-     * @return array
-     * @throws Exception
+     * @param  TableActionRequest  $request
+     * @param  Respond  $respond
+     * @return Respond|array
      */
-    public function mass_delete(TableActionRequest $request, Respond $respond)
+    public function mass_delete(TableActionRequest $request, Respond $respond): Respond|array
     {
         if (!check_referer('DELETE')) {
             return [];
@@ -281,18 +280,15 @@ class SystemController extends Controller
     }
 
     /**
-     * @param  string  $model
-     * @param  int  $depth
-     * @param  array  $data
-     * @param  string|null  $parent_field
-     * @param  string  $order_field
-     * @return array
+     * @param  NestableSaveRequest  $request
+     * @param  Respond  $respond
+     * @return Respond|array
      * @throws Throwable
      */
     public function nestable_save(
         NestableSaveRequest $request,
         Respond $respond,
-    ) {
+    ): Respond|array {
         if (!check_referer('PUT')) {
             return [];
         }

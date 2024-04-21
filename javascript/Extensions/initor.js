@@ -34,8 +34,13 @@ window.updateInits = () => {
         if (! e.dataLoaded) {
 
             const data = e.dataset;
+            let vueNum = data.vueNum;
             let fn = data.load;
             let params = data.loadParams ?? [];
+
+            if (vueNum) {
+                window.initedVue[vueNum].$destroy();
+            }
 
             if (typeof params === 'string') {
                 try {

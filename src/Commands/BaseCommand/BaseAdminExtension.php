@@ -99,7 +99,7 @@ class BaseAdminExtension extends Command
             ] as $dir
         ) {
             if (!is_dir($dir)) {
-                mkdir($dir, 0777, 1);
+                mkdir($dir, 0777, true);
                 $this->info('Created dir ['.str_replace(base_path(), '', realpath($dir)).']!');
             }
         }
@@ -316,7 +316,7 @@ class BaseAdminExtension extends Command
     {
         $list = file_get_contents($this->remote_url);
 
-        $list = json_decode($list, 1);
+        $list = json_decode($list, true);
 
         return $list['packageNames'];
     }
@@ -335,7 +335,7 @@ class BaseAdminExtension extends Command
         }
 
         $data = file_get_contents("https://packagist.org/packages/{$name}.json");
-        $data = json_decode($data, 1);
+        $data = json_decode($data, true);
         if (isset($data['status']) && $data['status'] === 'error') {
             $this->error($data['message']);
 

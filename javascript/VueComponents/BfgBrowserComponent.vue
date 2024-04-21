@@ -46,7 +46,7 @@ export default {
     },
     data() {
         return {
-            values: Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []),
+            values: this.value === 'null' ? [] : Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []),
             drag: false,
             dark: window.darkMode,
             dropIndexes: {},

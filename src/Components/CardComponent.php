@@ -44,9 +44,9 @@ class CardComponent extends Component
     protected ?CardBodyComponent $body = null;
 
     /**
-     * @var ModelTableComponent|null
+     * @var ModelTableComponent|ModelCardsComponent|null
      */
-    protected ?ModelTableComponent $table = null;
+    protected ModelTableComponent|ModelCardsComponent|null $table = null;
 
     /**
      * @var string|null
@@ -201,13 +201,32 @@ class CardComponent extends Component
     /**
      * @param ...$delegates
      * @return ModelTableComponent
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function model_table(...$delegates): ModelTableComponent
     {
         $body = $this->card_body()->tableResponsive()->fullSpace();
         $this->table = $body->model_table($delegates);
+
+        $this->table->model($this->search_form);
+
+        $ad = $this->table->getActionData();
+
+        if ($ad['show']) {
+
+            $this->headerObj = admin_view('components.model-table.actions', $ad);
+        }
+
+        return $this->table;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return ModelCardsComponent
+     */
+    public function model_cards(...$delegates): ModelCardsComponent
+    {
+        $body = $this->card_body()->tableResponsive();
+        $this->table = $body->model_cards($delegates);
 
         $this->table->model($this->search_form);
 

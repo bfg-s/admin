@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
+use Admin\Delegates\Buttons;
+use Admin\Delegates\ModelCards;
+use Admin\Respond;
 use Illuminate\Http\Request;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
@@ -48,29 +51,28 @@ class AdministratorsController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable): Page
+    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable, ModelCards $modelCards, Buttons $buttons): Page
     {
         return $page->card(
             $card->title('admin.admin_list'),
             $card->search_form(
                 $searchForm->id(),
-                $searchForm->email('email', 'admin.email_address'),
+                $searchForm->input('email', 'admin.email_address')->icon_envelope(),
                 $searchForm->input('login', 'admin.login_name'),
                 $searchForm->input('name', 'admin.name'),
                 $searchForm->at(),
             ),
-            $card->model_table(
-                $modelTable->id(),
-                $modelTable->col('admin.avatar', 'avatar')->avatar(),
-                $modelTable->col('admin.role', [$this, 'show_role']),
-                $modelTable->col('admin.email_address', 'email')->sort(),
-                $modelTable->col('admin.login_name', 'login')->sort(),
-                $modelTable->col('admin.name', 'name')->sort(),
-                $modelTable->at(),
-                $modelTable->controlDelete(static function (AdminUser $user) {
+            $card->model_cards(
+                $modelCards->avatarField('avatar'),
+                $modelCards->titleField('name'),
+                $modelCards->subtitleField('email'),
+                $modelCards->id(),
+                $modelCards->row('admin.role', [$this, 'show_role'])->icon_users(),
+                $modelCards->row('admin.login_name', 'login')->sort()->icon_user(),
+                $modelCards->at(),
+                $modelCards->controlDelete(static function (AdminUser $user) {
                     return $user->id !== 1 && admin()->id !== $user->id;
                 }),
-                $modelTable->disableChecks(),
             )
         );
     }

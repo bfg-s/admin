@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.1.2] - 2024-04-11
+## [6.2.0] - 2024-04-21
 
-Flow bug fixed.
+### Added
+* New component `ModelCards` for the administrators list.
+### Fixed
+* json_decode with right associative.
+* image_browser null value in component.
+* image_browser block after flash_document.
+* Callbacks with empty parameters.
+
+## [6.1.2] - 2024-04-11
 
 ### Added
 * Fine-tuning the default model table component in admin configs.

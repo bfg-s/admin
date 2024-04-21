@@ -144,6 +144,7 @@ abstract class Component extends ComponentInputs
         'template' => TemplateComponent::class,
         'template_area' => TemplateAreaComponent::class,
         'accordion' => AccordionComponent::class,
+        'model_cards' => ModelCardsComponent::class,
 
         /**
          * Small components

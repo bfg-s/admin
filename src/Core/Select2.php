@@ -294,7 +294,7 @@ class Select2 extends Collection
             if ($this->where) {
                 $form = request($this->getName().'_form');
 
-                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, 1) : $form);
+                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, true) : $form);
             }
 
             if ($this->data) {
@@ -320,7 +320,7 @@ class Select2 extends Collection
             if ($this->where) {
                 $form = request($this->getName().'_form');
 
-                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, 1) : $form);
+                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, true) : $form);
             }
 
             $this->data = $this->data instanceof Arrayable ? $this->data->toArray() : $this->data->get()->all();

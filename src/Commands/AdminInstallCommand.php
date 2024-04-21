@@ -103,7 +103,7 @@ class AdminInstallCommand extends Command
 
             $this->info("File {$extensions} created!");
 
-            $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
+            $base_composer = json_decode(file_get_contents(base_path('composer.json')), true);
 
             if (
                 !isset($base_composer['scripts']['post-autoload-dump'])

@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Admin\Controllers\Controller;
 use Throwable;
 
 /**

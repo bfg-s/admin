@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Admin\Traits\ModelTable;
+namespace Admin\Traits\ModelCards;
 
 use Admin\Components\ModelTable\HeaderComponent;
 use Admin\Models\AdminPermission;
@@ -62,6 +62,11 @@ trait TableControlsTrait
      * @var array
      */
     protected $action = [];
+
+    /**
+     * @var Closure|null
+     */
+    protected ?Closure $checkBox = null;
 
     /**
      * @param  Closure|array|mixed  $test
@@ -206,13 +211,13 @@ trait TableControlsTrait
             'actions' => array_map(fn(ModelTableAction $action) => $action->toArray(), $this->action),
             'order_field' => $this->order_field,
             'select_type' => $select_type,
-            'columns' => collect($this->columns)
+            'columns' => collect($this->rows)
                 ->filter(static function ($i) {
                     return isset($i['field']) && is_string($i['field']) && !$i['hide'];
                 })
                 ->pluck('field')
                 ->toArray(),
-            'all_columns' => collect($this->columns)
+            'all_columns' => collect($this->rows)
                 ->filter(static function ($i) {
                     return isset($i['label']) && $i['label'];
                 })
@@ -250,39 +255,44 @@ trait TableControlsTrait
                 && $this->menu->getLinkDestroy(0);
             $show = count($this->action) || $hasDelete || count(PrepareExport::$columns) || $this->hasHidden;
             $modelName = $this->model_name;
+            $this->checkBox = function (Model|array $model) use ($modelName) {
+                return admin_view('components.model-table.checkbox', [
+                    'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
+                    'table_id' => $modelName,
+                    'disabled' => !$this->get_test_var('control_selectable', [$model]),
+                ]);
+            };
 
-            if ($this->checks && !request()->has('show_deleted') && $show) {
-                $this->to_prepend()->column(function (HeaderComponent $headerComponent) use ($hasDelete) {
-
-                    $headerComponent->fit();
-
-                    $headerComponent->view('components.model-table.checkbox', [
-                        'id' => false,
-                        'table_id' => $this->model_name,
-                        'object' => $this->model_class,
-                        'actions' => $this->action,
-                        'delete' => $this->get_test_var('check_delete') && $hasDelete,
-                        'columns' => collect($this->columns)->filter(static function ($i) {
-                            return isset($i['field']) && is_string($i['field']);
-                        })->pluck('field')->toArray(),
-                    ]);
-
-                }, function (Model|array $model) use ($modelName) {
-                    return admin_view('components.model-table.checkbox', [
-                        'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
-                        'table_id' => $modelName,
-                        'disabled' => !$this->get_test_var('control_selectable', [$model]),
-                    ]);
-                });
-            }
+//            if ($this->checks && !request()->has('show_deleted') && $show) {
+//                $this->to_prepend()->row(function (HeaderComponent $headerComponent) use ($hasDelete) {
+//
+//                    $headerComponent->fit();
+//
+//                    $headerComponent->view('components.model-table.checkbox', [
+//                        'id' => false,
+//                        'table_id' => $this->model_name,
+//                        'object' => $this->model_class,
+//                        'actions' => $this->action,
+//                        'delete' => $this->get_test_var('check_delete') && $hasDelete,
+//                        'columns' => collect($this->columns)->filter(static function ($i) {
+//                            return isset($i['field']) && is_string($i['field']);
+//                        })->pluck('field')->toArray(),
+//                    ]);
+//
+//                }, function (Model|array $model) use ($modelName) {
+//                    return admin_view('components.model-table.checkbox', [
+//                        'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
+//                        'table_id' => $modelName,
+//                        'disabled' => !$this->get_test_var('control_selectable', [$model]),
+//                    ]);
+//                });
+//            }
 
             if (request()->has('show_deleted')) {
                 $this->deleted_at();
             }
 
-            $this->column(function (HeaderComponent $headerComponent) {
-                $headerComponent->fit();
-            },function (Model|array $model) {
+            $this->buttons[] = function (Model|array $model) {
                 $menu = $this->menu;
 
                 return $this->createComponent(ButtonsComponent::class)->use(function (ButtonsComponent $group) use ($model, $menu) {
@@ -336,7 +346,7 @@ trait TableControlsTrait
                         }
                     }
                 });
-            });
+            };
         }
     }
 }

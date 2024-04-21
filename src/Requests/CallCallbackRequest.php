@@ -30,7 +30,7 @@ class CallCallbackRequest extends FormRequest
     {
         return [
             'key' => 'required|int',
-            'parameters' => 'required|array',
+            'parameters' => 'array',
         ];
     }
 }

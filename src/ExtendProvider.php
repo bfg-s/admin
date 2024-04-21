@@ -139,7 +139,7 @@ class ExtendProvider extends ServiceProviderIlluminate
         $file = $dir.'/../composer.json';
 
         if (is_file($file)) {
-            $data = json_decode(file_get_contents($file), 1);
+            $data = json_decode(file_get_contents($file), true);
 
             if (isset($data['name'])) {
                 static::$name = $data['name'];

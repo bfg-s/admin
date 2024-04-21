@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Middlewares\DomMiddleware;
+use Admin\Traits\ModelCards\TableBuilderTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,23 +14,20 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Admin\Traits\Delegable;
-use Admin\Traits\ModelTable\TableBuilderTrait;
-use Admin\Traits\ModelTable\TableControlsTrait;
-use Admin\Traits\ModelTable\TableExtensionTrait;
-use Admin\Traits\ModelTable\TableHelpersTrait;
+use Admin\Traits\ModelCards\TableControlsTrait;
+use Admin\Traits\ModelCards\TableHelpersTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * @methods static::$extensions (...$params) static
- * @mixin ModelTableComponentFields
- * @mixin ModelTableComponentMethods
- * @property-read ModelTableComponent $sort
+ * @methods Admin\Components\ModelTableComponent::$extensions (...$params) static
+ * @mixin ModelCardsComponentFields
+ * @mixin ModelCardsComponentMethods
+ * @property-read ModelCardsComponent $sort
  */
-class ModelTableComponent extends Component
+class ModelCardsComponent extends Component
 {
     use TableHelpersTrait;
-    use TableExtensionTrait;
     use TableBuilderTrait;
     use TableControlsTrait;
     use Delegable;
@@ -43,7 +40,7 @@ class ModelTableComponent extends Component
     /**
      * @var string
      */
-    protected string $view = 'model-table';
+    protected string $view = 'model-cards';
 
     /**
      * @var mixed|null
@@ -83,12 +80,12 @@ class ModelTableComponent extends Component
     /**
      * @var int
      */
-    protected $per_page = 15;
+    protected $per_page = 9;
 
     /**
      * @var int[]
      */
-    protected $per_pages = [10, 15, 20, 50, 100, 500, 1000];
+    protected $per_pages = [9, 15, 21, 51, 102, 501, 1002];
 
     /**
      * @var string
@@ -103,7 +100,7 @@ class ModelTableComponent extends Component
     /**
      * @var array
      */
-    protected $columns = [];
+    protected array $rows = [];
 
     /**
      * @var string|null
@@ -125,10 +122,10 @@ class ModelTableComponent extends Component
      */
     public function __construct(...$delegates)
     {
-        $this->per_page = config('admin.model-table-component.per_page', $this->per_page);
-        $this->per_pages = config('admin.model-table-component.per_pages', $this->per_pages);
-        $this->order_field = config('admin.model-table-component.order_field', $this->order_field);
-        $this->order_type = config('admin.model-table-component.order_type', $this->order_type);
+        $this->per_page = config('admin.model-cards-component.per_page', $this->per_page);
+        $this->per_pages = config('admin.model-cards-component.per_pages', $this->per_pages);
+        $this->order_field = config('admin.model-cards-component.order_field', $this->order_field);
+        $this->order_type = config('admin.model-cards-component.order_type', $this->order_type);
 
         parent::__construct();
 
@@ -157,8 +154,6 @@ class ModelTableComponent extends Component
                 $this->per_page = (string) request()->get($this->model_name.'_per_page');
             }
         } catch (\Throwable) {}
-
-        DomMiddleware::setModelTableComponent($this);
     }
 
     /**
@@ -171,11 +166,19 @@ class ModelTableComponent extends Component
 
     /**
      * @return string[]
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function viewData(): array
     {
+        $select = request()->get($this->model_name.'_type', $this->order_type);
+
         return [
             'id' => $this->model_name,
+            'rows' => $this->rows,
+            'select' => $select,
+            'model_name' => $this->model_name,
+            'order_field' => $this->order_field,
         ];
     }
 
@@ -259,27 +262,19 @@ class ModelTableComponent extends Component
     public function __call($name, $arguments)
     {
         if (
-            preg_match("/^col_(.+)$/", $name, $matches)
+            preg_match("/^row_(.+)$/", $name, $matches)
             && !isset(Component::$inputs[$name])
             && !Component::hasComponentStatic($name)
         ) {
             $name = str_replace(['_dot_', '__'], '.', Str::snake($matches[1], '_'));
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
-            return $this->col(Lang::has("admin.$label") ? __("admin.$label") : $label, $name);
+            return $this->row(Lang::has("admin.$label") ? __("admin.$label") : $label, $name);
         } else {
-            if (
-                preg_match("/^sort_in_(.+)$/", $name, $m)
-                && !isset(Component::$inputs[$name])
-                && !Component::hasComponentStatic($name)
-            ) {
-                return $this->sort($m[1]);
-            } else {
-                if (static::hasExtension($name) && isset($this->columns[$this->last])) {
-                    $this->columns[$this->last]['macros'][] = [$name, $arguments];
+            if (ModelTableComponent::hasExtension($name) && isset($this->rows[$this->last])) {
+                $this->rows[$this->last]['macros'][] = [$name, $arguments];
 
-                    return $this;
-                }
+                return $this;
             }
         }
 

@@ -148,6 +148,16 @@ return [
     ],
 
     /**
+     * Fine-tuning the default model cards component.
+     */
+    'model-cards-component' => [
+        'per_page' => 9,
+        'per_pages' => [9, 15, 21, 51, 102, 501, 1002],
+        'order_field' => 'id',
+        'order_type' => 'desc',
+    ],
+
+    /**
      * Footer data
      */
     'footer' => [

@@ -1,7 +1,9 @@
 window.initedVueForPjsxMoveDestroy = [];
+window.initedVue = [];
 
 window.libs['vueInit'] = function () {
     const $el = this.target;
+    $el.removeAttribute('data-load');
     if ($el.__vue) {
         return ;
     }
@@ -13,6 +15,8 @@ window.libs['vueInit'] = function () {
     let parents = pjax ? $el.closest(pjax) : 0;
 
     let name = $el.tagName.toLowerCase();
+
+    $el.setAttribute('data-vue-num', window.initedVue.length);
 
     if ($el.hasAttribute('id')) {
 
@@ -57,6 +61,8 @@ window.libs['vueInit'] = function () {
         if (destroyable) {
             window.initedVueForPjsxMoveDestroy.push(component);
         }
+
+        window.initedVue.push(component);
 
         $el.__vue = component;
     } catch (e) {

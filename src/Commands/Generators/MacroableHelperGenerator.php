@@ -336,6 +336,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                 $isProperty
                 || $isAny
                 || $type == '\Admin\Components\ModelTableComponent'
+                || $type == '\Admin\Components\ModelCardsComponent'
                 || $type == '\Admin\Components\ModelInfoTableComponent'
             ) {
                 $doc->tagPropertyRead(
@@ -484,6 +485,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 
     public function createSearchAndColAndRowFields()
     {
+        /** ModelTable helpers start */
         $class = class_entity("ModelTableComponentFields");
         $class->namespace('Admin\Components');
 
@@ -514,7 +516,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
 
             foreach ($this->relations as $relation) {
-                foreach ($relation['fillable'] as $field) {
+                foreach ($this->getModelFields() as $field) {
                     if ($field) {
                         $camelField = Str::snake($field);
                         $m = $method.'_'.$relation['name'].'__'.$camelField;
@@ -539,7 +541,9 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         $nameClass = Str::snake('ModelTableComponentFields');
         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
         file_put_contents($file, "<?php \n\n".$class->render());
+        /** ModelTable helpers end */
 
+        /** ModelInfoTable helpers start */
         $class = class_entity('ModelInfoTableComponentFields');
         $class->namespace('Admin\Components');
 
@@ -567,7 +571,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
 
             foreach ($this->relations as $relation) {
-                foreach ($relation['fillable'] as $field) {
+                foreach ($this->getModelFields() as $field) {
                     if ($field) {
                         $camelField = Str::snake($field);
                         $m = $method.'_'.$relation['name'].'__'.$camelField;
@@ -592,6 +596,62 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         $nameClass = Str::snake('ModelInfoTableComponentFields');
         $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
         file_put_contents($file, "<?php \n\n".$class->render());
+        /** ModelInfoTable helpers end */
+
+        /** ModelCards helpers start */
+        $class = class_entity('ModelCardsComponentFields');
+        $class->namespace('Admin\Components');
+
+        $class->doc(function ($doc) {
+            $method = 'row';
+            $methods = [];
+            $modelInfoType = "\\".Admin\Components\ModelCardsComponent::class."|\\".\Admin\Delegates\ModelCards::class."|\\".Delegate::class;
+            /** @var DocumentorEntity $doc */
+            foreach ($this->getModelFields() as $field) {
+                $camelField = Str::snake($field);
+                if ($camelField) {
+                    $methods[] = $method.'_'.$camelField;
+
+                    $doc->tagMethod(
+                        $modelInfoType,
+                        $method.'_'.$camelField."(callable|string \$label = null)",
+                        "Method {$method}_{$camelField}"
+                    );
+                    $doc->tagPropertyRead(
+                        $modelInfoType,
+                        $method.'_'.$camelField,
+                        "Property {$method}_{$camelField}"
+                    );
+                }
+            }
+
+            foreach ($this->relations as $relation) {
+                foreach ($this->getModelFields() as $field) {
+                    if ($field) {
+                        $camelField = Str::snake($field);
+                        $m = $method.'_'.$relation['name'].'__'.$camelField;
+                        if ($camelField && !in_array($m, $methods)) {
+                            $doc->tagMethod(
+                                $modelInfoType,
+                                $m."(callable|string \$label = null)",
+                                "Method {$m}"
+                            );
+                            $doc->tagPropertyRead(
+                                $modelInfoType,
+                                $method.'_'.$relation['name'].'__'.$camelField,
+                                "Property {$method}_{$relation['name']}__{$camelField}"
+                            );
+                            $methods[] = $m;
+                        }
+                    }
+                }
+            }
+        });
+
+        $nameClass = Str::snake('ModelCardsComponentFields');
+        $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
+        file_put_contents($file, "<?php \n\n".$class->render());
+        /** ModelCards helpers end */
 
         $class = class_entity('SearchFormComponentFields');
         $class->namespace('Admin\Components');

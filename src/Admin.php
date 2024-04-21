@@ -133,7 +133,7 @@ class Admin
             $lock_file = base_path('composer.lock');
             if (is_file($lock_file)) {
                 $lock = file_get_contents($lock_file);
-                $json = json_decode($lock, 1);
+                $json = json_decode($lock, true);
                 $admin = collect($json['packages'])->where('name', 'bfg/admin')->first();
                 if ($admin && isset($admin['version'])) {
                     return ltrim($admin['version'], 'v');

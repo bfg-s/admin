@@ -20,7 +20,7 @@ trait TableBuilderTrait
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function _build(): void
+    protected function build(): void
     {
         $header = $this->createComponent(HeadComponent::class);
 

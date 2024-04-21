@@ -20,7 +20,7 @@ trait AdminExtensionTrait
      */
     protected function add_repo_to_composer(string $path)
     {
-        $base_composer = json_decode(file_get_contents(base_path('composer.json')), 1);
+        $base_composer = json_decode(file_get_contents(base_path('composer.json')), true);
 
         if (!isset($base_composer['repositories'])) {
             $base_composer['repositories'] = [];
