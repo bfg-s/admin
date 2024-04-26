@@ -53,6 +53,11 @@ export default {
             move: false
         }
     },
+    watch: {
+        values (arr) {
+            return arr.filter(i => i !== '[__EMPTY_ARRAY__]')
+        }
+    },
     mounted() {
 
     },

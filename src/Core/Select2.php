@@ -86,7 +86,7 @@ class Select2 extends Collection
     /**
      * @var Collection
      */
-    private mixed $value_data;
+    private mixed $value_data = null;
 
     /**
      * @var Closure|null
