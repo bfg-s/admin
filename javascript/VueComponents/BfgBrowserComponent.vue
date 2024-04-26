@@ -6,7 +6,7 @@
         @drop.prevent="handleDrop"
     >
         <draggable v-model="values" @start="drag=true" @end="drag=false" class="file-browser-previews" handle=".move-handle">
-            <div v-for="(val, valIndex) in values.filter(i => i !== '[__EMPTY_ARRAY__]')" v-if="! dropIndexes[valIndex]" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
+            <div v-for="(val, valIndex) in filterValues" v-if="! dropIndexes[valIndex]" class="file-browser-preview move-handle" :key="`preview-${valIndex}`">
                 <img :src="String(val).startsWith('/') ? val : `/${val}`" :alt="val"/>
                 <div class="file-browser-preview-controls">
                     <div class="file-browser-preview-control-btn" @click="preview(val)">
@@ -23,7 +23,7 @@
         </draggable>
 
 
-        <template v-for="(val, valIndex) in values">
+        <template v-for="(val, valIndex) in filterValues">
             <input v-if="! dropIndexes[valIndex]" type="hidden" :name="`${fieldName}${!String(fieldName).endsWith('[]') ? '[]':''}`" :value="val" :key="`hidden-${valIndex}`" />
         </template>
         <input v-if="! values.length" :name="fieldName.replace(/\[]$/, '')" value="[__EMPTY_ARRAY__]" type="hidden" />
@@ -53,9 +53,9 @@ export default {
             move: false
         }
     },
-    watch: {
-        values (arr) {
-            return arr.filter(i => i !== '[__EMPTY_ARRAY__]')
+    computed: {
+        filterValues () {
+            return this.values.filter(i => i !== '[__EMPTY_ARRAY__]')
         }
     },
     mounted() {
