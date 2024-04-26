@@ -26,7 +26,7 @@
         <template v-for="(val, valIndex) in filterValues">
             <input v-if="! dropIndexes[valIndex]" type="hidden" :name="`${fieldName}${!String(fieldName).endsWith('[]') ? '[]':''}`" :value="val" :key="`hidden-${valIndex}`" />
         </template>
-        <input v-if="! values.length" :name="fieldName.replace(/\[]$/, '')" value="[__EMPTY_ARRAY__]" type="hidden" />
+        <input v-if="! filterValues.length" :name="fieldName.replace(/\[]$/, '')" value="[__EMPTY_ARRAY__]" type="hidden" />
         <i class="fas fa-cloud-download-alt file-browser-logo-download"></i>
         <input type="file" ref="file" style="display: none" @change="previewFiles" multiple accept="image/*" />
     </div>
