@@ -623,7 +623,14 @@ class MenuItem implements ArrayAccess, Arrayable
     public function setModelClass(?string $model_class = null): void
     {
         if ($model_class === null && $controller = $this->controller) {
-            $model_class = $controller::$model ?? null;
+
+            if (method_exists($controller, 'getModel')) {
+                $model_class = call_user_func([$controller, 'getModel']);
+            } elseif (property_exists($controller, 'model')) {
+                $model_class = $controller::$model;
+            } else {
+                $model_class = null;
+            }
         }
 
         $this->model_class = $model_class;

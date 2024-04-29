@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Delegates\Form;
+use Admin\Delegates\Modal;
 use Admin\Models\AdminPermission;
+use Admin\Respond;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Admin\Core\MenuItem;
 use Admin\Explanation;
@@ -409,14 +414,76 @@ class CardComponent extends Component
     }
 
     /**
+     * @param  Respond  $respond
+     * @param  Request  $request
+     * @return Respond
+     */
+    public function factoryRun(Respond $respond, Request $request): Respond
+    {
+        $count = (int) $request->count;
+        $model = $request->model;
+
+        if ($count) {
+            $model::factory()->count($count)->create();
+
+            return $respond
+                ->toast_success(__('admin.factory_created', ['count' => $count]))
+                ->reload();
+        }
+
+        return $respond
+            ->toast_error(__('admin.factory_error'));
+    }
+
+    /**
      * Make default tools.
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function make_default_tools(): void
     {
         if ($this->default_tools !== false) {
             /** @var Closure $test */
             $test = $this->default_tools;
+
+            if ($test('factory')) {
+
+                $type = $this->now->getType();
+
+                $className = '\\Database\\Factories\\' . Str::singular(class_basename($this->model::class))
+                    . 'Factory';
+
+                if (class_exists($className)) {
+
+                    $modal = new Modal();
+                    $form = new Form();
+
+                    $this->modal(
+                        $modal->name('factory_modal'),
+                        $modal->title(__('admin.factory')),
+                        $modal->submitEvent([$this, 'factoryRun']),
+                        $modal->form(
+                            $form->input('count', 'admin.count')->default(1),
+                            $form->hidden('model')->default($this->model::class),
+                        ),
+                        $modal->buttons()
+                            ->success()
+                            ->icon_paper_plane()
+                            ->title(__('admin.create'))
+                            ->modalSubmit(),
+                    );
+
+                    if ($type == 'index') {
+
+                        $group = $this->buttons();
+                        $group->info()
+                            ->title(__('admin.factory'))
+                            ->icon_industry()
+                            ->modal('factory_modal');
+                    }
+                }
+            }
 
             if ($test('search')) {
                 $group = $this->buttons();

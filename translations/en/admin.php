@@ -284,4 +284,9 @@ return [
     'downloading_excel' => 'Downloading excel...',
     'downloading_csv' => 'Downloading csv...',
     'documentation' => 'Documentation',
+    'factory_created' => ':count items created with factory!',
+    'factory_error' => 'Error creating elements by the factory!',
+    'factory' => 'Factory',
+    'create' => 'Create',
+    'count' => 'Count',
 ];

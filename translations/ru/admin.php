@@ -284,4 +284,9 @@ return [
     'downloading_excel' => 'Загрузка excel...',
     'downloading_csv' => 'Загрузка csv...',
     'documentation' => 'Документация',
+    'factory_created' => ':count предметов, созданные фабрикой!',
+    'factory_error' => 'Ошибка создания элементов заводом!',
+    'factory' => 'Фабрика',
+    'create' => 'Создать',
+    'count' => 'Количество',
 ];
