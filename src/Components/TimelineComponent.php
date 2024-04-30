@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
 class TimelineComponent extends Component
@@ -202,10 +205,95 @@ class TimelineComponent extends Component
     }
 
     /**
+     * @return mixed
+     */
+    protected function getPaginate(): mixed
+    {
+        if (!$this->model) {
+            return [];
+        }
+
+        if ($this->model instanceof Model) {
+            $paginate = new (get_class($this->model));
+        } elseif (is_string($this->model)) {
+            $paginate = new $this->model();
+        } elseif (is_array($this->model)) {
+            $paginate = collect($this->model);
+        } else {
+            $paginate = $this->model;
+        }
+
+        return ($paginate instanceof Collection
+            ? $paginate->sortByDesc($this->order_field, 'desc')
+            : $paginate->orderBy($this->order_field, 'desc')
+        )->paginate($this->per_page, ['*'], $this->model_name.'_page');
+    }
+
+    /**
+     * @param $paginate
+     * @return View|string
+     */
+    protected function paginateFooter($paginate): string|View
+    {
+        return $this->model_name && $paginate ? admin_view('components.time-line.paginate-footer', [
+            'model' => $this->model,
+            'paginator' => $paginate,
+            'from' => (($paginate->currentPage() * $paginate->perPage()) - $paginate->perPage()) + 1,
+            'to' => ($paginate->currentPage() * $paginate->perPage()) > $paginate->total() ? $paginate->total() : ($paginate->currentPage() * $paginate->perPage()),
+            'per_page' => $this->per_page,
+            'per_pages' => $this->per_pages,
+            'elements' => $this->paginationElements($paginate),
+            'page_name' => $this->model_name.'_page',
+            'per_name' => $this->model_name.'_per_page',
+        ]) : '';
+    }
+
+    /**
+     * Get the array of elements to pass to the view.
+     *
+     * @param  LengthAwarePaginator  $page
+     * @return array
+     */
+    protected function paginationElements(LengthAwarePaginator $page): array
+    {
+        $window = UrlWindow::make($page);
+
+        return array_filter([
+            $window['first'],
+            is_array($window['slider']) ? '...' : null,
+            $window['slider'],
+            is_array($window['last']) ? '...' : null,
+            $window['last'],
+        ]);
+    }
+
+    /**
+     * @param  string  $segment
+     * @param $model
+     * @param $area
+     * @param  null  $default
+     * @return mixed
+     * @throws Throwable
+     */
+    protected function callCallableExtender(string $segment, $model, $area, $default = null): mixed
+    {
+        $s = $this->{$segment};
+
+        return $s && is_string($s) ? ($model->{$s} ?: $default) : (
+        $s && is_embedded_call($s) ? embedded_call($s, [
+            get_class($area) => $area,
+            (is_object($model) ? get_class($model) : 'model') => $model,
+            'model' => $model,
+            static::class => $this,
+        ]) : $default
+        );
+    }
+
+    /**
      * @return void
      * @throws Throwable
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function mount(): void
     {
@@ -239,90 +327,5 @@ class TimelineComponent extends Component
             static::class => $this,
         ]) : $value
         );
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getPaginate(): mixed
-    {
-        if (!$this->model) {
-            return [];
-        }
-
-        if ($this->model instanceof Model) {
-            $paginate = new (get_class($this->model));
-        } elseif (is_string($this->model)) {
-            $paginate = new $this->model();
-        } elseif (is_array($this->model)) {
-            $paginate = collect($this->model);
-        } else {
-            $paginate = $this->model;
-        }
-
-        return ($paginate instanceof Collection
-            ? $paginate->sortByDesc($this->order_field, 'desc')
-            : $paginate->orderBy($this->order_field, 'desc')
-        )->paginate($this->per_page, ['*'], $this->model_name.'_page');
-    }
-
-    /**
-     * @param  string  $segment
-     * @param $model
-     * @param $area
-     * @param  null  $default
-     * @return mixed
-     * @throws Throwable
-     */
-    protected function callCallableExtender(string $segment, $model, $area, $default = null): mixed
-    {
-        $s = $this->{$segment};
-
-        return $s && is_string($s) ? ($model->{$s} ?: $default) : (
-        $s && is_embedded_call($s) ? embedded_call($s, [
-            get_class($area) => $area,
-            (is_object($model) ? get_class($model) : 'model') => $model,
-            'model' => $model,
-            static::class => $this,
-        ]) : $default
-        );
-    }
-
-    /**
-     * @param $paginate
-     * @return \Illuminate\View\View|string
-     */
-    protected function paginateFooter($paginate): string|\Illuminate\View\View
-    {
-        return $this->model_name && $paginate ? admin_view('components.time-line.paginate-footer', [
-            'model' => $this->model,
-            'paginator' => $paginate,
-            'from' => (($paginate->currentPage() * $paginate->perPage()) - $paginate->perPage()) + 1,
-            'to' => ($paginate->currentPage() * $paginate->perPage()) > $paginate->total() ? $paginate->total() : ($paginate->currentPage() * $paginate->perPage()),
-            'per_page' => $this->per_page,
-            'per_pages' => $this->per_pages,
-            'elements' => $this->paginationElements($paginate),
-            'page_name' => $this->model_name.'_page',
-            'per_name' => $this->model_name.'_per_page',
-        ]) : '';
-    }
-
-    /**
-     * Get the array of elements to pass to the view.
-     *
-     * @param  LengthAwarePaginator  $page
-     * @return array
-     */
-    protected function paginationElements(LengthAwarePaginator $page): array
-    {
-        $window = UrlWindow::make($page);
-
-        return array_filter([
-            $window['first'],
-            is_array($window['slider']) ? '...' : null,
-            $window['slider'],
-            is_array($window['last']) ? '...' : null,
-            $window['last'],
-        ]);
     }
 }

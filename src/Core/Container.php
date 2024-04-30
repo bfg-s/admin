@@ -6,11 +6,11 @@ namespace Admin\Core;
 
 use Admin\Components\AccessDeniedComponent;
 use Admin\Components\Component;
+use Admin\Interfaces\SegmentContainerInterface;
 use Admin\Middlewares\Authenticate;
+use Admin\Traits\FontAwesome;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
-use Admin\Interfaces\SegmentContainerInterface;
-use Admin\Traits\FontAwesome;
 use Illuminate\View\View;
 use Throwable;
 
@@ -38,16 +38,14 @@ abstract class Container implements SegmentContainerInterface
      * @var array
      */
     protected array $breadcrumb = [];
-
-    /**
-     * @var callable
-     */
-    private $warp;
-
     /**
      * @var array
      */
     protected array $contents = [];
+    /**
+     * @var callable
+     */
+    private $warp;
 
     /**
      * @param $warp
@@ -62,16 +60,6 @@ abstract class Container implements SegmentContainerInterface
             ]);
         }
         $this->warp = $warp;
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return static
-     * @throws Throwable
-     */
-    public static function create(...$params): static
-    {
-        return new static(...$params);
     }
 
     /**
@@ -166,7 +154,7 @@ abstract class Container implements SegmentContainerInterface
      */
     public function render(): View
     {
-        if (! Authenticate::$access) {
+        if (!Authenticate::$access) {
             $this->contents = [
                 AccessDeniedComponent::create()
             ];
@@ -178,5 +166,15 @@ abstract class Container implements SegmentContainerInterface
             'breadcrumb' => $this->breadcrumb,
             'storeList' => $this->storeList,
         ]);
+    }
+
+    /**
+     * @param  mixed  ...$params
+     * @return static
+     * @throws Throwable
+     */
+    public static function create(...$params): static
+    {
+        return new static(...$params);
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Facades;
 
-use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 use Admin\Admin;
+use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 
 /**
  * @mixin Admin

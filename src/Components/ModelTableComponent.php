@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 use Admin\Middlewares\DomMiddleware;
+use Admin\Traits\Delegable;
+use Admin\Traits\ModelTable\TableBuilderTrait;
+use Admin\Traits\ModelTable\TableControlsTrait;
+use Admin\Traits\ModelTable\TableExtensionTrait;
+use Admin\Traits\ModelTable\TableHelpersTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,13 +18,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Admin\Traits\Delegable;
-use Admin\Traits\ModelTable\TableBuilderTrait;
-use Admin\Traits\ModelTable\TableControlsTrait;
-use Admin\Traits\ModelTable\TableExtensionTrait;
-use Admin\Traits\ModelTable\TableHelpersTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 /**
  * @methods static::$extensions (...$params) static
@@ -36,89 +37,73 @@ class ModelTableComponent extends Component
     use Delegable;
 
     /**
+     * @var bool
+     */
+    public static bool $is_export = false;
+    /**
      * @var SearchFormComponent|null
      */
     public ?SearchFormComponent $search = null;
-
     /**
      * @var string
      */
     protected string $view = 'model-table';
-
     /**
      * @var mixed|null
      */
     protected mixed $label = null;
-
     /**
      * @var bool
      */
     protected bool $hasHidden = false;
-
     /**
      * @var Model|Builder|Relation|Collection|array|null
      */
     protected $model;
-
     /**
      * @var LengthAwarePaginator|null
      */
     protected ?LengthAwarePaginator $paginate = null;
-
     /**
      * @var mixed|array
      */
     protected mixed $model_control = [];
-
     /**
      * @var string
      */
     protected $model_name;
-
     /**
      * @var string
      */
     protected $model_class;
-
     /**
      * @var int
      */
     protected $per_page = 15;
-
     /**
      * @var int[]
      */
     protected $per_pages = [10, 15, 20, 50, 100, 500, 1000];
-
     /**
      * @var string
      */
     protected $order_field = 'id';
-
     /**
      * @var string
      */
     protected $order_type = 'desc';
-
     /**
      * @var array
      */
     protected $columns = [];
-
     /**
      * @var string|null
      */
     protected $last;
-
     /**
      * @var bool
      */
     protected $prepend = false;
-
-    /**
-     * @var bool
-     */
-    public static bool $is_export = false;
 
     /**
      * @param ...$delegates
@@ -135,13 +120,15 @@ class ModelTableComponent extends Component
         if (request()->has($this->model_name)) {
             try {
                 $this->order_field = request()->get($this->model_name);
-            } catch (\Throwable) {}
+            } catch (Throwable) {
+            }
         }
 
         if (request()->has($this->model_name.'_type')) {
             try {
                 $type = request()->get($this->model_name.'_type');
-            } catch (\Throwable) {}
+            } catch (Throwable) {
+            }
             $this->order_type = $type === 'asc' || $type === 'desc' ? $type : 'asc';
         }
 
@@ -156,7 +143,8 @@ class ModelTableComponent extends Component
                 )) {
                 $this->per_page = (string) request()->get($this->model_name.'_per_page');
             }
-        } catch (\Throwable) {}
+        } catch (Throwable) {
+        }
 
         DomMiddleware::setModelTableComponent($this);
     }
@@ -167,16 +155,6 @@ class ModelTableComponent extends Component
     public function getPaginate(): ?LengthAwarePaginator
     {
         return $this->paginate;
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function viewData(): array
-    {
-        return [
-            'id' => $this->model_name,
-        ];
     }
 
     /**
@@ -192,62 +170,10 @@ class ModelTableComponent extends Component
         }
 
         if ($model) {
-
             parent::model($model);
         }
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function createModel(): mixed
-    {
-        if (is_array($this->model)) {
-            $this->model = collect($this->model);
-        }
-
-        if (request()->has('show_deleted')) {
-            $this->model = $this->model->onlyTrashed();
-        }
-
-        $select_type = request()->get($this->model_name.'_type', $this->order_type);
-        $this->order_field = request()->get($this->model_name, $this->order_field);
-
-        if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
-            foreach ($this->model_control as $item) {
-                if ($item instanceof SearchFormComponent) {
-                    $this->model = $item->makeModel($this->model);
-                } elseif (is_embedded_call($item)) {
-                    $r = call_user_func($item, $this->model);
-                    if ($r) {
-                        $this->model = $r;
-                    }
-                } elseif (is_array($item)) {
-                    $this->model = eloquent_instruction($this->model, $item);
-                }
-            }
-
-            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate(
-                $this->per_page,
-                ['*'],
-                $this->model_name.'_page'
-            );
-        } elseif ($this->model instanceof Collection) {
-            if (request()->has($this->model_name)) {
-                $model = $this->model
-                    ->{strtolower($select_type) == 'asc' ? 'sortBy' : 'sortByDesc'}($this->order_field);
-            } else {
-                $model = $this->model;
-            }
-
-            return $this->paginate = $model->paginate($this->per_page, $this->model_name.'_page');
-        }
-
-        return $this->model;
     }
 
     /**
@@ -319,6 +245,16 @@ class ModelTableComponent extends Component
     }
 
     /**
+     * @return string[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'id' => $this->model_name,
+        ];
+    }
+
+    /**
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -328,5 +264,56 @@ class ModelTableComponent extends Component
         $this->createModel();
 
         $this->build();
+    }
+
+    /**
+     * @return mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function createModel(): mixed
+    {
+        if (is_array($this->model)) {
+            $this->model = collect($this->model);
+        }
+
+        if (request()->has('show_deleted')) {
+            $this->model = $this->model->onlyTrashed();
+        }
+
+        $select_type = request()->get($this->model_name.'_type', $this->order_type);
+        $this->order_field = request()->get($this->model_name, $this->order_field);
+
+        if ($this->model instanceof Relation || $this->model instanceof Builder || $this->model instanceof Model) {
+            foreach ($this->model_control as $item) {
+                if ($item instanceof SearchFormComponent) {
+                    $this->model = $item->makeModel($this->model);
+                } elseif (is_embedded_call($item)) {
+                    $r = call_user_func($item, $this->model);
+                    if ($r) {
+                        $this->model = $r;
+                    }
+                } elseif (is_array($item)) {
+                    $this->model = eloquent_instruction($this->model, $item);
+                }
+            }
+
+            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate(
+                $this->per_page,
+                ['*'],
+                $this->model_name.'_page'
+            );
+        } elseif ($this->model instanceof Collection) {
+            if (request()->has($this->model_name)) {
+                $model = $this->model
+                    ->{strtolower($select_type) == 'asc' ? 'sortBy' : 'sortByDesc'}($this->order_field);
+            } else {
+                $model = $this->model;
+            }
+
+            return $this->paginate = $model->paginate($this->per_page, $this->model_name.'_page');
+        }
+
+        return $this->model;
     }
 }

@@ -21,7 +21,7 @@ abstract class Vue extends Component
     {
         $this->attr('name', $this->element);
 
-        if (! isset(static::$count[$this->element])) {
+        if (!isset(static::$count[$this->element])) {
             static::$count[$this->element] = 0;
         } else {
             static::$count[$this->element]++;

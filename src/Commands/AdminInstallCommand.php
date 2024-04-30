@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Admin\Commands;
 
 use Admin\ApplicationConfig;
-use App\Admin\Delegates\CommonTrait;
-use File;
-use Illuminate\Console\Command;
 use Admin\ApplicationServiceProvider;
 use Admin\Core\JsonFormatter;
 use Admin\Core\NavigatorExtensionProvider;
 use Admin\Interfaces\ActionWorkExtensionInterface;
 use Admin\Models\AdminSeeder;
 use Admin\Models\AdminUser;
+use App\Admin\Delegates\CommonTrait;
+use Illuminate\Console\Command;
 use Schema;
 use Symfony\Component\Console\Input\InputOption;
 

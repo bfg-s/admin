@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Admin\Models\AdminFileStorage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller
@@ -33,7 +33,6 @@ class UploadController extends Controller
 
         if ($request->hasFile('upload')) {
             if ($file = AdminFileStorage::makeFile($request->file('upload'))) {
-
                 return response()->json([
                     'url' => asset($file),
                     'file' => $file,
@@ -56,7 +55,6 @@ class UploadController extends Controller
         $file = $request->input('file');
 
         if ($file) {
-
             $file = preg_replace('/^\/uploads\//', '', $file);
             $storeFile = AdminFileStorage::where('file_name', $file)->first();
 

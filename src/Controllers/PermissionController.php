@@ -6,8 +6,6 @@ namespace Admin\Controllers;
 
 use Admin\Delegates\Accordion;
 use Admin\Delegates\Alert;
-use Illuminate\Support\Str;
-use Lang;
 use Admin\Delegates\Card;
 use Admin\Delegates\Form;
 use Admin\Delegates\ModelInfoTable;
@@ -16,6 +14,8 @@ use Admin\Delegates\SearchForm;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminRole;
 use Admin\Page;
+use Illuminate\Support\Str;
+use Lang;
 
 class PermissionController extends Controller
 {
@@ -42,8 +42,12 @@ class PermissionController extends Controller
      * @param  ModelTable  $modelTable
      * @return Page
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable)
-    {
+    public function index(
+        Page $page,
+        Card $card,
+        SearchForm $searchForm,
+        ModelTable $modelTable
+    ): Page {
         return $page
             ->card(
                 $card->search_form(
@@ -74,8 +78,12 @@ class PermissionController extends Controller
      * @param  Accordion  $accordion
      * @return Page
      */
-    public function matrix(Page $page, Card $card, Form $form, Accordion $accordion)
-    {
+    public function matrix(
+        Page $page,
+        Card $card,
+        Form $form,
+        Accordion $accordion
+    ): Page {
         return $page
             ->card(
                 $card->form(
@@ -115,8 +123,12 @@ class PermissionController extends Controller
      * @param  Alert  $alert
      * @return Page
      */
-    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable, Alert $alert): Page
-    {
+    public function show(
+        Page $page,
+        Card $card,
+        ModelInfoTable $modelInfoTable,
+        Alert $alert
+    ): Page {
         return $page
             ->card(
                 $card->model_info_table(

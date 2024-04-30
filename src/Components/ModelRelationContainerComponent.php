@@ -71,17 +71,6 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
-     * @return array|null[]
-     */
-    protected function viewData(): array
-    {
-        return [
-            'buttons' => $this->buttons,
-            'ordered' => $this->ordered,
-        ];
-    }
-
-    /**
      * @param  string|null  $ordered
      * @return $this
      */
@@ -228,6 +217,17 @@ class ModelRelationContainerComponent extends Component
     public function hasControls(): bool
     {
         return (bool) count($this->controls);
+    }
+
+    /**
+     * @return array|null[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'buttons' => $this->buttons,
+            'ordered' => $this->ordered,
+        ];
     }
 
     /**

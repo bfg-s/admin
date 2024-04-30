@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Core\TableExtends;
 
+use Admin\Components\FieldComponent;
 use Admin\Components\Inputs\SwitcherInput;
 use Admin\Components\Small\AComponent;
 use Illuminate\Database\Eloquent\Model;
-use Admin\Components\FieldComponent;
 
 class Editables
 {
@@ -18,10 +18,13 @@ class Editables
      * @param  null  $field
      * @return SwitcherInput|FieldComponent
      */
-    public function input_switcher($value, array $props = [], Model $model = null, $field = null): SwitcherInput|FieldComponent
-    {
+    public function input_switcher(
+        $value,
+        array $props = [],
+        Model $model = null,
+        $field = null
+    ): SwitcherInput|FieldComponent {
         if ($model) {
-
             $id = uniqid('id');
 
             $fieldComponent = FieldComponent::create();
@@ -32,12 +35,16 @@ class Editables
                 ->switchSize('mini')
                 ->value($value)
                 ->setId($id)
-                ->setDatas(['change' => json_encode(['custom_save' => [
-                    get_class($model),
-                    $model->id,
-                    $field,
-                    $id,
-                ]])]);
+                ->setDatas([
+                    'change' => json_encode([
+                        'custom_save' => [
+                            get_class($model),
+                            $model->id,
+                            $field,
+                            $id,
+                        ]
+                    ])
+                ]);
 
             return $fieldComponent;
         }
@@ -55,24 +62,23 @@ class Editables
     public function input_select($value, array $props = [], Model $model = null, $field = null): mixed
     {
         if ($model) {
-
             $options = $props[0] ?? [];
             $format = $props[1] ?? (is_array($options) ? false : 'id:name');
             $where = $props[2] ?? null;
             $id = str_replace('.', '_', 'input_'.$field.'_'.$model->id);
 
-            return "<div style='max-width: 200px'>" . FieldComponent::select($field)->on_change('custom_save', [
+            return "<div style='max-width: 200px'>".FieldComponent::select($field)->on_change('custom_save', [
                     get_class($model),
                     $model->id,
                     $field,
                     $id,
                 ])
-                ->only_input()
-                ->value($value)
-                ->force_set_id($id)
-                ->when(is_array($options), fn ($q) => $q->options($options, $format))
-                ->when(is_string($options), fn ($q) => $q->load($options, $format, $where))
-                 . "</div>";
+                    ->only_input()
+                    ->value($value)
+                    ->force_set_id($id)
+                    ->when(is_array($options), fn($q) => $q->options($options, $format))
+                    ->when(is_string($options), fn($q) => $q->load($options, $format, $where))
+                ."</div>";
         }
 
         return $value;
@@ -88,7 +94,6 @@ class Editables
     public function input_radios($value, array $props = [], Model $model = null, $field = null): mixed
     {
         if ($model) {
-
             $options = $props[0] ?? [];
             $first_default = $props[1] ?? false;
             $id = 'input_'.$field.'_'.$model->id;
@@ -98,7 +103,7 @@ class Editables
                 ->value($value)
                 ->set_name($field.'_'.$model->id)
                 ->force_set_id($id)
-                ->when(is_array($options), fn ($q) => $q->options($options, !! $first_default))
+                ->when(is_array($options), fn($q) => $q->options($options, !!$first_default))
                 ->on_change('custom_save', [
                     get_class($model),
                     $model->id,
@@ -130,24 +135,6 @@ class Editables
 
     /**
      * @param $value
-     * @param  array  $props
-     * @param  Model|array|null  $model
-     * @param  null  $field
-     * @param  null  $title
-     * @return string
-     */
-    public function textarea_editable(
-        $value,
-        array $props = [],
-        Model|array $model = null,
-        $field = null,
-        $title = null
-    ): AComponent|string {
-        return $this->editable($value, $model, $title, $field, 'textarea');
-    }
-
-    /**
-     * @param $value
      * @param  Model|array  $model
      * @param $title
      * @param $field
@@ -172,5 +159,23 @@ class Editables
         }
 
         return $value;
+    }
+
+    /**
+     * @param $value
+     * @param  array  $props
+     * @param  Model|array|null  $model
+     * @param  null  $field
+     * @param  null  $title
+     * @return string
+     */
+    public function textarea_editable(
+        $value,
+        array $props = [],
+        Model|array $model = null,
+        $field = null,
+        $title = null
+    ): AComponent|string {
+        return $this->editable($value, $model, $title, $field, 'textarea');
     }
 }

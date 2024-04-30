@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Admin\Components\Component;
 use Admin\Traits\FontAwesome;
+use Illuminate\Contracts\Support\Arrayable;
 
 class ModelTableAction implements Arrayable
 {

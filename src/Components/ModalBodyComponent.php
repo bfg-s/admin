@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
 class ModalBodyComponent extends Component
 {
     /**
@@ -14,8 +17,8 @@ class ModalBodyComponent extends Component
     /**
      * @param ...$delegates
      * @return FormComponent
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function form(...$delegates): FormComponent
     {

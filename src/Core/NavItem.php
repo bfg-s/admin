@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Closure;
-use Illuminate\Contracts\Support\Arrayable;
 use Admin\Navigate;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\NavCommon;
+use Closure;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 
 class NavItem implements Arrayable

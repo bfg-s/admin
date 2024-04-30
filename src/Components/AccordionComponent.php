@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Closure;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
-
 class AccordionComponent extends Component
 {
-    /**
-     * @var string
-     */
-    protected string $view = 'accordion';
-
     /**
      * @var int
      */
     protected static int $count = 0;
-
+    /**
+     * @var string
+     */
+    protected string $view = 'accordion';
     /**
      * @var string
      */
@@ -31,7 +25,7 @@ class AccordionComponent extends Component
     public function __construct(...$delegates)
     {
         parent::__construct($delegates);
-        $this->id = "accordion_" . static::$count;
+        $this->id = "accordion_".static::$count;
         static::$count++;
     }
 
@@ -43,8 +37,7 @@ class AccordionComponent extends Component
     {
         $body = $this->createComponent(AccordionBodyComponent::class)->title($title);
 
-        if (! $this->contents) {
-
+        if (!$this->contents) {
             $body->show();
         }
 
@@ -71,6 +64,5 @@ class AccordionComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

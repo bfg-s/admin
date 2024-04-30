@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
+use Admin\ExtendProvider;
 use App;
 use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Admin\ExtendProvider;
 
 class MenuItem implements ArrayAccess, Arrayable
 {
@@ -65,7 +65,7 @@ class MenuItem implements ArrayAccess, Arrayable
     {
         $data = [];
         foreach (get_object_vars($this) as $key => $value) {
-            if ($value !== null && $value !== '' && $value !== [] && ! is_object($value)) {
+            if ($value !== null && $value !== '' && $value !== [] && !is_object($value)) {
                 if ($key === 'title') {
                     $data[$key] = __($value);
                 } else {
@@ -623,7 +623,6 @@ class MenuItem implements ArrayAccess, Arrayable
     public function setModelClass(?string $model_class = null): void
     {
         if ($model_class === null && $controller = $this->controller) {
-
             if (method_exists($controller, 'getModel')) {
                 $model_class = call_user_func([$controller, 'getModel']);
             } elseif (property_exists($controller, 'model')) {
@@ -832,14 +831,14 @@ class MenuItem implements ArrayAccess, Arrayable
         $this->{$offset} = null;
     }
 
-    public function setDontUseSearch(bool $dontUseSearch): void
-    {
-        $this->dontUseSearch = $dontUseSearch;
-    }
-
     public function getDontUseSearch(): bool
     {
         return $this->dontUseSearch;
+    }
+
+    public function setDontUseSearch(bool $dontUseSearch): void
+    {
+        $this->dontUseSearch = $dontUseSearch;
     }
 
     public function getNavBarVue(): ?string

@@ -130,7 +130,6 @@ class FormComponent extends Component
     public function hiddens(array $fields): static
     {
         foreach ($fields as $name => $value) {
-
             $this->view('components.inputs.hidden', [
                 'name' => $name,
                 'value' => $value

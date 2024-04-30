@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Admin\Traits\ModelRelation\ModelRelationBuilderTrait;
 use Admin\Traits\ModelRelation\ModelRelationHelpersTrait;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Throwable;
 
 class ModelRelationComponent extends Component
@@ -18,66 +18,54 @@ class ModelRelationComponent extends Component
      * @var mixed
      */
     protected static mixed $fm = null;
-
-    /**
-     * @var Relation|null
-     */
-    protected ?Relation $relation = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $relation_name = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $path_name = null;
-
-    /**
-     * @var ModelRelationContentComponent
-     */
-    protected $last_content;
-
-    /**
-     * @var callable
-     */
-    protected $on_empty;
-
-    /**
-     * @var mixed
-     */
-    protected mixed $fm_old;
-
-    /**
-     * @var array
-     */
-    protected array $innerDelegates = [];
-
-    /**
-     * @var string
-     */
-    protected string $view = 'model-relation';
-
-    /**
-     * @var string|null
-     */
-    protected ?string $title = null;
-
-    /**
-     * @var mixed|null
-     */
-    protected mixed $buttons = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $ordered = null;
-
     /**
      * @var bool
      */
     protected static bool $tplMode = false;
+    /**
+     * @var Relation|null
+     */
+    protected ?Relation $relation = null;
+    /**
+     * @var string|null
+     */
+    protected ?string $relation_name = null;
+    /**
+     * @var string|null
+     */
+    protected ?string $path_name = null;
+    /**
+     * @var ModelRelationContentComponent
+     */
+    protected $last_content;
+    /**
+     * @var callable
+     */
+    protected $on_empty;
+    /**
+     * @var mixed
+     */
+    protected mixed $fm_old;
+    /**
+     * @var array
+     */
+    protected array $innerDelegates = [];
+    /**
+     * @var string
+     */
+    protected string $view = 'model-relation';
+    /**
+     * @var string|null
+     */
+    protected ?string $title = null;
+    /**
+     * @var mixed|null
+     */
+    protected mixed $buttons = null;
+    /**
+     * @var string|null
+     */
+    protected ?string $ordered = null;
 
     /**
      * @param  array|string  $relationName
@@ -101,14 +89,6 @@ class ModelRelationComponent extends Component
     }
 
     /**
-     * @return string|null
-     */
-    public function getRelationName(): ?string
-    {
-        return $this->relation_name;
-    }
-
-    /**
      * @param  bool  $state
      * @return void
      */
@@ -126,6 +106,14 @@ class ModelRelationComponent extends Component
     }
 
     /**
+     * @return string|null
+     */
+    public function getRelationName(): ?string
+    {
+        return $this->relation_name;
+    }
+
+    /**
      * @param  array  $names
      * @return string|null
      */
@@ -133,19 +121,18 @@ class ModelRelationComponent extends Component
     {
         if (static::$tplMode) {
             if (count($names) <= 1) {
-                $return = $this->relation_name . '[{__id__}]';
+                $return = $this->relation_name.'[{__id__}]';
             } else {
-                if (! $this->model->exists) {
-                    $return = $this->relation_name . '[{__id__}]';
+                if (!$this->model->exists) {
+                    $return = $this->relation_name.'[{__id__}]';
                 } else {
-
                     $return = $this->relation_name
-                        . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+                        .($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
                 }
             }
         } else {
             $return = $this->relation_name
-                . ($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
+                .($this->model->{$this->model->getKeyName()} ? "[{$this->model->{$this->model->getKeyName()}}]" : '');
         }
 
         return $return;
@@ -153,18 +140,7 @@ class ModelRelationComponent extends Component
 
     public function deepPath(array $paths): string|null
     {
-        return $this->relation_name . '.*';
-    }
-
-    /**
-     * @param  string|null  $title
-     * @return static
-     */
-    public function title(?string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
+        return $this->relation_name.'.*';
     }
 
     /**
@@ -203,6 +179,17 @@ class ModelRelationComponent extends Component
             $this->buildNestedTemplate();
             $this->setDatas(['relation' => $this->relation_name, 'relation-path' => $this->relation_name]);
         }
+    }
+
+    /**
+     * @param  string|null  $title
+     * @return static
+     */
+    public function title(?string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     /**

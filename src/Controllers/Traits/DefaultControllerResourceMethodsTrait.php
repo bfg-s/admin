@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Admin\Controllers\Traits;
 
-use Admin\Repositories\AdminRepository;
-use App;
-use Exception;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
-use Admin\Respond;
 use Admin\Delegates\Card;
 use Admin\Delegates\Form;
 use Admin\Delegates\ModelInfoTable;
 use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Page;
+use Admin\Respond;
+use App;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
@@ -128,10 +127,14 @@ trait DefaultControllerResourceMethodsTrait
         $updated = $this->requestToModel($save, static::$imageModifiers);
 
         if ($updated) {
-            admin_log_success('Updated successfully', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
+            admin_log_success('Updated successfully',
+                trim(get_class($this->model()).' for '.$this->model()->getRouteKeyName().': '.$this->model()->{$this->model()->getRouteKeyName()},
+                    '\\'), 'fas fa-save');
             Respond::glob()->put('alert::success', __('admin.saved_successfully'));
         } else {
-            admin_log_danger('Update error', trim(get_class($this->model()) . ' for ' . $this->model()->getRouteKeyName() . ': ' . $this->model()->{$this->model()->getRouteKeyName()}, '\\'), 'fas fa-save');
+            admin_log_danger('Update error',
+                trim(get_class($this->model()).' for '.$this->model()->getRouteKeyName().': '.$this->model()->{$this->model()->getRouteKeyName()},
+                    '\\'), 'fas fa-save');
             Respond::glob()->put('alert::error', __('admin.unknown_error'));
         }
 
@@ -167,7 +170,6 @@ trait DefaultControllerResourceMethodsTrait
         $stored = $this->requestToModel($save, static::$imageModifiers);
 
         if ($stored) {
-
             Respond::glob()->put('alert::success', __('admin.saved_successfully'));
             admin_log_success('Create successfully', trim(get_class($this->model()), '\\'), 'fas fa-save');
             Respond::glob()->put('alert::success', __('admin.successfully_created'));
@@ -198,20 +200,21 @@ trait DefaultControllerResourceMethodsTrait
         }
 
         if ($model) {
-
             $modelName = trim(get_class($this->model()), '\\');
             $key = $this->model_primary();
 
             try {
                 if ($restore && $model->restore()) {
-                    admin_log_warning('Successfully restored', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash-restore-alt');
+                    admin_log_warning('Successfully restored',
+                        $modelName.' for '.$this->model()->getRouteKeyName().': '.$key, 'fas fa-trash-restore-alt');
                     Respond::glob()->put('alert::success', __('admin.successfully_restored'));
-
                 } elseif ($force && $model->forceDelete()) {
-                    admin_log_danger('Successfully force deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-eraser');
+                    admin_log_danger('Successfully force deleted',
+                        $modelName.' for '.$this->model()->getRouteKeyName().': '.$key, 'fas fa-eraser');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
                 } elseif ($model->delete()) {
-                    admin_log_danger('Successfully deleted', $modelName . ' for ' . $this->model()->getRouteKeyName() . ': ' . $key, 'fas fa-trash');
+                    admin_log_danger('Successfully deleted',
+                        $modelName.' for '.$this->model()->getRouteKeyName().': '.$key, 'fas fa-trash');
                     Respond::glob()->put('alert::success', __('admin.successfully_deleted'));
                 } else {
                     Respond::glob()->put('alert::error', __('admin.unknown_error'));

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Admin\Traits\ModelCards;
 
+use Admin\Components\ButtonsComponent;
+use Admin\Core\PrepareExport;
 use Admin\Traits\FontAwesome;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
-use Illuminate\View\View;
-use Admin\Components\ButtonsComponent;
-use Admin\Core\PrepareExport;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 trait TableHelpersTrait
 {
@@ -49,19 +49,6 @@ trait TableHelpersTrait
      * @var string|null
      */
     protected string|null $subtitleField = null;
-
-    /**
-     * @param  int  $per_page
-     * @return $this
-     */
-    public function perPage(int $per_page): static
-    {
-        if (is_int($this->per_page)) {
-            $this->per_page = $per_page;
-        }
-
-        return $this;
-    }
 
     /**
      * @param  string  $field
@@ -129,45 +116,6 @@ trait TableHelpersTrait
     {
         $this->buttons[] = $this->createComponent(ButtonsComponent::class)
             ->delegatesNow($delegates);
-
-        return $this;
-    }
-
-    /**
-     * @param  string|Closure|array|null  $label
-     * @param  array|string|Closure|null  $field
-     * @return $this
-     */
-    public function row($label, array|string|Closure $field = null): static
-    {
-        if ($field === null) {
-            $field = $label;
-
-            $label = null;
-        }
-
-        $this->last = uniqid('row');
-
-        $key = Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
-
-        $row = [
-            'field' => $field,
-            'label' => is_string($label) ? __($label) : $label,
-            'sort' => false,
-            'trash' => true,
-            'info' => false,
-            'icon' => false,
-            'key' => is_string($field) ? $key : null,
-            'hide' => request()->has($key) && request($key) == 0,
-            'macros' => [],
-        ];
-
-        if ($this->prepend) {
-            $this->prepend = false;
-            array_unshift($this->rows, $row);
-        } else {
-            $this->rows[$this->last] = $row;
-        }
 
         return $this;
     }
@@ -312,10 +260,49 @@ trait TableHelpersTrait
         if (isset($this->rows[$this->last])) {
             $this->rows[$this->last]['sort'] =
                 $field ?: (
-                    is_string($this->rows[$this->last]['field']) ?
-                        $this->rows[$this->last]['field'] :
-                        false
-                    );
+                is_string($this->rows[$this->last]['field']) ?
+                    $this->rows[$this->last]['field'] :
+                    false
+                );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string|Closure|array|null  $label
+     * @param  array|string|Closure|null  $field
+     * @return $this
+     */
+    public function row($label, array|string|Closure $field = null): static
+    {
+        if ($field === null) {
+            $field = $label;
+
+            $label = null;
+        }
+
+        $this->last = uniqid('row');
+
+        $key = Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
+
+        $row = [
+            'field' => $field,
+            'label' => is_string($label) ? __($label) : $label,
+            'sort' => false,
+            'trash' => true,
+            'info' => false,
+            'icon' => false,
+            'key' => is_string($field) ? $key : null,
+            'hide' => request()->has($key) && request($key) == 0,
+            'macros' => [],
+        ];
+
+        if ($this->prepend) {
+            $this->prepend = false;
+            array_unshift($this->rows, $row);
+        } else {
+            $this->rows[$this->last] = $row;
         }
 
         return $this;
@@ -423,5 +410,18 @@ trait TableHelpersTrait
             'page_name' => $this->model_name.'_page',
             'per_name' => $this->model_name.'_per_page',
         ]) : '';
+    }
+
+    /**
+     * @param  int  $per_page
+     * @return $this
+     */
+    public function perPage(int $per_page): static
+    {
+        if (is_int($this->per_page)) {
+            $this->per_page = $per_page;
+        }
+
+        return $this;
     }
 }

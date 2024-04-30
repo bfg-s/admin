@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Admin;
 
 use Admin\Components\CardComponent;
-use Admin\Components\PageComponents;
 use Admin\Components\Component;
+use Admin\Components\PageComponents;
 use Admin\Components\SearchFormComponent;
 use Admin\Controllers\Controller;
 use Admin\Core\Container;
@@ -138,51 +138,6 @@ class Page extends Container
     }
 
     /**
-     * @template RegisteredObject
-     * @param  object|RegisteredObject  $class
-     * @return object|RegisteredObject
-     */
-    public function registerClass(object $class)
-    {
-        $className = get_class($class);
-        $this->classes[$className] = $class;
-        $this->applyExplanations($className, $class);
-
-        return $class;
-    }
-
-    /**
-     * @param  string  $class
-     * @param  object  $instance
-     * @return void
-     */
-    protected function applyExplanations(string $class, object $instance): void
-    {
-        foreach ($this->explanations as $key => $explanation) {
-            $explanation->applyFor($class, $instance);
-            if ($explanation->isEmpty()) {
-                unset($this->explanations[$key]);
-            }
-        }
-    }
-
-    /**
-     * @param  callable|Explanation  $extend
-     * @return static
-     */
-    public function explanation(callable|Explanation $extend): self
-    {
-        if (is_callable($extend)) {
-            $extend = call_user_func($extend);
-        }
-        if ($extend instanceof Explanation) {
-            $this->explanations[] = $extend;
-        }
-
-        return $this;
-    }
-
-    /**
      * @return MenuItem|null
      */
     public function menu(): ?MenuItem
@@ -238,6 +193,11 @@ class Page extends Container
         return $return.$prep;
     }
 
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
+
     /**
      * @param ...$delegates
      * @return $this
@@ -247,6 +207,22 @@ class Page extends Container
         $this->explanation(
             Explanation::new($delegates)
         );
+
+        return $this;
+    }
+
+    /**
+     * @param  callable|Explanation  $extend
+     * @return static
+     */
+    public function explanation(callable|Explanation $extend): self
+    {
+        if (is_callable($extend)) {
+            $extend = call_user_func($extend);
+        }
+        if ($extend instanceof Explanation) {
+            $this->explanations[] = $extend;
+        }
 
         return $this;
     }
@@ -294,6 +270,35 @@ class Page extends Container
     }
 
     /**
+     * @template RegisteredObject
+     * @param  object|RegisteredObject  $class
+     * @return object|RegisteredObject
+     */
+    public function registerClass(object $class)
+    {
+        $className = get_class($class);
+        $this->classes[$className] = $class;
+        $this->applyExplanations($className, $class);
+
+        return $class;
+    }
+
+    /**
+     * @param  string  $class
+     * @param  object  $instance
+     * @return void
+     */
+    protected function applyExplanations(string $class, object $instance): void
+    {
+        foreach ($this->explanations as $key => $explanation) {
+            $explanation->applyFor($class, $instance);
+            if ($explanation->isEmpty()) {
+                unset($this->explanations[$key]);
+            }
+        }
+    }
+
+    /**
      * @param $name
      * @param $arguments
      * @return static
@@ -302,10 +307,9 @@ class Page extends Container
     public function __call($name, $arguments)
     {
         if (isset(Component::$components[$name])) {
-
             $component = Component::$components[$name];
 
-            /*** @var Component $component **/
+            /*** @var Component $component * */
             $component = new $component(...$arguments);
 
             $component->model($this->model);
@@ -320,7 +324,6 @@ class Page extends Container
             }
 
             $this->contents[] = $component;
-
         } elseif (str_ends_with($name, '_by_default')) {
             $name = str_replace('_by_default', '', $name);
             if (!request()->has('method') || request('method') == $name) {
@@ -353,6 +356,19 @@ class Page extends Container
     }
 
     /**
+     * @param  array  $delegates
+     * @return $this
+     */
+    protected function explainForClasses(array $delegates = []): static
+    {
+        foreach ($this->classes as $className => $class) {
+            Explanation::new($delegates)->applyFor($className, $class);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Component|string|null
      */
     public function getContent(): Component|string|null
@@ -375,19 +391,6 @@ class Page extends Container
     }
 
     /**
-     * @param  array  $delegates
-     * @return $this
-     */
-    protected function explainForClasses(array $delegates = []): static
-    {
-        foreach ($this->classes as $className => $class) {
-            Explanation::new($delegates)->applyFor($className, $class);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Closure
      */
     public function withTools(): Closure
@@ -399,10 +402,5 @@ class Page extends Container
 
             return $this;
         };
-    }
-
-    public function getModel(): ?Model
-    {
-        return $this->model;
     }
 }

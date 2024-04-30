@@ -113,7 +113,8 @@ trait TableBuilderTrait
             }
             foreach ($column['macros'] as $macro) {
                 $value = static::callE($macro[0], [
-                    $value, $macro[1], $item, $column['field'], $column['label'], $columnComponent, $column['header'], $row,
+                    $value, $macro[1], $item, $column['field'], $column['label'], $columnComponent, $column['header'],
+                    $row,
                 ]);
             }
 

@@ -22,10 +22,17 @@ abstract class Delegator
 
     protected $condition = true;
 
+    public function __get(string $name)
+    {
+        $result = (new Delegate($this->class, $this->condition))->__call($name, []);
+        $this->condition = true;
+
+        return $result;
+    }
+
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-
             $macro = static::$macros[$method];
 
             if ($macro instanceof Closure) {
@@ -36,14 +43,6 @@ abstract class Delegator
         }
 
         $result = (new Delegate($this->class, $this->condition))->__call($method, $parameters);
-        $this->condition = true;
-
-        return $result;
-    }
-
-    public function __get(string $name)
-    {
-        $result = (new Delegate($this->class, $this->condition))->__call($name, []);
         $this->condition = true;
 
         return $result;
@@ -72,19 +71,7 @@ abstract class Delegator
         $router = app('router');
         $this->if(
             ($router->currentRouteNamed('*.create')
-            || $router->currentRouteNamed('*.store'))
-            && $addCondition
-        );
-
-        return $this;
-    }
-
-    public function ifEdit($addCondition = true): static
-    {
-        $router = app('router');
-        $this->if(
-            ($router->currentRouteNamed('*.edit')
-            || $router->currentRouteNamed('*.update'))
+                || $router->currentRouteNamed('*.store'))
             && $addCondition
         );
 
@@ -96,9 +83,9 @@ abstract class Delegator
         $router = app('router');
         $this->if(
             ($router->currentRouteNamed('*.edit')
-            || $router->currentRouteNamed('*.update')
-            || $router->currentRouteNamed('*.create')
-            || $router->currentRouteNamed('*.store'))
+                || $router->currentRouteNamed('*.update')
+                || $router->currentRouteNamed('*.create')
+                || $router->currentRouteNamed('*.store'))
             && $addCondition
         );
 
@@ -185,6 +172,18 @@ abstract class Delegator
         return [
             $this->ifEdit()->info('id', 'admin.id')
         ];
+    }
+
+    public function ifEdit($addCondition = true): static
+    {
+        $router = app('router');
+        $this->if(
+            ($router->currentRouteNamed('*.edit')
+                || $router->currentRouteNamed('*.update'))
+            && $addCondition
+        );
+
+        return $this;
     }
 
     public function inputInfoAt(): array

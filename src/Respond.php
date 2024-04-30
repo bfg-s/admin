@@ -31,6 +31,29 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Access to global instance.
+     *
+     * @return Respond
+     */
+    public static function glob(): static
+    {
+        if (!static::$instance_glob) {
+            static::$instance_glob = new static();
+        }
+
+        return static::$instance_glob;
+    }
+
+    /**
+     * @param ...$attributes
+     * @return static
+     */
+    public static function create(...$attributes): static
+    {
+        return new static(...$attributes);
+    }
+
+    /**
      * @param  string|null  $link
      * @return $this
      */
@@ -39,6 +62,24 @@ class Respond extends Collection implements Renderable, Htmlable
         $this->put('location', $link);
 
         return $this;
+    }
+
+    /**
+     * Put rule.
+     *
+     * @param $key
+     * @param  mixed  $value
+     * @return Respond
+     */
+    public function put($key, $value = null): static
+    {
+        if (is_array($key)) {
+            foreach ($key as $name => $item) {
+                $this->put($name, $item);
+            }
+            return $this;
+        }
+        return parent::put($this->count().':'.$key, $value);
     }
 
     /**
@@ -87,6 +128,23 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * @param $type
+     * @param $text
+     * @param  null  $title
+     * @return $this
+     */
+    public function toast($type, $text, $title = null): static
+    {
+        if (is_string($text)) {
+            $this->put("toast::{$type}", $title ? [[__($text), __($title)]] : __($text));
+        } else {
+            $this->put("toast::{$type}", $text);
+        }
+
+        return $this;
+    }
+
+    /**
      * toast:warning.
      *
      * @param $text
@@ -123,56 +181,6 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * @param $type
-     * @param $text
-     * @param  null  $title
-     * @return $this
-     */
-    public function toast($type, $text, $title = null): static
-    {
-        if (is_string($text)) {
-            $this->put("toast::{$type}", $title ? [[__($text), __($title)]] : __($text));
-        } else {
-            $this->put("toast::{$type}", $text);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Put rule.
-     *
-     * @param $key
-     * @param  mixed  $value
-     * @return Respond
-     */
-    public function put($key, $value = null): static
-    {
-        if (is_array($key)) {
-            foreach ($key as $name => $item) {
-                $this->put($name, $item);
-            }
-            return $this;
-        }
-        return parent::put($this->count().':'.$key, $value);
-    }
-
-    /**
-     * Access to global instance.
-     *
-     * @return Respond
-     */
-    public static function glob(): static
-    {
-        if (! static::$instance_glob) {
-
-            static::$instance_glob = new static();
-        }
-
-        return static::$instance_glob;
-    }
-
-    /**
      * @return string
      */
     public function toHtml(): string
@@ -192,21 +200,20 @@ class Respond extends Collection implements Renderable, Htmlable
     /**
      * @return string
      */
-    public function render(): string
+    public function __toString()
     {
-        if ($this->renderWithExecutor) {
-
-            return "window.exec(" . $this->toJson() . ")";
-        }
-        return $this->toJson();
+        return $this->render();
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function render(): string
     {
-        return $this->render();
+        if ($this->renderWithExecutor) {
+            return "window.exec(".$this->toJson().")";
+        }
+        return $this->toJson();
     }
 
     /**
@@ -217,14 +224,5 @@ class Respond extends Collection implements Renderable, Htmlable
         $this->renderWithExecutor = true;
 
         return $this;
-    }
-
-    /**
-     * @param ...$attributes
-     * @return static
-     */
-    public static function create(...$attributes): static
-    {
-        return new static(...$attributes);
     }
 }

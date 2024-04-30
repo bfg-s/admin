@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\Traits;
 
-use Admin\Components\FormGroupComponent;
-
 trait RulesFrontTrait
 {
     /**

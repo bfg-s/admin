@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Exception;
-use Illuminate\Console\Command;
 use Admin\ExtendProvider;
 use Admin\Models\AdminRole;
+use Exception;
+use Illuminate\Console\Command;
 
 class PermissionsExtensionProvider
 {

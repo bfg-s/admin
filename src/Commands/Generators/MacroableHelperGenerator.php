@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace Admin\Commands\Generators;
 
+use Admin;
+use Admin\Controllers\Controller;
+use Admin\Core\Delegate;
+use Admin\Delegates\ModelCards;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
+use Admin\Page;
 use App\Admin\Delegates\ModelInfoTable;
 use App\Admin\Delegates\ModelTable;
 use App\Admin\Delegates\SearchForm;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Closure;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Illuminate\Support\Str;
 use Log;
-use Admin;
-use Admin\Controllers\Controller;
-use Admin\Core\Delegate;
-use Admin\Interfaces\AdminHelpGeneratorInterface;
-use Admin\Page;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
-use Illuminate\Support\Str;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
@@ -124,7 +125,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             }
 
             if ($doc !== false) {
-
                 foreach ($this->get_variables($doc, 'methods') as $method) {
                     $macroable_classes[$ns][] = [
                         'type' => 'methods',
@@ -160,7 +160,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                     }
 
                     if (!isset($isset_classes[$namespace_name][$name])) {
-
                         $isset_classes[$namespace_name][$name] = $name;
                     }
                 } elseif ($type === 'methods') {
@@ -605,7 +604,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         $class->doc(function ($doc) {
             $method = 'row';
             $methods = [];
-            $modelInfoType = "\\".Admin\Components\ModelCardsComponent::class."|\\".\Admin\Delegates\ModelCards::class."|\\".Delegate::class;
+            $modelInfoType = "\\".Admin\Components\ModelCardsComponent::class."|\\".ModelCards::class."|\\".Delegate::class;
             /** @var DocumentorEntity $doc */
             foreach ($this->getModelFields() as $field) {
                 $camelField = Str::snake($field);

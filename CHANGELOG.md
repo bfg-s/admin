@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [6.2.2] - 2024-04-29
 ### Fixed
 * Fixed bug in resource controller when model set in the method.
+* Fixed excel export for the model table component.
+* Optimized classes imports.
+* Reformat code.
 ### Added
 * Factory running if exists in the model.
 

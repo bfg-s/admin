@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Admin\Controllers;
 
 use Admin\Facades\AdminFacade;
-use Admin\Models\AdminUser;
-use Admin\Respond;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
-
-use Illuminate\Support\Facades\Crypt;
 
 use function respond;
 
@@ -45,7 +44,7 @@ class AuthController
             return redirect()->route('admin.login');
         }
 
-        if (! admin()->two_factor_confirmed_at) {
+        if (!admin()->two_factor_confirmed_at) {
             return $result;
         } else {
             Auth::guard('admin')->logout();
@@ -58,48 +57,9 @@ class AuthController
         ]);
     }
 
-    public function twofaGet(Request $request)
-    {
-        if (!AdminFacade::guest()) {
-            return redirect()->route(config('admin.home-route', 'admin.dashboard'));
-        }
-
-        return redirect()->route('admin.login');
-    }
-
-    /**
-     * @throws IncompatibleWithGoogleAuthenticatorException
-     * @throws SecretKeyTooShortException
-     * @throws InvalidCharactersException
-     */
-    public function twofaPost(Request $request)
-    {
-        $data = $request->validate([
-            'login' => 'required|min:3|max:191',
-            'password' => 'required|min:4|max:191',
-            'code' => 'required|min:6|max:6',
-        ]);
-
-        $result = $this->login_post($request);
-
-        if (!admin()) {
-            return redirect()->route('admin.login');
-        }
-
-        $google2fa = new Google2FA();
-        $secret = admin()->two_factor_secret;
-
-        if (! $google2fa->verify($data['code'], $secret)) {
-            Auth::guard('admin')->logout();
-            return redirect()->route('admin.login');
-        }
-
-        return $result;
-    }
-
     /**
      * @param  Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|Factory|View|RedirectResponse|Redirector
      */
     public function login_post(Request $request)
     {
@@ -137,5 +97,47 @@ class AuthController
         }
 
         return redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function twofaGet()
+    {
+        if (!AdminFacade::guest()) {
+            return redirect()->route(config('admin.home-route', 'admin.dashboard'));
+        }
+
+        return redirect()->route('admin.login');
+    }
+
+    /**
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws SecretKeyTooShortException
+     * @throws InvalidCharactersException
+     */
+    public function twofaPost(Request $request)
+    {
+        $data = $request->validate([
+            'login' => 'required|min:3|max:191',
+            'password' => 'required|min:4|max:191',
+            'code' => 'required|min:6|max:6',
+        ]);
+
+        $result = $this->login_post($request);
+
+        if (!admin()) {
+            return redirect()->route('admin.login');
+        }
+
+        $google2fa = new Google2FA();
+        $secret = admin()->two_factor_secret;
+
+        if (!$google2fa->verify($data['code'], $secret)) {
+            Auth::guard('admin')->logout();
+            return redirect()->route('admin.login');
+        }
+
+        return $result;
     }
 }

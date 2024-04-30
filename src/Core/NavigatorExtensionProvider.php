@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Closure;
 use Admin\ExtendProvider;
 use Admin\Interfaces\NavigateInterface;
 use Admin\Navigate;
+use Closure;
 
 /**
  * @mixin NavigatorMethods

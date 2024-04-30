@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Admin\Models\AdminRole;
 use Admin\Models\AdminUser as User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class AdminUserCommand extends Command
 {

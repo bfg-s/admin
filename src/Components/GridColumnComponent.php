@@ -58,6 +58,5 @@ class GridColumnComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

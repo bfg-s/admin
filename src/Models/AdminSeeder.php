@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        if (! app()->runningUnitTests()) {
+        if (!app()->runningUnitTests()) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         }
 
@@ -71,7 +71,7 @@ class AdminSeeder extends Seeder
             'path' => 'admin*', 'method' => ['*'], 'state' => 'close', 'admin_role_id' => $moderatorRole->id
         ]);
 
-        if (! app()->runningUnitTests()) {
+        if (!app()->runningUnitTests()) {
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
     }

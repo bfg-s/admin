@@ -24,17 +24,6 @@ class FileInput extends Input
     ];
 
     /**
-     * After construct event.
-     */
-    protected function after_construct(): void
-    {
-        if ($this->name && str_ends_with($this->name, '[]')) {
-
-            $this->attr('multiple', true);
-        }
-    }
-
-    /**
      * @param  mixed  ...$exts
      * @return $this
      */
@@ -47,5 +36,15 @@ class FileInput extends Input
         }
 
         return $this;
+    }
+
+    /**
+     * After construct event.
+     */
+    protected function after_construct(): void
+    {
+        if ($this->name && str_ends_with($this->name, '[]')) {
+            $this->attr('multiple', true);
+        }
     }
 }

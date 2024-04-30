@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
+use Admin\ExtendProvider;
 use DB;
 use File;
 use Illuminate\Console\Command;
@@ -12,7 +13,6 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
-use Admin\ExtendProvider;
 use Symfony\Component\Finder\Finder;
 
 class InstallExtensionProvider

@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Admin;
 
-use Admin\Facades\AdminFacade;
-use Admin\Models\AdminMenu;
-use Admin\Models\AdminSetting;
-use Exception;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Admin\Core\ConfigExtensionProvider;
 use Admin\Core\InstallExtensionProvider;
 use Admin\Core\NavGroup;
 use Admin\Core\NavigatorExtensionProvider;
 use Admin\Core\PermissionsExtensionProvider;
 use Admin\Core\UnInstallExtensionProvider;
+use Admin\Facades\AdminFacade;
 use Admin\Interfaces\NavigateInterface;
+use Admin\Models\AdminMenu;
+use Admin\Models\AdminSetting;
+use Exception;
+use Illuminate\Console\Command;
+use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use ReflectionClass;
 
 class ExtendProvider extends ServiceProviderIlluminate

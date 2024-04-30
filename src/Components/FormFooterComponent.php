@@ -32,21 +32,18 @@ class FormFooterComponent extends Component
      * @var ButtonsComponent|null
      */
     protected ?ButtonsComponent $group = null;
-
-    /**
-     * @var bool
-     */
-    private bool $nav_redirect = true;
-
     /**
      * @var string
      */
     protected string $view = 'form-footer';
-
     /**
      * @var bool
      */
     protected bool $row = false;
+    /**
+     * @var bool
+     */
+    private bool $nav_redirect = true;
 
     /**
      * @param ...$delegates
@@ -122,19 +119,6 @@ class FormFooterComponent extends Component
     }
 
     /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'group' => $this->group,
-            'row' => $this->row,
-            'type' => $this->type ?? $this->page->resource_type,
-            'nav_redirect' => $this->nav_redirect,
-        ];
-    }
-
-    /**
      * @return $this
      */
     public function createDefaultCRUDFooter(): static
@@ -159,6 +143,19 @@ class FormFooterComponent extends Component
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'group' => $this->group,
+            'row' => $this->row,
+            'type' => $this->type ?? $this->page->resource_type,
+            'nav_redirect' => $this->nav_redirect,
+        ];
     }
 
     /**

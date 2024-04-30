@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Closure;
-use Illuminate\Contracts\Support\Arrayable;
 use Admin\Explanation;
 use Admin\Traits\Delegable;
 use Admin\Traits\TypesTrait;
+use Closure;
+use Illuminate\Contracts\Support\Arrayable;
 
 class TableComponent extends Component
 {
@@ -58,6 +58,27 @@ class TableComponent extends Component
     }
 
     /**
+     * @param $rows
+     * @return $this
+     */
+    public function rows($rows): static
+    {
+        if (is_callable($rows)) {
+            $rows = call_user_func($rows);
+        }
+
+        if ($rows instanceof Arrayable) {
+            $rows = $rows->toArray();
+        }
+
+        if (is_array($rows)) {
+            $this->array_build = $rows;
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     protected function viewData(): array
@@ -79,27 +100,6 @@ class TableComponent extends Component
             'hasHeader' => isset($this->array_build['headers']) && $this->array_build['rows'],
             'first_th' => $this->first_th,
         ];
-    }
-
-    /**
-     * @param $rows
-     * @return $this
-     */
-    public function rows($rows): static
-    {
-        if (is_callable($rows)) {
-            $rows = call_user_func($rows);
-        }
-
-        if ($rows instanceof Arrayable) {
-            $rows = $rows->toArray();
-        }
-
-        if (is_array($rows)) {
-            $this->array_build = $rows;
-        }
-
-        return $this;
     }
 
     /**
@@ -129,6 +129,5 @@ class TableComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

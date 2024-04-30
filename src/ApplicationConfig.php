@@ -21,11 +21,10 @@ class ApplicationConfig extends ConfigExtensionProvider
         $lang = strtolower(AdminFacade::nowLang());
 
         $validationLocalizationFile = 'admin/plugins/jquery-validation/localization/messages_'
-            . $lang
-            . '.min.js';
+            .$lang
+            .'.min.js';
 
         if ($lang !== 'en' && is_file(public_path($validationLocalizationFile))) {
-
             $this->mergeScripts([$validationLocalizationFile]);
         }
     }
@@ -36,7 +35,7 @@ class ApplicationConfig extends ConfigExtensionProvider
     public function js(): string
     {
         $respond = "";
-        if(Respond::glob()->count()) {
+        if (Respond::glob()->count()) {
             $respond .= 'exec('.Respond::glob()->toJson().");\n";
         }
 

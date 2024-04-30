@@ -6,43 +6,39 @@ namespace Admin\Core;
 
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Throwable;
 
 class PrepareExport implements FromCollection
 {
     use SearchFormConditionRulesTrait;
 
     public static $columns = [];
-
-    /**
-     * @var Model|string
-     */
-    protected $model;
-
-    /**
-     * @var array
-     */
-    protected $ids;
-
-    /**
-     * @var string
-     */
-    protected $order;
-
-    /**
-     * @var string
-     */
-    protected $order_type;
-
-    /**
-     * @var string
-     */
-    protected string $table;
-
     /**
      * @var array
      */
     public static array $fields = [];
+    /**
+     * @var Model|string
+     */
+    protected $model;
+    /**
+     * @var array
+     */
+    protected $ids;
+    /**
+     * @var string
+     */
+    protected $order;
+    /**
+     * @var string
+     */
+    protected $order_type;
+    /**
+     * @var string
+     */
+    protected string $table;
 
     /**
      * @param  string  $model
@@ -60,7 +56,11 @@ class PrepareExport implements FromCollection
         $this->table = $table;
     }
 
-    public function collection()
+    /**
+     * @return Collection
+     * @throws Throwable
+     */
+    public function collection(): Collection
     {
         $query = $this->model::query();
         if ($this->ids) {

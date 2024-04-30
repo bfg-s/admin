@@ -50,6 +50,5 @@ class TemplateAreaComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

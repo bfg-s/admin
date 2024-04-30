@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Core\MenuItem;
 use Admin\Delegates\Form;
 use Admin\Delegates\Modal;
+use Admin\Explanation;
 use Admin\Models\AdminPermission;
+use Admin\Page;
 use Admin\Respond;
+use Admin\Traits\Delegable;
+use Admin\Traits\FontAwesome;
+use Admin\Traits\TypesTrait;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Admin\Core\MenuItem;
-use Admin\Explanation;
-use Admin\Page;
-use Admin\Traits\Delegable;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -165,17 +165,6 @@ class CardComponent extends Component
     }
 
     /**
-     * @param  array|string  $title
-     * @return $this
-     */
-    public function title(array|string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
      * @return CardBodyComponent|null
      */
     public function getBody(): ?CardBodyComponent
@@ -217,7 +206,6 @@ class CardComponent extends Component
         $ad = $this->table->getActionData();
 
         if ($ad['show']) {
-
             $this->headerObj = admin_view('components.model-table.actions', $ad);
         }
 
@@ -238,7 +226,6 @@ class CardComponent extends Component
         $ad = $this->table->getActionData();
 
         if ($ad['show']) {
-
             $this->headerObj = admin_view('components.model-table.actions', $ad);
         }
 
@@ -266,30 +253,11 @@ class CardComponent extends Component
 
     /**
      * @param ...$delegates
-     * @return FormComponent
-     */
-    public function form(...$delegates): FormComponent
-    {
-        return $this->card_body()->form(...$delegates);
-    }
-
-    /**
-     * @param ...$delegates
      * @return NestedComponent
      */
     public function nested(...$delegates): NestedComponent
     {
         return $this->card_body()->nested(...$delegates)->model($this->search_form);
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return FormFooterComponent
-     */
-    public function footer(...$params): FormFooterComponent
-    {
-        return $this->createComponent(FormFooterComponent::class, ...$params)
-            ->setRow(true);
     }
 
     /**
@@ -330,6 +298,17 @@ class CardComponent extends Component
     }
 
     /**
+     * @param  mixed  ...$delegates
+     * @return ButtonsComponent
+     */
+    public function buttons(...$delegates): ButtonsComponent
+    {
+        $this->groups[] = $current = ButtonsComponent::create(...$delegates);
+
+        return $current;
+    }
+
+    /**
      * @param  string  $name
      * @return $this
      */
@@ -338,6 +317,14 @@ class CardComponent extends Component
         $this->icon = $name;
 
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withoutWindowControls(): static
+    {
+        return $this->windowControls(false);
     }
 
     /**
@@ -352,11 +339,25 @@ class CardComponent extends Component
     }
 
     /**
-     * @return $this
+     * @param  Respond  $respond
+     * @param  Request  $request
+     * @return Respond
      */
-    public function withoutWindowControls(): static
+    public function factoryRun(Respond $respond, Request $request): Respond
     {
-        return $this->windowControls(false);
+        $count = (int) $request->count;
+        $model = $request->model;
+
+        if ($count) {
+            $model::factory()->count($count)->create();
+
+            return $respond
+                ->toast_success(__('admin.factory_created', ['count' => $count]))
+                ->reload();
+        }
+
+        return $respond
+            ->toast_error(__('admin.factory_error'));
     }
 
     /**
@@ -384,58 +385,6 @@ class CardComponent extends Component
     }
 
     /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'type' => $this->type,
-            'model' => admin_repo()->modelNow,
-            'title' => $this->title,
-            'icon' => $this->icon,
-            'footer' => fn () => $this->table?->footer(),
-            'window_controls' => $this->window_controls,
-            'groups' => $this->groups,
-            'default_tools' => $this->default_tools,
-            'search_form' => $this->search_form,
-            'headerObj' => $this->headerObj
-        ];
-    }
-
-    /**
-     * @param  mixed  ...$delegates
-     * @return ButtonsComponent
-     */
-    public function buttons(...$delegates): ButtonsComponent
-    {
-        $this->groups[] = $current = ButtonsComponent::create(...$delegates);
-
-        return $current;
-    }
-
-    /**
-     * @param  Respond  $respond
-     * @param  Request  $request
-     * @return Respond
-     */
-    public function factoryRun(Respond $respond, Request $request): Respond
-    {
-        $count = (int) $request->count;
-        $model = $request->model;
-
-        if ($count) {
-            $model::factory()->count($count)->create();
-
-            return $respond
-                ->toast_success(__('admin.factory_created', ['count' => $count]))
-                ->reload();
-        }
-
-        return $respond
-            ->toast_error(__('admin.factory_error'));
-    }
-
-    /**
      * Make default tools.
      * @return void
      * @throws ContainerExceptionInterface
@@ -448,14 +397,12 @@ class CardComponent extends Component
             $test = $this->default_tools;
 
             if ($test('factory')) {
-
                 $type = $this->now->getType();
 
-                $className = '\\Database\\Factories\\' . Str::singular(class_basename($this->model::class))
-                    . 'Factory';
+                $className = '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
+                    .'Factory';
 
                 if (class_exists($className)) {
-
                     $modal = new Modal();
                     $form = new Form();
 
@@ -475,7 +422,6 @@ class CardComponent extends Component
                     );
 
                     if ($type == 'index') {
-
                         $group = $this->buttons();
                         $group->info()
                             ->title(__('admin.factory'))
@@ -519,7 +465,8 @@ class CardComponent extends Component
                 if ($model && property_exists($model, 'forceDeleting')) {
                     if (!request()->has('show_deleted')) {
                         $this->buttons()->dark('fas fa-trash')
-                            ->on_click('location', admin_url_with_get(['show_deleted' => 1]))->setTitle(__('admin.deleted'));
+                            ->on_click('location',
+                                admin_url_with_get(['show_deleted' => 1]))->setTitle(__('admin.deleted'));
                     } else {
                         $this->buttons()->resourceList(admin_url_with_get([], ['show_deleted']));
                     }
@@ -538,7 +485,6 @@ class CardComponent extends Component
                         }
                     }
                 } elseif ($type === 'edit' || $type === 'show') {
-
                     $key = $this->realModel()->getRouteKey();
 
                     if ($test('list')) {
@@ -579,5 +525,54 @@ class CardComponent extends Component
                 }
             }
         }
+    }
+
+    /**
+     * @param  array|string  $title
+     * @return $this
+     */
+    public function title(array|string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return FormComponent
+     */
+    public function form(...$delegates): FormComponent
+    {
+        return $this->card_body()->form(...$delegates);
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'type' => $this->type,
+            'model' => admin_repo()->modelNow,
+            'title' => $this->title,
+            'icon' => $this->icon,
+            'footer' => fn() => $this->table?->footer(),
+            'window_controls' => $this->window_controls,
+            'groups' => $this->groups,
+            'default_tools' => $this->default_tools,
+            'search_form' => $this->search_form,
+            'headerObj' => $this->headerObj
+        ];
+    }
+
+    /**
+     * @param  mixed  ...$params
+     * @return FormFooterComponent
+     */
+    public function footer(...$params): FormFooterComponent
+    {
+        return $this->createComponent(FormFooterComponent::class, ...$params)
+            ->setRow(true);
     }
 }

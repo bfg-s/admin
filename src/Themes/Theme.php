@@ -76,14 +76,6 @@ abstract class Theme
     }
 
     /**
-     * @return string
-     */
-    public function getViewVariable(): string
-    {
-        return $this->viewVariable;
-    }
-
-    /**
      * @return string|null
      */
     public function getDirectory(): ?string
@@ -129,7 +121,15 @@ abstract class Theme
      */
     public function template(string $path): string
     {
-        return $this->getViewVariable() . $path;
+        return $this->getViewVariable().$path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getViewVariable(): string
+    {
+        return $this->viewVariable;
     }
 
     /**

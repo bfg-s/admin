@@ -14,7 +14,7 @@ class SystemStylesBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildStyles(); ?>";
+        return "<?php echo ".static::class."::buildStyles(); ?>";
     }
 
     /**
@@ -27,14 +27,11 @@ class SystemStylesBladeDirective
         $styles = [];
 
         foreach ($extensions as $extension) {
-
             $styles = array_merge($styles, $extension->config()->getStyles());
         }
 
         foreach (Component::$components as $component) {
-
             if (method_exists($component, 'getStyles')) {
-
                 $styles = array_merge($styles, $component::getStyles());
             }
         }
@@ -44,9 +41,9 @@ class SystemStylesBladeDirective
         $styles = array_merge($styles, $theme->getStyles());
 
         return implode("\n", array_map(
-            fn (string $style) => "<link rel=\"stylesheet\" href=\""
-                . (str_starts_with($style, 'https://') || str_starts_with($style, 'http://') ? $style : asset($style))
-                . "\">",
+            fn(string $style) => "<link rel=\"stylesheet\" href=\""
+                .(str_starts_with($style, 'https://') || str_starts_with($style, 'http://') ? $style : asset($style))
+                ."\">",
             $styles
         ));
     }

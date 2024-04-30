@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Traits\Delegable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use Admin\Traits\Delegable;
 
 abstract class SimpleComponent implements Renderable, Htmlable
 {

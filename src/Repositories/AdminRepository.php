@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Admin\Repositories;
 
+use Admin\Core\MenuItem;
+use Admin\Exceptions\ShouldBeModelInControllerException;
+use Admin\Models\AdminPermission;
+use Admin\Models\AdminUser;
 use Bfg\Repository\Repository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
-use Admin\Core\MenuItem;
-use Admin\Exceptions\ShouldBeModelInControllerException;
-use Admin\Models\AdminPermission;
-use Admin\Models\AdminUser;
 use Navigate;
 use Route;
 
@@ -117,7 +118,7 @@ class AdminRepository extends Repository
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Builder|Model|object|null
+     * @return Builder|Model|object|null
      * @throws ShouldBeModelInControllerException
      */
     public function modelNow(): mixed
@@ -254,7 +255,7 @@ class AdminRepository extends Repository
     public function isDarkMode(): bool
     {
         $mode = request()->cookie('admin-dark-mode');
-        if (! is_numeric($mode)) {
+        if (!is_numeric($mode)) {
             $mode = $mode
                 ? (explode("|", Crypt::decryptString($mode))[1] ?? (int) config('admin.dark_mode', true))
                 : (int) config('admin.dark_mode', true);
@@ -322,33 +323,35 @@ class AdminRepository extends Repository
             if ($item['link'] ?? null) {
                 $menuItem->setLink($item['link']);
                 $menuItem->setSelected(false);
-            } else if ($menuItem->getAction()) {
-                $menuItem->mergeRouteParams($this->getQuery($menuItem->getRoute()));
-                $menuItem->setLink();
-                $menuItem->setController();
-                $menuItem->setCurrent($menuItem->getRoute() == $this->currentQueryField);
-                $menuItem->setModelClass();
-                $menuItem->setSelected();
-            } elseif ($menuItem->getResource()) {
-                $menuItem->setRouteParams(
-                    array_callable_results($menuItem->getRouteParams() ?? [], $menuItem)
-                );
-                $menuItem->setType(
-                    str_replace($menuItem->getRoute().'.', '', $this->currentQueryField ?: '')
-                );
-                $menuItem->setCurrent(
-                    str_replace('.'.$menuItem->getType(), '', $this->currentQueryField ?: '')
-                    == $menuItem->getRoute()
-                );
-                $menuItem->setLink(
-                    $menuItem->getLinkIndex()
-                );
-                $menuItem->setController(
-                    $menuItem->getResourceAction()
-                );
+            } else {
+                if ($menuItem->getAction()) {
+                    $menuItem->mergeRouteParams($this->getQuery($menuItem->getRoute()));
+                    $menuItem->setLink();
+                    $menuItem->setController();
+                    $menuItem->setCurrent($menuItem->getRoute() == $this->currentQueryField);
+                    $menuItem->setModelClass();
+                    $menuItem->setSelected();
+                } elseif ($menuItem->getResource()) {
+                    $menuItem->setRouteParams(
+                        array_callable_results($menuItem->getRouteParams() ?? [], $menuItem)
+                    );
+                    $menuItem->setType(
+                        str_replace($menuItem->getRoute().'.', '', $this->currentQueryField ?: '')
+                    );
+                    $menuItem->setCurrent(
+                        str_replace('.'.$menuItem->getType(), '', $this->currentQueryField ?: '')
+                        == $menuItem->getRoute()
+                    );
+                    $menuItem->setLink(
+                        $menuItem->getLinkIndex()
+                    );
+                    $menuItem->setController(
+                        $menuItem->getResourceAction()
+                    );
 
-                $menuItem->setModelClass();
-                $menuItem->setSelected();
+                    $menuItem->setModelClass();
+                    $menuItem->setSelected();
+                }
             }
 
             if (!$menuItem->isActive()) {

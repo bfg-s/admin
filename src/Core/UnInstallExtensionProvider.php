@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
+use Admin\ExtendProvider;
 use DB;
 use Exception;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
-use Admin\ExtendProvider;
 use Symfony\Component\Finder\SplFileInfo;
 
 class UnInstallExtensionProvider

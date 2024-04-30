@@ -111,6 +111,5 @@ class SmallBoxComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

@@ -10,16 +10,6 @@ use Intervention\Image\Interfaces\FontInterface;
 class ImageInput extends FileInput
 {
     /**
-     * After construct event.
-     */
-    protected function after_construct(): void
-    {
-        parent::after_construct();
-        $this->exts('jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg', 'webp');
-        $this->image();
-    }
-
-    /**
      * @param  int|null  $width
      * @param  int|null  $height
      * @return $this
@@ -27,6 +17,22 @@ class ImageInput extends FileInput
     public function resize(?int $width, ?int $height): static
     {
         $this->addImageModifier(__FUNCTION__, $width, $height);
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  mixed  ...$attributes
+     * @return $this
+     */
+    public function addImageModifier(string $name, ...$attributes): static
+    {
+        if ($this->admin_controller) {
+            /** @var Controller $controller */
+            $controller = $this->controller;
+            $controller::addImageModifier($this->path, $name, $attributes);
+        }
 
         return $this;
     }
@@ -130,8 +136,14 @@ class ImageInput extends FileInput
      * @param  string  $position
      * @return $this
      */
-    public function crop(int $width, int $height, int $offset_x = 0, int $offset_y = 0, mixed $background = 'ffffff', string $position = 'top-left'): static
-    {
+    public function crop(
+        int $width,
+        int $height,
+        int $offset_x = 0,
+        int $offset_y = 0,
+        mixed $background = 'ffffff',
+        string $position = 'top-left'
+    ): static {
         $this->addImageModifier(__FUNCTION__, $width, $height, $offset_x, $offset_y, $background, $position);
 
         return $this;
@@ -144,8 +156,12 @@ class ImageInput extends FileInput
      * @param  string  $position
      * @return $this
      */
-    public function resizeCanvas(?int $width, ?int $height, mixed $background = 'ffffff', string $position = 'center'): static
-    {
+    public function resizeCanvas(
+        ?int $width,
+        ?int $height,
+        mixed $background = 'ffffff',
+        string $position = 'center'
+    ): static {
         $this->addImageModifier(__FUNCTION__, $width, $height, $background, $position);
 
         return $this;
@@ -158,8 +174,12 @@ class ImageInput extends FileInput
      * @param  string  $position
      * @return $this
      */
-    public function resizeCanvasRelative(?int $width, ?int $height, mixed $background = 'ffffff', string $position = 'center'): static
-    {
+    public function resizeCanvasRelative(
+        ?int $width,
+        ?int $height,
+        mixed $background = 'ffffff',
+        string $position = 'center'
+    ): static {
         $this->addImageModifier(__FUNCTION__, $width, $height, $background, $position);
 
         return $this;
@@ -173,8 +193,13 @@ class ImageInput extends FileInput
      * @param  int  $opacity
      * @return $this
      */
-    public function place(mixed $element, string $position = 'top-left', int $offset_x = 0, int $offset_y = 0, int $opacity = 100): static
-    {
+    public function place(
+        mixed $element,
+        string $position = 'top-left',
+        int $offset_x = 0,
+        int $offset_y = 0,
+        int $opacity = 100
+    ): static {
         $this->addImageModifier(__FUNCTION__, $element, $position, $offset_x, $offset_y, $opacity);
 
         return $this;
@@ -450,19 +475,12 @@ class ImageInput extends FileInput
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  ...$attributes
-     * @return $this
+     * After construct event.
      */
-    public function addImageModifier(string $name, ...$attributes): static
+    protected function after_construct(): void
     {
-
-        if ($this->admin_controller) {
-            /** @var Controller $controller */
-            $controller = $this->controller;
-            $controller::addImageModifier($this->path, $name, $attributes);
-        }
-
-        return $this;
+        parent::after_construct();
+        $this->exts('jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg', 'webp');
+        $this->image();
     }
 }

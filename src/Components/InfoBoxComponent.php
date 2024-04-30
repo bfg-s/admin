@@ -50,8 +50,12 @@ class InfoBoxComponent extends Component
      * @param  string  $icon
      * @param ...$params
      */
-    public function __construct(string $title = null, string $body = '', string $icon = 'fas fa-info-circle', ...$params)
-    {
+    public function __construct(
+        string $title = null,
+        string $body = '',
+        string $icon = 'fas fa-info-circle',
+        ...$params
+    ) {
         parent::__construct();
 
         $this->title = $title;

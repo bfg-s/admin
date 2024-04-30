@@ -30,7 +30,6 @@ class SearchForm extends Delegator
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-
             $macro = static::$macros[$method];
 
             if ($macro instanceof \Closure) {

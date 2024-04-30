@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Admin;
 
-use Broadcast;
-use Closure;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Routing\Router;
 use Admin\Core\NavGroup;
 use Admin\Core\NavigatorExtensions;
 use Admin\Core\NavItem;
 use Admin\Interfaces\NavigateInterface;
 use Admin\Traits\NavDefaultTools;
+use Broadcast;
+use Closure;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Routing\Router;
 
 /**
  * @mixin NavigatorExtensions
@@ -47,6 +47,14 @@ class Navigate implements NavigateInterface
         }
 
         return \Navigate::instance();
+    }
+
+    /**
+     * @return $this
+     */
+    public function instance()
+    {
+        return $this;
     }
 
     /**
@@ -215,14 +223,6 @@ class Navigate implements NavigateInterface
     {
         Broadcast::channel($channel, $callback, $options);
 
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function instance()
-    {
         return $this;
     }
 

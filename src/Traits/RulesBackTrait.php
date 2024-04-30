@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Admin\Traits;
 
 use Admin\Components\FormGroupComponent;
-use Closure;
 use Admin\Controllers\Controller;
+use Closure;
 
 trait RulesBackTrait
 {
@@ -48,7 +48,7 @@ trait RulesBackTrait
             /** @var Controller $controller */
             $arr = str_ends_with($this->name, '[]') ? '.' : '';
             $deepPaths = $this->deepPaths();
-            $ruleKey = implode('.', $deepPaths) . $arr;
+            $ruleKey = implode('.', $deepPaths).$arr;
             $controller = $this->controller;
 
             $controller::setGlobalRule($ruleKey, $rule);
@@ -107,6 +107,22 @@ trait RulesBackTrait
     public function after(string $date, string $message = null): static
     {
         return $this->_rule(__FUNCTION__, [$date], $message);
+    }
+
+    /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _rule(string $rule, array $params = [], string $message = null): static
+    {
+        $params = trim(implode(',', $params), ',');
+        if ($params) {
+            $rule .= ":{$params}";
+        }
+
+        return $this->rule($rule, $message);
     }
 
     /**
@@ -536,6 +552,23 @@ trait RulesBackTrait
     }
 
     /**
+     * @param  string  $rule
+     * @param  array  $params
+     * @param  string|null  $message
+     * @return $this
+     */
+    protected function _n_rule(string $rule, array $params = [], string $message = null): static
+    {
+        $new_params = [];
+
+        foreach ($params as $key => $param) {
+            $new_params[] = "{$key}={$param}";
+        }
+
+        return $this->_rule($rule, $new_params, $message);
+    }
+
+    /**
      * @param $condition
      * @param  string|null  $message
      * @return FormGroupComponent
@@ -612,8 +645,12 @@ trait RulesBackTrait
      * @param  string|null  $message
      * @return FormGroupComponent
      */
-    public function exists_if($condition, string $table, string $column = null, string $message = null): FormGroupComponent
-    {
+    public function exists_if(
+        $condition,
+        string $table,
+        string $column = null,
+        string $message = null
+    ): FormGroupComponent {
         return $condition ? $this->exists($table, $column, $message) : $this;
     }
 
@@ -1600,38 +1637,5 @@ trait RulesBackTrait
     public function uuid(string $message = null): static
     {
         return $this->rule(__FUNCTION__, $message);
-    }
-
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _rule(string $rule, array $params = [], string $message = null): static
-    {
-        $params = trim(implode(',', $params), ',');
-        if ($params) {
-            $rule .= ":{$params}";
-        }
-
-        return $this->rule($rule, $message);
-    }
-
-    /**
-     * @param  string  $rule
-     * @param  array  $params
-     * @param  string|null  $message
-     * @return $this
-     */
-    protected function _n_rule(string $rule, array $params = [], string $message = null): static
-    {
-        $new_params = [];
-
-        foreach ($params as $key => $param) {
-            $new_params[] = "{$key}={$param}";
-        }
-
-        return $this->_rule($rule, $new_params, $message);
     }
 }

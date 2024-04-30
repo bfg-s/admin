@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $web_id
  * @property string|null $icon
  * @property Carbon|null $created_at
- * @property-read \Admin\Models\AdminUser|null $admin_user
+ * @property-read AdminUser|null $admin_user
  * @method static Builder|AdminLog makeDumpedModel()
  * @method static Builder|AdminLog newModelQuery()
  * @method static Builder|AdminLog newQuery()
@@ -55,7 +55,8 @@ class AdminLog extends Model
      * @var array
      */
     protected $fillable = [
-        'icon', 'admin_user_id', 'title', 'detail', 'ip', 'url', 'route', 'method', 'session_id', 'user_agent', 'web_id',
+        'icon', 'admin_user_id', 'title', 'detail', 'ip', 'url', 'route', 'method', 'session_id', 'user_agent',
+        'web_id',
     ];
 
     /**

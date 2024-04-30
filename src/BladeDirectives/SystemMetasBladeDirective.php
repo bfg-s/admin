@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
-use Admin\Components\Component;
 use Admin\Facades\AdminFacade;
 
 class SystemMetasBladeDirective
@@ -14,7 +13,7 @@ class SystemMetasBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildMetas(); ?>";
+        return "<?php echo ".static::class."::buildMetas(); ?>";
     }
 
     /**
@@ -27,7 +26,6 @@ class SystemMetasBladeDirective
         $metas = [];
 
         foreach ($extensions as $extension) {
-
             $metas = array_merge($metas, $extension->config()->metas());
         }
 

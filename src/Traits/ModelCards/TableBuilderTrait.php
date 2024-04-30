@@ -43,7 +43,7 @@ trait TableBuilderTrait
             $count = $this->paginate->count();
         }
 
-        if (! $count) {
+        if (!$count) {
             $this->view('components.model-cards.empty', [
                 'header_count' => $header_count
             ]);

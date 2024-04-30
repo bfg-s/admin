@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Admin\Traits\ModelTable;
 
+use Admin\Components\ButtonsComponent;
+use Admin\Core\PrepareExport;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
-use Illuminate\View\View;
-use Admin\Components\ButtonsComponent;
-use Admin\Core\PrepareExport;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 trait TableHelpersTrait
 {
@@ -26,19 +26,6 @@ trait TableHelpersTrait
      * @var bool
      */
     protected bool $init = false;
-
-    /**
-     * @param  int  $per_page
-     * @return $this
-     */
-    public function perPage(int $per_page): static
-    {
-        if (is_int($this->per_page)) {
-            $this->per_page = $per_page;
-        }
-
-        return $this;
-    }
 
     /**
      * @param  array  $per_pages
@@ -375,5 +362,18 @@ trait TableHelpersTrait
             'page_name' => $this->model_name.'_page',
             'per_name' => $this->model_name.'_per_page',
         ]) : '';
+    }
+
+    /**
+     * @param  int  $per_page
+     * @return $this
+     */
+    public function perPage(int $per_page): static
+    {
+        if (is_int($this->per_page)) {
+            $this->per_page = $per_page;
+        }
+
+        return $this;
     }
 }

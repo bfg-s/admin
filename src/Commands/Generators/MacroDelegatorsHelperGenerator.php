@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Admin\Commands\Generators;
 
+use Admin;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use App\Admin\Delegates\ModelInfoTable;
 use App\Admin\Delegates\ModelTable;
 use App\Admin\Delegates\SearchForm;
 use File;
 use Illuminate\Console\Command;
-use Log;
-use Admin;
-use Admin\Interfaces\AdminHelpGeneratorInterface;
-use ReflectionClass;
 use Illuminate\Support\Str;
+use Log;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
@@ -34,7 +35,7 @@ class MacroDelegatorsHelperGenerator implements AdminHelpGeneratorInterface
     /**
      * @param  Command  $command
      * @return mixed|string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function handle(Command $command)
     {
@@ -81,14 +82,13 @@ class MacroDelegatorsHelperGenerator implements AdminHelpGeneratorInterface
             }
 
             if ($refl->hasProperty('macros')) {
-
                 $macroProperty = $refl->getProperty('macros');
                 $macroProperty->setAccessible(true);
                 $protectedValue = $macroProperty->getValue();
                 if ($protectedValue && is_array($protectedValue)) {
                     $properties = array_keys($protectedValue);
 
-                    $class = class_entity('MacroMethodsFor' . $name);
+                    $class = class_entity('MacroMethodsFor'.$name);
                     $class->namespace('Admin\Delegates');
 
                     $class->doc(function ($doc) use ($properties) {
@@ -101,7 +101,7 @@ class MacroDelegatorsHelperGenerator implements AdminHelpGeneratorInterface
                         }
                     });
 
-                    $nameClass = Str::snake('MacroMethodsFor' . $name);
+                    $nameClass = Str::snake('MacroMethodsFor'.$name);
                     $file = base_path("vendor/_laravel_idea/_ide_helper_{$nameClass}.php");
                     file_put_contents($file, "<?php \n\n".$class->render());
                 }

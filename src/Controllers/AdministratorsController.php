@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
-use Admin\Delegates\Buttons;
-use Admin\Delegates\ModelCards;
-use Admin\Respond;
-use Illuminate\Http\Request;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
 use Admin\Delegates\Form;
+use Admin\Delegates\ModelCards;
 use Admin\Delegates\ModelInfoTable;
-use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\Tab;
 use Admin\Models\AdminRole;
 use Admin\Models\AdminUser;
 use Admin\Page;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Http\Request;
 
 class AdministratorsController extends Controller
 {
@@ -34,7 +29,11 @@ class AdministratorsController extends Controller
      */
     public function show_role(AdminUser $user): string
     {
-        return '<span class="badge badge-success">'.$user->roles->pluck('name')->implode('</span> <span class="badge badge-success">').'</span>';
+        return '<span class="badge badge-success">'
+            .$user->roles
+                ->pluck('name')
+                ->implode('</span> <span class="badge badge-success">')
+            .'</span>';
     }
 
     public function defaultTools($type): bool
@@ -46,18 +45,21 @@ class AdministratorsController extends Controller
      * @param  Page  $page
      * @param  Card  $card
      * @param  SearchForm  $searchForm
-     * @param  ModelTable  $modelTable
+     * @param  ModelCards  $modelCards
      * @return Page
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable, ModelCards $modelCards, Buttons $buttons): Page
-    {
+    public function index(
+        Page $page,
+        Card $card,
+        SearchForm $searchForm,
+        ModelCards $modelCards
+    ): Page {
         return $page->card(
             $card->title('admin.admin_list'),
             $card->search_form(
                 $searchForm->id(),
-                $searchForm->input('email', 'admin.email_address')->icon_envelope(),
+                $searchForm->input('email', 'admin.email_address')
+                    ->icon_envelope(),
                 $searchForm->input('login', 'admin.login_name'),
                 $searchForm->input('name', 'admin.name'),
                 $searchForm->at(),
@@ -67,8 +69,11 @@ class AdministratorsController extends Controller
                 $modelCards->titleField('name'),
                 $modelCards->subtitleField('email'),
                 $modelCards->id(),
-                $modelCards->row('admin.role', [$this, 'show_role'])->icon_users(),
-                $modelCards->row('admin.login_name', 'login')->sort()->icon_user(),
+                $modelCards->row('admin.role', [$this, 'show_role'])
+                    ->icon_users(),
+                $modelCards->row('admin.login_name', 'login')
+                    ->sort()
+                    ->icon_user(),
                 $modelCards->at(),
                 $modelCards->controlDelete(static function (AdminUser $user) {
                     return $user->id !== 1 && admin()->id !== $user->id;
@@ -84,15 +89,20 @@ class AdministratorsController extends Controller
      * @param  Tab  $tab
      * @return Page
      */
-    public function matrix(Page $page, Card $card, Form $form, Tab $tab): Page
-    {
+    public function matrix(
+        Page $page,
+        Card $card,
+        Form $form,
+        Tab $tab
+    ): Page {
         return $page
             ->card(
                 $card->title(['admin.add_admin', 'admin.edit_admin']),
                 $card->form(
                     $form->tab(
                         $tab->ifEdit()->info_id(),
-                        $tab->image('avatar', 'admin.avatar')->nullable(),
+                        $tab->image('avatar', 'admin.avatar')
+                            ->nullable(),
                         $tab->icon_cogs()->title('admin.common'),
                         $tab->input('login', 'admin.login_name')
                             ->required()
@@ -108,7 +118,8 @@ class AdministratorsController extends Controller
                             ->unique(AdminUser::class, 'email', $this->model()->id)
                             ->is_max_length(191)
                             ->max(191),
-                        $tab->multi_select('roles[]', 'admin.role')->icon_user_secret()
+                        $tab->multi_select('roles[]', 'admin.role')
+                            ->icon_user_secret()
                             ->options(AdminRole::all()->pluck('name', 'id')),
                         $tab->ifEdit()->info_updated_at(),
                         $tab->ifEdit()->info_created_at(),
@@ -117,7 +128,8 @@ class AdministratorsController extends Controller
                         $tab->ifEdit()->info_id(),
                         $tab->icon_key()->title('admin.password'),
                         $tab->password('password', 'admin.new_password')
-                            ->confirm()->required_condition($this->isType('create')),
+                            ->confirm()
+                            ->required_condition($this->isType('create')),
                         $tab->ifEdit()->info_updated_at(),
                         $tab->ifEdit()->info_created_at(),
                     ),
@@ -151,20 +163,23 @@ class AdministratorsController extends Controller
             ->card(
                 $card->model_info_table(
                     $modelInfoTable->id(),
-                    $modelInfoTable->row('admin.avatar', 'avatar')->avatar(150),
+                    $modelInfoTable->row('admin.avatar', 'avatar')
+                        ->avatar(150),
                     $modelInfoTable->row('admin.role', [$this, 'show_role']),
                     $modelInfoTable->row('admin.email_address', 'email'),
                     $modelInfoTable->row('admin.login_name', 'login'),
                     $modelInfoTable->row('admin.name', 'name'),
                     $modelInfoTable->row(
                         'admin.activity',
-                        fn (AdminUser $user) => $user->logs()->count()
+                        fn(AdminUser $user) => $user->logs()->count()
                     )->badge_number,
                     $modelInfoTable->row(
                         'admin.day_activity',
-                        fn (AdminUser $user)
-                        => $user->logs()->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-                            ->count()
+                        fn(AdminUser $user) => $user->logs()
+                            ->whereBetween('created_at', [
+                                now()->startOfDay(),
+                                now()->endOfDay()
+                            ])->count()
                     )->badge_number,
                     $modelInfoTable->at(),
                 )
@@ -213,6 +228,9 @@ class AdministratorsController extends Controller
             );
     }
 
+    /**
+     * @return array
+     */
     public function defaultDateRange(): array
     {
         return [

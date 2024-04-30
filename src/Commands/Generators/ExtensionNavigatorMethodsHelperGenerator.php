@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Admin\Commands\Generators;
 
 use Admin\Facades\AdminFacade;
-use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Admin\Navigate;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Illuminate\Console\Command;
 use ReflectionClass;
 
 class ExtensionNavigatorMethodsHelperGenerator implements AdminHelpGeneratorInterface

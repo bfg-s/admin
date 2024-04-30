@@ -15,7 +15,7 @@ class AttributesBladeDirective
      */
     public static function directive($expression): string
     {
-        return "<?php echo " . static::class . "::attributesBuild($expression); ?>";
+        return "<?php echo ".static::class."::attributesBuild($expression); ?>";
     }
 
     /**
@@ -26,7 +26,7 @@ class AttributesBladeDirective
     {
         $html = [];
         foreach ($arrayOfAttributes as $key => $val) {
-            if (! is_string($val) && is_callable($val)) {
+            if (!is_string($val) && is_callable($val)) {
                 $val = call_user_func($val, $key);
             }
             if ($val instanceof Renderable) {

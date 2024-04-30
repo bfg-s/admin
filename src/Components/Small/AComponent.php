@@ -14,14 +14,6 @@ class AComponent extends Component
     protected $element = 'a';
 
     /**
-     * @return void
-     */
-    protected function mount(): void
-    {
-        // TODO: Implement mount() method.
-    }
-
-    /**
      * @param  string  $href
      * @return $this
      */
@@ -29,6 +21,14 @@ class AComponent extends Component
     {
         $this->attr('href', $href);
 
-        return  $this;
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+        // TODO: Implement mount() method.
     }
 }

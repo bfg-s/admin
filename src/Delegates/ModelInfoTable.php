@@ -6,6 +6,7 @@ namespace Admin\Delegates;
 
 use Admin\Components\ModelInfoTableComponent;
 use Admin\Core\Delegator;
+use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -30,10 +31,9 @@ class ModelInfoTable extends Delegator
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-
             $macro = static::$macros[$method];
 
-            if ($macro instanceof \Closure) {
+            if ($macro instanceof Closure) {
                 $macro = $macro->bindTo($this, static::class);
             }
 

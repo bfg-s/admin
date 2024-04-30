@@ -4,54 +4,47 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Components\Builders\ChartJsComponentBuilder;
+use Admin\Delegates\SearchForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Admin\Components\Builders\ChartJsComponentBuilder;
-use Admin\Delegates\SearchForm;
 use Throwable;
 
 class ChartJsComponent extends Component
 {
     /**
+     * @var array
+     */
+    public static array $loadCallBacks = [];
+    /**
      * @var int
      */
     protected static int $count = 0;
-
     /**
      * @var ChartJsComponentBuilder
      */
     public ChartJsComponentBuilder $builder;
-
     /**
      * @var mixed
      */
     protected mixed $dataBuilder = null;
-
     /**
      * @var int
      */
     protected int $size = 100;
-
     /**
      * @var string
      */
     protected string $type = 'line';
-
     /**
      * @var array
      */
     protected array $datasets = [];
-
     /**
      * @var string
      */
     protected string $view = 'chartjs';
-
-    /**
-     * @var array
-     */
-    public static array $loadCallBacks = [];
 
     /**
      * @param  array  $delegates
@@ -106,6 +99,14 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * @return $this
+     */
+    public function typeBar(): static
+    {
+        return $this->type('bar');
+    }
+
+    /**
      * @param  string  $type
      * @return $this
      */
@@ -115,14 +116,6 @@ class ChartJsComponent extends Component
         $this->builder->type($type);
 
         return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function typeBar(): static
-    {
-        return $this->type('bar');
     }
 
     /**
@@ -242,8 +235,8 @@ class ChartJsComponent extends Component
         return $this->prepareData(static function ($model) use ($atColumn, $format) {
             return ($model instanceof Collection ? $model : $model->get())
                 ->sortBy($atColumn)->groupBy(static function (Model $model) use ($atColumn, $format) {
-                return ($model->{$atColumn} instanceof Carbon ? $model->{$atColumn} : Carbon::parse($model->{$atColumn}))->format($format);
-            });
+                    return ($model->{$atColumn} instanceof Carbon ? $model->{$atColumn} : Carbon::parse($model->{$atColumn}))->format($format);
+                });
         });
     }
 
@@ -274,7 +267,7 @@ class ChartJsComponent extends Component
     /**
      * @param  string  $title
      * @param  mixed|null  $callback
-     * @param mixed $default
+     * @param  mixed  $default
      * @return $this
      */
     public function eachPoint(string $title, mixed $callback = null, mixed $default = 0): static
@@ -331,49 +324,6 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @param  string|array  $title
-     * @param  array  $data
-     * @param  array  $color
-     * @return $this
-     */
-    public function customChart(string|array $title, array $data, array $color = []): static
-    {
-        $isDataList = array_is_list($data);
-        $isColorList = $color && isset($color[0]) && is_array($color[0]);
-        $data = ! $isDataList || $data === [] ? [$data] : $data;
-
-        $this->builder
-            ->type($this->type)
-            ->labels(collect($data[0])->keys()->toArray());
-
-        foreach ($data as $key => $datum) {
-
-            if ($isColorList) {
-                $bgColor = $color[$key] ?? $this->randColor();
-            } else {
-                $bgColor = $color ?: $this->randColor();
-            }
-
-            $this->builder->addDataset(
-                [
-                    'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
-                    'backgroundColor' => array_is_list($color) && isset($color[0]) && is_array($color[0])
-                        ? array_map(fn (array $c) => $this->renderColor($c, '0.31'), $color)
-                        : $this->renderColor($bgColor, '0.31'),
-                    'borderColor' => $this->renderColor($bgColor, '0.7'),
-                    'pointBorderColor' => $this->renderColor($bgColor, '0.7'),
-                    'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'),
-                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()),
-                    'pointHoverBorderColor' => $this->renderColor($this->randColor()),
-                    'data' => collect($datum)->values()->toArray(),
-                ]
-            );
-        }
-
-        return $this;
-    }
-
-    /**
      * @param  int  $min
      * @param  int  $max
      * @return array
@@ -398,13 +348,45 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @return array
+     * @param  string|array  $title
+     * @param  array  $data
+     * @param  array  $color
+     * @return $this
      */
-    protected function viewData(): array
+    public function customChart(string|array $title, array $data, array $color = []): static
     {
-        return array_merge($this->builder->getParams(), [
-            'loading' => isset(static::$loadCallBacks[$this->builder->getName()])
-        ]);
+        $isDataList = array_is_list($data);
+        $isColorList = $color && isset($color[0]) && is_array($color[0]);
+        $data = !$isDataList || $data === [] ? [$data] : $data;
+
+        $this->builder
+            ->type($this->type)
+            ->labels(collect($data[0])->keys()->toArray());
+
+        foreach ($data as $key => $datum) {
+            if ($isColorList) {
+                $bgColor = $color[$key] ?? $this->randColor();
+            } else {
+                $bgColor = $color ?: $this->randColor();
+            }
+
+            $this->builder->addDataset(
+                [
+                    'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
+                    'backgroundColor' => array_is_list($color) && isset($color[0]) && is_array($color[0])
+                        ? array_map(fn(array $c) => $this->renderColor($c, '0.31'), $color)
+                        : $this->renderColor($bgColor, '0.31'),
+                    'borderColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointBorderColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'),
+                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()),
+                    'pointHoverBorderColor' => $this->renderColor($this->randColor()),
+                    'data' => collect($datum)->values()->toArray(),
+                ]
+            );
+        }
+
+        return $this;
     }
 
     /**
@@ -416,10 +398,19 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return array_merge($this->builder->getParams(), [
+            'loading' => isset(static::$loadCallBacks[$this->builder->getName()])
+        ]);
+    }
+
+    /**
      * @return void
      */
     protected function mount(): void
     {
-
     }
 }

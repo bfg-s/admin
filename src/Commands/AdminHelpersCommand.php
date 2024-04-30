@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Admin\Commands;
 
+use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
+use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
+use Admin\Commands\Generators\GenerateAdminHelper;
 use Admin\Commands\Generators\GenerateNotificationKeys;
+use Admin\Commands\Generators\MacroableHelperGenerator;
 use Admin\Commands\Generators\MacroDelegatorsHelperGenerator;
+use Admin\Interfaces\AdminHelpGeneratorInterface;
 use App;
 use Artisan;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Log;
-use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
-use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
-use Admin\Commands\Generators\GenerateAdminHelper;
-use Admin\Commands\Generators\MacroableHelperGenerator;
-use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Throwable;
 
 class AdminHelpersCommand extends Command
@@ -139,8 +139,7 @@ class AdminHelpersCommand extends Command
 
         $helpersDir = base_path("vendor/_laravel_idea");
 
-        if (! is_dir($helpersDir)) {
-
+        if (!is_dir($helpersDir)) {
             mkdir($helpersDir);
         }
 
@@ -178,7 +177,6 @@ class AdminHelpersCommand extends Command
                         $this->error(" > File: [{$exception->getFile()}:{$exception->getLine()}]");
                     }
                     if ($file_data) {
-
                         $file = base_path("vendor/_laravel_idea/_ide_helper_{$name}.php");
                         file_put_contents($file, "<?php \n\n".$file_data);
                         $this->info("> Helper [".str_replace(base_path(), '', $file)."] generated!");

@@ -11,29 +11,25 @@ class TabContentComponent extends Component
     use FontAwesome;
 
     /**
-     * @var string
-     */
-    protected string $view = 'tab-content';
-
-    /**
      * @var string|null
      */
     public ?string $getTitle = null;
-
     /**
      * @var string|null
      */
     public ?string $getIcon = null;
-
     /**
      * @var mixed|null
      */
     public mixed $getActiveCondition = null;
-
     /**
      * @var bool
      */
     public bool $getLeft = true;
+    /**
+     * @var string
+     */
+    protected string $view = 'tab-content';
 
     /**
      * @param  string  $title

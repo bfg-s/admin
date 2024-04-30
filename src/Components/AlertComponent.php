@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Closure;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\TypesTrait;
+use Closure;
 
 class AlertComponent extends Component
 {
@@ -89,6 +89,5 @@ class AlertComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

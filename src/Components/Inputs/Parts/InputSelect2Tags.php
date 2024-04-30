@@ -48,18 +48,6 @@ class InputSelect2Tags extends Component
         return $this;
     }
 
-    protected function viewData(): array
-    {
-        return [
-            'options' => $this->optionsPrint,
-            'name' => $this->name,
-            'id' => $this->id,
-            'hasBug' => $this->hasBug,
-            'datas' => $this->datas,
-            'multiple' => true,
-        ];
-    }
-
     /**
      * @return $this
      */
@@ -121,6 +109,18 @@ class InputSelect2Tags extends Component
         $this->hasBug = $hasBug;
 
         return $this;
+    }
+
+    protected function viewData(): array
+    {
+        return [
+            'options' => $this->optionsPrint,
+            'name' => $this->name,
+            'id' => $this->id,
+            'hasBug' => $this->hasBug,
+            'datas' => $this->datas,
+            'multiple' => true,
+        ];
     }
 
     protected function mount(): void

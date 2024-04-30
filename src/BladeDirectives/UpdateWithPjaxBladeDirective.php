@@ -18,7 +18,7 @@ class UpdateWithPjaxBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildAttribute(); ?>";
+        return "<?php echo ".static::class."::buildAttribute(); ?>";
     }
 
     /**
@@ -26,7 +26,7 @@ class UpdateWithPjaxBladeDirective
      */
     public static function buildAttribute(): string
     {
-        $name = 'tag-' . count(static::$_lives);
+        $name = 'tag-'.count(static::$_lives);
 
         static::$_lives[] = $name;
 

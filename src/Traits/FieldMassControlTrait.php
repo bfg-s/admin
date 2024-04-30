@@ -42,16 +42,6 @@ trait FieldMassControlTrait
     /**
      * @return $this
      */
-    public function vertical(): static
-    {
-        $this->vertical = true;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
     public function horizontal(): static
     {
         $this->vertical = false;
@@ -66,27 +56,6 @@ trait FieldMassControlTrait
     public function if($condition): static
     {
         $this->set = $condition;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function reversed(): static
-    {
-        $this->reversed = true;
-
-        return $this;
-    }
-
-    /**
-     * @param  int  $width
-     * @return $this
-     */
-    public function label_width(int $width): static
-    {
-        $this->label_width = $width;
 
         return $this;
     }
@@ -133,5 +102,36 @@ trait FieldMassControlTrait
         }
 
         return false;
+    }
+
+    /**
+     * @return $this
+     */
+    public function vertical(): static
+    {
+        $this->vertical = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function reversed(): static
+    {
+        $this->reversed = true;
+
+        return $this;
+    }
+
+    /**
+     * @param  int  $width
+     * @return $this
+     */
+    public function label_width(int $width): static
+    {
+        $this->label_width = $width;
+
+        return $this;
     }
 }

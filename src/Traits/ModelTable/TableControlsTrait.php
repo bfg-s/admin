@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Admin\Traits\ModelTable;
 
+use Admin\Components\ButtonsComponent;
 use Admin\Components\ModelTable\HeaderComponent;
+use Admin\Core\ModelTableAction;
+use Admin\Core\PrepareExport;
 use Admin\Models\AdminPermission;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
-use Admin\Components\ButtonsComponent;
-use Admin\Core\ModelTableAction;
-use Admin\Core\PrepareExport;
 
 trait TableControlsTrait
 {
@@ -253,7 +253,6 @@ trait TableControlsTrait
 
             if ($this->checks && !request()->has('show_deleted') && $show) {
                 $this->to_prepend()->column(function (HeaderComponent $headerComponent) use ($hasDelete) {
-
                     $headerComponent->fit();
 
                     $headerComponent->view('components.model-table.checkbox', [
@@ -266,10 +265,9 @@ trait TableControlsTrait
                             return isset($i['field']) && is_string($i['field']);
                         })->pluck('field')->toArray(),
                     ]);
-
                 }, function (Model|array $model) use ($modelName) {
                     return admin_view('components.model-table.checkbox', [
-                        'id' => is_array($model) ?  ($model['id'] ?? null) :$model->id,
+                        'id' => is_array($model) ? ($model['id'] ?? null) : $model->id,
                         'table_id' => $modelName,
                         'disabled' => !$this->get_test_var('control_selectable', [$model]),
                     ]);
@@ -282,15 +280,17 @@ trait TableControlsTrait
 
             $this->column(function (HeaderComponent $headerComponent) {
                 $headerComponent->fit();
-            },function (Model|array $model) {
+            }, function (Model|array $model) {
                 $menu = $this->menu;
 
-                return $this->createComponent(ButtonsComponent::class)->use(function (ButtonsComponent $group) use ($model, $menu) {
+                return $this->createComponent(ButtonsComponent::class)->use(function (ButtonsComponent $group) use (
+                    $model,
+                    $menu
+                ) {
                     if ($menu && $menu->isResource()) {
                         $key = $model->getRouteKey();
 
                         if (!request()->has('show_deleted')) {
-
                             if ($this->get_test_var('control_edit', [$model])) {
                                 if (AdminPermission::checkUrl($menu->getLinkEdit($key), 'PUT')) {
                                     $group->resourceEdit($menu->getLinkEdit($key), '');
@@ -299,7 +299,6 @@ trait TableControlsTrait
 
                             if ($this->get_test_var('control_delete', [$model])) {
                                 if (AdminPermission::checkUrl($menu->getLinkDestroy($key), 'DELETE')) {
-
                                     $group->resourceDestroy(
                                         $menu->getLinkDestroy($key),
                                         '',

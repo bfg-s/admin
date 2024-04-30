@@ -75,121 +75,99 @@ window.libs['table_action'] = async function () {
     }
 };
 
-function downloadBlob(blob, name = 'file.txt') {
-    if (
-        window.navigator &&
-        window.navigator.msSaveOrOpenBlob
-    ) return window.navigator.msSaveOrOpenBlob(blob);
-
-    // For other browsers:
-    // Create a link pointing to the ObjectURL containing the blob.
-    const data = window.URL.createObjectURL(
-        //blob
-        new Blob(blob)
-    );
-
-    const link = document.createElement('a');
-    link.href = data;
-    link.download = name;
-
-    // this is necessary as link.click() does not work on the latest firefox
-    link.dispatchEvent(
-        new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        })
-    );
-
-    setTimeout(() => {
-        // For Firefox it is necessary to delay revoking the ObjectURL
-        window.URL.revokeObjectURL(data);
-        link.remove();
-    }, 100);
-}
-
-
 window.libs['table_action::exportToExcel'] = async function () {
     let ids = selectedIds(this.target);
     NProgress.start();
-    if (window.langs.downloading_excel)
+    if (window.langs.downloading_excel) {
         exec("toast::success", window.langs.downloading_excel);
-    const token = exec('token');
-    axios.post(window.export_excel, {
-        _token: token,
+    }
+
+    let link = window.document.createElement('a');
+    link.setAttribute('target', '');
+    link.setAttribute('download', '');
+    link.href = window.export_excel + '?' + http_build_query({
         model: this.target.dataset.object,
         ids: ids,
         order: this.target.dataset.order,
         order_type: this.target.dataset.orderType,
         table: this.target.dataset.table,
-    }).then((data) => {
-
-
-        let contentDispo = data.headers.get('content-disposition');
-
-        if (contentDispo) {
-
-            let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-            let blob = data.data;
-            if (window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveBlob(blob, fileName);
-            } else {
-                let downloadLink = window.document.createElement('a');
-                let contentTypeHeader = data.headers.get('content-type');
-                downloadLink.href = window.URL.createObjectURL(new Blob([blob], {type: contentTypeHeader}));
-                downloadLink.download = fileName;
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-            }
-        }
-    })
-    .catch((data) => {
-        exec("toast::error", data.response.data.message);
-    })
-    .finally(() => {
-        NProgress.done()
+        ...get_query_parameters()
     });
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    NProgress.done();
 };
 
 window.libs['table_action::exportToCsv'] = async function () {
     let ids = selectedIds(this.target);
     NProgress.start();
-    if (window.langs.downloading_csv)
+    if (window.langs.downloading_csv) {
         exec("toast::success", window.langs.downloading_csv);
-    const token = exec('token');
-    axios.post(window.export_csv, {
-        _token: token,
+    }
+
+    let link = window.document.createElement('a');
+    link.setAttribute('target', '');
+    link.setAttribute('download', '');
+    link.href = window.export_csv + '?' + http_build_query({
         model: this.target.dataset.object,
         ids: ids,
         order: this.target.dataset.order,
         order_type: this.target.dataset.orderType,
         table: this.target.dataset.table,
-    }).then((data) => {
+        ...get_query_parameters()
+    });
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-        let contentDispo = data.headers.get('content-disposition');
+    NProgress.done();
+};
 
-        if (contentDispo) {
+function http_build_query(obj, prefix = '') {
+    let queryString = [];
 
-            let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-            let blob = data.data;
-            if (window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveBlob(blob, fileName);
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            let fullKey = prefix ? `${prefix}[${encodeURIComponent(key)}]` : encodeURIComponent(key);
+            let value = obj[key];
+
+            if (typeof value === 'object' && value !== null) {
+                queryString.push(http_build_query(value, fullKey));
             } else {
-                let downloadLink = window.document.createElement('a');
-                let contentTypeHeader = data.headers.get('content-type');
-                downloadLink.href = window.URL.createObjectURL(new Blob([blob], {type: contentTypeHeader}));
-                downloadLink.download = fileName;
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
+                queryString.push(`${fullKey}=${encodeURIComponent(value)}`);
             }
         }
-    })
-    .catch((data) => {
-        exec("toast::error", data.response.data.message);
-    })
-    .finally(() => {
-        NProgress.done()
-    });
-};
+    }
+
+    return queryString.join('&');
+}
+
+function get_query_parameters() {
+    let query = window.location.search.substring(1);
+    let params = new URLSearchParams(query);
+    let result = {};
+
+    for (let [key, value] of params) {
+        if (decodeURIComponent(key).includes('[')) {
+
+            let keys = key.replace(/\]/g, '').split('[');
+            let current = result;
+
+            for (let i = 0; i < keys.length - 1; i++) {
+                let partKey = decodeURIComponent(keys[i]);
+                if (!current[partKey]) {
+                    current[partKey] = {};
+                }
+                current = current[partKey];
+            }
+
+            current[decodeURIComponent(keys[keys.length - 1])] = decodeURIComponent(value);
+        } else {
+            result[decodeURIComponent(key)] = decodeURIComponent(value);
+        }
+    }
+
+    return result;
+}

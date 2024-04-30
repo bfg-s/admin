@@ -29,7 +29,7 @@ class AdminLteTheme extends Theme
     /**
      * @var string|null
      */
-    protected ?string $directory = __DIR__ . '/../../lte';
+    protected ?string $directory = __DIR__.'/../../lte';
 
     /**
      * @var string

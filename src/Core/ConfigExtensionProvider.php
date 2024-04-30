@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Closure;
 use Admin\Components\Component;
 use Admin\Components\ModelTableComponent;
 use Admin\ExtendProvider;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteRegistrar;
@@ -51,7 +51,8 @@ class ConfigExtensionProvider
      * @param  RouteRegistrar  $route
      * @return void
      */
-    public function routes(RouteRegistrar $route) {
+    public function routes(RouteRegistrar $route)
+    {
         //
     }
 
@@ -184,7 +185,6 @@ CSS;
      */
     public function response(Response $response): Response
     {
-
         return $response;
     }
 }

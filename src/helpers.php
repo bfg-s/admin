@@ -1,15 +1,17 @@
 <?php
 
-use Admin\Facades\AdminFacade;
-use Admin\Respond;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Admin\Core\MenuItem;
+use Admin\Facades\AdminFacade;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminUser;
 use Admin\Page;
 use Admin\Repositories\AdminRepository;
+use Admin\Respond;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 if (!function_exists('admin_log')) {
     /**
@@ -127,8 +129,7 @@ if (!function_exists('admin_controller_model')) {
      */
     function admin_controller_model(): string
     {
-        if($action = Route::currentRouteAction()) {
-
+        if ($action = Route::currentRouteAction()) {
             $class = Str::parseCallback($action)[0];
 
             if (property_exists($class, 'model')) {
@@ -155,8 +156,8 @@ if (!function_exists('admin_uri')) {
     /**
      * @param  string  $uri
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     function admin_uri(string $uri = ''): string
     {
@@ -164,7 +165,8 @@ if (!function_exists('admin_uri')) {
             $uri = '/'.trim($uri, '/');
         }
 
-        return (config('layout.lang_mode') ? '/'.AdminFacade::nowLang() : '').'/'.trim(config('admin.route.prefix'), '/').$uri;
+        return (config('layout.lang_mode') ? '/'.AdminFacade::nowLang() : '').'/'.trim(config('admin.route.prefix'),
+                '/').$uri;
     }
 }
 
@@ -490,7 +492,9 @@ if (!function_exists('is_image')) {
 if (!function_exists('beautiful_date')) {
     function beautiful_date($time)
     {
-        if (! $time) return $time;
+        if (!$time) {
+            return $time;
+        }
 
         $timestamp = strtotime($time);
         $published = date('d.m.Y', $timestamp);
@@ -512,7 +516,9 @@ if (!function_exists('beautiful_date')) {
 if (!function_exists('beautiful_date_time')) {
     function beautiful_date_time($time)
     {
-        if (! $time) return $time;
+        if (!$time) {
+            return $time;
+        }
 
         $timestamp = strtotime($time);
 
@@ -602,17 +608,16 @@ if (!function_exists('is_embedded_call')) {
     }
 }
 
-if (! function_exists('body_namespace_element')) {
-
+if (!function_exists('body_namespace_element')) {
     /**
      * Get only namespace body.
      *
-     * @param string $namespace
-     * @param int $level
-     * @param string $delimiter
+     * @param  string  $namespace
+     * @param  int  $level
+     * @param  string  $delimiter
      * @return string
      */
-    function body_namespace_element(string $namespace, int $level = 1, string $delimiter = '\\') : string
+    function body_namespace_element(string $namespace, int $level = 1, string $delimiter = '\\'): string
     {
         return Bfg\Entity\Core\Entities\NamespaceEntity::bodySegment($namespace, $level);
     }

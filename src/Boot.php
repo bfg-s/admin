@@ -9,6 +9,7 @@ use Admin\Core\TableExtends\Decorations;
 use Admin\Core\TableExtends\Display;
 use Admin\Core\TableExtends\Editables;
 use Admin\Core\TableExtends\Formatter;
+use Admin\Facades\AdminFacade;
 use ReflectionException;
 
 class Boot
@@ -36,7 +37,7 @@ class Boot
             ModelTableComponent::addExtensionClass($item);
         }
 
-        foreach (\Admin\Facades\AdminFacade::extensions() as $extension) {
+        foreach (AdminFacade::extensions() as $extension) {
             if ($extension->included()) {
                 $extension->config()->boot();
             }

@@ -264,46 +264,38 @@ class UsersTest extends TestCase
         });
     }
 
-    public function test_sorting_administrator_list()
+    public function test_sorting_roles_list()
     {
         $this->adminAuth();
 
         $this->browse(function (Browser $browser) {
 
-                $browser->visitRoute('admin.administration.admin_user.index')
-                    ->assertSee('Administrators');
-
-                $browser->script('document.querySelector(\'[data-sort="email"]\').click()');
-
-                $browser->pause(1000);
-
-                $browser->script('document.querySelector(\'[data-sort="login"]\').click()');
-
-                $browser->pause(1000);
+                $browser->visitRoute('admin.administration.admin_role.index')
+                    ->assertSee('Roles');
 
                 $browser->script('document.querySelector(\'[data-sort="name"]\').click()');
 
-                $browser->pause(1000);
+                $browser->waitForRoute('admin.administration.admin_role.index');
 
                 $browser->script('document.querySelector(\'[data-sort="updated_at"]\').click()');
 
-                $browser->pause(1000);
+                $browser->waitForRoute('admin.administration.admin_role.index');
 
                 $browser->script('document.querySelector(\'[data-sort="created_at"]\').click()');
 
-                $browser->pause(1000);
+                $browser->waitForRoute('admin.administration.admin_role.index');
 
                 $browser->script('document.querySelector(\'[data-sort="id"]\').click()');
 
-                $browser->pause(1000);
+                $browser->waitForRoute('admin.administration.admin_role.index');
 
-                $browser->assertScript("Number(String($('table').find('tbody tr td').first().find('span')[0].innerHTML).trim()) === 1");
+                $browser->assertScript("Number(String($($('table').find('tbody tr td')[1]).find('span')[0].innerHTML).trim()) === 1");
 
                 $browser->script('document.querySelector(\'[data-sort="id"]\').click()');
 
-                $browser->pause(1000);
+                $browser->waitForRoute('admin.administration.admin_role.index');
 
-                $browser->assertScript("Number(String($('table').find('tbody tr td').first().find('span')[0].innerHTML).trim()) !== 1");
+                $browser->assertScript("Number(String($($('table').find('tbody tr td')[1]).find('span')[0].innerHTML).trim()) !== 1");
             });
     }
 }

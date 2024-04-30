@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Admin\Models;
 
+use Admin;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
-use Admin;
 use Illuminate\Support\Str;
 
 /**
@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
  * @property int $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \Admin\Models\AdminRole|null $role
+ * @property-read AdminRole|null $role
  * @method static Builder|AdminPermission makeDumpedModel()
  * @method static Builder|AdminPermission newModelQuery()
  * @method static Builder|AdminPermission newQuery()
@@ -85,7 +85,6 @@ class AdminPermission extends Model
         }
 
         if (!$result) {
-
             /** @var AdminPermission $close */
             foreach (static::now()->where('state', 'open') as $open) {
                 $path = ltrim(static::makeCheckedPath($open->path), '/');

@@ -6,40 +6,6 @@ namespace Admin\Components;
 
 use Admin\BladeDirectives\SystemCssBladeDirective;
 use Admin\BladeDirectives\SystemJsBladeDirective;
-use Admin\Components\Inputs\AmountInput;
-use Admin\Components\Inputs\AutocompleteInput;
-use Admin\Components\Inputs\ChecksInput;
-use Admin\Components\Inputs\CKEditorInput;
-use Admin\Components\Inputs\CodeMirrorInput;
-use Admin\Components\Inputs\ColorInput;
-use Admin\Components\Inputs\DateInput;
-use Admin\Components\Inputs\DateRangeInput;
-use Admin\Components\Inputs\DateTimeInput;
-use Admin\Components\Inputs\DateTimeRangeInput;
-use Admin\Components\Inputs\DualSelectInput;
-use Admin\Components\Inputs\EmailInput;
-use Admin\Components\Inputs\FileInput;
-use Admin\Components\Inputs\HiddenInput;
-use Admin\Components\Inputs\IconInput;
-use Admin\Components\Inputs\ImageInput;
-use Admin\Components\Inputs\InfoCreatedAtInput;
-use Admin\Components\Inputs\InfoIdInput;
-use Admin\Components\Inputs\InfoInput;
-use Admin\Components\Inputs\InfoUpdatedAtInput;
-use Admin\Components\Inputs\Input;
-use Admin\Components\Inputs\MDEditorInput;
-use Admin\Components\Inputs\MultiSelectInput;
-use Admin\Components\Inputs\NumberInput;
-use Admin\Components\Inputs\NumericInput;
-use Admin\Components\Inputs\PasswordInput;
-use Admin\Components\Inputs\RadiosInput;
-use Admin\Components\Inputs\RatingInput;
-use Admin\Components\Inputs\SelectInput;
-use Admin\Components\Inputs\SelectTagsInput;
-use Admin\Components\Inputs\SliderInput;
-use Admin\Components\Inputs\SwitcherInput;
-use Admin\Components\Inputs\TextareaInput;
-use Admin\Components\Inputs\TimeInput;
 use Admin\Components\Small\AComponent;
 use Admin\Components\Small\CenterComponent;
 use Admin\Components\Small\DivComponent;
@@ -101,13 +67,6 @@ abstract class Component extends ComponentInputs
     use Conditionable;
 
     /**
-     * The value represents the HTML element to be used. It defaults to 'div' if not specified.
-     *
-     * @var string
-     */
-    protected $element = 'div';
-
-    /**
      * An associative array that maps component names to their corresponding class names.
      * The keys represent the component names, and the values represent the class names.
      * Each component class is responsible for rendering the HTML markup for that component.
@@ -166,7 +125,6 @@ abstract class Component extends ComponentInputs
         'center' => CenterComponent::class,
         'img' => ImgComponent::class,
     ];
-
     /**
      * @var array
      * @desc The variable $scripts holds an array of scripts.
@@ -182,18 +140,21 @@ abstract class Component extends ComponentInputs
      *           ];
      */
     protected static array $scripts = [];
-
     /**
      * @var array $styles
      * Contains an array of styles.
      */
     protected static array $styles = [];
-
     /**
      * @var array|null $regInputs A variable to store registered input data.
      */
     protected static $regInputs = null;
-
+    /**
+     * The value represents the HTML element to be used. It defaults to 'div' if not specified.
+     *
+     * @var string
+     */
+    protected $element = 'div';
     /**
      * @var string|null
      */
@@ -300,6 +261,95 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * @param $model
+     * @return $this
+     */
+    public function model($model = null): static
+    {
+        if ($model || !$this->model) {
+            if (is_callable($model)) {
+                $model = call_user_func($model, $this->model ?: $this->page->model());
+            }
+
+            $m = $this->model ?: $this->page->model();
+            if (is_array($model) && !isset($model[0]) && $m) {
+                $model = eloquent_instruction($m, $model);
+            }
+
+            if (is_string($model) && class_exists($model)) {
+                $model = new $model();
+            }
+
+            $search = false;
+            if ($model instanceof SearchFormComponent) {
+                $model = $model->makeModel($this->model ?: $this->page->model());
+                $search = true;
+            }
+
+            $this->model = $model ?? $this->page->model();
+            if (!$this->model_name) {
+                $this->model_name = $this->page->getModelName($model);
+            }
+            if (!$search) {
+                $c = $this->realModel();
+                if ($c && !is_array($c)) {
+                    $class = is_string($c) ? $this->model : get_class($c);
+                    $this->menu = $this->page->findModelMenu($class);
+                }
+            }
+            $this->iSelectModel = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function realModel(): mixed
+    {
+        if (
+            $this->model instanceof Builder
+            || $this->model instanceof Relation
+        ) {
+            return $this->model->getModel();
+        }
+
+        return $this->model;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function delegates(...$delegates): static
+    {
+        $this->delegates = [
+            ...$this->delegates,
+            ...$delegates,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed  ...$classes
+     * @return $this
+     */
+    public function addClass(...$classes): static
+    {
+        foreach ($classes as $class) {
+            if (is_array($class)) {
+                $this->classes = array_merge($this->classes, $class);
+            } else {
+                $this->classes[] = $class;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public static function getScripts(): array
@@ -316,49 +366,59 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @return View|string
-     * @throws Throwable
+     * Static create.
+     *
+     * @param  array  $data
+     * @return static
      */
-    public function render(): View|string
+    public static function create(...$data): static
     {
-        if (! $this->isInit) {
-
-            $this->onRender();
-
-            $this->mount();
-
-            SystemJsBladeDirective::addComponentJs($this->js());
-            SystemCssBladeDirective::addComponentCss($this->css());
-
-            $this->isInit = true;
-        }
-
-
-        if (is_embedded_call($this->wrc)) {
-            call_user_func($this->wrc, $this);
-        }
-
-        foreach ($this->rendered as $item) {
-            call_user_func($item, $this);
-        }
-
-        $renderedView = admin_view('components.' . $this->view, array_merge([
-            'contents' => $this->contents,
-            'classes' => $this->classes,
-            'element' => $this->element,
-            'attributes' => $this->attributes,
-        ], $this->viewData()))->render();
-
-        return $this->afterRenderEvent($renderedView);
+        return new static(...$data);
     }
 
     /**
-     * @param $renderedView
-     * @return string
+     * @param $name
+     * @param $arguments
+     * @return Component|FormGroupComponent|bool|mixed
      */
-    protected function afterRenderEvent($renderedView): string
+    public static function __callStatic($name, $arguments)
     {
-        return $renderedView;
+        if ($call = static::static_call_group($name, $arguments)) {
+            return $call;
+        }
+
+        return (new static())->{$name}(...$arguments);
+    }
+
+    /**
+     * @param  string  $name
+     * @param  string  $class
+     * @return void
+     */
+    public static function registerFormComponent(string $name, string $class): void
+    {
+        static::$inputs[$name] = $class;
+    }
+
+    /**
+     * @param  array  $array
+     * @return void
+     */
+    public static function mergeFormComponents(array $array): void
+    {
+        static::$inputs = array_merge(static::$inputs, $array);
+    }
+
+    /**
+     * Register a new component.
+     *
+     * @param  string  $name
+     * @param  string  $class
+     * @return void
+     */
+    public static function registerComponent(string $name, string $class): void
+    {
+        static::$components[$name] = $class;
     }
 
     /**
@@ -368,6 +428,43 @@ abstract class Component extends ComponentInputs
     public function setId(string $id): static
     {
         $this->attr('id', $id);
+
+        return $this;
+    }
+
+    /**
+     * @param  string|array  $name
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function attr(string|array $name, mixed $value = null): static
+    {
+        if (is_array($name)) {
+            foreach ($name as $k => $v) {
+                $this->attr($k, $v);
+            }
+        } else {
+            if ($name == 'class') {
+                $this->classes[] = $value;
+            } else {
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                    $name = ":".$name;
+                }
+                $added = false;
+                if ($value instanceof Respond) {
+                    if (isset($this->attributes[$name])) {
+                        //dd($this->attributes[$name], $value);
+                        $this->attributes[$name] = $this->attributes[$name]->merge($value);
+                        $added = true;
+                    }
+                }
+
+                if (!$added) {
+                    $this->attributes[$name] = $value;
+                }
+            }
+        }
 
         return $this;
     }
@@ -384,17 +481,9 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [];
-    }
-
-    /**
      * Set the values of the attribute "data-*".
      *
-     * @param array $datas
+     * @param  array  $datas
      * @return Component
      */
     public function setDatas(array $datas): static
@@ -431,11 +520,26 @@ abstract class Component extends ComponentInputs
             foreach ($callable as $item) {
                 $this->use($item);
             }
-        } else if (is_string($callable)) {
-            $this->appEnd($callable);
-        } else if (is_callable($callable)) {
-            call_user_func($callable, $this);
+        } else {
+            if (is_string($callable)) {
+                $this->appEnd($callable);
+            } else {
+                if (is_callable($callable)) {
+                    call_user_func($callable, $this);
+                }
+            }
         }
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed  $content
+     * @return $this
+     */
+    public function appEnd(mixed $content = ""): static
+    {
+        $this->contents[] = $content;
 
         return $this;
     }
@@ -446,48 +550,6 @@ abstract class Component extends ComponentInputs
     public function dump(): static
     {
         dump($this);
-
-        return $this;
-    }
-
-    /**
-     * @param  string|array  $name
-     * @param mixed $value
-     * @return $this
-     */
-    public function attr(string|array $name, mixed $value = null): static
-    {
-        if (is_array($name)) {
-            foreach ($name as $k => $v) {
-
-                $this->attr($k, $v);
-            }
-        } else {
-
-            if ($name == 'class') {
-
-                $this->classes[] = $value;
-
-            } else {
-
-                if (is_array($value)) {
-                    $value = json_encode($value);
-                    $name = ":" . $name;
-                }
-                $added = false;
-                if ($value instanceof Respond) {
-                    if (isset($this->attributes[$name])) {
-                    //dd($this->attributes[$name], $value);
-                        $this->attributes[$name] = $this->attributes[$name]->merge($value);
-                        $added = true;
-                    }
-                }
-
-                if (! $added) {
-                    $this->attributes[$name] = $value;
-                }
-            }
-        }
 
         return $this;
     }
@@ -516,11 +578,101 @@ abstract class Component extends ComponentInputs
         $render = $this->render();
 
         if ($render instanceof Renderable) {
-
             $render = $render->render();
         }
 
         return $render;
+    }
+
+    /**
+     * @return View|string
+     * @throws Throwable
+     */
+    public function render(): View|string
+    {
+        if (!$this->isInit) {
+            $this->onRender();
+
+            $this->mount();
+
+            SystemJsBladeDirective::addComponentJs($this->js());
+            SystemCssBladeDirective::addComponentCss($this->css());
+
+            $this->isInit = true;
+        }
+
+
+        if (is_embedded_call($this->wrc)) {
+            call_user_func($this->wrc, $this);
+        }
+
+        foreach ($this->rendered as $item) {
+            call_user_func($item, $this);
+        }
+
+        $renderedView = admin_view('components.'.$this->view, array_merge([
+            'contents' => $this->contents,
+            'classes' => $this->classes,
+            'element' => $this->element,
+            'attributes' => $this->attributes,
+        ], $this->viewData()))->render();
+
+        return $this->afterRenderEvent($renderedView);
+    }
+
+    /**
+     * @return void
+     */
+    public function onRender(): void
+    {
+        $this->newExplain($this->delegates);
+        $this->newExplainForce($this->force_delegates);
+        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
+            $this->model($this->parent->model);
+        }
+    }
+
+    /**
+     * Component mount method.
+     * @return void
+     */
+    abstract protected function mount(): void;
+
+    /**
+     * @return string
+     */
+    public function js(): string
+    {
+        return <<<JS
+
+JS;
+    }
+
+    /**
+     * @return string
+     */
+    public function css(): string
+    {
+        return <<<CSS
+
+CSS;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param $renderedView
+     * @return string
+     */
+    protected function afterRenderEvent($renderedView): string
+    {
+        return $renderedView;
     }
 
     /**
@@ -535,23 +687,6 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @param  mixed  ...$classes
-     * @return $this
-     */
-    public function addClass(...$classes): static
-    {
-        foreach ($classes as $class) {
-            if (is_array($class)) {
-                $this->classes = array_merge($this->classes, $class);
-            } else {
-                $this->classes[] = $class;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @param $condition
      * @param ...$classes
      * @return $this
@@ -559,7 +694,6 @@ abstract class Component extends ComponentInputs
     public function addClassIf($condition, ...$classes): static
     {
         if ($condition) {
-
             return $this->addClass(...$classes);
         }
 
@@ -567,23 +701,12 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @param mixed $content
+     * @param  mixed  $content
      * @return $this
      */
     public function prepEnd(mixed $content = ""): static
     {
         array_unshift($this->contents, $content);
-
-        return $this;
-    }
-
-    /**
-     * @param mixed $content
-     * @return $this
-     */
-    public function appEnd(mixed $content = ""): static
-    {
-        $this->contents[] = $content;
 
         return $this;
     }
@@ -627,14 +750,19 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * Static create.
-     *
-     * @param array $data
-     * @return static
+     * @template CLASS
+     * @param  string|CLASS  $componentClass
+     * @param ...$arguments
+     * @return Component|CLASS
      */
-    public static function create(...$data): static
+    public function createComponent(string $componentClass, ...$arguments)
     {
-        return new static(...$data);
+        /** @var Component $newObj */
+        $newObj = new $componentClass(...$arguments);
+
+        $newObj->setParent($this);
+
+        return $newObj;
     }
 
     /**
@@ -654,125 +782,11 @@ abstract class Component extends ComponentInputs
      * @param $model
      * @return $this
      */
-    public function model($model = null): static
-    {
-        if ($model || !$this->model) {
-            if (is_callable($model)) {
-                $model = call_user_func($model, $this->model ?: $this->page->model());
-            }
-
-            $m = $this->model ?: $this->page->model();
-            if (is_array($model) && ! isset($model[0]) && $m) {
-                $model = eloquent_instruction($m, $model);
-            }
-
-            if (is_string($model) && class_exists($model)) {
-                $model = new $model();
-            }
-
-            $search = false;
-            if ($model instanceof SearchFormComponent) {
-                $model = $model->makeModel($this->model ?: $this->page->model());
-                $search = true;
-            }
-
-            $this->model = $model ?? $this->page->model();
-            if (! $this->model_name) {
-                $this->model_name = $this->page->getModelName($model);
-            }
-            if (!$search) {
-                $c = $this->realModel();
-                if ($c && !is_array($c)) {
-                    $class = is_string($c) ? $this->model : get_class($c);
-                    $this->menu = $this->page->findModelMenu($class);
-                }
-            }
-            $this->iSelectModel = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $model
-     * @return $this
-     */
     public function simpleSetModel($model): static
     {
         $this->model = $model;
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function realModel(): mixed
-    {
-        if (
-            $this->model instanceof Builder
-            || $this->model instanceof Relation
-        ) {
-            return $this->model->getModel();
-        }
-
-        return $this->model;
-    }
-
-    /**
-     * @param ...$delegates
-     * @return $this
-     */
-    public function delegates(...$delegates): static
-    {
-        $this->delegates = [
-            ...$this->delegates,
-            ...$delegates,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return Component|FormGroupComponent|bool|mixed
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        if ($call = static::static_call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return (new static())->{$name}(...$arguments);
-    }
-
-    /**
-     * @param  string  $name
-     * @param  string  $class
-     * @return void
-     */
-    public static function registerFormComponent(string $name, string $class): void
-    {
-        static::$inputs[$name] = $class;
-    }
-
-    /**
-     * @param  array  $array
-     * @return void
-     */
-    public static function mergeFormComponents(array $array): void
-    {
-        static::$inputs = array_merge(static::$inputs, $array);
-    }
-
-    /**
-     * @param  string  $name
-     * @return bool
-     */
-    public static function has(string $name): bool
-    {
-        return isset(static::$inputs[$name]);
     }
 
     /**
@@ -785,17 +799,6 @@ abstract class Component extends ComponentInputs
             ...$this->force_delegates,
             ...$delegates,
         ];
-
-        return $this;
-    }
-
-    /**
-     * @param ...$delegates
-     * @return $this
-     */
-    public function forceDelegateNow(...$delegates): static
-    {
-        $this->newExplainForce($delegates);
 
         return $this;
     }
@@ -818,16 +821,25 @@ abstract class Component extends ComponentInputs
     public function withCollection($collection, callable $callback): static
     {
         foreach ($collection as $key => $item) {
-
             $result = call_user_func($callback, $item, $key);
 
             if ($result && is_array($result)) {
-
                 $this->forceDelegateNow(
                     ...$result
                 );
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return $this
+     */
+    public function forceDelegateNow(...$delegates): static
+    {
+        $this->newExplainForce($delegates);
 
         return $this;
     }
@@ -905,48 +917,40 @@ abstract class Component extends ComponentInputs
             $label = $arguments[0] ?? ucfirst(str_replace(['.', '_'], ' ', $name));
 
             return $this->{$field}($name, Lang::has("admin.$label") ? __("admin.$label") : $label);
-        } else if ($this->hasComponent($name)) {
-            if ($object = $this->getComponent($name)) {
-
-                $this->appEnd(
-                    $newObj = $this->createComponent($object, ...$arguments)
-                );
-                return $newObj;
-            }
         } else {
-            if ($call = $this->call_group($name, $arguments)) {
-                return $call;
+            if ($this->hasComponent($name)) {
+                if ($object = $this->getComponent($name)) {
+                    $this->appEnd(
+                        $newObj = $this->createComponent($object, ...$arguments)
+                    );
+                    return $newObj;
+                }
+            } else {
+                if ($call = $this->call_group($name, $arguments)) {
+                    return $call;
+                }
             }
         }
 
-        throw new Exception("Method [$name] not found! In [" . static::class . "]");
+        throw new Exception("Method [$name] not found! In [".static::class."]");
     }
 
     /**
-     * @template CLASS
-     * @param  string|CLASS  $componentClass
-     * @param ...$arguments
-     * @return Component|CLASS
+     * @param  string  $name
+     * @return bool
      */
-    public function createComponent(string $componentClass, ...$arguments)
+    public static function hasComponentStatic(string $name): bool
     {
-        /** @var Component $newObj */
-        $newObj = new $componentClass(...$arguments);
-
-        $newObj->setParent($this);
-
-        return $newObj;
+        return isset(static::$components[$name]);
     }
 
     /**
-     * @param  Component  $component
-     * @return $this
+     * @param  string  $name
+     * @return bool
      */
-    public function setParent(Component $component): static
+    public static function has(string $name): bool
     {
-        $this->parent = $component;
-
-        return $this;
+        return isset(static::$inputs[$name]);
     }
 
     /**
@@ -965,18 +969,6 @@ abstract class Component extends ComponentInputs
     public function getComponent(string $name): ?string
     {
         return static::$components[$name] ?? null;
-    }
-
-    /**
-     * Register a new component.
-     *
-     * @param  string  $name
-     * @param  string  $class
-     * @return void
-     */
-    public static function registerComponent(string $name, string $class): void
-    {
-        static::$components[$name] = $class;
     }
 
     /**
@@ -1009,24 +1001,6 @@ abstract class Component extends ComponentInputs
 
         return $this;
     }
-
-    /**
-     * @return void
-     */
-    public function onRender(): void
-    {
-        $this->newExplain($this->delegates);
-        $this->newExplainForce($this->force_delegates);
-        if (!$this->iSelectModel && ($this->parent?->model ?? null)) {
-            $this->model($this->parent->model);
-        }
-    }
-
-    /**
-     * Component mount method.
-     * @return void
-     */
-    abstract protected function mount(): void;
 
     /**
      * @param  callable  $callback
@@ -1120,7 +1094,6 @@ abstract class Component extends ComponentInputs
     public function setTitleIf($condition, string $title): static
     {
         if ($condition) {
-
             $this->attr('title', $title);
         }
 
@@ -1146,35 +1119,6 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @param  string  $name
-     * @return bool
-     */
-    public static function hasComponentStatic(string $name): bool
-    {
-        return isset(static::$components[$name]);
-    }
-
-    /**
-     * @return string
-     */
-    public function js(): string
-    {
-        return <<<JS
-
-JS;
-    }
-
-    /**
-     * @return string
-     */
-    public function css(): string
-    {
-        return <<<CSS
-
-CSS;
-    }
-
-    /**
      * @param  array  $attributes
      * @return $this
      */
@@ -1188,7 +1132,7 @@ CSS;
     /**
      * Hide component.
      *
-     * @param bool $eq
+     * @param  bool  $eq
      * @return $this
      */
     public function hide(mixed $eq = true): static
@@ -1198,11 +1142,6 @@ CSS;
         }
 
         return $this;
-    }
-
-    public function getParent(): ?Component
-    {
-        return $this->parent;
     }
 
     /**
@@ -1235,6 +1174,43 @@ CSS;
     }
 
     /**
+     * @param  string  $str
+     * @return array
+     */
+    protected function parseStringToArray(string $str): array
+    {
+        $arr = explode('[', $str);
+        return array_map(function ($s) {
+            return trim(trim(trim($s), '[]'));
+        }, $arr);
+    }
+
+    /**
+     * @param  array  $names
+     * @return string|null
+     */
+    public function deepName(array $names): string|null
+    {
+        return null;
+    }
+
+    public function getParent(): ?Component
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param  Component  $component
+     * @return $this
+     */
+    public function setParent(Component $component): static
+    {
+        $this->parent = $component;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function deepPaths(): array
@@ -1258,27 +1234,6 @@ CSS;
             ->filter()
             ->values()
             ->all();
-    }
-
-    /**
-     * @param  string  $str
-     * @return array
-     */
-    protected function parseStringToArray(string $str): array
-    {
-        $arr = explode('[', $str);
-        return array_map(function ($s) {
-            return trim(trim(trim($s), '[]'));
-        }, $arr);
-    }
-
-    /**
-     * @param  array  $names
-     * @return string|null
-     */
-    public function deepName(array $names): string|null
-    {
-        return null;
     }
 
     /**

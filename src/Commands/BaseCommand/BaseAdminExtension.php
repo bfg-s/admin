@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Commands\BaseCommand;
 
+use Admin\Admin;
 use Admin\Core\CfgFile;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -11,7 +12,6 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\MountManager;
-use Admin\Admin;
 
 class BaseAdminExtension extends Command
 {

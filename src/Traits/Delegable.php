@@ -10,14 +10,6 @@ use Admin\Explanation;
 trait Delegable
 {
     /**
-     * @return static|Delegate
-     */
-    public static function new(): Delegate|static
-    {
-        return new Delegate(static::class);
-    }
-
-    /**
      * @param ...$delegates
      * @return mixed
      */
@@ -40,6 +32,14 @@ trait Delegable
         }
 
         return $this;
+    }
+
+    /**
+     * @return static|Delegate
+     */
+    public static function new(): Delegate|static
+    {
+        return new Delegate(static::class);
     }
 
     /**

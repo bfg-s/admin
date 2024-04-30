@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\Models;
 
-use BaconQrCode\Renderer\Color\Rgb;
-use BaconQrCode\Renderer\Image\SvgImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\Fill;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 use Eloquent;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -40,13 +34,13 @@ use Laravel\Fortify\Fortify;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property Carbon|null $two_factor_confirmed_at
- * @property-read Collection|\Admin\Models\AdminLog[] $logs
+ * @property-read Collection|AdminLog[] $logs
  * @property-read int|null $logs_count
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read Collection|\Admin\Models\AdminRole[] $roles
- * @property-read Collection|\Admin\Models\AdminBrowser[] $browsers
- * @property-read Collection|\Admin\Models\AdminEvent[] $events
+ * @property-read Collection|AdminRole[] $roles
+ * @property-read Collection|AdminBrowser[] $browsers
+ * @property-read Collection|AdminEvent[] $events
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser makeDumpedModel()
  * @method static \Illuminate\Database\Eloquent\Builder|AdminUser newModelQuery()

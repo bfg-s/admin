@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Admin\Commands\Generators;
 
-use Admin\Page;
-use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Admin\Components\Component;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
+use Admin\Page;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Illuminate\Console\Command;
 use ReflectionClass;
 
 class GenerateAdminHelper implements AdminHelpGeneratorInterface
@@ -27,7 +28,7 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
         $class2 = $namespace->class('PageComponents')
             ->abstractClass();
 
-        $class->extend('\\' . \Admin\Components\Component::class);
+        $class->extend('\\'.Component::class);
 
         $class->doc(function ($doc) {
             $this->generateComponents($doc);
@@ -46,7 +47,7 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
      */
     protected function generateComponents($doc)
     {
-        collect(\Admin\Components\Component::$components)->map(function ($item, $key) use ($doc) {
+        collect(Component::$components)->map(function ($item, $key) use ($doc) {
             if (!class_exists($item)) {
                 return $item;
             }
@@ -74,7 +75,7 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
      */
     protected function generateComponents2($doc)
     {
-        collect(\Admin\Components\Component::$components)->map(function ($item, $key) use ($doc) {
+        collect(Component::$components)->map(function ($item, $key) use ($doc) {
             if (!class_exists($item)) {
                 return $item;
             }

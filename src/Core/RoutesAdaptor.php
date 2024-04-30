@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Illuminate\Routing\PendingResourceRegistration;
 use Admin\Admin;
 use Admin\Facades\NavigateFacade;
 use Admin\Navigate;
+use Illuminate\Routing\PendingResourceRegistration;
 use Illuminate\Routing\Router;
 
 class RoutesAdaptor
@@ -80,7 +80,9 @@ class RoutesAdaptor
         if (isset($menu['items']) && isset($menu['route']) && count($menu['items'])) {
             $uri = $menu['route'].(isset($menu['uri']) ? ('/'.trim($menu['uri'], '/')) : '');
 
-            $router->as($uri . '.')->prefix($uri)->middleware($menu['middleware'] ?? [])->group(static function (Router $router) use ($menu) {
+            $router->as($uri.'.')->prefix($uri)->middleware($menu['middleware'] ?? [])->group(static function (
+                Router $router
+            ) use ($menu) {
                 foreach ($menu['items'] as $item) {
                     static::make_route($item, $router);
 

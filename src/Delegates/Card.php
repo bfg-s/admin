@@ -6,6 +6,7 @@ namespace Admin\Delegates;
 
 use Admin\Components\CardComponent;
 use Admin\Core\Delegator;
+use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -21,10 +22,9 @@ class Card extends Delegator
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-
             $macro = static::$macros[$method];
 
-            if ($macro instanceof \Closure) {
+            if ($macro instanceof Closure) {
                 $macro = $macro->bindTo($this, static::class);
             }
 
@@ -32,14 +32,6 @@ class Card extends Delegator
         }
 
         return parent::__call($method, $parameters);
-    }
-
-    public function defaultDateRange(): array
-    {
-        return [
-            now()->subYear()->toDateString(),
-            now()->addDay()->toDateString(),
-        ];
     }
 
     public function statisticBody(...$delegates): array
@@ -73,6 +65,23 @@ class Card extends Delegator
                         ->eachPointCount('Created')
                         ->miniChart(),
                 ),
+        ];
+    }
+
+    public function defaultDateRange(): array
+    {
+        return [
+            now()->subYear()->toDateString(),
+            now()->addDay()->toDateString(),
+        ];
+    }
+
+    public function nestedModelTable(...$delegators): array
+    {
+        return [
+            $this->ifQuery('sort')->nestedTools(),
+            $this->ifQuery('screen', 1)->nestedTools(),
+            $this->sortedModelTable(...$delegators),
         ];
     }
 
@@ -114,15 +123,6 @@ class Card extends Delegator
                         ->eachPointCount('Created')
                         ->miniChart(),
                 ),
-        ];
-    }
-
-    public function nestedModelTable(...$delegators): array
-    {
-        return [
-            $this->ifQuery('sort')->nestedTools(),
-            $this->ifQuery('screen', 1)->nestedTools(),
-            $this->sortedModelTable(...$delegators),
         ];
     }
 }

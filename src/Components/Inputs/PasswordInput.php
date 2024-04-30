@@ -33,7 +33,6 @@ class PasswordInput extends Input
         /** @var Controller $controller */
         $controller = Route::current()->controller;
         if (property_exists($controller, 'crypt_fields')) {
-
             $controller::addCryptField($this->name);
         }
 

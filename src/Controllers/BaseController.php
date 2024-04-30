@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
+use Admin;
+use Admin\Core\ModelSaver;
+use Admin\ExtendProvider;
+use Admin\Models\AdminRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -11,10 +15,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 use Lang;
-use Admin;
-use Admin\Core\ModelSaver;
-use Admin\ExtendProvider;
-use Admin\Models\AdminRole;
 
 /**
  * @template CurrentModel

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Admin\Traits;
 
 use Admin\Respond;
-use Illuminate\Contracts\Support\Renderable;
 
 trait DataTrait
 {

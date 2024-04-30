@@ -33,27 +33,6 @@ class ButtonComponent extends Component
     protected string $typeAttribute = 'button';
 
     /**
-     * @return void
-     */
-    protected function mount(): void
-    {
-
-    }
-
-    /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'typeAttribute' => $this->typeAttribute,
-            'type' => $this->type,
-            'icon' => $this->icon,
-            'title' => $this->title,
-        ];
-    }
-
-    /**
      * @return $this
      */
     public function setType(string $type): static
@@ -224,5 +203,25 @@ class ButtonComponent extends Component
         $this->title = $title;
 
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    protected function mount(): void
+    {
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'typeAttribute' => $this->typeAttribute,
+            'type' => $this->type,
+            'icon' => $this->icon,
+            'title' => $this->title,
+        ];
     }
 }

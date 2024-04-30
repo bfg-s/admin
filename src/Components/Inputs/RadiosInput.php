@@ -9,6 +9,7 @@ use Admin\Components\Inputs\Parts\InputRadioBox;
 class RadiosInput extends ChecksInput
 {
     protected array $attributes = ['a' => 1];
+
     /**
      * @return mixed
      */

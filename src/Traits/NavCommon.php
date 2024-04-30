@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Traits;
 
-use Closure;
-use Admin\ExtendProvider;
 use Admin\Admin;
+use Admin\ExtendProvider;
 use Admin\Navigate;
+use Closure;
 use Illuminate\Support\Str;
 
 trait NavCommon

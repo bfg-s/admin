@@ -18,7 +18,7 @@ class SystemJsBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildScripts(); ?>";
+        return "<?php echo ".static::class."::buildScripts(); ?>";
     }
 
     /**
@@ -32,34 +32,30 @@ class SystemJsBladeDirective
         $html = [];
 
         if ($respond = session('respond')) {
-
             $html[] = "exec($respond)";
         }
 
         foreach ($extensions as $extension) {
-
             $html[] = $extension->config()->js();
         }
 
         foreach (static::$componentJs as $componentJ) {
-
             $html[] = $componentJ;
         }
 
         if ($themeJs = AdminFacade::getTheme()->js()) {
-
             $html[] = $themeJs;
         }
 
         $html[] = 'document.querySelector(\'[name="csrf-token"]\').setAttribute("content", "'.csrf_token().'")';
 
         $separator = ($tag ? "</script>" : "")
-            . "\n"
-            . ($tag ? "<script>" : "");
+            ."\n"
+            .($tag ? "<script>" : "");
 
         return ($tag ? "<script>" : "")
-            . implode($separator, $html)
-            . ($tag ? "</script>" : "");
+            .implode($separator, $html)
+            .($tag ? "</script>" : "");
     }
 
     /**

@@ -13,6 +13,26 @@ trait AlpineInjectionTrait
 
     /**
      * @param  string  $name
+     * @param  array  $modifiers
+     * @return mixed
+     */
+    public function xGet(string $name, array $modifiers = []): mixed
+    {
+        return $this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]
+            ?? ($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')] ?? null);
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xShow(mixed $value = ''): static
+    {
+        return $this->xAttribute('show', $value);
+    }
+
+    /**
+     * @param  string  $name
      * @param  mixed  $value
      * @param  array  $modifiers
      * @return $this
@@ -26,74 +46,6 @@ trait AlpineInjectionTrait
         );
 
         return $this;
-    }
-
-    /**
-     * @param  string  $name
-     * @param  array  $modifiers
-     * @return bool
-     */
-    public function xHas(string $name, array $modifiers = []): bool
-    {
-        return isset($this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')])
-            || isset($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]);
-    }
-
-    /**
-     * @param  string  $name
-     * @param  array  $modifiers
-     * @return mixed
-     */
-    public function xGet(string $name, array $modifiers = []): mixed
-    {
-        return $this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]
-            ?? ($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')] ?? null);
-    }
-
-    /**
-     * @param  string  $event
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function xOn(string $event, mixed $value): static
-    {
-        $this->xInit();
-
-        return $this->xAttribute("on:{$event}", $value);
-    }
-
-    /**
-     * @param  mixed  $data
-     * @return $this
-     */
-    public function xInit(mixed $data = ''): static
-    {
-        if (! $this->xHas('init')) {
-
-            $this->xAttribute('init');
-
-            return $data ? $this->xData($data) : $this;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed  $data
-     * @return $this
-     */
-    public function xData(mixed $data = ''): static
-    {
-        return $this->xAttribute('data', $data);
-    }
-
-    /**
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function xShow(mixed $value = ''): static
-    {
-        return $this->xAttribute('show', $value);
     }
 
     /**
@@ -218,6 +170,53 @@ trait AlpineInjectionTrait
     public function xOnClick(mixed $value): static
     {
         return $this->xOn('click', $value);
+    }
+
+    /**
+     * @param  string  $event
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function xOn(string $event, mixed $value): static
+    {
+        $this->xInit();
+
+        return $this->xAttribute("on:{$event}", $value);
+    }
+
+    /**
+     * @param  mixed  $data
+     * @return $this
+     */
+    public function xInit(mixed $data = ''): static
+    {
+        if (!$this->xHas('init')) {
+            $this->xAttribute('init');
+
+            return $data ? $this->xData($data) : $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  array  $modifiers
+     * @return bool
+     */
+    public function xHas(string $name, array $modifiers = []): bool
+    {
+        return isset($this->attributes["x-{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')])
+            || isset($this->attributes["x-on:{$name}".($modifiers ? '.'.implode('.', $modifiers) : '')]);
+    }
+
+    /**
+     * @param  mixed  $data
+     * @return $this
+     */
+    public function xData(mixed $data = ''): static
+    {
+        return $this->xAttribute('data', $data);
     }
 
     /**

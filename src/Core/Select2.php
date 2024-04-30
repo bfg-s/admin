@@ -11,10 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
 class Select2 extends Collection
 {
@@ -52,66 +50,54 @@ class Select2 extends Collection
      * @var Arrayable|Model|Builder|Relation|Collection|LengthAwarePaginator|array
      */
     protected $data;
-
-    /**
-     * @var int
-     */
-    private $_paginate_total = 0;
-
-    /**
-     * @var int
-     */
-    private $_paginate_current = 0;
-
-    /**
-     * @var mixed
-     */
-    private $value;
-
-    /**
-     * @var string|null
-     */
-    private $no_select;
-
-    /**
-     * @var string|null
-     */
-    private $prefix;
-
-    /**
-     * @var string
-     */
-    private string $name = 'select2_page';
-
-    /**
-     * @var Collection
-     */
-    private mixed $value_data = null;
-
-    /**
-     * @var Closure|null
-     */
-    private $where;
-
     /**
      * @var string
      */
     protected string $format = "{id}) {name}";
-
     /**
      * @var array
      */
     protected array $relations = [];
-
     /**
      * @var string|null
      */
     protected ?string $orderBy = null;
-
     /**
      * @var string
      */
     protected string $orderType = 'ASC';
+    /**
+     * @var int
+     */
+    private $_paginate_total = 0;
+    /**
+     * @var int
+     */
+    private $_paginate_current = 0;
+    /**
+     * @var mixed
+     */
+    private $value;
+    /**
+     * @var string|null
+     */
+    private $no_select;
+    /**
+     * @var string|null
+     */
+    private $prefix;
+    /**
+     * @var string
+     */
+    private string $name = 'select2_page';
+    /**
+     * @var Collection
+     */
+    private mixed $value_data = null;
+    /**
+     * @var Closure|null
+     */
+    private $where;
 
     /**
      * Select2 constructor.
@@ -294,7 +280,8 @@ class Select2 extends Collection
             if ($this->where) {
                 $form = request($this->getName().'_form');
 
-                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, true) : $form);
+                $this->data = call_user_func($this->where, $this->data,
+                    is_json($form) ? json_decode($form, true) : $form);
             }
 
             if ($this->data) {
@@ -320,7 +307,8 @@ class Select2 extends Collection
             if ($this->where) {
                 $form = request($this->getName().'_form');
 
-                $this->data = call_user_func($this->where, $this->data, is_json($form) ? json_decode($form, true) : $form);
+                $this->data = call_user_func($this->where, $this->data,
+                    is_json($form) ? json_decode($form, true) : $form);
             }
 
             $this->data = $this->data instanceof Arrayable ? $this->data->toArray() : $this->data->get()->all();
@@ -350,9 +338,26 @@ class Select2 extends Collection
     }
 
     /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $return = [
+            'results' => $this->no_select ? array_merge([['id' => '', 'text' => $this->no_select]],
+                $this->all()) : $this->all(),
+        ];
+
+        if ($this->pagination && $this->_paginate_current !== $this->_paginate_total && count($return['results'])) {
+            $return['pagination'] = ['more' => true];
+        }
+
+        return $return;
+    }
+
+    /**
      * @return $this
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function makeSearch(): static
     {
@@ -413,13 +418,12 @@ class Select2 extends Collection
                     foreach ($this->relations as $relation) {
                         $query->orWhereHas(
                             $relation[0],
-                            fn ($qRelation) => $qRelation->where($relation[1], 'like', "%{$q}%")
+                            fn($qRelation) => $qRelation->where($relation[1], 'like', "%{$q}%")
                         );
                     }
                 });
 
                 if ($this->orderBy) {
-
                     $this->data = $this->data->orderBy($this->orderBy, $this->orderType);
                 }
             }
@@ -427,7 +431,6 @@ class Select2 extends Collection
             if ($cacheColumns) {
                 $this->columns = $cacheColumns;
             }
-
             //var_dump($this->orderBy); die;
         }
 
@@ -475,7 +478,6 @@ class Select2 extends Collection
 
                     /** @var Model $d */
                     foreach ($data as $d) {
-
                         $result[$d[$key]] = preg_replace_callback('/{([0-9A-z.-]+)}/m', function ($m) use ($d) {
                             return multi_dot_call($d, $m[1]);
                         }, $this->format);
@@ -702,23 +704,6 @@ class Select2 extends Collection
         $this->items = $this->toArray();
 
         return parent::toJson($options);
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $return = [
-            'results' => $this->no_select ? array_merge([['id' => '', 'text' => $this->no_select]],
-                $this->all()) : $this->all(),
-        ];
-
-        if ($this->pagination && $this->_paginate_current !== $this->_paginate_total && count($return['results'])) {
-            $return['pagination'] = ['more' => true];
-        }
-
-        return $return;
     }
 
     /**

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Admin\Commands;
 
-use Admin\Delegates\Tab;
-use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin\Delegates\Card;
 use Admin\Delegates\Form;
 use Admin\Delegates\ModelInfoTable;
 use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
+use Admin\Delegates\Tab;
 use Admin\Page;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -60,7 +58,7 @@ class AdminControllerCommand extends Command
             $resource = true;
         }
 
-        if (! str_ends_with($name, 'Controller')) {
+        if (!str_ends_with($name, 'Controller')) {
             $name .= 'Controller';
         }
 

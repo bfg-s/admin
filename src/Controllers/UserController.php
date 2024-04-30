@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
-use Admin\Components\Small\DivComponent;
-use Admin\Components\TimelineComponent;
-use Admin\Delegates\Modal;
-use Admin\Delegates\Row;
-use Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Admin\Respond;
 use Admin\Components\ModelInfoTableComponent;
 use Admin\Components\TabContentComponent;
+use Admin\Components\TimelineComponent;
 use Admin\Delegates\Buttons;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
 use Admin\Delegates\Column;
 use Admin\Delegates\Form;
+use Admin\Delegates\Modal;
+use Admin\Delegates\Row;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\Tab;
 use Admin\Models\AdminLog;
 use Admin\Models\AdminUser;
 use Admin\Page;
+use Admin\Respond;
+use Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -72,7 +72,6 @@ class UserController extends Controller
         $password = $this->modelInput('password');
 
         if (Hash::check($password, admin()->password)) {
-
             admin()->update([
                 'two_factor_secret' => null,
                 'two_factor_confirmed_at' => null,
@@ -80,7 +79,6 @@ class UserController extends Controller
 
             $respond->toast_success('2fa is success disable!');
             $respond->reload();
-
         } else {
             $respond->toast_error('Wrong password!');
         }
@@ -120,24 +118,21 @@ class UserController extends Controller
     }
 
     /**
-     * @param  Request  $request
      * @param  Respond  $respond
-     * @return Respond|void
+     * @return Respond
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
      */
-    public function twofaEnable(Request $request, Respond $respond)
+    public function twofaEnable(Respond $respond)
     {
         $otp = $this->modelInput('otp');
         $secret = $this->modelInput('secret');
 
         if ($otp && $secret) {
-
             $google2fa = new Google2FA();
 
             if ($google2fa->verify($otp, $secret)) {
-
                 admin()->update([
                     'two_factor_secret' => $secret,
                     'two_factor_confirmed_at' => now(),
@@ -300,9 +295,10 @@ class UserController extends Controller
                                     $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                                         ->groupDataByAt('created_at')
                                         ->withCollection($logTitles, function ($title) {
-                                            return $this->chart_js->eachPoint($title, static function ($c) use ($title) {
-                                                return $c->where('title', $title)->count();
-                                            });
+                                            return $this->chart_js->eachPoint($title,
+                                                static function ($c) use ($title) {
+                                                    return $c->where('title', $title)->count();
+                                                });
                                         })->miniChart();
                                 }),
                         )
@@ -342,7 +338,7 @@ class UserController extends Controller
             $timeline->set_title(function (AdminLog $log) {
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             }),
-            $timeline->set_icon(fn (AdminLog $log) => $log->icon),
+            $timeline->set_icon(fn(AdminLog $log) => $log->icon),
             $timeline->set_body(function (TimelineComponent $timelineComponent, AdminLog $log) {
                 return ModelInfoTableComponent::create()->model($log)->use(function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();
@@ -391,7 +387,7 @@ class UserController extends Controller
 
     /**
      * @param  Respond  $respond
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function logout(Respond $respond)
     {

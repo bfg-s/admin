@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Admin\Traits;
 
-use Admin\Controllers\SettingsController;
-use Closure;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
+use Admin\Admin;
 use Admin\Controllers\AdministratorsController;
 use Admin\Controllers\MenuController;
 use Admin\Controllers\PermissionController;
 use Admin\Controllers\RolesController;
+use Admin\Controllers\SettingsController;
 use Admin\Core\NavGroup;
 use Admin\Core\NavItem;
-use Admin\Admin;
 use Admin\Models\AdminMenu;
 use Admin\Navigate;
+use Closure;
+use Illuminate\Support\Str;
 
 trait NavDefaultTools
 {
@@ -85,30 +84,6 @@ trait NavDefaultTools
             ->icon_ban();
     }
 
-    protected function injectRemoteMenu(AdminMenu $menu, NavGroup $rootGroup = null): void
-    {
-        $rootGroup = $rootGroup ?: $this;
-
-        if ($menu->type === 'item') {
-            $rootGroup->item($menu->name, $menu->route, Str::parseCallback($menu->action))
-                ->icon($menu->icon);
-        } else {
-            if ($menu->type === 'resource') {
-                $rootGroup->item($menu->name)
-                    ->resource($menu->route, $menu->action)
-                    ->icon($menu->icon)
-                    ->except(...($menu->except ?: []));
-            } else {
-                $rootGroup->group(
-                    $menu->name,
-                    $menu->route,
-                    fn(NavGroup $group) => $menu->child->map(fn(AdminMenu $lteMenu) => $this->injectRemoteMenu($lteMenu,
-                        $group))
-                )->icon($menu->icon);
-            }
-        }
-    }
-
     /**
      * @return void
      */
@@ -153,5 +128,29 @@ trait NavDefaultTools
                 call_user_func($call, $group);
             }
         })->icon_universal_access();
+    }
+
+    protected function injectRemoteMenu(AdminMenu $menu, NavGroup $rootGroup = null): void
+    {
+        $rootGroup = $rootGroup ?: $this;
+
+        if ($menu->type === 'item') {
+            $rootGroup->item($menu->name, $menu->route, Str::parseCallback($menu->action))
+                ->icon($menu->icon);
+        } else {
+            if ($menu->type === 'resource') {
+                $rootGroup->item($menu->name)
+                    ->resource($menu->route, $menu->action)
+                    ->icon($menu->icon)
+                    ->except(...($menu->except ?: []));
+            } else {
+                $rootGroup->group(
+                    $menu->name,
+                    $menu->route,
+                    fn(NavGroup $group) => $menu->child->map(fn(AdminMenu $lteMenu) => $this->injectRemoteMenu($lteMenu,
+                        $group))
+                )->icon($menu->icon);
+            }
+        }
     }
 }

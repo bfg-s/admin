@@ -11,8 +11,6 @@ use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Models\AdminRole;
 use Admin\Page;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class RolesController extends Controller
 {
@@ -27,11 +25,13 @@ class RolesController extends Controller
      * @param  SearchForm  $searchForm
      * @param  ModelTable  $modelTable
      * @return Page
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function index(Page $page, Card $card, SearchForm $searchForm, ModelTable $modelTable): Page
-    {
+    public function index(
+        Page $page,
+        Card $card,
+        SearchForm $searchForm,
+        ModelTable $modelTable
+    ): Page {
         return $page->card(
             $card->title('admin.list_of_roles'),
             $card->search_form(
@@ -42,8 +42,14 @@ class RolesController extends Controller
             ),
             $card->model_table(
                 $modelTable->id(),
-                $modelTable->col('admin.title', 'name')->sort()->to_export()->input_editable,
-                $modelTable->col('admin.slug', 'slug')->sort()->badge('success')->to_export(),
+                $modelTable->col('admin.title', 'name')
+                    ->sort()
+                    ->to_export()
+                    ->input_editable,
+                $modelTable->col('admin.slug', 'slug')
+                    ->sort()
+                    ->badge('success')
+                    ->to_export(),
                 $modelTable->at(),
             ),
         );
@@ -55,14 +61,21 @@ class RolesController extends Controller
      * @param  Form  $form
      * @return Page
      */
-    public function matrix(Page $page, Card $card, Form $form)
-    {
+    public function matrix(
+        Page $page,
+        Card $card,
+        Form $form
+    ): Page {
         return $page->card(
             $card->title(['admin.add_role', 'admin.edit_role']),
             $card->form(
                 $form->ifEdit()->info_id(),
-                $form->input('name', 'admin.title')->required()->duplication_how_slug('#input_slug'),
-                $form->input('slug', 'admin.slug')->required()->slugable(),
+                $form->input('name', 'admin.title')
+                    ->required()
+                    ->duplication_how_slug('#input_slug'),
+                $form->input('slug', 'admin.slug')
+                    ->required()
+                    ->slugable(),
                 $form->ifEdit()->info_updated_at(),
                 $form->ifEdit()->info_created_at(),
             ),
@@ -76,13 +89,17 @@ class RolesController extends Controller
      * @param  ModelInfoTable  $modelInfoTable
      * @return Page
      */
-    public function show(Page $page, Card $card, ModelInfoTable $modelInfoTable)
-    {
+    public function show(
+        Page $page,
+        Card $card,
+        ModelInfoTable $modelInfoTable
+    ): Page {
         return $page->card(
             $card->model_info_table(
                 $modelInfoTable->id(),
                 $modelInfoTable->row('admin.title', 'name'),
-                $modelInfoTable->row('admin.slug', 'slug')->badge('success'),
+                $modelInfoTable->row('admin.slug', 'slug')
+                    ->badge('success'),
                 $modelInfoTable->at(),
             )
         );

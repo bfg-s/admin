@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Middlewares;
 
+use Admin\Boot;
 use Admin\Facades\AdminFacade;
+use Admin\Models\AdminPermission;
+use Admin\Respond;
 use Cache;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
@@ -13,9 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Admin\Respond;
-use Admin\Boot;
-use Admin\Models\AdminPermission;
 use ReflectionException;
 use Route;
 use Symfony\Component\DomCrawler\Crawler;
@@ -44,9 +44,8 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (! static::$alreadyPost) {
-
-            static::$alreadyPost = ! ($request->isMethod('get') || $request->isMethod('head'));
+        if (!static::$alreadyPost) {
+            static::$alreadyPost = !($request->isMethod('get') || $request->isMethod('head'));
         }
 
         if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
@@ -89,7 +88,7 @@ class Authenticate
         }
 
         if (
-            ! Auth::guard('admin')->guest()
+            !Auth::guard('admin')->guest()
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.load_modal')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.toggle_dark')
@@ -98,7 +97,7 @@ class Authenticate
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.load_chart_js')
             && !\Illuminate\Support\Facades\Route::currentRouteNamed('admin.profile.logout')
             && config('admin.force-2fa')
-            && ! admin()->two_factor_confirmed_at
+            && !admin()->two_factor_confirmed_at
         ) {
             session()->flash(
                 'respond',
@@ -110,7 +109,6 @@ class Authenticate
         }
 
         if (static::$access) {
-
             foreach (AdminFacade::extensions() as $extension) {
                 $extension->config()->middleware($request);
             }
@@ -120,13 +118,11 @@ class Authenticate
         /** @var Response $response */
         $response = $next($request);
 
-        if (! static::$alreadyPost) {
-
+        if (!static::$alreadyPost) {
             admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'), 'fas fa-file-download');
         }
 
         if ($response instanceof Response) {
-
             foreach (AdminFacade::extensions() as $extension) {
                 $response = $extension->config()->response($response);
             }
@@ -157,7 +153,7 @@ class Authenticate
             }
 
             if (config('admin.lang_mode') && !str_starts_with($except, App::getLocale())) {
-                $except = App::getLocale(). '/' . $except;
+                $except = App::getLocale().'/'.$except;
             }
 
             if ($request->is($except)) {

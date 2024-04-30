@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Commands\Generators;
 
-use Illuminate\Console\Command;
-use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Admin;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
+use Bfg\Entity\Core\Entities\DocumentorEntity;
+use Illuminate\Console\Command;
 use ReflectionException;
 
 class ExtensionNavigatorHelperGenerator implements AdminHelpGeneratorInterface

@@ -11,16 +11,14 @@ class TabsComponent extends Component
     use Delegable;
 
     /**
-     * @var string
-     */
-    protected string $view = 'tabs';
-
-    /**
      * Count of tabs.
      * @var int
      */
     protected static int $counter = 0;
-
+    /**
+     * @var string
+     */
+    protected string $view = 'tabs';
     /**
      * @var array
      */
@@ -43,17 +41,6 @@ class TabsComponent extends Component
     public function __construct(...$explanations)
     {
         parent::__construct(...$explanations);
-    }
-
-    /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'left' => $this->left,
-            'tabs' => $this->tabs,
-        ];
     }
 
     /**
@@ -106,7 +93,7 @@ class TabsComponent extends Component
             $title = $content->getTitle;
             $icon = $content->getIcon;
             $active = $content->getActiveCondition;
-            if (! $this->leftSeted) {
+            if (!$this->leftSeted) {
                 $this->left = $content->getLeft;
                 $this->leftSeted = true;
             }
@@ -138,6 +125,17 @@ class TabsComponent extends Component
         static::$counter++;
 
         return $content;
+    }
+
+    /**
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'left' => $this->left,
+            'tabs' => $this->tabs,
+        ];
     }
 
     /**

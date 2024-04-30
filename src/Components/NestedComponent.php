@@ -114,24 +114,6 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param  string|null  $field
-     * @param  string|null  $order
-     * @return $this
-     */
-    public function orderBy(string $field = null, string $order = null): static
-    {
-        if ($field) {
-            $this->order_by_field = $field;
-        }
-
-        if ($order) {
-            $this->order_by_type = $order;
-        }
-
-        return $this;
-    }
-
-    /**
      * @param  string|callable  $field
      * @return $this
      */
@@ -273,6 +255,24 @@ class NestedComponent extends Component
         $this->model = $this->model->get();
 
         $this->attr('data-order-field', $this->order_by_field);
+    }
+
+    /**
+     * @param  string|null  $field
+     * @param  string|null  $order
+     * @return $this
+     */
+    public function orderBy(string $field = null, string $order = null): static
+    {
+        if ($field) {
+            $this->order_by_field = $field;
+        }
+
+        if ($order) {
+            $this->order_by_type = $order;
+        }
+
+        return $this;
     }
 
     /**

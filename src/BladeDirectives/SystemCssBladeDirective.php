@@ -18,7 +18,7 @@ class SystemCssBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildStyles(); ?>";
+        return "<?php echo ".static::class."::buildStyles(); ?>";
     }
 
     /**
@@ -31,21 +31,18 @@ class SystemCssBladeDirective
         $html = [];
 
         foreach ($extensions as $extension) {
-
             $html[] = $extension->config()->css();
         }
 
         foreach (static::$componentCss as $componentCs) {
-
             $html[] = $componentCs;
         }
 
         if ($themeCss = AdminFacade::getTheme()->css()) {
-
             $html[] = $themeCss;
         }
 
-        return "<style>" . implode("</style>\n<style>", $html) . '</style>';
+        return "<style>".implode("</style>\n<style>", $html).'</style>';
     }
 
     /**

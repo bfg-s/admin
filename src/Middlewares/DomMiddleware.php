@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\ViewErrorBag;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DomMiddleware
 {
@@ -30,8 +31,7 @@ class DomMiddleware
      */
     public static function setModelTableComponent(?ModelTableComponent $modelTableComponent): void
     {
-        if (! static::$modelTableComponent) {
-
+        if (!static::$modelTableComponent) {
             static::$modelTableComponent = $modelTableComponent;
         }
     }
@@ -64,7 +64,6 @@ class DomMiddleware
         }
 
         if ($response instanceof JsonResponse) {
-
             return $response;
         }
 
@@ -87,13 +86,12 @@ class DomMiddleware
 
     /**
      * @param  Request  $request
-     * @param  Response  $response
+     * @param  Response|BinaryFileResponse  $response
      * @return $this
-     * @throws Exception
      */
-    protected function setContent(Request $request, Response $response)
+    protected function setContent(Request $request, Response|BinaryFileResponse $response)
     {
-        if ($request->pjax() && $request->header('X-PJAX-CONTAINER')) {
+        if ($request->pjax() && $request->header('X-PJAX-CONTAINER') && $response instanceof Response) {
             $html = new Crawler($response->getContent());
 
             $container_html = $html->filter($request->header('X-PJAX-CONTAINER'))->eq(0);
@@ -122,27 +120,14 @@ class DomMiddleware
     protected function createTagWatcher(Crawler $html): static
     {
         foreach (UpdateWithPjaxBladeDirective::$_lives as $life) {
-
-//            SystemJsBladeDirective::addComponentJs(
-//                "$(\"[data-update-with-pjax='{$life}']\").html(('"
-//                . json_encode(['html' => $html->filter("[data-update-with-pjax='{$life}']")->eq(0)->html()])
-//                . "').html);"
-//            );
-
-//            SystemJsBladeDirective::addComponentJs(
-//                "$(\"[data-update-with-pjax='{$life}']\").html("
-//                . json_encode($html->filter("[data-update-with-pjax='{$life}']")->eq(0)->html())
-//                . ").html);"
-//            );
-
             SystemJsBladeDirective::addComponentJs(
                 "exec("
-                . json_encode([
+                .json_encode([
                     'html' => [
                         "[data-update-with-pjax='{$life}']",
                         $html->filter("[data-update-with-pjax='{$life}']")->eq(0)->html()
                     ]
-                ]) . ");"
+                ]).");"
             );
         }
 
@@ -175,7 +160,9 @@ class DomMiddleware
      */
     protected function setUriHeader($response, Request $request)
     {
-        $response->header('X-PJAX-URL', $request->getRequestUri());
+        if (method_exists($response, 'header')) {
+            $response->header('X-PJAX-URL', $request->getRequestUri());
+        }
 
         return $this;
     }

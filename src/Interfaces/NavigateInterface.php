@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Admin\Interfaces;
 
-use Closure;
 use Admin\Core\NavGroup;
 use Admin\Core\NavItem;
 use Admin\Navigate;
+use Closure;
 
 interface NavigateInterface
 {

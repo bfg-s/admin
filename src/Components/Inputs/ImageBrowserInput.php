@@ -7,6 +7,7 @@ namespace Admin\Components\Inputs;
 use Admin\Components\FormGroupComponent;
 use Admin\Components\Inputs\Vue\ImageBrowserVue;
 use Illuminate\View\View;
+use Throwable;
 
 class ImageBrowserInput extends FormGroupComponent
 {
@@ -27,7 +28,7 @@ class ImageBrowserInput extends FormGroupComponent
 
     /**
      * @return View
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function field(): string
     {

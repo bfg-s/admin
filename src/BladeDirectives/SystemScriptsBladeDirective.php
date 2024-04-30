@@ -14,7 +14,7 @@ class SystemScriptsBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildScripts(); ?>";
+        return "<?php echo ".static::class."::buildScripts(); ?>";
     }
 
     /**
@@ -29,14 +29,11 @@ class SystemScriptsBladeDirective
         $scripts = $theme->getFirstScripts();
 
         foreach ($extensions as $extension) {
-
             $scripts = array_merge($scripts, $extension->config()->getScripts());
         }
 
         foreach (Component::$components as $component) {
-
             if (method_exists($component, 'getScripts')) {
-
                 $scripts = array_merge($scripts, $component::getScripts());
             }
         }
@@ -46,9 +43,10 @@ class SystemScriptsBladeDirective
         $scripts[] = 'admin/js/app.js';
 
         return implode("\n", array_map(
-            fn (string $script) => "<script type=\"text/javascript\" src=\""
-                . (str_starts_with($script, 'https://') || str_starts_with($script, 'http://') ? $script : asset($script))
-                . "\"></script>",
+            fn(string $script) => "<script type=\"text/javascript\" src=\""
+                .(str_starts_with($script, 'https://') || str_starts_with($script,
+                    'http://') ? $script : asset($script))
+                ."\"></script>",
             $scripts
         ));
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\Requests;
 
 use Admin\Facades\AdminFacade;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -20,13 +21,13 @@ class SaveImageOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return ! AdminFacade::guest();
+        return !AdminFacade::guest();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

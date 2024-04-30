@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
+use Admin\Models\AdminFileStorage;
 use DB;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
-use Admin\Models\AdminFileStorage;
 use Intervention\Image\ImageManager;
 
 class ModelSaver
@@ -133,8 +133,10 @@ class ModelSaver
             } else {
                 return $this->create_model($data, $add);
             }
-        } else if ($data || $add) {
-            return $this->create_model($data, $add);
+        } else {
+            if ($data || $add) {
+                return $this->create_model($data, $add);
+            }
         }
         return false;
     }
@@ -158,19 +160,21 @@ class ModelSaver
                     }
                     $image->save(public_path($data[$key]));
                 }
-            } else if (is_array($datum) && isset($datum[0]) && $datum[0] instanceof UploadedFile) {
-                foreach ($datum as $keyData => $item) {
-                    $data[$key][$keyData] = AdminFileStorage::makeFile($item);
-                    if (isset($this->imageModifiers[$key])) {
-                        $image = ImageManager::imagick()->read(public_path($data[$key][$keyData]));
-                        foreach ($this->imageModifiers[$key] as $imageModifier) {
-                            $image->{$imageModifier[0]}(...$imageModifier[1]);
-                        }
-                        $image->save(public_path($data[$key][$keyData]));
-                    }
-                }
             } else {
-                $data[$key] = $datum;
+                if (is_array($datum) && isset($datum[0]) && $datum[0] instanceof UploadedFile) {
+                    foreach ($datum as $keyData => $item) {
+                        $data[$key][$keyData] = AdminFileStorage::makeFile($item);
+                        if (isset($this->imageModifiers[$key])) {
+                            $image = ImageManager::imagick()->read(public_path($data[$key][$keyData]));
+                            foreach ($this->imageModifiers[$key] as $imageModifier) {
+                                $image->{$imageModifier[0]}(...$imageModifier[1]);
+                            }
+                            $image->save(public_path($data[$key][$keyData]));
+                        }
+                    }
+                } else {
+                    $data[$key] = $datum;
+                }
             }
         }
         $key = $this->getModelKeyName();
@@ -328,7 +332,6 @@ class ModelSaver
                             if ($fk != 0) {
                                 $param = collect($param)->collapse()->values()->toArray();
                             } else {
-
                                 $param = collect($param)->filter(static function ($i) {
                                     return !isset($i[static::DELETE_FIELD]);
                                 })->map(static function ($i) {
@@ -341,7 +344,6 @@ class ModelSaver
 
                         $builder->sync($param);
                     } elseif ($builder instanceof HasMany || $builder instanceof MorphMany || $builder instanceof MorphToMany) {
-
                         if (is_array($param) && isset($param[array_key_first($param)]) && is_array($param[array_key_first($param)])) {
                             $param = collect($param);
                             $params_with_id = $param->where('id');
@@ -370,6 +372,57 @@ class ModelSaver
         }
 
         return $result;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  mixed  ...$params
+     * @return array
+     */
+    protected function call_on(string $name, ...$params): array
+    {
+        $events = static::$$name;
+        $model = $this->getModel();
+        $class = $model ? get_class($model) : false;
+
+        $result = [];
+
+        if ($class && isset($events[$class])) {
+            foreach ($events[$class] as $item) {
+                $r = call_user_func_array($item, $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        if (
+            $this->eventsObject
+            && $model
+            && method_exists($this->eventsObject, $name)
+            && property_exists($this->eventsObject, 'model')
+        ) {
+            $controllerModel = $this->eventsObject::$model;
+            if ($controllerModel == $class) {
+                $r = call_user_func_array([$this->eventsObject, $name], $params);
+                if (is_array($r) && count($r)) {
+                    $result = array_merge_recursive($result, $r);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $src
+     * @return $this
+     */
+    public function setSrc($src): static
+    {
+        $this->src = $src;
+
+        return $this;
     }
 
     /**
@@ -478,57 +531,6 @@ class ModelSaver
         } else {
             return $this->model;
         }
-    }
-
-    /**
-     * @param  string  $name
-     * @param  mixed  ...$params
-     * @return array
-     */
-    protected function call_on(string $name, ...$params): array
-    {
-        $events = static::$$name;
-        $model = $this->getModel();
-        $class = $model ? get_class($model) : false;
-
-        $result = [];
-
-        if ($class && isset($events[$class])) {
-            foreach ($events[$class] as $item) {
-                $r = call_user_func_array($item, $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        if (
-            $this->eventsObject
-            && $model
-            && method_exists($this->eventsObject, $name)
-            && property_exists($this->eventsObject, 'model')
-        ) {
-            $controllerModel = $this->eventsObject::$model;
-            if ($controllerModel == $class) {
-                $r = call_user_func_array([$this->eventsObject, $name], $params);
-                if (is_array($r) && count($r)) {
-                    $result = array_merge_recursive($result, $r);
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $src
-     * @return $this
-     */
-    public function setSrc($src): static
-    {
-        $this->src = $src;
-
-        return $this;
     }
 
     /**

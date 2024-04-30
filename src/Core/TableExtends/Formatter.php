@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Admin\Core\TableExtends;
 
-use Admin\Components\Small\AComponent;
-use Admin\Components\Small\IComponent;
+use Admin\Models\AdminPermission;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Eloquent\Model;
-use Admin\Models\AdminPermission;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -317,8 +315,11 @@ class Formatter
      * @param  Model|array|null  $model
      * @return array|Application|Translator|string|null
      */
-    public function to_lang($value = null, array $props = [], Model|array $model = null): array|string|Translator|Application|null
-    {
+    public function to_lang(
+        $value = null,
+        array $props = [],
+        Model|array $model = null
+    ): array|string|Translator|Application|null {
         return $model ? tag_replace(__($value, $props), $model) : __($value, $props);
     }
 
@@ -451,7 +452,6 @@ class Formatter
     {
         if ($value) {
             if (is_string($value)) {
-
                 $result = json_decode(
                     htmlspecialchars_decode($value), true
                 );

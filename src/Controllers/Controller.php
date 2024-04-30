@@ -6,15 +6,16 @@ namespace Admin\Controllers;
 
 use Admin\Components\CardComponent;
 use Admin\Components\Component;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
-use Admin\Respond;
 use Admin\Controllers\Traits\DefaultControllerResourceMethodsTrait;
 use Admin\Core\Delegate;
 use Admin\Exceptions\NotFoundExplainForControllerException;
 use Admin\Explanation;
 use Admin\Page;
+use Admin\Respond;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 use function redirect;
 
@@ -67,6 +68,66 @@ class Controller extends BaseController
         if (!Component::hasComponentStatic($name)) {
             Component::$components[$name] = $class;
         }
+    }
+
+    public static function getHelpMethodList()
+    {
+        $result = self::$explanation_list;
+        foreach ($result as $key => $extension) {
+            $result[$key.'_by_request'] = $extension;
+            $result[$key.'_by_default'] = $extension;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  string  $key
+     * @param  mixed  $rule
+     * @return void
+     */
+    public static function setGlobalRule(string $key, mixed $rule): void
+    {
+        if (is_string($rule) && isset(static::$rules[$key])) {
+            if (!in_array($rule, static::$rules[$key])) {
+                static::$rules[$key][] = $rule;
+            }
+        } else {
+            static::$rules[$key][] = $rule;
+        }
+    }
+
+    /**
+     * @param  string  $key
+     * @param  mixed  $rule
+     * @param  string|null  $message
+     * @return void
+     */
+    public static function setGlobalRuleMessage(string $key, mixed $rule, ?string $message): void
+    {
+        if ($message && is_string($rule)) {
+            static::$rule_messages["{$key}.{$rule}"] = $message;
+        }
+    }
+
+    /**
+     * @param  string  $path
+     * @param  string  $name
+     * @param  array  $attributes
+     * @return void
+     */
+    public static function addImageModifier(string $path, string $name, array $attributes = []): void
+    {
+        static::$imageModifiers[$path][] = [$name, $attributes];
+    }
+
+    /**
+     * @param  string  $fieldName
+     * @return void
+     */
+    public static function addCryptField(string $fieldName): void
+    {
+        static::$crypt_fields[] = $fieldName;
     }
 
     /**
@@ -217,7 +278,7 @@ class Controller extends BaseController
     /**
      * @param  string  $path
      * @param $default
-     * @return array|Application|\Illuminate\Foundation\Application|\Illuminate\Http\Request|mixed|string|null
+     * @return array|Application|\Illuminate\Foundation\Application|Request|mixed|string|null
      */
     public function modelInput(string $path, $default = null): mixed
     {
@@ -228,66 +289,5 @@ class Controller extends BaseController
         }
 
         return request($path, $default);
-    }
-
-    public static function getHelpMethodList()
-    {
-        $result = self::$explanation_list;
-        foreach ($result as $key => $extension) {
-            $result[$key.'_by_request'] = $extension;
-            $result[$key.'_by_default'] = $extension;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  string  $key
-     * @param  mixed  $rule
-     * @return void
-     */
-    public static function setGlobalRule(string $key, mixed $rule): void
-    {
-        if (is_string($rule) && isset(static::$rules[$key])) {
-            if (! in_array($rule, static::$rules[$key])) {
-                static::$rules[$key][] = $rule;
-            }
-        } else {
-            static::$rules[$key][] = $rule;
-        }
-    }
-
-    /**
-     * @param  string  $key
-     * @param  mixed  $rule
-     * @param  string|null  $message
-     * @return void
-     */
-    public static function setGlobalRuleMessage(string $key, mixed $rule, ?string $message): void
-    {
-        if ($message && is_string($rule)) {
-
-            static::$rule_messages["{$key}.{$rule}"] = $message;
-        }
-    }
-
-    /**
-     * @param  string  $path
-     * @param  string  $name
-     * @param  array  $attributes
-     * @return void
-     */
-    public static function addImageModifier(string $path, string $name, array $attributes = []): void
-    {
-        static::$imageModifiers[$path][] = [$name, $attributes];
-    }
-
-    /**
-     * @param  string  $fieldName
-     * @return void
-     */
-    public static function addCryptField(string $fieldName): void
-    {
-        static::$crypt_fields[] = $fieldName;
     }
 }

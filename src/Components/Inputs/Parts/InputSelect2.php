@@ -48,7 +48,7 @@ class InputSelect2 extends Component
     /**
      * @var mixed|null
      */
-    protected mixed $multiple  = null;
+    protected mixed $multiple = null;
 
     /**
      * @param $options
@@ -59,40 +59,6 @@ class InputSelect2 extends Component
         parent::__construct($delegates);
 
         $this->options = $options;
-    }
-
-    /**
-     * Add options from array.
-     *
-     * @param  array  $data
-     * @param  null  $select
-     * @return $this
-     */
-    public function options($data = [], $select = null)
-    {
-        if ($select instanceof Collection) {
-            $select = $select->pluck('id');
-        }
-
-        if ($select instanceof Arrayable) {
-            $select = $select->toArray();
-        }
-
-        foreach ($data as $key => $val) {
-            $this->optionsPrint[(string) $key] = $val;
-
-            if (is_string($key) || is_numeric($key)) {
-                if (is_array($select) && (in_array($key, $select))) {
-                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
-                } elseif ($this->paramEq($select) === $this->paramEq($key)) {
-                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
-                } elseif ($this->paramEq($this->value) === $this->paramEq($key)) {
-                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
-                }
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -135,30 +101,6 @@ class InputSelect2 extends Component
         return $this;
     }
 
-    protected function viewData(): array
-    {
-        return [
-            'options' => $this->optionsPrint,
-            'name' => $this->name,
-            'id' => $this->id,
-            'hasBug' => $this->hasBug,
-            'multiple' => $this->multiple,
-        ];
-    }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    protected function paramEq($value): string
-    {
-        if (is_array($value)) {
-            $value = json_encode($value);
-        }
-
-        return (string) $value;
-    }
-
     /**
      * @param $value
      * @return $this
@@ -178,6 +120,64 @@ class InputSelect2 extends Component
         $this->options($this->options, $this->value);
 
         return $this;
+    }
+
+    /**
+     * Add options from array.
+     *
+     * @param  array  $data
+     * @param  null  $select
+     * @return $this
+     */
+    public function options($data = [], $select = null)
+    {
+        if ($select instanceof Collection) {
+            $select = $select->pluck('id');
+        }
+
+        if ($select instanceof Arrayable) {
+            $select = $select->toArray();
+        }
+
+        foreach ($data as $key => $val) {
+            $this->optionsPrint[(string) $key] = $val;
+
+            if (is_string($key) || is_numeric($key)) {
+                if (is_array($select) && (in_array($key, $select))) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                } elseif ($this->paramEq($select) === $this->paramEq($key)) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                } elseif ($this->paramEq($this->value) === $this->paramEq($key)) {
+                    $this->optionsPrint[(string) $key] = [$this->optionsPrint[(string) $key]];
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function paramEq($value): string
+    {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        return (string) $value;
+    }
+
+    protected function viewData(): array
+    {
+        return [
+            'options' => $this->optionsPrint,
+            'name' => $this->name,
+            'id' => $this->id,
+            'hasBug' => $this->hasBug,
+            'multiple' => $this->multiple,
+        ];
     }
 
     /**

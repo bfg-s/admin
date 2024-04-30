@@ -18,7 +18,7 @@ class SystemJsVariablesBladeDirective
      */
     public static function directive(): string
     {
-        return "<?php echo " . static::class . "::buildScripts(); ?>";
+        return "<?php echo ".static::class."::buildScripts(); ?>";
     }
 
     /**
@@ -32,12 +32,12 @@ class SystemJsVariablesBladeDirective
         ];
 
         $separator = "</script>"
-            . "\n"
-            . "<script>";
+            ."\n"
+            ."<script>";
 
         return "<script>"
-            . implode($separator, $html)
-            . "</script>";
+            .implode($separator, $html)
+            ."</script>";
     }
 
     protected static function html()

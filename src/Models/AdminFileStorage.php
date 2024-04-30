@@ -176,6 +176,24 @@ class AdminFileStorage extends Model
     }
 
     /**
+     * @param  UploadedFile  $file
+     * @param  string|null  $storage
+     * @return bool
+     */
+    public function hasFile(UploadedFile $file, string $storage = null)
+    {
+        if (!$storage) {
+            $storage = config('admin.upload.disk');
+        }
+
+        return $this->where('original_name', $file->getClientOriginalName())
+            ->where('mime_type', $file->getMimeType())
+            ->where('size', $file->getSize())
+            ->where('driver', $storage)
+            ->exists();
+    }
+
+    /**
      * @return void
      */
     public function dropFile(): void
@@ -215,24 +233,6 @@ class AdminFileStorage extends Model
     public function scopeActive($query)
     {
         return $query->whereActive(1);
-    }
-
-    /**
-     * @param  UploadedFile  $file
-     * @param  string|null  $storage
-     * @return bool
-     */
-    public function hasFile(UploadedFile $file, string $storage = null)
-    {
-        if (!$storage) {
-            $storage = config('admin.upload.disk');
-        }
-
-        return $this->where('original_name', $file->getClientOriginalName())
-            ->where('mime_type', $file->getMimeType())
-            ->where('size', $file->getSize())
-            ->where('driver', $storage)
-            ->exists();
     }
 
     /**

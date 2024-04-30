@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 use Admin\Components\Inputs\Parts\InputFormGroupComponent;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ViewErrorBag;
 use Admin\Page;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\RulesBackTrait;
 use Admin\Traits\RulesFrontTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\ViewErrorBag;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 abstract class FormGroupComponent extends Component
 {
@@ -21,55 +23,49 @@ abstract class FormGroupComponent extends Component
     use FontAwesome;
 
     /**
+     * @var int
+     */
+    protected static int $counter = 0;
+    /**
      * @var string|null
      */
     protected ?string $title = null;
-
     /**
      * @var string|null
      */
     protected ?string $name = null;
-
     /**
      * @var string|null
      */
     protected ?string $icon = 'fas fa-pencil-alt';
-
     /**
      * @var string|null
      */
     protected ?string $info = null;
-
     /**
      * @var int|null
      */
     protected ?int $label_width = 2;
-
     /**
      * @var bool
      */
     protected bool $vertical = false;
-
     /**
      * @var bool
      */
     protected bool $reversed = false;
-
     /**
      * @var Component|FormComponent|null
      */
     protected FormComponent|Component|null $parent_field = null;
-
     /**
      * @var Model
      */
     protected $model;
-
     /**
      * @var mixed
      */
     protected $value;
-
     /**
      * @var string|null
      */
@@ -78,66 +74,50 @@ abstract class FormGroupComponent extends Component
      * @var string|null
      */
     protected ?string $path = null;
-
     /**
      * @var bool
      */
     protected bool $has_bug = false;
-
     /**
      * @var ViewErrorBag
      */
     protected mixed $errors = null;
-
     /**
      * @var bool
      */
     protected bool $admin_controller = false;
-
     /**
      * @var string|null
      */
     protected ?string $controller;
-
     /**
      * @var string|null
      */
     protected ?string $method = null;
-
     /**
      * @var bool
      */
     protected $only_input = false;
-
     /**
      * @var callable
      */
     protected mixed $value_to = null;
-
     /**
      * @var Page
      */
     protected Page $page;
-
     /**
      * @var mixed|null
      */
     protected mixed $default = null;
-
     /**
      * @var array
      */
     protected array $fgs = [];
-
     /**
      * @var string
      */
     protected string $view = 'content-only';
-
-    /**
-     * @var int
-     */
-    protected static int $counter = 0;
 
     /**
      * FormGroup constructor.
@@ -184,33 +164,6 @@ abstract class FormGroupComponent extends Component
     }
 
     /**
-     * @param  string  $id
-     * @return $this
-     */
-    public function setId(string $id): static
-    {
-        $this->field_id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return void
-     */
-    protected function on_build(): void
-    {
-
-    }
-
-    /**
-     * @return void
-     */
-    public function mount(): void
-    {
-        $this->makeWrapper();
-    }
-
-    /**
      * @return $this
      */
     public function vertical(): static
@@ -229,9 +182,128 @@ abstract class FormGroupComponent extends Component
     }
 
     /**
+     * @param  string  $id
      * @return $this
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function setId(string $id): static
+    {
+        $this->field_id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return void
+     */
+    public function mount(): void
+    {
+        $this->makeWrapper();
+    }
+
+    /**
+     * Make wrapper for input.
+     * @return void
+     */
+    protected function makeWrapper(): void
+    {
+        $this->on_build();
+
+        if ($this->only_input) {
+            $this->value = $this->create_value();
+            if ($this->value_to) {
+                $this->value = call_user_func($this->value_to, $this->value, $this->model);
+            }
+            $this->appEnd(
+                $this->field()
+            )->appEnd(
+                $this->app_end_field()
+            );
+
+            return;
+        }
+
+        $fg = $this->createComponent(InputFormGroupComponent::class);
+
+        $group_width = 12 - $this->label_width;
+
+        $fg->setViewData([
+            'icon' => $this->icon,
+            'vertical' => $this->vertical,
+            'name' => $this->name,
+            'title' => $this->title,
+            'group_width' => $group_width,
+            'label_width' => $this->label_width,
+            'reversed' => $this->reversed,
+            'id' => $this->field_id,
+            'info' => $this->info,
+            'errors' => $this->errors,
+            'messages' => $this->errors->get($this->name),
+            'hasError' => $this->errors->has($this->name),
+        ]);
+
+        foreach ($this->fgs as $fgs) {
+            call_user_func($fgs, $fg);
+        }
+
+        $this->value = $this->create_value();
+
+        if ($this->value_to) {
+            $this->value = call_user_func($this->value_to, $this->value, $this->model);
+        }
+
+        $fg->appEnd(
+            $this->field()
+        )->appEnd(
+            $this->app_end_field()
+        );
+
+        $this->appEnd($fg);
+    }
+
+    /**
+     * @return void
+     */
+    protected function on_build(): void
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function create_value(): mixed
+    {
+        if ($this->value !== null) {
+            return $this->value;
+        }
+
+        $val = old($this->path);
+        if (!$val) {
+            $val = request($this->path) ?: null;
+        }
+        if (!$val && $this->model) {
+            $val = multi_dot_call($this->model, $this->path, false);
+        }
+
+        return $val !== null && $val !== '' ? $val : $this->default;
+    }
+
+    /**
+     * @return mixed
+     */
+    abstract public function field(): mixed;
+
+    /**
+     * @return string
+     */
+    protected function app_end_field(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return $this
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function queryable(): static
     {
@@ -285,18 +357,10 @@ abstract class FormGroupComponent extends Component
 
         $isArrayable = str_ends_with($this->get_name(), '[]');
 
-        $this->set_name($name . ($isArrayable ? '[]' : ''));
+        $this->set_name($name.($isArrayable ? '[]' : ''));
         $this->set_id('input_'.$this->convertBracketsToUnderscore($name).($isArrayable ? '_'.static::$counter++ : ''));
 
         return $this;
-    }
-
-    /**
-     * @return Component|null
-     */
-    public function getParent(): ?Component
-    {
-        return $this->parent_field;
     }
 
     /**
@@ -310,11 +374,49 @@ abstract class FormGroupComponent extends Component
         }
 
         $firstElement = array_shift($array);
-        $formattedElements = array_map(function($item) {
+        $formattedElements = array_map(function ($item) {
             return sprintf('[%s]', $item);
         }, $array);
 
-        return $firstElement . implode('', $formattedElements);
+        return $firstElement.implode('', $formattedElements);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_name(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param  string  $name
+     * @return $this
+     */
+    public function set_name(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function set_id($id): static
+    {
+        $this->field_id = Str::slug($id, '_');
+
+        return $this;
+    }
+
+    /**
+     * @return Component|null
+     */
+    public function getParent(): ?Component
+    {
+        return $this->parent_field;
     }
 
     /**
@@ -364,7 +466,6 @@ abstract class FormGroupComponent extends Component
     public function crypt(): static
     {
         if ($this->admin_controller) {
-
             $this->controller::addCryptField($this->name);
         }
 
@@ -535,39 +636,9 @@ abstract class FormGroupComponent extends Component
      * @param $id
      * @return $this
      */
-    public function set_id($id): static
-    {
-        $this->field_id = Str::slug($id, '_');
-
-        return $this;
-    }
-
-    /**
-     * @param $id
-     * @return $this
-     */
     public function force_set_id($id): static
     {
         $this->field_id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function get_name(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param  string  $name
-     * @return $this
-     */
-    public function set_name(string $name): static
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -608,98 +679,5 @@ abstract class FormGroupComponent extends Component
         $this->title = $title;
 
         return $this;
-    }
-
-    /**
-     * Make wrapper for input.
-     * @return void
-     */
-    protected function makeWrapper(): void
-    {
-        $this->on_build();
-
-        if ($this->only_input) {
-            $this->value = $this->create_value();
-            if ($this->value_to) {
-                $this->value = call_user_func($this->value_to, $this->value, $this->model);
-            }
-            $this->appEnd(
-                $this->field()
-            )->appEnd(
-                $this->app_end_field()
-            );
-
-            return;
-        }
-
-        $fg = $this->createComponent(InputFormGroupComponent::class);
-
-        $group_width = 12 - $this->label_width;
-
-        $fg->setViewData([
-            'icon' => $this->icon,
-            'vertical' => $this->vertical,
-            'name' => $this->name,
-            'title' => $this->title,
-            'group_width' => $group_width,
-            'label_width' => $this->label_width,
-            'reversed' => $this->reversed,
-            'id' => $this->field_id,
-            'info' => $this->info,
-            'errors' => $this->errors,
-            'messages' => $this->errors->get($this->name),
-            'hasError' => $this->errors->has($this->name),
-        ]);
-
-        foreach ($this->fgs as $fgs) {
-            call_user_func($fgs, $fg);
-        }
-
-        $this->value = $this->create_value();
-
-        if ($this->value_to) {
-            $this->value = call_user_func($this->value_to, $this->value, $this->model);
-        }
-
-        $fg->appEnd(
-            $this->field()
-        )->appEnd(
-            $this->app_end_field()
-        );
-
-        $this->appEnd($fg);
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function create_value(): mixed
-    {
-        if ($this->value !== null) {
-            return $this->value;
-        }
-
-        $val = old($this->path);
-        if (!$val) {
-            $val = request($this->path) ?: null;
-        }
-        if (!$val && $this->model) {
-            $val = multi_dot_call($this->model, $this->path, false);
-        }
-
-        return $val !== null && $val !== '' ? $val : $this->default;
-    }
-
-    /**
-     * @return mixed
-     */
-    abstract public function field(): mixed;
-
-    /**
-     * @return string
-     */
-    protected function app_end_field(): string
-    {
-        return '';
     }
 }

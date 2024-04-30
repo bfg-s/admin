@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Facades;
 
-use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 use Admin\Navigate;
+use Illuminate\Support\Facades\Facade as FacadeIlluminate;
 
 class NavigateFacade extends FacadeIlluminate
 {

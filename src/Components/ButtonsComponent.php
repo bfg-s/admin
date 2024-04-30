@@ -232,9 +232,9 @@ class ButtonsComponent extends Component
         string $link = null,
         string $title = null,
         string $message = null,
-        $key = null, array $add = []
+        $key = null,
+        array $add = []
     ): Buttons|ButtonComponent {
-
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -250,7 +250,8 @@ class ButtonsComponent extends Component
                 return new Buttons();
             }
 
-            $stay = $this->menu->isNotCurrent() ? (str_contains($link, '?') ? '&' : '?').'_after=stay&' . http_build_query($add) : '?' . http_build_query($add);
+            $stay = $this->menu->isNotCurrent() ? (str_contains($link,
+                    '?') ? '&' : '?').'_after=stay&'.http_build_query($add) : '?'.http_build_query($add);
 
             return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete')])->on_click('admin::delete_item', [
                 __(
@@ -287,7 +288,6 @@ class ButtonsComponent extends Component
         string $message = null,
         $key = null
     ): ButtonComponent|static {
-
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -299,7 +299,9 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->danger(['fas fa-trash-alt', $title ?? __('admin.delete_forever')])->on_click('admin::delete_item', [
+            return $this->danger([
+                'fas fa-trash-alt', $title ?? __('admin.delete_forever')
+            ])->on_click('admin::delete_item', [
                 __(
                     'admin.delete_forever_subject',
                     ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
@@ -325,7 +327,6 @@ class ButtonsComponent extends Component
         string $message = null,
         $key = null
     ): ButtonComponent|static {
-
         if (!$link && $this->model) {
             $key = $this->realModel()->getRouteKey();
 
@@ -337,7 +338,9 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->warning(['fas fa-trash-restore-alt', $title ?? __('admin.restore')])->on_click('admin::delete_item', [
+            return $this->warning([
+                'fas fa-trash-restore-alt', $title ?? __('admin.restore')
+            ])->on_click('admin::delete_item', [
                 __(
                     'admin.restore_subject',
                     ['subject' => strtoupper($message ?? $this->model->getRouteKeyName()).($key ? ":{$key}?" : '')]
@@ -408,6 +411,5 @@ class ButtonsComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

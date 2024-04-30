@@ -17,15 +17,21 @@ use ReflectionException;
 class SelectInput extends FormGroupComponent
 {
     /**
+     * @var mixed|null
+     */
+    public static mixed $json = null;
+    /**
+     * @var array
+     */
+    public static array $loadCallBacks = [];
+    /**
      * @var string|null
      */
     protected ?string $icon = 'fas fa-mouse-pointer';
-
     /**
      * @var array
      */
     protected array $options = [];
-
     /**
      * @var string[]
      */
@@ -33,51 +39,34 @@ class SelectInput extends FormGroupComponent
         'load' => 'select2::init',
         'theme' => 'bootstrap4',
     ];
-
     /**
      * @var mixed
      */
     protected mixed $load_subject = null;
-
     /**
      * @var string|null
      */
     protected ?string $load_format = null;
-
     /**
      * @var mixed|callable
      */
     protected mixed $load_where;
-
     /**
      * @var bool
      */
     protected bool $nullable = false;
-
     /**
      * @var bool
      */
     protected bool $multiple = false;
-
-    /**
-     * @var mixed|null
-     */
-    public static mixed $json = null;
-
     /**
      * @var string|null
      */
     protected ?string $orderBy = null;
-
     /**
      * @var string
      */
     protected string $orderType = 'ASC';
-
-    /**
-     * @var array
-     */
-    public static array $loadCallBacks = [];
 
     /**
      * @return mixed
@@ -103,28 +92,6 @@ class SelectInput extends FormGroupComponent
             ->makeOptions()
             ->setDatas($this->data)
             ->addClass($this->class);
-    }
-
-    /**
-     * @param  string  $field
-     * @param  string  $type
-     * @return $this
-     */
-    public function orderBy(string $field, string $type = 'ASC'): static
-    {
-        $this->orderBy = $field;
-        $this->orderType = $type;
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $field
-     * @return $this
-     */
-    public function orderByDesc(string $field): static
-    {
-        return $this->orderBy($field, 'DESC');
     }
 
     /**
@@ -198,6 +165,28 @@ class SelectInput extends FormGroupComponent
         if ($first_default && !$this->nullable) {
             $this->default(array_key_first($this->options));
         }
+
+        return $this;
+    }
+
+    /**
+     * @param  string  $field
+     * @return $this
+     */
+    public function orderByDesc(string $field): static
+    {
+        return $this->orderBy($field, 'DESC');
+    }
+
+    /**
+     * @param  string  $field
+     * @param  string  $type
+     * @return $this
+     */
+    public function orderBy(string $field, string $type = 'ASC'): static
+    {
+        $this->orderBy = $field;
+        $this->orderType = $type;
 
         return $this;
     }

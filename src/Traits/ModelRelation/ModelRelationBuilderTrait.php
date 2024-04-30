@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Admin\Traits\ModelRelation;
 
+use Admin\Components\ButtonsComponent;
 use Admin\Components\Component;
 use Admin\Components\LangComponent;
-use Admin\Components\ModelRelationContainerComponent;
-use Illuminate\Database\Eloquent\Model;
-use Admin\Components\ButtonsComponent;
 use Admin\Components\ModelRelationComponent;
+use Admin\Components\ModelRelationContainerComponent;
 use Admin\Components\ModelRelationContentComponent;
 use Admin\Core\ModelSaver;
 use Admin\Explanation;
+use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
 /**
@@ -26,7 +26,7 @@ trait ModelRelationBuilderTrait
      */
     protected function buildNestedTemplate(): void
     {
-        if (! $this->ordered) {
+        if (!$this->ordered) {
             $datas = $this->relation->get();
         } else {
             $datas = $this->relation->orderBy($this->ordered)->get();
@@ -39,7 +39,6 @@ trait ModelRelationBuilderTrait
 
         /** @var Model $item */
         foreach ($datas as $item) {
-
             $this->page->model($item);
             $this->model($item);
 
@@ -61,7 +60,6 @@ trait ModelRelationBuilderTrait
             ]);
 
             if ($this->ordered) {
-
                 $container->view('components.inputs.hidden', [
                     'name' => "{$nameStart}[{$this->ordered}]",
                     'value' => $item->{$this->ordered} ?: $i,
@@ -84,7 +82,6 @@ trait ModelRelationBuilderTrait
                 $del = $this->last_content->get_test_var('control_delete', [$item]);
 
                 if ($del || $this->last_content->hasControls()) {
-
                     if ($del) {
                         $buttonsDel = $this->createComponent(ButtonsComponent::class)
                             ->addCLass('control_relation');
@@ -158,11 +155,31 @@ trait ModelRelationBuilderTrait
         }
 
         $firstElement = array_shift($array);
-        $formattedElements = array_map(function($item) {
+        $formattedElements = array_map(function ($item) {
             return sprintf('[%s]', $item);
         }, $array);
 
-        return $firstElement . implode('', $formattedElements);
+        return $firstElement.implode('', $formattedElements);
+    }
+
+    /**
+     * @return void
+     */
+    protected function applyTemplate(): void
+    {
+        /**
+         * Required Force.
+         */
+        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
+    }
+
+    /**
+     * @param  mixed  ...$params
+     * @return mixed
+     */
+    protected function callEmptyTemplate(...$params): mixed
+    {
+        return call_user_func($this->on_empty, ...$params);
     }
 
     /**
@@ -191,7 +208,6 @@ trait ModelRelationBuilderTrait
         $container->model($emptyModel);
 
         if ($this->ordered) {
-
             $deepNames = $this->deepNames();
 
             $nameStart = $this->namesToString($deepNames);
@@ -217,7 +233,7 @@ trait ModelRelationBuilderTrait
         $container->appEnd($this->last_content);
 
         if (!$this->last_content->get_test_var('control_create')) {
-            return ;
+            return;
         }
         $buttons = $this->createComponent(ButtonsComponent::class);
         $buttons->warning(['fas fa-minus', __('admin.remove')])->on_click('admin::drop_relation_tpl');
@@ -240,25 +256,5 @@ trait ModelRelationBuilderTrait
 
         ModelRelationComponent::templateMode(false);
         LangComponent::templateMode(false);
-    }
-
-    /**
-     * @return void
-     */
-    protected function applyTemplate(): void
-    {
-        /**
-         * Required Force.
-         */
-        $this->last_content?->explainForce(Explanation::new($this->innerDelegates));
-    }
-
-    /**
-     * @param  mixed  ...$params
-     * @return mixed
-     */
-    protected function callEmptyTemplate(...$params): mixed
-    {
-        return call_user_func($this->on_empty, ...$params);
     }
 }

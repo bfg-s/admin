@@ -16,6 +16,5 @@ class GridRowComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

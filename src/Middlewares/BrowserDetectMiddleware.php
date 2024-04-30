@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Admin\Middlewares;
 
-use Admin\Facades\AdminFacade;
 use Admin\Models\AdminBrowser;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class BrowserDetectMiddleware
 {
@@ -31,12 +27,10 @@ class BrowserDetectMiddleware
     public function handle($request, Closure $next)
     {
         //dump($request->userAgent());
-        if (admin()->exists && $request->userAgent() && ! $request->ajax()) {
-
+        if (admin()->exists && $request->userAgent() && !$request->ajax()) {
             $result = getBrowserDetails($request->userAgent());
 
             if ($result['name'] !== 'Unknown') {
-
                 $id = $request->cookie('browser');
 
                 /** @var AdminBrowser $exists */
@@ -55,7 +49,7 @@ class BrowserDetectMiddleware
                     $exists = admin()->browsers()->create($data)->fresh();
                 }
 
-                if (! $exists->active) {
+                if (!$exists->active) {
                     Auth::guard('admin')->logout();
                     return redirect()->route('admin.home');
                 }

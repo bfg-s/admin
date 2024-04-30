@@ -7,54 +7,45 @@ namespace Admin\Components;
 class LangComponent extends Component
 {
     /**
-     * @var string
-     */
-    protected string $view = 'lang';
-
-    /**
-     * @var array|null
-     */
-    protected ?array $lang_list = null;
-
-    /**
-     * @var array
-     */
-    protected array $insideInputs = [];
-
-    /**
-     * @var string|null
-     */
-    protected ?string $name = null;
-
-    /**
-     * @var string|null
-     */
-    protected ?string $id = null;
-
-    /**
-     * @var bool
-     */
-    protected ?bool $verticalSet = null;
-
-    /**
-     * @var bool
-     */
-    protected ?bool $reversedSet = null;
-
-    /**
-     * @var int|null
-     */
-    protected ?int $label_width = null;
-
-    /**
      * @var int
      */
     protected static int $counter = 0;
-
     /**
      * @var bool
      */
     protected static bool $tplMode = false;
+    /**
+     * @var string
+     */
+    protected string $view = 'lang';
+    /**
+     * @var array|null
+     */
+    protected ?array $lang_list = null;
+    /**
+     * @var array
+     */
+    protected array $insideInputs = [];
+    /**
+     * @var string|null
+     */
+    protected ?string $name = null;
+    /**
+     * @var string|null
+     */
+    protected ?string $id = null;
+    /**
+     * @var bool
+     */
+    protected ?bool $verticalSet = null;
+    /**
+     * @var bool
+     */
+    protected ?bool $reversedSet = null;
+    /**
+     * @var int|null
+     */
+    protected ?int $label_width = null;
 
     /**
      * Lang constructor.
@@ -82,20 +73,18 @@ class LangComponent extends Component
     protected function mount(): void
     {
         foreach ($this->contents as $key => $inner_input) {
-
             if ($inner_input instanceof FormGroupComponent) {
-
                 foreach ($this->lang_list ?: config('admin.languages', []) as $lang) {
                     $input = clone $inner_input;
                     $input->only_input();
-                    if (! $this->name) {
+                    if (!$this->name) {
                         $this->name = $input->get_title();
                     }
-                    if (! $this->id) {
+                    if (!$this->id) {
                         $this->id = $input->get_id()
-                            . '_lang'
-                            . self::$counter++
-                            . (static::$tplMode ? '{__val__}' : '');
+                            .'_lang'
+                            .self::$counter++
+                            .(static::$tplMode ? '{__val__}' : '');
                     }
                     if ($this->verticalSet === null) {
                         $this->verticalSet = $input->get_vertical();

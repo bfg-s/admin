@@ -10,22 +10,16 @@ use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
-use Admin\Middlewares\BrowserDetectMiddleware;
-use Admin\Requests\CalendarEventRequest;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
-use Admin\Requests\DropEventTemplateRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\LoadSelect2Request;
 use Admin\Requests\NestableSaveRequest;
-use Admin\Requests\NewEventTemplateRequest;
-use Admin\Requests\NotificationSettingsRequest;
 use Admin\Requests\SaveImageOrderRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
 use Admin\Respond;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
@@ -33,7 +27,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
+use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
+use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
@@ -63,7 +64,6 @@ class SystemController extends Controller
         $result_areas = [];
 
         foreach (LiveComponent::$list as $area => $item) {
-
             $content = $item->render();
 
             $pattern = '/<div[^>]*>(.*)<\/div>\s*<\/div>/s';
@@ -79,6 +79,23 @@ class SystemController extends Controller
         }
 
         return $result_areas;
+    }
+
+    /**
+     * @return void
+     */
+    protected function refererEmit(): void
+    {
+        $refUrl = str_replace(
+            '/'.App::getLocale(), '/en',
+            Request::server('HTTP_REFERER')
+        );
+
+        Route::dispatch(
+            Request::create(
+                $refUrl
+            )
+        )->getContent();
     }
 
     /**
@@ -118,11 +135,14 @@ class SystemController extends Controller
 
     /**
      * @param  ExportExcelRequest  $request
-     * @return array|BinaryFileResponse
-     * @throws Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @return mixed
+     * @throws IOException
+     * @throws InvalidArgumentException
+     * @throws Throwable
+     * @throws UnsupportedTypeException
+     * @throws WriterNotOpenedException
      */
-    public function export_excel(ExportExcelRequest $request): \Symfony\Component\HttpFoundation\BinaryFileResponse|array
+    public function export_excel(ExportExcelRequest $request)
     {
         if (!check_referer()) {
             return [];
@@ -132,9 +152,10 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        $prepared = new PrepareExport($request->model, $request->ids ?: [], $request->order, $request->order_type, $request->table);
+        $prepared = new PrepareExport($request->model, $request->ids ?: [], $request->order, $request->order_type,
+            $request->table);
 
-        $fileName = class_basename($request->model) . '_' . now()->format('Y_m_d_His').'.xlsx';
+        $fileName = class_basename($request->model).'_'.now()->format('Y_m_d_His').'.xlsx';
 
         admin_log_warning('Export', "To [$fileName] excel", 'far fa-file-excel');
 
@@ -155,7 +176,8 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        $prepared = new PrepareExport($request->model, $request->ids, $request->order, $request->order_type, $request->table);
+        $prepared = new PrepareExport($request->model, $request->ids ?: [], $request->order, $request->order_type,
+            $request->table);
 
         $fileName = class_basename($request->model).'_'.now()->format('Y_m_d_His').'.csv';
 
@@ -209,10 +231,12 @@ class SystemController extends Controller
             $find->{$request->field_name} = $request->val;
 
             if ($find->save()) {
-                admin_log_warning('Save custom field', "[$request->field_name] from [$oldValue] to [$request->val]", 'fas fa-save');
+                admin_log_warning('Save custom field', "[$request->field_name] from [$oldValue] to [$request->val]",
+                    'fas fa-save');
                 $respond->put('alert::success', __('admin.saved_successfully'))->reload();
             } else {
-                admin_log_danger('Decline custom save field', "[$request->field_name] from [$oldValue] to [$request->val]", 'fas fa-save');
+                admin_log_danger('Decline custom save field',
+                    "[$request->field_name] from [$oldValue] to [$request->val]", 'fas fa-save');
                 $respond->put('alert::error', __('admin.unknown_error'));
             }
         }
@@ -234,7 +258,6 @@ class SystemController extends Controller
         $this->refererEmit();
 
         if (isset(static::$callbacks[$request->key])) {
-
             admin_log_warning('Call callback', (string) $request->key, 'fas fa-balance-scale-right');
 
             app()->call(static::$callbacks[$request->key], $request->parameters);
@@ -266,10 +289,12 @@ class SystemController extends Controller
                 }
             }
             if ($success) {
-                admin_log_warning('Delete', "[$request->class] for ids [".json_encode($request->ids)."]", 'fas fa-trash-alt');
+                admin_log_warning('Delete', "[$request->class] for ids [".json_encode($request->ids)."]",
+                    'fas fa-trash-alt');
                 $respond->put('alert::success', __('admin.successfully_deleted'))->reload();
             } else {
-                admin_log_danger('Error delete', "[$request->class] for ids [".json_encode($request->ids)."]", 'fas fa-trash-alt');
+                admin_log_danger('Error delete', "[$request->class] for ids [".json_encode($request->ids)."]",
+                    'fas fa-trash-alt');
                 $respond->put('alert::error', __('admin.unknown_error'));
             }
         } else {
@@ -295,8 +320,10 @@ class SystemController extends Controller
 
         if (class_exists($request->model)) {
             DB::transaction(function () use ($request) {
-                foreach ($this->nestable_collapse($request->data, $request->depth, $request->parent_field, null, $request->order_field) as $item) {
-
+                foreach (
+                    $this->nestable_collapse($request->data, $request->depth, $request->parent_field, null,
+                        $request->order_field) as $item
+                ) {
                     if ($model = $request->model::where('id', $item['id'])->first()) {
                         $model->update($item['data']);
                     }
@@ -358,7 +385,6 @@ class SystemController extends Controller
         $this->refererEmit();
 
         if (isset(ChartJsComponent::$loadCallBacks[$request->name])) {
-
             call_user_func(...ChartJsComponent::$loadCallBacks[$request->name]);
 
             return ChartJsComponent::$loadCallBacks[$request->name][1]->getViewData();
@@ -372,7 +398,6 @@ class SystemController extends Controller
         $this->refererEmit();
 
         if (isset(SelectInput::$loadCallBacks[$request->_select2_name])) {
-
             return SelectInput::$loadCallBacks[$request->_select2_name]->toJson(JSON_UNESCAPED_UNICODE);
         }
 
@@ -382,9 +407,9 @@ class SystemController extends Controller
     /**
      * @param  TranslateRequest  $request
      * @return string|null
-     * @throws \Stichoza\GoogleTranslate\Exceptions\LargeTextException
-     * @throws \Stichoza\GoogleTranslate\Exceptions\RateLimitException
-     * @throws \Stichoza\GoogleTranslate\Exceptions\TranslationRequestException
+     * @throws LargeTextException
+     * @throws RateLimitException
+     * @throws TranslationRequestException
      */
     public function translate(TranslateRequest $request): ?string
     {
@@ -403,7 +428,6 @@ class SystemController extends Controller
         $model = $request->model::find($request->id);
 
         if ($model) {
-
             $model->update([
                 $request->field => $request->fileList
             ]);
@@ -417,22 +441,5 @@ class SystemController extends Controller
     public function deleteOrderedImage()
     {
         return response()->json(['success' => true]);
-    }
-
-    /**
-     * @return void
-     */
-    protected function refererEmit(): void
-    {
-        $refUrl = str_replace(
-            '/'.App::getLocale(), '/en',
-            Request::server('HTTP_REFERER')
-        );
-
-        Route::dispatch(
-            Request::create(
-                $refUrl
-            )
-        )->getContent();
     }
 }

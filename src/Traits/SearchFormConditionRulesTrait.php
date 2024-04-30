@@ -89,7 +89,7 @@ trait SearchFormConditionRulesTrait
      * @param $value
      * @return mixed
      */
-    protected function not_equal(mixed$model, $value, $key): mixed
+    protected function not_equal(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '!=', $value);
     }
@@ -133,7 +133,7 @@ trait SearchFormConditionRulesTrait
      * @param $value
      * @return mixed
      */
-    protected function less(mixed$model, $value, $key): mixed
+    protected function less(mixed $model, $value, $key): mixed
     {
         return $model->where($key, '<', $value);
     }

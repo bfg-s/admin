@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Laravel\Dusk\DuskServiceProvider;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
@@ -201,7 +202,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function makeRouter(): \Illuminate\Routing\RouteRegistrar
+    protected function makeRouter(): RouteRegistrar
     {
         $route = Route::domain(config('admin.route.domain', ''))
             ->name(config('admin.route.name'));
@@ -209,7 +210,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         $middlewares = ['web', 'admin-auth', DomMiddleware::class];
 
         if (config('admin.lang_mode', true)) {
-            $route = $route->prefix('{adminLang}/' . config('admin.route.prefix'));
+            $route = $route->prefix('{adminLang}/'.config('admin.route.prefix'));
             $middlewares[] = LanguageMiddleware::class;
         } else {
             $route = $route->prefix(config('admin.route.prefix'));
@@ -227,7 +228,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         if (config('admin.lang_mode', true)) {
             Route::domain(config('admin.route.domain', ''))
-                ->name(config('admin.route.name') . 'index')
+                ->name(config('admin.route.name').'index')
                 ->prefix(config('admin.route.prefix'))
                 ->middleware(['web', 'admin-auth', DomMiddleware::class, LanguageMiddleware::class])
                 ->get('/', function () {
@@ -293,9 +294,9 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         if (
             $this->app->environment('local', 'testing')
-            && class_exists(\Laravel\Dusk\DuskServiceProvider::class)
+            && class_exists(DuskServiceProvider::class)
         ) {
-            $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
+            $this->app->register(DuskServiceProvider::class);
         }
     }
 

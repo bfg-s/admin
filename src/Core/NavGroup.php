@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Closure;
-use Illuminate\Contracts\Support\Arrayable;
-use Admin\Interfaces\NavigateInterface;
 use Admin\Admin;
+use Admin\Interfaces\NavigateInterface;
 use Admin\Navigate;
 use Admin\Traits\FontAwesome;
 use Admin\Traits\NavCommon;
 use Admin\Traits\NavDefaultTools;
+use Closure;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * @mixin NavigatorExtensions

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Admin;
 
+use Admin\Components\Vue\ModalCollection;
+use Admin\Models\AdminUser;
 use Admin\Themes\AdminLteTheme;
 use Admin\Themes\PublishedAdminLteTheme;
 use Admin\Themes\Theme;
 use Auth;
-use Exception;
+use Composer\InstalledVersions;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Admin\Components\Vue\ModalCollection;
-use Admin\Models\AdminUser;
 use Illuminate\Support\Facades\Crypt;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -84,7 +84,6 @@ class Admin
         $obj = new $class;
 
         if ($obj instanceof Theme) {
-
             static::$themes[$obj->getSlug()] = $class;
         }
     }
@@ -103,7 +102,7 @@ class Admin
      */
     public function getThemes(): array
     {
-        return array_map(fn (string $class) => new $class, static::$themes);
+        return array_map(fn(string $class) => new $class, static::$themes);
     }
 
     /**
@@ -127,8 +126,8 @@ class Admin
      */
     public function version(): string
     {
-        if (class_exists(\Composer\InstalledVersions::class)) {
-            return \Composer\InstalledVersions::getPrettyVersion('bfg/admin');
+        if (class_exists(InstalledVersions::class)) {
+            return InstalledVersions::getPrettyVersion('bfg/admin');
         } else {
             $lock_file = base_path('composer.lock');
             if (is_file($lock_file)) {
@@ -249,16 +248,18 @@ class Admin
 
         if (in_array($segment, config('admin.languages', ['en', 'uk', 'ru']))) {
             $select = $segment;
-        } else if (request()->cookie('lang')) {
-            $lang = request()->cookie('lang');
+        } else {
+            if (request()->cookie('lang')) {
+                $lang = request()->cookie('lang');
 
-            if (in_array($lang, config('admin.languages', ['en', 'uk', 'ru']))) {
-                $select = $lang;
-            } else {
-                $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
-
-                if (in_array($lang, config('admin.languages'))) {
+                if (in_array($lang, config('admin.languages', ['en', 'uk', 'ru']))) {
                     $select = $lang;
+                } else {
+                    $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
+
+                    if (in_array($lang, config('admin.languages'))) {
+                        $select = $lang;
+                    }
                 }
             }
         }

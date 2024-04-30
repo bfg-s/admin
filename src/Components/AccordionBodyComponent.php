@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Closure;
-use Admin\Traits\FontAwesome;
 use Admin\Traits\TypesTrait;
 
 class AccordionBodyComponent extends Component
@@ -13,25 +11,21 @@ class AccordionBodyComponent extends Component
     use TypesTrait;
 
     /**
+     * @var int
+     */
+    protected static int $count = 0;
+    /**
      * @var string
      */
     protected string $view = 'accordion.body';
-
     /**
      * @var string
      */
     protected string $title = "";
-
     /**
      * @var bool
      */
     protected bool $show = false;
-
-    /**
-     * @var int
-     */
-    protected static int $count = 0;
-
     /**
      * @var string
      */
@@ -45,7 +39,7 @@ class AccordionBodyComponent extends Component
     public function __construct(...$delegates)
     {
         parent::__construct($delegates);
-        $this->id = "collapse_" . static::$count;
+        $this->id = "collapse_".static::$count;
         static::$count++;
     }
 
@@ -100,6 +94,5 @@ class AccordionBodyComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

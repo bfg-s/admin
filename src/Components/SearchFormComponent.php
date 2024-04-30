@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Core\PrepareExport;
-use Exception;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use Admin\Components\SearchFields\AmountSearchInput;
 use Admin\Components\SearchFields\ChecksSearchInput;
 use Admin\Components\SearchFields\ColorSearchInput;
@@ -26,9 +22,14 @@ use Admin\Components\SearchFields\SelectSearchInput;
 use Admin\Components\SearchFields\SelectTagsSearchField;
 use Admin\Components\SearchFields\SwitcherSearchField;
 use Admin\Components\SearchFields\TimeFieldSearchField;
+use Admin\Core\PrepareExport;
 use Admin\Explanation;
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Admin\Traits\SearchFormHelpersTrait;
+use Exception;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 /**
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
@@ -246,9 +247,9 @@ class SearchFormComponent extends Component
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function getSearchInfoComponent(): \Illuminate\View\View
+    public function getSearchInfoComponent(): View
     {
         return admin_view('components.search-form.info', [
             'fields' => $this->fields
@@ -274,6 +275,5 @@ class SearchFormComponent extends Component
      */
     protected function mount(): void
     {
-
     }
 }

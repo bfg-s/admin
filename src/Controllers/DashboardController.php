@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
-use Admin\Delegates\Column;
-use Admin\Delegates\Row;
-use App;
-use Composer\Composer;
-use DB;
-use Illuminate\Support\Arr;
 use Admin;
 use Admin\Delegates\Card;
 use Admin\Delegates\CardBody;
 use Admin\Delegates\ChartJs;
+use Admin\Delegates\Column;
+use Admin\Delegates\Row;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\StatisticPeriod;
 use Admin\Page;
+use App;
+use Composer\Composer;
+use DB;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use PDO;
 
@@ -62,7 +62,7 @@ class DashboardController extends Controller
                     ->total()
             ),
             $row->column(8)->row(
-                //$row->addClass('w-100'),
+            //$row->addClass('w-100'),
                 $row->column(12)->card(
                     $card->title(__('admin.user_statistics')),
                     $card->card_body(
@@ -74,7 +74,6 @@ class DashboardController extends Controller
                                 )
                                 ->size(300)
                                 ->load(function (Admin\Components\ChartJsComponent $component) {
-
                                     $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                                         ->groupDataByAt('created_at')
                                         ->eachPointCount(__('admin.added_to_users'))
@@ -92,12 +91,11 @@ class DashboardController extends Controller
                         $cardBody->chart_js(
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
-
                                 $adminLogs = Admin\Models\AdminBrowser::all(['name'])->groupBy('name')->map(
-                                    fn (Collection $collection) => $collection->count()
+                                    fn(Collection $collection) => $collection->count()
                                 );
                                 $component->customChart(__('admin.browser'), [$adminLogs->toArray()], $adminLogs->map(
-                                    fn () => $component->randColor()
+                                    fn() => $component->randColor()
                                 )->values()->toArray());
                             }),
                         )
@@ -109,15 +107,15 @@ class DashboardController extends Controller
                         $cardBody->chart_js(
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
-
                                 $adminLogs = admin()->logs()->where('title', '!=', 'Loaded page')->get(['title'])->map(
-                                    fn (Admin\Models\AdminLog $log) => ['name' => $log->title]
+                                    fn(Admin\Models\AdminLog $log) => ['name' => $log->title]
                                 )->groupBy('name')->map(
-                                    fn (Collection $collection) => $collection->count()
+                                    fn(Collection $collection) => $collection->count()
                                 );
-                                $component->customChart(__('admin.menu_action'), [$adminLogs->toArray()], $adminLogs->map(
-                                    fn () => $component->randColor()
-                                )->values()->toArray());
+                                $component->customChart(__('admin.menu_action'), [$adminLogs->toArray()],
+                                    $adminLogs->map(
+                                        fn() => $component->randColor()
+                                    )->values()->toArray());
                             }),
                         )
                     ),
@@ -237,14 +235,14 @@ class DashboardController extends Controller
 
         return [
             __('admin.server_version') => '<span class="badge badge-dark">v'.admin_version_string($pdo->getAttribute(PDO::ATTR_SERVER_VERSION)).'</span>',
-            __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION) . ' ',
-            __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO) . ' ',
-            __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS) . ' ',
-            __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) . ' ',
+            __('admin.client_version') => $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION).' ',
+            __('admin.server_info') => $pdo->getAttribute(PDO::ATTR_SERVER_INFO).' ',
+            __('admin.connection_status') => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS).' ',
+            __('admin.mysql_driver') => $pdo->getAttribute(PDO::ATTR_DRIVER_NAME).' ',
             __('admin.db_driver') => config('database.default'),
             __('admin.database') => env('DB_DATABASE'),
-            __('admin.user') => env('DB_USERNAME') . ' ',
-            __('admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))) . ' ',
+            __('admin.user') => env('DB_USERNAME').' ',
+            __('admin.password') => str_repeat('*', strlen(env('DB_PASSWORD'))).' ',
         ];
     }
 }
