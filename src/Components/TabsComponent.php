@@ -15,10 +15,12 @@ class TabsComponent extends Component
      * @var int
      */
     protected static int $counter = 0;
+
     /**
      * @var string
      */
     protected string $view = 'tabs';
+
     /**
      * @var array
      */

@@ -37,66 +37,82 @@ class ModelCardsComponent extends Component
      * @var bool
      */
     public static bool $is_export = false;
+
     /**
      * @var SearchFormComponent|null
      */
     public ?SearchFormComponent $search = null;
+
     /**
      * @var string
      */
     protected string $view = 'model-cards';
+
     /**
      * @var mixed|null
      */
     protected mixed $label = null;
+
     /**
      * @var bool
      */
     protected bool $hasHidden = false;
+
     /**
      * @var Model|Builder|Relation|Collection|array|null
      */
     protected $model;
+
     /**
      * @var LengthAwarePaginator|null
      */
     protected ?LengthAwarePaginator $paginate = null;
+
     /**
      * @var mixed|array
      */
     protected mixed $model_control = [];
+
     /**
      * @var string
      */
     protected $model_name;
+
     /**
      * @var string
      */
     protected $model_class;
+
     /**
      * @var int
      */
     protected $per_page = 9;
+
     /**
      * @var int[]
      */
     protected $per_pages = [9, 15, 21, 51, 102, 501, 1002];
+
     /**
      * @var string
      */
     protected $order_field = 'id';
+
     /**
      * @var string
      */
     protected $order_type = 'desc';
+
     /**
      * @var array
      */
     protected array $rows = [];
+
     /**
      * @var string|null
      */
     protected $last;
+
     /**
      * @var bool
      */

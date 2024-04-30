@@ -58,7 +58,7 @@ class ModelRelationContainerComponent extends Component
 
     /**
      * @param  string  $relation
-     * @param  string  $name
+     * @param  string|int  $name
      * @param ...$delegates
      */
     public function __construct(string $relation, string|int $name, ...$delegates)

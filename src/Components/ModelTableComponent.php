@@ -40,66 +40,82 @@ class ModelTableComponent extends Component
      * @var bool
      */
     public static bool $is_export = false;
+
     /**
      * @var SearchFormComponent|null
      */
     public ?SearchFormComponent $search = null;
+
     /**
      * @var string
      */
     protected string $view = 'model-table';
+
     /**
      * @var mixed|null
      */
     protected mixed $label = null;
+
     /**
      * @var bool
      */
     protected bool $hasHidden = false;
+
     /**
      * @var Model|Builder|Relation|Collection|array|null
      */
     protected $model;
+
     /**
      * @var LengthAwarePaginator|null
      */
     protected ?LengthAwarePaginator $paginate = null;
+
     /**
      * @var mixed|array
      */
     protected mixed $model_control = [];
+
     /**
      * @var string
      */
     protected $model_name;
+
     /**
      * @var string
      */
     protected $model_class;
+
     /**
      * @var int
      */
     protected $per_page = 15;
+
     /**
      * @var int[]
      */
     protected $per_pages = [10, 15, 20, 50, 100, 500, 1000];
+
     /**
      * @var string
      */
     protected $order_field = 'id';
+
     /**
      * @var string
      */
     protected $order_type = 'desc';
+
     /**
      * @var array
      */
     protected $columns = [];
+
     /**
      * @var string|null
      */
     protected $last;
+
     /**
      * @var bool
      */

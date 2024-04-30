@@ -17,30 +17,37 @@ class ChartJsComponent extends Component
      * @var array
      */
     public static array $loadCallBacks = [];
+
     /**
      * @var int
      */
     protected static int $count = 0;
+
     /**
      * @var ChartJsComponentBuilder
      */
     public ChartJsComponentBuilder $builder;
+
     /**
      * @var mixed
      */
     protected mixed $dataBuilder = null;
+
     /**
      * @var int
      */
     protected int $size = 100;
+
     /**
      * @var string
      */
     protected string $type = 'line';
+
     /**
      * @var array
      */
     protected array $datasets = [];
+
     /**
      * @var string
      */

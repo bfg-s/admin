@@ -32,14 +32,17 @@ class FormFooterComponent extends Component
      * @var ButtonsComponent|null
      */
     protected ?ButtonsComponent $group = null;
+
     /**
      * @var string
      */
     protected string $view = 'form-footer';
+
     /**
      * @var bool
      */
     protected bool $row = false;
+
     /**
      * @var bool
      */

@@ -18,50 +18,62 @@ class ModelRelationComponent extends Component
      * @var mixed
      */
     protected static mixed $fm = null;
+
     /**
      * @var bool
      */
     protected static bool $tplMode = false;
+
     /**
      * @var Relation|null
      */
     protected ?Relation $relation = null;
+
     /**
      * @var string|null
      */
     protected ?string $relation_name = null;
+
     /**
      * @var string|null
      */
     protected ?string $path_name = null;
+
     /**
      * @var ModelRelationContentComponent
      */
     protected $last_content;
+
     /**
      * @var callable
      */
     protected $on_empty;
+
     /**
      * @var mixed
      */
     protected mixed $fm_old;
+
     /**
      * @var array
      */
     protected array $innerDelegates = [];
+
     /**
      * @var string
      */
     protected string $view = 'model-relation';
+
     /**
      * @var string|null
      */
     protected ?string $title = null;
+
     /**
      * @var mixed|null
      */
     protected mixed $buttons = null;
+
     /**
      * @var string|null
      */

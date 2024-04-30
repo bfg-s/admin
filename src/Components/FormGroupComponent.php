@@ -26,94 +26,117 @@ abstract class FormGroupComponent extends Component
      * @var int
      */
     protected static int $counter = 0;
+
     /**
      * @var string|null
      */
     protected ?string $title = null;
+
     /**
      * @var string|null
      */
     protected ?string $name = null;
+
     /**
      * @var string|null
      */
     protected ?string $icon = 'fas fa-pencil-alt';
+
     /**
      * @var string|null
      */
     protected ?string $info = null;
+
     /**
      * @var int|null
      */
     protected ?int $label_width = 2;
+
     /**
      * @var bool
      */
     protected bool $vertical = false;
+
     /**
      * @var bool
      */
     protected bool $reversed = false;
+
     /**
      * @var Component|FormComponent|null
      */
     protected FormComponent|Component|null $parent_field = null;
+
     /**
      * @var Model
      */
     protected $model;
+
     /**
      * @var mixed
      */
     protected $value;
+
     /**
      * @var string|null
      */
     protected ?string $field_id = null;
+
     /**
      * @var string|null
      */
     protected ?string $path = null;
+
     /**
      * @var bool
      */
     protected bool $has_bug = false;
+
     /**
      * @var ViewErrorBag
      */
     protected mixed $errors = null;
+
     /**
      * @var bool
      */
     protected bool $admin_controller = false;
+
     /**
      * @var string|null
      */
     protected ?string $controller;
+
     /**
      * @var string|null
      */
     protected ?string $method = null;
+
     /**
      * @var bool
      */
     protected $only_input = false;
+
     /**
      * @var callable
      */
     protected mixed $value_to = null;
+
     /**
      * @var Page
      */
     protected Page $page;
+
     /**
      * @var mixed|null
      */
     protected mixed $default = null;
+
     /**
      * @var array
      */
     protected array $fgs = [];
+
     /**
      * @var string
      */

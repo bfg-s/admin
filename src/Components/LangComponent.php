@@ -10,38 +10,47 @@ class LangComponent extends Component
      * @var int
      */
     protected static int $counter = 0;
+
     /**
      * @var bool
      */
     protected static bool $tplMode = false;
+
     /**
      * @var string
      */
     protected string $view = 'lang';
+
     /**
      * @var array|null
      */
     protected ?array $lang_list = null;
+
     /**
      * @var array
      */
     protected array $insideInputs = [];
+
     /**
      * @var string|null
      */
     protected ?string $name = null;
+
     /**
      * @var string|null
      */
     protected ?string $id = null;
+
     /**
      * @var bool
      */
     protected ?bool $verticalSet = null;
+
     /**
      * @var bool
      */
     protected ?bool $reversedSet = null;
+
     /**
      * @var int|null
      */

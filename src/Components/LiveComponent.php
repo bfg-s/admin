@@ -10,14 +10,17 @@ class LiveComponent extends Component
      * @var array|LiveComponent[]
      */
     public static array $list = [];
+
     /**
      * @var int
      */
     protected static $counter = 0;
+
     /**
      * @var string
      */
     protected string $view = 'live';
+
     /**
      * @var mixed|null
      */

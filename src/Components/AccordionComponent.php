@@ -10,10 +10,12 @@ class AccordionComponent extends Component
      * @var int
      */
     protected static int $count = 0;
+
     /**
      * @var string
      */
     protected string $view = 'accordion';
+
     /**
      * @var string
      */

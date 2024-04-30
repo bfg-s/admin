@@ -15,30 +15,37 @@ class ModalComponent extends Component
      * @var array|ModalComponent[]
      */
     public static array $list = [];
+
     /**
      * @var int
      */
     protected static int $count = 0;
+
     /**
      * @var bool
      */
     public bool $temporary = false;
+
     /**
      * @var mixed|null
      */
     public mixed $submitEvent = null;
+
     /**
      * @var string
      */
     public string $size = 'default';
+
     /**
      * @var bool
      */
     public bool $backdrop = false;
+
     /**
      * @var string
      */
     protected string $view = 'modal';
+
     /**
      * @var bool
      */

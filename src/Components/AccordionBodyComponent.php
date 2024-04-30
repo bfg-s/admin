@@ -14,18 +14,22 @@ class AccordionBodyComponent extends Component
      * @var int
      */
     protected static int $count = 0;
+
     /**
      * @var string
      */
     protected string $view = 'accordion.body';
+
     /**
      * @var string
      */
     protected string $title = "";
+
     /**
      * @var bool
      */
     protected bool $show = false;
+
     /**
      * @var string
      */

@@ -125,6 +125,7 @@ abstract class Component extends ComponentInputs
         'center' => CenterComponent::class,
         'img' => ImgComponent::class,
     ];
+
     /**
      * @var array
      * @desc The variable $scripts holds an array of scripts.
@@ -140,21 +141,25 @@ abstract class Component extends ComponentInputs
      *           ];
      */
     protected static array $scripts = [];
+
     /**
      * @var array $styles
      * Contains an array of styles.
      */
     protected static array $styles = [];
+
     /**
      * @var array|null $regInputs A variable to store registered input data.
      */
     protected static $regInputs = null;
+
     /**
      * The value represents the HTML element to be used. It defaults to 'div' if not specified.
      *
      * @var string
      */
     protected $element = 'div';
+
     /**
      * @var string|null
      */
