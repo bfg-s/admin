@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.2.2] - 2024-04-29
+## [6.2.2] - 2024-04-30
 ### Fixed
 * Fixed bug in resource controller when model set in the method.
 * Fixed excel export for the model table component.
