@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Fixed excel export for the model table component.
 * Optimized classes imports.
 * Reformat code.
+* Remove old generator.
 ### Added
 * Factory running if exists in the model.
 

@@ -31,7 +31,6 @@ class AdminHelpersCommand extends Command
         ExtensionNavigatorHelperGenerator::class,
         ExtensionNavigatorMethodsHelperGenerator::class,
         MacroableHelperGenerator::class,
-        GenerateNotificationKeys::class,
         MacroDelegatorsHelperGenerator::class,
     ];
     /**
