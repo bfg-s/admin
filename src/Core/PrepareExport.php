@@ -6,6 +6,7 @@ namespace Admin\Core;
 
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Throwable;
@@ -131,6 +132,9 @@ class PrepareExport implements FromCollection
         foreach ($exportCollection as $head => $col) {
             $headers[] = $head;
             foreach ($col as $ic => $item) {
+                if ($item instanceof Carbon) {
+                    $item = $item->toDateTimeString();
+                }
                 $result[$ic][$i] = strip_tags((string) $item);
             }
             $i++;
