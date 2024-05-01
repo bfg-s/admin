@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Optimized classes imports.
 * Reformat code.
 * Remove old generator.
+* Prepare export for the model table component.
 ### Added
 * Factory running if exists in the model.
 

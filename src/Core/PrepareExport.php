@@ -131,7 +131,7 @@ class PrepareExport implements FromCollection
         foreach ($exportCollection as $head => $col) {
             $headers[] = $head;
             foreach ($col as $ic => $item) {
-                $result[$ic][$i] = strip_tags($item);
+                $result[$ic][$i] = strip_tags((string) $item);
             }
             $i++;
         }
