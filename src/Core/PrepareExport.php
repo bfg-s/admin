@@ -132,9 +132,7 @@ class PrepareExport implements FromCollection
         foreach ($exportCollection as $head => $col) {
             $headers[] = $head;
             foreach ($col as $ic => $item) {
-                if ($item instanceof Carbon) {
-                    $item = $item->toDateTimeString();
-                }
+
                 $result[$ic][$i] = strip_tags((string) $item);
             }
             $i++;
