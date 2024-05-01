@@ -84,7 +84,6 @@ window.libs['table_action::exportToExcel'] = async function () {
 
     let link = window.document.createElement('a');
     link.setAttribute('target', '');
-    link.setAttribute('download', '');
     link.href = window.export_excel + '?' + http_build_query({
         model: this.target.dataset.object,
         ids: ids,
@@ -109,7 +108,6 @@ window.libs['table_action::exportToCsv'] = async function () {
 
     let link = window.document.createElement('a');
     link.setAttribute('target', '');
-    link.setAttribute('download', '');
     link.href = window.export_csv + '?' + http_build_query({
         model: this.target.dataset.object,
         ids: ids,
