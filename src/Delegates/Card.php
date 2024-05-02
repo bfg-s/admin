@@ -65,6 +65,7 @@ class Card extends Delegator
                     $searchForm->date_range('created_at', 'admin.created_at')
                         ->default(implode(' - ', $this->defaultDateRange()))
                 )
+                ->size(100)
                 ->loadModelBy(title: __('admin.created'))
         ];
     }
@@ -118,6 +119,7 @@ class Card extends Delegator
                 ),
             $this->ifQuery('screen', 2)
                 ->chart_js()
+                ->size(100)
                 ->loadModelBy(title: __('admin.created')),
         ];
     }

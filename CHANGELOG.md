@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Dashboard load chart js with new method.
 * statisticBody with new method.
 * sortedModelTable with new method.
+* Sizes for statisticBody and sortedModelTable.
 
 ## [6.2.1] - 2024-04-26
 
