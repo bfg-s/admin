@@ -14,8 +14,24 @@ trait SearchFormConditionRulesTrait
      */
     public function makeModel(mixed $model): mixed
     {
-        if (request()->has('q')) {
-            $r = request('q');
+        $r = request()->has('q') ? request('q') : [];
+
+        if (is_array($r)) {
+
+            foreach ($this->fields as $field) {
+
+                if (! isset($r[$field['field_name']])) {
+                    $val = $field['class']->getValue() ?: $field['class']->getDefault();
+                    if ($val) {
+                        $r[$field['field_name']] = $val;
+                    }
+                }
+
+            }
+        }
+
+        if ($r) {
+
             if (is_string($r)) {
                 if ($this->global_search_fields) {
                     $i = 0;
@@ -41,6 +57,7 @@ trait SearchFormConditionRulesTrait
                     });
                 }
             } elseif (is_array($r)) {
+
                 foreach ($r as $key => $val) {
                     if ($val != null) {
                         foreach ($this->fields as $field) {

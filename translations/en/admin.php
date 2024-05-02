@@ -300,4 +300,5 @@ return [
     'is-extension' => 'Is extension',
     'done' => 'Done',
     'page-info' => 'Page info',
+    'created' => 'Created',
 ];

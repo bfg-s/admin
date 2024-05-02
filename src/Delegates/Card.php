@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\Delegates;
 
 use Admin\Components\CardComponent;
+use Admin\Components\ChartJsComponent;
 use Admin\Core\Delegator;
 use Closure;
 use Illuminate\Support\Traits\Macroable;
@@ -38,7 +39,7 @@ class Card extends Delegator
     {
         $statisticPeriod = new StatisticPeriod();
         $modelTable = new ModelTable();
-        $chartJs = new ChartJs();
+        $searchForm = new SearchForm();
 
         return [
             $this->ifNotQuery('chart')->buttons()->warning(['fas fa-chart-line', __('admin.statistic')])
@@ -59,12 +60,12 @@ class Card extends Delegator
                     ->total()
             ),
             $this->ifQuery('chart')
-                ->chart_js(
-                    $chartJs->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
-                        ->groupDataByAt('created_at')
-                        ->eachPointCount('Created')
-                        ->miniChart(),
-                ),
+                ->chart_js()
+                ->hasSearch(
+                    $searchForm->date_range('created_at', 'admin.created_at')
+                        ->default(implode(' - ', $this->defaultDateRange()))
+                )
+                ->loadModelBy(title: __('admin.created'))
         ];
     }
 
@@ -89,7 +90,6 @@ class Card extends Delegator
     {
         $statisticPeriod = new StatisticPeriod();
         $modelTable = new ModelTable();
-        $chartJs = new ChartJs();
 
         return [
             $this->ifNotQuery('screen', 1)->buttons()->info(['fas fa-stream', __('admin.sort')])
@@ -117,12 +117,8 @@ class Card extends Delegator
                         ->total()
                 ),
             $this->ifQuery('screen', 2)
-                ->chart_js(
-                    $chartJs->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
-                        ->groupDataByAt('created_at')
-                        ->eachPointCount('Created')
-                        ->miniChart(),
-                ),
+                ->chart_js()
+                ->loadModelBy(title: __('admin.created')),
         ];
     }
 }

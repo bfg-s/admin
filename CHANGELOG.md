@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.2.2] - 2024-04-30
+## [6.2.2] - 2024-05-02
 ### Fixed
 * Fixed bug in resource controller when model set in the method.
 * Fixed excel export for the model table component.
@@ -14,10 +14,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Prepare export for the model table component.
 * Now menu in modal.
 * Table for modal body.
+* Search form with default values.
 ### Added
 * Factory running if exists in the model.
 * Modal info page.
 * Percent formatter for model table. 
+* New method "loadModelBy" for load ChartJs.
+### Changed
+* Dashboard load chart js with new method.
+* statisticBody with new method.
+* sortedModelTable with new method.
 
 ## [6.2.1] - 2024-04-26
 

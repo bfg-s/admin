@@ -9,6 +9,8 @@ use Admin\Delegates\SearchForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ChartJsComponent extends Component
@@ -54,6 +56,11 @@ class ChartJsComponent extends Component
     protected string $view = 'chartjs';
 
     /**
+     * @var SearchFormComponent|null
+     */
+    protected SearchFormComponent|null $searchForm = null;
+
+    /**
      * @param  array  $delegates
      * @throws Throwable
      */
@@ -80,15 +87,58 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * @return SearchFormComponent|null
+     */
+    public function getSearchForm(): ?SearchFormComponent
+    {
+        return $this->searchForm;
+    }
+
+    /**
+     * @param  string  $by
+     * @param  array|string|null  $title
+     * @return $this
+     */
+    public function loadModelBy(
+        string $by = "created_at",
+        array|string|null $title = null,
+    ): static {
+        $isDate = str_ends_with($by, '_at');
+        $this->load(function (ChartJsComponent $chartJs) use ($by, $isDate, $title) {
+
+            $query = $chartJs->realModel()->getQuery();
+
+            if ($this->searchForm) {
+
+                $query = $this->searchForm->makeModel($query);
+            }
+
+            $result = $query->select([
+                $isDate ? DB::raw("DATE({$by}) as date") : $by,
+                DB::raw('COUNT(*) as count')
+            ])->groupBy('date')->get()->mapWithKeys(function ($item) use ($by, $isDate) {
+                $item = (array) $item;
+                return [$item[$isDate ? 'date' : $by] => $item['count']];
+            });
+
+            $chartJs->customChart(
+                $title ?: Str::plural(class_basename(get_class($chartJs->realModel()))),
+                $result
+            );
+        });
+
+        return $this;
+    }
+
+    /**
      * @param ...$delegates
      * @return $this
      */
     public function hasSearch(...$delegates): static
     {
-        /** @var SearchForm $form */
-        $form = $this->div()->search_form($delegates);
+        $this->searchForm = $this->div()->search_form($delegates);
 
-        $this->model = $form->makeModel($this->model);
+        $this->model = $this->searchForm->makeModel($this->model);
 
         return $this;
     }
@@ -356,12 +406,17 @@ class ChartJsComponent extends Component
 
     /**
      * @param  string|array  $title
-     * @param  array  $data
+     * @param  Collection|array  $data
      * @param  array  $color
      * @return $this
      */
-    public function customChart(string|array $title, array $data, array $color = []): static
+    public function customChart(string|array $title, Collection|array $data, array $color = []): static
     {
+        if ($data instanceof Collection) {
+
+            $data = $data->toArray();
+        }
+
         $isDataList = array_is_list($data);
         $isColorList = $color && isset($color[0]) && is_array($color[0]);
         $data = !$isDataList || $data === [] ? [$data] : $data;

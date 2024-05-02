@@ -126,6 +126,14 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
      * @param  array  $params
      * @return $this
      */

@@ -73,12 +73,7 @@ class DashboardController extends Controller
                                         ->default(implode(' - ', $this->defaultDateRange()))
                                 )
                                 ->size(300)
-                                ->load(function (Admin\Components\ChartJsComponent $component) {
-                                    $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
-                                        ->groupDataByAt('created_at')
-                                        ->eachPointCount(__('admin.added_to_users'))
-                                        ->miniChart();
-                                }),
+                                ->loadModelBy(title: __('admin.added_to_users')),
                         )
                     )
                 ),

@@ -293,6 +293,22 @@ abstract class FormGroupComponent extends Component
     /**
      * @return mixed
      */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefault(): mixed
+    {
+        return $this->default;
+    }
+
+    /**
+     * @return mixed
+     */
     protected function create_value(): mixed
     {
         if ($this->value !== null) {
