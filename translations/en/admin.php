@@ -299,4 +299,5 @@ return [
     'soft-delete' => 'SoftDelete',
     'is-extension' => 'Is extension',
     'done' => 'Done',
+    'page-info' => 'Page info',
 ];

@@ -431,7 +431,7 @@ class CardComponent extends Component
 
                 $this->modal(
                     $modal->name('model_info_modal'),
-                    $modal->title('Page info'),
+                    $modal->title(__('admin.page-info')),
                     $modal->table()->rows($infoRows),
                     $modal->buttons()
                         ->success()
