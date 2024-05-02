@@ -310,6 +310,20 @@ class Formatter
     }
 
     /**
+     * @param  array  $props
+     * @param $value
+     * @return string
+     */
+    public function percent($value = null, array $props = []): string
+    {
+        if (!$value) {
+            $value = 0;
+        }
+
+        return number_format($value, 2) . ($props[0] ?? '%');
+    }
+
+    /**
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model

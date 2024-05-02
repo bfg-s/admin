@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 * Factory running if exists in the model.
 * Modal info page.
+* Percent formatter for model table. 
 
 ## [6.2.1] - 2024-04-26
 
