@@ -205,6 +205,15 @@ class AdminRepository extends Repository
      */
     public function currentQueryField(): ?string
     {
+        $modal = request()->input('_modal');
+
+        if ($modal) {
+
+            $url = \Illuminate\Support\Facades\Request::server('HTTP_REFERER');
+            $route = Route::getRoutes()->match(app('request')->create($url));
+            return $route->getName();
+        }
+
         return Route::currentRouteName();
     }
 

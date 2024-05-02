@@ -339,29 +339,9 @@ class CardComponent extends Component
     }
 
     /**
-     * @param  Respond  $respond
-     * @param  Request  $request
-     * @return Respond
-     */
-    public function factoryRun(Respond $respond, Request $request): Respond
-    {
-        $count = (int) $request->count;
-        $model = $request->model;
-
-        if ($count) {
-            $model::factory()->count($count)->create();
-
-            return $respond
-                ->toast_success(__('admin.factory_created', ['count' => $count]))
-                ->reload();
-        }
-
-        return $respond
-            ->toast_error(__('admin.factory_error'));
-    }
-
-    /**
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function mount(): void
     {
@@ -385,6 +365,29 @@ class CardComponent extends Component
     }
 
     /**
+     * @param  Respond  $respond
+     * @param  Request  $request
+     * @return Respond
+     */
+    public function factoryRun(Respond $respond, Request $request): Respond
+    {
+        $count = (int) $request->count;
+        /** @var Model $model */
+        $model = (string) $request->model;
+
+        if ($count) {
+            $model::factory()->count($count)->create();
+
+            return $respond
+                ->toast_success(__('admin.factory_created', ['count' => $count]))
+                ->reload();
+        }
+
+        return $respond
+            ->toast_error(__('admin.factory_error'));
+    }
+
+    /**
      * Make default tools.
      * @return void
      * @throws ContainerExceptionInterface
@@ -395,14 +398,60 @@ class CardComponent extends Component
         if ($this->default_tools !== false) {
             /** @var Closure $test */
             $test = $this->default_tools;
+            $type = $this->now->getType();
+            $isRoot = admin()->isRoot();
+            $factoryClassName = '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
+                .'Factory';
 
-            if ($test('factory')) {
-                $type = $this->now->getType();
+            if ($test('info') && $isRoot) {
 
-                $className = '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
-                    .'Factory';
+                $modal = new Modal();
+                $nowMenu = admin_repo()->now;
 
-                if (class_exists($className)) {
+                $infoRows = [
+                    'ID' => $nowMenu->getId(),
+                    __('admin.controller') => admin_repo()->currentController::class,
+                    __('admin.type') => $nowMenu->getType(),
+                    __('admin.route') => $nowMenu->getCurrentRoute(),
+                    __('admin.link') => $nowMenu->getLink(),
+                    __('admin.model') => $this->model::class,
+                    __('admin.table') => $this->model->getTable(),
+                    __('admin.fillable') => "<pre>" . json_encode($this->model->getFillable(), JSON_PRETTY_PRINT) . "</pre>",
+                    __('admin.casts') => "<pre>" . json_encode($this->model->getCasts(), JSON_PRETTY_PRINT) . "</pre>",
+                    __('admin.factory') => method_exists($this->model, 'factory') && class_exists($factoryClassName)
+                        ? ModelTableComponent::callExtension('badge', [__('admin.yes'), ["success"]])
+                        : ModelTableComponent::callExtension('badge', [__('admin.no'), ["danger"]]),
+                    __('admin.soft-delete') => property_exists($this->model, 'forceDeleting')
+                        ? ModelTableComponent::callExtension('badge', [__('admin.yes'), ["success"]])
+                        : ModelTableComponent::callExtension('badge', [__('admin.no'), ["danger"]]),
+                    __('admin.is-extension') => $nowMenu->getExtension()
+                        ? ModelTableComponent::callExtension('badge', [__('admin.yes'), ["success"]])
+                        : ModelTableComponent::callExtension('badge', [__('admin.no'), ["danger"]]),
+                ];
+
+                $this->modal(
+                    $modal->name('model_info_modal'),
+                    $modal->title('Page info'),
+                    $modal->table()->rows($infoRows),
+                    $modal->buttons()
+                        ->success()
+                        ->icon_times_circle()
+                        ->title(__('admin.done'))
+                        ->modalDestroy(),
+                );
+
+                $this->buttons()
+                    ->dark()
+                    ->icon_info_circle()
+                    ->modal('model_info_modal');
+            }
+
+            if ($test('factory') && $isRoot) {
+
+                if (
+                    method_exists($this->model, 'factory')
+                    && class_exists($factoryClassName)
+                ) {
                     $modal = new Modal();
                     $form = new Form();
 
@@ -432,29 +481,32 @@ class CardComponent extends Component
             }
 
             if ($test('search')) {
-                $group = $this->buttons();
-                $group->primary(['fas fa-search', __('admin.search')])
-                    ->setDatas([
-                        'toggle' => 'collapse',
-                        'target' => '.table_search_form',
-                    ])->attr([
-                        'aria-expanded' => 'true',
-                        'aria-controls' => 'table_search_form',
-                    ])->whenRender(function (ButtonComponent $button) {
-                        if (!$this->search_form || !$this->search_form->fieldsCount()) {
-                            $button->addClass('d-none');
-                        }
-                    });
+                if ($type !== 'create' && $type !== 'edit') {
 
-                if ($this->search_form && request()->has('q')) {
-                    $group->danger(['fas fa-window-close', __('admin.cancel')])
-                        ->attr('id', 'cancel_search_params')
-                        ->query([], ['q', 'page'])
-                        ->whenRender(function (ButtonComponent $button) {
+                    $group = $this->buttons();
+                    $group->primary(['fas fa-search', __('admin.search')])
+                        ->setDatas([
+                            'toggle' => 'collapse',
+                            'target' => '.table_search_form',
+                        ])->attr([
+                            'aria-expanded' => 'true',
+                            'aria-controls' => 'table_search_form',
+                        ])->whenRender(function (ButtonComponent $button) {
                             if (!$this->search_form || !$this->search_form->fieldsCount()) {
                                 $button->addClass('d-none');
                             }
                         });
+
+                    if ($this->search_form && request()->has('q')) {
+                        $group->danger(['fas fa-window-close', __('admin.cancel')])
+                            ->attr('id', 'cancel_search_params')
+                            ->query([], ['q', 'page'])
+                            ->whenRender(function (ButtonComponent $button) {
+                                if (!$this->search_form || !$this->search_form->fieldsCount()) {
+                                    $button->addClass('d-none');
+                                }
+                            });
+                    }
                 }
             }
 

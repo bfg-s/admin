@@ -203,6 +203,20 @@ class ModalComponent extends Component
 
     /**
      * @param ...$delegates
+     * @return TableComponent
+     */
+    public function table(...$delegates): TableComponent
+    {
+        if (!$this->body) {
+            $this->body = $this->createComponent(ModalBodyComponent::class);
+            $this->body->addClass('p-0');
+        }
+
+        return $this->body->table(...$delegates);
+    }
+
+    /**
+     * @param ...$delegates
      * @return $this
      */
     public function model_table(...$delegates): static

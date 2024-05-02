@@ -12,8 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Reformat code.
 * Remove old generator.
 * Prepare export for the model table component.
+* Now menu in modal.
+* Table for modal body.
 ### Added
 * Factory running if exists in the model.
+* Modal info page.
 
 ## [6.2.1] - 2024-04-26
 
