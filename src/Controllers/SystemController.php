@@ -91,11 +91,18 @@ class SystemController extends Controller
             Request::server('HTTP_REFERER')
         );
 
-        Route::dispatch(
+        $page = Route::dispatch(
             Request::create(
                 $refUrl
             )
-        )->getContent();
+        );
+
+        $content = $page->getContent();
+
+        if ($page->getStatusCode() == 500) {
+
+            echo $content; die;
+        }
     }
 
     /**

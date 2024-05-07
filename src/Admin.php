@@ -7,7 +7,6 @@ namespace Admin;
 use Admin\Components\Vue\ModalCollection;
 use Admin\Models\AdminUser;
 use Admin\Themes\AdminLteTheme;
-use Admin\Themes\PublishedAdminLteTheme;
 use Admin\Themes\Theme;
 use Auth;
 use Composer\InstalledVersions;
@@ -21,14 +20,13 @@ class Admin
     /**
      * @var string
      */
-    public static string $version = '6.1.0';
+    public static string $version = '6.2.3';
 
     /**
      * @var Theme[]
      */
     public static array $themes = [
         'admin-lte' => AdminLteTheme::class,
-        'published-admin-lte' => PublishedAdminLteTheme::class,
     ];
 
     /**

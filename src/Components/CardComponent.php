@@ -408,7 +408,7 @@ class CardComponent extends Component
                 $modal = new Modal();
                 $nowMenu = admin_repo()->now;
 
-                $infoRows = [
+                $infoRows = $nowMenu ? [
                     'ID' => $nowMenu->getId(),
                     __('admin.controller') => admin_repo()->currentController::class,
                     __('admin.type') => $nowMenu->getType(),
@@ -427,7 +427,7 @@ class CardComponent extends Component
                     __('admin.is-extension') => $nowMenu->getExtension()
                         ? ModelTableComponent::callExtension('badge', [__('admin.yes'), ["success"]])
                         : ModelTableComponent::callExtension('badge', [__('admin.no'), ["danger"]]),
-                ];
+                ] : [];
 
                 $this->modal(
                     $modal->name('model_info_modal'),
