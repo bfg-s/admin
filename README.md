@@ -18,6 +18,7 @@ composer require bfg/admin:^6
 
 # Documentation
 We have extensive [documentation](https://wood.veskod.com/documentation/admin-panel) in which you can get acquainted with the bfg admin panel.
+If you need more live help, contact the [GPT assistant](https://chatgpt.com/g/g-IVDdWZUXy-bfg-admin-proffesional) 
 
 # Demo
 [Video on YouTube](https://www.youtube.com/watch?v=2HjjJsHDKTg)
