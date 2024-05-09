@@ -119,7 +119,7 @@ class Authenticate
         $response = $next($request);
 
         if (!static::$alreadyPost) {
-            admin_log_primary('Loaded page', trim(Route::currentRouteAction(), '\\'), 'fas fa-file-download');
+            admin_log_primary('Loaded page', trim(Route::currentRouteAction() ?: '', '\\'), 'fas fa-file-download');
         }
 
         if ($response instanceof Response) {
