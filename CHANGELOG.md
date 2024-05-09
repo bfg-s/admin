@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.2.3] - 2024-05-07
+## [6.2.3] - 2024-05-09
 
 ### Fixed
 * Fixed bug in call backs.
+* Extension create, setup extension with "dev-main"
+* Documentation url in the navigation.
 
 ### Added
 * Check on status 500 referer in the SystemController.

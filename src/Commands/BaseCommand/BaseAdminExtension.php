@@ -128,7 +128,7 @@ class BaseAdminExtension extends Command
 
         $this->add_repo_to_composer(str_replace(base_path().'/', '', $base_dir).'/');
 
-        $this->call_composer("require {$name}");
+        $this->call_composer("require {$name}:\"dev-main\"");
 
         $this->info("Extension [{$name}] created!");
 

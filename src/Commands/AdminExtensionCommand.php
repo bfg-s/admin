@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\Commands;
 
 use Admin\Commands\BaseCommand\BaseAdminExtension;
+use League\Flysystem\FilesystemException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -38,8 +39,9 @@ class AdminExtensionCommand extends BaseAdminExtension
      * Execute the console command.
      *
      * @return mixed
+     * @throws FilesystemException
      */
-    public function handle()
+    public function handle(): mixed
     {
         $name = $this->argument('name');
 

@@ -71,7 +71,7 @@
 
         @if(admin()->isRoot())
             <li class="nav-item">
-                <a class="nav-link" target="_blank" href="https://wood.veskod.com/documentation/admin-panel" title="{{__('admin.documentation')}}" role="button">
+                <a class="nav-link" target="_blank" href="https://xsaven.github.io/bfg-admin-documentation" title="{{__('admin.documentation')}}" role="button">
                     <i class="fas fa-book"></i>
                 </a>
             </li>
