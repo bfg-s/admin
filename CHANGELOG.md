@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 * Check on status 500 referer in the SystemController.
+* Select delegates for default delegate helpers (statisticBody, nestedModelTable, sortedModelTable).
+* Check on exists default id, created_at and updated_at.
 
 ### Changed
 * Remove lte publish theme.

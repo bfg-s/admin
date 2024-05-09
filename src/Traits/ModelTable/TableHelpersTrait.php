@@ -235,7 +235,10 @@ trait TableHelpersTrait
      */
     public function id(): static
     {
-        $this->column('admin.id', 'id')->true_data()->hide_on_mobile()->sort();
+        if (collect($this->columns)->where('field', 'id')->isEmpty()) {
+
+            $this->column('admin.id', 'id')->true_data()->hide_on_mobile()->sort();
+        }
 
         return $this;
     }
@@ -275,7 +278,10 @@ trait TableHelpersTrait
      */
     public function created_at(): static
     {
-        $this->column('admin.created_at', 'created_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        if (collect($this->columns)->where('field', 'created_at')->isEmpty()) {
+
+            $this->column('admin.created_at', 'created_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        }
 
         return $this;
     }
@@ -285,7 +291,10 @@ trait TableHelpersTrait
      */
     public function updated_at(): static
     {
-        $this->column('admin.updated_at', 'updated_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        if (collect($this->columns)->where('field', 'updated_at')->isEmpty()) {
+
+            $this->column('admin.updated_at', 'updated_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        }
 
         return $this;
     }
@@ -295,7 +304,10 @@ trait TableHelpersTrait
      */
     public function deleted_at(): static
     {
-        $this->column('admin.deleted_at', 'deleted_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        if (collect($this->columns)->where('field', 'deleted_at')->isEmpty()) {
+
+            $this->column('admin.deleted_at', 'deleted_at')->beautiful_date_time()->true_data()->hide_on_mobile()->sort();
+        }
 
         return $this;
     }

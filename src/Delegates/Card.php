@@ -18,8 +18,31 @@ class Card extends Delegator
 {
     use Macroable;
 
+    /**
+     * @var string
+     */
     protected $class = CardComponent::class;
 
+    /**
+     * @var StatisticPeriod|string
+     */
+    protected StatisticPeriod|string $statisticPeriodClass = StatisticPeriod::class;
+
+    /**
+     * @var ModelTable|string
+     */
+    protected ModelTable|string $modelTableClass = ModelTable::class;
+
+    /**
+     * @var SearchForm|string
+     */
+    protected SearchForm|string $searchFormClass = SearchForm::class;
+
+    /**
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
@@ -35,11 +58,48 @@ class Card extends Delegator
         return parent::__call($method, $parameters);
     }
 
+    /**
+     * @param  StatisticPeriod|string  $statisticPeriod
+     * @return $this
+     */
+    public function withStatisticPeriodClass(StatisticPeriod|string $statisticPeriod): static
+    {
+        $this->statisticPeriodClass = $statisticPeriod;
+
+        return $this;
+    }
+
+    /**
+     * @param  ModelTable|string  $modelTable
+     * @return $this
+     */
+    public function withModelTableClass(ModelTable|string $modelTable): static
+    {
+        $this->modelTableClass = $modelTable;
+
+        return $this;
+    }
+
+    /**
+     * @param  SearchForm|string  $searchForm
+     * @return $this
+     */
+    public function withSearchFormClass(SearchForm|string $searchForm): static
+    {
+        $this->searchFormClass = $searchForm;
+
+        return $this;
+    }
+
+    /**
+     * @param ...$delegates
+     * @return array
+     */
     public function statisticBody(...$delegates): array
     {
-        $statisticPeriod = new StatisticPeriod();
-        $modelTable = new ModelTable();
-        $searchForm = new SearchForm();
+        $statisticPeriod = is_string($this->statisticPeriodClass) ? new $this->statisticPeriodClass() : $this->statisticPeriodClass;
+        $modelTable = is_string($this->modelTableClass) ? new $this->modelTableClass() : $this->modelTableClass;
+        $searchForm = is_string($this->searchFormClass) ? new $this->searchFormClass() : $this->searchFormClass;
 
         return [
             $this->ifNotQuery('chart')->buttons()->warning(['fas fa-chart-line', __('admin.statistic')])
@@ -89,8 +149,8 @@ class Card extends Delegator
 
     public function sortedModelTable(...$delegators): array
     {
-        $statisticPeriod = new StatisticPeriod();
-        $modelTable = new ModelTable();
+        $statisticPeriod = is_string($this->statisticPeriodClass) ? new $this->statisticPeriodClass() : $this->statisticPeriodClass;
+        $modelTable = is_string($this->modelTableClass) ? new $this->modelTableClass() : $this->modelTableClass;
 
         return [
             $this->ifNotQuery('screen', 1)->buttons()->info(['fas fa-stream', __('admin.sort')])
