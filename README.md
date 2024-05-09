@@ -17,7 +17,7 @@ composer require bfg/admin:^6
 ```
 
 # Documentation
-We have extensive [documentation](https://xsaven.github.io/bfg-admin-documentation) in which you can get acquainted with the bfg admin panel.
+We have extensive [documentation](https://bfg-s.github.io/admin-documentation) in which you can get acquainted with the bfg admin panel.
 If you need more live help, contact the [GPT assistant](https://chatgpt.com/g/g-IVDdWZUXy-bfg-admin-proffesional) 
 
 # Demo
