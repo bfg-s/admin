@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 * Check on status 500 referer in the SystemController.
-* Select delegates for default delegate helpers (statisticBody, nestedModelTable, sortedModelTable).
-* Check on exists default id, created_at and updated_at.
+* Select delegates for default delegate helpers (statisticBody, nestedModelTable, sortedModelTable). [issue](https://github.com/bfg-s/admin/issues/1)
+* Check on exists default id, created_at and updated_at. [issue](https://github.com/bfg-s/admin/issues/1)
 
 ### Changed
 * Remove lte publish theme.
