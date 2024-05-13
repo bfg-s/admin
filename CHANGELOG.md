@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Fixed bug in call backs.
 * Fixed extension create, setup extension with "dev-main"
 * Fixed documentation url in the navigation.
+* Fixed decrypt old language.
 * Added check on status 500 referer in the SystemController.
 * Added select delegates for default delegate helpers (statisticBody, nestedModelTable, sortedModelTable). [issue](https://github.com/bfg-s/admin/issues/1)
 * Added check on exists default id, created_at and updated_at. [issue](https://github.com/bfg-s/admin/issues/1)

@@ -253,8 +253,11 @@ class Admin
                 if (in_array($lang, config('admin.languages', ['en', 'uk', 'ru']))) {
                     $select = $lang;
                 } else {
-                    $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
-
+                    try {
+                        $lang = explode("|", Crypt::decryptString($lang))[1] ?? null;
+                    } catch (\Throwable) {
+                        $lang = null;
+                    }
                     if (in_array($lang, config('admin.languages'))) {
                         $select = $lang;
                     }
