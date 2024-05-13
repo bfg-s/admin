@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Added select delegates for default delegate helpers (statisticBody, nestedModelTable, sortedModelTable). [issue](https://github.com/bfg-s/admin/issues/1)
 * Added check on exists default id, created_at and updated_at. [issue](https://github.com/bfg-s/admin/issues/1)
 * Changed remove lte publish theme.
+* Changed color of restore button from warning to success.
 
 ## [6.2.2](https://github.com/bfg-s/admin/compare/6.2.1...6.2.2) - 2024-05-02
 

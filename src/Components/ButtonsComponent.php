@@ -338,7 +338,7 @@ class ButtonsComponent extends Component
         }
 
         if ($link) {
-            return $this->warning([
+            return $this->success([
                 'fas fa-trash-restore-alt', $title ?? __('admin.restore')
             ])->on_click('admin::delete_item', [
                 __(
