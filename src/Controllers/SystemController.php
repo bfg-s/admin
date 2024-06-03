@@ -8,14 +8,15 @@ use Admin\Components\ChartJsComponent;
 use Admin\Components\Inputs\SelectInput;
 use Admin\Components\LiveComponent;
 use Admin\Components\ModalComponent;
-use Admin\Components\ModelTableComponent;
 use Admin\Core\PrepareExport;
+use Admin\Middlewares\Authenticate;
 use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\LoadSelect2Request;
 use Admin\Requests\NestableSaveRequest;
+use Admin\Requests\RealtimeRequest;
 use Admin\Requests\SaveImageOrderRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
@@ -27,10 +28,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
-use OpenSpout\Common\Exception\InvalidArgumentException;
-use OpenSpout\Common\Exception\IOException;
-use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use PhpOffice\PhpSpreadsheet\Exception;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
@@ -39,21 +36,67 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
+/**
+ * System controller admin panel for processing all requests under the hood.
+ */
 class SystemController extends Controller
 {
     /**
+     * Callbacks of all events that the admin panel uses. Click, double click, hover.
+     *
      * @var array
      */
-    public static array $callbacks = [
+    public static array $componentEventCallbacks = [
 
     ];
 
     /**
-     * @var int
+     * The list of realtime components for update.
+     *
+     * @var \Admin\Components\Component[]
      */
-    protected static $i = 0;
+    public static array $realtimeComponents = [
+
+    ];
 
     /**
+     * Accounting iteration to handle nesting and sorting component data persistence.
+     *
+     * @var int
+     */
+    protected static int $iteration = 0;
+
+    /**
+     * Simulate the processing of the previous page in order to build the page anew and select the necessary data.
+     *
+     * @return void
+     */
+    protected function refererEmit(): void
+    {
+        Authenticate::$noLog = true;
+
+        $refUrl = str_replace(
+            '/'.App::getLocale(), '/en',
+            Request::server('HTTP_REFERER')
+        );
+
+        $page = Route::dispatch(
+            Request::create(
+                $refUrl
+            )
+        );
+
+        $content = $page->getContent();
+
+        if ($page->getStatusCode() == 500) {
+
+            echo $content; die;
+        }
+    }
+
+    /**
+     * Endpoint for loading live parts of the page.
+     *
      * @return array
      * @throws Throwable
      */
@@ -82,30 +125,8 @@ class SystemController extends Controller
     }
 
     /**
-     * @return void
-     */
-    protected function refererEmit(): void
-    {
-        $refUrl = str_replace(
-            '/'.App::getLocale(), '/en',
-            Request::server('HTTP_REFERER')
-        );
-
-        $page = Route::dispatch(
-            Request::create(
-                $refUrl
-            )
-        );
-
-        $content = $page->getContent();
-
-        if ($page->getStatusCode() == 500) {
-
-            echo $content; die;
-        }
-    }
-
-    /**
+     * Endpoint for loading modal windows.
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array|mixed|void
      * @throws Throwable
@@ -141,21 +162,18 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for exporting data to Excel.
+     *
      * @param  ExportExcelRequest  $request
-     * @return mixed
-     * @throws IOException
-     * @throws InvalidArgumentException
-     * @throws Throwable
-     * @throws UnsupportedTypeException
-     * @throws WriterNotOpenedException
+     * @return array|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function export_excel(ExportExcelRequest $request)
+    public function export_excel(ExportExcelRequest $request): BinaryFileResponse|array
     {
         if (!check_referer()) {
             return [];
         }
-
-        ModelTableComponent::$is_export = true;
 
         $this->refererEmit();
 
@@ -170,12 +188,14 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for exporting data to csv.
+     *
      * @param  ExportExcelRequest  $request
      * @return array|BinaryFileResponse
      * @throws Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function export_csv(ExportExcelRequest $request)
+    public function export_csv(ExportExcelRequest $request): BinaryFileResponse|array
     {
         if (!check_referer()) {
             return [];
@@ -194,6 +214,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for switching the dark theme of the admin panel.
+     *
      * @param  Respond  $respond
      * @return Respond
      */
@@ -215,6 +237,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for saving custom data, for custom inputs that can be embedded in a table, for example.
+     *
      * @param  CustomSaveRequest  $request
      * @param  Respond  $respond
      * @return Respond|array
@@ -252,6 +276,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for calling the callback of a click, double-click or hover event.
+     *
      * @param  CallCallbackRequest  $request
      * @param  Respond  $respond
      * @return Respond|array
@@ -264,10 +290,10 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        if (isset(static::$callbacks[$request->key])) {
+        if (isset(static::$componentEventCallbacks[$request->key])) {
             admin_log_warning('Call callback', (string) $request->key, 'fas fa-balance-scale-right');
 
-            app()->call(static::$callbacks[$request->key], $request->parameters);
+            app()->call(static::$componentEventCallbacks[$request->key], $request->parameters);
         } else {
             $respond->toast_error(__('admin.callback_not_found'));
         }
@@ -276,6 +302,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for mass deletion of records using table actions.
+     *
      * @param  TableActionRequest  $request
      * @param  Respond  $respond
      * @return Respond|array
@@ -312,6 +340,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for saving data from nesting and sorting components.
+     *
      * @param  NestableSaveRequest  $request
      * @param  Respond  $respond
      * @return Respond|array
@@ -337,7 +367,7 @@ class SystemController extends Controller
                 }
             });
             admin_log_warning('Nested save', "For [$request->model]", 'fas fa-network-wired');
-            static::$i = 0;
+            static::$iteration = 0;
             $respond->toast_success(__('admin.saved_successfully'));
         }
 
@@ -345,6 +375,8 @@ class SystemController extends Controller
     }
 
     /**
+     * A helper method for handling nested data for the nesting and sorting component.
+     *
      * @param  array  $data
      * @param  int|string  $depth
      * @param  string|null  $parent_field
@@ -358,7 +390,7 @@ class SystemController extends Controller
         string $parent_field = null,
         $parent = null,
         string $order_field = 'order'
-    ) {
+    ): array {
         $result = [];
 
         foreach ($data as $item) {
@@ -370,11 +402,11 @@ class SystemController extends Controller
                 $new['data'][$parent_field ?? 'parent_id'] = $parent;
             }
 
-            $new['data'][$order_field ?? 'order'] = static::$i;
+            $new['data'][$order_field ?? 'order'] = static::$iteration;
 
             $result[] = $new;
 
-            static::$i++;
+            static::$iteration++;
 
             if (isset($item['children'])) {
                 $result = array_merge(
@@ -387,7 +419,13 @@ class SystemController extends Controller
         return $result;
     }
 
-    public function load_chart_js(LoadChartJsRequest $request)
+    /**
+     * Endpoint for downloading graph data.
+     *
+     * @param  \Admin\Requests\LoadChartJsRequest  $request
+     * @return array
+     */
+    public function load_chart_js(LoadChartJsRequest $request): array
     {
         $this->refererEmit();
 
@@ -400,7 +438,13 @@ class SystemController extends Controller
         return [];
     }
 
-    public function load_select2(LoadSelect2Request $request)
+    /**
+     * Endpoint for loading select2 data.
+     *
+     * @param  \Admin\Requests\LoadSelect2Request  $request
+     * @return array
+     */
+    public function load_select2(LoadSelect2Request $request): string|array
     {
         $this->refererEmit();
 
@@ -412,6 +456,40 @@ class SystemController extends Controller
     }
 
     /**
+     * Realtime endpoint for updating the component.
+     *
+     * @param  \Admin\Requests\RealtimeRequest  $request
+     * @return \Illuminate\Http\JsonResponse|string|null
+     */
+    public function realtime(RealtimeRequest $request): \Illuminate\Http\JsonResponse|string|null
+    {
+        $this->refererEmit();
+
+        $result = [];
+
+        foreach ($request->names as $name) {
+
+            $component = static::$realtimeComponents[$name] ?? null;
+
+            if ($component) {
+
+                $result[$name] = $component->getRenderedView();
+            }
+        }
+
+        if ($result) {
+
+            return response()->json($result);
+        }
+
+        return response()->json([
+            'status' => 'fail',
+        ]);
+    }
+
+    /**
+     * Endpoint for text translation.
+     *
      * @param  TranslateRequest  $request
      * @return string|null
      * @throws LargeTextException
@@ -426,6 +504,8 @@ class SystemController extends Controller
     }
 
     /**
+     * Endpoint for maintaining the order of images in the image component in multi mode.
+     *
      * @param  SaveImageOrderRequest  $request
      * @param  Respond  $respond
      * @return Respond
@@ -445,7 +525,12 @@ class SystemController extends Controller
         return $respond;
     }
 
-    public function deleteOrderedImage()
+    /**
+     * Endpoint stub for "deleting an image".
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteOrderedImage(): \Illuminate\Http\JsonResponse
     {
         return response()->json(['success' => true]);
     }

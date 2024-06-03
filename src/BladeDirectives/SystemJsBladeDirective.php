@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class is responsible for the @adminSystemJs blade directive.
+ */
 class SystemJsBladeDirective
 {
     /**
+     * Property for storing custom admin panel scripts.
+     *
      * @var array
      */
     protected static array $componentJs = [];
 
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -22,12 +29,14 @@ class SystemJsBladeDirective
     }
 
     /**
+     * A function that is responsible for generating scripts.
+     *
      * @param  bool  $tag
      * @return string
      */
     public static function buildScripts(bool $tag = true): string
     {
-        $extensions = AdminFacade::extensions();
+        $extensions = Admin::extensions();
 
         $html = [];
 
@@ -43,7 +52,7 @@ class SystemJsBladeDirective
             $html[] = $componentJ;
         }
 
-        if ($themeJs = AdminFacade::getTheme()->js()) {
+        if ($themeJs = Admin::getTheme()->js()) {
             $html[] = $themeJs;
         }
 
@@ -59,6 +68,8 @@ class SystemJsBladeDirective
     }
 
     /**
+     * Add a custom script to the admin panel.
+     *
      * @param  string  $js
      * @return void
      */

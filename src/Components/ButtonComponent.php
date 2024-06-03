@@ -4,35 +4,74 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\Typeable;
 
+/**
+ * The button component is responsible for all buttons in the admin panel.
+ */
 class ButtonComponent extends Component
 {
-    use TypesTrait;
-    use FontAwesome;
+    use Typeable;
+    use FontAwesomeTrait;
 
     /**
+     * Name of the button icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * The text indicated on the button.
+     *
      * @var null|string
      */
     protected ?string $title = null;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'button';
 
     /**
+     * Button type attribute.
+     *
      * @var string
      */
     protected string $typeAttribute = 'button';
 
     /**
+     * Set an icon to the button.
+     *
+     * @param  string  $name
+     * @return $this
+     */
+    public function icon(string $name): static
+    {
+        $this->icon = $name;
+
+        return $this;
+    }
+
+    /**
+     * Set the text that will be displayed on the button.
+     *
+     * @param  string  $title
+     * @return $this
+     */
+    public function title(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Set the button type attribute.
+     *
      * @return $this
      */
     public function setType(string $type): static
@@ -43,6 +82,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * By clicking, call up the modal window specified by name.
+     *
      * @param  string  $modalName
      * @param  array  $query
      * @return $this
@@ -60,6 +101,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Destroy the currently called modal window.
+     *
      * @return $this
      */
     public function modalDestroy(): static
@@ -72,6 +115,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Hide the currently called modal window.
+     *
      * @return $this
      */
     public function modalHide(): static
@@ -84,6 +129,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Submit the form from the currently called modal window.
+     *
      * @return $this
      */
     public function modalSubmit(string $after = "destroy"): static
@@ -96,6 +143,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Go to the page and add or reset the query parameter "method".
+     *
      * @param  string|null  $method
      * @return $this
      */
@@ -111,6 +160,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Go to the page and add or unset any query parameter.
+     *
      * @param  array  $params
      * @param  array  $unset
      * @return $this
@@ -123,6 +174,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Go to the page and unset or add any query parameter.
+     *
      * @param  array  $unset
      * @param  array  $params
      * @return $this
@@ -133,6 +186,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Go to the page and switch any query parameter, if there is one, remove it, if not, add it.
+     *
      * @param  string|array  $name
      * @param  mixed  $value
      * @return $this
@@ -149,6 +204,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * The wrapper over `query` accepts multiple keys.
+     *
      * @param  string|array  $name
      * @param  mixed  $value
      * @return $this
@@ -161,6 +218,8 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Remove the query parameter or parameters.
+     *
      * @param  string|array  $name
      * @return $this
      */
@@ -172,47 +231,8 @@ class ButtonComponent extends Component
     }
 
     /**
-     * @param  array  $data
-     * @return $this
-     */
-    public function iconTitle(array $data): static
-    {
-        $this->icon($data[0] ?? '');
-        $this->title($data[1] ?? '');
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $name
-     * @return $this
-     */
-    public function icon(string $name): static
-    {
-        $this->icon = $name;
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $title
-     * @return $this
-     */
-    public function title(string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return void
-     */
-    protected function mount(): void
-    {
-    }
-
-    /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -223,5 +243,14 @@ class ButtonComponent extends Component
             'icon' => $this->icon,
             'title' => $this->title,
         ];
+    }
+
+    /**
+     * Method for mounting components on the admin panel page.
+     *
+     * @return void
+     */
+    protected function mount(): void
+    {
     }
 }

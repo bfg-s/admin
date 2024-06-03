@@ -20,71 +20,100 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Intervention\Image\ImageManager;
 
+/**
+ * The part of the kernel that is responsible for saving form data.
+ */
 class ModelSaver
 {
     public const DELETE_FIELD = '__DELETE__';
 
     /**
+     * Event callbacks when saving data.
+     *
      * @var callable[]
      */
     protected static array $on_save = [];
 
     /**
+     * Event callbacks when data is saved.
+     *
      * @var callable[]
      */
     protected static array $on_saved = [];
 
     /**
+     * Event callbacks when data saving is completed.
+     *
      * @var callable[]
      */
     protected static array $on_finish = [];
 
     /**
+     * Event callbacks when before the data is created.
+     *
      * @var callable[]
      */
     protected static array $on_create = [];
 
     /**
+     * Event callbacks when after the data has been created.
+     *
      * @var callable[]
      */
     protected static array $on_created = [];
 
     /**
+     * Event callbacks when before the data is updated.
+     *
      * @var callable[]
      */
     protected static array $on_update = [];
 
     /**
+     * Event callbacks when after the data has been updated.
+     *
      * @var callable[]
      */
     protected static array $on_updated = [];
 
     /**
+     * Event callbacks when before the data is deleted.
+     *
      * @var callable[]
      */
     protected static array $on_delete = [];
 
     /**
+     * Event callbacks when after the data is deleted.
+     *
      * @var callable[]
      */
     protected static array $on_deleted = [];
 
     /**
+     * List of models with which the saver worked.
+     *
      * @var array
      */
     protected static array $modelsProcessed = [];
 
     /**
+     * Mark if any of the data was deleted.
+     *
      * @var bool
      */
     protected bool $has_delete = false;
 
     /**
+     * Data build source for recursive queries.
+     *
      * @var mixed
      */
     protected mixed $src = null;
 
     /**
+     * ModelSaver constructor.
+     *
      * @param  string|Model  $model
      * @param  array  $data
      * @param  object|null  $eventsObject
@@ -102,6 +131,8 @@ class ModelSaver
     }
 
     /**
+     * Perform an operation on the specified model with the specified date.
+     *
      * @template SaveModel
      * @param  SaveModel  $model
      * @param  array  $data
@@ -115,7 +146,7 @@ class ModelSaver
     }
 
     /**
-     * Save method.
+     * Method for saving data to the model.
      *
      * @return bool|Model
      */
@@ -142,6 +173,8 @@ class ModelSaver
     }
 
     /**
+     * Generate and receive data for saving.
+     *
      * @return array[]
      */
     protected function getDatas(): array
@@ -207,6 +240,8 @@ class ModelSaver
     }
 
     /**
+     * Get the name of the model key.
+     *
      * @return string|null
      */
     public function getModelKeyName(): ?string
@@ -216,6 +251,8 @@ class ModelSaver
     }
 
     /**
+     * Get the model.
+     *
      * @return Model|null
      */
     public function getModel(): ?Model
@@ -234,6 +271,8 @@ class ModelSaver
     }
 
     /**
+     * Calculate and obtain the nulllabel of the field.
+     *
      * @return array
      */
     protected function getNullableFields(): array
@@ -258,6 +297,8 @@ class ModelSaver
     }
 
     /**
+     * Get the model table.
+     *
      * @return string|null
      */
     public function getModelTable(): ?string
@@ -267,6 +308,8 @@ class ModelSaver
     }
 
     /**
+     * Get model fields.
+     *
      * @return array
      */
     protected function getFields(): array
@@ -281,13 +324,13 @@ class ModelSaver
     }
 
     /**
-     * Update model.
+     * Model update process.
      *
      * @param $data
      * @param $add
-     * @return bool|void
+     * @return mixed
      */
-    protected function update_model($data, $add)
+    protected function update_model($data, $add): mixed
     {
         if ($this->has_delete) {
             $this->call_on('on_delete', $this->data, $this->model);
@@ -375,6 +418,8 @@ class ModelSaver
     }
 
     /**
+     * Call an existing event.
+     *
      * @param  string  $name
      * @param  mixed  ...$params
      * @return array
@@ -415,6 +460,8 @@ class ModelSaver
     }
 
     /**
+     * Set the builder source for the nested relationship.
+     *
      * @param $src
      * @return $this
      */
@@ -426,7 +473,8 @@ class ModelSaver
     }
 
     /**
-     * Create model.
+     * The process of creating a model.
+     *
      * @param $data
      * @param $add
      * @return Model|string|null
@@ -534,6 +582,8 @@ class ModelSaver
     }
 
     /**
+     * Do as much work as possible with the model for recording.
+     *
      * @param $model
      * @param  array|Arrayable  $data
      * @return Collection
@@ -556,15 +606,8 @@ class ModelSaver
     }
 
     /**
-     * @param  callable|string  $model
-     * @param  callable|null  $call
-     */
-    public static function on_save(callable|string $model, callable $call = null): void
-    {
-        static::on('save', $model, $call);
-    }
-
-    /**
+     * Add an event to the specified event name.
+     *
      * @param  string  $event
      * @param $model
      * @param  callable|null  $call
@@ -587,6 +630,19 @@ class ModelSaver
     }
 
     /**
+     * Add an event when the model is saved.
+     *
+     * @param  callable|string  $model
+     * @param  callable|null  $call
+     */
+    public static function on_save(callable|string $model, callable $call = null): void
+    {
+        static::on('save', $model, $call);
+    }
+
+    /**
+     * Add an event when the model is saved.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -596,6 +652,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event when finished working with the model.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -605,6 +663,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event before creating the model.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -614,6 +674,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event when the model is created.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -623,6 +685,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event before updating the model.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -632,6 +696,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event when the model is updated.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -641,6 +707,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event before deleting a model.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -650,6 +718,8 @@ class ModelSaver
     }
 
     /**
+     * Add an event after deleting a model.
+     *
      * @param  callable|string  $model
      * @param  callable|null  $call
      */
@@ -659,6 +729,8 @@ class ModelSaver
     }
 
     /**
+     * Get a collection of instances of the specified model.
+     *
      * @param  string  $class
      * @return Collection|Model[]
      */

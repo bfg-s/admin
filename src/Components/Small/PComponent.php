@@ -6,14 +6,21 @@ namespace Admin\Components\Small;
 
 use Admin\Components\Component;
 
+/**
+ * The HTML component of the "p" tag.
+ */
 class PComponent extends Component
 {
     /**
+     * The tag element from which the component begins.
+     *
      * @var string
      */
-    protected $element = 'p';
+    protected string $element = 'p';
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

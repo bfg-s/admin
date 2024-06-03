@@ -9,6 +9,8 @@ use Admin\Page;
 use Closure;
 
 /**
+ * Part of the kernel that is responsible for providing delegations with the necessary functionality.
+ *
  * @property-read LangComponent|static $lang
  * @template DelegatedClass
  * @mixin DelegatedClass
@@ -16,12 +18,25 @@ use Closure;
 abstract class Delegator
 {
     /**
+     * Delegated actions for class.
+     *
      * @var DelegatedClass
      */
     protected $class;
 
-    protected $condition = true;
+    /**
+     * Condition under which the delegate will be executed.
+     *
+     * @var mixed|bool
+     */
+    protected mixed $condition = true;
 
+    /**
+     * The magic method for adding methods to the delegate.
+     *
+     * @param  string  $name
+     * @return \Admin\Core\Delegate
+     */
     public function __get(string $name)
     {
         $result = (new Delegate($this->class, $this->condition))->__call($name, []);
@@ -30,6 +45,13 @@ abstract class Delegator
         return $result;
     }
 
+    /**
+     * The magic method for adding methods to the delegate or calling macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
@@ -48,7 +70,13 @@ abstract class Delegator
         return $result;
     }
 
-    public function ifIndex($addCondition = true): static
+    /**
+     * Execute the following delegations if the resource type is now index.
+     *
+     * @param  mixed  $addCondition
+     * @return $this
+     */
+    public function ifIndex(mixed $addCondition = true): static
     {
         $router = app('router');
         $this->if(
@@ -59,14 +87,26 @@ abstract class Delegator
         return $this;
     }
 
-    public function if($condition): static
+    /**
+     * Execute the following delegations if the condition is met.
+     *
+     * @param  mixed  $condition
+     * @return $this
+     */
+    public function if(mixed $condition): static
     {
         $this->condition = is_callable($condition) ? call_user_func($condition) : $condition;
 
         return $this;
     }
 
-    public function ifCreate($addCondition = true): static
+    /**
+     * Execute the following delegations if the resource type is now creation.
+     *
+     * @param  mixed  $addCondition
+     * @return $this
+     */
+    public function ifCreate(mixed $addCondition = true): static
     {
         $router = app('router');
         $this->if(
@@ -78,7 +118,13 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifForm($addCondition = true): static
+    /**
+     * Perform the following delegations if the resource type is currently creation or editing.
+     *
+     * @param  mixed  $addCondition
+     * @return $this
+     */
+    public function ifForm(mixed $addCondition = true): static
     {
         $router = app('router');
         $this->if(
@@ -92,6 +138,12 @@ abstract class Delegator
         return $this;
     }
 
+    /**
+     * Execute the following delegations if the resource type is now displaying the model.
+     *
+     * @param ...$delegates
+     * @return $this
+     */
     public function ifShow(...$delegates): static
     {
         $router = app('router');
@@ -100,6 +152,13 @@ abstract class Delegator
         return $this;
     }
 
+    /**
+     * Execute the following delegations if the current query matches the specified one.
+     *
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool|$this
+     */
     public function ifQuery(string $path, mixed $need_value = true): bool|static
     {
         $val = request($path);
@@ -112,6 +171,13 @@ abstract class Delegator
         return $this;
     }
 
+    /**
+     * Execute the following delegations if the current query does not match the specified one.
+     *
+     * @param  string  $path
+     * @param  mixed  $need_value
+     * @return bool|$this
+     */
     public function ifNotQuery(string $path, mixed $need_value = true): bool|static
     {
         $val = request($path);
@@ -124,7 +190,13 @@ abstract class Delegator
         return $this;
     }
 
-    public function ifNot($condition): static
+    /**
+     * Execute the following delegations if the specified conditions worked out false.
+     *
+     * @param  mixed  $condition
+     * @return $this
+     */
+    public function ifNot(mixed $condition): static
     {
         $this->condition = !(is_callable($condition) ? call_user_func($condition) : $condition);
 
@@ -132,6 +204,8 @@ abstract class Delegator
     }
 
     /**
+     * If the model input is not equal to the specified value.
+     *
      * @param  string  $path
      * @param  mixed  $need_value
      * @return bool
@@ -142,6 +216,8 @@ abstract class Delegator
     }
 
     /**
+     * If the model input is equal to the specified value.
+     *
      * @param  string  $path
      * @param  mixed  $need_value
      * @return bool
@@ -156,7 +232,14 @@ abstract class Delegator
         return $need_value == (is_bool($need_value) ? (bool) $val : $val);
     }
 
-    public function modelInput(string $path, $default = null)
+    /**
+     * Get the value of the share if there is no request, if there is a request with a similar name, then the request will be taken.
+     *
+     * @param  string  $path
+     * @param $default
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\Request|mixed|string|null
+     */
+    public function modelInput(string $path, $default = null): mixed
     {
         $model = app(Page::class)->model();
 
@@ -167,14 +250,13 @@ abstract class Delegator
         return request($path, $default);
     }
 
-    public function inputInfoId(): array
-    {
-        return [
-            $this->ifEdit()->info('id', 'admin.id')
-        ];
-    }
-
-    public function ifEdit($addCondition = true): static
+    /**
+     * Process the following delegations if the current resource type is editing.
+     *
+     * @param mixed $addCondition
+     * @return $this
+     */
+    public function ifEdit(mixed $addCondition = true): static
     {
         $router = app('router');
         $this->if(
@@ -186,6 +268,23 @@ abstract class Delegator
         return $this;
     }
 
+    /**
+     * Helper for adding input information about the identifier.
+     *
+     * @return array
+     */
+    public function inputInfoId(): array
+    {
+        return [
+            $this->ifEdit()->info('id', 'admin.id')
+        ];
+    }
+
+    /**
+     * Helper for adding timestamp information input.
+     *
+     * @return array
+     */
     public function inputInfoAt(): array
     {
         return [

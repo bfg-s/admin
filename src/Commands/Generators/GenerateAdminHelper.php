@@ -11,15 +11,18 @@ use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Illuminate\Console\Command;
 use ReflectionClass;
 
+/**
+ * The class that is responsible for the methods of components that are imported using the magic method.
+ */
 class GenerateAdminHelper implements AdminHelpGeneratorInterface
 {
     /**
-     * Handle call method.
+     * Output helper generation function.
      *
      * @param  Command  $command
      * @return string
      */
-    public function handle(Command $command)
+    public function handle(Command $command): string
     {
         $namespace = namespace_entity("Admin\\Components");
 
@@ -34,18 +37,18 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
             $this->generateComponents($doc);
         });
         $class2->doc(function ($doc) {
-            $this->generateComponents2($doc);
+            $this->generateComponentsInPage($doc);
         });
 
         return $namespace->render();
     }
 
     /**
-     * Generate components.
+     * Generate helpers methods for components.
      *
      * @param  DocumentorEntity  $doc
      */
-    protected function generateComponents($doc)
+    protected function generateComponents(DocumentorEntity $doc): void
     {
         collect(Component::$components)->map(function ($item, $key) use ($doc) {
             if (!class_exists($item)) {
@@ -69,11 +72,11 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
     }
 
     /**
-     * Generate components.
+     * Generate helper methods for components in Page class.
      *
      * @param  DocumentorEntity  $doc
      */
-    protected function generateComponents2($doc)
+    protected function generateComponentsInPage(DocumentorEntity $doc): void
     {
         collect(Component::$components)->map(function ($item, $key) use ($doc) {
             if (!class_exists($item)) {

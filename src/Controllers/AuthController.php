@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,16 +17,16 @@ use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
-use function respond;
-
 class AuthController
 {
     /**
-     * Make login page.
+     * Admin panel login page.
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function login()
+    public function login(): \Illuminate\View\View|RedirectResponse
     {
-        if (!AdminFacade::guest()) {
+        if (!Admin::guest()) {
             return redirect()->route(config('admin.home-route', 'admin.dashboard'));
         }
 
@@ -34,13 +34,16 @@ class AuthController
     }
 
     /**
-     * Make login page.
+     * Security definition page with input of 2FA admin panel.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Routing\Redirector|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
      */
-    public function twofa(Request $request)
+    public function twoFa(Request $request): View|Factory|Redirector|\Illuminate\View\View|Application|RedirectResponse
     {
-        $result = $this->login_post($request);
+        $result = $this->loginPost($request);
 
-        if (AdminFacade::guest()) {
+        if (Admin::guest()) {
             return redirect()->route('admin.login');
         }
 
@@ -58,10 +61,12 @@ class AuthController
     }
 
     /**
-     * @param  Request  $request
-     * @return Application|Factory|View|RedirectResponse|Redirector
+     * Login processing page for the admin panel.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function login_post(Request $request)
+    public function loginPost(Request $request): \Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
     {
         $request->validate([
             'login' => 'required|min:3|max:191',
@@ -100,11 +105,13 @@ class AuthController
     }
 
     /**
+     * Page for entering 2FA for the admin panel.
+     *
      * @return RedirectResponse
      */
-    public function twofaGet()
+    public function twoFaGet(): RedirectResponse
     {
-        if (!AdminFacade::guest()) {
+        if (!Admin::guest()) {
             return redirect()->route(config('admin.home-route', 'admin.dashboard'));
         }
 
@@ -112,11 +119,13 @@ class AuthController
     }
 
     /**
+     * Page for processing 2FA code for the admin panel.
+     *
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws SecretKeyTooShortException
      * @throws InvalidCharactersException
      */
-    public function twofaPost(Request $request)
+    public function twoFaPost(Request $request): View|Factory|\Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
     {
         $data = $request->validate([
             'login' => 'required|min:3|max:191',
@@ -124,7 +133,7 @@ class AuthController
             'code' => 'required|min:6|max:6',
         ]);
 
-        $result = $this->login_post($request);
+        $result = $this->loginPost($request);
 
         if (!admin()) {
             return redirect()->route('admin.login');

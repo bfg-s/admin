@@ -10,11 +10,14 @@ class ApplicationServiceProvider extends ExtendProvider
 {
     /**
      * Extension call slug.
+     *
      * @var string
      */
-    public static $slug = 'application';
+    public static string $slug = 'application';
 
     /**
+     * Standard admin panel scripts.
+     *
      * @var array
      */
     protected array $defaultScripts = [
@@ -76,6 +79,8 @@ class ApplicationServiceProvider extends ExtendProvider
     ];
 
     /**
+     * Standard admin panel styles.
+     *
      * @var array
      */
     protected array $defaultStyles = [
@@ -114,9 +119,11 @@ class ApplicationServiceProvider extends ExtendProvider
     ];
 
     /**
+     * A method that is executed immediately after registering a service provider.
+     *
      * @throws Exception
      */
-    public function register()
+    public function register(): void
     {
         static::$name = config('app.name');
 
@@ -124,6 +131,8 @@ class ApplicationServiceProvider extends ExtendProvider
     }
 
     /**
+     * Method for initializing the configuration. Called when the configuration is loaded.
+     *
      * @return void
      * @throws Exception
      */
@@ -139,9 +148,11 @@ class ApplicationServiceProvider extends ExtendProvider
     }
 
     /**
+     * A method that determines whether the extension will participate in the navigation of the admin panel.
+     *
      * @return bool
      */
-    public function included()
+    public function included(): bool
     {
         return true;
     }

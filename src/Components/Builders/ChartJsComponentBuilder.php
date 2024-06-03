@@ -7,22 +7,31 @@ namespace Admin\Components\Builders;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
+/**
+ * Special kernel chart builder ChartJS.
+ */
 class ChartJsComponentBuilder
 {
     /**
+     * List of chart builders.
+     *
      * @var array
      */
-    protected static $charts = [];
+    protected static array $charts = [];
 
     /**
-     * @var string
+     * Unique name of the current chart.
+     *
+     * @var string|null
      */
-    private $name;
+    private string|null $name = null;
 
     /**
+     * Default settings for the current chart.
+     *
      * @var array
      */
-    private $defaults = [
+    private array $defaults = [
         'datasets' => [],
         'labels' => [],
         'type' => 'line',
@@ -31,9 +40,11 @@ class ChartJsComponentBuilder
     ];
 
     /**
+     * List of acceptable chart types.
+     *
      * @var array
      */
-    private $types = [
+    private array $types = [
         'bar',
         'horizontalBar',
         'bubble',
@@ -45,6 +56,9 @@ class ChartJsComponentBuilder
         'radar',
     ];
 
+    /**
+     * ChartJsComponentBuilder constructor.
+     */
     public function __construct()
     {
         $num = count(static::$charts);
@@ -52,11 +66,12 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param $name
+     * Set a unique name for the chart.
      *
-     * @return $this|ChartJsComponentBuilder
+     * @param $name
+     * @return $this
      */
-    public function name($name)
+    public function name($name): static
     {
         $old = static::$charts[$this->name] ?? [];
         $this->name = $name;
@@ -66,22 +81,24 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param $element
+     * Set graphic element.
      *
-     * @return ChartJsComponentBuilder
+     * @param $element
+     * @return $this
      */
-    public function element($element)
+    public function element($element): static
     {
         return $this->set('element', $element);
     }
 
     /**
+     * Set the value of the current chart.
+     *
      * @param $key
      * @param $value
-     *
-     * @return $this|ChartJsComponentBuilder
+     * @return $this
      */
-    private function set($key, $value)
+    private function set($key, $value): static
     {
         Arr::set(static::$charts[$this->name], $key, $value);
 
@@ -89,31 +106,35 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param  array  $labels
+     * Set labels for the current chart.
      *
-     * @return ChartJsComponentBuilder
+     * @param  array  $labels
+     * @return $this
      */
-    public function labels(array $labels)
+    public function labels(array $labels): static
     {
         return $this->set('labels', $labels);
     }
 
     /**
-     * @param  array  $datasets
+     * Install datasets of the current chart.
      *
-     * @return ChartJsComponentBuilder
+     * @param  array  $datasets
+     * @return $this
      */
-    public function datasets(array $datasets)
+    public function datasets(array $datasets): static
     {
         return $this->set('datasets', $datasets);
     }
 
     /**
+     * Install simple datasets of the current chart.
+     *
      * @param  string  $label
      * @param  array  $dataset
-     * @return ChartJsComponentBuilder
+     * @return $this
      */
-    public function simpleDatasets(string $label, array $dataset)
+    public function simpleDatasets(string $label, array $dataset): static
     {
         static::$charts[$this->name]['datasets'][] = [
             'label' => $label,
@@ -123,7 +144,13 @@ class ChartJsComponentBuilder
         return $this;
     }
 
-    public function addDataset(array $dataset)
+    /**
+     * Add datasets of the current chart.
+     *
+     * @param  array  $dataset
+     * @return $this
+     */
+    public function addDataset(array $dataset): static
     {
         static::$charts[$this->name]['datasets'][] = $dataset;
 
@@ -131,11 +158,12 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param $type
+     * Set the current chart type.
      *
-     * @return ChartJsComponentBuilder
+     * @param $type
+     * @return $this
      */
-    public function type($type)
+    public function type($type): static
     {
         if (!in_array($type, $this->types)) {
             throw new InvalidArgumentException('Invalid Chart type.');
@@ -145,21 +173,23 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param  array  $size
+     * Set the size of the current chart.
      *
-     * @return ChartJsComponentBuilder
+     * @param  array  $size
+     * @return $this
      */
-    public function size($size)
+    public function size(array $size): static
     {
         return $this->set('size', $size);
     }
 
     /**
-     * @param  array  $options
+     * Set options for the current chart.
      *
-     * @return $this|ChartJsComponentBuilder
+     * @param  array  $options
+     * @return $this
      */
-    public function options(array $options)
+    public function options(array $options): static
     {
         foreach ($options as $key => $value) {
             $this->set('options.'.$key, $value);
@@ -169,13 +199,16 @@ class ChartJsComponentBuilder
     }
 
     /**
-     * @param  string|array  $optionsRaw
+     * Set raw options for the current chart.
+     *
+     * @param  array|string  $optionsRaw
      * @return static
      */
-    public function optionsRaw($optionsRaw)
+    public function optionsRaw(array|string $optionsRaw): static
     {
         if (is_array($optionsRaw)) {
-            $this->set('optionsRaw', json_encode($optionsRaw, true));
+
+            $this->set('optionsRaw', json_encode($optionsRaw));
 
             return $this;
         }
@@ -185,7 +218,12 @@ class ChartJsComponentBuilder
         return $this;
     }
 
-    public function getParams()
+    /**
+     * Get all parameters of the current chart.
+     *
+     * @return array
+     */
+    public function getParams(): array
     {
         $chart = static::$charts[$this->name];
 
@@ -202,20 +240,12 @@ class ChartJsComponentBuilder
     }
 
     /**
+     * Get the name of the current chart.
+     *
      * @return string
      */
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    private function get($key)
-    {
-        return Arr::get(static::$charts[$this->name], $key);
     }
 }

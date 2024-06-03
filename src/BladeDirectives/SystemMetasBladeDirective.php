@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class is responsible for the blade directive @adminSystemMetas.
+ */
 class SystemMetasBladeDirective
 {
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -17,11 +22,13 @@ class SystemMetasBladeDirective
     }
 
     /**
+     * A function that is responsible for generating meta tags.
+     *
      * @return string
      */
     public static function buildMetas(): string
     {
-        $extensions = AdminFacade::extensions();
+        $extensions = Admin::extensions();
 
         $metas = [];
 
@@ -29,7 +36,7 @@ class SystemMetasBladeDirective
             $metas = array_merge($metas, $extension->config()->metas());
         }
 
-        $theme = AdminFacade::getTheme();
+        $theme = Admin::getTheme();
 
         $metas = array_merge($metas, $theme->metas());
 

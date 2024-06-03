@@ -11,6 +11,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the card component.
+ *
  * @mixin CardComponent
  * @mixin MacroMethodsForCard
  */
@@ -19,26 +21,36 @@ class Card extends Delegator
     use Macroable;
 
     /**
+     * Delegated actions for class.
+     *
      * @var string
      */
     protected $class = CardComponent::class;
 
     /**
+     * Period statistics component.
+     *
      * @var StatisticPeriod|string
      */
     protected StatisticPeriod|string $statisticPeriodClass = StatisticPeriod::class;
 
     /**
+     * Model table component.
+     *
      * @var ModelTable|string
      */
     protected ModelTable|string $modelTableClass = ModelTable::class;
 
     /**
+     * Search form component.
+     *
      * @var SearchForm|string
      */
     protected SearchForm|string $searchFormClass = SearchForm::class;
 
     /**
+     * Magic method for macros.
+     *
      * @param $method
      * @param $parameters
      * @return \Admin\Core\Delegate|mixed
@@ -59,6 +71,8 @@ class Card extends Delegator
     }
 
     /**
+     * Use the period statistics component.
+     *
      * @param  StatisticPeriod|string  $statisticPeriod
      * @return $this
      */
@@ -70,6 +84,8 @@ class Card extends Delegator
     }
 
     /**
+     * Use the model table component.
+     *
      * @param  ModelTable|string  $modelTable
      * @return $this
      */
@@ -81,6 +97,8 @@ class Card extends Delegator
     }
 
     /**
+     * Use the search form component.
+     *
      * @param  SearchForm|string  $searchForm
      * @return $this
      */
@@ -92,6 +110,8 @@ class Card extends Delegator
     }
 
     /**
+     * Make a statistician period body.
+     *
      * @param ...$delegates
      * @return array
      */
@@ -130,6 +150,11 @@ class Card extends Delegator
         ];
     }
 
+    /**
+     * Default date interval.
+     *
+     * @return array
+     */
     public function defaultDateRange(): array
     {
         return [
@@ -138,6 +163,12 @@ class Card extends Delegator
         ];
     }
 
+    /**
+     * Make a nested body.
+     *
+     * @param ...$delegators
+     * @return array
+     */
     public function nestedModelTable(...$delegators): array
     {
         return [
@@ -147,6 +178,12 @@ class Card extends Delegator
         ];
     }
 
+    /**
+     * Make a sortable body.
+     *
+     * @param ...$delegators
+     * @return array
+     */
     public function sortedModelTable(...$delegators): array
     {
         $statisticPeriod = is_string($this->statisticPeriodClass) ? new $this->statisticPeriodClass() : $this->statisticPeriodClass;

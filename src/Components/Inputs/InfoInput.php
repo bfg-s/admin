@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class InfoInput extends FormGroupComponent
+/**
+ * Input the admin panel to display the field as information.
+ */
+class InfoInput extends InputGroupComponent
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = 'fas fa-quote-right';
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View

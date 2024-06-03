@@ -7,21 +7,14 @@ namespace Admin\Components\Inputs;
 use Admin\Controllers\Controller;
 use Intervention\Image\Interfaces\FontInterface;
 
+/**
+ * Input the admin panel to select pictures.
+ */
 class ImageInput extends FileInput
 {
     /**
-     * @param  int|null  $width
-     * @param  int|null  $height
-     * @return $this
-     */
-    public function resize(?int $width, ?int $height): static
-    {
-        $this->addImageModifier(__FUNCTION__, $width, $height);
-
-        return $this;
-    }
-
-    /**
+     * Add the specified modifier for the selected image.
+     *
      * @param  string  $name
      * @param  mixed  ...$attributes
      * @return $this
@@ -38,6 +31,22 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "resize" modifier for the selected image.
+     *
+     * @param  int|null  $width
+     * @param  int|null  $height
+     * @return $this
+     */
+    public function resize(?int $width, ?int $height): static
+    {
+        $this->addImageModifier(__FUNCTION__, $width, $height);
+
+        return $this;
+    }
+
+    /**
+     * Add a "resizeDown" modifier for the selected image.
+     *
      * @param  int|null  $width
      * @param  int|null  $height
      * @return $this
@@ -50,6 +59,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "scale" modifier for the selected image.
+     *
      * @param  int|null  $width
      * @param  int|null  $height
      * @return $this
@@ -62,6 +73,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "scaleDown" modifier for the selected image.
+     *
      * @param  int|null  $width
      * @param  int|null  $height
      * @return $this
@@ -74,6 +87,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "cover" modifier for the selected image.
+     *
      * @param  int  $width
      * @param  int  $height
      * @param  string  $position
@@ -87,6 +102,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "coverDown" modifier for the selected image.
+     *
      * @param  int  $width
      * @param  int  $height
      * @param  string  $position
@@ -100,6 +117,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "pad" modifier for the selected image.
+     *
      * @param  int  $width
      * @param  int  $height
      * @param  string  $background
@@ -114,6 +133,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "contain" modifier for the selected image.
+     *
      * @param  int  $width
      * @param  int  $height
      * @param  string  $background
@@ -128,6 +149,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "crop" modifier for the selected image.
+     *
      * @param  int  $width
      * @param  int  $height
      * @param  int  $offset_x
@@ -150,6 +173,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "resizeCanvas" modifier for the selected image.
+     *
      * @param  int|null  $width
      * @param  int|null  $height
      * @param  string  $background
@@ -168,6 +193,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "resizeCanvasRelative" modifier for the selected image.
+     *
      * @param  int|null  $width
      * @param  int|null  $height
      * @param  string  $background
@@ -186,6 +213,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "place" modifier for the selected image.
+     *
      * @param  mixed  $element
      * @param  string  $position
      * @param  int  $offset_x
@@ -206,6 +235,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "brightness" modifier for the selected image.
+     *
      * @param  int  $level
      * @return $this
      */
@@ -217,6 +248,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "contrast" modifier for the selected image.
+     *
      * @param  int  $level
      * @return $this
      */
@@ -228,6 +261,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "gamma" modifier for the selected image.
+     *
      * @param  float  $gamma
      * @return $this
      */
@@ -239,6 +274,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "colorize" modifier for the selected image.
+     *
      * @param  int  $red
      * @param  int  $green
      * @param  int  $blue
@@ -252,6 +289,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "flop" modifier for the selected image.
+     *
      * @return $this
      */
     public function flop(): static
@@ -262,6 +301,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "flip" modifier for the selected image.
+     *
      * @return $this
      */
     public function flip(): static
@@ -272,6 +313,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "rotate" modifier for the selected image.
+     *
      * @param  float  $angle
      * @param  mixed  $background
      * @return $this
@@ -284,18 +327,21 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "blur" modifier for the selected image.
+     *
      * @param  int  $amount
      * @return $this
      */
     public function blur(int $amount = 5): static
     {
-        //dd($amount);
         $this->addImageModifier(__FUNCTION__, $amount);
 
         return $this;
     }
 
     /**
+     * Add a "sharpen" modifier for the selected image.
+     *
      * @param  int  $amount
      * @return $this
      */
@@ -307,6 +353,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "invert" modifier for the selected image.
+     *
      * @return $this
      */
     public function invert(): static
@@ -317,6 +365,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "pixelate" modifier for the selected image.
+     *
      * @param  int  $size
      * @return $this
      */
@@ -328,6 +378,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "reduceColors" modifier for the selected image.
+     *
      * @param  int  $limit
      * @param  mixed  $background
      * @return $this
@@ -340,6 +392,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "writingText" modifier for the selected image.
+     *
      * @param  string  $text
      * @param  int  $x
      * @param  int  $y
@@ -354,6 +408,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "fill" modifier for the selected image.
+     *
      * @param  mixed  $color
      * @param  int|null  $x
      * @param  int|null  $y
@@ -367,6 +423,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawPixel" modifier for the selected image.
+     *
      * @param  int  $x
      * @param  int  $y
      * @param  mixed|null  $color
@@ -380,6 +438,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawRectangle" modifier for the selected image.
+     *
      * @param  int  $x
      * @param  int  $y
      * @param  callable|null  $init
@@ -393,6 +453,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawEllipse" modifier for the selected image.
+     *
      * @param  int  $x
      * @param  int  $y
      * @param  callable|null  $init
@@ -406,6 +468,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawCircle" modifier for the selected image.
+     *
      * @param  int  $x
      * @param  int  $y
      * @param  callable|null  $init
@@ -419,6 +483,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawLine" modifier for the selected image.
+     *
      * @param  callable|null  $init
      * @return $this
      */
@@ -430,6 +496,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "drawPolygon" modifier for the selected image.
+     *
      * @param  callable  $init
      * @return $this
      */
@@ -441,6 +509,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "sliceAnimation" modifier for the selected image.
+     *
      * @param  int  $offset
      * @param  int|null  $length
      * @return $this
@@ -453,6 +523,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "setLoops" modifier for the selected image.
+     *
      * @param  int  $count
      * @return $this
      */
@@ -464,6 +536,8 @@ class ImageInput extends FileInput
     }
 
     /**
+     * Add a "removeAnimation" modifier for the selected image.
+     *
      * @param  int|string  $position
      * @return $this
      */
@@ -476,6 +550,8 @@ class ImageInput extends FileInput
 
     /**
      * After construct event.
+     *
+     * @return void
      */
     protected function after_construct(): void
     {

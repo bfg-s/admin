@@ -4,42 +4,52 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class SliderInput extends FormGroupComponent
+/**
+ * Input admin panel for a slider with which you can select data from the range.
+ */
+class SliderInput extends InputGroupComponent
 {
     /**
-     * @var string
-     */
-    protected string $type = 'text';
-
-    /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
-    protected ?string $icon = null;
+    protected string|null $icon = null;
 
     /**
+     * Minimum value for the slider.
+     *
      * @var int
      */
     protected int $min = 1;
 
     /**
+     * Maximum value for the slider.
+     *
      * @var int
      */
     protected int $max = 100;
 
     /**
+     * Step of adding a value for the slider.
+     *
      * @var int
      */
     protected int $step = 1;
 
     /**
+     * Disabled slider input.
+     *
      * @var bool
      */
     protected bool $disabled = false;
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View
@@ -66,6 +76,8 @@ class SliderInput extends FormGroupComponent
     }
 
     /**
+     * Set the minimum value for the input slider.
+     *
      * @param  int  $value
      * @param  string|null  $message
      * @return $this
@@ -80,6 +92,8 @@ class SliderInput extends FormGroupComponent
     }
 
     /**
+     * Set the maximum value for the input slider.
+     *
      * @param  int  $value
      * @param  string|null  $message
      * @return $this
@@ -94,6 +108,8 @@ class SliderInput extends FormGroupComponent
     }
 
     /**
+     * Set step to set the value for the input slider.
+     *
      * @param  int  $value
      * @return $this
      */
@@ -105,6 +121,8 @@ class SliderInput extends FormGroupComponent
     }
 
     /**
+     * Disable slider input.
+     *
      * @return $this
      */
     public function disabled(): static

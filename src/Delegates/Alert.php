@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the alert component.
+ *
  * @mixin AlertComponent
  * @mixin MacroMethodsForAlert
  */
@@ -17,8 +19,20 @@ class Alert extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = AlertComponent::class;
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

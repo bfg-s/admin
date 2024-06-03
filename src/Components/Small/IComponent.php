@@ -5,23 +5,32 @@ declare(strict_types=1);
 namespace Admin\Components\Small;
 
 use Admin\Components\Component;
-use Admin\Traits\FontAwesome;
+use Admin\Traits\FontAwesomeTrait;
 
+/**
+ * The HTML component of the "i" tag.
+ */
 class IComponent extends Component
 {
-    use FontAwesome;
+    use FontAwesomeTrait;
 
     /**
+     * The tag element from which the component begins.
+     *
      * @var string
      */
-    protected $element = 'i';
+    protected string $element = 'i';
 
     /**
+     * Element icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * IComponent constructor.
+     *
      * @param  array  $classes
      * @param ...$delegates
      */
@@ -33,6 +42,8 @@ class IComponent extends Component
     }
 
     /**
+     * Set the element icon.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -44,6 +55,8 @@ class IComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

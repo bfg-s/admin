@@ -18,7 +18,7 @@ use Admin\Commands\AdminExtensionCommand;
 use Admin\Commands\AdminHelpersCommand;
 use Admin\Commands\AdminInstallCommand;
 use Admin\Commands\AdminUserCommand;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Admin\Middlewares\Authenticate;
 use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Middlewares\DomMiddleware;
@@ -36,9 +36,16 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 
+/**
+ * The main class of the service provider of the admin panel
+ * in which all additional features of the admin panel are connected,
+ * such as publishing assets, declaring commands, middleware, and so on.
+ */
 class ServiceProvider extends ServiceProviderIlluminate
 {
     /**
+     * List of admin panel commands.
+     *
      * @var array
      */
     protected array $commands = [
@@ -62,13 +69,11 @@ class ServiceProvider extends ServiceProviderIlluminate
      * Bootstrap services.
      *
      * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function boot(): void
     {
-        URL::defaults(['adminLang' => AdminFacade::nowLang()]);
+        URL::defaults(['adminLang' => Admin::nowLang()]);
 
         /**
          * Register app routes.
@@ -94,7 +99,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Register extensions routes
          */
-        foreach (AdminFacade::extensions() as $extension) {
+        foreach (Admin::extensions() as $extension) {
             $extension->config()->routes($routerForExtensions);
         }
 
@@ -152,7 +157,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         /**
          * Load themes views
          */
-        foreach (AdminFacade::getThemes() as $theme) {
+        foreach (Admin::getThemes() as $theme) {
             if (
                 ($namespace = $theme->getNamespace())
                 && ($directory = $theme->getDirectory())
@@ -198,9 +203,9 @@ class ServiceProvider extends ServiceProviderIlluminate
     }
 
     /**
+     * Create a router admin panel.
+     *
      * @return RouteRegistrar
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function makeRouter(): RouteRegistrar
     {
@@ -222,9 +227,11 @@ class ServiceProvider extends ServiceProviderIlluminate
     }
 
     /**
+     * Create a router for redirecting from a language for the admin panel.
+     *
      * @return void
      */
-    public function redirectebleRoute()
+    public function redirectebleRoute(): void
     {
         if (config('admin.lang_mode', true)) {
             Route::domain(config('admin.route.domain', ''))
@@ -239,8 +246,10 @@ class ServiceProvider extends ServiceProviderIlluminate
 
     /**
      * Make view variables.
+     *
+     * @return void
      */
-    private function viewVariables()
+    private function viewVariables(): void
     {
         app('view')->share([
             'admin' => config('admin'),
@@ -253,7 +262,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @return void
      * @throws Exception
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(Page::class, function ($app) {
             return new Page($app->router);
@@ -305,7 +314,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      *
      * @return void
      */
-    protected function registerRouteMiddleware()
+    protected function registerRouteMiddleware(): void
     {
         foreach ($this->routeMiddleware as $key => $middleware) {
             app('router')->aliasMiddleware($key, $middleware);
@@ -317,7 +326,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      *
      * @return void
      */
-    private function loadAuthAndDiscConfig()
+    private function loadAuthAndDiscConfig(): void
     {
         config(Arr::dot(config('admin.auth', []), 'auth.'));
         config(Arr::dot(config('admin.disks', []), 'filesystems.disks.'));

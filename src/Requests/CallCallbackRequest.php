@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Admin\Requests;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
+ * Request class which is responsible for validating data when requesting a callback.
+ *
  * @property-read int $key
  * @property-read array $parameters
  */
@@ -19,7 +21,7 @@ class CallCallbackRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return !AdminFacade::guest();
+        return !Admin::guest();
     }
 
     /**

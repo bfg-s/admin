@@ -4,60 +4,84 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * The language component of the input turns the content input into tabs with languages.
+ */
 class LangComponent extends Component
 {
     /**
+     * Language wrapper input counter.
+     *
      * @var int
      */
     protected static int $counter = 0;
 
     /**
+     * Template mode is enabled for the model relation component.
+     *
      * @var bool
      */
     protected static bool $tplMode = false;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'lang';
 
     /**
+     * List of languages that need to be processed.
+     *
      * @var array|null
      */
     protected ?array $lang_list = null;
 
     /**
+     * List of internal inputs for the language field.
+     *
      * @var array
      */
     protected array $insideInputs = [];
 
     /**
+     * The title of the language input group.
+     *
      * @var string|null
      */
-    protected ?string $name = null;
+    protected ?string $title = null;
 
     /**
+     * Identifier of the language input group.
+     *
      * @var string|null
      */
     protected ?string $id = null;
 
     /**
+     * Vertical mode.
+     *
      * @var bool
      */
     protected ?bool $verticalSet = null;
 
     /**
+     * Reverse mode.
+     *
      * @var bool
      */
     protected ?bool $reversedSet = null;
 
     /**
+     * Label width in columns.
+     *
      * @var int|null
      */
-    protected ?int $label_width = null;
+    protected ?int $labelWidth = null;
 
     /**
-     * Lang constructor.
+     * LangComponent constructor.
+     *
      * @param  array|null  $lang_list
      */
     public function __construct(array $lang_list = null)
@@ -68,6 +92,8 @@ class LangComponent extends Component
     }
 
     /**
+     * Set template mode.
+     *
      * @param  bool  $state
      * @return void
      */
@@ -77,17 +103,37 @@ class LangComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'inside_inputs' => $this->insideInputs,
+            'title' => $this->title,
+            'id' => $this->id,
+            'vertical' => $this->verticalSet,
+            'label_width' => $this->labelWidth,
+            'reversed' => $this->reversedSet,
+            'current_lang' => \Illuminate\Support\Facades\App::getLocale(),
+        ];
+    }
+
+    /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void
     {
         foreach ($this->contents as $key => $inner_input) {
-            if ($inner_input instanceof FormGroupComponent) {
+            if ($inner_input instanceof InputGroupComponent) {
                 foreach ($this->lang_list ?: config('admin.languages', []) as $lang) {
                     $input = clone $inner_input;
                     $input->only_input();
-                    if (!$this->name) {
-                        $this->name = $input->get_title();
+                    if (!$this->title) {
+                        $this->title = $input->get_title();
                     }
                     if (!$this->id) {
                         $this->id = $input->get_id()
@@ -98,8 +144,8 @@ class LangComponent extends Component
                     if ($this->verticalSet === null) {
                         $this->verticalSet = $input->get_vertical();
                     }
-                    if ($this->label_width === null) {
-                        $this->label_width = $input->get_label_width();
+                    if ($this->labelWidth === null) {
+                        $this->labelWidth = $input->get_label_width();
                     }
                     if ($this->reversedSet === null) {
                         $this->reversedSet = $input->get_reversed();
@@ -114,20 +160,5 @@ class LangComponent extends Component
                 unset($this->contents[$key]);
             }
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'insideInputs' => $this->insideInputs,
-            'name' => $this->name,
-            'id' => $this->id,
-            'vertical' => $this->verticalSet,
-            'label_width' => $this->label_width,
-            'reversed' => $this->reversedSet,
-        ];
     }
 }

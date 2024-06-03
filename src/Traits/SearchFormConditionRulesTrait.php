@@ -6,59 +6,63 @@ namespace Admin\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Trait with conditions for the search form.
+ */
 trait SearchFormConditionRulesTrait
 {
     /**
+     * Build a query to the model using selected fields and search form conditions.
+     *
      * @param  mixed  $model
      * @return mixed
      */
     public function makeModel(mixed $model): mixed
     {
-        $r = request()->has('q') ? request('q') : [];
+        $requestQuery = request()->has('q') ? request('q') : [];
 
-        if (is_array($r)) {
+        if (is_array($requestQuery)) {
 
             foreach ($this->fields as $field) {
 
-                if (! isset($r[$field['field_name']])) {
+                if (! isset($requestQuery[$field['field_name']])) {
                     $val = $field['class']->getValue() ?: $field['class']->getDefault();
                     if ($val) {
-                        $r[$field['field_name']] = $val;
+                        $requestQuery[$field['field_name']] = $val;
                     }
                 }
-
             }
         }
 
-        if ($r) {
+        if ($requestQuery) {
 
-            if (is_string($r)) {
+            if (is_string($requestQuery)) {
                 if ($this->global_search_fields) {
                     $i = 0;
                     foreach ($this->global_search_fields as $global_search_field) {
                         $find = collect($this->fields)->where('field_name', $global_search_field)->first();
                         if ($find && (!isset($find['method']) || !is_embedded_call($find['method']))) {
                             if ($i) {
-                                $model = $model->orWhere($global_search_field, 'like', "%{$r}%");
+                                $model = $model->orWhere($global_search_field, 'like', "%{$requestQuery}%");
                             } else {
-                                $model = $model->where($global_search_field, 'like', "%{$r}%");
+                                $model = $model->where($global_search_field, 'like', "%{$requestQuery}%");
                             }
                             $i++;
                         }
                     }
                 } else {
-                    $model = $model->orWhere(function ($q) use ($r) {
+                    $model = $model->orWhere(function ($q) use ($requestQuery) {
                         foreach ($this->fields as $field) {
                             if (!str_ends_with($field['field_name'], '_at')) {
-                                $q = $q->orWhere($field['field_name'], 'like', "%{$r}%");
+                                $q = $q->orWhere($field['field_name'], 'like', "%{$requestQuery}%");
                             }
                         }
                         return $q;
                     });
                 }
-            } elseif (is_array($r)) {
+            } elseif (is_array($requestQuery)) {
 
-                foreach ($r as $key => $val) {
+                foreach ($requestQuery as $key => $val) {
                     if ($val != null) {
                         foreach ($this->fields as $field) {
                             if ($field['field_name'] === $key) {
@@ -90,6 +94,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "=" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -101,6 +107,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "!=" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -112,6 +120,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for ">=" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -123,6 +133,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "<=" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -134,6 +146,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for ">" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -145,6 +159,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "<" symbol.
+     *
      * @param  Model  $model
      * @param $key
      * @param $value
@@ -156,6 +172,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "%=" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -167,6 +185,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "=%" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -178,6 +198,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "%=%" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -189,6 +211,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "null" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -204,6 +228,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "not_null" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -219,6 +245,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "in" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -230,6 +258,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "not_in" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -241,6 +271,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "between" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value
@@ -252,6 +284,8 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "not_between" symbol.
+     *
      * @param  mixed  $model
      * @param $key
      * @param $value

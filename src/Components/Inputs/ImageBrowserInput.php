@@ -4,29 +4,26 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Admin\Components\Inputs\Vue\ImageBrowserVue;
 use Illuminate\View\View;
 use Throwable;
 
-class ImageBrowserInput extends FormGroupComponent
+/**
+ * Input admin panel for selecting and controlling many pictures.
+ */
+class ImageBrowserInput extends InputGroupComponent
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
-     * @var bool
-     */
-    protected bool $form_control = true;
-
-    /**
-     * @var int|null
-     */
-    protected ?int $rows = null;
-
-    /**
+     * Method for creating an input field.
+     *
      * @return View
      * @throws Throwable
      */

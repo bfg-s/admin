@@ -6,14 +6,21 @@ namespace Admin\Components\Small;
 
 use Admin\Components\Component;
 
+/**
+ * The HTML component of the "a" tag.
+ */
 class AComponent extends Component
 {
     /**
+     * The tag element from which the component begins.
+     *
      * @var string
      */
-    protected $element = 'a';
+    protected string $element = 'a';
 
     /**
+     * Set the source for the tag.
+     *
      * @param  string  $href
      * @return $this
      */
@@ -25,6 +32,8 @@ class AComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

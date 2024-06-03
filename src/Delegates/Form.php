@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the form component.
+ *
  * @mixin FormComponent
  * @mixin MacroMethodsForForm
  */
@@ -17,8 +19,19 @@ class Form extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = FormComponent::class;
 
+    /**
+     * Make default tab general for form.
+     *
+     * @param ...$delegates
+     * @return array
+     */
     public function tabGeneral(...$delegates): array
     {
         $tab = new Tab();
@@ -33,6 +46,13 @@ class Form extends Delegator
         ];
     }
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

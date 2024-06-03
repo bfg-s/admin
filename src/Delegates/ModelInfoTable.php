@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the component of the model info table.
+ *
  * @mixin ModelInfoTableComponent
  * @mixin MacroMethodsForModelInfoTable
  */
@@ -17,8 +19,19 @@ class ModelInfoTable extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = ModelInfoTableComponent::class;
 
+    /**
+     * Make default rows for model info table.
+     *
+     * @param ...$delegates
+     * @return array
+     */
     public function rowDefault(...$delegates): array
     {
         return [
@@ -28,6 +41,13 @@ class ModelInfoTable extends Delegator
         ];
     }
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

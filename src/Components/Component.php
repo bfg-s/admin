@@ -28,48 +28,47 @@ use Admin\Core\MenuItem;
 use Admin\Explanation;
 use Admin\Page;
 use Admin\Respond;
-use Admin\Traits\AlpineInjectionTrait;
-use Admin\Traits\BootstrapClassHelpers;
-use Admin\Traits\BuildHelperTrait;
-use Admin\Traits\DataAttributes;
-use Admin\Traits\DataTrait;
+use Admin\Traits\ComponentAlpineJsTrait;
+use Admin\Traits\ComponentBootstrapClassesTrait;
+use Admin\Traits\ComponentDataEventsTrait;
+use Admin\Traits\ComponentEventsTrait;
+use Admin\Traits\ComponentPublicEventsTrait;
+use Admin\Traits\ComponentTabsTrait;
 use Admin\Traits\Delegable;
-use Admin\Traits\FieldMassControlTrait;
+use Admin\Traits\ComponentInputControlTrait;
 use Closure;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
-use Illuminate\View\View;
 use Throwable;
 
 /**
- * Renders the component and returns the rendered HTML markup.
+ * The main abstraction class for all components of the admin panel.
  *
  * @methods static::$components
  * @mixin ComponentMethods
- *
- * @return View|string The rendered HTML markup.
  */
-abstract class Component extends ComponentInputs
+abstract class Component extends ComponentInputs implements Renderable
 {
-    use FieldMassControlTrait;
-    use BuildHelperTrait;
-    use Delegable;
-    use DataTrait;
-    use DataAttributes;
-    use BootstrapClassHelpers;
-    use AlpineInjectionTrait;
+    use ComponentBootstrapClassesTrait;
+    use ComponentPublicEventsTrait;
+    use ComponentInputControlTrait;
+    use ComponentDataEventsTrait;
+    use ComponentAlpineJsTrait;
+    use ComponentEventsTrait;
+    use ComponentTabsTrait;
     use Conditionable;
+    use Delegable;
 
     /**
      * An associative array that maps component names to their corresponding class names.
      * The keys represent the component names, and the values represent the class names.
-     * Each component class is responsible for rendering the HTML markup for that component.
      *
      * @var array $components
      */
@@ -127,127 +126,190 @@ abstract class Component extends ComponentInputs
     ];
 
     /**
+     * The variable holds an array of scripts. Each element in the array represents a script file path or URL.
+     *
      * @var array
-     * @desc The variable $scripts holds an array of scripts.
-     *       Each element in the array represents a script file path or URL.
-     *       This variable is used to store and manage a collection of scripts that will be included in the application.
-     *       The array can be empty or can contain multiple elements.
-     *       Each element should be a string representing the path or URL of a script.
-     *       Example:
-     *           $scripts = [
-     *               'js/script1.js',
-     *               'https://external-site.com/script2.js',
-     *               '/path/to/script3.js',
-     *           ];
      */
     protected static array $scripts = [];
 
     /**
+     * The variable holds an array of styles. Each element in the array represents a style file path or URL.
+     *
      * @var array $styles
-     * Contains an array of styles.
      */
     protected static array $styles = [];
 
     /**
-     * @var array|null $regInputs A variable to store registered input data.
+     * A variable to store registered input data.
+     *
+     * @var array|null $regInputs
      */
     protected static $regInputs = null;
 
     /**
-     * The value represents the HTML element to be used. It defaults to 'div' if not specified.
+     * The tag element from which the component begins.
      *
      * @var string
      */
-    protected $element = 'div';
+    protected string $element = 'div';
 
     /**
+     * The CSS class that needs to be applied to the parent element.
+     *
      * @var string|null
      */
-    protected $class = null;
+    protected string|null $class = null;
 
     /**
-     * @var Builder|Model|Relation|null
+     * Current component model.
+     *
+     * @var Collection|Builder|Model|Relation|null
      */
-    protected $model = null;
+    protected Collection|Builder|Model|Relation|null $model = null;
 
     /**
+     * The current unique name of the component model.
+     *
      * @var string|null
      */
-    protected $model_name = null;
+    protected string|null $model_name = null;
 
     /**
+     * The current component model class.
+     *
      * @var string|null
      */
-    protected $model_class = null;
+    protected string|null $model_class = null;
 
     /**
+     * List of applicable delegations.
+     *
      * @var array
      */
     protected array $delegates = [];
 
     /**
+     * List of delegations used by force.
+     *
      * @var array
      */
     protected array $force_delegates = [];
 
     /**
+     * Link to the instance of the current page.
+     *
      * @var Page
      */
     protected Page $page;
 
     /**
+     * The element class of the current menu item.
+     *
      * @var MenuItem|null
      */
-    protected ?MenuItem $menu = null;
+    protected MenuItem|null $menu = null;
 
     /**
+     * A marker of whether the model is specified by the user or not.
+     *
      * @var bool
      */
     protected bool $iSelectModel = false;
 
     /**
+     * List of parent components for the content.
+     *
      * @var array
      */
     protected array $contents = [];
 
     /**
+     * A list of CSS classes that need to be applied to the first HTML element of the component.
+     *
      * @var array
      */
     protected array $classes = [];
 
     /**
+     * List of attributes that should be applied to the first HTML element of the component.
+     *
      * @var array
      */
     protected array $attributes = [];
 
     /**
-     * @var Closure[]|array[]
-     */
-    protected array $rendered = [];
-
-    /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = "default";
 
     /**
-     * When render closure.
+     * Callbacks for executing actions after the component has been rendered.
      *
      * @var Closure|array|null
      */
-    protected Closure|array|null $wrc = null;
+    protected Closure|array|null $whenRenderCallback = null;
 
     /**
+     * The parent component of the current component.
+     *
      * @var Component|null
      */
     protected ?Component $parent = null;
 
     /**
+     * Indicates whether the component has already been initialized.
+     *
      * @var bool
      */
     protected bool $isInit = false;
 
     /**
+     * Settable date attributes.
+     *
+     * @var array
+     */
+    protected array $data = [];
+
+    /**
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
+     */
+    protected bool $realTime = false;
+
+    /**
+     * Default delay between realtime requests.
+     *
+     * @var int
+     */
+    protected int $realTimeTimeout = 5000;
+
+    /**
+     * Counter of components.
+     *
+     * @var int
+     */
+    protected static int $counterOfComponents = 0;
+
+    /**
+     * Current component count.
+     *
+     * @var int
+     */
+    protected int $currentCount = 0;
+
+    /**
+     * Rendered modal window template.
+     *
+     * @var string|null
+     */
+    protected string|null $renderedView = null;
+
+    /**
+     * Component constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -263,9 +325,13 @@ abstract class Component extends ComponentInputs
         if ($this->class) {
             $this->addClass($this->class);
         }
+
+        $this->currentCount = ++static::$counterOfComponents;
     }
 
     /**
+     * Assign a model, builder, or relation to a component.
+     *
      * @param $model
      * @return $this
      */
@@ -309,6 +375,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Get the real model from the current model (since the component may have a builder or relation)
+     *
      * @return mixed
      */
     public function realModel(): mixed
@@ -324,6 +392,9 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Add delegations to the component.
+     * The delegation is a class that implements the Delegate interface.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -338,6 +409,9 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Add a CSS class to the component.
+     * The class can be a string or an array of strings.
+     *
      * @param  mixed  ...$classes
      * @return $this
      */
@@ -355,6 +429,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Get all scripts links that are connected to the component.
+     *
      * @return array
      */
     public static function getScripts(): array
@@ -363,6 +439,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Get all style links that are connected to the component.
+     *
      * @return array
      */
     public static function getStyles(): array
@@ -371,7 +449,7 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * Static create.
+     * Static component helper for creating a new component instance.
      *
      * @param  array  $data
      * @return static
@@ -382,20 +460,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * @param $name
-     * @param $arguments
-     * @return Component|FormGroupComponent|bool|mixed
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        if ($call = static::static_call_group($name, $arguments)) {
-            return $call;
-        }
-
-        return (new static())->{$name}(...$arguments);
-    }
-
-    /**
+     * Registration of a new input form.
+     *
      * @param  string  $name
      * @param  string  $class
      * @return void
@@ -406,6 +472,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Merge the list of new form inputs.
+     *
      * @param  array  $array
      * @return void
      */
@@ -415,7 +483,7 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * Register a new component.
+     * Register a new admin panel component.
      *
      * @param  string  $name
      * @param  string  $class
@@ -427,6 +495,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Set the component ID attribute.
+     *
      * @param  string  $id
      * @return $this
      */
@@ -438,6 +508,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Set the component attribute.
+     *
      * @param  string|array  $name
      * @param  mixed  $value
      * @return $this
@@ -459,7 +531,6 @@ abstract class Component extends ComponentInputs
                 $added = false;
                 if ($value instanceof Respond) {
                     if (isset($this->attributes[$name])) {
-                        //dd($this->attributes[$name], $value);
                         $this->attributes[$name] = $this->attributes[$name]->merge($value);
                         $added = true;
                     }
@@ -475,6 +546,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Add text to content components.
+     *
      * @param $text
      * @return $this
      */
@@ -516,6 +589,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Use a closure for a component.
+     *
      * @param  callable|array|string  $callable
      * @return $this
      */
@@ -539,6 +614,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Add content to the end of the content list of components.
+     *
      * @param  mixed  $content
      * @return $this
      */
@@ -550,6 +627,8 @@ abstract class Component extends ComponentInputs
     }
 
     /**
+     * Dump components.
+     *
      * @return $this
      */
     public function dump(): static
@@ -560,7 +639,7 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * Set when render closure.
+     * Add a callback for when the component is rendering.
      *
      * @param  array|Closure  $call
      * @return $this
@@ -568,33 +647,67 @@ abstract class Component extends ComponentInputs
     public function whenRender(array|Closure $call): static
     {
         if (is_embedded_call($call)) {
-            $this->wrc = $call;
+            $this->whenRenderCallback = $call;
         }
 
         return $this;
     }
 
     /**
+     * A magic method that turns a component into a string.
+     *
      * @return string
      * @throws Throwable
      */
     public function __toString(): string
     {
-        $render = $this->render();
-
-        if ($render instanceof Renderable) {
-            $render = $render->render();
-        }
-
-        return $render;
+        return $this->render();
     }
 
     /**
-     * @return View|string
+     * Disable component real-time updates.
+     *
+     * @return $this
+     */
+    public function withoutRealtime(): static
+    {
+        $this->realTime = false;
+
+        return $this;
+    }
+
+    /**
+     * Check if the component is real-time.
+     *
+     * @return bool
+     */
+    public function isRealtime(): bool
+    {
+        return $this->realTime;
+    }
+
+    /**
+     * Timeout time in milliseconds for real-time updates.
+     *
+     * @param  int  $timeout
+     * @return $this
+     */
+    public function setTimeout(int $timeout): static
+    {
+        $this->realTimeTimeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * Render the components.
+     *
+     * @return string
      * @throws Throwable
      */
-    public function render(): View|string
+    public function render(): string
     {
+
         if (!$this->isInit) {
             $this->onRender();
 
@@ -604,15 +717,20 @@ abstract class Component extends ComponentInputs
             SystemCssBladeDirective::addComponentCss($this->css());
 
             $this->isInit = true;
+
+            if ($this->realTime) {
+
+                $this->dataLoad('realtime', [
+                    'name' => 'component-' . $this->currentCount,
+                    'timeout' => $this->realTimeTimeout,
+                ]);
+
+                SystemController::$realtimeComponents['component-' . $this->currentCount] = $this;
+            }
         }
 
-
-        if (is_embedded_call($this->wrc)) {
-            call_user_func($this->wrc, $this);
-        }
-
-        foreach ($this->rendered as $item) {
-            call_user_func($item, $this);
+        if (is_embedded_call($this->whenRenderCallback)) {
+            call_user_func($this->whenRenderCallback, $this);
         }
 
         $renderedView = admin_view('components.'.$this->view, array_merge([
@@ -622,13 +740,27 @@ abstract class Component extends ComponentInputs
             'attributes' => $this->attributes,
         ], $this->viewData()))->render();
 
-        return $this->afterRenderEvent($renderedView);
+        $this->renderedView = $this->afterRenderEvent($renderedView);
+
+        return $this->renderedView;
     }
 
     /**
+     * Get a rendered modal window template.
+     *
+     * @return string|null
+     */
+    public function getRenderedView(): string|null
+    {
+        return $this->renderedView;
+    }
+
+    /**
+     * A function that runs before the main rendering applies delegations and a model.
+     *
      * @return void
      */
-    public function onRender(): void
+    protected function onRender(): void
     {
         $this->newExplain($this->delegates);
         $this->newExplainForce($this->force_delegates);
@@ -638,12 +770,15 @@ abstract class Component extends ComponentInputs
     }
 
     /**
-     * Component mount method.
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     abstract protected function mount(): void;
 
     /**
+     * Get the JavaScript that belongs to the component to be displayed on the page.
+     *
      * @return string
      */
     public function js(): string
@@ -654,6 +789,8 @@ JS;
     }
 
     /**
+     * Get the CSS that belongs to the component to be displayed on the page.
+     *
      * @return string
      */
     public function css(): string
@@ -664,6 +801,8 @@ CSS;
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -672,6 +811,8 @@ CSS;
     }
 
     /**
+     * Method to override, used to add events to the component after rendering.
+     *
      * @param $renderedView
      * @return string
      */
@@ -681,7 +822,7 @@ CSS;
     }
 
     /**
-     * Add new child.
+     * Add any content type to the end of the content list of the components sheet.
      *
      * @param  mixed  $data
      * @return $this
@@ -692,6 +833,8 @@ CSS;
     }
 
     /**
+     * Add the CSS class to the component if the condition is met.
+     *
      * @param $condition
      * @param ...$classes
      * @return $this
@@ -706,6 +849,8 @@ CSS;
     }
 
     /**
+     * Add content to the beginning of the content list of components.
+     *
      * @param  mixed  $content
      * @return $this
      */
@@ -717,6 +862,8 @@ CSS;
     }
 
     /**
+     * Add the admin panel blade theme template to the end of the list of components sheet content.
+     *
      * @param $view
      * @param  array  $data
      * @param  array  $mergeData
@@ -730,6 +877,8 @@ CSS;
     }
 
     /**
+     * Add the blade template to the end of the content list of the components sheet.
+     *
      * @param $view
      * @param  array  $data
      * @param  array  $mergeData
@@ -743,6 +892,8 @@ CSS;
     }
 
     /**
+     * Create a new VUE component.
+     *
      * @param  string  $class
      * @param  array  $params
      * @return Component
@@ -755,6 +906,8 @@ CSS;
     }
 
     /**
+     * Create a new component.
+     *
      * @template CLASS
      * @param  string|CLASS  $componentClass
      * @param ...$arguments
@@ -784,10 +937,12 @@ CSS;
     }
 
     /**
+     * Roughly assign a model to a component.
+     *
      * @param $model
      * @return $this
      */
-    public function simpleSetModel($model): static
+    public function forceSetModel($model): static
     {
         $this->model = $model;
 
@@ -795,6 +950,8 @@ CSS;
     }
 
     /**
+     * Add delegations for enforcement.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -809,6 +966,8 @@ CSS;
     }
 
     /**
+     * Get the class of the real model.
+     *
      * @return string|null
      */
     public function realModelClass(): ?string
@@ -819,6 +978,8 @@ CSS;
     }
 
     /**
+     * Apply a data collection to a component.
+     *
      * @param $collection
      * @param  callable  $callback
      * @return $this
@@ -832,6 +993,8 @@ CSS;
                 $this->forceDelegateNow(
                     ...$result
                 );
+            } else if ($result instanceof Delegate) {
+                $this->forceDelegateNow($result);
             }
         }
 
@@ -839,6 +1002,8 @@ CSS;
     }
 
     /**
+     * Apply delegations immediately and forcefully.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -850,6 +1015,8 @@ CSS;
     }
 
     /**
+     * Apply a callback that can return delegations and explanations.
+     *
      * @param  callable  $callback
      * @return $this
      */
@@ -869,6 +1036,8 @@ CSS;
     }
 
     /**
+     * Apply delegations immediately.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -880,20 +1049,8 @@ CSS;
     }
 
     /**
-     * Event after render.
-     * @param  array|Closure  $call
-     * @return $this
-     */
-    public function rendered(array|Closure $call): static
-    {
-        if (is_embedded_call($call)) {
-            $this->rendered[] = $call;
-        }
-
-        return $this;
-    }
-
-    /**
+     * A magic method to handle adding components to the content list of components.
+     *
      * @param $name
      * @param $arguments
      * @return bool|FormComponent|mixed|string
@@ -931,7 +1088,8 @@ CSS;
                     return $newObj;
                 }
             } else {
-                if ($call = $this->call_group($name, $arguments)) {
+
+                if ($call = $this->initInput($name, $arguments)) {
                     return $call;
                 }
             }
@@ -941,6 +1099,66 @@ CSS;
     }
 
     /**
+     * Magic static call.
+     *
+     * @param  string  $name
+     * @param  array  $arguments
+     * @return mixed
+     */
+    public static function __callStatic(string $name, array $arguments)
+    {
+        return static::create()->$name(...$arguments);
+    }
+
+    /**
+     * Method for initializing an input in the content of a component.
+     *
+     * @param $name
+     * @param  array  $arguments
+     * @return bool|InputGroupComponent|mixed
+     */
+    protected function initInput($name, array $arguments): mixed
+    {
+        if (isset(static::$inputs[$name])) {
+            $class = static::$inputs[$name];
+
+            $class = new $class(...$arguments);
+
+            if ($class instanceof InputGroupComponent) {
+                $class->set_parent($this);
+
+                $class->model($this->model);
+
+                if ($this->vertical) {
+                    $class->vertical();
+                }
+
+                if ($this->reversed) {
+                    $class->reversed();
+                }
+
+                if ($this->labelWidth !== null) {
+                    $class->label_width($this->labelWidth);
+                }
+            }
+
+            if ($this->set) {
+                $this->appEnd($class);
+            } else {
+                $class->unregister();
+            }
+
+            $this->set = true;
+
+            return $class;
+        }
+
+        return false;
+    }
+
+    /**
+     * Static method to check if a component exists.
+     *
      * @param  string  $name
      * @return bool
      */
@@ -950,15 +1168,19 @@ CSS;
     }
 
     /**
+     * Check if the input exists.
+     *
      * @param  string  $name
      * @return bool
      */
-    public static function has(string $name): bool
+    public static function hasInput(string $name): bool
     {
         return isset(static::$inputs[$name]);
     }
 
     /**
+     * Check if the component exists.
+     *
      * @param  string  $name
      * @return bool
      */
@@ -968,6 +1190,8 @@ CSS;
     }
 
     /**
+     * Get component class by name.
+     *
      * @param  string  $name
      * @return string|null
      */
@@ -977,6 +1201,8 @@ CSS;
     }
 
     /**
+     * A magic method for applying properties like inserting components into a content list.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -1008,79 +1234,8 @@ CSS;
     }
 
     /**
-     * @param  callable  $callback
-     * @param  array  $parameters
-     * @return $this
-     */
-    public function click(callable $callback, array $parameters = []): static
-    {
-        $this->on_click(
-            static::registerCallBack($callback, $parameters, $this->model)
-        );
-
-        return $this;
-    }
-
-    /**
-     * @param  callable  $callback
-     * @param  array  $parameters
-     * @param $model
-     * @return array[]
-     */
-    public static function registerCallBack(callable $callback, array $parameters = [], $model = null): array
-    {
-        SystemController::$callbacks[] = $callback;
-
-        if ($model) {
-            foreach ($parameters as $key => $parameter) {
-                if (is_int($key) && is_string($parameter)) {
-                    $parameters[$parameter] = multi_dot_call($model, $parameter);
-                    unset($parameters[$key]);
-                } else {
-                    if (is_callable($parameter)) {
-                        $parameters[$key] = call_user_func($parameter, $model);
-                    }
-                }
-            }
-        }
-
-        return [
-            'admin::call_callback' => [
-                array_key_last(SystemController::$callbacks),
-                $parameters
-            ]
-        ];
-    }
-
-    /**
-     * @param  callable  $callback
-     * @param  array  $parameters
-     * @return $this
-     */
-    public function dblclick(callable $callback, array $parameters = []): static
-    {
-        $this->on_dblclick(
-            static::registerCallBack($callback, $parameters, $this->model)
-        );
-
-        return $this;
-    }
-
-    /**
-     * @param  callable  $callback
-     * @param  array  $parameters
-     * @return $this
-     */
-    public function hover(callable $callback, array $parameters = []): static
-    {
-        $this->on_hover(
-            static::registerCallBack($callback, $parameters, $this->model)
-        );
-
-        return $this;
-    }
-
-    /**
+     * Set the title attribute, which is responsible for displaying text on hover.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -1092,6 +1247,8 @@ CSS;
     }
 
     /**
+     * Set the title attribute, which is responsible for displaying text on hover. If the conditions are met.
+     *
      * @param $condition
      * @param  string  $title
      * @return $this
@@ -1106,6 +1263,8 @@ CSS;
     }
 
     /**
+     * Check if the component attribute exists.
+     *
      * @param  string  $name
      * @return bool
      */
@@ -1115,6 +1274,8 @@ CSS;
     }
 
     /**
+     * Get a component attribute by name.
+     *
      * @param  string  $name
      * @return mixed
      */
@@ -1124,6 +1285,8 @@ CSS;
     }
 
     /**
+     * Set component attributes by name.
+     *
      * @param  array  $attributes
      * @return $this
      */
@@ -1135,7 +1298,7 @@ CSS;
     }
 
     /**
-     * Hide component.
+     * Hide a component on the page, will add a display none.
      *
      * @param  bool  $eq
      * @return $this
@@ -1150,6 +1313,8 @@ CSS;
     }
 
     /**
+     * Get the name generated by nested components.
+     *
      * @return array
      */
     public function deepNames(): array
@@ -1179,6 +1344,8 @@ CSS;
     }
 
     /**
+     * Helper function for parsing a name string into an array.
+     *
      * @param  string  $str
      * @return array
      */
@@ -1191,6 +1358,8 @@ CSS;
     }
 
     /**
+     * The deep name function is present in the tree of all components and generates the name nested.
+     *
      * @param  array  $names
      * @return string|null
      */
@@ -1199,12 +1368,19 @@ CSS;
         return null;
     }
 
-    public function getParent(): ?Component
+    /**
+     * Get the parent component.
+     *
+     * @return \Admin\Components\Component|null
+     */
+    public function getParent(): Component|null
     {
         return $this->parent;
     }
 
     /**
+     * Set the parent component.
+     *
      * @param  Component  $component
      * @return $this
      */
@@ -1216,6 +1392,8 @@ CSS;
     }
 
     /**
+     * Get the nested path of all parents.
+     *
      * @return array
      */
     public function deepPaths(): array
@@ -1242,6 +1420,8 @@ CSS;
     }
 
     /**
+     * Generate part of the path for a nested pass.
+     *
      * @param  array  $paths
      * @return string|null
      */
@@ -1251,11 +1431,18 @@ CSS;
     }
 
     /**
-     * @param  string  $name
-     * @return string
+     * Merge a list of custom date attributes with the current component.
+     *
+     * @param  array  $datas
+     * @return $this
      */
-    public function applyName(string $name): string
+    public function mergeDataList(array $datas): static
     {
-        return $name;
+        $this->data = array_merge(
+            $this->data,
+            $datas
+        );
+
+        return $this;
     }
 }

@@ -19,14 +19,5 @@
         height="{!! $size['height'] !!}"
         @class($classes)
         @attributes($attributes)
-        data-load-params="{{ json_encode([
-        'type' => $type,
-        'labels' => $labels,
-        'datasets' => $datasets,
-        'options' => $optionsRaw ?: $options,
-        'name' => $element,
-        'loading' => $loading,
-        'loaderId' => $element . 'Loader',
-    ]) }}"
     ></canvas>
 </div>

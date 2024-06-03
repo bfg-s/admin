@@ -6,11 +6,21 @@ namespace Admin\Components\Small;
 
 use Admin\Components\Component;
 
+/**
+ * The HTML component of the "h3" tag.
+ */
 class H3Component extends Component
 {
-    protected $element = 'h3';
+    /**
+     * The tag element from which the component begins.
+     *
+     * @var string
+     */
+    protected string $element = 'h3';
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

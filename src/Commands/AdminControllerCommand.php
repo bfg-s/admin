@@ -17,6 +17,9 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * This class is designed to process a command that creates a controller for the admin panel.
+ */
 class AdminControllerCommand extends Command
 {
     /**
@@ -36,9 +39,9 @@ class AdminControllerCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $name = $this->argument('name');
 
@@ -214,7 +217,7 @@ class AdminControllerCommand extends Command
         if (is_file($file) && !$this->option('force')) {
             $this->error("Controller [{$namespace}\\{$name}] exists!");
 
-            return;
+            return 0;
         }
 
         file_put_contents($file, $class->render());
@@ -229,6 +232,8 @@ class AdminControllerCommand extends Command
                 ]);
             }
         }
+
+        return 0;
     }
 
     /**
@@ -236,7 +241,7 @@ class AdminControllerCommand extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the class'],
@@ -248,7 +253,7 @@ class AdminControllerCommand extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the class even if the controller already exists.'],

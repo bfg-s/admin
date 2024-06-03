@@ -5,23 +5,27 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 /**
- * Class AccessDeniedComponent
- *
  * Represents a component that displays an access denied alert.
  */
 class AccessDeniedComponent extends Component
 {
     /**
+     * The tag element from which the component begins.
+     *
      * @var string
      */
-    protected $element = "section";
+    protected string $element = "section";
 
     /**
-     * @var string
+     * The CSS class that needs to be applied to the parent element.
+     *
+     * @var string|null
      */
-    protected $class = 'content-header';
+    protected string|null $class = 'content-header';
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

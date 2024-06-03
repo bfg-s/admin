@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * Admin panel template component.
+ */
 class TemplateComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'template';
 
     /**
+     * TemplateComponent constructor.
+     *
      * @param  string  $id
      * @param ...$delegates
      */
@@ -27,6 +34,8 @@ class TemplateComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return string[]
      */
     protected function viewData(): array
@@ -37,6 +46,8 @@ class TemplateComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

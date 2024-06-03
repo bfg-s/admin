@@ -4,24 +4,35 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input admin panel for entering numbers.
+ */
 class NumberInput extends Input
 {
     /**
+     * HTML attribute of the input type.
+     *
      * @var string
      */
     protected $type = 'number';
 
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * Input value.
+     *
      * @var int
      */
-    protected $value = 0;
+    protected mixed $value = 0;
 
     /**
+     * Settable date attributes.
+     *
      * @var string[]
      */
     protected array $data = [
@@ -30,6 +41,8 @@ class NumberInput extends Input
     ];
 
     /**
+     * Set the value of the step to add to the value.
+     *
      * @param  float|int  $step
      * @return $this
      */
@@ -72,6 +85,8 @@ class NumberInput extends Input
     }
 
     /**
+     * Center the input value.
+     *
      * @return $this
      */
     public function center(): static

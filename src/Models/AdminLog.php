@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
+ * A model that is responsible for logging in the admin panel.
+ *
  * @property string $title
  * @property string|null $detail
  * @property string $ip
@@ -44,14 +46,23 @@ use Illuminate\Support\Carbon;
  */
 class AdminLog extends Model
 {
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
     public const UPDATED_AT = null;
 
     /**
+     * The table associated with the model.
+     *
      * @var string
      */
     protected $table = 'admin_logs';
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -60,6 +71,8 @@ class AdminLog extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
      * @var string[]
      */
     protected $casts = [
@@ -77,6 +90,8 @@ class AdminLog extends Model
     ];
 
     /**
+     * Relation to the user of the admin panel.
+     *
      * @return HasOne
      */
     public function admin_user(): HasOne

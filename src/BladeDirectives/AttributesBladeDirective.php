@@ -7,9 +7,14 @@ namespace Admin\BladeDirectives;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 
+/**
+ * The class that is responsible for the @attributes blade directive.
+ */
 class AttributesBladeDirective
 {
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @param $expression
      * @return string
      */
@@ -19,6 +24,8 @@ class AttributesBladeDirective
     }
 
     /**
+     * A function that is responsible for generating attributes.
+     *
      * @param  array  $arrayOfAttributes
      * @return string
      */

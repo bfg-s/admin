@@ -21,9 +21,6 @@
         @if(is_numeric($key))
             data-{{ $data }}
         @else
-{{--            @if (is_array($data))--}}
-{{--            @dd($data)--}}
-{{--            @endif--}}
             data-{{ $key }}='{{ is_array($data) ? json_encode($data) : $data }}'
         @endif
     @endforeach

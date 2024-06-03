@@ -4,73 +4,104 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
-use Admin\Components\Inputs\Parts\InputSelect2;
+use Admin\Components\InputGroupComponent;
+use Admin\Components\Inputs\Parts\InputSelect2Component;
 use Admin\Core\Select2;
 use Admin\Page;
 use App;
 use Illuminate\Contracts\Support\Arrayable;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use ReflectionException;
 
-class SelectInput extends FormGroupComponent
+/**
+ * Input admin panel for selecting data from a drop-down list.
+ */
+class SelectInput extends InputGroupComponent
 {
     /**
-     * @var mixed|null
-     */
-    public static mixed $json = null;
-    /**
+     * List of callbacks for loading options for select.
+     *
      * @var array
      */
     public static array $loadCallBacks = [];
+
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = 'fas fa-mouse-pointer';
+
     /**
+     * List of options for select.
+     *
      * @var array
      */
     protected array $options = [];
+
     /**
+     * Settable date attributes.
+     *
      * @var string[]
      */
     protected array $data = [
         'load' => 'select2::init',
         'theme' => 'bootstrap4',
     ];
+
     /**
+     * The subject of loading options for the select.
+     *
      * @var mixed
      */
     protected mixed $load_subject = null;
+
     /**
+     * Format for displaying options for select.
+     *
      * @var string|null
      */
     protected ?string $load_format = null;
+
     /**
+     * Closure for additional description of the selection from the subject of the options for the select.
+     *
      * @var mixed|callable
      */
     protected mixed $load_where;
+
     /**
+     * Input may be null.
+     *
      * @var bool
      */
     protected bool $nullable = false;
+
     /**
+     * Input the admin panel with multi-selection.
+     *
      * @var bool
      */
     protected bool $multiple = false;
+
     /**
+     * The field by which selection options are sorted.
+     *
      * @var string|null
      */
-    protected ?string $orderBy = null;
+    protected string|null $orderBy = null;
+
     /**
+     * Option sorting type for select.
+     *
      * @var string
      */
     protected string $orderType = 'ASC';
 
     /**
+     * Method for creating an input field.
+     *
      * @return mixed
-     * @throws ReflectionException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function field(): mixed
     {
@@ -80,9 +111,7 @@ class SelectInput extends FormGroupComponent
 
         $this->data['placeholder'] = $this->title;
 
-        app(Page::class)->toStore('live', [$this->path => $this->value]);
-
-        return InputSelect2::create($this->options)
+        return InputSelect2Component::create($this->options)
             ->setAttributes($this->attributes)
             ->setName($this->name)
             ->setId($this->field_id)
@@ -95,10 +124,11 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * A method to create a subject data load for a selector.
+     *
      * @return void
-     * @throws ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function loadSubject(): void
     {
@@ -127,17 +157,21 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
-     * @param $vals
+     * Set values for selection.
+     *
+     * @param $values
      * @return void
      */
-    protected function setSubjectValues($vals): void
+    protected function setSubjectValues($values): void
     {
-        if ($vals) {
-            $this->options($vals, true);
+        if ($values) {
+            $this->options($values, true);
         }
     }
 
     /**
+     * Add options to the current input.
+     *
      * @param  array|Arrayable  $options
      * @param  bool  $first_default
      * @return $this
@@ -170,6 +204,8 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * Set the sort field and sort type to "Desc".
+     *
      * @param  string  $field
      * @return $this
      */
@@ -179,6 +215,8 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * Set the sort field and any sort type.
+     *
      * @param  string  $field
      * @param  string  $type
      * @return $this
@@ -192,6 +230,8 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * Describe the data loading properties for the select.
+     *
      * @param $subject
      * @param  string  $format
      * @param  callable|null  $where
@@ -211,6 +251,8 @@ class SelectInput extends FormGroupComponent
     }
 
     /**
+     * Make the current input null.
+     *
      * @param  string|null  $message
      * @return static
      */

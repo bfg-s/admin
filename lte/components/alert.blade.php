@@ -12,6 +12,6 @@
                 {{ $title }}
             @endif
         </h4>
-        {!! $body !!}
+        {!! is_callable($body) ? call_user_func($body) : $body !!}
     @endif
 </div>

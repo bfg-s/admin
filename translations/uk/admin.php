@@ -265,6 +265,7 @@ return [
     'you_have_enabled_two_factor_authentication' => 'У вас включено двофакторну автентифікацію.',
     'administrators_browser_statistic' => 'Статистика браузерів адміністраторів',
     'browser' => 'Браузер',
+    'browsers' => 'Браузери',
     'translate_field_to_lang' => 'Перекласти :name до :lang',
     'calendar' => 'Календар',
     'is_online' => 'В мережі',
@@ -301,4 +302,6 @@ return [
     'done' => 'Готово',
     'page-info' => 'Інформація про сторінку',
     'created' => 'Створено',
+    'ip' => 'IP',
+    'current_browser' => 'Поточний браузер',
 ];

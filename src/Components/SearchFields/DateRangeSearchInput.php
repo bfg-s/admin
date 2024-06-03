@@ -7,14 +7,21 @@ namespace Admin\Components\SearchFields;
 use Admin\Components\Inputs\DateRangeInput;
 use Carbon\Carbon;
 
+/**
+ * Search input to the admin panel to select a date range.
+ */
 class DateRangeSearchInput extends DateRangeInput
 {
     /**
+     * Comparisons for the current field.
+     *
      * @var string
      */
     public static string $condition = 'between';
 
     /**
+     * Transformation of the input value for search.
+     *
      * @param $value
      * @return array
      */

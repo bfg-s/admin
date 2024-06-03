@@ -6,6 +6,9 @@ namespace Admin\Interfaces;
 
 use Illuminate\Console\Command;
 
+/**
+ * Generator assistant interface for creating assistants.
+ */
 interface AdminHelpGeneratorInterface
 {
     /**
@@ -14,5 +17,5 @@ interface AdminHelpGeneratorInterface
      * @param  Command  $command
      * @return mixed
      */
-    public function handle(Command $command);
+    public function handle(Command $command): mixed;
 }

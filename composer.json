@@ -59,8 +59,8 @@
                 "Admin\\ServiceProvider"
             ],
             "aliases": {
-                "Admin": "Admin\\Facades\\AdminFacade",
-                "Navigate": "Admin\\Facades\\NavigateFacade"
+                "Admin": "Admin",
+                "Navigate": "Navigate"
             }
         }
     }

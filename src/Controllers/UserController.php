@@ -6,17 +6,20 @@ namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
 use Admin\Components\ModelInfoTableComponent;
+use Admin\Components\ModelTableComponent;
 use Admin\Components\TabContentComponent;
 use Admin\Components\TimelineComponent;
 use Admin\Delegates\Buttons;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
-use Admin\Delegates\Column;
 use Admin\Delegates\Form;
 use Admin\Delegates\Modal;
+use Admin\Delegates\ModelTable;
 use Admin\Delegates\Row;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\Tab;
+use Admin\Middlewares\BrowserDetectMiddleware;
+use Admin\Models\AdminBrowser;
 use Admin\Models\AdminLog;
 use Admin\Models\AdminUser;
 use Admin\Page;
@@ -34,20 +37,28 @@ use PragmaRX\Google2FAQRCode\Google2FA;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * System controller admin panel for displaying the user page.
+ */
 class UserController extends Controller
 {
     /**
-     * Static variable Model.
+     * The model the admin panel controller works with.
+     *
      * @var string
      */
     public static $model = AdminUser::class;
 
     /**
+     * Current user of the admin panel.
+     *
      * @var AdminUser|null
      */
-    protected ?AdminUser $user = null;
+    protected AdminUser|null $user = null;
 
     /**
+     * Method for processing a modal window when 2FA is enabled, to check the entered administrator password.
+     *
      * @param  Respond  $respond
      * @return Respond
      */
@@ -64,6 +75,8 @@ class UserController extends Controller
     }
 
     /**
+     * Method for processing a modal window when 2FA is turned off, to check the entered administrator password.
+     *
      * @param  Respond  $respond
      * @return Respond
      */
@@ -87,6 +100,8 @@ class UserController extends Controller
     }
 
     /**
+     * Method for generating a modal window to complete the inclusion of 2FA authorization.
+     *
      * @param  Form  $form
      * @return array
      * @throws IncompatibleWithGoogleAuthenticatorException
@@ -118,13 +133,15 @@ class UserController extends Controller
     }
 
     /**
+     * Method to complete enabling 2FA authorization.
+     *
      * @param  Respond  $respond
      * @return Respond
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
      */
-    public function twofaEnable(Respond $respond)
+    public function twoFaEnable(Respond $respond): Respond
     {
         $otp = $this->modelInput('otp');
         $secret = $this->modelInput('secret');
@@ -152,9 +169,10 @@ class UserController extends Controller
     }
 
     /**
+     * Method for describing the user page.
+     *
      * @param  Request  $request
      * @param  Page  $page
-     * @param  Column  $column
      * @param  Card  $card
      * @param  Form  $form
      * @param  Tab  $tab
@@ -163,14 +181,14 @@ class UserController extends Controller
      * @param  Buttons  $buttons
      * @param  Row  $row
      * @param  Modal  $modal
+     * @param  \Admin\Delegates\ModelTable  $modelTable
      * @return Page
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(
         Request $request,
         Page $page,
-        Column $column,
         Card $card,
         Form $form,
         Tab $tab,
@@ -179,6 +197,7 @@ class UserController extends Controller
         Buttons $buttons,
         Row $row,
         Modal $modal,
+        ModelTable $modelTable,
     ): Page {
         $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
@@ -198,7 +217,7 @@ class UserController extends Controller
             )
             ->modal(
                 $modal->title(__('admin.2fa_auth_finish'))->closable()->temporary(),
-                $modal->submitEvent([$this, 'twofaEnable']),
+                $modal->submitEvent([$this, 'twoFaEnable']),
                 $modal->form(
                     [$this, 'qrGenerateFinish']
                 ),
@@ -283,6 +302,26 @@ class UserController extends Controller
                         ))
                     ),
                     $card->tab(
+                        $tab->icon_internet_explorer()->title('admin.browsers'),
+                        $tab->model_table(
+                            $modelTable->model(admin()->browsers()),
+                            $modelTable->col('admin.name', 'name')->sort(),
+                            $modelTable->col('admin.ip', 'ip')->sort(),
+                            $modelTable->col('admin.active', function (AdminBrowser $adminBrowser) {
+                                if (BrowserDetectMiddleware::$browser && $adminBrowser->id !== BrowserDetectMiddleware::$browser->id) {
+                                    return ModelTableComponent::callExtension('input_switcher', [
+                                        $adminBrowser->active,
+                                        [],
+                                        $adminBrowser,
+                                        'active'
+                                    ]);
+                                } else {
+                                    return ModelTableComponent::callExtension('badge', [__('admin.current_browser')]);
+                                }
+                            })->sort(),
+                        ),
+                    ),
+                    $card->tab(
                         $tab->title('admin.activity')->icon_chart_line(),
                         $tab->active($request->has('q')),
                         $tab->chart_js(
@@ -291,7 +330,9 @@ class UserController extends Controller
                                 ->hasSearch(
                                     $searchForm->date_range('created_at', 'admin.created_at')
                                         ->default(implode(' - ', $this->defaultDateRange()))
-                                )->load(function (ChartJsComponent $component) use ($logTitles) {
+                                )
+                                ->load(function (ChartJsComponent $component) use ($logTitles) {
+
                                     $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                                         ->groupDataByAt('created_at')
                                         ->withCollection($logTitles, function ($title) {
@@ -324,6 +365,8 @@ class UserController extends Controller
     }
 
     /**
+     * The method is responsible for generating a timeline in the user page tab.
+     *
      * @param $content
      * @param $model
      * @param  Controller  $controller
@@ -340,7 +383,7 @@ class UserController extends Controller
             }),
             $timeline->set_icon(fn(AdminLog $log) => $log->icon),
             $timeline->set_body(function (TimelineComponent $timelineComponent, AdminLog $log) {
-                return ModelInfoTableComponent::create()->model($log)->use(function (ModelInfoTableComponent $table) {
+                return ModelInfoTableComponent::create()->withoutRealtime()->model($log)->use(function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();
                     $table->row('URL', 'url')->to_prepend_link();
                     $table->row('Route', 'route')->copied();
@@ -354,6 +397,8 @@ class UserController extends Controller
     }
 
     /**
+     * Default date interval.
+     *
      * @return array
      */
     public function defaultDateRange(): array
@@ -365,6 +410,8 @@ class UserController extends Controller
     }
 
     /**
+     * Method event when data is updated.
+     *
      * @param $form
      * @return void
      */
@@ -378,6 +425,8 @@ class UserController extends Controller
     }
 
     /**
+     * A method that returns the model with which the controller works.
+     *
      * @return Model|AdminUser|string|null
      */
     public function getModel(): Model|AdminUser|string|null
@@ -386,10 +435,12 @@ class UserController extends Controller
     }
 
     /**
+     * The method that is responsible for logging out the administrator.
+     *
      * @param  Respond  $respond
      * @return RedirectResponse
      */
-    public function logout(Respond $respond)
+    public function logout(Respond $respond): RedirectResponse
     {
         admin_log_success('Was logout', null, 'fas fa-sign-out-alt');
 

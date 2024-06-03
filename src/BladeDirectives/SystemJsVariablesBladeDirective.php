@@ -4,31 +4,32 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class is responsible for the blade directive @adminSystemJsVariables.
+ */
 class SystemJsVariablesBladeDirective
 {
     /**
-     * @var array
-     */
-    protected static array $componentJs = [];
-
-    /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
     {
-        return "<?php echo ".static::class."::buildScripts(); ?>";
+        return "<?php echo ".static::class."::buildVariables(); ?>";
     }
 
     /**
-     * @param  bool  $tag
+     * A function that is responsible for generating variables.
+     *
      * @return string
      */
-    public static function buildScripts(): string
+    public static function buildVariables(): string
     {
         $html = [
-            static::html()
+            static::defaultVariables()
         ];
 
         $separator = "</script>"
@@ -40,10 +41,15 @@ class SystemJsVariablesBladeDirective
             ."</script>";
     }
 
-    protected static function html()
+    /**
+     * Generate default variables.
+     *
+     * @return string
+     */
+    protected static function defaultVariables(): string
     {
         $dark = json_encode(admin_repo()->isDarkMode);
-        if (AdminFacade::guest()) {
+        if (Admin::guest()) {
             return <<<JS
 window.darkMode = $dark;
 JS;
@@ -68,6 +74,7 @@ JS;
             $translate = route('admin.translate');
             $load_chart_js = route('admin.load_chart_js');
             $load_select2 = route('admin.load_select2');
+            $realtime = route('admin.realtime');
             $delete_ordered_image = route('admin.delete_ordered_image');
             $langs = json_encode(__('admin'), JSON_UNESCAPED_UNICODE);
             return <<<JS
@@ -87,18 +94,8 @@ window.translate = "$translate";
 window.load_chart_js = "$load_chart_js";
 window.load_select2 = "$load_select2";
 window.delete_ordered_image = "$delete_ordered_image";
+window.realtime = "$realtime";
 JS;
-        }
-    }
-
-    /**
-     * @param  string  $js
-     * @return void
-     */
-    public static function addComponentJs(string $js): void
-    {
-        if ($js) {
-            static::$componentJs[] = $js;
         }
     }
 }

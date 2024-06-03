@@ -4,23 +4,32 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input admin panel for rating.
+ */
 class RatingInput extends Input
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
-    protected ?string $icon = null;
+    protected string|null $icon = null;
 
     /**
+     * Added or not a form control class for input.
+     *
      * @var bool
      */
-    protected $form_control = false;
+    protected bool $form_control = true;
 
     /**
+     * Settable date attributes.
+     *
      * @var array
      */
     protected array $data = [
-        'load' => 'rating',
+        'load' => '{"rating": []}',
         'animate' => 'true',
         'step' => '1',
         'show-clear' => 'false',
@@ -29,11 +38,15 @@ class RatingInput extends Input
     ];
 
     /**
-     * @var int
+     * Default input value if no value is set.
+     *
+     * @var mixed
      */
     protected mixed $default = 0;
 
     /**
+     * Set the minimum rating value.
+     *
      * @param  int  $value
      * @param  string|null  $message
      * @return static
@@ -50,6 +63,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the maximum rating value.
+     *
      * @param  int  $value
      * @param  string|null  $message
      * @return static
@@ -62,10 +77,12 @@ class RatingInput extends Input
     }
 
     /**
-     * @param  int|float  $step
+     * Set the rating value step.
+     *
+     * @param  float|int  $step
      * @return $this
      */
-    public function step($step): static
+    public function step(float|int $step): static
     {
         $this->data['step'] = $step;
 
@@ -73,6 +90,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set rating size to "xl".
+     *
      * @return $this
      */
     public function sizeXl(): static
@@ -83,6 +102,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the rating size to "lg".
+     *
      * @return $this
      */
     public function sizeLg(): static
@@ -93,6 +114,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the rating size to "md".
+     *
      * @return $this
      */
     public function sizeMd(): static
@@ -103,6 +126,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the rating size to "sm".
+     *
      * @return $this
      */
     public function sizeSm(): static
@@ -113,6 +138,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the rating size to "xs".
+     *
      * @return $this
      */
     public function sizeXs(): static
@@ -123,6 +150,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the rating value to read-only.
+     *
      * @return $this
      */
     public function readonly(): static
@@ -133,6 +162,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Disable rating input.
+     *
      * @return $this
      */
     public function disabled(): static
@@ -143,6 +174,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Set the number of rating stars.
+     *
      * @param  int  $stars
      * @return RatingInput
      */
@@ -154,6 +187,8 @@ class RatingInput extends Input
     }
 
     /**
+     * Display caption.
+     *
      * @return $this
      */
     public function showCaption(): static

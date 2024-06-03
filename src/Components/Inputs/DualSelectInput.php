@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input admin panel for dual selection.
+ */
 class DualSelectInput extends SelectInput
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
-     * @var string
+     * The CSS class that needs to be applied to the parent element.
+     *
+     * @var string|null
      */
-    protected $class = 'duallistbox';
+    protected string|null $class = 'duallistbox';
 
     /**
+     * Settable date attributes.
+     *
      * @var string[]
      */
     protected array $data = [
@@ -24,17 +33,9 @@ class DualSelectInput extends SelectInput
     ];
 
     /**
+     * Input the admin panel with multi-selection.
+     *
      * @var bool
      */
     protected bool $multiple = true;
-
-    /**
-     * @param  string[]  $data
-     * @return DualSelectInput
-     */
-    public function setData(array $data): DualSelectInput
-    {
-        $this->data = $data;
-        return $this;
-    }
 }

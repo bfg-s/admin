@@ -12,17 +12,19 @@ use Illuminate\Database\Eloquent\Model;
 class Editables
 {
     /**
+     * Add a switch to the input column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
-     * @param  null  $field
+     * @param  string|null  $field
      * @return SwitcherInput|FieldComponent
      */
     public function input_switcher(
         $value,
         array $props = [],
         Model $model = null,
-        $field = null
+        string $field = null
     ): SwitcherInput|FieldComponent {
         if ($model) {
             $id = uniqid('id');
@@ -53,6 +55,8 @@ class Editables
     }
 
     /**
+     * Add a selector to the input column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
@@ -75,7 +79,7 @@ class Editables
                 ])
                     ->only_input()
                     ->value($value)
-                    ->force_set_id($id)
+                    ->setId($id)
                     ->when(is_array($options), fn($q) => $q->options($options, $format))
                     ->when(is_string($options), fn($q) => $q->load($options, $format, $where))
                 ."</div>";
@@ -85,6 +89,8 @@ class Editables
     }
 
     /**
+     * Add radios input to the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|null  $model
@@ -102,7 +108,7 @@ class Editables
                 ->only_input()
                 ->value($value)
                 ->set_name($field.'_'.$model->id)
-                ->force_set_id($id)
+                ->setId($id)
                 ->when(is_array($options), fn($q) => $q->options($options, !!$first_default))
                 ->on_change('custom_save', [
                     get_class($model),
@@ -116,12 +122,14 @@ class Editables
     }
 
     /**
+     * Add to the column as an editing input.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
      * @param  null  $field
      * @param  null  $title
-     * @return string
+     * @return \Admin\Components\Small\AComponent|string
      */
     public function input_editable(
         $value,
@@ -134,12 +142,34 @@ class Editables
     }
 
     /**
+     * Add to the textarea column for editing.
+     *
+     * @param $value
+     * @param  array  $props
+     * @param  Model|array|null  $model
+     * @param  null  $field
+     * @param  null  $title
+     * @return \Admin\Components\Small\AComponent|string
+     */
+    public function textarea_editable(
+        $value,
+        array $props = [],
+        Model|array $model = null,
+        $field = null,
+        $title = null
+    ): AComponent|string {
+        return $this->editable($value, $model, $title, $field, 'textarea');
+    }
+
+    /**
+     * Add a custom edit field to the column.
+     *
      * @param $value
      * @param  Model|array  $model
      * @param $title
      * @param $field
      * @param $type
-     * @return string
+     * @return \Admin\Components\Small\AComponent|string
      */
     protected function editable($value, Model|array $model, $title, $field, $type): AComponent|string
     {
@@ -155,27 +185,9 @@ class Editables
                 'url' => $now->getLinkUpdate($model->getRouteKey()),
                 'name' => $field,
                 'value' => is_array($val) ? json_encode($val) : $val,
-            ])->on_load('editable')->text($value);
+            ])->on_load('editable')->text($value)->addClass('editable editable-click');
         }
 
         return $value;
-    }
-
-    /**
-     * @param $value
-     * @param  array  $props
-     * @param  Model|array|null  $model
-     * @param  null  $field
-     * @param  null  $title
-     * @return string
-     */
-    public function textarea_editable(
-        $value,
-        array $props = [],
-        Model|array $model = null,
-        $field = null,
-        $title = null
-    ): AComponent|string {
-        return $this->editable($value, $model, $title, $field, 'textarea');
     }
 }

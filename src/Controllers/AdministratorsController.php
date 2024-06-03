@@ -16,14 +16,21 @@ use Admin\Models\AdminUser;
 use Admin\Page;
 use Illuminate\Http\Request;
 
+/**
+ * Controller for working with administrators.
+ */
 class AdministratorsController extends Controller
 {
     /**
+     * The model the admin panel controller works with.
+     *
      * @var string
      */
     public static $model = AdminUser::class;
 
     /**
+     * A function that handles displaying administrator roles.
+     *
      * @param  AdminUser  $user
      * @return string
      */
@@ -36,12 +43,20 @@ class AdministratorsController extends Controller
             .'</span>';
     }
 
+    /**
+     * A function that handles the default display of tools.
+     *
+     * @param $type
+     * @return bool
+     */
     public function defaultTools($type): bool
     {
         return !($type === 'delete' && $this->model()->id == 1);
     }
 
     /**
+     * Index method for displaying a list of records and filtering them.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  SearchForm  $searchForm
@@ -83,6 +98,8 @@ class AdministratorsController extends Controller
     }
 
     /**
+     * Form method for displaying the form for editing and adding a record.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  Form  $form
@@ -139,6 +156,8 @@ class AdministratorsController extends Controller
     }
 
     /**
+     * Display method for displaying information about a record.
+     *
      * @param  Request  $request
      * @param  Page  $page
      * @param  Card  $card
@@ -229,6 +248,8 @@ class AdministratorsController extends Controller
     }
 
     /**
+     * Default date interval.
+     *
      * @return array
      */
     public function defaultDateRange(): array

@@ -6,49 +6,54 @@ namespace Admin;
 
 use Admin\Core\ConfigExtensionProvider;
 use Admin\Core\InstallExtensionProvider;
-use Admin\Core\NavGroup;
 use Admin\Core\NavigatorExtensionProvider;
-use Admin\Core\PermissionsExtensionProvider;
 use Admin\Core\UnInstallExtensionProvider;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Admin\Interfaces\NavigateInterface;
-use Admin\Models\AdminMenu;
-use Admin\Models\AdminSetting;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use ReflectionClass;
 
+/**
+ * Class for extending the extension provider.
+ */
 class ExtendProvider extends ServiceProviderIlluminate
 {
     /**
      * Extension ID name.
+     *
      * @var string
      */
-    public static $name;
+    public static string $name;
 
     /**
      * Extension call slug.
+     *
      * @var string
      */
-    public static $slug;
+    public static string $slug;
 
     /**
      * Extension description.
+     *
      * @var string
      */
-    public static $description = '';
+    public static string $description = '';
 
     /**
-     * After route to set.
-     * @var null|string
+     * Set extension routes after all other extensions.
+     *
+     * @var string|null
      */
-    public static $after;
+    public static string|null $after = null;
 
     /**
+     * Built-in expansion commands.
+     *
      * @var array
      */
-    protected $commands = [
+    protected array $commands = [
 
     ];
 
@@ -57,50 +62,54 @@ class ExtendProvider extends ServiceProviderIlluminate
      *
      * @var array
      */
-    protected $routeMiddleware = [
+    protected array $routeMiddleware = [
 
     ];
 
     /**
      * Simple bind in app service provider.
+     *
      * @var array
      */
-    protected $bind = [
+    protected array $bind = [
 
     ];
 
     /**
+     * Navigator class for extension.
+     *
      * @var string
      */
-    protected $navigator = NavigatorExtensionProvider::class;
+    protected string $navigator = NavigatorExtensionProvider::class;
 
     /**
+     * The installer class for the extension.
+     *
      * @var string
      */
-    protected $install = InstallExtensionProvider::class;
+    protected string $install = InstallExtensionProvider::class;
 
     /**
+     * Removal class for extension.
+     *
      * @var string
      */
-    protected $uninstall = UnInstallExtensionProvider::class;
+    protected string $uninstall = UnInstallExtensionProvider::class;
 
     /**
-     * @var string
-     */
-    protected $permissions = PermissionsExtensionProvider::class;
-
-    /**
+     * Extension configuration class.
+     *
      * @var ConfigExtensionProvider|string
      */
-    protected $config = ConfigExtensionProvider::class;
+    protected ConfigExtensionProvider|string $config = ConfigExtensionProvider::class;
 
     /**
-     * Bootstrap services.
+     * Method for initializing the configuration. Called when the configuration is loaded.
      *
      * @return void
      * @throws Exception
      */
-    public function boot()
+    public function boot(): void
     {
         foreach ($this->bind as $key => $item) {
             if (is_numeric($key)) {
@@ -111,12 +120,12 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Register services.
+     * A method that is executed immediately after registering a service provider.
      *
      * @return void
      * @throws Exception
      */
-    public function register()
+    public function register(): void
     {
         if (!static::$name) {
             $this->getNameAndDescription();
@@ -124,13 +133,15 @@ class ExtendProvider extends ServiceProviderIlluminate
         $this->generateSlug();
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-        AdminFacade::registerExtension($this);
+        Admin::registerExtension($this);
     }
 
     /**
      * Get name and description from composer.json.
+     *
+     * @return void
      */
-    protected function getNameAndDescription()
+    protected function getNameAndDescription(): void
     {
         $dir = dirname((new ReflectionClass(static::class))->getFileName());
 
@@ -151,10 +162,13 @@ class ExtendProvider extends ServiceProviderIlluminate
 
     /**
      * Generate extension slug.
+     *
+     * @return void
      */
-    protected function generateSlug()
+    protected function generateSlug(): void
     {
         if (!static::$slug) {
+
             static::$slug = preg_replace('/[^A-Za-z]/', '_', static::$name);
         }
 
@@ -166,25 +180,28 @@ class ExtendProvider extends ServiceProviderIlluminate
      *
      * @return void
      */
-    protected function registerRouteMiddleware()
+    protected function registerRouteMiddleware(): void
     {
-        // register route middleware.
         foreach ($this->routeMiddleware as $key => $middleware) {
+
             app('router')->aliasMiddleware($key, $middleware);
         }
     }
 
     /**
+     * A method that determines whether the extension will participate in the navigation of the admin panel.
+     *
      * @return bool
      */
-    public function included()
+    public function included(): bool
     {
-        return isset(Admin::$extensions[static::$name]) && Admin::$extensions[static::$name];
+        return isset(AdminEngine::$extensions[static::$name]) && AdminEngine::$extensions[static::$name];
     }
 
     /**
      * Extension navigator element.
-     * @param  Navigate|NavGroup|NavigateInterface  $navigate
+     *
+     * @param  NavigateInterface  $navigate
      * @return void
      */
     public function navigator(NavigateInterface $navigate): void
@@ -195,7 +212,8 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Install process.
+     * Extension install process.
+     *
      * @param  Command  $command
      * @return void
      */
@@ -207,7 +225,8 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Uninstall process.
+     * Extension uninstall process.
+     *
      * @param  Command  $command
      * @return void
      */
@@ -219,27 +238,11 @@ class ExtendProvider extends ServiceProviderIlluminate
     }
 
     /**
-     * Permission process.
-     * @param  Command  $command
-     * @param  string  $type
-     * @return void
+     * Get extension config class.
+     *
+     * @return ConfigExtensionProvider|string
      */
-    public function permission(Command $command, string $type): void
-    {
-        if ($this->permissions) {
-            if ($type === 'up') {
-                (new $this->permissions($command, $this))->up();
-            } elseif ($type === 'down') {
-                (new $this->permissions($command, $this))->down();
-            }
-        }
-    }
-
-    /**
-     * Extension configs.
-     * @return ConfigExtensionProvider
-     */
-    public function config()
+    public function config(): ConfigExtensionProvider|string
     {
         if ($this->config && is_string($this->config)) {
             $this->config = new $this->config($this);

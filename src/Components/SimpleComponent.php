@@ -8,26 +8,37 @@ use Admin\Traits\Delegable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 
+/**
+ * Abstraction of a simple admin panel page component.
+ */
 abstract class SimpleComponent implements Renderable, Htmlable
 {
     use Delegable;
 
     /**
+     * Name of the admin panel theme template.
+     *
      * @var string|null
      */
     protected ?string $template = null;
 
     /**
+     * States of a simple component.
+     *
      * @var array
      */
     protected array $state = [];
 
     /**
+     * Simple component delegations.
+     *
      * @var array
      */
     protected array $delegates = [];
 
     /**
+     * SimpleComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -36,6 +47,8 @@ abstract class SimpleComponent implements Renderable, Htmlable
     }
 
     /**
+     * Converter components to HTML.
+     *
      * @return mixed
      */
     public function toHtml(): mixed
@@ -44,6 +57,8 @@ abstract class SimpleComponent implements Renderable, Htmlable
     }
 
     /**
+     * Render the component.
+     *
      * @return mixed
      */
     public function render(): mixed
@@ -56,6 +71,8 @@ abstract class SimpleComponent implements Renderable, Htmlable
     }
 
     /**
+     * Magic method for getting the state property of a component.
+     *
      * @param  string  $name
      * @return mixed
      */
@@ -65,6 +82,8 @@ abstract class SimpleComponent implements Renderable, Htmlable
     }
 
     /**
+     * Magic method for setting the state property of a component.
+     *
      * @param  string  $name
      * @param $value
      * @return void
@@ -75,6 +94,8 @@ abstract class SimpleComponent implements Renderable, Htmlable
     }
 
     /**
+     * Method for creating a new component instance.
+     *
      * @param ...$delegates
      * @return $this
      */

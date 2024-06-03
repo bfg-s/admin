@@ -4,55 +4,56 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\Delegable;
-
+/**
+ * Tab component of the admin panel.
+ */
 class TabsComponent extends Component
 {
-    use Delegable;
-
     /**
-     * Count of tabs.
+     * Tab counter.
+     *
      * @var int
      */
     protected static int $counter = 0;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'tabs';
 
     /**
+     * List of tabs.
+     *
      * @var array
      */
     protected array $tabs = [];
 
     /**
+     * Left orientation of tabs.
+     *
      * @var bool
      */
     protected bool $left = true;
 
     /**
+     * Left tab orientation is applied.
+     *
      * @var bool
      */
-    protected bool $leftSeted = false;
+    protected bool $leftApplied = false;
 
     /**
-     * Tabs constructor.
-     * @param  mixed  ...$explanations
-     */
-    public function __construct(...$explanations)
-    {
-        parent::__construct(...$explanations);
-    }
-
-    /**
-     * Create tab from classes.
+     * Create tabs from array list.
+     *
      * @param  array  $list
      * @return $this
      */
     public function tabList(array $list): static
     {
         foreach ($list as $item) {
+
             $this->tab($item);
         }
 
@@ -60,6 +61,8 @@ class TabsComponent extends Component
     }
 
     /**
+     * Add a new tab.
+     *
      * @param ...$delegates
      * @return TabsComponent
      */
@@ -73,6 +76,8 @@ class TabsComponent extends Component
     }
 
     /**
+     * Native function for adding a new tab.
+     *
      * @param  string|TabContentComponent  $title
      * @param $icon
      * @param  callable|array|null  $contentCb
@@ -92,12 +97,12 @@ class TabsComponent extends Component
 
         if ($title instanceof TabContentComponent) {
             $content = $title;
-            $title = $content->getTitle;
-            $icon = $content->getIcon;
-            $active = $content->getActiveCondition;
-            if (!$this->leftSeted) {
-                $this->left = $content->getLeft;
-                $this->leftSeted = true;
+            $title = $content->title;
+            $icon = $content->icon;
+            $active = $content->activeCondition;
+            if (!$this->leftApplied) {
+                $this->left = $content->left;
+                $this->leftApplied = true;
             }
         }
 
@@ -130,6 +135,8 @@ class TabsComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -141,6 +148,8 @@ class TabsComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

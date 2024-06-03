@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Admin\Repositories;
 
 use Admin\Core\MenuItem;
-use Admin\Exceptions\ShouldBeModelInControllerException;
+use Admin\Exceptions\ModelShouldBeInControllerException;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminUser;
 use Bfg\Repository\Repository;
@@ -19,6 +19,8 @@ use Navigate;
 use Route;
 
 /**
+ * Main repository of the admin panel. Responsible for all aspects of the admin panel.
+ *
  * @property-read string|null $currentQueryField
  * @property-read string|null $type
  * @property-read array $getCurrentQuery
@@ -35,6 +37,8 @@ use Route;
 class AdminRepository extends Repository
 {
     /**
+     * Repository cache.
+     *
      * @var array
      */
     protected static array $cache = [
@@ -45,6 +49,8 @@ class AdminRepository extends Repository
     ];
 
     /**
+     * Get the current menu item class.
+     *
      * @return mixed
      */
     public function now(): mixed
@@ -58,6 +64,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the current resource type.
+     *
      * @return string|null
      */
     public function type(): ?string
@@ -80,21 +88,23 @@ class AdminRepository extends Repository
     }
 
     /**
-     * @param $__name_
-     * @param $__default
+     * Get data from a menu item.
+     *
+     * @param $name
+     * @param $default
      * @return array|mixed|null
      */
-    public function data($__name_ = null, $__default = null): mixed
+    public function data($name = null, $default = null): mixed
     {
-        $return = $__default;
+        $return = $default;
 
         $menu = $this->now;
 
         if ($menu && $menu->isResource()) {
             $return = $menu->getData();
 
-            if ($__name_) {
-                $return = $return[$__name_] ?? $__default;
+            if ($name) {
+                $return = $return[$name] ?? $default;
             }
         }
 
@@ -102,6 +112,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the initial route model.
+     *
      * @return object|string|null
      */
     public function modelPrimary(): object|string|null
@@ -118,8 +130,10 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the current controller model.
+     *
      * @return Builder|Model|object|null
-     * @throws ShouldBeModelInControllerException
+     * @throws ModelShouldBeInControllerException
      */
     public function modelNow(): mixed
     {
@@ -131,7 +145,7 @@ class AdminRepository extends Repository
             } elseif (property_exists($controller, 'model')) {
                 $return = $controller::$model;
             } else {
-                throw new ShouldBeModelInControllerException();
+                throw new ModelShouldBeInControllerException();
             }
         }
 
@@ -157,6 +171,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Save the current query to the session.
+     *
      * @param  Request  $request
      * @return void
      */
@@ -180,6 +196,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the current query from the session.
+     *
      * @return mixed
      */
     public function getCurrentQuery(): mixed
@@ -188,6 +206,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the specified query from the session.
+     *
      * @param  string  $name
      * @return mixed
      */
@@ -201,13 +221,16 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the current query field.
+     *
      * @return string|null
      */
     public function currentQueryField(): ?string
     {
         $modal = request()->input('_modal');
+        $realtime = request()->input('_realtime');
 
-        if ($modal) {
+        if ($modal || $realtime) {
 
             $url = \Illuminate\Support\Facades\Request::server('HTTP_REFERER');
             $route = Route::getRoutes()->match(app('request')->create($url));
@@ -218,6 +241,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the current controller.
+     *
      * @return mixed
      */
     public function currentController(): mixed
@@ -226,6 +251,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get the chain of parents of a menu item.
+     *
      * @return Collection
      */
     public function nowParents(): Collection
@@ -234,6 +261,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Helper to form a chain of parents of a menu item.
+     *
      * @param  MenuItem  $menuItem
      * @param  array  $result
      * @return array
@@ -259,6 +288,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Check if dark theme mode is enabled.
+     *
      * @return bool
      */
     public function isDarkMode(): bool
@@ -274,6 +305,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Get a list of all menu items.
+     *
      * @return Collection
      */
     public function menuList(): Collection
@@ -282,6 +315,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Generate a list of all menu items.
+     *
      * @param  array|null  $items
      * @param  MenuItem|null  $parent
      * @return Collection
@@ -290,7 +325,7 @@ class AdminRepository extends Repository
         ?array $items = null,
         MenuItem $parent = null
     ): Collection {
-        $items = $items !== null ? $items : Navigate::getMaked();
+        $items = $items !== null ? $items : Navigate::getRawItems();
         $result = collect();
 
         foreach ($items as $item) {
@@ -313,14 +348,12 @@ class AdminRepository extends Repository
             $menuItem->setNavBarVue($item['nav_bar_vue'] ?? null);
             $menuItem->setLeftNavBarView($item['left_nav_bar_view'] ?? null);
             $menuItem->setLeftNavBarVue($item['left_nav_bar_vue'] ?? null);
-            $menuItem->setPrepend($item['prepend'] ?? false);
             $menuItem->setExtension($item['extension'] ?? null);
             $menuItem->setMainHeader($item['main_header'] ?? null);
             $menuItem->setResource($item['resource'] ?? null);
             $menuItem->setResourceRoute($item['resource_route'] ?? null);
             $menuItem->setResourceOnly($item['resource_only'] ?? null);
             $menuItem->setResourceExcept($item['resource_except'] ?? null);
-            $menuItem->setLinkParams($item['link_params'] ?? null);
             $menuItem->setDontUseSearch($item['dontUseSearch'] ?? false);
             $menuItem->setParams($item['params'] ?? null);
             $menuItem->setTargetBlank($item['target_blank'] ?? false);
@@ -391,6 +424,8 @@ class AdminRepository extends Repository
     }
 
     /**
+     * Model class namespace getter.
+     *
      * @return string
      */
     protected function getModelClass(): string

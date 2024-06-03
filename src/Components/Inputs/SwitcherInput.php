@@ -4,24 +4,35 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input admin panel for value switch.
+ */
 class SwitcherInput extends Input
 {
     /**
+     * HTML attribute of the input type.
+     *
      * @var string
      */
     protected $type = 'checkbox';
 
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * Added or not a form control class for input.
+     *
      * @var bool
      */
-    protected $form_control = false;
+    protected bool $form_control = false;
 
     /**
+     * Settable date attributes.
+     *
      * @var array
      */
     protected array $data = [
@@ -29,6 +40,8 @@ class SwitcherInput extends Input
     ];
 
     /**
+     * Set a custom switch size.
+     *
      * @param  string  $size
      * @return $this
      */
@@ -40,6 +53,8 @@ class SwitcherInput extends Input
     }
 
     /**
+     * Set labels for switch states.
+     *
      * @param  string|null  $on
      * @param  string|null  $off
      * @param  string|null  $label
@@ -61,7 +76,8 @@ class SwitcherInput extends Input
     }
 
     /**
-     * On build.
+     * Method to override, event before creating the input wrapper.
+     *
      * @return void
      */
     protected function on_build(): void
@@ -76,12 +92,14 @@ class SwitcherInput extends Input
     }
 
     /**
+     * Create a value for the input.
+     *
      * @return int
      */
     protected function create_value(): int
     {
         if (parent::create_value()) {
-            //$this->params[] = ['checked' => 'true'];
+
             $this->checked = true;
         }
 

@@ -4,49 +4,60 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\Delegable;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\Typeable;
 
+/**
+ * Small box component of the admin panel.
+ */
 class SmallBoxComponent extends Component
 {
-    use FontAwesome;
-    use TypesTrait;
-    use Delegable;
+    use FontAwesomeTrait;
+    use Typeable;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'small-box';
 
     /**
+     * Small box title.
+     *
      * @var string|null
      */
-    private ?string $title = null;
+    private string|null $title = null;
 
     /**
+     * Small box icon.
+     *
      * @var string|null
      */
-    private ?string $icon = null;
+    private string|null $icon = null;
 
     /**
+     * Small box body.
+     *
      * @var string|mixed
      */
     private mixed $body = null;
 
     /**
-     * @var array
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
      */
-    private array $params = [];
+    protected bool $realTime = true;
 
     /**
-     * Alert constructor.
+     * SmallBoxComponent constructor.
+     *
      * @param  string|null  $title
      * @param  string  $body
      * @param  string  $icon
-     * @param  mixed  ...$params
      */
-    public function __construct(string $title = null, mixed $body = '', string $icon = 'fas fa-info-circle', ...$params)
+    public function __construct(string $title = null, mixed $body = '', string $icon = 'fas fa-info-circle')
     {
         parent::__construct();
 
@@ -55,11 +66,11 @@ class SmallBoxComponent extends Component
         $this->icon = $icon;
 
         $this->body = $body;
-
-        $this->params = $params;
     }
 
     /**
+     * Set the title of the small box.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -71,6 +82,8 @@ class SmallBoxComponent extends Component
     }
 
     /**
+     * Set a small box icon.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -82,6 +95,8 @@ class SmallBoxComponent extends Component
     }
 
     /**
+     * Install the body of the small box.
+     *
      * @param  array|string  $body
      * @param  string  $small_info
      * @return $this
@@ -94,6 +109,8 @@ class SmallBoxComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -107,6 +124,8 @@ class SmallBoxComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

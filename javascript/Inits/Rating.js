@@ -1,5 +1,7 @@
 window.libs['rating'] = function () {
-    return $(this.target).rating({
+    //console.log(this.target);
+
+    $(this.target).rating({
         theme: 'krajee-fas',
         emptyStar: '<i class="far fa-star"></i>',
         filledStar: '<i class="fas fa-star"></i>',

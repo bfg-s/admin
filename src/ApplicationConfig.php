@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace Admin;
 
 use Admin\Core\ConfigExtensionProvider;
-use Admin\Facades\AdminFacade;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Admin\Facades\Admin;
 
-class ApplicationConfig extends ConfigExtensionProvider
+/**
+ * Abstract class for application configuration.
+ * Your configuration class `app/Admin/Config.php` should inherit from this class.
+ */
+abstract class ApplicationConfig extends ConfigExtensionProvider
 {
     /**
+     * Method for initializing the configuration. Called when the configuration is loaded.
+     *
      * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function boot()
+    public function boot(): void
     {
-        $lang = strtolower(AdminFacade::nowLang());
+        $lang = strtolower(Admin::nowLang());
 
         $validationLocalizationFile = 'admin/plugins/jquery-validation/localization/messages_'
             .$lang
@@ -30,6 +32,9 @@ class ApplicationConfig extends ConfigExtensionProvider
     }
 
     /**
+     * Method for adding JavaScript scripts to the admin panel.
+     * In this case, a global respond is sent for execution.
+     *
      * @return string
      */
     public function js(): string
@@ -39,14 +44,16 @@ class ApplicationConfig extends ConfigExtensionProvider
             $respond .= 'exec('.Respond::glob()->toJson().");\n";
         }
 
-        if (AdminFacade::guest()) {
+        if (Admin::guest()) {
             return '';
         } else {
-            return (string) $respond;
+            return $respond;
         }
     }
 
     /**
+     * Method for adding meta tags to the admin panel.
+     *
      * @return string[]
      */
     public function metas(): array

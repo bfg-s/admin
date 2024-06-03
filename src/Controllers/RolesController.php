@@ -12,14 +12,21 @@ use Admin\Delegates\SearchForm;
 use Admin\Models\AdminRole;
 use Admin\Page;
 
+/**
+ * Admin panel controller for the roles control page.
+ */
 class RolesController extends Controller
 {
     /**
+     * The model the admin panel controller works with.
+     *
      * @var string
      */
     public static $model = AdminRole::class;
 
     /**
+     * Index method for displaying a list of records and filtering them.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  SearchForm  $searchForm
@@ -56,6 +63,8 @@ class RolesController extends Controller
     }
 
     /**
+     * Form method for displaying the form for editing and adding a record.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  Form  $form
@@ -84,6 +93,8 @@ class RolesController extends Controller
     }
 
     /**
+     * Display method for displaying information about a record.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  ModelInfoTable  $modelInfoTable

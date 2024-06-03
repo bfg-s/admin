@@ -10,12 +10,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
+/**
+ * Middleware for checking the administrator's browser.
+ */
 class BrowserDetectMiddleware
 {
     /**
      * @var AdminBrowser|null
      */
-    public static ?AdminBrowser $browser = null;
+    public static AdminBrowser|null $browser = null;
+
+    /**
+     * @var AdminBrowser|null
+     */
+    public static AdminBrowser|null $browserBefore = null;
 
     /**
      * Handle an incoming request.
@@ -24,27 +32,30 @@ class BrowserDetectMiddleware
      * @param  Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
-        //dump($request->userAgent());
-        if (admin()->exists && $request->userAgent() && !$request->ajax()) {
+        if (admin()->exists && $request->userAgent()) {
             $result = getBrowserDetails($request->userAgent());
 
             if ($result['name'] !== 'Unknown') {
-                $id = $request->cookie('browser');
 
-                /** @var AdminBrowser $exists */
-                $exists = $id ? admin()->browsers()->find($id) : null;
+                $exists = admin()->browsers()
+                    ->where('name', $result['name'])
+                    ->where('ip', $request->ip())
+                    ->latest()
+                    ->first();
 
                 $data = [
                     'name' => $result['name'],
                     'ip' => $request->ip(),
                     'user_agent' => $result['userAgent'],
                     'session_id' => session()->getId(),
+                    'admin_user_id' => admin()->id,
                 ];
 
                 if ($exists) {
                     $exists->update($data);
+                    $exists->touch();
                 } else {
                     $exists = admin()->browsers()->create($data)->fresh();
                 }
@@ -55,8 +66,6 @@ class BrowserDetectMiddleware
                 }
 
                 static::$browser = $exists;
-
-                Cookie::queue(Cookie::forever('browser', $exists->id));
             }
         }
 

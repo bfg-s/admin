@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input admin panel autocomplete.
+ */
 class AutocompleteInput extends SelectInput
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = 'fas fa-tag';
 
     /**
+     * AutocompleteInput constructor.
+     *
      * @param  string  $name
      * @param  string|null  $title
      * @param ...$params
@@ -24,13 +31,15 @@ class AutocompleteInput extends SelectInput
     }
 
     /**
-     * @param $vals
+     * Set values for selection.
+     *
+     * @param $values
      * @return void
      */
-    protected function setSubjectValues($vals): void
+    protected function setSubjectValues($values): void
     {
-        if (is_array($vals) && count($vals)) {
-            $this->options($vals, true);
+        if (is_array($values) && count($values)) {
+            $this->options($values, true);
         } else {
             $this->options([$this->value]);
         }

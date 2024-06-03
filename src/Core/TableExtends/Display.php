@@ -9,9 +9,14 @@ use Admin\Components\ModelTable\HeaderComponent;
 use Admin\Components\ModelTable\RowComponent;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * The part of the kernel that is responsible for working with displaying the model table.
+ */
 class Display
 {
     /**
+     * Hide a column on a mobile device.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model

@@ -18,10 +18,10 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
-use Laravel\Fortify\Fortify;
 
 /**
+ * A model that is responsible for users in the admin panel.
+ *
  * @property int $id
  * @property string $login
  * @property string $password
@@ -70,11 +70,15 @@ class AdminUser extends Model implements AuthenticatableContract
     use SoftDeletes;
 
     /**
+     * The table associated with the model.
+     *
      * @var string
      */
     protected $table = 'admin_users';
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -82,6 +86,8 @@ class AdminUser extends Model implements AuthenticatableContract
     ];
 
     /**
+     * The attributes that aren't mass assignable.
+     *
      * @var array
      */
     protected $guarded = [
@@ -89,6 +95,8 @@ class AdminUser extends Model implements AuthenticatableContract
     ];
 
     /**
+     * The attributes that should be cast.
+     *
      * @var array
      */
     protected $casts = [
@@ -102,6 +110,8 @@ class AdminUser extends Model implements AuthenticatableContract
     ];
 
     /**
+     * User's relationship towards browsers.
+     *
      * @return HasMany
      */
     public function browsers(): HasMany
@@ -110,14 +120,8 @@ class AdminUser extends Model implements AuthenticatableContract
     }
 
     /**
-     * @return HasMany
-     */
-    public function events(): HasMany
-    {
-        return $this->hasMany(AdminEvent::class, 'admin_user_id', 'id');
-    }
-
-    /**
+     * User's relationship towards roles.
+     *
      * @return BelongsToMany
      */
     public function roles(): BelongsToMany
@@ -126,6 +130,8 @@ class AdminUser extends Model implements AuthenticatableContract
     }
 
     /**
+     * User's attitude relationship logs.
+     *
      * @return HasMany
      */
     public function logs(): HasMany
@@ -134,6 +140,8 @@ class AdminUser extends Model implements AuthenticatableContract
     }
 
     /**
+     * Mutator for the user avatar field.
+     *
      * @param $avatar
      * @return string
      */

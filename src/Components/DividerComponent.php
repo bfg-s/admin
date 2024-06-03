@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * Solid bar component of the admin panel.
+ */
 class DividerComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'divider';
 
     /**
+     * DividerComponent constructor.
+     *
      * @param  string|callable|null  $right_title
      * @param  string|callable|null  $center_title
      * @param  string|callable|null  $left_title
@@ -37,6 +44,8 @@ class DividerComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -50,6 +59,8 @@ class DividerComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

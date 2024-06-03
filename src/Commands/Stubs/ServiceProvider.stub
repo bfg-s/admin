@@ -1,0 +1,63 @@
+<?php
+
+namespace {NAMESPACE};
+
+use Admin\ExtendProvider;
+use Admin\Core\ConfigExtensionProvider;
+use {NAMESPACE}\Extension\Config;
+use {NAMESPACE}\Extension\Install;
+use {NAMESPACE}\Extension\Navigator;
+use {NAMESPACE}\Extension\Uninstall;
+use {NAMESPACE}\Extension\Permissions;
+use Admin\Core\ConfigExtensionProvider;
+
+/**
+ * Class ServiceProvider
+ * @package {NAMESPACE}
+ */
+class ServiceProvider extends ExtendProvider
+{
+    /**
+     * Extension ID name
+     * @var string
+     */
+    public static string $name = "{NAME}";
+
+    /**
+     * Extension call slug
+     * @var string
+     */
+    static string $slug = "{SLUG}";
+
+    /**
+     * Extension description
+     * @var string
+     */
+    public static string $description = "{DESCRIPTION}";
+
+    /**
+     * @var string
+     */
+    protected string $navigator = Navigator::class;
+
+    /**
+     * @var string
+     */
+    protected string $install = Install::class;
+
+    /**
+     * @var string
+     */
+    protected string $uninstall = Uninstall::class;
+
+    /**
+     * @var string
+     */
+    protected string $permissions = Permissions::class;
+
+    /**
+     * @var ConfigExtensionProvider|string
+     */
+    protected ConfigExtensionProvider|string $config = Config::class;
+}
+

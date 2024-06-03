@@ -7,7 +7,6 @@ namespace Admin\Commands;
 use Admin\Commands\Generators\ExtensionNavigatorHelperGenerator;
 use Admin\Commands\Generators\ExtensionNavigatorMethodsHelperGenerator;
 use Admin\Commands\Generators\GenerateAdminHelper;
-use Admin\Commands\Generators\GenerateNotificationKeys;
 use Admin\Commands\Generators\MacroableHelperGenerator;
 use Admin\Commands\Generators\MacroDelegatorsHelperGenerator;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
@@ -19,10 +18,13 @@ use Illuminate\Support\Str;
 use Log;
 use Throwable;
 
+/**
+ * This class is designed to process the command that creates admin panel assistants for the IDE.
+ */
 class AdminHelpersCommand extends Command
 {
     /**
-     * Default executor list.
+     * Default help executor list.
      *
      * @var array
      */
@@ -46,16 +48,6 @@ class AdminHelpersCommand extends Command
      * @var string
      */
     protected $description = 'Generator helper from ide';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Add class in to handle execute.

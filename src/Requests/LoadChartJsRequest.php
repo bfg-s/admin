@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Admin\Requests;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
+ * Request class which is responsible for loading chart data.
+ *
  * @property-read string $name
  */
 class LoadChartJsRequest extends FormRequest
@@ -18,7 +20,7 @@ class LoadChartJsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return !AdminFacade::guest();
+        return !Admin::guest();
     }
 
     /**

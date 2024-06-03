@@ -4,30 +4,37 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\Delegable;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\Typeable;
 
+/**
+ * Information box component of the admin panel.
+ */
 class InfoBoxComponent extends Component
 {
-    use FontAwesome;
-    use TypesTrait;
-    use Delegable;
+    use FontAwesomeTrait;
+    use Typeable;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'info-box';
 
     /**
+     * Box title.
+     *
      * @var string|null
      */
-    private ?string $title = null;
+    private string|null $title = null;
 
     /**
+     * Box icon.
+     *
      * @var string|null
      */
-    private ?string $icon = null;
+    private string|null $icon = null;
 
     /**
      * @var string|array|null
@@ -35,26 +42,30 @@ class InfoBoxComponent extends Component
     private string|array|null $link = null;
 
     /**
+     * Box body.
+     *
      * @var string|mixed
      */
     private mixed $body = null;
 
     /**
-     * @var array
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
      */
-    private array $params = [];
+    protected bool $realTime = true;
 
     /**
+     * InfoBoxComponent constructor.
+     *
      * @param  string|null  $title
      * @param  string  $body
      * @param  string  $icon
-     * @param ...$params
      */
     public function __construct(
         string $title = null,
         string $body = '',
         string $icon = 'fas fa-info-circle',
-        ...$params
     ) {
         parent::__construct();
 
@@ -63,11 +74,11 @@ class InfoBoxComponent extends Component
         $this->icon = $icon;
 
         $this->body = $body;
-
-        $this->params = $params;
     }
 
     /**
+     * Set the box title.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -79,6 +90,8 @@ class InfoBoxComponent extends Component
     }
 
     /**
+     * Set box icon.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -90,6 +103,8 @@ class InfoBoxComponent extends Component
     }
 
     /**
+     * Set a button with the specified box link.
+     *
      * @param  string  $link
      * @param  string|null  $text
      * @param  string|null  $icon
@@ -103,6 +118,8 @@ class InfoBoxComponent extends Component
     }
 
     /**
+     * Install the box body.
+     *
      * @param  array|string  $body
      * @param  string  $small_info
      * @return $this
@@ -115,6 +132,8 @@ class InfoBoxComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -129,6 +148,8 @@ class InfoBoxComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

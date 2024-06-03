@@ -29,8 +29,15 @@ function _call (execute, target, event, ...params) {
     }
 }
 
-window.updateInits = () => {
-    document.querySelectorAll('[data-load]').forEach((e, k) => {
+window.resetInits = (element = document) => {
+    element.querySelectorAll('[data-load]').forEach((e, k) => {
+        e.dataLoaded = false;
+    });
+};
+
+window.updateInits = (element = document) => {
+    element.querySelectorAll('[data-load]').forEach((e, k) => {
+
         if (! e.dataLoaded) {
 
             const data = e.dataset;

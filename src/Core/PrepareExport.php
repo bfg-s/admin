@@ -6,42 +6,69 @@ namespace Admin\Core;
 
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Throwable;
 
+/**
+ * The part of the kernel that is responsible for exporting data from the model table.
+ */
 class PrepareExport implements FromCollection
 {
     use SearchFormConditionRulesTrait;
 
-    public static $columns = [];
     /**
+     * Added columns for export.
+     *
+     * @var array
+     */
+    public static array $columns = [];
+
+    /**
+     * Table fields for export.
+     *
      * @var array
      */
     public static array $fields = [];
+
     /**
+     * Exported model.
+     *
      * @var Model|string
      */
-    protected $model;
+    protected string|Model $model;
+
     /**
+     * Exported identifiers.
+     *
      * @var array
      */
-    protected $ids;
+    protected array $ids;
+
     /**
+     * Sort exported data by this field.
+     *
      * @var string
      */
-    protected $order;
+    protected string $order;
+
     /**
+     * Type of sorting of the exported data.
+     *
      * @var string
      */
-    protected $order_type;
+    protected string $order_type;
+
     /**
+     * Current table of exported data.
+     *
      * @var string
      */
     protected string $table;
 
     /**
+     * PrepareExport constructor.
+     *
      * @param  string  $model
      * @param  array  $ids
      * @param  string  $order
@@ -58,6 +85,8 @@ class PrepareExport implements FromCollection
     }
 
     /**
+     * Get a collection of exported data.
+     *
      * @return Collection
      * @throws Throwable
      */

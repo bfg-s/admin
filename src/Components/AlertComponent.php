@@ -4,41 +4,49 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\Typeable;
 use Closure;
 
+/**
+ * Alert component for outputting a message.
+ */
 class AlertComponent extends Component
 {
-    use FontAwesome;
-    use TypesTrait;
+    use FontAwesomeTrait;
+    use Typeable;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'alert';
 
     /**
+     * Component title.
+     *
      * @var string|null
      */
     protected ?string $title;
 
     /**
+     * Component icon.
+     *
      * @var string|null
      */
     protected ?string $icon;
 
     /**
+     * Component message body.
+     *
      * @var string|mixed
      */
     protected mixed $body;
 
     /**
-     * @var array
-     */
-    protected array $params;
-
-    /**
+     * Set the component title.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -50,6 +58,8 @@ class AlertComponent extends Component
     }
 
     /**
+     * Set the component icon.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -61,10 +71,12 @@ class AlertComponent extends Component
     }
 
     /**
-     * @param  string|array|Closure  $body
+     * Set the message body of the component.
+     *
+     * @param  array|string|Closure  $body
      * @return $this
      */
-    public function body($body): static
+    public function body(array|string|Closure $body): static
     {
         $this->body = $body;
 
@@ -72,6 +84,8 @@ class AlertComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -85,6 +99,8 @@ class AlertComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

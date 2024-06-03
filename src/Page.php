@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Admin;
 
-use Admin\Components\CardComponent;
 use Admin\Components\Component;
 use Admin\Components\PageComponents;
 use Admin\Components\SearchFormComponent;
 use Admin\Controllers\Controller;
-use Admin\Core\Container;
+use Admin\Core\PageContainer;
 use Admin\Core\MenuItem;
 use Admin\Traits\Delegable;
 use BadMethodCallException;
@@ -23,88 +22,115 @@ use Illuminate\Support\Collection;
 use Throwable;
 
 /**
+ * The main file of the page where all components are placed.
+ * The main page container class.
+ *
  * @template CurrentModel
  * @mixin PageComponents
  */
-class Page extends Container
+class Page extends PageContainer
 {
     use Delegable;
 
     /**
      * Has models on process.
+     *
      * @var array
      */
     protected static array $models = [];
 
     /**
+     * The menu item that is currently active or selected.
+     *
      * @var MenuItem|null
      */
-    public ?MenuItem $menu;
+    public MenuItem|null $menu;
 
     /**
+     * List of all menu items present on the page.
+     *
      * @var Collection|MenuItem[]|mixed|null
      */
-    public ?Collection $menus = null;
+    public Collection|null $menus = null;
 
     /**
+     * The current application controller.
+     *
      * @var Controller|mixed|null
      */
-    public ?Controller $controller = null;
+    public Controller|null $controller = null;
 
     /**
+     * The current name of the application controller class.
+     *
      * @var string|null
      */
-    public ?string $controllerClassName = null;
+    public string|null $controllerClassName = null;
 
     /**
+     * The application's current operation type (add, edit, view, index...).
+     *
      * @var string|mixed|null
      */
-    public ?string $resource_type = null;
+    public string|null $resource_type = null;
 
     /**
+     * Child classes that should be displayed on the page
+     *
      * @var array
      */
     protected array $classes = [];
 
     /**
+     * List of explanations for nested child classes.
+     *
      * @var Explanation[]
      */
     protected array $explanations = [];
 
     /**
+     * Current application router.
+     *
      * @var Router
      */
     protected Router $router;
 
     /**
      * The last content component.
+     *
      * @var string
      */
     protected string $content;
 
     /**
+     * The main current model to which the page belongs.
+     *
      * @var Model|null
      */
-    protected ?Model $model = null;
+    protected Model|null $model = null;
 
     /**
+     * The class name of the main current model to which the page belongs.
+     *
      * @var string|null
      */
-    protected ?string $model_class = null;
+    protected string|null $model_class = null;
 
     /**
+     * Explanations of what should be done first after creating a component on a page.
+     *
      * @var mixed|array|null
      */
     protected mixed $firstExplanation = null;
 
     /**
-     * Sheet constructor.
+     * Page constructor.
+     *
      * @param  Router  $router
      * @throws Throwable
      */
-    public function __construct(
-        Router $router
-    ) {
+    public function __construct(Router $router)
+    {
         parent::__construct(null);
         $this->router = $router;
         $this->menus = admin_repo()->menuList;
@@ -121,6 +147,8 @@ class Page extends Container
     }
 
     /**
+     * Install your model or get the current model.
+     *
      * @return CurrentModel|Builder|Model|Relation|mixed
      */
     public function model($model = null)
@@ -138,19 +166,25 @@ class Page extends Container
     }
 
     /**
+     * Get and assign the current menu item.
+     *
      * @return MenuItem|null
      */
-    public function menu(): ?MenuItem
+    public function menu(): MenuItem|null
     {
         $model = $this->menu->getModelClass();
+
         if ($model && $this->model_class != $model) {
-            $this->menu = $this->menus->where('model_class', $this->model_class)->first();
+
+            $this->menu = $this->findModelMenu($this->model_class);
         }
 
         return $this->menu;
     }
 
     /**
+     * Find a menu item that belongs to the specified model class.
+     *
      * @param  string  $model
      * @return mixed
      */
@@ -160,6 +194,8 @@ class Page extends Container
     }
 
     /**
+     * Get the unique name of the page model.
+     *
      * @param  null  $model
      * @return string
      */
@@ -193,12 +229,19 @@ class Page extends Container
         return $return.$prep;
     }
 
-    public function getModel(): ?Model
+    /**
+     * Get the current page model.
+     *
+     * @return Model|null
+     */
+    public function getModel(): Model|null
     {
         return $this->model;
     }
 
     /**
+     * Follow these steps with explanations.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -212,10 +255,12 @@ class Page extends Container
     }
 
     /**
-     * @param  callable|Explanation  $extend
+     * Add an explanation to the list with explanations.
+     *
+     * @param  Explanation|callable  $extend
      * @return static
      */
-    public function explanation(callable|Explanation $extend): self
+    public function explanation(Explanation|callable $extend): static
     {
         if (is_callable($extend)) {
             $extend = call_user_func($extend);
@@ -228,6 +273,8 @@ class Page extends Container
     }
 
     /**
+     * Forget the specified children's class.
+     *
      * @param  string  $class
      * @return $this
      */
@@ -241,6 +288,8 @@ class Page extends Container
     }
 
     /**
+     * Check if the specified child class exists.
+     *
      * @param  string  $class
      * @return bool
      */
@@ -250,12 +299,14 @@ class Page extends Container
     }
 
     /**
+     * Apply a callback to the current page.
+     *
      * @param  callable|null  $callback
      * @param  object|null  $registerBefore
-     * @return mixed
+     * @return static
      * @throws Throwable
      */
-    public function callCallBack(callable $callback = null, object $registerBefore = null): mixed
+    public function callCallBack(callable $callback = null, object $registerBefore = null): static
     {
         if ($registerBefore) {
             $this->registerClass($registerBefore);
@@ -266,15 +317,17 @@ class Page extends Container
             ], $this->classes));
         }
 
-        return null;
+        return $this;
     }
 
     /**
+     * Register your children's class.
+     *
      * @template RegisteredObject
      * @param  object|RegisteredObject  $class
      * @return object|RegisteredObject
      */
-    public function registerClass(object $class)
+    public function registerClass(object $class): object
     {
         $className = get_class($class);
         $this->classes[$className] = $class;
@@ -284,6 +337,8 @@ class Page extends Container
     }
 
     /**
+     * Applies existing explanations to the specified class.
+     *
      * @param  string  $class
      * @param  object  $instance
      * @return void
@@ -299,6 +354,8 @@ class Page extends Container
     }
 
     /**
+     * A magic method that is responsible for filling this page with content when we magically write the name of our component.
+     *
      * @param $name
      * @param $arguments
      * @return static
@@ -356,6 +413,8 @@ class Page extends Container
     }
 
     /**
+     * Apply delegations to all classes that are currently present on the page.
+     *
      * @param  array  $delegates
      * @return $this
      */
@@ -369,6 +428,8 @@ class Page extends Container
     }
 
     /**
+     * Get the latest content component.
+     *
      * @return Component|string|null
      */
     public function getContent(): Component|string|null
@@ -377,6 +438,8 @@ class Page extends Container
     }
 
     /**
+     * Get the specified child class.
+     *
      * @template RegisteredObject
      * @template RegisteredDefaultObject
      * @param  RegisteredObject|string  $class
@@ -388,19 +451,5 @@ class Page extends Container
         $class = $class === 'content' ? $this->content : $class;
 
         return $this->classes[$class] ?? $default;
-    }
-
-    /**
-     * @return Closure
-     */
-    public function withTools(): Closure
-    {
-        return function ($test = null) {
-            if ($this->hasClass(CardComponent::class)) {
-                $this->getClass(CardComponent::class)->defaultTools($test);
-            }
-
-            return $this;
-        };
     }
 }

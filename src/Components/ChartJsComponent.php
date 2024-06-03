@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 use Admin\Components\Builders\ChartJsComponentBuilder;
-use Admin\Delegates\SearchForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -13,54 +12,77 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Throwable;
 
+/**
+ * The component that is responsible for displaying graphs on the admin panel pages.
+ */
 class ChartJsComponent extends Component
 {
     /**
+     * Storage of graph callbacks for lazy loading.
+     *
      * @var array
      */
     public static array $loadCallBacks = [];
 
     /**
+     * Counter of charts per page for a unique identifier.
+     *
      * @var int
      */
     protected static int $count = 0;
 
     /**
+     * A special builder class for Chart.js charts.
+     *
      * @var ChartJsComponentBuilder
      */
     public ChartJsComponentBuilder $builder;
 
     /**
+     * Display data for the graph builder.
+     *
      * @var mixed
      */
     protected mixed $dataBuilder = null;
 
     /**
+     * Set a custom size for the graph.
+     *
      * @var int
      */
     protected int $size = 100;
 
     /**
+     * Set the type for the graph.
+     *
      * @var string
      */
     protected string $type = 'line';
 
     /**
+     * Set of graph lines.
+     *
      * @var array
      */
     protected array $datasets = [];
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'chartjs';
 
     /**
+     * Link to the search form if available on the chart.
+     *
      * @var SearchFormComponent|null
      */
     protected SearchFormComponent|null $searchForm = null;
 
     /**
+     * ChartJsComponent constructor.
+     *
      * @param  array  $delegates
      * @throws Throwable
      */
@@ -71,11 +93,11 @@ class ChartJsComponent extends Component
         parent::__construct(...$delegates);
 
         $this->builder = new ChartJsComponentBuilder();
-
-        $this->setDatas(['load' => 'chart::js']);
     }
 
     /**
+     * Add a callback for lazy loading of the chart.
+     *
      * @param  callable  $cb
      * @return $this
      */
@@ -87,14 +109,18 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Get a schedule search form if available.
+     *
      * @return SearchFormComponent|null
      */
-    public function getSearchForm(): ?SearchFormComponent
+    public function getSearchForm(): SearchFormComponent|null
     {
         return $this->searchForm;
     }
 
     /**
+     * An add-on for lazy loading, it allows you to extract data from the database and group it by a specified field.
+     *
      * @param  string  $by
      * @param  array|string|null  $title
      * @return $this
@@ -131,6 +157,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * A method that adds and describes a search form for a graph.
+     *
      * @param ...$delegates
      * @return $this
      */
@@ -144,6 +172,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom chart size.
+     *
      * @param  int  $height
      * @param  int  $width
      * @return $this
@@ -156,14 +186,8 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @return $this
-     */
-    public function typeBar(): static
-    {
-        return $this->type('bar');
-    }
-
-    /**
+     * Set a custom chart type.
+     *
      * @param  string  $type
      * @return $this
      */
@@ -176,6 +200,18 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "bar" type for the chart.
+     *
+     * @return $this
+     */
+    public function typeBar(): static
+    {
+        return $this->type('bar');
+    }
+
+    /**
+     * Set a custom "horizontalBar" type for the chart.
+     *
      * @return $this
      */
     public function typeHorizontalBar(): static
@@ -184,6 +220,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "bubble" type for the chart.
+     *
      * @return $this
      */
     public function typeBubble(): static
@@ -192,6 +230,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "scatter" type for the chart.
+     *
      * @return $this
      */
     public function typeScatter(): static
@@ -200,6 +240,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "doughnut" type for the graph.
+     *
      * @return $this
      */
     public function typeDoughnut(): static
@@ -208,6 +250,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "line" type for the graph.
+     *
      * @return $this
      */
     public function typeLine(): static
@@ -216,6 +260,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom "pie" type for the chart.
+     *
      * @return $this
      */
     public function typePie(): static
@@ -224,6 +270,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom type "polarArea" for the graph.
+     *
      * @return $this
      */
     public function typePolarArea(): static
@@ -232,6 +280,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set a custom type "radar" for the chart.
+     *
      * @return $this
      */
     public function typeRadar(): static
@@ -240,6 +290,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set the default data to be obtained between two data.
+     *
      * @param  string  $column
      * @param $from
      * @param $to
@@ -251,6 +303,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Set the data to be obtained between two data.
+     *
      * @param  string  $column
      * @param $from
      * @param $to
@@ -264,6 +318,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Prepare data for graphs.
+     *
      * @param  callable|null  $callback
      * @return $this
      */
@@ -283,6 +339,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Group data by column for graphs.
+     *
      * @param  string  $atColumn
      * @param  string  $format
      * @return $this
@@ -298,6 +356,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Group all prepared data for graphs.
+     *
      * @param  string  $column
      * @return $this
      */
@@ -311,6 +371,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Count all prepared data points for graphs.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -322,6 +384,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Process each point using a callback.
+     *
      * @param  string  $title
      * @param  mixed|null  $callback
      * @param  mixed  $default
@@ -340,6 +404,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Count each point using a callback.
+     *
      * @param  string  $title
      * @param $callback
      * @return $this
@@ -352,6 +418,8 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Convert already prepared data into a mini graph
+     *
      * @return $this
      */
     public function miniChart(): static
@@ -362,16 +430,17 @@ class ChartJsComponent extends Component
             ->labels(collect($this->dataBuilder)->keys()->toArray());
 
         foreach ($this->datasets as $dataset) {
-            $bgColor = $this->randColor();
+            $label = __($dataset['title']);
+            $bgColor = $this->randColorByName($label, 1);
             $this->builder->addDataset(
                 [
-                    'label' => __($dataset['title']),
+                    'label' => $label,
                     'backgroundColor' => $this->renderColor($bgColor, '0.31'), //"rgba(38, 185, 154, 0.31)",
                     'borderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
                     'pointBorderColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
                     'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'), //"rgba(38, 185, 154, 0.7)",
-                    'pointHoverBackgroundColor' => $this->randColor(), //"#fff",
-                    'pointHoverBorderColor' => $this->randColor(),
+                    'pointHoverBackgroundColor' => $this->randColorByName($label, 2), //"#fff",
+                    'pointHoverBorderColor' => $this->randColorByName($label, 3),
                     'data' => collect($dataset['data'])->values()->toArray(),
                 ]
             );
@@ -381,6 +450,20 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Transform a color from an array to an rgba string.
+     *
+     * @param $c
+     * @param  string  $opacity
+     * @return string
+     */
+    public function renderColor($c, string $opacity = '1.0'): string
+    {
+        return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
+    }
+
+    /**
+     * Create and get a random color for graph lines.
+     *
      * @param  int  $min
      * @param  int  $max
      * @return array
@@ -395,16 +478,35 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @param $c
-     * @param  string  $opacity
-     * @return string
+     * Create and get a random color for graph lines.
+     *
+     * @param  string  $title
+     * @param  string|int|null  $salt
+     * @return array
      */
-    public function renderColor($c, string $opacity = '1.0'): string
+    public function randColorByName(string $title, string|int $salt = null): array
     {
-        return "rgba({$c[0]}, {$c[1]}, {$c[2]}, $opacity)";
+        if ($salt) {
+
+            $title = $title . '-' . $salt;
+        }
+        $hashString = (string) crc32($title);
+        $result = [];
+        $length = strlen($hashString);
+
+        for ($i = 0; $i < $length; $i += 3) {
+
+            $result[] = substr($hashString, $i, 3);
+        }
+
+        $inst = array_map(fn ($number) => intval($number) % 256, $result);
+
+        return [$inst[0], $inst[1], $inst[2]];
     }
 
     /**
+     * Describe an arbitrary graph with arbitrary data.
+     *
      * @param  string|array  $title
      * @param  Collection|array  $data
      * @param  array  $color
@@ -426,23 +528,26 @@ class ChartJsComponent extends Component
             ->labels(collect($data[0])->keys()->toArray());
 
         foreach ($data as $key => $datum) {
+
+            $label = is_array($title) ? __($title[$key] ?? '') : __($title);
+
             if ($isColorList) {
-                $bgColor = $color[$key] ?? $this->randColor();
+                $bgColor = $color[$key] ?? $this->randColorByName($label, 1);
             } else {
-                $bgColor = $color ?: $this->randColor();
+                $bgColor = $color ?: $this->randColorByName($label, 2);
             }
 
             $this->builder->addDataset(
                 [
-                    'label' => is_array($title) ? __($title[$key] ?? '') : __($title),
+                    'label' => $label,
                     'backgroundColor' => array_is_list($color) && isset($color[0]) && is_array($color[0])
                         ? array_map(fn(array $c) => $this->renderColor($c, '0.31'), $color)
                         : $this->renderColor($bgColor, '0.31'),
                     'borderColor' => $this->renderColor($bgColor, '0.7'),
                     'pointBorderColor' => $this->renderColor($bgColor, '0.7'),
                     'pointBackgroundColor' => $this->renderColor($bgColor, '0.7'),
-                    'pointHoverBackgroundColor' => $this->renderColor($this->randColor()),
-                    'pointHoverBorderColor' => $this->renderColor($this->randColor()),
+                    'pointHoverBackgroundColor' => $this->renderColor($this->randColorByName($label, 3)),
+                    'pointHoverBorderColor' => $this->renderColor($this->randColorByName($label, 4)),
                     'data' => collect($datum)->values()->toArray(),
                 ]
             );
@@ -452,14 +557,8 @@ class ChartJsComponent extends Component
     }
 
     /**
-     * @return array
-     */
-    public function getViewData(): array
-    {
-        return $this->viewData();
-    }
-
-    /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -470,9 +569,33 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Get additional data to be sent to the template.
+     *
+     * @return array
+     */
+    public function getViewData(): array
+    {
+        return $this->viewData();
+    }
+
+    /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void
     {
+        $params = $this->viewData();
+
+        $this->dataLoad('chart::js', [
+            'type' => $params['type'],
+            'labels' => $params['labels'],
+            'datasets' => $params['datasets'],
+            'options' => $params['optionsRaw'] ?: $params['options'],
+            'name' => $params['element'],
+            'loading' => $params['loading'],
+            'loaderId' => $params['element'] . 'Loader',
+            'timeout' => $this->realTimeTimeout,
+        ]);
     }
 }

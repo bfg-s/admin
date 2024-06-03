@@ -9,6 +9,9 @@ use Admin\Models\AdminUser as User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
+/**
+ * This class is designed to process the command that creates a user for the admin panel.
+ */
 class AdminUserCommand extends Command
 {
     /**
@@ -26,21 +29,11 @@ class AdminUserCommand extends Command
     protected $description = 'Make admin user';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         /** @var User $user_model */
         $user_model = config('admin.auth.providers.admin.model');

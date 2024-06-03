@@ -17,17 +17,24 @@ use Admin\Page;
 use Illuminate\Support\Str;
 use Lang;
 
+/**
+ * Admin panel controller for permission control page.
+ */
 class PermissionController extends Controller
 {
     /**
+     * The model the admin panel controller works with.
+     *
      * @var string
      */
     public static $model = AdminPermission::class;
 
     /**
+     * Available methods and their colors.
+     *
      * @var string[]
      */
-    public $method_colors = [
+    public array $method_colors = [
         '*' => 'dark',
         'GET' => 'info',
         'POST' => 'primary',
@@ -36,6 +43,8 @@ class PermissionController extends Controller
     ];
 
     /**
+     * Index method for displaying a list of records and filtering them.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  SearchForm  $searchForm
@@ -72,6 +81,8 @@ class PermissionController extends Controller
     }
 
     /**
+     * Form method for displaying the form for editing and adding a record.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  Form  $form
@@ -117,6 +128,8 @@ class PermissionController extends Controller
     }
 
     /**
+     * Display method for displaying information about a record.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  ModelInfoTable  $modelInfoTable
@@ -151,10 +164,12 @@ class PermissionController extends Controller
     }
 
     /**
+     * A function for processing the output of a method, wraps it in a badge.
+     *
      * @param  AdminPermission  $permission
      * @return string
      */
-    public function show_methods(AdminPermission $permission)
+    public function show_methods(AdminPermission $permission): string
     {
         return collect($permission->method)->map(function ($i) {
             return "<span class=\"badge badge-".($this->method_colors[$i] ?? 'light')."\">".
@@ -163,24 +178,13 @@ class PermissionController extends Controller
     }
 
     /**
+     * A function for processing state output, wraps it in a badge.
+     *
      * @param  AdminPermission  $permission
      * @return string
      */
-    public function show_state(AdminPermission $permission)
+    public function show_state(AdminPermission $permission): string
     {
         return '<span class="badge badge-'.($permission->state === 'open' ? 'success' : 'danger').'">'.($permission->state === 'open' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>').' '.__("admin.{$permission->state}").'</span>';
-    }
-
-    /**
-     * @return array
-     */
-    public function permissionInfo(): array
-    {
-        $card = new Card;
-
-        return [
-            $card->title('Instructions')->successType(),
-            $card->card_body()->p(Str::markdown(__('admin.permission_instruction')))
-        ];
     }
 }

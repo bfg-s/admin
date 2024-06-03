@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the model cards component.
+ *
  * @mixin ModelCardsComponent
  * @mixin MacroMethodsForModelCards
  */
@@ -17,8 +19,19 @@ class ModelCards extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = ModelCardsComponent::class;
 
+    /**
+     * Make default rows for model cards.
+     *
+     * @param ...$delegates
+     * @return array
+     */
     public function rowDefault(...$delegates): array
     {
         return [
@@ -28,6 +41,13 @@ class ModelCards extends Delegator
         ];
     }
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

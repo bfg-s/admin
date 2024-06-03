@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the tab component.
+ *
  * @mixin TabContentComponent
  * @mixin MacroMethodsForTab
  */
@@ -17,8 +19,20 @@ class Tab extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = TabContentComponent::class;
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

@@ -13,9 +13,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Throwable;
 
+/**
+ * Part of the kernel that is responsible for working with formatting columns of the model table.
+ */
 class Formatter
 {
     /**
+     * Set the character limit for a line in a column.
+     *
      * @param  null  $value
      * @param  array  $props
      * @return string
@@ -38,6 +43,8 @@ class Formatter
     }
 
     /**
+     * Remove all tags from a row in a column.
+     *
      * @param $value
      * @param  array  $props
      * @return mixed|string|null
@@ -54,6 +61,8 @@ class Formatter
     }
 
     /**
+     * Perform decoding of HTML string entities in a column.
+     *
      * @param $value
      * @param  array  $props
      * @return mixed|string|null
@@ -68,6 +77,8 @@ class Formatter
     }
 
     /**
+     * Add resource management buttons (edit, view, entire list) to the value in the column,
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -121,6 +132,8 @@ class Formatter
     }
 
     /**
+     * Add resource control buttons (edit) to the value in the column,
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -159,6 +172,8 @@ class Formatter
     }
 
     /**
+     * Add resource control buttons (show) to the value in the column,
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -197,6 +212,8 @@ class Formatter
     }
 
     /**
+     * Add text to the end of the text that was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -215,6 +232,8 @@ class Formatter
     }
 
     /**
+     * Add text to the beginning of the text that was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -233,6 +252,8 @@ class Formatter
     }
 
     /**
+     * Add a link to the end of the text that was in the column.
+     *
      * @param  null  $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -257,6 +278,8 @@ class Formatter
     }
 
     /**
+     * Add a link to the beginning of the text that was in the column.
+     *
      * @param  null  $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -281,6 +304,8 @@ class Formatter
     }
 
     /**
+     * Perform formatting of the number that was in the column.
+     *
      * @param  array  $props
      * @param $value
      * @return string
@@ -296,6 +321,8 @@ class Formatter
     }
 
     /**
+     * Format the amount that was in the column into monetary form.
+     *
      * @param  array  $props
      * @param $value
      * @return string
@@ -310,6 +337,8 @@ class Formatter
     }
 
     /**
+     * Format the number that was in the column into a percentage form.
+     *
      * @param  array  $props
      * @param $value
      * @return string
@@ -324,6 +353,8 @@ class Formatter
     }
 
     /**
+     * Format the language array that was in the column into the normal form of the current language.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -338,6 +369,8 @@ class Formatter
     }
 
     /**
+     * Format the data that was in the column into a string.
+     *
      * @param $value
      * @param  array  $props
      * @return array|Application|Translator|string|null
@@ -360,6 +393,8 @@ class Formatter
     }
 
     /**
+     * Format into a string with the language variables that were in the column.
+     *
      * @param $value
      * @param  array  $props
      * @return array|Application|Translator|string|null
@@ -370,6 +405,8 @@ class Formatter
     }
 
     /**
+     * Make a trim with the data that was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @return array|Application|Translator|string|null
@@ -384,6 +421,8 @@ class Formatter
     }
 
     /**
+     * Make date formatting carbon what was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -402,6 +441,8 @@ class Formatter
     }
 
     /**
+     * Make time formatting carbon that was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -419,6 +460,8 @@ class Formatter
     }
 
     /**
+     * Make an explosion of the data that was in the column.
+     *
      * @param $value
      * @param  array  $props
      * @return mixed|string
@@ -441,6 +484,8 @@ class Formatter
     }
 
     /**
+     * Format the date that was in the column into a beautiful form.
+     *
      * @param $value
      * @return string
      */
@@ -450,6 +495,8 @@ class Formatter
     }
 
     /**
+     * Format the date and time that was in the column into a beautiful form.
+     *
      * @param $value
      * @return string
      */
@@ -459,6 +506,8 @@ class Formatter
     }
 
     /**
+     * Format what was in the column into Json.
+     *
      * @param $value
      * @return mixed|string|null
      */

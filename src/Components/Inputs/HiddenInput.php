@@ -4,32 +4,45 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class HiddenInput extends FormGroupComponent
+/**
+ * Hidden admin panel input.
+ */
+class HiddenInput extends InputGroupComponent
 {
     /**
+     * Vertical display of input and label.
+     *
      * @var bool
      */
     protected bool $vertical = true;
 
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * Display only the input without a label.
+     *
      * @var bool
      */
-    protected $only_input = true;
+    protected bool $only_input = true;
 
     /**
+     * Admin panel input is disabled
+     *
      * @var bool
      */
     protected bool $disabled = false;
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View
@@ -43,6 +56,8 @@ class HiddenInput extends FormGroupComponent
     }
 
     /**
+     * Make the admin panel input disabled.
+     *
      * @return $this
      */
     public function disabled(): static

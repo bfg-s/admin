@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Admin\Middlewares;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Middleware which is responsible for the language model of behavior of the admin panel.
+ */
 class LanguageMiddleware
 {
     /**
@@ -20,12 +21,10 @@ class LanguageMiddleware
      * @param  Request  $request
      * @param  Closure  $next
      * @return mixed
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
-        $lang = AdminFacade::nowLang();
+        $lang = Admin::nowLang();
 
         App::setLocale($lang);
 

@@ -1,7 +1,7 @@
 <?php
 
 use Admin\Core\MenuItem;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminUser;
 use Admin\Page;
@@ -156,8 +156,6 @@ if (!function_exists('admin_uri')) {
     /**
      * @param  string  $uri
      * @return string
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     function admin_uri(string $uri = ''): string
     {
@@ -165,7 +163,7 @@ if (!function_exists('admin_uri')) {
             $uri = '/'.trim($uri, '/');
         }
 
-        return (config('layout.lang_mode') ? '/'.AdminFacade::nowLang() : '').'/'.trim(config('admin.route.prefix'),
+        return (config('layout.lang_mode') ? '/'.Admin::nowLang() : '').'/'.trim(config('admin.route.prefix'),
                 '/').$uri;
     }
 }
@@ -191,7 +189,7 @@ if (!function_exists('admin_user')) {
      */
     function admin_user(): AdminUser
     {
-        return AdminFacade::user() ?? new AdminUser();
+        return Admin::user() ?? new AdminUser();
     }
 }
 
@@ -201,7 +199,7 @@ if (!function_exists('admin')) {
      */
     function admin(): AdminUser
     {
-        return AdminFacade::user() ?? new AdminUser();
+        return Admin::user() ?? new AdminUser();
     }
 }
 
@@ -265,7 +263,13 @@ if (!function_exists('admin_url_with_get')) {
      */
     function admin_url_with_get(array $params = [], array $unset = []): string
     {
-        $url = explode('?', url()->current())[0];
+        $modal = request()->input('_modal');
+        $realtime = request()->input('_realtime');
+        $currentUrl = $modal || $realtime
+            ? \Illuminate\Support\Facades\Request::server('HTTP_REFERER')
+            : url()->current();
+
+        $url = explode('?', $currentUrl)[0];
 
         $params = \Illuminate\Support\Arr::dot(array_merge(request()->query(), $params));
         foreach ($unset as $k => $item) {
@@ -580,7 +584,7 @@ if (!function_exists('admin_template')) {
      */
     function admin_template(string $template): string
     {
-        return AdminFacade::getTheme()->template($template);
+        return Admin::getTheme()->template($template);
     }
 }
 
@@ -721,5 +725,42 @@ if (!function_exists('getBrowserDetails')) {
             'platform' => $platform,
             'pattern' => $pattern
         );
+    }
+}
+
+if (! function_exists('admin_show_model_field')) {
+    /**
+     * Function for generating a string data from input any data.
+     *
+     * @param  mixed  $data
+     * @param  mixed  $model
+     * @param  mixed  ...$args
+     * @return mixed
+     */
+    function admin_show_model_field (mixed $data, mixed $model, ...$args): mixed {
+        if (is_callable($data)) {
+            $data = call_user_func($data, $model, ...$args);
+        } else if(is_string($data) && $model) {
+            $data = multi_dot_call($model, $data);
+        }
+
+        return $data;
+    }
+}
+
+if (! function_exists('admin_show_text')) {
+    /**
+     * Function for generating a string data from input any data.
+     *
+     * @param  mixed  $data
+     * @param  mixed|null  $model
+     * @param  mixed  ...$args
+     * @return mixed
+     */
+    function admin_show_text (mixed $data, mixed $model = null, ...$args): mixed {
+        if (is_callable($data)) {
+            $data = call_user_func($data, $model, ...$args);
+        }
+        return $data;
     }
 }

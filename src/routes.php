@@ -6,7 +6,7 @@ use Admin\Controllers\SystemController;
 use Admin\Controllers\UploadController;
 use Admin\Controllers\UserController;
 use Admin\Core\RoutesAdaptor;
-use Admin\Facades\NavigateFacade;
+use Admin\Facades\Navigate;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::group([], function (Router $route) {
     $route->get('/', [AuthController::class, 'login'])->name('home');
     $route->get('login', [AuthController::class, 'login'])->name('login');
-    $route->get('2fa', [AuthController::class, 'twofaGet'])->name('2fa.get');
-    $route->post('2fa', [AuthController::class, 'twofa'])->name('2fa');
-    $route->post('2fa_post', [AuthController::class, 'twofaPost'])->name('2fa.post');
+    $route->get('2fa', [AuthController::class, 'twoFaGet'])->name('2fa.get');
+    $route->post('2fa', [AuthController::class, 'twoFa'])->name('2fa');
+    $route->post('2fa_post', [AuthController::class, 'twoFaPost'])->name('2fa.post');
 
     $route->get('export_excel', [SystemController::class, 'export_excel'])->name('export_excel');
     $route->get('export_csv', [SystemController::class, 'export_csv'])->name('export_csv');
@@ -35,6 +35,7 @@ Route::group([], function (Router $route) {
     $route->post('save_image_order', [SystemController::class, 'saveImageOrder'])->name('save_image_order');
     $route->post('delete_ordered_image', [SystemController::class, 'deleteOrderedImage'])->name('delete_ordered_image');
     $route->post('load_select2', [SystemController::class, 'load_select2'])->name('load_select2');
+    $route->post('realtime', [SystemController::class, 'realtime'])->name('realtime');
 });
 
 /**
@@ -61,7 +62,7 @@ Route::group([], function (Router $route) {
         ->name('uploader_drop');
 
     if (config('admin.home-route', 'admin.dashboard') === 'admin.dashboard') {
-        NavigateFacade::item('admin.dashboard', 'dashboard')
+        Navigate::item('admin.dashboard', 'dashboard')
             ->action([
                 class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class,
                 'index'
@@ -71,7 +72,7 @@ Route::group([], function (Router $route) {
     }
 
     $route->namespace(admin_app_namespace('Controllers'))->group(static function (Router $route) {
-        RoutesAdaptor::create_by_menu($route);
+        RoutesAdaptor::createByMenu($route);
     });
 });
 

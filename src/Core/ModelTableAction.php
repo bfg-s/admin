@@ -5,26 +5,64 @@ declare(strict_types=1);
 namespace Admin\Core;
 
 use Admin\Components\Component;
-use Admin\Traits\FontAwesome;
+use Admin\Traits\FontAwesomeTrait;
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * The part of the kernel that is responsible for the action of the model table or model cards.
+ */
 class ModelTableAction implements Arrayable
 {
-    use FontAwesome;
+    use FontAwesomeTrait;
 
-    protected $title = 'Action';
-    protected $icon = 'fas fa-dot-circle';
-    protected $confirm = null;
-    protected $warning = 'admin.before_need_to_select';
+    /**
+     * Action title.
+     *
+     * @var string
+     */
+    protected string $title = 'Action';
 
+    /**
+     * Action icon.
+     *
+     * @var string
+     */
+    protected string $icon = 'fas fa-dot-circle';
+
+    /**
+     * Confirmation for action before action.
+     *
+     * @var string|null
+     */
+    protected string|null $confirm = null;
+
+    /**
+     * Warning for action before action without selected rows.
+     *
+     * @var string|null
+     */
+    protected string|null $warning = 'admin.before_need_to_select';
+
+    /**
+     * ModelTableAction constructor.
+     *
+     * @param $model
+     * @param $callback
+     * @param  array  $callback_parameters
+     */
     public function __construct(
         protected $model,
         protected $callback,
-        protected $callback_parameters = [],
+        protected array $callback_parameters = [],
     ) {
     }
 
-    public function toArray()
+    /**
+     * Convert the action class to an array.
+     *
+     * @return array
+     */
+    public function toArray(): array
     {
         if (
             $this->title
@@ -43,6 +81,8 @@ class ModelTableAction implements Arrayable
     }
 
     /**
+     * Set the action title.
+     *
      * @param  string  $title
      * @return $this
      */
@@ -54,6 +94,8 @@ class ModelTableAction implements Arrayable
     }
 
     /**
+     * Set action icon.
+     *
      * @param  string  $icon
      * @return $this
      */
@@ -65,6 +107,8 @@ class ModelTableAction implements Arrayable
     }
 
     /**
+     * Set action confirmation.
+     *
      * @param  string  $confirmMessage
      * @return $this
      */
@@ -76,6 +120,8 @@ class ModelTableAction implements Arrayable
     }
 
     /**
+     * Set action warning.
+     *
      * @param  string  $warningMessage
      * @return $this
      */
@@ -87,6 +133,8 @@ class ModelTableAction implements Arrayable
     }
 
     /**
+     * Remove action warning.
+     *
      * @return static
      */
     public function nullable(): static

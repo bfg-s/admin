@@ -265,6 +265,7 @@ return [
     'you_have_enabled_two_factor_authentication' => 'You have enabled two factor authentication.',
     'administrators_browser_statistic' => 'Administrators browser statistic',
     'browser' => 'Browser',
+    'browsers' => 'Browsers',
     'translate_field_to_lang' => 'Translate :name to :LANG',
     'calendar' => 'Calendar',
     'is_online' => 'Is online',
@@ -301,4 +302,6 @@ return [
     'done' => 'Done',
     'page-info' => 'Page info',
     'created' => 'Created',
+    'ip' => 'IP',
+    'current_browser' => 'Current browser',
 ];

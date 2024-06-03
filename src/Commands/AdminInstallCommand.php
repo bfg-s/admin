@@ -6,16 +6,20 @@ namespace Admin\Commands;
 
 use Admin\ApplicationConfig;
 use Admin\ApplicationServiceProvider;
+use Admin\Core\ConfigExtensionProvider;
 use Admin\Core\JsonFormatter;
 use Admin\Core\NavigatorExtensionProvider;
 use Admin\Interfaces\ActionWorkExtensionInterface;
 use Admin\Models\AdminSeeder;
 use Admin\Models\AdminUser;
-use App\Admin\Delegates\CommonTrait;
+use Exception;
 use Illuminate\Console\Command;
 use Schema;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * This class is designed to process the command that installs the admin panel.
+ */
 class AdminInstallCommand extends Command
 {
     /**
@@ -35,9 +39,10 @@ class AdminInstallCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
+     * @throws Exception
      */
-    public function handle()
+    public function handle(): int
     {
         $this->call('vendor:publish', [
             '--tag' => 'admin-migrations',
@@ -69,7 +74,6 @@ class AdminInstallCommand extends Command
         $base_dirs = [
             '/',
             '/Controllers',
-            //'/Delegates'
         ];
 
         foreach ($base_dirs as $base_dir) {
@@ -148,35 +152,6 @@ class AdminInstallCommand extends Command
             $this->info("File {$controller} created!");
         }
 
-//        $delegates = admin_app_path('Delegates');
-//
-//        $currentDelegates = File::allFiles(__DIR__.'/../Delegates');
-//
-//        if (!trait_exists(CommonTrait::class)) {
-//            $file = admin_app_path('Delegates/CommonTrait.php');
-//            $pageClass = class_entity('CommonTrait')->traitObject();
-//            $pageClass->namespace(admin_app_namespace('Delegates'));
-//            $pageClass->doc(function ($doc) {
-//            });
-//            file_put_contents($file, $pageClass->wrap('php')->render());
-//            $this->info('Common delegate created!');
-//        }
-//
-//        foreach ($currentDelegates as $currentDelegate) {
-//            $file = $delegates.'/'.$currentDelegate->getFilename();
-//            if (!is_file($file)) {
-//                $parentClass = class_in_file($currentDelegate->getPathname());
-//                $class = class_basename($parentClass);
-//                $delegateClass = class_entity($class);
-//                $delegateClass->namespace(admin_app_namespace('Delegates'));
-//                $delegateClass->use("$parentClass as Admin$class");
-//                $delegateClass->extend("Admin$class");
-//                $delegateClass->addTrait('CommonTrait');
-//                file_put_contents($file, $delegateClass->wrap('php')->render());
-//                $this->info("Delegate {$class} created!");
-//            }
-//        }
-
         $this->call('vendor:publish', [
             '--tag' => 'admin-lang',
             '--force' => $this->option('force'),
@@ -208,9 +183,11 @@ class AdminInstallCommand extends Command
     }
 
     /**
-     * Make app classes.
+     * Make application classes.
+     *
+     * @return void
      */
-    protected function makeApp()
+    protected function makeApp(): void
     {
         $nav = admin_app_path('Navigator.php');
 
@@ -243,6 +220,7 @@ class AdminInstallCommand extends Command
             $class->wrap('php');
             $class->extend(ApplicationConfig::class);
             $class->method('boot')
+                ->returnType('void')
                 ->line('parent::boot();')
                 ->line()
                 ->line('//');
@@ -263,10 +241,11 @@ class AdminInstallCommand extends Command
             $class->wrap('php');
             $class->use(admin_app_namespace('Config'));
             $class->use(admin_app_namespace('Navigator'));
+            $class->use(ConfigExtensionProvider::class);
             $class->extend(ApplicationServiceProvider::class);
 
-            $class->prop('protected:navigator', entity('Navigator::class'));
-            $class->prop('protected:config', entity('Config::class'));
+            $class->prop('protected string:navigator', entity('Navigator::class'));
+            $class->prop('protected ConfigExtensionProvider|string:config', entity('Config::class'));
 
             file_put_contents(
                 $provider,
@@ -282,7 +261,7 @@ class AdminInstallCommand extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Publish the assets even if already exists'],

@@ -11,9 +11,8 @@ use Admin\Explanation;
 use Admin\Models\AdminPermission;
 use Admin\Page;
 use Admin\Respond;
-use Admin\Traits\Delegable;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\Typeable;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -22,84 +21,101 @@ use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * The card component is responsible for all cards in the admin panel.
+ */
 class CardComponent extends Component
 {
-    use TypesTrait;
-    use FontAwesome;
-    use Delegable;
+    use Typeable;
+    use FontAwesomeTrait;
 
     /**
-     * @var bool
-     */
-    public static bool $isContainer = true;
-
-    /**
+     * Link to the search form in the map if available
+     *
      * @var SearchFormComponent|null
      */
-    public ?SearchFormComponent $search_form = null;
+    public SearchFormComponent|null $search_form = null;
 
     /**
+     * Element of the current menu item.
+     *
      * @var MenuItem|null
      */
-    protected ?MenuItem $now = null;
+    protected MenuItem|null $nowMenu = null;
 
     /**
+     * Link to the card body class.
+     *
      * @var CardBodyComponent|null
      */
-    protected ?CardBodyComponent $body = null;
+    protected CardBodyComponent|null $body = null;
 
     /**
+     * Link to the card table if it exists.
+     *
      * @var ModelTableComponent|ModelCardsComponent|null
      */
     protected ModelTableComponent|ModelCardsComponent|null $table = null;
 
     /**
+     * Selected card icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * Selected card title.
+     *
      * @var string|array|null
      */
     protected string|array|null $title = null;
 
     /**
+     * Callback to check whether to display standard tools on the card or not.
+     *
      * @var mixed
      */
     protected mixed $default_tools = false;
 
     /**
+     * Whether or not to display map control buttons such as maximize, collapse and remove.
+     *
      * @var bool
      */
     protected bool $window_controls = true;
 
     /**
-     * @var bool
-     */
-    protected bool $has_search_form = true;
-
-    /**
+     * The current instance of the page class.
+     *
      * @var Page
      */
     protected Page $page;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'card';
 
     /**
+     * All groups of buttons that are present on the card.
+     *
      * @var array
      */
     protected array $groups = [];
 
     /**
-     * Addition header object
+     * An additional map header object, used to add actions to the table.
+     *
      * @var View|null
      */
     protected ?View $headerObj = null;
 
     /**
+     * CardComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -108,7 +124,7 @@ class CardComponent extends Component
 
         parent::__construct();
 
-        $this->now = $this->menu;
+        $this->nowMenu = $this->menu;
 
         $this->groups[] = new ButtonsComponent();
 
@@ -116,23 +132,15 @@ class CardComponent extends Component
     }
 
     /**
-     * @param  Page  $page
-     * @param  array  $delegates
-     * @return void
-     */
-    public static function registrationInToContainer(Page $page, array $delegates = []): void
-    {
-        $page->registerClass($page->next()->getContent()->card($delegates));
-    }
-
-    /**
+     * Add a tab to the body of the page.
+     *
      * @param ...$delegates
      * @return $this
      */
     public function tab(...$delegates): static
     {
         if (!$this->body) {
-            $this->full_body();
+            $this->fullBody();
         }
 
         array_unshift($delegates, TabContentComponent::new()->p3()->pr4());
@@ -142,15 +150,19 @@ class CardComponent extends Component
     }
 
     /**
+     * Add a body to the full width and height of the card.
+     *
      * @param ...$params
      * @return CardBodyComponent
      */
-    public function full_body(...$params): CardBodyComponent
+    public function fullBody(...$params): CardBodyComponent
     {
         return $this->card_body()->fullSpace()->use($params);
     }
 
     /**
+     * Add and describe a body to the card.
+     *
      * @param ...$delegations
      * @return CardBodyComponent
      */
@@ -165,6 +177,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Get the current card body.
+     *
      * @return CardBodyComponent|null
      */
     public function getBody(): ?CardBodyComponent
@@ -173,6 +187,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe a search form in the card.
+     *
      * @return $this
      */
     public function search_form(...$delegates): static
@@ -193,6 +209,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe a model table to a card.
+     *
      * @param ...$delegates
      * @return ModelTableComponent
      */
@@ -213,6 +231,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe model cards to a card.
+     *
      * @param ...$delegates
      * @return ModelCardsComponent
      */
@@ -233,6 +253,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe graphs to the card.
+     *
      * @param ...$delegates
      * @return ChartJsComponent
      */
@@ -243,15 +265,19 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe the model info table to the card.
+     *
      * @param ...$delegates
      * @return ModelInfoTableComponent
      */
     public function model_info_table(...$delegates): ModelInfoTableComponent
     {
-        return $this->full_body()->model_info_table($delegates);
+        return $this->fullBody()->model_info_table($delegates);
     }
 
     /**
+     * Add and describe a component for controlling order and nesting in a card.
+     *
      * @param ...$delegates
      * @return NestedComponent
      */
@@ -261,6 +287,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe the form footer to the card.
+     *
      * @param  mixed  ...$delegates
      * @return FormFooterComponent
      */
@@ -275,6 +303,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add a test callback for standard instruments to the card.
+     *
      * @param  array|Closure|null  $test
      * @return $this
      */
@@ -288,6 +318,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add control buttons for the order control and nesting components to the card.
+     *
      * @return $this
      */
     public function nestedTools(): static
@@ -298,6 +330,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe a group of buttons in the card title.
+     *
      * @param  mixed  ...$delegates
      * @return ButtonsComponent
      */
@@ -309,6 +343,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Set the card icon which is located in the card header.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -320,6 +356,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Disables card control buttons.
+     *
      * @return $this
      */
     public function withoutWindowControls(): static
@@ -328,6 +366,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Enables or disables the state of the card control buttons.
+     *
      * @param  bool  $eq
      * @return $this
      */
@@ -339,32 +379,8 @@ class CardComponent extends Component
     }
 
     /**
-     * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function mount(): void
-    {
-        $this->make_default_tools();
-
-        $originTitle = $this->title;
-        $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
-        if (admin_model_type('index')) {
-            $this->title = $this->title !== null ? $this->title : 'admin.list';
-            if (request()->has('show_deleted') && request('show_deleted') == 1) {
-                $this->title = __($this->title).' <small><b>('.__('admin.deleted').')</b></small>';
-            }
-        } elseif (admin_model_type('create')) {
-            $this->title = $this->title !== null ? $this->title : 'admin.add';
-        } elseif (admin_model_type('edit')) {
-            $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
-            $this->title = $this->title !== null ? $this->title : 'admin.id_edit';
-        } elseif (admin_model_type('show')) {
-            $this->title = $this->title !== null ? $this->title : 'admin.information';
-        }
-    }
-
-    /**
+     * Factory modal window callback.
+     *
      * @param  Respond  $respond
      * @param  Request  $request
      * @return Respond
@@ -388,17 +404,18 @@ class CardComponent extends Component
     }
 
     /**
-     * Make default tools.
+     * Creates standard tool buttons.
+     *
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function make_default_tools(): void
+    protected function makeDefaultTools(): void
     {
         if ($this->default_tools !== false) {
             /** @var Closure $test */
             $test = $this->default_tools;
-            $type = $this->now->getType();
+            $type = $this->nowMenu->getType();
             $isRoot = admin()->isRoot();
             $factoryClassName = '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
                 .'Factory';
@@ -441,7 +458,7 @@ class CardComponent extends Component
                 );
 
                 $this->buttons()
-                    ->dark()
+                    ->info()
                     ->icon_info_circle()
                     ->modal('model_info_modal');
             }
@@ -510,7 +527,7 @@ class CardComponent extends Component
                 }
             }
 
-            if ($this->has_search_form && $this->now && $this->now->isType('index')) {
+            if ($this->nowMenu && $this->nowMenu->isType('index')) {
                 /** @var Model $model */
                 $model = admin_repo()->modelNow;
 
@@ -525,8 +542,8 @@ class CardComponent extends Component
                 }
             }
 
-            if ($this->now && $this->now->isResource() && !request()->has('show_deleted')) {
-                $type = $this->now->getType();
+            if ($this->nowMenu && $this->nowMenu->isResource() && !request()->has('show_deleted')) {
+                $type = $this->nowMenu->getType();
 
                 $btn = $this->buttons();
 
@@ -580,6 +597,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Set the card title.
+     *
      * @param  array|string  $title
      * @return $this
      */
@@ -591,6 +610,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Add and describe a form to the body of the product card.
+     *
      * @param ...$delegates
      * @return FormComponent
      */
@@ -600,6 +621,20 @@ class CardComponent extends Component
     }
 
     /**
+     * Create a card footer component.
+     *
+     * @param  mixed  ...$params
+     * @return FormFooterComponent
+     */
+    public function footer(...$params): FormFooterComponent
+    {
+        return $this->createComponent(FormFooterComponent::class, ...$params)
+            ->setRow(true);
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -619,12 +654,30 @@ class CardComponent extends Component
     }
 
     /**
-     * @param  mixed  ...$params
-     * @return FormFooterComponent
+     * Method for mounting components on the admin panel page.
+     *
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function footer(...$params): FormFooterComponent
+    protected function mount(): void
     {
-        return $this->createComponent(FormFooterComponent::class, ...$params)
-            ->setRow(true);
+        $this->makeDefaultTools();
+
+        $originTitle = $this->title;
+        $this->title = is_array($this->title) && isset($this->title[0]) ? $this->title[0] : $this->title;
+        if (admin_model_type('index')) {
+            $this->title = $this->title !== null ? $this->title : 'admin.list';
+            if (request()->has('show_deleted') && request('show_deleted') == 1) {
+                $this->title = __($this->title).' <small><b>('.__('admin.deleted').')</b></small>';
+            }
+        } elseif (admin_model_type('create')) {
+            $this->title = $this->title !== null ? $this->title : 'admin.add';
+        } elseif (admin_model_type('edit')) {
+            $this->title = is_array($originTitle) && isset($originTitle[1]) ? $originTitle[1] : $this->title;
+            $this->title = $this->title !== null ? $this->title : 'admin.id_edit';
+        } elseif (admin_model_type('show')) {
+            $this->title = $this->title !== null ? $this->title : 'admin.information';
+        }
     }
 }

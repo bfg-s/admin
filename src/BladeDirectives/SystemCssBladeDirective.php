@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class responsible for the blade directive @adminSystemCss
+ */
 class SystemCssBladeDirective
 {
     /**
+     * Property for storing custom admin panel styles.
+     *
      * @var array
      */
     protected static array $componentCss = [];
 
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -22,11 +29,13 @@ class SystemCssBladeDirective
     }
 
     /**
+     * A function that is responsible for generating styles.
+     *
      * @return string
      */
     public static function buildStyles(): string
     {
-        $extensions = AdminFacade::extensions();
+        $extensions = Admin::extensions();
 
         $html = [];
 
@@ -38,7 +47,7 @@ class SystemCssBladeDirective
             $html[] = $componentCs;
         }
 
-        if ($themeCss = AdminFacade::getTheme()->css()) {
+        if ($themeCss = Admin::getTheme()->css()) {
             $html[] = $themeCss;
         }
 
@@ -46,6 +55,8 @@ class SystemCssBladeDirective
     }
 
     /**
+     * Add a custom style to the admin panel.
+     *
      * @param  string  $css
      * @return void
      */

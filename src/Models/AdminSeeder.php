@@ -7,6 +7,9 @@ namespace Admin\Models;
 use DB;
 use Illuminate\Database\Seeder;
 
+/**
+ * Class for seeding all admin panel data.
+ */
 class AdminSeeder extends Seeder
 {
     /**
@@ -14,7 +17,7 @@ class AdminSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         if (!app()->runningUnitTests()) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');

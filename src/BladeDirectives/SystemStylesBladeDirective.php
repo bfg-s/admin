@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Admin\BladeDirectives;
 
 use Admin\Components\Component;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class is responsible for the blade directive @adminSystemStyles.
+ */
 class SystemStylesBladeDirective
 {
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -18,11 +23,13 @@ class SystemStylesBladeDirective
     }
 
     /**
+     * A function that is responsible for generating styles.
+     *
      * @return string
      */
     public static function buildStyles(): string
     {
-        $extensions = AdminFacade::extensions();
+        $extensions = Admin::extensions();
 
         $styles = [];
 
@@ -36,7 +43,7 @@ class SystemStylesBladeDirective
             }
         }
 
-        $theme = AdminFacade::getTheme();
+        $theme = Admin::getTheme();
 
         $styles = array_merge($styles, $theme->getStyles());
 

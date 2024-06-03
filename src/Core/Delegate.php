@@ -7,22 +7,51 @@ namespace Admin\Core;
 use Admin\Components\LangComponent;
 
 /**
+ * The part of the kernel that is responsible for delegating calls to page components.
+ *
  * @property-read LangComponent|static $lang
  */
 class Delegate
 {
-    public $class;
+    /**
+     * Class of the delegate.
+     *
+     * @var string
+     */
+    public string $class;
 
-    public $methods = [];
+    /**
+     * Methods of the delegate.
+     *
+     * @var array
+     */
+    public array $methods = [];
 
-    protected $condition;
+    /**
+     * The condition under which the delegate will be executed.
+     *
+     * @var mixed|true
+     */
+    protected mixed $condition;
 
-    public function __construct(string $class, $condition = true)
+    /**
+     * Delegate constructor.
+     *
+     * @param  string  $class
+     * @param mixed $condition
+     */
+    public function __construct(string $class, mixed $condition = true)
     {
         $this->class = $class;
         $this->condition = $condition;
     }
 
+    /**
+     * The magic method for adding methods to the delegate.
+     *
+     * @param  string  $name
+     * @return $this
+     */
     public function __get(string $name)
     {
         if ($this->condition) {
@@ -32,6 +61,13 @@ class Delegate
         return $this;
     }
 
+    /**
+     * The magic method for adding methods to the delegate.
+     *
+     * @param $name
+     * @param $arguments
+     * @return $this
+     */
     public function __call($name, $arguments)
     {
         if ($this->condition) {

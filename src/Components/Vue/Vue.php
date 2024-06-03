@@ -7,14 +7,21 @@ namespace Admin\Components\Vue;
 use Admin\Components\Component;
 use Illuminate\Support\Str;
 
+/**
+ * Abstract class Vue components.
+ */
 abstract class Vue extends Component
 {
     /**
+     * Counter Vue of elements on the admin panel page.
+     *
      * @var array
      */
     protected static array $count = [];
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

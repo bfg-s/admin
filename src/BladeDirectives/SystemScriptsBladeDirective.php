@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Admin\BladeDirectives;
 
 use Admin\Components\Component;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 
+/**
+ * The class is responsible for the blade directive @adminSystemScripts.
+ */
 class SystemScriptsBladeDirective
 {
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -18,13 +23,15 @@ class SystemScriptsBladeDirective
     }
 
     /**
+     * A function that is responsible for generating scripts.
+     *
      * @return string
      */
     public static function buildScripts(): string
     {
-        $extensions = AdminFacade::extensions();
+        $extensions = Admin::extensions();
 
-        $theme = AdminFacade::getTheme();
+        $theme = Admin::getTheme();
 
         $scripts = $theme->getFirstScripts();
 

@@ -12,25 +12,36 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteRegistrar;
 
-class ConfigExtensionProvider
+/**
+ * Abstract class for extending the configuration of the package.
+ * This class is the base class for all configuration classes in the package.
+ */
+abstract class ConfigExtensionProvider
 {
     /**
+     * Current extension provider.
+     *
      * @var ExtendProvider
      */
     public ExtendProvider $provider;
 
     /**
+     * Global extension scripts.
+     *
      * @var array
      */
     protected array $scripts = [];
 
     /**
+     * Global extension styles.
+     *
      * @var array
      */
     protected array $styles = [];
 
     /**
      * ConfigExtensionProvider constructor.
+     *
      * @param  ExtendProvider  $provider
      */
     public function __construct(ExtendProvider $provider)
@@ -39,7 +50,7 @@ class ConfigExtensionProvider
     }
 
     /**
-     * On boot application.
+     * Method for initializing the configuration. Called when the configuration is loaded.
      */
     public function boot()
     {
@@ -47,7 +58,8 @@ class ConfigExtensionProvider
     }
 
     /**
-     * Register extension routers
+     * Register extension routers.
+     *
      * @param  RouteRegistrar  $route
      * @return void
      */
@@ -57,6 +69,8 @@ class ConfigExtensionProvider
     }
 
     /**
+     * Helper property for adding extensions to the model table.
+     *
      * @param  string  $name
      * @param  Closure  $call
      * @return $this
@@ -69,6 +83,8 @@ class ConfigExtensionProvider
     }
 
     /**
+     * Helper property for adding an extension class to a model table.
+     *
      * @param  string  $class
      * @return $this
      */
@@ -80,6 +96,8 @@ class ConfigExtensionProvider
     }
 
     /**
+     * Helper property for adding inputs to the form.
+     *
      * @param  string  $name
      * @param  string  $class
      * @return $this
@@ -91,6 +109,13 @@ class ConfigExtensionProvider
         return $this;
     }
 
+    /**
+     * Helper property for registering a global component.
+     *
+     * @param  string  $name
+     * @param  string  $class
+     * @return $this
+     */
     public function registerComponent(string $name, string $class): static
     {
         Component::registerComponent($name, $class);
@@ -100,6 +125,7 @@ class ConfigExtensionProvider
 
     /**
      * Get extension scripts.
+     *
      * @return array
      */
     public function getScripts(): array
@@ -109,6 +135,7 @@ class ConfigExtensionProvider
 
     /**
      * Get extension styles.
+     *
      * @return array
      */
     public function getStyles(): array
@@ -117,7 +144,8 @@ class ConfigExtensionProvider
     }
 
     /**
-     * Merge scripts to script list
+     * Merge scripts to extension script list.
+     *
      * @param  array  $scripts
      * @return $this
      */
@@ -129,7 +157,8 @@ class ConfigExtensionProvider
     }
 
     /**
-     * Merge styles to style list
+     * Merge styles to extension style list.
+     *
      * @param  array  $styles
      * @return $this
      */
@@ -141,6 +170,8 @@ class ConfigExtensionProvider
     }
 
     /**
+     * Method for adding meta tags to the admin panel.
+     *
      * @return array
      */
     public function metas(): array
@@ -149,6 +180,8 @@ class ConfigExtensionProvider
     }
 
     /**
+     * Method for adding JavaScript scripts to the admin panel.
+     *
      * @return string
      */
     public function js(): string
@@ -159,6 +192,8 @@ JS;
     }
 
     /**
+     * Method for adding CSS styles to the admin panel.
+     *
      * @return string
      */
     public function css(): string
@@ -169,7 +204,9 @@ CSS;
     }
 
     /**
-     * Register response callback
+     * Register middleware callback.
+     * To process the current request of the panel page at the middleware level.
+     *
      * @param  Request  $request
      * @return void
      */
@@ -179,7 +216,9 @@ CSS;
     }
 
     /**
-     * Register response callback
+     * Register response callback.
+     * To process the current response of the panel page.
+     *
      * @param  Response  $response
      * @return Response
      */

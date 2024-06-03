@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class MDEditorInput extends FormGroupComponent
+/**
+ * Input the admin panel to display markdown data.
+ */
+class MDEditorInput extends InputGroupComponent
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
-    protected ?string $icon = null;
+    protected string|null $icon = null;
 
     /**
+     * Settable date attributes.
+     *
      * @var string[]
      */
     protected array $data = [
@@ -22,6 +29,8 @@ class MDEditorInput extends FormGroupComponent
     ];
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View

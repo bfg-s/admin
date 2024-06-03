@@ -8,15 +8,19 @@ use Admin;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Illuminate\Console\Command;
-use ReflectionException;
 
+/**
+ * The class is responsible for generating IDE extension helpers for navigation.
+ */
 class ExtensionNavigatorHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
+     * Output helper generation function.
+     *
      * @param  Command  $command
-     * @return mixed|string
+     * @return string
      */
-    public function handle(Command $command)
+    public function handle(Command $command): string
     {
         $class = class_entity('NavigatorExtensions');
         $class->namespace("Admin\Core");
@@ -33,9 +37,8 @@ class ExtensionNavigatorHelperGenerator implements AdminHelpGeneratorInterface
      * Generate default methods.
      *
      * @param  DocumentorEntity  $doc
-     * @throws ReflectionException
      */
-    protected function generateDefaultMethods($doc)
+    protected function generateDefaultMethods(DocumentorEntity $doc): void
     {
         foreach (Admin::extensions() as $name => $provider) {
             $doc->tagMethod('void', $provider::$slug, "Make extension routes ($name})");

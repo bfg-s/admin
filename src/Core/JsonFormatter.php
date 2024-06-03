@@ -151,19 +151,19 @@ class JsonFormatter
      * @throws Exception
      */
     public static function replaceCallback(
-        $pattern,
+        array|string $pattern,
         callable $replacement,
-        $subject,
+        mixed $subject,
         int $limit = -1,
         int &$count = null,
         int $flags = 0
     ): string {
         if (!is_scalar($subject)) {
             if (is_array($subject)) {
-                throw new InvalidArgumentException(static::ARRAY_MSG);
+                throw new InvalidArgumentException('Array is not supported as subject');
             }
 
-            throw new TypeError(sprintf(static::INVALID_TYPE_MSG, gettype($subject)));
+            throw new TypeError(sprintf('Is not scalar', gettype($subject)));
         }
 
         $result = preg_replace_callback($pattern, $replacement, $subject, $limit, $count,

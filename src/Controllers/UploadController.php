@@ -8,9 +8,14 @@ use Admin\Models\AdminFileStorage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * System controller admin panel for downloading and deleting files.
+ */
 class UploadController extends Controller
 {
     /**
+     * Endpoint for downloading files.
+     *
      * @param  Request  $request
      * @return JsonResponse
      */
@@ -47,6 +52,8 @@ class UploadController extends Controller
     }
 
     /**
+     * Endpoint for deleting files.
+     *
      * @param  Request  $request
      * @return JsonResponse
      */

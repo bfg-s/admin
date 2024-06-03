@@ -4,41 +4,56 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\BuildHelperTrait;
+use Admin\Traits\ComponentTabsTrait;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * Admin panel form component.
+ */
 class FormComponent extends Component
 {
-    use BuildHelperTrait {
-        BuildHelperTrait::tab as helpTab;
+    use ComponentTabsTrait {
+        ComponentTabsTrait::tab as helpTab;
     }
 
     /**
+     * Last form ID.
+     *
      * @var string|null
      */
     public static ?string $last_id = null;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'form';
 
     /**
+     * Method for submitting form data.
+     *
      * @var string
      */
     protected string $method = 'post';
 
     /**
+     * Action property where to send form data.
+     *
      * @var string|null
      */
     protected ?string $action = null;
 
     /**
+     * Event attribute for submitting form data.
+     *
      * @var string
      */
     protected string $onSubmit = '';
 
     /**
+     * FormComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -47,6 +62,8 @@ class FormComponent extends Component
     }
 
     /**
+     * Redefining tabs from the helper.
+     *
      * @param ...$delegates
      * @return TabsComponent
      */
@@ -58,6 +75,8 @@ class FormComponent extends Component
     }
 
     /**
+     * Set the method for submitting form data.
+     *
      * @param  string  $method
      * @return $this
      */
@@ -69,6 +88,8 @@ class FormComponent extends Component
     }
 
     /**
+     * Set the action to submit form data.
+     *
      * @param  string  $action
      * @return $this
      */
@@ -80,15 +101,54 @@ class FormComponent extends Component
     }
 
     /**
+     * Set the value of the form submit event attribute.
+     *
      * @param  string  $onSubmit
-     * @return void
+     * @return $this
      */
-    public function setOnSubmit(string $onSubmit): void
+    public function setOnSubmit(string $onSubmit): static
     {
         $this->onSubmit = $onSubmit;
+
+        return $this;
     }
 
     /**
+     * Add a list of hidden form inputs.
+     *
+     * @param  array  $fields
+     * @return $this
+     */
+    public function hiddens(array $fields): static
+    {
+        foreach ($fields as $name => $value) {
+            $this->view('components.inputs.hidden', [
+                'name' => $name,
+                'value' => $value
+            ]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'method' => $this->method,
+            'action' => $this->action,
+            'onSubmit' => $this->onSubmit,
+            'id' => static::$last_id,
+        ];
+    }
+
+    /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void
@@ -121,34 +181,5 @@ class FormComponent extends Component
                 '_after' => session('_after', 'index')
             ]);
         }
-    }
-
-    /**
-     * @param  array  $fields
-     * @return $this
-     */
-    public function hiddens(array $fields): static
-    {
-        foreach ($fields as $name => $value) {
-            $this->view('components.inputs.hidden', [
-                'name' => $name,
-                'value' => $value
-            ]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    protected function viewData(): array
-    {
-        return [
-            'method' => $this->method,
-            'action' => $this->action,
-            'onSubmit' => $this->onSubmit,
-            'id' => static::$last_id,
-        ];
     }
 }

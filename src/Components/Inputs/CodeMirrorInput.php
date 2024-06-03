@@ -4,22 +4,31 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class CodeMirrorInput extends FormGroupComponent
+/**
+ * Input admin panel CodeMirror.
+ */
+class CodeMirrorInput extends InputGroupComponent
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * CodeMirror mode.
+     *
      * @var string
      */
     protected string $mode = 'html';
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View
@@ -38,6 +47,8 @@ class CodeMirrorInput extends FormGroupComponent
     }
 
     /**
+     * Set your own CodeMirror mode.
+     *
      * @param  string  $mode
      * @return $this
      */

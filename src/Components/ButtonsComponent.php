@@ -7,14 +7,21 @@ namespace Admin\Components;
 use Admin\Delegates\Buttons;
 use Illuminate\Support\Facades\Request;
 
+/**
+ * The button group component is responsible for all button groups that are in the admin panel.
+ */
 class ButtonsComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'buttons';
 
     /**
+     * ButtonsComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -25,6 +32,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button to a group with a default type.
+     *
      * @param $ico
      * @return ButtonComponent
      */
@@ -34,6 +43,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button to a group with the specified type and icon.
+     *
      * @param  string  $type
      * @param  null  $ico
      * @return ButtonComponent
@@ -49,7 +60,8 @@ class ButtonsComponent extends Component
             $btn->icon($ico);
         } else {
             if ($ico && is_array($ico)) {
-                $btn->iconTitle($ico);
+                $btn->icon($ico[0] ?? '');
+                $btn->title($ico[1] ?? '');
             }
         }
 
@@ -59,7 +71,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Reload button.
+     * Add a page reload button.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @return ButtonComponent
@@ -74,6 +87,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with type secondary to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent
      */
@@ -83,6 +98,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add buttons to control order and nesting in a group.
+     *
      * @return $this
      */
     public function nestable(): static
@@ -94,6 +111,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with type info to the group.
+     *
      * @param  mixed  $name
      * @return ButtonComponent
      */
@@ -103,6 +122,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with type primary to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent
      */
@@ -112,6 +133,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with type dark to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent
      */
@@ -121,7 +144,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource list button.
+     * Add a resource list button to a group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @return $this|ButtonComponent
@@ -140,7 +164,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource edit button.
+     * Add a resource edit button to the group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @return ButtonComponent|ButtonsComponent|Buttons
@@ -171,10 +196,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Nestable group.
-     */
-
-    /**
+     * Add a button with type success to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent
      */
@@ -184,11 +207,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource group.
-     */
-
-    /**
-     * Resource info button.
+     * Add a resource information button to a group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @return ButtonComponent|ButtonsComponent|Buttons
@@ -220,7 +240,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource add button.
+     * Add a button to delete a resource to a group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @param  string|null  $message
@@ -266,6 +287,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with the danger type to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent|static
      */
@@ -275,7 +298,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource add button.
+     * Add a button to force removal of a resource to a group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @param  string|null  $message
@@ -314,7 +338,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource add button.
+     * Add a resource recovery button to the group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @param  string|null  $message
@@ -353,6 +378,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a button with the warning type to the group.
+     *
      * @param  mixed|null  $ico
      * @return ButtonComponent
      */
@@ -362,6 +389,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Add a submit form button to the group.
+     *
      * @param  array|string|null  $icon
      * @param  string|null  $form
      * @return ButtonComponent
@@ -384,7 +413,8 @@ class ButtonsComponent extends Component
     }
 
     /**
-     * Resource add button.
+     * Add a button to add a resource to a group.
+     *
      * @param  string|null  $link
      * @param  string|null  $title
      * @return ButtonComponent|static
@@ -407,6 +437,8 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

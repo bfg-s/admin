@@ -4,46 +4,53 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Admin\Admin;
+use Admin\AdminEngine;
 use Admin\Interfaces\NavigateInterface;
-use Admin\Navigate;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\NavCommon;
-use Admin\Traits\NavDefaultTools;
+use Admin\NavigateEngine;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\NavCommonTrait;
+use Admin\Traits\NavDefaultToolsTrait;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
+ * The part of the kernel that is responsible for the navigation group.
+ *
  * @mixin NavigatorExtensions
  */
 class NavGroup implements Arrayable, NavigateInterface
 {
-    use FontAwesome;
-    use NavCommon;
-    use NavDefaultTools;
+    use FontAwesomeTrait;
+    use NavCommonTrait;
+    use NavDefaultToolsTrait;
 
     /**
+     * List of navigation items in the group.
+     *
      * @var array
      */
     public $items = [];
 
     /**
-     * NavItem constructor.
+     * NavGroup constructor.
+     *
      * @param  string|null  $title
-     * @param  string  $route
+     * @param  string|null  $route
      */
     public function __construct(string $title = null, string $route = null)
     {
         $this->title($title)
             ->route($route)
-            ->extension(Navigate::$extension);
+            ->extension(NavigateEngine::$extension);
     }
 
     /**
+     * Perform a closure on the navigation group.
+     *
      * @param  Closure|array  ...$calls
      * @return $this
      */
-    public function do(...$calls)
+    public function do(...$calls): static
     {
         foreach ($calls as $call) {
             if (is_embedded_call($call)) {
@@ -55,18 +62,21 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
+     * Add an item to the navigation group.
+     *
      * @param  string|null  $title
      * @param  string|null  $route
      * @param  string|Closure|null  $action
      * @return NavItem
      */
-    public function item(string $title = null, string $route = null, $action = null)
+    public function item(string $title = null, string $route = null, $action = null): NavItem
     {
         $item = new NavItem($title, $route, $action);
 
         $this->items['items'][] = $item;
 
         if (isset($item->items['route'])) {
+
             $this->includeAfterGroup($item->items['route']);
         }
 
@@ -74,12 +84,14 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
+     * Add a group to a navigation group.
+     *
      * @param  string|null  $title
      * @param  string|null|Closure|array  $route
-     * @param  Closure|array|null  $cb
+     * @param  array|Closure|null  $cb
      * @return NavGroup
      */
-    public function group(string $title = null, $route = null, $cb = null)
+    public function group(string $title = null, $route = null, array|Closure $cb = null): NavGroup
     {
         if (is_embedded_call($route) && !is_string($route)) {
             $cb = $route;
@@ -91,10 +103,12 @@ class NavGroup implements Arrayable, NavigateInterface
         $this->items['items'][] = $item;
 
         if (isset($item->items['route'])) {
+
             $this->includeAfterGroup($item->items['route']);
         }
 
         if (is_embedded_call($cb)) {
+
             call_user_func($cb, $item);
         }
 
@@ -102,59 +116,69 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
-     * @param  string  $view
-     * @param  array  $params
-     * @param  bool  $prepend
-     * @return $this
-     */
-    public function nav_bar_view(string $view, array $params = [], bool $prepend = false)
-    {
-        Navigate::$items[] = collect(['nav_bar_view' => $view, 'params' => $params, 'prepend' => $prepend]);
-
-        return $this;
-    }
-
-    /**
+     * Add vue template navbar.
+     *
      * @param  string  $class
      * @param  array  $params
      * @param  bool  $prepend
      * @return $this
      */
-    public function nav_bar_vue(string $class, array $params = [], bool $prepend = false)
+    public function nav_bar_vue(string $class, array $params = [], bool $prepend = false): static
     {
-        Navigate::$items[] = collect(['nav_bar_vue' => $class, 'params' => $params, 'prepend' => $prepend]);
+        NavigateEngine::$items[] = collect(['nav_bar_vue' => $class, 'params' => $params, 'prepend' => $prepend]);
 
         return $this;
     }
 
     /**
+     * Add a navbar template.
+     *
+     * @param  string  $view
+     * @param  array  $params
+     * @param  bool  $prepend
+     * @return $this
+     */
+    public function nav_bar_view(string $view, array $params = [], bool $prepend = false): static
+    {
+        NavigateEngine::$items[] = collect(['nav_bar_view' => $view, 'params' => $params, 'prepend' => $prepend]);
+
+        return $this;
+    }
+
+    /**
+     * Add left a navbar template.
+     *
      * @param  string  $view
      * @param  array  $params
      * @return $this
      */
-    public function left_nav_bar_view(string $view, array $params = [])
+    public function left_nav_bar_view(string $view, array $params = []): static
     {
-        Navigate::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
+        NavigateEngine::$items[] = collect(['left_nav_bar_view' => $view, 'params' => $params]);
 
         return $this;
     }
 
     /**
+     * Add left vue template navbar.
+     *
      * @param  string  $class
      * @param  array  $params
      * @return $this
      */
-    public function left_nav_bar_vue(string $class, array $params = [])
+    public function left_nav_bar_vue(string $class, array $params = []): static
     {
-        Navigate::$items[] = collect(['left_nav_bar_vue' => $class, 'params' => $params]);
+        NavigateEngine::$items[] = collect(['left_nav_bar_vue' => $class, 'params' => $params]);
 
         return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Convert the navigation group into an array.
+     *
+     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         if (isset($this->items['items'])) {
             foreach ($this->items['items'] as $key => $item) {
@@ -167,19 +191,21 @@ class NavGroup implements Arrayable, NavigateInterface
     }
 
     /**
+     * Magic method for inserting slug extensions into navigation.
+     *
      * @param $name
      * @param $arguments
      */
     public function __call($name, $arguments)
     {
-        if (isset(Admin::$nav_extensions[$name])) {
-            Navigate::$extension = Admin::$nav_extensions[$name];
+        if (isset(AdminEngine::$nav_extensions[$name])) {
+            NavigateEngine::$extension = AdminEngine::$nav_extensions[$name];
 
-            Admin::$nav_extensions[$name]->navigator($this);
+            AdminEngine::$nav_extensions[$name]->navigator($this);
 
-            Navigate::$extension = null;
+            NavigateEngine::$extension = null;
 
-            unset(Admin::$nav_extensions[$name]);
+            unset(AdminEngine::$nav_extensions[$name]);
         }
     }
 }

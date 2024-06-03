@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Throwable;
 
 /**
+ * Component of the model info table of the admin panel.
+ *
  * @methods Admin\Components\ModelTableComponent::$extensions (...$params) static
  * @mixin ModelInfoTableComponentFields
  * @mixin ModelInfoTableComponentMethods
@@ -19,26 +21,36 @@ use Throwable;
 class ModelInfoTableComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
-    protected string $view = 'content-only';
+    protected string $view = 'model-info-table';
 
     /**
-     * @var array|Model
-     */
-    protected $model;
-
-    /**
+     * Model info table rows.
+     *
      * @var array
      */
     protected array $rows = [];
 
     /**
+     * The last index of the added model info table row.
+     *
      * @var string|null
      */
     protected ?string $last = null;
 
     /**
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
+     */
+    protected bool $realTime = true;
+
+    /**
+     * Add information to a row in the model info table.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -52,6 +64,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A helper that adds an identifier row to the model info table.
+     *
      * @return $this
      */
     public function id(): static
@@ -62,6 +76,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * Adds an identifier row to the model info table.
+     *
      * @param  string|Closure|array  $field
      * @param  string  $label
      * @return $this
@@ -76,6 +92,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * An assistant that adds a deleted row to the model info table.
+     *
      * @return $this
      */
     public function deleted_at(): static
@@ -86,6 +104,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A helper that adds "at" rows to the model info table.
+     *
      * @return $this
      */
     public function at(): static
@@ -96,6 +116,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A helper that adds "created at" rows to the model info table.
+     *
      * @return $this
      */
     public function created_at(): static
@@ -106,6 +128,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A helper that adds "updated at" rows to the model info table.
+     *
      * @return $this
      */
     public function updated_at(): static
@@ -116,6 +140,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A helper that adds an active field switch row to the model info table.
+     *
      * @return $this
      */
     public function active_switcher(): static
@@ -126,6 +152,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A magic method for calling a method that allows you to process extensions of the model info table.
+     *
      * @param $name
      * @param $arguments
      * @return $this|bool|ModelInfoTableComponent|string
@@ -154,6 +182,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * A magic method for calling a property that allows you to process extensions of the model info table.
+     *
      * @param  string  $name
      * @return $this|ModelInfoTableComponent
      */
@@ -174,6 +204,8 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @throws Throwable
      */
     protected function mount(): void
@@ -215,6 +247,6 @@ class ModelInfoTableComponent extends Component
             }
         }
 
-        $this->table()->rows($data);
+        $this->table()->withoutRealtime()->rows($data);
     }
 }

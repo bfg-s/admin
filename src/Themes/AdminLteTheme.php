@@ -4,39 +4,56 @@ declare(strict_types=1);
 
 namespace Admin\Themes;
 
+/**
+ * Class of the main theme of the admin panel.
+ */
 class AdminLteTheme extends Theme
 {
     /**
+     * Name of the visual theme.
+     *
      * @var string
      */
     protected string $name = 'AdminLte 3';
 
     /**
+     * Description of the visual theme.
+     *
      * @var string
      */
     protected string $description = 'AdminLTE is an HTML template that can be used for any purpose.';
 
     /**
+     * Blade render variable to form the template path.
+     *
      * @var string
      */
     protected string $viewVariable = 'admin-lte::';
 
     /**
+     * Template namespace to form a template group.
+     *
      * @var string|null
      */
-    protected ?string $namespace = 'admin-lte';
+    protected string|null $namespace = 'admin-lte';
 
     /**
+     * Path to the templates of theme directory.
+     *
      * @var string|null
      */
-    protected ?string $directory = __DIR__.'/../../lte';
+    protected string|null $directory = __DIR__.'/../../lte';
 
     /**
+     * Visual theme slug.
+     *
      * @var string
      */
     protected string $slug = 'admin-lte';
 
     /**
+     * Visual theme styles.
+     *
      * @var array|string[]
      */
     protected array $styles = [
@@ -47,6 +64,8 @@ class AdminLteTheme extends Theme
     ];
 
     /**
+     * Initial visual theme scripts.
+     *
      * @var array|string[]
      */
     protected array $firstScripts = [
@@ -57,6 +76,8 @@ class AdminLteTheme extends Theme
     ];
 
     /**
+     * Visual theme scripts.
+     *
      * @var array|string[]
      */
     protected array $scripts = [

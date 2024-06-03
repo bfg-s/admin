@@ -6,21 +6,45 @@ namespace Admin\Components\ModelTable;
 
 use Admin\Components\Component;
 
+/**
+ * Header of the admin panel component for the model table.
+ */
 class HeaderComponent extends Component
 {
+    /**
+     * The name of the component template.
+     *
+     * @var string
+     */
     protected string $view = 'model-table.header';
 
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @var array
+     */
     protected array $viewData = [];
 
+    /**
+     * Add the "fit" class.
+     *
+     * @var bool
+     */
     protected bool $fit = false;
 
-    protected $label = null;
+    /**
+     * Title label.
+     *
+     * @var string|null
+     */
+    protected string|null $label = null;
 
-    public function __construct(...$delegates)
-    {
-        parent::__construct($delegates);
-    }
-
+    /**
+     * Set additional data to be sent to the column template.
+     *
+     * @param  array  $data
+     * @return $this
+     */
     public function setViewData(array $data): static
     {
         $this->viewData = $data;
@@ -28,6 +52,11 @@ class HeaderComponent extends Component
         return $this;
     }
 
+    /**
+     * Enable adding "fit" class.
+     *
+     * @return $this
+     */
     public function fit(): static
     {
         $this->fit = true;
@@ -35,6 +64,11 @@ class HeaderComponent extends Component
         return $this;
     }
 
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
     protected function viewData(): array
     {
         return array_merge([
@@ -43,6 +77,11 @@ class HeaderComponent extends Component
         ], $this->viewData);
     }
 
+    /**
+     * Method for mounting components on the admin panel page.
+     *
+     * @return void
+     */
     protected function mount(): void
     {
         $this->label = isset($this->viewData['column']['label'])

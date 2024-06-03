@@ -9,13 +9,17 @@ use Admin\Core\TableExtends\Decorations;
 use Admin\Core\TableExtends\Display;
 use Admin\Core\TableExtends\Editables;
 use Admin\Core\TableExtends\Formatter;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use ReflectionException;
 
+/**
+ * Admin panel loading class. Loads all components and extensions.
+ */
 class Boot
 {
     /**
-     * Table extensions.
+     * Model table column extensions.
+     *
      * @var array
      */
     protected static array $table_classes = [
@@ -27,6 +31,7 @@ class Boot
 
     /**
      * Run boot scripts.
+     *
      * @throws ReflectionException
      */
     public static function run(): void
@@ -37,7 +42,7 @@ class Boot
             ModelTableComponent::addExtensionClass($item);
         }
 
-        foreach (AdminFacade::extensions() as $extension) {
+        foreach (Admin::extensions() as $extension) {
             if ($extension->included()) {
                 $extension->config()->boot();
             }

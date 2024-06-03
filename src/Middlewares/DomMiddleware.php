@@ -18,14 +18,21 @@ use Illuminate\Support\ViewErrorBag;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * Middleware for processing HTML processes dom tree.
+ */
 class DomMiddleware
 {
     /**
+     * Saved model table component.
+     *
      * @var ModelTableComponent|null
      */
     protected static ?ModelTableComponent $modelTableComponent = null;
 
     /**
+     * Save the model table component.
+     *
      * @param  ModelTableComponent|null  $modelTableComponent
      * @return void
      */
@@ -41,10 +48,10 @@ class DomMiddleware
      *
      * @param  Request  $request
      * @param  Closure  $next
-     * @return mixed
+     * @return JsonResponse|Response|RedirectResponse
      * @throws Exception
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response|JsonResponse|RedirectResponse
     {
         /** @var Response $response */
         $response = $next($request);
@@ -85,11 +92,13 @@ class DomMiddleware
     }
 
     /**
+     * Get the page content and set it as content to send.
+     *
      * @param  Request  $request
      * @param  Response|BinaryFileResponse  $response
      * @return $this
      */
-    protected function setContent(Request $request, Response|BinaryFileResponse $response)
+    protected function setContent(Request $request, Response|BinaryFileResponse $response): static
     {
         if ($request->pjax() && $request->header('X-PJAX-CONTAINER') && $response instanceof Response) {
             $html = new Crawler($response->getContent());
@@ -114,6 +123,8 @@ class DomMiddleware
 
 
     /**
+     * Receive and set watcher tag content to update.
+     *
      * @param  Crawler  $html
      * @return $this
      */
@@ -135,9 +146,11 @@ class DomMiddleware
     }
 
     /**
+     * Transferring all errors from the session to toasts.
+     *
      * @return $this
      */
-    protected function setErrorsToasts()
+    protected function setErrorsToasts(): static
     {
         if (config('layout.toast_errors', true) && session()->has('errors')) {
             /** @var ViewErrorBag $bags */
@@ -154,11 +167,13 @@ class DomMiddleware
     }
 
     /**
-     * @param  Response|RedirectResponse  $response
+     * Setting a header indicating that the request is pjax.
+     *
+     * @param  RedirectResponse|Response  $response
      * @param  Request  $request
      * @return DomMiddleware
      */
-    protected function setUriHeader($response, Request $request)
+    protected function setUriHeader(Response|RedirectResponse $response, Request $request): static
     {
         if (method_exists($response, 'header')) {
             $response->header('X-PJAX-URL', $request->getRequestUri());

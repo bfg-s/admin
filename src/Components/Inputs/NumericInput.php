@@ -6,19 +6,28 @@ namespace Admin\Components\Inputs;
 
 use Illuminate\View\View;
 
+/**
+ * Input admin panel for entering numbers with possible floating point.
+ */
 class NumericInput extends Input
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
-    protected ?string $icon = 'fas fa-hashtag';
+    protected string|null $icon = 'fas fa-hashtag';
 
     /**
+     * Number of characters after floating point.
+     *
      * @var int
      */
     protected int $digits = 2;
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View
@@ -34,6 +43,8 @@ class NumericInput extends Input
     }
 
     /**
+     * Set the number of characters after floating point.
+     *
      * @param  int  $digits
      * @return $this
      */

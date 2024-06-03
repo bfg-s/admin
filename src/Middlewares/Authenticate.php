@@ -5,33 +5,44 @@ declare(strict_types=1);
 namespace Admin\Middlewares;
 
 use Admin\Boot;
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Admin\Models\AdminPermission;
 use Admin\Respond;
 use Cache;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use ReflectionException;
 use Route;
-use Symfony\Component\DomCrawler\Crawler;
 
+/**
+ * Middleware which is responsible for checking authorization and authentication.
+ */
 class Authenticate
 {
     /**
+     * A property that is responsible for public access to the page.
+     *
      * @var bool
      */
-    public static $access = true;
-    /**
-     * @var Collection
-     */
-    protected static $menu;
+    public static bool $access = true;
 
-    protected static bool $alreadyPost = false;
+    /**
+     * Mark request as no log.
+     *
+     * @var bool
+     */
+    public static bool $noLog = false;
+
+    /**
+     * A property that is responsible for the state of the request type, so that it is not a get or a head.
+     *
+     * @var bool
+     */
+    protected bool $isNoGetOrHead = false;
 
     /**
      * Handle an incoming request.
@@ -39,13 +50,16 @@ class Authenticate
      * @param  Request  $request
      * @param  Closure  $next
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      * @throws ReflectionException|AuthenticationException
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        if (!static::$alreadyPost) {
-            static::$alreadyPost = !($request->isMethod('get') || $request->isMethod('head'));
+        $currentRouteName = \Illuminate\Support\Facades\Route::currentRouteName();
+
+        if (!$this->isNoGetOrHead) {
+
+            $this->isNoGetOrHead = !($request->isMethod('get') || $request->isMethod('head'));
         }
 
         if (!Auth::guard('admin')->guest() && $this->shouldPassThrough($request)) {
@@ -109,7 +123,7 @@ class Authenticate
         }
 
         if (static::$access) {
-            foreach (AdminFacade::extensions() as $extension) {
+            foreach (Admin::extensions() as $extension) {
                 $extension->config()->middleware($request);
             }
         }
@@ -118,12 +132,23 @@ class Authenticate
         /** @var Response $response */
         $response = $next($request);
 
-        if (!static::$alreadyPost) {
+        if (
+            ! $this->isNoGetOrHead
+            && ! static::$noLog
+            && $currentRouteName != 'admin.call_callback'
+            && $currentRouteName != 'admin.load_lives'
+            && $currentRouteName != 'admin.load_chart_js'
+            && $currentRouteName != 'admin.translate'
+            && $currentRouteName != 'admin.save_image_order'
+            && $currentRouteName != 'admin.delete_ordered_image'
+            && $currentRouteName != 'admin.load_select2'
+            && $currentRouteName != 'admin.realtime'
+        ) {
             admin_log_primary('Loaded page', trim(Route::currentRouteAction() ?: '', '\\'), 'fas fa-file-download');
         }
 
         if ($response instanceof Response) {
-            foreach (AdminFacade::extensions() as $extension) {
+            foreach (Admin::extensions() as $extension) {
                 $response = $extension->config()->response($response);
             }
         }
@@ -138,7 +163,7 @@ class Authenticate
      *
      * @return bool
      */
-    protected function shouldPassThrough($request)
+    protected function shouldPassThrough(Request $request): bool
     {
         $excepts = [
             admin_uri('login'),
@@ -165,6 +190,8 @@ class Authenticate
     }
 
     /**
+     * Method for handling an exception being thrown for an unauthorized user.
+     *
      * @param  Request  $request
      * @throws AuthenticationException
      */
@@ -185,9 +212,11 @@ class Authenticate
     }
 
     /**
+     * Method for checking user access to a page.
+     *
      * @return bool
      */
-    protected function access()
+    protected function access(): bool
     {
         $now = admin_now();
 
@@ -196,69 +225,5 @@ class Authenticate
         }
 
         return AdminPermission::check();
-    }
-
-    protected function watchModal(Request $request, Response $response)
-    {
-        if ($request->has('_modal') && $request->ajax()) {
-            $controller = Route::current()?->controller;
-
-            $method = $request->get('_handle');
-            if (
-                $method
-                && $controller
-                && method_exists($controller, $method)
-            ) {
-                return $response->setContent(
-                    app()->call([$controller, $method], [
-                        'detail' => $request->has('_detail')
-                    ])
-                );
-            }
-        }
-
-        return null;
-    }
-
-    protected function watchAreas(Request $request, Response $response)
-    {
-        if ($request->has('_areas') && $request->ajax()) {
-            $_areas = $request->get('_areas');
-
-            if ($_areas) {
-                $hashes = Cache::get('admin_areas_hashes', []);
-
-                $html = new Crawler($response->getContent());
-
-                $result_areas = [];
-
-                foreach ($_areas as $area) {
-                    $ht = $html->filter("#{$area}");
-                    if ($ht->count()) {
-                        $html_text = $ht->eq(0)->html();
-                        $html_hash = md5($html_text);
-                        if (isset($hashes[$area])) {
-                            if ($hashes[$area] != $html_hash) {
-                                $result_areas[$area] = $html_text;
-                                $hashes[$area] = $html_hash;
-                            }
-                        } else {
-                            $result_areas[$area] = $html_text;
-                            $hashes[$area] = $html_hash;
-                        }
-                    }
-                }
-
-                Cache::forever('admin_areas_hashes', $hashes);
-
-                return $response->setContent($result_areas);
-            }
-        } else {
-            if (Cache::has('admin_areas_hashes')) {
-                Cache::forget('admin_areas_hashes');
-            }
-        }
-
-        return null;
     }
 }

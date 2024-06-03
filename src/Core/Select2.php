@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,90 +13,143 @@ use Illuminate\Support\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Part of the kernel that is responsible for adapting data for the select2 plugin.
+ */
 class Select2 extends Collection
 {
     /**
+     * Whether pagination is disabled for data.
+     *
      * @var bool
      */
-    protected $disable_pagination = false;
+    protected bool $disable_pagination = false;
 
     /**
+     * Whether pagination is enabled for the response result.
+     *
      * @var bool
      */
-    protected $pagination = true;
+    protected bool $pagination = true;
 
     /**
+     * Number of records per page.
+     *
      * @var int|null
      */
-    protected $paginate_peg_page = 15;
+    protected int|null $paginate_peg_page = 15;
 
     /**
+     * Specified columns for selection.
+     *
      * @var string[]
      */
-    protected $columns = [];
+    protected array $columns = [];
 
     /**
+     * Specified columns for selection in which you can search.
+     *
      * @var array
      */
-    protected $search_columns = [];
+    protected array $search_columns = [];
 
     /**
+     * Group data by.
+     *
      * @var bool|string
      */
-    protected $group_by = false;
+    protected string|bool $group_by = false;
 
     /**
+     * Data for withdrawing options.
+     *
      * @var Arrayable|Model|Builder|Relation|Collection|LengthAwarePaginator|array
      */
-    protected $data;
+    protected Arrayable|Collection|array|LengthAwarePaginator|Builder|Relation|Model $data;
+
     /**
+     * Format for displaying options.
+     *
      * @var string
      */
     protected string $format = "{id}) {name}";
+
     /**
+     * Connected relations for selection.
+     *
      * @var array
      */
     protected array $relations = [];
+
     /**
+     * Sort by field if specified.
+     *
      * @var string|null
      */
     protected ?string $orderBy = null;
+
     /**
+     * Sort in the specified type if a field for sorting is specified.
+     *
      * @var string
      */
     protected string $orderType = 'ASC';
+
     /**
+     * Total pages in pagination.
+     *
      * @var int
      */
-    private $_paginate_total = 0;
+    private int $_paginate_total = 0;
+
     /**
+     * Current pagination page.
+     *
      * @var int
      */
-    private $_paginate_current = 0;
+    private int $_paginate_current = 0;
+
     /**
+     * The current value of the select.
+     *
      * @var mixed
      */
-    private $value;
+    private mixed $value = null;
+
     /**
+     * If you need text when adding an empty option.
+     *
      * @var string|null
      */
-    private $no_select;
+    private string|null $no_select = null;
+
     /**
-     * @var string|null
+     * Prefix for query parameter names.
+     *
+     * @var string|array|null
      */
-    private $prefix;
+    private string|array|null $prefix = null;
+
     /**
+     * Name for query parameter names.
+     *
      * @var string
      */
     private string $name = 'select2_page';
+
     /**
+     * Data for outputting options.
+     *
      * @var Collection
      */
     private mixed $value_data = null;
+
     /**
-     * @var Closure|null
+     * Own conditions for customizing a request to the database to receive options.
+     *
+     * @var mixed|null
      */
-    private $where;
+    private mixed $where = null;
 
     /**
      * Select2 constructor.
@@ -152,6 +204,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Set select value.
+     *
      * @param $value
      * @return $this
      */
@@ -163,6 +217,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Set the output select format.
+     *
      * @param  string  $format
      * @return $this
      */
@@ -186,6 +242,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Set the text of an empty select.
+     *
      * @param  string  $text
      * @return $this
      */
@@ -197,6 +255,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Calculate data for output.
+     *
      * @param $data
      * @return $this
      * @throws ContainerExceptionInterface
@@ -221,13 +281,12 @@ class Select2 extends Collection
 
     /**
      * Create selection data.
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     private function createData(): void
     {
-        //Arrayable|array|Model|Builder|Relation|Collection|LengthAwarePaginator
-
         if ($this->data instanceof Model) {
             $this->createModel();
         } elseif ($this->data instanceof Arrayable && !$this->data instanceof Collection) {
@@ -262,6 +321,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Create a data paginator for output.
+     *
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -322,6 +383,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Create groups for output if any.
+     *
      * @return $this
      */
     private function makeGroupBy(): static
@@ -338,6 +401,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Create a data array for output to the front.
+     *
      * @return array
      */
     public function toArray(): array
@@ -355,6 +420,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Perform a data search for options.
+     *
      * @return $this
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -431,13 +498,14 @@ class Select2 extends Collection
             if ($cacheColumns) {
                 $this->columns = $cacheColumns;
             }
-            //var_dump($this->orderBy); die;
         }
 
         return $this;
     }
 
     /**
+     * Get a unique selector name for query parameter names.
+     *
      * @return string
      */
     public function getName(): string
@@ -446,6 +514,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Create a selector value.
+     *
      * @param $dataInsert
      */
     private function makeValue($dataInsert): void
@@ -493,6 +563,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Get the selector key column.
+     *
      * @return string
      */
     public function getKeyColumn(): string
@@ -501,6 +573,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Get the selector's text column.
+     *
      * @return string
      */
     public function getTextColumn(): string
@@ -681,6 +755,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Add a selector column for sorting.
+     *
      * @param  string  $cols
      * @return $this
      */
@@ -696,6 +772,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Generate a json selector from an array.
+     *
      * @param  int  $options
      * @return string
      */
@@ -707,6 +785,8 @@ class Select2 extends Collection
     }
 
     /**
+     * Get data for outputting options.
+     *
      * @return Collection
      */
     public function getValueData(): mixed

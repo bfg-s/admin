@@ -4,24 +4,32 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
-use Admin\Components\Inputs\Parts\InputCheckBox;
+use Admin\Components\InputGroupComponent;
+use Admin\Components\Inputs\Parts\InputCheckBoxComponent;
 use Illuminate\Contracts\Support\Arrayable;
 
-class ChecksInput extends FormGroupComponent
+/**
+ * Input admin panel checkbox.
+ */
+class ChecksInput extends InputGroupComponent
 {
     /**
+     * Checkbox options.
+     *
      * @var array
      */
     protected array $options = [];
 
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
-     * Checks constructor.
+     * ChecksInput constructor.
+     *
      * @param  string  $name
      * @param  string|null  $title
      * @param ...$params
@@ -41,11 +49,13 @@ class ChecksInput extends FormGroupComponent
     }
 
     /**
+     * Method for creating an input field.
+     *
      * @return mixed
      */
     public function field(): mixed
     {
-        return InputCheckBox::create($this->options)
+        return InputCheckBoxComponent::create($this->options)
             ->name($this->name)
             ->id($this->field_id)
             ->value($this->value)
@@ -55,6 +65,8 @@ class ChecksInput extends FormGroupComponent
     }
 
     /**
+     * Add checkbox options.
+     *
      * @param  array|Arrayable  $options
      * @param  bool  $first_default
      * @return $this
@@ -72,13 +84,5 @@ class ChecksInput extends FormGroupComponent
         }
 
         return $this;
-    }
-
-    /**
-     * Make wrapper for input.
-     */
-    protected function makeWrapper(): void
-    {
-        parent::makeWrapper();
     }
 }

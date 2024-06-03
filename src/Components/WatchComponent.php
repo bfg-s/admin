@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * A special observer component for live parts of the admin panel template.
+ */
 class WatchComponent extends LiveComponent
 {
     /**
+     * WatchComponent constructor.
+     *
      * @param $condition
      * @param ...$delegates
      */

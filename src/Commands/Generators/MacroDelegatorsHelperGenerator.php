@@ -6,9 +6,6 @@ namespace Admin\Commands\Generators;
 
 use Admin;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
-use App\Admin\Delegates\ModelInfoTable;
-use App\Admin\Delegates\ModelTable;
-use App\Admin\Delegates\SearchForm;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -18,31 +15,38 @@ use ReflectionException;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
 
+/**
+ * The generator is responsible for generating delegation macros.
+ */
 class MacroDelegatorsHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
+     * Directories where delegations with the marco trait will be searched.
+     *
      * @var string[]
      */
-    public static $dirs = [
+    public static array $dirs = [
         __DIR__.'/../../Delegates',
     ];
 
     /**
+     * Current command class instance.
+     *
      * @var Command
      */
-    private $command;
+    private Command $command;
 
     /**
      * @param  Command  $command
-     * @return mixed|string
+     * @return void
      * @throws ReflectionException
      */
-    public function handle(Command $command)
+    public function handle(Command $command): void
     {
         $this->command = $command;
 
         $dirs = array_merge([
-            //admin_app_path()
+            admin_app_path()
         ], static::$dirs);
 
         foreach (array_keys(Admin::extensionProviders()) as $provider) {

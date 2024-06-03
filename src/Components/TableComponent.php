@@ -5,47 +5,62 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 use Admin\Explanation;
-use Admin\Traits\Delegable;
-use Admin\Traits\TypesTrait;
+use Admin\Traits\Typeable;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * Table component of the admin panel.
+ */
 class TableComponent extends Component
 {
-    use TypesTrait;
-    use Delegable;
+    use Typeable;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'table';
 
     /**
+     * Array to construct the table.
+     *
      * @var array
      */
     protected array $array_build = [];
 
     /**
-     * @var bool
-     */
-    protected bool $auto_tbody = false;
-
-    /**
+     * Add a "row" scope to the first "th" of the table.
+     *
      * @var bool
      */
     protected bool $first_th = true;
 
     /**
+     * Add a callback for mapping table rows.
+     *
      * @var mixed
      */
     protected mixed $map = null;
 
     /**
+     * Add a callback for mapping with table row keys.
+     *
      * @var mixed
      */
     protected mixed $mapWithKeys = null;
 
     /**
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
+     */
+    protected bool $realTime = true;
+
+    /**
+     * TableComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -58,6 +73,8 @@ class TableComponent extends Component
     }
 
     /**
+     * Add rows to the table.
+     *
      * @param $rows
      * @return $this
      */
@@ -79,6 +96,34 @@ class TableComponent extends Component
     }
 
     /**
+     * Add a callback for mapping table rows.
+     *
+     * @param  Closure  $call
+     * @return $this
+     */
+    public function map(Closure $call): static
+    {
+        $this->map = $call;
+
+        return $this;
+    }
+
+    /**
+     * Add a callback for mapping with table row keys.
+     *
+     * @param  Closure  $call
+     * @return $this
+     */
+    public function mapWithKeys(Closure $call): static
+    {
+        $this->mapWithKeys = $call;
+
+        return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -103,28 +148,8 @@ class TableComponent extends Component
     }
 
     /**
-     * @param  Closure  $call
-     * @return $this
-     */
-    public function map(Closure $call): static
-    {
-        $this->map = $call;
-
-        return $this;
-    }
-
-    /**
-     * @param  Closure  $call
-     * @return $this
-     */
-    public function mapWithKeys(Closure $call): static
-    {
-        $this->mapWithKeys = $call;
-
-        return $this;
-    }
-
-    /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

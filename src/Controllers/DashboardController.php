@@ -12,6 +12,7 @@ use Admin\Delegates\Column;
 use Admin\Delegates\Row;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\StatisticPeriod;
+use Admin\Models\AdminBrowser;
 use Admin\Page;
 use App;
 use Composer\Composer;
@@ -20,17 +21,24 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use PDO;
 
+/**
+ * Admin panel controller for the dashboard page.
+ */
 class DashboardController extends Controller
 {
     /**
+     * Mandatory PHP extensions for the admin panel.
+     *
      * @var array
      */
-    protected $required = [
+    protected array $requiredPhpExtensions = [
         'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql',
         'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif',
     ];
 
     /**
+     * The controller index to process the page.
+     *
      * @param  Page  $page
      * @param  Card  $card
      * @param  CardBody  $cardBody
@@ -62,7 +70,6 @@ class DashboardController extends Controller
                     ->total()
             ),
             $row->column(8)->row(
-            //$row->addClass('w-100'),
                 $row->column(12)->card(
                     $card->title(__('admin.user_statistics')),
                     $card->card_body(
@@ -86,11 +93,11 @@ class DashboardController extends Controller
                         $cardBody->chart_js(
                             $chartJs->size(300)->typeDoughnut(),
                             $chartJs->load(function (Admin\Components\ChartJsComponent $component) {
-                                $adminLogs = Admin\Models\AdminBrowser::all(['name'])->groupBy('name')->map(
+                                $adminLogs = AdminBrowser::all(['name'])->groupBy('name')->map(
                                     fn(Collection $collection) => $collection->count()
                                 );
                                 $component->customChart(__('admin.browser'), [$adminLogs->toArray()], $adminLogs->map(
-                                    fn() => $component->randColor()
+                                    fn(int $count, string $name) => $component->randColorByName($name)
                                 )->values()->toArray());
                             }),
                         )
@@ -109,7 +116,7 @@ class DashboardController extends Controller
                                 );
                                 $component->customChart(__('admin.menu_action'), [$adminLogs->toArray()],
                                     $adminLogs->map(
-                                        fn() => $component->randColor()
+                                        fn(int $count, string $name) => $component->randColorByName($name)
                                     )->values()->toArray());
                             }),
                         )
@@ -128,17 +135,19 @@ class DashboardController extends Controller
     }
 
     /**
+     * Create a card with a table for information.
+     *
      * @param  string  $title
      * @param $rows
      * @return Admin\Components\CardComponent
      */
-    public function cardTableCol(string $title, $rows)
+    public function cardTableCol(string $title, $rows): Admin\Components\CardComponent
     {
         $card = Admin\Components\CardComponent::create();
 
         $card->title($title)
             ->h100()
-            ->full_body()
+            ->fullBody()
             ->tableResponsive()
             ->table()
             ->rows($rows);
@@ -147,6 +156,8 @@ class DashboardController extends Controller
     }
 
     /**
+     * Display information about the environment.
+     *
      * @return array
      */
     public function environmentInfo(): array
@@ -154,7 +165,7 @@ class DashboardController extends Controller
         $mods = get_loaded_extensions();
 
         foreach ($mods as $key => $mod) {
-            if (array_search($mod, $this->required) !== false) {
+            if (array_search($mod, $this->requiredPhpExtensions) !== false) {
                 $mods[$key] = "<span class=\"badge badge-success\">{$mod}</span>";
             } else {
                 $mods[$key] = "<span class=\"badge badge-warning\">{$mod}</span>";
@@ -173,6 +184,8 @@ class DashboardController extends Controller
     }
 
     /**
+     * Display information about Laravel.
+     *
      * @return array
      */
     public function laravelInfo(): array
@@ -201,6 +214,8 @@ class DashboardController extends Controller
     }
 
     /**
+     * Display information about the composer.
+     *
      * @return array
      */
     public function composerInfo(): array
@@ -221,6 +236,8 @@ class DashboardController extends Controller
     }
 
     /**
+     * Display information about the database.
+     *
      * @return array
      */
     public function databaseInfo(): array

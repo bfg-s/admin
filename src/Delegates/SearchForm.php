@@ -16,8 +16,19 @@ class SearchForm extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = SearchFormComponent::class;
 
+    /**
+     * Make search inputs for default fields.
+     *
+     * @param ...$delegates
+     * @return array
+     */
     public function inDefault(...$delegates): array
     {
         return [
@@ -27,6 +38,13 @@ class SearchForm extends Delegator
         ];
     }
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

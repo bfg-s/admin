@@ -6,19 +6,28 @@ namespace Admin\Components;
 
 use Admin\Explanation;
 
+/**
+ * Grid column is a component of the admin panel layout.
+ */
 class GridColumnComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'grid-column';
 
     /**
+     * Number of columns, maximum 12.
+     *
      * @var int|null
      */
     protected ?int $num = null;
 
     /**
+     * GridColumnComponent constructor.
+     *
      * @param  array  $delegates
      */
     public function __construct(int $num = null, ...$delegates)
@@ -33,6 +42,8 @@ class GridColumnComponent extends Component
     }
 
     /**
+     * Set the number of columns, maximum 12.
+     *
      * @param  int  $num
      * @return $this
      */
@@ -44,6 +55,8 @@ class GridColumnComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return int[]|null[]
      */
     protected function viewData(): array
@@ -54,6 +67,8 @@ class GridColumnComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

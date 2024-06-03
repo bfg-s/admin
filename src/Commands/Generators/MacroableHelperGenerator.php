@@ -10,14 +10,12 @@ use Admin\Core\Delegate;
 use Admin\Delegates\ModelCards;
 use Admin\Interfaces\AdminHelpGeneratorInterface;
 use Admin\Page;
-use App\Admin\Delegates\ModelInfoTable;
-use App\Admin\Delegates\ModelTable;
-use App\Admin\Delegates\SearchForm;
 use Bfg\Entity\Core\Entities\DocumentorEntity;
 use Closure;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Log;
 use ReflectionClass;
@@ -26,39 +24,68 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Finder\SplFileInfo;
 use Throwable;
+use ReflectionException;
 
+/**
+ * The class is responsible for macro helpers, additional components and custom components and inputs.
+ */
 class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 {
     /**
+     * Directories where the search for classes with a macro trait and a signature for a property with methods will be performed.
+     *
      * @var string[]
      */
-    public static $dirs = [
+    public static array $dirs = [
         __DIR__.'/../../Components',
     ];
 
-    public static $fields = [];
     /**
+     * All existing model fields.
+     *
+     * @var array
+     */
+    public static array $fields = [];
+
+    /**
+     * All available relationship types for models.
+     *
      * @var string[]
      */
-    protected $types = [
+    protected array $types = [
         'hasMany', 'hasManyThrough', 'hasOneThrough', 'belongsToMany', 'hasOne',
         'belongsTo', 'morphOne', 'morphTo', 'morphMany', 'morphToMany', 'morphedByMany',
     ];
-    protected $relations = [];
+
     /**
+     * All available model relationships.
+     *
+     * @var array
+     */
+    protected Collection|array $relations = [];
+
+    /**
+     * The content of the current model is divided into an array by rows.
+     *
      * @var array
      */
     protected array $model_lines = [];
-    /**
-     * @var Command
-     */
-    private $command;
 
     /**
-     * @param  Command  $command
-     * @return mixed|string
+     * Current command class instance.
+     *
+     * @var Command
      */
-    public function handle(Command $command)
+    private Command $command;
+
+    /**
+     * Output helper generation function.
+     *
+     * @param  Command  $command
+     * @return void
+     * @throws ReflectionException
+     */
+    public function handle(Command $command): void
     {
         $this->command = $command;
 
@@ -83,7 +110,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                 ->filter(static function ($class) {
                     try {
                         return class_exists($class);
-                    } catch (Throwable $throwable) {
+                    } catch (Throwable) {
                     }
 
                     return false;
@@ -96,9 +123,9 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 
         foreach ($classes as $class) {
             try {
-                $refl = new ReflectionClass($class);
+                $reflection = new ReflectionClass($class);
 
-                if ($refl->isInterface()) {
+                if ($reflection->isInterface()) {
                     continue;
                 }
             } catch (Throwable $exception) {
@@ -109,10 +136,10 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 
             $coreTrait = 'Admin\\Core\\Traits\\Macroable';
 
-            $traits = array_keys($refl->getTraits());
+            $traits = array_keys($reflection->getTraits());
 
             $ns = body_namespace_element($class);
-            $doc = $refl->getDocComment();
+            $doc = $reflection->getDocComment();
 
             if (count($traits) && in_array($coreTrait, $traits)) {
                 $macroable_classes[$ns][] = [
@@ -120,19 +147,19 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                     'class' => $class,
                     'name' => class_basename($class),
                     'doc' => $doc,
-                    'ref' => $refl,
+                    'ref' => $reflection,
                 ];
             }
 
             if ($doc !== false) {
-                foreach ($this->get_variables($doc, 'methods') as $method) {
+                foreach ($this->getDocVariables($doc, 'methods') as $method) {
                     $macroable_classes[$ns][] = [
                         'type' => 'methods',
                         'class' => $class,
                         'name' => class_basename($class),
                         'doc' => $doc,
                         'methods' => $method,
-                        'ref' => $refl,
+                        'ref' => $reflection,
                     ];
                 }
             }
@@ -141,7 +168,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         $isset_classes = [];
 
         foreach ($macroable_classes as $namespace_name => $data) {
-            //$namespace = namespace_entity($namespace_name);
 
             foreach ($data as $class) {
                 $type = $class['type'];
@@ -216,18 +242,19 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
                     }
                 }
             }
-            //$r_ns .= $namespace->render();
         }
 
         $this->createSearchAndColAndRowFields();
     }
 
     /**
+     * Get all variables of the specified dock block.
+     *
      * @param  string  $doc
      * @param  string  $var_name
      * @return array
      */
-    public static function get_variables(string $doc, string $var_name)
+    public static function getDocVariables(string $doc, string $var_name): array
     {
         $result = [];
 
@@ -241,10 +268,14 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
     }
 
     /**
-     * @param  DocumentorEntity  $doc
+     * Generate extension methods and properties of components, model fields and their connections.
+     *
+     * @param  \Bfg\Entity\Core\Entities\DocumentorEntity  $doc
      * @param  array  $class_data
+     * @return void
+     * @throws ReflectionException
      */
-    protected function extendMethods($doc, array $class_data)
+    protected function extendMethods(DocumentorEntity $doc, array $class_data): void
     {
         $m = $class_data['methods'];
         foreach ($m['data'] as $method => $method_class) {
@@ -347,7 +378,6 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
 
             if (in_array($method, array_keys(Admin\Components\Component::$inputs))) {
                 if (!in_array($method, ['info_id', 'info_created_at', 'info_updated_at'])) {
-                    $class_res = Admin\Components\Component::$inputs[$method];
                     foreach ($this->getModelFields() as $field) {
                         $camelField = Str::snake($field);
 
@@ -369,7 +399,13 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         }
     }
 
-    protected function getModelFields()
+    /**
+     * Get the fields of all models that are in the application.
+     *
+     * @return array
+     * @throws ReflectionException
+     */
+    protected function getModelFields(): array
     {
         if (static::$fields) {
             return static::$fields;
@@ -430,6 +466,12 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         return static::$fields = $fields;
     }
 
+    /**
+     * Get the relationships of all models that are in the application.
+     *
+     * @param  \ReflectionClass  $ref
+     * @return array
+     */
     protected function getAllRelations(ReflectionClass $ref): array
     {
         $this->model_lines = explode("\n", file_get_contents($ref->getFileName()));
@@ -464,7 +506,7 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
             return false;
         })->mapWithKeys(function (ReflectionMethod $method) use ($ref) {
             $methodName = $method->getName();
-            $model_content = $this->getMethodByLines($method->getStartLine(), $method->getEndLine());
+            $model_content = $this->getModelDataByLines($method->getStartLine(), $method->getEndLine());
             if (
                 preg_match('/return \$this->('.implode('|', $this->types).')\s*\(.*\)\s*;/', $model_content)
             ) {
@@ -477,12 +519,24 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         })->toArray();
     }
 
-    protected function getMethodByLines(int $start, int $end)
+    /**
+     * Get text from the model at the beginning of the line and at the end of the line.
+     *
+     * @param  int  $start
+     * @param  int  $end
+     * @return string
+     */
+    protected function getModelDataByLines(int $start, int $end): string
     {
         return implode("\n", array_slice($this->model_lines, $start - 1, ($end - $start) + 1));
     }
 
-    public function createSearchAndColAndRowFields()
+    /**
+     * Creates model helper properties and methods for searches and tables.
+     *
+     * @return void
+     */
+    public function createSearchAndColAndRowFields(): void
     {
         /** ModelTable helpers start */
         $class = class_entity("ModelTableComponentFields");

@@ -1,4 +1,4 @@
-<div class="card card-{{ $type }} card-outline">
+<div class="card card-{{ $type }} card-outline" @attributes($attributes)>
     <a class="d-block w-100" data-toggle="collapse" href="#{{ $id }}">
         <div class="card-header">
             <h4 class="card-title w-100">

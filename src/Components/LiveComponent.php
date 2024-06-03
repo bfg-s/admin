@@ -4,29 +4,42 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * Live component for dynamic content.
+ */
 class LiveComponent extends Component
 {
     /**
+     * List of live fields for access from the system controller.
+     *
      * @var array|LiveComponent[]
      */
     public static array $list = [];
 
     /**
+     * Counter of live components for a unique ID.
+     *
      * @var int
      */
-    protected static $counter = 0;
+    protected static int $counter = 0;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'live';
 
     /**
+     * Live component identifier.
+     *
      * @var mixed|null
      */
     protected mixed $id = null;
 
     /**
+     * LiveComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -37,6 +50,8 @@ class LiveComponent extends Component
     }
 
     /**
+     * Method to override, used to add events to the component after rendering.
+     *
      * @param $renderedView
      * @return string
      */
@@ -51,6 +66,8 @@ class LiveComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return string[]
      */
     protected function viewData(): array
@@ -61,6 +78,8 @@ class LiveComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

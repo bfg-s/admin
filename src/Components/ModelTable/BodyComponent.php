@@ -6,15 +6,23 @@ namespace Admin\Components\ModelTable;
 
 use Admin\Components\Component;
 
+/**
+ * The body of the admin panel component for the model table.
+ */
 class BodyComponent extends Component
 {
+    /**
+     * The name of the component template.
+     *
+     * @var string
+     */
     protected string $view = 'model-table.body';
 
-    public function __construct(...$delegates)
-    {
-        parent::__construct($delegates);
-    }
-
+    /**
+     * Method for mounting components on the admin panel page.
+     *
+     * @return void
+     */
     protected function mount(): void
     {
         // TODO: Implement mount() method.

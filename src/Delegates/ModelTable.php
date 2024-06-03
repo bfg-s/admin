@@ -10,6 +10,8 @@ use Closure;
 use Illuminate\Support\Traits\Macroable;
 
 /**
+ * The delegation that is responsible for the model table component.
+ *
  * @mixin ModelTableComponent
  * @mixin MacroMethodsForModelTable
  */
@@ -17,8 +19,19 @@ class ModelTable extends Delegator
 {
     use Macroable;
 
+    /**
+     * Delegated actions for class.
+     *
+     * @var string
+     */
     protected $class = ModelTableComponent::class;
 
+    /**
+     * Make default columns for model table.
+     *
+     * @param ...$delegates
+     * @return array
+     */
     public function colDefault(...$delegates): array
     {
         return [
@@ -28,6 +41,11 @@ class ModelTable extends Delegator
         ];
     }
 
+    /**
+     * Make default "at" columns for model table.
+     *
+     * @return array
+     */
     public function colAt(): array
     {
         return [
@@ -36,6 +54,13 @@ class ModelTable extends Delegator
         ];
     }
 
+    /**
+     * Magic method for macros.
+     *
+     * @param $method
+     * @param $parameters
+     * @return \Admin\Core\Delegate|mixed
+     */
     public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {

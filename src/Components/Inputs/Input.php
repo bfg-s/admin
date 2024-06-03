@@ -4,37 +4,52 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Illuminate\View\View;
 
-class Input extends FormGroupComponent
+/**
+ * Input the admin panel to display simple data.
+ */
+class Input extends InputGroupComponent
 {
     /**
+     * HTML attribute of the input type.
+     *
      * @var string
      */
     protected $type = 'text';
 
     /**
+     * Added or not a form control class for input.
+     *
      * @var bool
      */
-    protected $form_control = true;
+    protected bool $form_control = true;
 
     /**
+     * The autocomplete attribute of component.
+     *
      * @var string
      */
     protected string $autocomplete = '';
 
     /**
+     * List of attributes that need to be added to the input.
+     *
      * @var array
      */
     protected array $attributes = [];
 
     /**
+     * Whether the current input is checked or not.
+     *
      * @var bool
      */
     protected bool $checked = false;
 
     /**
+     * Method for creating an input field.
+     *
      * @return View
      */
     public function field(): View
@@ -60,6 +75,8 @@ class Input extends FormGroupComponent
     }
 
     /**
+     * Transform the input data into a slug.
+     *
      * @return $this
      */
     public function slugable(): static
@@ -70,6 +87,8 @@ class Input extends FormGroupComponent
     }
 
     /**
+     * Duplicate input data into another input as a slug.
+     *
      * @param  string  $to
      * @return $this
      */
@@ -81,6 +100,8 @@ class Input extends FormGroupComponent
     }
 
     /**
+     * Duplicate input data into another input.
+     *
      * @param  string  $to
      * @return $this
      */
@@ -92,6 +113,8 @@ class Input extends FormGroupComponent
     }
 
     /**
+     * Set the mask to the current input.
+     *
      * @param  mixed  $mask
      * @param  array  $options
      * @return $this
@@ -104,6 +127,8 @@ class Input extends FormGroupComponent
     }
 
     /**
+     * Disable current input.
+     *
      * @return $this
      */
     public function disabled(): static

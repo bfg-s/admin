@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
+ * A model that is responsible for administrator roles.
+ *
  * @property int $id
  * @property string $name
  * @property string $slug
@@ -34,11 +36,15 @@ use Illuminate\Support\Carbon;
 class AdminRole extends Model
 {
     /**
+     * The table associated with the model.
+     *
      * @var string
      */
     protected $table = 'admin_roles';
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -46,6 +52,8 @@ class AdminRole extends Model
     ];
 
     /**
+     * Relationship of users to administrator roles.
+     *
      * @return BelongsToMany
      */
     public function users(): BelongsToMany

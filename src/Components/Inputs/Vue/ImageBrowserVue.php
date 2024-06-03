@@ -6,7 +6,15 @@ namespace Admin\Components\Inputs\Vue;
 
 use Admin\Components\Vue\Vue;
 
+/**
+ * VueJs input admin panel for viewing pictures.
+ */
 class ImageBrowserVue extends Vue
 {
-    protected $element = 'bfg-browser-component';
+    /**
+     * The tag element from which the component begins.
+     *
+     * @var string
+     */
+    protected string $element = 'bfg-browser-component';
 }

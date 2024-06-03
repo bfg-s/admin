@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Traits;
 
+/**
+ * Trade with frontend validation form rules.
+ */
 trait RulesFrontTrait
 {
     /**
      * Validation rules.
+     *
      * @var array
      */
     protected array $rules = [];
 
     /**
-     * поле обязательное для заполнения.
+     * This field is required.
+     *
      * @return $this
      */
     public function is_required(): static
@@ -24,7 +29,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * проверяет корректность e-mail адреса.
+     * Checks the correctness of the e-mail address.
+     *
      * @return $this
      */
     public function is_email(): static
@@ -35,7 +41,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * проверяет корректность url адреса.
+     * Checks the correctness of the URL address.
+     *
      * @return $this
      */
     public function is_url(): static
@@ -46,7 +53,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * проверяет корректность даты.
+     * Checks the date is correct.
+     *
      * @return $this
      */
     public function is_date(): static
@@ -57,7 +65,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * проверка на число.
+     * Number check.
+     *
      * @return $this
      */
     public function is_number(): static
@@ -68,7 +77,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * только цифры.
+     * Only numbers.
+     *
      * @return $this
      */
     public function is_digits(): static
@@ -79,7 +89,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * равное чему-то (например другому полю equalTo: "#pswd").
+     * Equal to something (for example another field equalTo: "#pswd").
+     *
      * @param  string  $field
      * @return $this
      */
@@ -91,7 +102,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * максимальное кол-во символов.
+     * Maximum number of characters.
+     *
      * @param  int  $max
      * @return $this
      */
@@ -103,7 +115,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * минимальное кол-во символов.
+     * Minimum number of characters.
+     *
      * @param  int  $min
      * @return $this
      */
@@ -115,7 +128,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * кол-во символов от скольких и до скольких (rangelength: [2, 5]).
+     * Number of characters from how many to how many (rangelength: [2, 5]).
+     *
      * @param  int  $min
      * @param  int  $max
      * @return $this
@@ -128,7 +142,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * число должно быть в диапазоне от и до (range: [2, 12]).
+     * The number must be in the range from and to (range: [2, 12]).
+     *
      * @param  int  $min
      * @param  int  $max
      * @return $this
@@ -141,7 +156,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * максимальное значение числа.
+     * The maximum value of the number.
+     *
      * @param  int  $max
      * @return $this
      */
@@ -153,7 +169,8 @@ trait RulesFrontTrait
     }
 
     /**
-     * минимальное значение числа.
+     * Minimum number value.
+     *
      * @param  int  $min
      * @return $this
      */

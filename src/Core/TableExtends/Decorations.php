@@ -5,28 +5,34 @@ declare(strict_types=1);
 namespace Admin\Core\TableExtends;
 
 use Admin\Components\Component;
-use Admin\Components\FieldComponent;
-use Admin\Components\Inputs\RatingInput;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
+/**
+ * The part of the kernel that is responsible for decorating the model table.
+ */
 class Decorations
 {
     /**
+     * Add rating stars to the column.
+     *
      * @param $value
      * @param  array  $props
-     * @return FieldComponent|RatingInput
+     * @return string
+     * @throws Throwable
      */
-    public function rating_stars($value, array $props = []): FieldComponent|RatingInput
+    public function rating_stars($value, array $props = []): string
     {
-        return FieldComponent::rating('rating')
-            ->only_input()
-            ->readonly()
-            ->value($value)
-            ->sizeXs();
+        $percentFull = $value * 100 / ($props[0] ?? 5);
+
+        return admin_view('components.model-table.decorations.rating-stars', [
+            'percentFull' => $percentFull + 5,
+        ])->render();
     }
 
     /**
+     * Add password stars to the column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -51,6 +57,8 @@ class Decorations
     }
 
     /**
+     * Add a true value to the column.
+     *
      * @param $value
      * @return string
      * @throws Throwable
@@ -63,6 +71,8 @@ class Decorations
     }
 
     /**
+     * Add the uploaded file to the column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -80,6 +90,8 @@ class Decorations
     }
 
     /**
+     * Add an avatar to the column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -96,6 +108,8 @@ class Decorations
     }
 
     /**
+     * Add a copy button to the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -120,6 +134,8 @@ class Decorations
     }
 
     /**
+     * Add a copy button to the right of the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -144,6 +160,8 @@ class Decorations
     }
 
     /**
+     * Add a number badge to the column.
+     *
      * @param $value
      * @return string
      * @throws Throwable
@@ -154,6 +172,8 @@ class Decorations
     }
 
     /**
+     * Add a badge to the column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -174,6 +194,8 @@ class Decorations
     }
 
     /**
+     * Add pill to column.
+     *
      * @param $value
      * @param  array  $props
      * @param  Model|array|null  $model
@@ -194,6 +216,8 @@ class Decorations
     }
 
     /**
+     * Display yes or no in the column depending on the value of the column.
+     *
      * @param $value
      * @return string
      * @throws Throwable
@@ -206,6 +230,8 @@ class Decorations
     }
 
     /**
+     * Display in column is on or off depending on the column value.
+     *
      * @param $value
      * @return string
      * @throws Throwable
@@ -218,6 +244,8 @@ class Decorations
     }
 
     /**
+     * Display the icon in the font awesome column from the column value.
+     *
      * @param $value
      * @param  int[]  $props
      * @return string
@@ -234,6 +262,8 @@ class Decorations
     }
 
     /**
+     * Display values in the column as tags in a badge.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -251,6 +281,8 @@ class Decorations
     }
 
     /**
+     * Display the cube in color in the value column.
+     *
      * @param $value
      * @param  array  $props
      * @return string
@@ -267,6 +299,8 @@ class Decorations
     }
 
     /**
+     * Display a progress bar in the value column.
+     *
      * @param $value
      * @param  array  $props
      * @return string

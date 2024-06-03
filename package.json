@@ -32,6 +32,7 @@
         "inputmask": "^5.0.8",
         "laravel-echo": "^1.11.3",
         "md5": "^2.3.0",
+        "morphdom": "^2.7.2",
         "nprogress": "^0.2.0",
         "pusher-js": "^7.0.3",
         "sweetalert2": "^11.7.32",

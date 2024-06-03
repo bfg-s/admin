@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input the admin panel to display the "created at" field.
+ */
 class InfoCreatedAtInput extends InfoInput
 {
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = 'fas fa-quote-right';
 
     /**
+     * InfoCreatedAtInput constructor.
+     *
      * @param  string  $name
      * @param  string  $title
      * @param ...$params

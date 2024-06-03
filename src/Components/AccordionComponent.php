@@ -4,24 +4,35 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * The component that displays the accordion.
+ */
 class AccordionComponent extends Component
 {
     /**
+     * Accordion counter for unique identifier.
+     *
      * @var int
      */
     protected static int $count = 0;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'accordion';
 
     /**
+     * Unique identifier of the accordion.
+     *
      * @var string
      */
     protected string $id = "";
 
     /**
+     * AccordionComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -32,6 +43,8 @@ class AccordionComponent extends Component
     }
 
     /**
+     * Add a new body for the accordion.
+     *
      * @param  string  $title
      * @return AccordionBodyComponent
      */
@@ -51,6 +64,8 @@ class AccordionComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -62,6 +77,8 @@ class AccordionComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

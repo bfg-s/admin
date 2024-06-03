@@ -4,78 +4,98 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
-
+/**
+ * Component of nested control and order of the admin panel.
+ */
 class NestedComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'nested';
 
     /**
-     * @var Builder|Model|Relation|string|null
-     */
-    protected $model;
-
-    /**
+     * Model field that should be used as the item name.
+     *
      * @var string|callable
      */
     protected $title_field = 'name';
 
     /**
+     * The parent field of the model.
+     *
      * @var string
      */
     protected string $parent_field = 'parent_id';
 
     /**
-     * Shoe default controls.
+     * Show default controls.
      *
      * @var mixed
      */
     protected mixed $controls = null;
 
     /**
-     * Custom controls.
+     * Callback for adding custom buttons.
      *
-     * @var callable
+     * @var mixed
      */
-    protected $custom_controls;
+    protected mixed $custom_controls = null;
 
     /**
+     * Property for checking whether an item's information button is displayed.
+     *
      * @var mixed
      */
     protected mixed $info_control = null;
 
     /**
+     * Property for checking whether the item delete button is displayed.
+     *
      * @var mixed
      */
     protected mixed $delete_control = null;
 
     /**
+     * Property for checking whether the item edit button is displayed.
+     *
      * @var mixed
      */
     protected mixed $edit_control = null;
 
     /**
+     * The model field by which data is sorted.
+     *
      * @var string
      */
     private string $order_by_field = 'order';
 
     /**
+     * The current data sort type.
+     *
      * @var string
      */
     private string $order_by_type = 'asc';
 
     /**
+     * Maximum nesting depth (if nesting is present).
+     *
      * @var int
      */
     private int $max_depth = 5;
 
     /**
-     * Col constructor.
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
+     */
+    protected bool $realTime = true;
+
+    /**
+     * NestedComponent constructor.
+     *
      * @param  mixed  ...$delegates
      */
     public function __construct(...$delegates)
@@ -95,10 +115,12 @@ class NestedComponent extends Component
 
         parent::__construct(...$delegates);
 
-        $this->setDatas(['load' => 'nestable']);
+        $this->dataLoad('nestable');
     }
 
     /**
+     * Set the sorting type to "desc" and, if necessary, the field by which sorting is performed.
+     *
      * @param  string|null  $field
      * @return $this
      */
@@ -114,6 +136,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Set the model field that is responsible for the item title.
+     *
      * @param  string|callable  $field
      * @return $this
      */
@@ -125,17 +149,8 @@ class NestedComponent extends Component
     }
 
     /**
-     * @param ...$delegates
-     * @return $this
-     */
-    public function template(...$delegates): static
-    {
-        $this->title_field = $delegates;
-
-        return $this;
-    }
-
-    /**
+     * Set the model's parent field.
+     *
      * @param  string|callable  $field
      * @return $this
      */
@@ -147,6 +162,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Set the maximum nesting depth of models.
+     *
      * @param  int  $depth
      * @return $this
      */
@@ -158,6 +175,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Add a callback to add custom buttons.
+     *
      * @param  callable  $call
      * @return $this
      */
@@ -169,6 +188,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Checking all control buttons.
+     *
      * @param  mixed  $test
      * @return $this
      */
@@ -182,6 +203,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Check all info buttons.
+     *
      * @param  mixed  $test
      * @return $this
      */
@@ -195,6 +218,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Checking all edit buttons.
+     *
      * @param  mixed  $test
      * @return $this
      */
@@ -208,6 +233,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Checking all delete buttons.
+     *
      * @param  mixed  $test
      * @return $this
      */
@@ -221,43 +248,8 @@ class NestedComponent extends Component
     }
 
     /**
-     * @return void
-     */
-    protected function mount(): void
-    {
-        $model = $this->realModel();
-
-        $hasOrder = false;
-
-        $this->setDatas([
-            'route' => route('admin.nestable_save')
-        ]);
-
-        if ($model) {
-            $fillable = $model->getFillable();
-            if (!in_array($this->parent_field, $fillable)) {
-                $this->max_depth = 1;
-            }
-            if (in_array($this->order_by_field, $fillable)) {
-                $hasOrder = true;
-            }
-            $this->setDatas(['model' => get_class($model)]);
-        } else {
-            $this->max_depth = 1;
-        }
-
-        $this->setDatas(['max-depth' => $this->max_depth, 'parent' => $this->parent_field]);
-
-        if ($hasOrder) {
-            $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type);
-        }
-
-        $this->model = $this->model->get();
-
-        $this->attr('data-order-field', $this->order_by_field);
-    }
-
-    /**
+     * Set the field to be sorted and the sort type.
+     *
      * @param  string|null  $field
      * @param  string|null  $order
      * @return $this
@@ -276,6 +268,8 @@ class NestedComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -318,5 +312,44 @@ class NestedComponent extends Component
                 return $group;
             },
         ];
+    }
+
+    /**
+     * Method for mounting components on the admin panel page.
+     *
+     * @return void
+     */
+    protected function mount(): void
+    {
+        $model = $this->realModel();
+
+        $hasOrder = false;
+
+        $this->setDatas([
+            'route' => route('admin.nestable_save')
+        ]);
+
+        if ($model) {
+            $fillable = $model->getFillable();
+            if (!in_array($this->parent_field, $fillable)) {
+                $this->max_depth = 1;
+            }
+            if (in_array($this->order_by_field, $fillable)) {
+                $hasOrder = true;
+            }
+            $this->setDatas(['model' => get_class($model)]);
+        } else {
+            $this->max_depth = 1;
+        }
+
+        $this->setDatas(['max-depth' => $this->max_depth, 'parent' => $this->parent_field]);
+
+        if ($hasOrder) {
+            $this->model = $this->model->orderBy($this->order_by_field, $this->order_by_type);
+        }
+
+        $this->model = $this->model->get();
+
+        $this->attr('data-order-field', $this->order_by_field);
     }
 }

@@ -4,38 +4,53 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
-use Admin\Traits\FontAwesome;
+use Admin\Traits\FontAwesomeTrait;
 
+/**
+ * Period statistics component of the admin panel.
+ */
 class StatisticPeriodComponent extends Component
 {
-    use FontAwesome;
+    use FontAwesomeTrait;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'statistic-period';
 
     /**
-     * @var string
+     * The CSS class that needs to be applied to the parent element.
+     *
+     * @var string|null
      */
-    protected $class = 'row';
+    protected string|null $class = 'row';
 
     /**
-     * @var mixed
-     */
-    protected $model = null;
-
-    /**
+     * The name of the entity (model) that is displayed as statistics.
+     *
      * @var mixed
      */
     protected mixed $entity = null;
 
     /**
+     * Statistics boxes icon.
+     *
      * @var string|null
      */
     protected ?string $icon = 'fas fa-lightbulb';
 
     /**
+     * Realtime marker, if enabled, the component will be updated at the specified frequency.
+     *
+     * @var bool
+     */
+    protected bool $realTime = true;
+
+    /**
+     * Set the entity (model) name as title.
+     *
      * @param  string|null  $nameOfSubject
      * @return $this
      */
@@ -47,6 +62,8 @@ class StatisticPeriodComponent extends Component
     }
 
     /**
+     * Display statistics for today in the component.
+     *
      * @return $this
      */
     public function forToday(): static
@@ -56,12 +73,14 @@ class StatisticPeriodComponent extends Component
                 __('admin.statistic_for_today', ['entity' => $this->entity]),
                 $this->model->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count().' ',
                 $this->icon
-            )->successType();
+            )->withoutRealtime()->successType();
 
         return $this;
     }
 
     /**
+     * Display statistics for the current week in the component.
+     *
      * @return $this
      */
     public function perWeek(): static
@@ -74,12 +93,14 @@ class StatisticPeriodComponent extends Component
                     [now()->subWeek()->startOfDay(), now()->endOfDay()]
                 )->count().' ',
                 $this->icon
-            )->infoType();
+            )->withoutRealtime()->infoType();
 
         return $this;
     }
 
     /**
+     * Display statistics for the current year in the component.
+     *
      * @return $this
      */
     public function perYear(): static
@@ -92,12 +113,14 @@ class StatisticPeriodComponent extends Component
                     [now()->subYear()->startOfDay(), now()->endOfDay()]
                 )->count().' ',
                 $this->icon
-            )->warningType();
+            )->withoutRealtime()->warningType();
 
         return $this;
     }
 
     /**
+     * Display statistics for all time in the component.
+     *
      * @return $this
      */
     public function total(): static
@@ -107,12 +130,14 @@ class StatisticPeriodComponent extends Component
                 __('admin.statistic_total', ['entity' => mb_strtolower($this->entity ?: '')]),
                 $this->model->count().' ',
                 $this->icon
-            )->primaryType();
+            )->withoutRealtime()->primaryType();
 
         return $this;
     }
 
     /**
+     * Set the statistics box icon.
+     *
      * @param  string  $name
      * @return $this
      */
@@ -124,6 +149,8 @@ class StatisticPeriodComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

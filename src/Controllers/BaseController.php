@@ -7,16 +7,16 @@ namespace Admin\Controllers;
 use Admin;
 use Admin\Core\ModelSaver;
 use Admin\ExtendProvider;
-use Admin\Models\AdminRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
-use Lang;
 
 /**
+ * Basic admin panel controller.
+ *
  * @template CurrentModel
  */
 abstract class BaseController extends Controller
@@ -26,51 +26,25 @@ abstract class BaseController extends Controller
     use ValidatesRequests;
 
     /**
+     * The controller belongs to the admin panel extension provider.
+     *
      * @var ExtendProvider|null
      */
-    public static $extension_affiliation;
+    public static ExtendProvider|null $extension_affiliation = null;
 
     /**
+     * The model the admin panel controller works with.
+     *
      * @var CurrentModel
      */
     public static $model;
 
     /**
-     * @param  string  $method
-     * @param  array|string[]  $roles
-     * @param  string|null  $description
-     * @return array
-     */
-    public static function generatePermission(string $method, array $roles = ['*'], string $description = null)
-    {
-        $provider = static::extension_affiliation();
-
-        $p_desc = '';
-
-        if ($provider && $provider::$description) {
-            $p_desc = $provider::$description;
-        }
-
-        if (!$p_desc) {
-            $p_desc = static::class;
-        }
-
-        return [
-            'slug' => $method,
-            'class' => static::class,
-            'description' => $p_desc.($description ? " [$description]" : (Lang::has("admin.about_method.{$method}") ? " [@admin.about_method.{$method}]" : " [{$method}]")),
-            'roles' => $roles === ['*'] ? AdminRole::all()->pluck('id')->toArray() : collect($roles)->map(static function (
-                $item
-            ) {
-                return is_numeric($item) ? $item : AdminRole::where('slug', $item)->first()->id;
-            })->filter()->values()->toArray(),
-        ];
-    }
-
-    /**
+     * Determine whether the controller belongs to the admin panel extension provider.
+     *
      * @return ExtendProvider|null
      */
-    public static function extension_affiliation()
+    public static function extension_affiliation(): ExtendProvider|null
     {
         if (static::$extension_affiliation) {
             return static::$extension_affiliation;
@@ -107,7 +81,7 @@ abstract class BaseController extends Controller
 
         $alreadyCached = [];
 
-        foreach (static::$crypt_fields as $crypt_field) {
+        foreach (static::$cryptFields as $crypt_field) {
             if (array_key_exists($crypt_field, $save)) {
                 if ($save[$crypt_field]) {
                     if (!isset($alreadyCached[$crypt_field])) {
@@ -126,7 +100,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get menu model.
+     * Get current controller model.
      *
      * @return CurrentModel|User|Model|string|null
      */
@@ -138,9 +112,9 @@ abstract class BaseController extends Controller
     /**
      * Get only exists model.
      *
-     * @return Model|string|null
+     * @return \Illuminate\Database\Eloquent\Model|\App\Models\User|string|null
      */
-    public function existsModel()
+    public function existsModel(): Model|User|string|null
     {
         return $this->model() && $this->model()->exists ? $this->model() : null;
     }
@@ -150,7 +124,7 @@ abstract class BaseController extends Controller
      *
      * @return object|string|null
      */
-    public function model_primary()
+    public function model_primary(): object|string|null
     {
         return admin_repo()->modelPrimary;
     }
@@ -160,7 +134,7 @@ abstract class BaseController extends Controller
      *
      * @return array|null
      */
-    public function now()
+    public function now(): array|null
     {
         return admin_repo()->now;
     }
@@ -171,7 +145,7 @@ abstract class BaseController extends Controller
      * @param  string  $type
      * @return bool
      */
-    public function isType(string $type)
+    public function isType(string $type): bool
     {
         return $this->type() === $type;
     }
@@ -181,17 +155,19 @@ abstract class BaseController extends Controller
      *
      * @return string|null
      */
-    public function type()
+    public function type(): string|null
     {
         return admin_repo()->type;
     }
 
     /**
+     * Get navigator date.
+     *
      * @param  null  $name
      * @param  null  $default
      * @return array|mixed
      */
-    public function data($name = null, $default = null)
+    public function data($name = null, $default = null): mixed
     {
         if (!$name) {
             return admin_repo()->data;
@@ -205,7 +181,7 @@ abstract class BaseController extends Controller
      *
      * @return array
      */
-    protected function resourceMap()
+    protected function resourceMap(): array
     {
         return [
             'index' => 'Index',

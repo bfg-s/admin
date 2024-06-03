@@ -8,27 +8,24 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 
+/**
+ * A class that is responsible for collecting commands that need to be executed on the front end.
+ */
 class Respond extends Collection implements Renderable, Htmlable
 {
     /**
-     * Global instance.
+     * Global instance of respond.
      *
      * @var Respond|null
      */
-    private static ?Respond $instance_glob = null;
+    private static Respond|null $instance_glob = null;
 
     /**
+     * A flag that determines whether the wrapper will be an executor function on the front end.
+     *
      * @var bool
      */
     protected bool $renderWithExecutor = false;
-
-    /**
-     * @param  array  $items
-     */
-    public function __construct(array $items = [])
-    {
-        parent::__construct($items);
-    }
 
     /**
      * Access to global instance.
@@ -38,13 +35,15 @@ class Respond extends Collection implements Renderable, Htmlable
     public static function glob(): static
     {
         if (!static::$instance_glob) {
-            static::$instance_glob = new static();
+            static::$instance_glob = static::create();
         }
 
         return static::$instance_glob;
     }
 
     /**
+     * Create new respond instance.
+     *
      * @param ...$attributes
      * @return static
      */
@@ -54,6 +53,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Redirects to the specified address.
+     *
      * @param  string|null  $link
      * @return $this
      */
@@ -65,7 +66,7 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * Put rule.
+     * Add an arbitrary command to be executed by the client.
      *
      * @param $key
      * @param  mixed  $value
@@ -83,6 +84,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Redirects to the specified address and reloads the page.
+     *
      * @param  string|null  $link
      * @return $this
      */
@@ -94,6 +97,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Reloads content on the page.
+     *
      * @param  string|null  $link
      * @return $this
      */
@@ -105,6 +110,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Reloads the page with a real page reload.
+     *
      * @param  string|null  $link
      * @return $this
      */
@@ -116,7 +123,7 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * toast:success.
+     * Sends a message indicating the operation was successful.
      *
      * @param $text
      * @param  null  $title
@@ -128,6 +135,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Send a toast message.
+     *
      * @param $type
      * @param $text
      * @param  null  $title
@@ -145,7 +154,7 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * toast:warning.
+     * Sends a warning message.
      *
      * @param $text
      * @param  null  $title
@@ -157,7 +166,7 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * toast:info.
+     * Sends an informational message.
      *
      * @param $text
      * @param  null  $title
@@ -169,7 +178,7 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
-     * toast:error.
+     * Sends an error message.
      *
      * @param $text
      * @param  null  $title
@@ -181,6 +190,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Convert command library to string for HTML.
+     *
      * @return string
      */
     public function toHtml(): string
@@ -189,6 +200,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Convert command library to Json.
+     *
      * @param  int  $options
      * @return string
      */
@@ -198,6 +211,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Convert command library to string.
+     *
      * @return string
      */
     public function __toString()
@@ -206,6 +221,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Render a library of commands for execution.
+     *
      * @return string
      */
     public function render(): string
@@ -217,6 +234,8 @@ class Respond extends Collection implements Renderable, Htmlable
     }
 
     /**
+     * Render a library of commands with a front-end executor function.
+     *
      * @return $this
      */
     public function renderWithExecutor(): static

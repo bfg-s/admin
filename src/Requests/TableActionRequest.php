@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Admin\Requests;
 
-use Admin\Facades\AdminFacade;
+use Admin\Facades\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
+ * Request class which is responsible for the action of the model table.
+ *
  * @property-read Model|string $class
  * @property-read array $ids
  * @property-read array $columns
@@ -21,7 +23,7 @@ class TableActionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return !AdminFacade::guest();
+        return !Admin::guest();
     }
 
     /**

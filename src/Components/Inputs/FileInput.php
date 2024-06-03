@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace Admin\Components\Inputs;
 
+/**
+ * Input the admin panel to select a file.
+ */
 class FileInput extends Input
 {
     /**
+     * HTML attribute of the input type.
+     *
      * @var string
      */
     protected $type = 'file';
 
     /**
+     * Admin panel input icon.
+     *
      * @var string|null
      */
     protected ?string $icon = null;
 
     /**
+     * Settable date attributes.
+     *
      * @var string[]
      */
     protected array $data = [
@@ -24,6 +33,8 @@ class FileInput extends Input
     ];
 
     /**
+     * List file extensions that are available for selection.
+     *
      * @param  mixed  ...$exts
      * @return $this
      */
@@ -40,6 +51,8 @@ class FileInput extends Input
 
     /**
      * After construct event.
+     *
+     * @return void
      */
     protected function after_construct(): void
     {

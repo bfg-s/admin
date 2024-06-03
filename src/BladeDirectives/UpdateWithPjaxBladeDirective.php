@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\BladeDirectives;
 
+/**
+ * The class is responsible for the blade directive @updateWithPjax.
+ */
 class UpdateWithPjaxBladeDirective
 {
     /**
-     * Lives ids.
+     * List of live tags that are updated.
      *
      * @var array
      */
     public static array $_lives = [];
 
     /**
+     * A function is a directive that is processed by the Blade template engine.
+     *
      * @return string
      */
     public static function directive(): string
@@ -22,6 +27,8 @@ class UpdateWithPjaxBladeDirective
     }
 
     /**
+     * A function that is responsible for generating data attribute.
+     *
      * @return string
      */
     public static function buildAttribute(): string

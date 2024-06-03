@@ -4,25 +4,31 @@ declare(strict_types=1);
 
 namespace Admin\Core;
 
-use Admin\Navigate;
-use Admin\Traits\FontAwesome;
-use Admin\Traits\NavCommon;
+use Admin\NavigateEngine;
+use Admin\Traits\FontAwesomeTrait;
+use Admin\Traits\NavCommonTrait;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 
+/**
+ * The part of the kernel that is responsible for the navigation item.
+ */
 class NavItem implements Arrayable
 {
-    use FontAwesome;
-    use NavCommon;
+    use FontAwesomeTrait;
+    use NavCommonTrait;
 
     /**
+     * Navigation rule items.
+     *
      * @var array
      */
     public $items = [];
 
     /**
      * NavItem constructor.
+     *
      * @param  string|null  $title
      * @param  string|null  $route
      * @param  null  $action
@@ -32,16 +38,19 @@ class NavItem implements Arrayable
         $this->route($route)
             ->title($title)
             ->action($action)
-            ->extension(Navigate::$extension);
+            ->extension(NavigateEngine::$extension);
     }
 
     /**
-     * @param  string|Closure|array  $action
+     * Add an action to navigation items.
+     *
+     * @param  Closure|string|array|null  $action
      * @return $this
      */
-    public function action($action): static
+    public function action(Closure|string|array|null $action): static
     {
-        if ($action !== null) {
+        if ($action) {
+
             $this->items['action'] = $action;
         }
 
@@ -49,6 +58,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Do not use navigation item in global search.
+     *
      * @return $this
      */
     public function dontUseSearch(): static
@@ -59,12 +70,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Set the page title.
+     *
      * @param  string|null  $title
      * @return $this
      */
     public function head_title(string $title = null): static
     {
         if ($title !== null) {
+
             $this->items['head_title'] = $title;
         }
 
@@ -72,16 +86,15 @@ class NavItem implements Arrayable
     }
 
     /**
-     * Route methods.
-     */
-
-    /**
+     * Set a navigation link item.
+     *
      * @param  string|null  $link
      * @return $this
      */
     public function link(string $link = null): static
     {
         if ($link !== null) {
+
             $this->items['link'] = $link;
         }
 
@@ -89,6 +102,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Set the blank target for the navigation item.
+     *
      * @return $this
      */
     public function targetBlank(): static
@@ -99,12 +114,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Set the navigation item to only the specified resource types.
+     *
      * @param ...$methods
      * @return $this
      */
     public function only(...$methods): static
     {
         if ($methods && isset($this->items['resource'])) {
+
             $this->items['resource_only'] = $methods;
         }
 
@@ -112,12 +130,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Set the navigation item to exclude the specified resource types.
+     *
      * @param ...$methods
      * @return $this
      */
     public function except(...$methods): static
     {
         if ($methods && isset($this->items['resource'])) {
+
             $this->items['resource_except'] = $methods;
         }
 
@@ -125,12 +146,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Add the router's "where" to the generating router.
+     *
      * @param  string|null  $where
      * @return $this
      */
     public function where(string $where = null): static
     {
         if ($where !== null) {
+
             $this->items['where'] = $where;
         }
 
@@ -138,12 +162,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Generated route method.
+     *
      * @param  string|null  $method
      * @return $this
      */
     public function method(string $method = null): static
     {
         if ($method !== null) {
+
             $this->items['method'] = strtolower($method);
         }
 
@@ -151,12 +178,15 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Add a route template as in the routing rules.
+     *
      * @param  string|null  $view
      * @return $this
      */
     public function view(string $view = null): static
     {
         if ($view !== null) {
+
             $this->items['view'] = $view;
         }
 
@@ -164,6 +194,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Add a route resource as in the routing rules.
+     *
      * @param  string  $name
      * @param  string  $resource
      * @param  array  $options
@@ -187,6 +219,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Ignore routing creation.
+     *
      * @return $this
      */
     public function ignored(): static
@@ -197,16 +231,8 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @return $this
-     */
-    public function has_rout(): static
-    {
-        $this->items['ignored'] = true;
-
-        return $this;
-    }
-
-    /**
+     * Add parameters for forming a routing link.
+     *
      * @param  array  $route_params
      * @return $this
      */
@@ -218,17 +244,8 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  callable  $callable
-     * @return $this
-     */
-    public function link_params(callable $callable): static
-    {
-        $this->items['link_params'] = $callable;
-
-        return $this;
-    }
-
-    /**
+     * Add a model to the routing item.
+     *
      * @param $model
      * @return $this
      */
@@ -240,6 +257,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Add a post route item with the desired action.
+     *
      * @param  array|string  $action
      * @return $this
      */
@@ -251,6 +270,8 @@ class NavItem implements Arrayable
     }
 
     /**
+     * Add a delete route item with the desired action.
+     *
      * @param  array|string  $action
      * @return $this
      */
@@ -262,19 +283,8 @@ class NavItem implements Arrayable
     }
 
     /**
-     * @param  array  $params
-     * @return $this
-     */
-    public function badge_params(array $params): static
-    {
-        if ($this->items['badge']) {
-            $this->items['badge']['params'] = $params;
-        }
-
-        return $this;
-    }
-
-    /**
+     * Get all rules from items in an array.
+     *
      * @return array
      */
     public function toArray(): array

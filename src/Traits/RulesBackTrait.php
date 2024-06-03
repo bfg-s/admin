@@ -4,23 +4,52 @@ declare(strict_types=1);
 
 namespace Admin\Traits;
 
-use Admin\Components\FormGroupComponent;
+use Admin\Components\InputGroupComponent;
 use Admin\Controllers\Controller;
-use Closure;
 
+/**
+ * Trade with backend validation form rules.
+ */
 trait RulesBackTrait
 {
     /**
+     * Duplicate rules to the front end rules. (Only for support rules)
+     *
      * @var bool
      */
     protected bool $print_front = true;
 
     /**
+     * Add custom rule.
+     *
+     * @param  object|string  $rule
+     * @param  string|null  $message
+     * @return $this
+     */
+    public function rule(object|string $rule, string $message = null): static
+    {
+        if ($this->admin_controller) {
+            /** @var Controller $controller */
+            $arr = str_ends_with($this->name, '[]') ? '.' : '';
+            $deepPaths = $this->deepPaths();
+            $ruleKey = implode('.', $deepPaths).$arr;
+            $controller = $this->controller;
+
+            $controller::addGlobalRule($ruleKey, $rule);
+            $controller::addGlobalRuleMessage($ruleKey, $rule, $message);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add rule "accepted" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function accepted_if($condition, string $message = null): FormGroupComponent
+    public function accepted_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->accepted($message) : $this;
     }
@@ -38,32 +67,13 @@ trait RulesBackTrait
     }
 
     /**
-     * @param  Closure|string|object  $rule
-     * @param  string|null  $message
-     * @return $this
-     */
-    public function rule($rule, string $message = null): static
-    {
-        if ($this->admin_controller) {
-            /** @var Controller $controller */
-            $arr = str_ends_with($this->name, '[]') ? '.' : '';
-            $deepPaths = $this->deepPaths();
-            $ruleKey = implode('.', $deepPaths).$arr;
-            $controller = $this->controller;
-
-            $controller::setGlobalRule($ruleKey, $rule);
-            $controller::setGlobalRuleMessage($ruleKey, $rule, $message);
-        }
-
-        return $this;
-    }
-
-    /**
+     * Add rule "active_url" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function active_url_if($condition, string $message = null): FormGroupComponent
+    public function active_url_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->active_url($message) : $this;
     }
@@ -83,12 +93,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "after" if condition is true.
+     *
      * @param $condition
      * @param  string  $date
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function after_if($condition, string $date, string $message = null): FormGroupComponent
+    public function after_if($condition, string $date, string $message = null): InputGroupComponent
     {
         return $condition ? $this->after($date, $message) : $this;
     }
@@ -126,12 +138,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "after_or_equal" if condition is true.
+     *
      * @param $condition
      * @param  string  $date
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function after_or_equal_if($condition, string $date, string $message = null): FormGroupComponent
+    public function after_or_equal_if($condition, string $date, string $message = null): InputGroupComponent
     {
         return $condition ? $this->after_or_equal($date, $message) : $this;
     }
@@ -150,11 +164,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "alpha" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function alpha_if($condition, string $message = null): FormGroupComponent
+    public function alpha_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->alpha($message) : $this;
     }
@@ -171,11 +187,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "alpha_dash" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function alpha_dash_if($condition, string $message = null): FormGroupComponent
+    public function alpha_dash_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->alpha_dash($message) : $this;
     }
@@ -193,11 +211,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "alpha_num" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function alpha_num_if($condition, string $message = null): FormGroupComponent
+    public function alpha_num_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->alpha_num($message) : $this;
     }
@@ -214,11 +234,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "array" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function array_if($condition, string $message = null): FormGroupComponent
+    public function array_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->array($message) : $this;
     }
@@ -235,10 +257,12 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "bail" if condition is true.
+     *
      * @param $condition
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function bail_if($condition): FormGroupComponent
+    public function bail_if($condition): InputGroupComponent
     {
         return $condition ? $this->bail() : $this;
     }
@@ -254,12 +278,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "before" if condition is true.
+     *
      * @param $condition
      * @param  string  $date
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function before_if($condition, string $date, string $message = null): FormGroupComponent
+    public function before_if($condition, string $date, string $message = null): InputGroupComponent
     {
         return $condition ? $this->before($date, $message) : $this;
     }
@@ -280,12 +306,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "before_or_equal" if condition is true.
+     *
      * @param $condition
      * @param  string  $date
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function before_or_equal_if($condition, string $date, string $message = null): FormGroupComponent
+    public function before_or_equal_if($condition, string $date, string $message = null): InputGroupComponent
     {
         return $condition ? $this->before_or_equal($date, $message) : $this;
     }
@@ -306,13 +334,15 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "between" if condition is true.
+     *
      * @param $condition
      * @param $min
      * @param $max
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function between_if($condition, $min, $max, string $message = null): FormGroupComponent
+    public function between_if($condition, $min, $max, string $message = null): InputGroupComponent
     {
         return $condition ? $this->between($min, $max, $message) : $this;
     }
@@ -333,11 +363,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "boolean" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function boolean_if($condition, string $message = null): FormGroupComponent
+    public function boolean_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->boolean($message) : $this;
     }
@@ -355,11 +387,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "confirmed" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function confirmed_if($condition, string $message = null): FormGroupComponent
+    public function confirmed_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->confirmed($message) : $this;
     }
@@ -378,11 +412,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "date" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function date_if($condition, string $message = null): FormGroupComponent
+    public function date_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->date($message) : $this;
     }
@@ -400,12 +436,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "date_equals" if condition is true.
+     *
      * @param $condition
      * @param  string  $date
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function date_equals_if($condition, string $date, string $message = null): FormGroupComponent
+    public function date_equals_if($condition, string $date, string $message = null): InputGroupComponent
     {
         return $condition ? $this->date_equals($date, $message) : $this;
     }
@@ -424,12 +462,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "date_format" if condition is true.
+     *
      * @param $condition
      * @param  string  $format
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function date_format_if($condition, string $format, string $message = null): FormGroupComponent
+    public function date_format_if($condition, string $format, string $message = null): InputGroupComponent
     {
         return $condition ? $this->date_format($format, $message) : $this;
     }
@@ -449,12 +489,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "different" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function different_if($condition, string $field, string $message = null): FormGroupComponent
+    public function different_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->different($field, $message) : $this;
     }
@@ -472,12 +514,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "digits" if condition is true.
+     *
      * @param $condition
      * @param  string  $value
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function digits_if($condition, string $value, string $message = null): FormGroupComponent
+    public function digits_if($condition, string $value, string $message = null): InputGroupComponent
     {
         return $condition ? $this->digits($value, $message) : $this;
     }
@@ -496,13 +540,15 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "digits_between" if condition is true.
+     *
      * @param $condition
      * @param $min
      * @param $max
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function digits_between_if($condition, $min, $max, string $message = null): FormGroupComponent
+    public function digits_between_if($condition, $min, $max, string $message = null): InputGroupComponent
     {
         return $condition ? $this->digits_between($min, $max, $message) : $this;
     }
@@ -522,12 +568,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "dimensions" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function dimensions_if($condition, array $params, string $message = null): FormGroupComponent
+    public function dimensions_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->dimensions($params, $message) : $this;
     }
@@ -552,6 +600,8 @@ trait RulesBackTrait
     }
 
     /**
+     * System new rule with parameters.
+     *
      * @param  string  $rule
      * @param  array  $params
      * @param  string|null  $message
@@ -569,11 +619,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "distinct" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function distinct_if($condition, string $message = null): FormGroupComponent
+    public function distinct_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->distinct($message) : $this;
     }
@@ -591,11 +643,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "email" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function email_if($condition, string $message = null): FormGroupComponent
+    public function email_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->email($message) : $this;
     }
@@ -616,12 +670,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "ends_with" if condition is true.
+     *
      * @param $condition
      * @param  array  $values
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function ends_with_if($condition, array $values, string $message = null): FormGroupComponent
+    public function ends_with_if($condition, array $values, string $message = null): InputGroupComponent
     {
         return $condition ? $this->ends_with($values, $message) : $this;
     }
@@ -639,18 +695,20 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "exists" if condition is true.
+     *
      * @param $condition
      * @param  string  $table
      * @param  string|null  $column
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
     public function exists_if(
         $condition,
         string $table,
         string $column = null,
         string $message = null
-    ): FormGroupComponent {
+    ): InputGroupComponent {
         return $condition ? $this->exists($table, $column, $message) : $this;
     }
 
@@ -668,11 +726,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "file" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function file_if($condition, string $message = null): FormGroupComponent
+    public function file_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->file($message) : $this;
     }
@@ -689,11 +749,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "filled" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function filled_if($condition, string $message = null): FormGroupComponent
+    public function filled_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->filled($message) : $this;
     }
@@ -710,12 +772,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "gt" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function gt_if($condition, string $field, string $message = null): FormGroupComponent
+    public function gt_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->gt($field, $message) : $this;
     }
@@ -735,12 +799,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "gte" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function gte_if($condition, string $field, string $message = null): FormGroupComponent
+    public function gte_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->gte($field, $message) : $this;
     }
@@ -761,11 +827,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "image" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function image_if($condition, string $message = null): FormGroupComponent
+    public function image_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->image($message) : $this;
     }
@@ -783,12 +851,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "in" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function in_if($condition, array $params, string $message = null): FormGroupComponent
+    public function in_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->in($params, $message) : $this;
     }
@@ -807,12 +877,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "in_array" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function in_array_if($condition, string $field, string $message = null): FormGroupComponent
+    public function in_array_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->in_array($field, $message) : $this;
     }
@@ -830,11 +902,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "ip" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function ip_if($condition, string $message = null): FormGroupComponent
+    public function ip_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->ip($message) : $this;
     }
@@ -851,11 +925,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "ipv4" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function ipv4_if($condition, string $message = null): FormGroupComponent
+    public function ipv4_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->ipv4($message) : $this;
     }
@@ -872,11 +948,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "ipv6" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function ipv6_if($condition, string $message = null): FormGroupComponent
+    public function ipv6_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->ipv6($message) : $this;
     }
@@ -893,11 +971,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "json" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function json_if($condition, string $message = null): FormGroupComponent
+    public function json_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->json($message) : $this;
     }
@@ -914,12 +994,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "lt" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function lt_if($condition, string $field, string $message = null): FormGroupComponent
+    public function lt_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->lt($field, $message) : $this;
     }
@@ -939,12 +1021,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "lte" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function lte_if($condition, string $field, string $message = null): FormGroupComponent
+    public function lte_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->lte($field, $message) : $this;
     }
@@ -964,12 +1048,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "max" if condition is true.
+     *
      * @param $condition
      * @param  int  $value
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function max_if($condition, int $value, string $message = null): FormGroupComponent
+    public function max_if($condition, int $value, string $message = null): InputGroupComponent
     {
         return $condition ? $this->max($value, $message) : $this;
     }
@@ -989,12 +1075,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "mimetypes" if condition is true.
+     *
      * @param $condition
      * @param  array  $mimetypes
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function mimetypes_if($condition, array $mimetypes, string $message = null): FormGroupComponent
+    public function mimetypes_if($condition, array $mimetypes, string $message = null): InputGroupComponent
     {
         return $condition ? $this->mimetypes($mimetypes, $message) : $this;
     }
@@ -1012,12 +1100,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "mimes" if condition is true.
+     *
      * @param $condition
      * @param  array  $mimes
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function mimes_if($condition, array $mimes, string $message = null): FormGroupComponent
+    public function mimes_if($condition, array $mimes, string $message = null): InputGroupComponent
     {
         return $condition ? $this->mimes($mimes, $message) : $this;
     }
@@ -1044,12 +1134,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "min" if condition is true.
+     *
      * @param $condition
      * @param  int  $value
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function min_if($condition, int $value, string $message = null): FormGroupComponent
+    public function min_if($condition, int $value, string $message = null): InputGroupComponent
     {
         return $condition ? $this->min($value, $message) : $this;
     }
@@ -1068,11 +1160,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "integer" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function integer_if($condition, string $message = null): FormGroupComponent
+    public function integer_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->integer($message) : $this;
     }
@@ -1089,12 +1183,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "not_in" if condition is true.
+     *
      * @param $condition
      * @param  array  $values
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function not_in_if($condition, array $values, string $message = null): FormGroupComponent
+    public function not_in_if($condition, array $values, string $message = null): InputGroupComponent
     {
         return $condition ? $this->not_in($values, $message) : $this;
     }
@@ -1112,12 +1208,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "not_regex" if condition is true.
+     *
      * @param $condition
      * @param  string  $pattern
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function not_regex_if($condition, string $pattern, string $message = null): FormGroupComponent
+    public function not_regex_if($condition, string $pattern, string $message = null): InputGroupComponent
     {
         return $condition ? $this->not_regex($pattern, $message) : $this;
     }
@@ -1143,11 +1241,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "nullable" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function nullable_if($condition, string $message = null): FormGroupComponent
+    public function nullable_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->nullable($message) : $this;
     }
@@ -1165,11 +1265,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "numeric" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function numeric_if($condition, string $message = null): FormGroupComponent
+    public function numeric_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->numeric($message) : $this;
     }
@@ -1190,12 +1292,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "password" if condition is true.
+     *
      * @param $condition
      * @param  string  $guard
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function password_if($condition, string $guard, string $message = null): FormGroupComponent
+    public function password_if($condition, string $guard, string $message = null): InputGroupComponent
     {
         return $condition ? $this->password($guard, $message) : $this;
     }
@@ -1214,11 +1318,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "present" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function present_if($condition, string $message = null): FormGroupComponent
+    public function present_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->present($message) : $this;
     }
@@ -1235,12 +1341,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "regex" if condition is true.
+     *
      * @param $condition
      * @param  string  $pattern
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function regex_if($condition, string $pattern, string $message = null): FormGroupComponent
+    public function regex_if($condition, string $pattern, string $message = null): InputGroupComponent
     {
         return $condition ? $this->regex($pattern, $message) : $this;
     }
@@ -1266,11 +1374,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_condition($condition, string $message = null): FormGroupComponent
+    public function required_condition($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required($message) : $this;
     }
@@ -1292,12 +1402,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_if_condition($condition, array $params, string $message = null): FormGroupComponent
+    public function required_if_condition($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_if($params, $message) : $this;
     }
@@ -1316,12 +1428,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required_unless" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_unless_if($condition, array $params, string $message = null): FormGroupComponent
+    public function required_unless_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_unless($params, $message) : $this;
     }
@@ -1340,12 +1454,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required_with" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_with_if($condition, array $params, string $message = null): FormGroupComponent
+    public function required_with_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_with($params, $message) : $this;
     }
@@ -1364,12 +1480,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required_with_all" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_with_all_if($condition, array $params, string $message = null): FormGroupComponent
+    public function required_with_all_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_with_all($params, $message) : $this;
     }
@@ -1388,12 +1506,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required_without" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_without_if($condition, array $params, string $message = null): FormGroupComponent
+    public function required_without_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_without($params, $message) : $this;
     }
@@ -1412,12 +1532,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "required_without_all" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function required_without_all_if($condition, array $params, string $message = null): FormGroupComponent
+    public function required_without_all_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->required_without_all($params, $message) : $this;
     }
@@ -1436,12 +1558,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "same" if condition is true.
+     *
      * @param $condition
      * @param  string  $field
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function same_if($condition, string $field, string $message = null): FormGroupComponent
+    public function same_if($condition, string $field, string $message = null): InputGroupComponent
     {
         return $condition ? $this->same($field, $message) : $this;
     }
@@ -1459,12 +1583,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "size" if condition is true.
+     *
      * @param $condition
      * @param  int  $value
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function size_if($condition, int $value, string $message = null): FormGroupComponent
+    public function size_if($condition, int $value, string $message = null): InputGroupComponent
     {
         return $condition ? $this->size($value, $message) : $this;
     }
@@ -1486,12 +1612,14 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "starts_with" if condition is true.
+     *
      * @param $condition
      * @param  array  $params
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function starts_with_if($condition, array $params, string $message = null): FormGroupComponent
+    public function starts_with_if($condition, array $params, string $message = null): InputGroupComponent
     {
         return $condition ? $this->starts_with($params, $message) : $this;
     }
@@ -1509,11 +1637,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "string" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function string_if($condition, string $message = null): FormGroupComponent
+    public function string_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->string($message) : $this;
     }
@@ -1531,11 +1661,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "timezone" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function timezone_if($condition, string $message = null): FormGroupComponent
+    public function timezone_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->timezone($message) : $this;
     }
@@ -1553,13 +1685,15 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "unique" if condition is true.
+     *
      * @param $condition
      * @param  string  $table
      * @param  string|null  $column
      * @param $except
      * @param $idColumn
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
     public function unique_if(
         $condition,
@@ -1568,7 +1702,7 @@ trait RulesBackTrait
         $except = null,
         $idColumn = null,
         string $message = null
-    ): FormGroupComponent {
+    ): InputGroupComponent {
         return $condition ? $this->unique($table, $column, $except, $idColumn, $message) : $this;
     }
 
@@ -1593,11 +1727,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "url" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function url_if($condition, string $message = null): FormGroupComponent
+    public function url_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->url($message) : $this;
     }
@@ -1618,11 +1754,13 @@ trait RulesBackTrait
     }
 
     /**
+     * Add rule "uuid" if condition is true.
+     *
      * @param $condition
      * @param  string|null  $message
-     * @return FormGroupComponent
+     * @return InputGroupComponent
      */
-    public function uuid_if($condition, string $message = null): FormGroupComponent
+    public function uuid_if($condition, string $message = null): InputGroupComponent
     {
         return $condition ? $this->uuid($message) : $this;
     }

@@ -2,7 +2,7 @@
         @class(array_merge(['timeline'], $classes))
         @attributes($attributes)
 >
-    {!! $prepend !!}
+    {!! admin_show_text($prepend) !!}
     @foreach ($paginate as $model)
         <div>
             @if($model[$order_field] instanceof Carbon && $model[$order_field]->day == 1)
@@ -39,7 +39,7 @@
     @if ($paginate->lastPage() == $paginate->currentPage())
         <div><i class="fas fa-clock bg-gray"></i></div>
     @endif
-    {!! $append !!}
+    {!! admin_show_text($append) !!}
     @if ($paginateFooter)
         {!! $paginateFooter !!}
     @endif

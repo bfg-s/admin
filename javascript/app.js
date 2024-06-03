@@ -57,6 +57,7 @@ require('./Inits/Tpl');
 require('./Inits/Fancy');
 require('./Inits/Doc');
 require('./Inits/Chart');
+require('./Inits/Realtime');
 
 _dispatch_event('admin:init');
 
@@ -77,6 +78,11 @@ $(tooltip_selector).tooltip({placement: 'auto'});
 $(document).on('pjax:start', function (event) {
     $(tooltip_selector).tooltip('dispose');
 });
+
+window.updateToolTips = () => {
+    $(tooltip_selector).tooltip('dispose');
+    $(tooltip_selector).tooltip({placement: 'auto'});
+};
 
 window.NProgress.configure({parent: '.loadedContent'});
 

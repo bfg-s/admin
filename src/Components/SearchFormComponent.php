@@ -25,13 +25,14 @@ use Admin\Components\SearchFields\TimeFieldSearchField;
 use Admin\Core\PrepareExport;
 use Admin\Explanation;
 use Admin\Traits\SearchFormConditionRulesTrait;
-use Admin\Traits\SearchFormHelpersTrait;
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 /**
+ * Search form component in the admin panel.
+ *
  * @methods static::$field_components (string $name, string $label, $condition = '{{ $condition || =% }}')
  * @mixin SearchFormComponentMethods
  * @mixin SearchFormComponentFields
@@ -39,9 +40,10 @@ use Illuminate\View\View;
 class SearchFormComponent extends Component
 {
     use SearchFormConditionRulesTrait;
-    use SearchFormHelpersTrait;
 
     /**
+     * List of component inputs that can be used in search forms.
+     *
      * @var array
      */
     public static array $field_components = [
@@ -66,21 +68,29 @@ class SearchFormComponent extends Component
     ];
 
     /**
+     * List of input names in a string separated by the "|" symbol.
+     *
      * @var mixed
      */
     protected static $regInputs = null;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'search-form';
 
     /**
+     * Model fields in the form of inputs that will be used for searching.
+     *
      * @var array
      */
     protected array $fields = [];
 
     /**
+     * Ready-made default search conditions.
+     *
      * @var string[]
      */
     protected array $conditions = [
@@ -102,12 +112,15 @@ class SearchFormComponent extends Component
     ];
 
     /**
+     * Model fields for which global search occurs.
+     *
      * @var array
      */
     protected array $global_search_fields = [];
 
     /**
-     * Form constructor.
+     * SearchFormComponent constructor.
+     *
      * @param  array  $delegates
      */
     public function __construct(...$delegates)
@@ -118,6 +131,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Get the number of search form fields.
+     *
      * @return int
      */
     public function fieldsCount(): int
@@ -126,6 +141,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Get all search form fields.
+     *
      * @return array
      */
     public function getFields(): array
@@ -134,6 +151,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Set fields for global search by model.
+     *
      * @param  array  $params
      * @return $this
      */
@@ -145,6 +164,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * A magical method that generates inputs to fields and corresponding conditions.
+     *
      * @param $name
      * @param $arguments
      * @return bool|FormComponent|mixed|string
@@ -182,9 +203,10 @@ class SearchFormComponent extends Component
                 $label = $arguments[1] ?? null;
                 $condition = $arguments[2] ?? null;
 
+                /** @var InputGroupComponent $class */
                 $class = new $class("q[{$field_name}]", $label);
 
-                if ($class instanceof FormGroupComponent) {
+                if ($class instanceof InputGroupComponent) {
                     $class->set_parent($this);
 
                     $class->vertical();
@@ -199,13 +221,19 @@ class SearchFormComponent extends Component
                 } elseif (is_string($condition) && isset($this->conditions[$condition])) {
                     $method = $this->conditions[$condition];
                 } else {
-                    if (property_exists($class, 'condition') && isset($this->conditions[$class::$condition])) {
-                        $condition = $class::$condition;
+                    if (property_exists($class, 'condition')) {
+                        /** @var string $conditionToSelect */
+                        $conditionToSelect = $class::$condition;
+                        if (isset($this->conditions[$conditionToSelect])) {
+                            $condition = $conditionToSelect;
+                        } else {
+                            $condition = '%=%';
+                        }
                     } else {
                         $condition = '%=%';
                     }
 
-                    if (is_string($condition) && isset($this->conditions[$condition])) {
+                    if (isset($this->conditions[$condition])) {
                         $method = $this->conditions[$condition];
                     }
                 }
@@ -226,6 +254,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * A magic method that generates inputs to fields based on property names.
+     *
      * @param  string  $name
      * @return SearchFormComponent
      */
@@ -255,6 +285,54 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Assistant for adding a search field by ID.
+     *
+     * @return $this
+     */
+    public function id(): static
+    {
+        $this->numeric('id', 'admin.id', '=');
+
+        return $this;
+    }
+
+    /**
+     * Helper for adding a search field using the "created at" and "updated at" fields.
+     *
+     * @return $this
+     */
+    public function at(): static
+    {
+        return $this->updated_at()->created_at();
+    }
+
+    /**
+     * Helper for adding a search field based on the "created at" field.
+     *
+     * @return $this
+     */
+    public function created_at(): static
+    {
+        $this->date_time_range('created_at', 'admin.created_at');
+
+        return $this;
+    }
+
+    /**
+     * Helper for adding a search field based on the "updated at" field.
+     *
+     * @return $this
+     */
+    public function updated_at(): static
+    {
+        $this->date_time_range('updated_at', 'admin.updated_at');
+
+        return $this;
+    }
+
+    /**
+     * The search informant template is automatically pulled up by the card.
+     *
      * @return View
      */
     public function getSearchInfoComponent(): View
@@ -265,6 +343,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -279,6 +359,8 @@ class SearchFormComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

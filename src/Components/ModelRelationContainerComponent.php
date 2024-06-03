@@ -4,59 +4,70 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * Relation container component of the admin panel model.
+ */
 class ModelRelationContainerComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'model-relation-container';
 
     /**
+     * Control marker by a group of control buttons.
+     *
      * @var mixed
      */
     protected mixed $control_group = null;
 
     /**
+     * Control marker with delete button.
+     *
      * @var mixed
      */
     protected mixed $control_delete = false;
 
     /**
+     * Control marker with the create button.
+     *
      * @var mixed
      */
     protected mixed $control_create = false;
 
     /**
+     * Control marker with recovery button.
+     *
      * @var mixed
      */
     protected mixed $control_restore = null;
 
     /**
-     * @var string|null
-     */
-    protected ?string $control_restore_text = '';
-
-    /**
-     * @var callable[]
-     */
-    protected array $controls = [];
-
-    /**
+     * Vertical display of input and label.
+     *
      * @var bool
      */
     protected bool $vertical = true;
 
     /**
+     * Groups of custom model relation container buttons.
+     *
      * @var array
      */
     protected array $buttons = [];
 
     /**
+     * A property that describes the column by which the model relation is sorted. If not specified, sorting is disabled.
+     *
      * @var string|null
      */
     protected ?string $ordered = null;
 
     /**
+     * ModelRelationContainerComponent constructor.
+     *
      * @param  string  $relation
      * @param  string|int  $name
      * @param ...$delegates
@@ -71,6 +82,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Set the model relation field to be sorted.
+     *
      * @param  string|null  $ordered
      * @return $this
      */
@@ -82,6 +95,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Add a group of buttons to the model relation.
+     *
      * @param  mixed  $buttons
      * @return static
      */
@@ -93,6 +108,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Enable all model relationship control buttons.
+     *
      * @return $this
      */
     public function fullControl(): static
@@ -105,6 +122,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Enable or disable the model relationship creation button.
+     *
      * @param  mixed|null  $test
      * @return $this
      */
@@ -116,6 +135,47 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Enable or disable the restore model relationship button.
+     *
+     * @param  mixed|null  $test
+     * @return $this
+     */
+    public function controlRestore(mixed $test = null): static
+    {
+        $this->set_test_var('control_restore', $test);
+
+        return $this;
+    }
+
+    /**
+     * Enable or disable the delete button by model relationships.
+     *
+     * @param  mixed|null  $test
+     * @return $this
+     */
+    public function controlDelete(mixed $test = null): static
+    {
+        $this->set_test_var('control_delete', $test);
+
+        return $this;
+    }
+
+    /**
+     * Enable or disable a group of model relationship management buttons.
+     *
+     * @param  mixed|null  $test
+     * @return $this
+     */
+    public function controlGroup(mixed $test = null): static
+    {
+        $this->set_test_var('control_group', $test);
+
+        return $this;
+    }
+
+    /**
+     * Set the control check value using model relationship buttons.
+     *
      * @param  string  $var_name
      * @param $test
      */
@@ -131,61 +191,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
-     * @param  mixed|null  $test
-     * @return $this
-     */
-    public function controlRestore(mixed $test = null): static
-    {
-        $this->set_test_var('control_restore', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed|null  $test
-     * @return $this
-     */
-    public function controlDelete(mixed $test = null): static
-    {
-        $this->set_test_var('control_delete', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  callable  $call
-     * @return $this
-     */
-    public function controls(callable $call): static
-    {
-        $this->controls[] = $call;
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed|null  $test
-     * @return $this
-     */
-    public function controlGroup(mixed $test = null): static
-    {
-        $this->set_test_var('control_group', $test);
-
-        return $this;
-    }
-
-    /**
-     * @param  string  $text
-     * @return $this
-     */
-    public function controlRestoreText(string $text): static
-    {
-        $this->control_restore_text = $text;
-
-        return $this;
-    }
-
-    /**
+     * Get the control check value of the model relationship buttons.
+     *
      * @param  string  $var_name
      * @param  array  $args
      * @return mixed
@@ -195,31 +202,18 @@ class ModelRelationContainerComponent extends Component
         if (is_bool($this->{$var_name}) || is_string($this->{$var_name})) {
             return $this->{$var_name};
         } elseif ($this->{$var_name} !== null) {
-            return call_user_func_array($this->{$var_name}, $args);
+            $call = $this->{$var_name};
+            if (is_callable($call)) {
+                return call_user_func_array($call, $args);
+            }
         }
 
         return true;
     }
 
     /**
-     * @param  mixed  ...$params
-     */
-    public function callControls(...$params): void
-    {
-        foreach ($this->controls as $control) {
-            call_user_func_array($control, $params);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasControls(): bool
-    {
-        return (bool) count($this->controls);
-    }
-
-    /**
+     * Additional data to be sent to the template.
+     *
      * @return array|null[]
      */
     protected function viewData(): array
@@ -231,6 +225,8 @@ class ModelRelationContainerComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

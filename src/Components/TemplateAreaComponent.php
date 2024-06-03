@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+/**
+ * Admin panel template area component.
+ */
 class TemplateAreaComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'template-area';
 
     /**
+     * TemplateAreaComponent constructor.
+     *
      * @param  string  $id
      * @param  bool  $autoload
      * @param ...$delegates
@@ -36,6 +43,8 @@ class TemplateAreaComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return string[]
      */
     protected function viewData(): array
@@ -46,6 +55,8 @@ class TemplateAreaComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

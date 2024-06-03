@@ -6,27 +6,28 @@ namespace Admin\Components\ModelTable;
 
 use Admin\Components\Component;
 
+/**
+ * Admin panel component for grid columns.
+ */
 class ColumnComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'model-table.column';
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @var array
      */
     protected array $viewData = [];
 
     /**
-     * @param ...$delegates
-     */
-    public function __construct(...$delegates)
-    {
-        parent::__construct($delegates);
-    }
-
-    /**
+     * Set additional data to be sent to the column template.
+     *
      * @param  array  $data
      * @return $this
      */
@@ -38,6 +39,8 @@ class ColumnComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -46,6 +49,8 @@ class ColumnComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

@@ -6,49 +6,70 @@ namespace Admin\Components;
 
 use Admin\Explanation;
 
+/**
+ * Footer component of the admin panel form.
+ */
 class FormFooterComponent extends Component
 {
     /**
+     * Admin panel form ID.
+     *
      * @var string|null
      */
-    protected ?string $form_id = null;
+    protected string|null $form_id = null;
 
     /**
+     * Custom button text.
+     *
      * @var string|null
      */
-    protected ?string $btn_text = null;
+    protected string|null $btn_text = null;
 
     /**
+     * Custom button icon.
+     *
      * @var string|null
      */
-    protected ?string $btn_icon = null;
+    protected string|null $btn_icon = null;
 
     /**
+     * The current operation type, edit or create.
+     *
      * @var string|null
      */
-    protected ?string $type = null;
+    protected string|null $type = null;
 
     /**
+     * Default button group.
+     *
      * @var ButtonsComponent|null
      */
-    protected ?ButtonsComponent $group = null;
+    protected ButtonsComponent|null $group = null;
 
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'form-footer';
 
     /**
+     * Determines whether to add the "row" class to the CSS.
+     *
      * @var bool
      */
     protected bool $row = false;
 
     /**
+     * Determines whether redirect form navigation is enabled.
+     *
      * @var bool
      */
     private bool $nav_redirect = true;
 
     /**
+     * FormFooterComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -63,6 +84,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Set the form ID.
+     *
      * @param  string  $id
      * @return $this
      */
@@ -74,6 +97,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Describe the default button.
+     *
      * @param  string  $text
      * @param  string|null  $icon
      * @return $this
@@ -90,6 +115,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Disable redirect form navigation.
+     *
      * @return $this
      */
     public function withOutRedirectRadios(): static
@@ -100,6 +127,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Set the current operation type.
+     *
      * @param  string  $type
      * @return $this
      */
@@ -111,6 +140,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Enable or disable the CSS class "row".
+     *
      * @param  bool  $row
      * @return $this
      */
@@ -122,6 +153,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Create standard buttons for the form.
+     *
      * @return $this
      */
     public function createDefaultCRUDFooter(): static
@@ -149,6 +182,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -162,6 +197,8 @@ class FormFooterComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

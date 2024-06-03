@@ -6,19 +6,28 @@ namespace Admin\Components\ModelCards;
 
 use Admin\Components\Component;
 
+/**
+ * Built-in admin panel card.
+ */
 class CardComponent extends Component
 {
     /**
+     * The name of the component template.
+     *
      * @var string
      */
     protected string $view = 'model-cards.card';
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @var array
      */
     protected array $viewData = [];
 
     /**
+     * CardComponent constructor.
+     *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
@@ -27,6 +36,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Set additional data to be sent to the card template.
+     *
      * @param  array  $data
      * @return $this
      */
@@ -38,6 +49,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
      * @return array
      */
     protected function viewData(): array
@@ -46,6 +59,8 @@ class CardComponent extends Component
     }
 
     /**
+     * Method for mounting components on the admin panel page.
+     *
      * @return void
      */
     protected function mount(): void

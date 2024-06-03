@@ -14,6 +14,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
+ * A model that provides access to the admin panel.
+ *
  * @property int $id
  * @property string $path
  * @property array $method
@@ -42,20 +44,31 @@ use Illuminate\Support\Str;
 class AdminPermission extends Model
 {
     /**
-     * @var Collection
+     * A collection of current accesses for the user.
+     *
+     * @var Collection|null
      */
-    public static $now;
+    public static Collection|null $now = null;
+
     /**
+     * The table associated with the model.
+     *
      * @var string
      */
     protected $table = 'admin_permission';
+
     /**
+     * The attributes that are mass assignable.
+     *
      * @var string[]
      */
     protected $fillable = [
         'path', 'method', 'state', 'description', 'admin_role_id', 'active', // state: open, close
     ];
+
     /**
+     * The attributes that should be cast.
+     *
      * @var string[]
      */
     protected $casts = [
@@ -63,6 +76,26 @@ class AdminPermission extends Model
     ];
 
     /**
+     * Get a collection of current accesses for a user.
+     *
+     * @return mixed
+     */
+    public static function now(): mixed
+    {
+        if (static::$now) {
+            return static::$now;
+        }
+
+        $roles = Admin::user()?->roles->pluck('id') ?? [];
+
+        return static::$now = static::whereIn('admin_role_id', $roles)
+            ->where('active', 1)
+            ->get();
+    }
+
+    /**
+     * Check the specified URL for access by the current user.
+     *
      * @param  string  $url
      * @param  string  $method
      * @return bool
@@ -103,22 +136,8 @@ class AdminPermission extends Model
     }
 
     /**
-     * @return mixed
-     */
-    public static function now(): mixed
-    {
-        if (static::$now) {
-            return static::$now;
-        }
-
-        $roles = Admin::user()?->roles->pluck('id') ?? [];
-
-        return static::$now = static::whereIn('admin_role_id', $roles)
-            ->where('active', 1)
-            ->get();
-    }
-
-    /**
+     * Helper for generating paths during verification.
+     *
      * @param  string  $inner_path
      * @return string
      */
@@ -130,6 +149,8 @@ class AdminPermission extends Model
     }
 
     /**
+     * Checking current access to the current page.
+     *
      * @return bool
      */
     public static function check(): bool
@@ -178,6 +199,8 @@ class AdminPermission extends Model
     }
 
     /**
+     * Relationship of access to administrator roles.
+     *
      * @return HasOne
      */
     public function role(): HasOne
