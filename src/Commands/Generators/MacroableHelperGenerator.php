@@ -82,10 +82,10 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
      * Output helper generation function.
      *
      * @param  Command  $command
-     * @return void
+     * @return mixed
      * @throws ReflectionException
      */
-    public function handle(Command $command): void
+    public function handle(Command $command): mixed
     {
         $this->command = $command;
 

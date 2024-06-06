@@ -57,7 +57,7 @@ class SliderInput extends InputGroupComponent
         return admin_view('components.inputs.slider', [
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title,
+            'placeholder' => $this->placeholder ?: $this->title,
             'value' => $this->value,
             'rules' => $this->rules,
             'datas' => [

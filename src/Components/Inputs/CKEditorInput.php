@@ -38,7 +38,7 @@ class CKEditorInput extends InputGroupComponent
         return admin_view('components.inputs.textarea', [
             'id' => $this->field_id,
             'name' => $this->name,
-            'placeholder' => $this->title,
+            'placeholder' => $this->placeholder ?: $this->title,
             'value' => $this->value,
             'rules' => $this->rules,
             'datas' => $this->data,

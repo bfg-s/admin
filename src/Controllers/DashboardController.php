@@ -27,6 +27,13 @@ use PDO;
 class DashboardController extends Controller
 {
     /**
+     * @var array
+     */
+    protected static array $widgets = [
+        \Admin\Widgets\PeriodStatisticWidget::class
+    ];
+
+    /**
      * Mandatory PHP extensions for the admin panel.
      *
      * @var array
@@ -35,6 +42,15 @@ class DashboardController extends Controller
         'redis', 'xml', 'xmlreader', 'openssl', 'bcmath', 'json', 'mbstring', 'session', 'mysqlnd', 'PDO', 'pdo_mysql',
         'Phar', 'mysqli', 'SimpleXML', 'sockets', 'exif',
     ];
+
+    /**
+     * @param  string  $class
+     * @return void
+     */
+    public static function addWidget(string $class): void
+    {
+        static::$widgets[] = $class;
+    }
 
     /**
      * The controller index to process the page.
@@ -47,7 +63,10 @@ class DashboardController extends Controller
      * @param  SearchForm  $searchForm
      * @param  Row  $row
      * @param  Column  $column
+     * @param  \Admin\Delegates\Modal  $modal
+     * @param  \Admin\Delegates\Buttons  $buttons
      * @return Page|mixed
+     * @throws \Throwable
      */
     public function index(
         Page $page,
@@ -58,8 +77,32 @@ class DashboardController extends Controller
         SearchForm $searchForm,
         Admin\Delegates\Row $row,
         Admin\Delegates\Column $column,
+        Admin\Delegates\Modal $modal,
+        Admin\Delegates\Buttons $buttons,
     ): mixed {
-        return $page->row(
+
+        $widgets = [];
+
+        foreach (static::$widgets as $widget) {
+
+            $widgets[] = $widget::create()->toArray();
+        }
+
+        return $page
+            ->modal(
+                $modal->name('dashboard_configuration')
+                    ->title('Dashboard settings')->sizeExtra(),
+                $modal->vue(Admin\Components\Vue\DashboardSettingsVue::class, ['widgets_hash' => base64_encode(json_encode($widgets))])
+            )
+            ->row(
+                $row->column(12)->center()->buttons(
+                    $buttons->success('fas fa-cogs')
+                        ->title('Dashboard settings')
+                        ->modal('dashboard_configuration')
+                )
+
+            )
+            ->row(
             $row->column(12)->statistic_period(
                 $statisticPeriod->model(config('auth.providers.users.model'))
                     ->title('admin.users')

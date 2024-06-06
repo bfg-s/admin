@@ -38,7 +38,7 @@ class MDEditorInput extends InputGroupComponent
         return admin_view('components.inputs.md-editor', [
             'id' => $this->field_id,
             'dataName' => $this->name,
-            'placeholder' => $this->title,
+            'placeholder' => $this->placeholder ?: $this->title,
             'datas' => $this->data,
             'rules' => $this->rules,
             'value' => $this->value,

@@ -7,7 +7,6 @@ namespace Admin\Components\Inputs;
 use Admin\Components\InputGroupComponent;
 use Admin\Components\Inputs\Parts\InputSelect2Component;
 use Admin\Core\Select2;
-use Admin\Page;
 use App;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -109,7 +108,7 @@ class SelectInput extends InputGroupComponent
             $this->loadSubject();
         }
 
-        $this->data['placeholder'] = $this->title;
+        $this->data['placeholder'] = $this->placeholder ?: $this->title;
 
         return InputSelect2Component::create($this->options)
             ->setAttributes($this->attributes)

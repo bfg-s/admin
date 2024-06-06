@@ -20,9 +20,9 @@ class ExtensionNavigatorMethodsHelperGenerator implements AdminHelpGeneratorInte
      * Output helper generation function.
      *
      * @param  Command  $command
-     * @return string
+     * @return mixed
      */
-    public function handle(Command $command): string
+    public function handle(Command $command): mixed
     {
         $class = class_entity('NavigatorMethods');
         $class->namespace("Admin\Core");

@@ -132,7 +132,9 @@ if (!function_exists('admin_controller_model')) {
         if ($action = Route::currentRouteAction()) {
             $class = Str::parseCallback($action)[0];
 
-            if (property_exists($class, 'model')) {
+            if (method_exists($class, 'getModel')) {
+                return call_user_func([$class, 'getModel']);
+            } else if (property_exists($class, 'model')) {
                 return $class::$model;
             }
         }

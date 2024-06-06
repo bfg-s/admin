@@ -6,6 +6,7 @@ namespace Admin\Core;
 
 use Admin\Components\Component;
 use Admin\Components\ModelTableComponent;
+use Admin\Controllers\DashboardController;
 use Admin\ExtendProvider;
 use Closure;
 use Illuminate\Http\Request;
@@ -119,6 +120,19 @@ abstract class ConfigExtensionProvider
     public function registerComponent(string $name, string $class): static
     {
         Component::registerComponent($name, $class);
+
+        return $this;
+    }
+
+    /**
+     * Helper property for registration new dashboard widget.
+     *
+     * @param  string  $class
+     * @return $this
+     */
+    public function registerDashboardWidget(string $class): static
+    {
+        DashboardController::addWidget($class);
 
         return $this;
     }

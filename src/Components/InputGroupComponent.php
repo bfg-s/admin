@@ -40,6 +40,13 @@ abstract class InputGroupComponent extends Component
     protected string|null $title = null;
 
     /**
+     * Input placeholder text.
+     *
+     * @var string|null
+     */
+    protected string|null $placeholder = null;
+
+    /**
      * Input name.
      *
      * @var string|null
@@ -215,6 +222,22 @@ abstract class InputGroupComponent extends Component
         }
         $this->model = $this->page->model();
         $this->after_construct();
+    }
+
+    /**
+     * Set a placeholder for the input.
+     *
+     * @param  string|null  $placeholder
+     * @return $this
+     */
+    public function placeholder(string|null $placeholder): static
+    {
+        if ($placeholder) {
+
+            $this->placeholder = $placeholder;
+        }
+
+        return $this;
     }
 
     /**

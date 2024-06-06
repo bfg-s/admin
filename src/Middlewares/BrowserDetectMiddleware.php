@@ -8,7 +8,6 @@ use Admin\Models\AdminBrowser;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 
 /**
  * Middleware for checking the administrator's browser.
@@ -21,11 +20,6 @@ class BrowserDetectMiddleware
     public static AdminBrowser|null $browser = null;
 
     /**
-     * @var AdminBrowser|null
-     */
-    public static AdminBrowser|null $browserBefore = null;
-
-    /**
      * Handle an incoming request.
      *
      * @param  Request  $request
@@ -34,7 +28,7 @@ class BrowserDetectMiddleware
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        if (admin()->exists && $request->userAgent()) {
+        if (admin()->id && $request->userAgent()) {
             $result = getBrowserDetails($request->userAgent());
 
             if ($result['name'] !== 'Unknown') {

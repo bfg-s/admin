@@ -32,8 +32,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Laravel\Dusk\DuskServiceProvider;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 
 /**
@@ -212,7 +210,11 @@ class ServiceProvider extends ServiceProviderIlluminate
         $route = Route::domain(config('admin.route.domain', ''))
             ->name(config('admin.route.name'));
 
-        $middlewares = ['web', 'admin-auth', DomMiddleware::class];
+        $middlewares = [
+            'web',
+            'admin-auth',
+            DomMiddleware::class
+        ];
 
         if (config('admin.lang_mode', true)) {
             $route = $route->prefix('{adminLang}/'.config('admin.route.prefix'));

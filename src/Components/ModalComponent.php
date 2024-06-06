@@ -260,6 +260,24 @@ class ModalComponent extends Component
     }
 
     /**
+     * Create a new VUE component.
+     *
+     * @param  string  $class
+     * @param  array  $params
+     * @return \Admin\Components\ModalComponent
+     */
+    public function vue(string $class, array $params = []): static
+    {
+        $body = $this->createBody();
+
+        $body->appEnd(
+            $body->createComponent($class)->attr($params)
+        );
+
+        return $this;
+    }
+
+    /**
      * Adding a nested component to the body of the modal window.
      *
      * @param ...$delegates

@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Admin\Controllers;
 
 use Admin\Facades\Admin;
+use Admin\Requests\LoginCodeRequest;
+use Admin\Requests\LoginRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
-use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
-use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
 class AuthController
@@ -36,14 +34,15 @@ class AuthController
     /**
      * Security definition page with input of 2FA admin panel.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Routing\Redirector|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+     * @param  \Admin\Requests\LoginRequest  $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Routing\Redirector|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function twoFa(Request $request): View|Factory|Redirector|\Illuminate\View\View|Application|RedirectResponse
+    public function twoFa(LoginRequest $request): View|Factory|Redirector|\Illuminate\View\View|Application|RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $result = $this->loginPost($request);
 
         if (Admin::guest()) {
+
             return redirect()->route('admin.login');
         }
 
@@ -63,16 +62,11 @@ class AuthController
     /**
      * Login processing page for the admin panel.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param  \Admin\Requests\LoginRequest|\Admin\Requests\LoginCodeRequest  $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\Http\JsonResponse
      */
-    public function loginPost(Request $request): \Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
+    public function loginPost(LoginRequest|LoginCodeRequest $request): \Illuminate\Foundation\Application|Redirector|Application|RedirectResponse|\Illuminate\Http\JsonResponse
     {
-        $request->validate([
-            'login' => 'required|min:3|max:191',
-            'password' => 'required|min:4|max:191',
-        ]);
-
         $login = false;
 
         if (Auth::guard('admin')->attempt(
@@ -121,17 +115,15 @@ class AuthController
     /**
      * Page for processing 2FA code for the admin panel.
      *
-     * @throws IncompatibleWithGoogleAuthenticatorException
-     * @throws SecretKeyTooShortException
-     * @throws InvalidCharactersException
+     * @param  \Admin\Requests\LoginCodeRequest  $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+     * @throws \PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException
+     * @throws \PragmaRX\Google2FA\Exceptions\InvalidCharactersException
+     * @throws \PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException
      */
-    public function twoFaPost(Request $request): View|Factory|\Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
+    public function twoFaPost(LoginCodeRequest $request): View|Factory|\Illuminate\Foundation\Application|Redirector|Application|RedirectResponse
     {
-        $data = $request->validate([
-            'login' => 'required|min:3|max:191',
-            'password' => 'required|min:4|max:191',
-            'code' => 'required|min:6|max:6',
-        ]);
+        $data = $request->validated();
 
         $result = $this->loginPost($request);
 

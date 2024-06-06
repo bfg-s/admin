@@ -20,9 +20,9 @@ class GenerateAdminHelper implements AdminHelpGeneratorInterface
      * Output helper generation function.
      *
      * @param  Command  $command
-     * @return string
+     * @return mixed
      */
-    public function handle(Command $command): string
+    public function handle(Command $command): mixed
     {
         $namespace = namespace_entity("Admin\\Components");
 
