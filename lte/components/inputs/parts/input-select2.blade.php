@@ -1,7 +1,7 @@
 <select
     name="{{ $name }}"
     id="{{ $id }}"
-    @class(array_merge(['form-control', 'is-invalid' => $hasBug], $classes))
+    @class(['form-control', 'is-invalid' => $hasBug])
     @attributes($attributes)
     @if($multiple) multiple="multiple" @endif
     @foreach(($datas ?? []) as $key => $data)

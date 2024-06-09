@@ -111,5 +111,7 @@ class MacroDelegatorsHelperGenerator implements AdminHelpGeneratorInterface
                 }
             }
         }
+        
+        return null;
     }
 }

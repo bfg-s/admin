@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['alert', 'alert-' . $type], $classes))
+    @class(['alert', 'alert-' . $type])
     @attributes($attributes)
     role="alert"
 >

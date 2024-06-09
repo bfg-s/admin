@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['card'], $classes))
+    @class(['card'])
     @attributes($attributes)
 >
     @if($title)

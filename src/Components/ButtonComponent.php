@@ -44,6 +44,13 @@ class ButtonComponent extends Component
     protected string $typeAttribute = 'button';
 
     /**
+     * Display the button as a none.
+     *
+     * @var bool
+     */
+    protected bool $displayNone = false;
+
+    /**
      * Set an icon to the button.
      *
      * @param  string  $name
@@ -231,6 +238,18 @@ class ButtonComponent extends Component
     }
 
     /**
+     * Set the button to be displayed as none.
+     *
+     * @return $this
+     */
+    public function displayNone(): static
+    {
+        $this->displayNone = true;
+
+        return $this;
+    }
+
+    /**
      * Additional data to be sent to the template.
      *
      * @return array
@@ -242,6 +261,7 @@ class ButtonComponent extends Component
             'type' => $this->type,
             'icon' => $this->icon,
             'title' => $this->title,
+            'displayNone' => $this->displayNone,
         ];
     }
 

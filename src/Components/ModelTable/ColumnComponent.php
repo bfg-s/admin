@@ -26,6 +26,25 @@ class ColumnComponent extends Component
     protected array $viewData = [];
 
     /**
+     * Hide the column on mobile devices.
+     *
+     * @var bool
+     */
+    protected bool $hideOnMobile = false;
+
+    /**
+     * Hide the column on mobile devices.
+     *
+     * @return $this
+     */
+    public function hideOnMobile(): static
+    {
+        $this->hideOnMobile = true;
+
+        return $this;
+    }
+
+    /**
      * Set additional data to be sent to the column template.
      *
      * @param  array  $data
@@ -45,7 +64,9 @@ class ColumnComponent extends Component
      */
     protected function viewData(): array
     {
-        return $this->viewData;
+        return array_merge([
+            'hideOnMobile' => $this->hideOnMobile,
+        ],$this->viewData);
     }
 
     /**

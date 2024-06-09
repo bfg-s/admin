@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['form-group row'], $classes))
+    @class(['form-group row'])
     @attributes($attributes)
     data-label-width="{{ $label_width }}"
     data-vertical="@json($vertical)"
@@ -8,7 +8,7 @@
         <label
             for="{{ $id }}"
             @class(['col-sm-' . $label_width => ! $vertical])
-        >{{ $title }}</label>
+        >{{ __($title) }}</label>
     @endif
 
     <div @class(['input-group' => $icon, 'w-100' => $vertical, 'col-sm-' . $group_width => !$vertical && $title])>
@@ -27,7 +27,7 @@
         <label
             for="{{ $id }}"
             @class(['col-sm-' . $label_width => ! $vertical])
-        >{{ $title }}</label>
+        >{{ __($title) }}</label>
     @endif
 
     @if ($info)

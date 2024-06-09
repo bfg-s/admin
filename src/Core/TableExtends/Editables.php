@@ -185,7 +185,7 @@ class Editables
                 'url' => $now->getLinkUpdate($model->getRouteKey()),
                 'name' => $field,
                 'value' => is_array($val) ? json_encode($val) : $val,
-            ])->on_load('editable')->text($value)->addClass('editable editable-click');
+            ])->on_load('editable')->text($value)->editable();
         }
 
         return $value;

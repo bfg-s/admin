@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['btn-group btn-group-sm ml-1'], $classes))
+    @class(['btn-group btn-group-sm ml-1', 'control_relation' => $controlRelation, 'return_relation' => $returnRelation])
     @attributes($attributes)
 >
     @foreach($contents as $content)

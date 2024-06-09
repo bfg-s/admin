@@ -120,16 +120,23 @@ window.libs['custom_save'] = async function (model, id, field, inputId) {
     }, 100);
 };
 
-window.libs['admin::call_callback'] = async function (key, parameters) {
-    NProgress.start();
-    const token = exec('token');
-    axios.post(window.call_callback, {
-        _token: token, key, parameters
-    }).then(data => {
-        exec(data.data);
-    }).finally(d => {
-        NProgress.done();
-    })
+window.libs['admin::call_callback'] = async function (key, parameters, confirm) {
+    const callCallBack = () => {
+        NProgress.start();
+        const token = exec('token');
+        axios.post(window.call_callback, {
+            _token: token, key, parameters
+        }).then(data => {
+            exec(data.data);
+        }).finally(d => {
+            NProgress.done();
+        })
+    };
+    if (confirm) {
+        window.libs['alert::confirm'](confirm, callCallBack);
+    } else {
+        callCallBack();
+    }
 };
 
 window.libs['admin::delete_item'] = function (title, url) {

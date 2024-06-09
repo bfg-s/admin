@@ -1,3 +1,3 @@
-<div @class(array_merge(['dd'], $classes)) @attributes($attributes)>
+<div @class(['dd']) @attributes($attributes)>
     @include(admin_template('components.nested.nested-item'))
 </div>

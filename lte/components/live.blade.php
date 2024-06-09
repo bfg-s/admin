@@ -1,6 +1,6 @@
 <div
     id="{{ $id }}"
-    @class(array_merge(['__live__'], $classes))
+    @class(['__live__'])
     @attributes($attributes)
 >
     @foreach($contents as $content)

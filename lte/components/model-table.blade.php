@@ -1,5 +1,5 @@
 <table
-    @class(array_merge(['table', 'table-sm', 'table-hover'], $classes))
+    @class(['table', 'table-sm', 'table-hover'])
     @attributes($attributes)
     id="{{ $id }}"
 >

@@ -36,6 +36,7 @@ Route::group([], function (Router $route) {
     $route->post('delete_ordered_image', [SystemController::class, 'deleteOrderedImage'])->name('delete_ordered_image');
     $route->post('load_select2', [SystemController::class, 'load_select2'])->name('load_select2');
     $route->post('realtime', [SystemController::class, 'realtime'])->name('realtime');
+    $route->post('save_dashboard', [SystemController::class, 'saveDashboard'])->name('save_dashboard');
 });
 
 /**

@@ -1,10 +1,14 @@
 <div
-    @class(array_merge(['row'], $classes))
+    @class(['row'])
     @attributes($attributes)
 >
     @if($left)
-        <div class="col-md-2">
-            <ul class="nav flex-column nav-tabs h-100" role="tablist" aria-orientation="vertical">
+        @if($vertical) <div class="col-md-2"> @endif
+            <ul
+                @class(['nav nav-tabs', 'flex-column h-100' => $vertical, 'w-100' => ! $vertical])
+                role="tablist"
+                @if($vertical) aria-orientation="vertical" @endif
+            >
                 @foreach($tabs as $tab)
                     <li class="nav-item">
                         <a
@@ -24,24 +28,28 @@
                     </li>
                 @endforeach
             </ul>
-        </div>
-        <div class="col-md-10">
-            <div class="tab-content">
+        @if($vertical) </div> @endif
+        @if($vertical) <div class="col-md-10"> @endif
+            <div @class(['tab-content', 'w-100' => ! $vertical])>
                 @foreach($tabs as $tab)
                     {!! $tab['content'] !!}
                 @endforeach
             </div>
-        </div>
+        @if($vertical) </div> @endif
     @else
-        <div class="col-md-10">
-            <div class="tab-content">
+        @if($vertical) <div class="col-md-10"> @endif
+            <div @class(['tab-content', 'w-100' => ! $vertical])>
                 @foreach($tabs as $tab)
                     {!! $tab['content'] !!}
                 @endforeach
             </div>
-        </div>
-        <div class="col-md-2">
-            <ul class="nav flex-column nav-tabs nav-tabs-right h-100" role="tablist" aria-orientation="vertical">
+        @if($vertical) </div> @endif
+        @if($vertical) <div class="col-md-2"> @endif
+            <ul
+                @class(['nav nav-tabs nav-tabs-right', 'flex-column h-100' => $vertical, 'w-100' => ! $vertical])
+                role="tablist"
+                @if($vertical) aria-orientation="vertical" @endif
+            >
                 @foreach($tabs as $tab)
                     <li class="nav-item">
                         <a
@@ -61,6 +69,6 @@
                     </li>
                 @endforeach
             </ul>
-        </div>
+        @if($vertical) </div> @endif
     @endif
 </div>

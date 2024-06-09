@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['form-group row'], $classes))
+    @class(['form-group row'])
     @attributes($attributes)
     data-label-width="{{ $label_width }}"
     data-vertical="@json($vertical)"

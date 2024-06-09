@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['card-body', 'p-0' => $foolSpace, 'table-responsive' => $tableResponsive], $classes))
+    @class(['card-body', 'p-0' => $foolSpace, 'table-responsive' => $tableResponsive])
     @attributes($attributes)
 >
     @foreach($contents as $content)

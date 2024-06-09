@@ -26,6 +26,13 @@ class GridColumnComponent extends Component
     protected ?int $num = null;
 
     /**
+     * Display flex for the column.
+     *
+     * @var bool
+     */
+    protected bool $displayFlex = false;
+
+    /**
      * GridColumnComponent constructor.
      *
      * @param  array  $delegates
@@ -39,6 +46,18 @@ class GridColumnComponent extends Component
         if ($num) {
             $this->num($num);
         }
+    }
+
+    /**
+     * Set the column to display flex.
+     *
+     * @return $this
+     */
+    public function displayFlex(): static
+    {
+        $this->displayFlex = true;
+
+        return $this;
     }
 
     /**
@@ -62,7 +81,8 @@ class GridColumnComponent extends Component
     protected function viewData(): array
     {
         return [
-            'num' => $this->num
+            'num' => $this->num,
+            'displayFlex' => $this->displayFlex,
         ];
     }
 

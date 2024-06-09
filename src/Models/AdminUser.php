@@ -140,6 +140,16 @@ class AdminUser extends Model implements AuthenticatableContract
     }
 
     /**
+     * User's relationship towards dashboards.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function dashboards(): HasMany
+    {
+        return $this->hasMany(AdminDashboard::class, 'admin_user_id', 'id');
+    }
+
+    /**
      * Mutator for the user avatar field.
      *
      * @param $avatar

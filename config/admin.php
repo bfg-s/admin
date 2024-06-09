@@ -62,6 +62,37 @@ return [
     ],
 
     /**
+     * Default dashboard widgets.
+     */
+    'widgets' => [
+        [
+            \Admin\Widgets\PeriodStatisticWidget::create()->settings([
+                'model' => config('auth.providers.users.model'),
+                'title' => 'admin.users',
+            ])->export(),
+        ],
+        [
+            \Admin\Widgets\ChartStatisticWidget::create()->settings([
+                'model' => config('auth.providers.users.model'),
+                'title' => 'admin.user_statistics',
+                'label' => 'admin.added_to_users',
+            ])->export(),
+        ],
+        [
+            \Admin\Widgets\AdministratorBrowserStatisticWidget::create()->export(),
+            \Admin\Widgets\ActivityStatisticWidget::create()->export(),
+        ],
+        [
+            \Admin\Widgets\EnvironmentsWidget::create()->export(),
+            \Admin\Widgets\LaravelInfoWidget::create()->export(),
+        ],
+        [
+            \Admin\Widgets\ComposerInfoWidget::create()->export(),
+            \Admin\Widgets\DatabaseInfoWidget::create()->export(),
+        ]
+    ],
+
+    /**
      * Use force 2fa for all admin users
      */
     'force-2fa' => false,

@@ -1,5 +1,4 @@
 <div
-    @class(array_merge([], $classes))
     @attributes($attributes)
     id="{{ $id }}"
 >

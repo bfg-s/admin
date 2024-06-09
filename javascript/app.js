@@ -22,6 +22,7 @@ document.addEventListener('alpine:init', () => {
 });
 
 window.Vue.component('bfg-browser-component', require('./VueComponents/BfgBrowserComponent.vue').default);
+window.Vue.component('bfg-dashboard-settings-component', require('./VueComponents/BfgDashboardSettingsComponent.vue').default);
 
 $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
 

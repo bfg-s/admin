@@ -17,7 +17,6 @@
         id="{!! $element !!}"
         width="{!! $size['width'] !!}"
         height="{!! $size['height'] !!}"
-        @class($classes)
         @attributes($attributes)
     ></canvas>
 </div>

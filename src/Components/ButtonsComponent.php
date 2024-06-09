@@ -20,6 +20,20 @@ class ButtonsComponent extends Component
     protected string $view = 'buttons';
 
     /**
+     * Class control_relation for the component.
+     *
+     * @var bool
+     */
+    protected bool $controlRelation = false;
+
+    /**
+     * Class return_relation for the component.
+     *
+     * @var bool
+     */
+    protected bool $returnRelation = false;
+
+    /**
      * ButtonsComponent constructor.
      *
      * @param ...$delegates
@@ -434,6 +448,43 @@ class ButtonsComponent extends Component
         }
 
         return $this;
+    }
+
+    /**
+     * Set the control_relation property to true.
+     *
+     * @return $this
+     */
+    public function controlRelation(): static
+    {
+        $this->controlRelation = true;
+
+        return $this;
+    }
+
+    /**
+     * Set the return_relation property to true.
+     *
+     * @return $this
+     */
+    public function returnRelation(): static
+    {
+        $this->returnRelation = true;
+
+        return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'controlRelation' => $this->controlRelation,
+            'returnRelation' => $this->returnRelation,
+        ];
     }
 
     /**

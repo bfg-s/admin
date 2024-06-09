@@ -32,6 +32,10 @@
                         @endif
                         {!! __($menu->getHeadTitle() ?? ($menu->getTitle() ?? 'Blank page')) !!}
                     @endif
+
+                    @foreach($buttonGroups as $buttonGroup)
+                        {!! $buttonGroup !!}
+                    @endforeach
                 </h1>
             </div>
             @php($first = admin_repo()->menuList->first())

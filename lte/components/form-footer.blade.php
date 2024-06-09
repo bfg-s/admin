@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['card-footer', 'row' => $row], $classes))
+    @class(['card-footer', 'row' => $row])
     @attributes($attributes)
 >
     <div class="row">

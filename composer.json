@@ -23,6 +23,7 @@
         "ext-pdo": "*",
         "bfg/entity": "*",
         "bfg/repository": "^1.0",
+        "bfg/attributes": "^1.2.5",
         "bfg/embedded-call": "^1.0",
         "maatwebsite/excel": "^3.1.37",
         "laravel/framework": "^8.0|^9.0|^10.0|^11.0",

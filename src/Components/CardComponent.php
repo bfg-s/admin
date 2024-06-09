@@ -235,6 +235,8 @@ class CardComponent extends Component
      *
      * @param ...$delegates
      * @return ModelCardsComponent
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function model_cards(...$delegates): ModelCardsComponent
     {
@@ -510,7 +512,7 @@ class CardComponent extends Component
                             'aria-controls' => 'table_search_form',
                         ])->whenRender(function (ButtonComponent $button) {
                             if (!$this->search_form || !$this->search_form->fieldsCount()) {
-                                $button->addClass('d-none');
+                                $button->displayNone();
                             }
                         });
 
@@ -520,7 +522,7 @@ class CardComponent extends Component
                             ->query([], ['q', 'page'])
                             ->whenRender(function (ButtonComponent $button) {
                                 if (!$this->search_form || !$this->search_form->fieldsCount()) {
-                                    $button->addClass('d-none');
+                                    $button->displayNone();
                                 }
                             });
                     }

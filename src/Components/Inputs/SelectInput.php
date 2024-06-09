@@ -118,8 +118,7 @@ class SelectInput extends InputGroupComponent
             ->setMultiple($this->multiple)
             ->setHasBug($this->has_bug)
             ->makeOptions()
-            ->setDatas($this->data)
-            ->addClass($this->class);
+            ->setDatas($this->data);
     }
 
     /**

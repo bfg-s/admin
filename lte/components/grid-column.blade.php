@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['col-md' => ! $num, 'col-md-' . $num => $num], $classes))
+    @class(['col-md' => ! $num, 'col-md-' . $num => $num, 'd-flex' => $displayFlex])
     @attributes($attributes)
 >
     @foreach($contents as $content)

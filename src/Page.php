@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace Admin;
 
 use Admin\Components\Component;
-use Admin\Components\PageComponents;
 use Admin\Components\SearchFormComponent;
 use Admin\Controllers\Controller;
 use Admin\Core\PageContainer;
 use Admin\Core\MenuItem;
-use Admin\Traits\Delegable;
-use BadMethodCallException;
-use Closure;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -26,12 +21,9 @@ use Throwable;
  * The main page container class.
  *
  * @template CurrentModel
- * @mixin PageComponents
  */
 class Page extends PageContainer
 {
-    use Delegable;
-
     /**
      * Has models on process.
      *
@@ -115,13 +107,6 @@ class Page extends PageContainer
      * @var string|null
      */
     protected string|null $model_class = null;
-
-    /**
-     * Explanations of what should be done first after creating a component on a page.
-     *
-     * @var mixed|array|null
-     */
-    protected mixed $firstExplanation = null;
 
     /**
      * Page constructor.
@@ -351,65 +336,6 @@ class Page extends PageContainer
                 unset($this->explanations[$key]);
             }
         }
-    }
-
-    /**
-     * A magic method that is responsible for filling this page with content when we magically write the name of our component.
-     *
-     * @param $name
-     * @param $arguments
-     * @return static
-     * @throws Exception|Throwable
-     */
-    public function __call($name, $arguments)
-    {
-        if (isset(Component::$components[$name])) {
-            $component = Component::$components[$name];
-
-            /*** @var Component $component * */
-            $component = new $component(...$arguments);
-
-            $component->model($this->model);
-
-            if (!$component instanceof Component) {
-                throw new Exception('Component is not admin part');
-            }
-
-            if ($this->firstExplanation && $name == 'card') {
-                $component->explain(call_user_func($this->firstExplanation));
-                $this->firstExplanation = null;
-            }
-
-            $this->contents[] = $component;
-        } elseif (str_ends_with($name, '_by_default')) {
-            $name = str_replace('_by_default', '', $name);
-            if (!request()->has('method') || request('method') == $name) {
-                $this->registerClass($this->{$name}());
-                $this->explainForClasses($arguments);
-            }
-        } elseif (str_ends_with($name, '_by_request')) {
-            $name = str_replace('_by_request', '', $name);
-            if (request()->has('method') && request('method') == $name) {
-                $this->registerClass($this->{$name}());
-                $this->explainForClasses($arguments);
-            }
-        } else {
-            if (!static::hasMacro($name)) {
-                throw new BadMethodCallException(sprintf(
-                    'Method %s::%s does not exist.',
-                    static::class,
-                    $name
-                ));
-            }
-            $macro = self::$macros[$name];
-            if ($macro instanceof Closure) {
-                return call_user_func_array($macro->bindTo($this, self::class), $arguments);
-            }
-
-            $macro(...$arguments);
-        }
-
-        return $this;
     }
 
     /**

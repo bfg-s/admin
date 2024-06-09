@@ -245,6 +245,8 @@ class MacroableHelperGenerator implements AdminHelpGeneratorInterface
         }
 
         $this->createSearchAndColAndRowFields();
+
+        return null;
     }
 
     /**

@@ -281,7 +281,7 @@ class ModelRelationComponent extends Component
                 if ($del || $this->last_content->hasControls()) {
                     if ($del) {
                         $buttonsDel = $this->createComponent(ButtonsComponent::class)
-                            ->addCLass('control_relation');
+                            ->controlRelation();
                         $buttonsDel->danger(['fas fa-trash', __('admin.delete')])
                             ->on_click('admin::drop_relation', [
                                 admin_view('components.inputs.hidden', [
@@ -295,7 +295,7 @@ class ModelRelationComponent extends Component
 
                     if ($this->last_content->get_test_var('control_restore') && $del) {
                         $buttonsRestore = $this->createComponent(ButtonsComponent::class)
-                            ->addCLass('return_relation')->hide();
+                            ->returnRelation()->hide();
                         $text_d = $this->last_content->get_test_var('control_restore_text');
                         $s = $text_d ?: (strtoupper($item->getKeyName()).': '.$item->{$item->getKeyName()});
                         $text = __('admin.restore_subject', ['subject' => $s]);

@@ -17,6 +17,7 @@ use Admin\Requests\LoadChartJsRequest;
 use Admin\Requests\LoadSelect2Request;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\RealtimeRequest;
+use Admin\Requests\SaveDashboardRequest;
 use Admin\Requests\SaveImageOrderRequest;
 use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
@@ -75,10 +76,7 @@ class SystemController extends Controller
     {
         Authenticate::$noLog = true;
 
-        $refUrl = str_replace(
-            '/'.App::getLocale(), '/en',
-            Request::server('HTTP_REFERER')
-        );
+        $refUrl = Request::server('HTTP_REFERER');
 
         $page = Route::dispatch(
             Request::create(
@@ -533,5 +531,24 @@ class SystemController extends Controller
     public function deleteOrderedImage(): \Illuminate\Http\JsonResponse
     {
         return response()->json(['success' => true]);
+    }
+
+    public function saveDashboard(SaveDashboardRequest $request, Respond $respond)
+    {
+        $data = $request->validated();
+        /** @var \Admin\Models\AdminDashboard $dashboard */
+        $dashboard = admin()->dashboards()->find($data['dashboard_id']);
+        if ($dashboard) {
+            $dashboard->rows()->delete();
+            foreach ($data['lines'] ?? [] as $order => $line) {
+                $dashboard->rows()->create([
+                    'admin_user_id' => admin()->id,
+                    'order' => $order,
+                    'widgets' => $line,
+                ]);
+            }
+            return $respond->toast_success('Dashboard saved')->reload();
+        }
+        return $respond->toast_error('Dashboard not found');
     }
 }

@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['card', 'card-outline', 'w-100', "card-{$type}"], $classes))
+    @class(['card', 'card-outline', 'w-100', "card-{$type}"])
     @attributes($attributes)
 >
     <div class="card-header">

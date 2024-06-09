@@ -14,12 +14,13 @@ trait ComponentPublicEventsTrait
      *
      * @param  callable  $callback
      * @param  array  $parameters
+     * @param  string|null  $confirm
      * @return $this
      */
-    public function click(callable $callback, array $parameters = []): static
+    public function click(callable $callback, array $parameters = [], string $confirm = null): static
     {
         $this->on_click(
-            static::registerCallBack($callback, $parameters, $this->model)
+            static::registerCallBack($callback, $parameters, $this->model, $confirm)
         );
 
         return $this;
@@ -30,12 +31,13 @@ trait ComponentPublicEventsTrait
      *
      * @param  callable  $callback
      * @param  array  $parameters
+     * @param  string|null  $confirm
      * @return $this
      */
-    public function dblclick(callable $callback, array $parameters = []): static
+    public function dblclick(callable $callback, array $parameters = [], string $confirm = null): static
     {
         $this->on_dblclick(
-            static::registerCallBack($callback, $parameters, $this->model)
+            static::registerCallBack($callback, $parameters, $this->model, $confirm)
         );
 
         return $this;
@@ -46,12 +48,13 @@ trait ComponentPublicEventsTrait
      *
      * @param  callable  $callback
      * @param  array  $parameters
+     * @param  string|null  $confirm
      * @return $this
      */
-    public function hover(callable $callback, array $parameters = []): static
+    public function hover(callable $callback, array $parameters = [], string $confirm = null): static
     {
         $this->on_hover(
-            static::registerCallBack($callback, $parameters, $this->model)
+            static::registerCallBack($callback, $parameters, $this->model, $confirm)
         );
 
         return $this;
@@ -62,10 +65,11 @@ trait ComponentPublicEventsTrait
      *
      * @param  callable  $callback
      * @param  array  $parameters
-     * @param $model
+     * @param  null  $model
+     * @param  string|null  $confirm
      * @return array[]
      */
-    public static function registerCallBack(callable $callback, array $parameters = [], $model = null): array
+    public static function registerCallBack(callable $callback, array $parameters = [], $model = null, string $confirm = null): array
     {
         SystemController::$componentEventCallbacks[] = $callback;
 
@@ -85,7 +89,8 @@ trait ComponentPublicEventsTrait
         return [
             'admin::call_callback' => [
                 array_key_last(SystemController::$componentEventCallbacks),
-                $parameters
+                $parameters,
+                __($confirm)
             ]
         ];
     }

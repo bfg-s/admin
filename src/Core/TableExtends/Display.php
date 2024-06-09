@@ -37,8 +37,8 @@ class Display
         HeaderComponent $th = null,
         RowComponent $tr = null
     ): mixed {
-        $td?->addClass('d-none', 'd-sm-table-cell');
-        $th?->addClass('d-none', 'd-sm-table-cell');
+        $td?->hideOnMobile();
+        $th?->hideOnMobile();
 
         return $value;
     }

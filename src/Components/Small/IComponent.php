@@ -15,11 +15,11 @@ class IComponent extends Component
     use FontAwesomeTrait;
 
     /**
-     * The tag element from which the component begins.
+     * The name of the component template.
      *
      * @var string
      */
-    protected string $element = 'i';
+    protected string $view = 'small.i';
 
     /**
      * Element icon.
@@ -31,14 +31,11 @@ class IComponent extends Component
     /**
      * IComponent constructor.
      *
-     * @param  array  $classes
      * @param ...$delegates
      */
-    public function __construct(array $classes = [], ...$delegates)
+    public function __construct(...$delegates)
     {
         parent::__construct($delegates);
-
-        $this->addClass(...$classes);
     }
 
     /**
@@ -55,14 +52,24 @@ class IComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the template.
+     *
+     * @return null[]|string[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'icon' => $this->icon,
+        ];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void
      */
     protected function mount(): void
     {
-        if ($this->icon) {
-            $this->addClass($this->icon);
-        }
+
     }
 }

@@ -98,4 +98,14 @@ trait ComponentInputControlTrait
 
         return $this;
     }
+
+    /**
+     * Check if the input is in vertical mode.
+     *
+     * @return bool
+     */
+    public function isVertical(): bool
+    {
+        return $this->vertical;
+    }
 }

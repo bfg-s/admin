@@ -1,5 +1,5 @@
 <button
-    @class(array_merge(['btn btn-xs', 'btn-outline-' . $type], $classes))
+    @class(['btn btn-xs', 'btn-outline-' . $type, 'd-none' => $displayNone])
     @attributes($attributes)
     type="{{ $typeAttribute }}"
 >
@@ -8,13 +8,13 @@
     @endif
     @if (($title || $contents) && $icon)
         <span class='d-none d-sm-inline'>
-            {{ $title }}
+            {{ __($title) }}
             @foreach($contents as $content)
                 {!! $content !!}
             @endforeach
         </span>
     @elseif ($title)
-        {{ $title }}
+        {{ __($title) }}
         @foreach($contents as $content)
             {!! $content !!}
         @endforeach

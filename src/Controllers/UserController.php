@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\Controllers;
 
 use Admin\Components\ChartJsComponent;
+use Admin\Components\Component;
 use Admin\Components\ModelInfoTableComponent;
 use Admin\Components\ModelTableComponent;
 use Admin\Components\TabContentComponent;
@@ -372,11 +373,11 @@ class UserController extends Controller
      * @param  Controller  $controller
      * @return void
      */
-    public static function timelineComponent($content, $model, Controller $controller): void
+    public static function timelineComponent(Component $content, $model, Controller $controller): void
     {
         $timeline = TimelineComponent::new();
 
-        $content->div()->addClass('col-md-12')->timeline(
+        $content->column(12)->timeline(
             $timeline->model($model)->setFullBody(),
             $timeline->set_title(function (AdminLog $log) {
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');

@@ -1,16 +1,14 @@
 const morphdom = require('morphdom').default;
 
 let componentCollection = {};
-let interval = 5000;
+let interval = 10000;
 
 window.libs['realtime'] = function (cfg) {
     if (! this.target) {
 
         return console.error("Target not fount for Validator!");
     }
-    if (interval !== Number(cfg.timeout)) {
-        interval = Number(cfg.timeout);
-    }
+    interval = Number(cfg.timeout);
     componentCollection[cfg.name] = this.target;
 }
 
@@ -39,10 +37,24 @@ function loopInterval() {
                     const key = resultKeys[i];
                     const target = componentCollection[key];
                     if (target && ! target.querySelector('.select2-container--open')) {
+
+                        const namesWithValues = {};
+
+                        target.querySelectorAll('input[type="checkbox"]').forEach((el) => {
+                            namesWithValues[el.getAttribute('name')] = el.checked ? 1 : 0;
+                        });
+
                         morphdom(target, data.data[key]);
                         window.resetInits(target);
                         window.updateInits(target);
                         window.updateToolTips();
+
+                        target.querySelectorAll('input[type="checkbox"]').forEach((el) => {
+                            const name = el.getAttribute('name');
+                            if (namesWithValues[name]) {
+                                el.checked = true;
+                            }
+                        });
                     }
                 }
             }

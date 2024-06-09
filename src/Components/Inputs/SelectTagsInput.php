@@ -32,8 +32,7 @@ class SelectTagsInput extends SelectInput
             ->setValues($this->value)
             ->setHasBug($this->has_bug)
             ->makeOptions()
-            ->setDatas($this->data)
-            ->addClass($this->class);
+            ->setDatas($this->data);
     }
 
     /**

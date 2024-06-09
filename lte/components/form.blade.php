@@ -1,5 +1,4 @@
 <form
-    @class($classes)
     @attributes($attributes)
     action="{{ $action }}"
     method="{{ $method }}"

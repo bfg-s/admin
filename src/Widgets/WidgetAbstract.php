@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Admin\Widgets;
 
+use Admin\Components\Component;
+use Admin\Components\DummyComponent;
 use Admin\Components\FieldComponent;
+use Admin\Components\Small\DivComponent;
+use Admin\Components\WidgetComponent;
+use Admin\Core\Delegate;
 use Admin\Exceptions\WidgetErrorException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,6 +19,13 @@ use Illuminate\Contracts\Support\Renderable;
  */
 abstract class WidgetAbstract implements Renderable, Arrayable
 {
+    /**
+     * The ID of the widget.
+     *
+     * @var string|int|float|null
+     */
+    protected string|int|float|null $id = null;
+
     /**
      * The name of the widget.
      *
@@ -34,13 +46,6 @@ abstract class WidgetAbstract implements Renderable, Arrayable
      * @var string|null
      */
     protected string|null $icon = null;
-
-    /**
-     * The slug of the widget.
-     *
-     * @var string
-     */
-    protected string $slug;
 
     /**
      * Settings for the widget.
@@ -64,16 +69,57 @@ abstract class WidgetAbstract implements Renderable, Arrayable
     protected array $settingsType = [];
 
     /**
+     * Limiting the widget by roles.
+     *
+     * @var array
+     */
+    protected array $roles = [];
+
+    /**
      * WidgetAbstract constructor.
      *
-     * @throws WidgetErrorException
+     * @param  array  $attributes
      */
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
-        if (! method_exists($this, 'handle')) {
-
-            throw new WidgetErrorException('The handle method is not defined in the widget.');
+        foreach ($attributes as $key => $value) {
+            if ($key === 'settings') {
+                $this->settings($value);
+            } else if ($key !== 'class') {
+                $this->{$key} = $value;
+            }
         }
+    }
+
+    /**
+     * Merge the given settings with the current settings.
+     *
+     * @param  array  $settings
+     * @return $this
+     */
+    public function settings(array $settings): static
+    {
+        $this->settings = array_merge($this->settings, $settings);
+
+        return $this;
+    }
+
+    /**
+     * Check if the widget has access to the current user.
+     *
+     * @return bool
+     */
+    public function isHasAccess(): bool
+    {
+        foreach (admin()->roles as $role) {
+
+            if (in_array($role->slug, $this->roles) || ! $this->roles) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -84,9 +130,26 @@ abstract class WidgetAbstract implements Renderable, Arrayable
      */
     public function render(): string
     {
-        return FieldComponent::create()
-            ->newExplainForce(app()->call([$this, 'handle']))
-            ->render();
+        if (! method_exists($this, 'handle')) {
+
+            return '';
+        }
+
+        $call = app()->call([$this, 'handle']);
+
+        if (! $call) {
+
+            return '';
+        }
+
+        if ($call instanceof Component) {
+            $div = $call;
+        } else {
+            $div = WidgetComponent::create()
+                ->newExplainForce($call);
+        }
+
+        return $div->render();
     }
 
     /**
@@ -99,13 +162,27 @@ abstract class WidgetAbstract implements Renderable, Arrayable
     {
         return [
             'class' => static::class,
+            'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'icon' => $this->icon,
-            'slug' => $this->slug,
             'settings' => $this->settings,
             'settingsDescription' => $this->settingsDescription,
             'settingsType' => $this->settingsType,
+        ];
+    }
+
+    /**
+     * Export widget for db write.
+     *
+     * @return array
+     */
+    public function export(): array
+    {
+        return [
+            'id' => $this->id ?: ((int) (crc32(uniqid()) . crc32(uniqid()))),
+            'class' => static::class,
+            'settings' => $this->settings,
         ];
     }
 
@@ -118,16 +195,17 @@ abstract class WidgetAbstract implements Renderable, Arrayable
      */
     public function __toString(): string
     {
-        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * A default method to create a new instance of the widget.
      *
+     * @param  array  $attributes
      * @return static
      */
-    public static function create(): static
+    public static function create(array $attributes = []): static
     {
-        return new static();
+        return new static($attributes);
     }
 }

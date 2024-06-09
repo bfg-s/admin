@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['template_container', 'card', 'card-outline'], $classes))
+    @class(['template_container', 'card', 'card-outline'])
     @attributes($attributes)
     @if($ordered) data-oder-by="{{ $ordered }}" @endif
 >

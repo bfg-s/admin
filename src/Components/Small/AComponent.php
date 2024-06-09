@@ -12,11 +12,30 @@ use Admin\Components\Component;
 class AComponent extends Component
 {
     /**
-     * The tag element from which the component begins.
+     * The name of the component template.
      *
      * @var string
      */
-    protected string $element = 'a';
+    protected string $view = 'small.a';
+
+    /**
+     * Is the tag editable.
+     *
+     * @var bool
+     */
+    protected bool $editable = false;
+
+    /**
+     * Make the tag editable.
+     *
+     * @return $this
+     */
+    public function editable(): static
+    {
+        $this->editable = true;
+
+        return $this;
+    }
 
     /**
      * Set the source for the tag.
@@ -29,6 +48,18 @@ class AComponent extends Component
         $this->attr('href', $href);
 
         return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return [
+            'editable' => $this->editable,
+        ];
     }
 
     /**

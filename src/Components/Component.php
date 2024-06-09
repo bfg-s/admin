@@ -154,13 +154,6 @@ abstract class Component extends ComponentInputs implements Renderable
     protected string $element = 'div';
 
     /**
-     * The CSS class that needs to be applied to the parent element.
-     *
-     * @var string|null
-     */
-    protected string|null $class = null;
-
-    /**
      * Current component model.
      *
      * @var Collection|Builder|Model|Relation|null
@@ -284,7 +277,7 @@ abstract class Component extends ComponentInputs implements Renderable
      *
      * @var int
      */
-    protected int $realTimeTimeout = 5000;
+    protected int $realTimeTimeout = 10000;
 
     /**
      * Counter of components.
@@ -321,10 +314,6 @@ abstract class Component extends ComponentInputs implements Renderable
         $this->iSelectModel = false;
 
         $this->delegates(...$delegates);
-
-        if ($this->class) {
-            $this->addClass($this->class);
-        }
 
         $this->currentCount = ++static::$counterOfComponents;
     }
@@ -404,26 +393,6 @@ abstract class Component extends ComponentInputs implements Renderable
             ...$this->delegates,
             ...$delegates,
         ];
-
-        return $this;
-    }
-
-    /**
-     * Add a CSS class to the component.
-     * The class can be a string or an array of strings.
-     *
-     * @param  mixed  ...$classes
-     * @return $this
-     */
-    public function addClass(...$classes): static
-    {
-        foreach ($classes as $class) {
-            if (is_array($class)) {
-                $this->classes = array_merge($this->classes, $class);
-            } else {
-                $this->classes[] = $class;
-            }
-        }
 
         return $this;
     }
@@ -521,24 +490,20 @@ abstract class Component extends ComponentInputs implements Renderable
                 $this->attr($k, $v);
             }
         } else {
-            if ($name == 'class') {
-                $this->classes[] = $value;
-            } else {
-                if (is_array($value)) {
-                    $value = json_encode($value);
-                    $name = ":".$name;
+            if (is_array($value)) {
+                $value = json_encode($value);
+                $name = ":".$name;
+            }
+            $added = false;
+            if ($value instanceof Respond) {
+                if (isset($this->attributes[$name])) {
+                    $this->attributes[$name] = $this->attributes[$name]->merge($value);
+                    $added = true;
                 }
-                $added = false;
-                if ($value instanceof Respond) {
-                    if (isset($this->attributes[$name])) {
-                        $this->attributes[$name] = $this->attributes[$name]->merge($value);
-                        $added = true;
-                    }
-                }
+            }
 
-                if (!$added) {
-                    $this->attributes[$name] = $value;
-                }
+            if (!$added) {
+                $this->attributes[$name] = $value;
             }
         }
 
@@ -735,7 +700,6 @@ abstract class Component extends ComponentInputs implements Renderable
 
         $renderedView = admin_view('components.'.$this->view, array_merge([
             'contents' => $this->contents,
-            'classes' => $this->classes,
             'element' => $this->element,
             'attributes' => $this->attributes,
         ], $this->viewData()))->render();
@@ -833,22 +797,6 @@ CSS;
     }
 
     /**
-     * Add the CSS class to the component if the condition is met.
-     *
-     * @param $condition
-     * @param ...$classes
-     * @return $this
-     */
-    public function addClassIf($condition, ...$classes): static
-    {
-        if ($condition) {
-            return $this->addClass(...$classes);
-        }
-
-        return $this;
-    }
-
-    /**
      * Add content to the beginning of the content list of components.
      *
      * @param  mixed  $content
@@ -900,7 +848,9 @@ CSS;
      */
     public function vue(string $class, array $params = []): static
     {
-        $this->createComponent($class)?->attr($params);
+        $this->appEnd(
+            $this->createComponent($class)?->attr($params)
+        );
 
         return $this;
     }

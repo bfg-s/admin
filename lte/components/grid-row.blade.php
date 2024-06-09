@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['row'], $classes))
+    @class(['row'])
     @attributes($attributes)
 >
     @foreach($contents as $content)

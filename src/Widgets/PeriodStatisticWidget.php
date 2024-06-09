@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Widgets;
 
+use Admin\Components\StatisticPeriodComponent;
+use Admin\Components\WidgetComponent;
 use Admin\Delegates\StatisticPeriod;
 
 class PeriodStatisticWidget extends WidgetAbstract
@@ -30,13 +32,6 @@ class PeriodStatisticWidget extends WidgetAbstract
     protected string|null $icon = 'fas fa-chart-pie';
 
     /**
-     * The slug of the widget.
-     *
-     * @var string
-     */
-    protected string $slug = 'period-statistic-widget';
-
-    /**
      * Settings for the widget.
      *
      * @var array
@@ -44,7 +39,7 @@ class PeriodStatisticWidget extends WidgetAbstract
     protected array $settings = [
         'model' => null,
         'title' => null,
-        'icon' => null,
+        'icon' => 'fas fa-chart-pie',
         'forToday' => true,
         'perWeek' => true,
         'perYear' => true,
@@ -82,10 +77,11 @@ class PeriodStatisticWidget extends WidgetAbstract
     ];
 
     /**
+     * @param  \Admin\Components\WidgetComponent  $widgetComponent
      * @param  \Admin\Delegates\StatisticPeriod  $statisticPeriod
-     * @return \Admin\Delegates\StatisticPeriod|array
+     * @return \Admin\Components\StatisticPeriodComponent|\Admin\Core\Delegate|array
      */
-    protected function handle(StatisticPeriod $statisticPeriod): StatisticPeriod|array
+    public function handle(WidgetComponent $widgetComponent, StatisticPeriod $statisticPeriod): StatisticPeriodComponent|WidgetComponent|null
     {
         $model = $this->settings['model'];
         if ($model) {
@@ -96,27 +92,16 @@ class PeriodStatisticWidget extends WidgetAbstract
             $perYear = $this->settings['perYear'];
             $total = $this->settings['total'];
 
-            $statisticPeriod->model($model);
-            if ($title) {
-                $statisticPeriod->title($title);
-            }
-            if ($icon) {
-                $statisticPeriod->icon($icon);
-            }
-            if ($forToday) {
-                $statisticPeriod->forToday();
-            }
-            if ($perWeek) {
-                $statisticPeriod->perWeek();
-            }
-            if ($perYear) {
-                $statisticPeriod->perYear();
-            }
-            if ($total) {
-                $statisticPeriod->total();
-            }
-            return $statisticPeriod;
+            return $widgetComponent->statistic_period(
+                $statisticPeriod->model($model)
+                    ->when($title, fn ($statisticPeriod) => $statisticPeriod->title($title))
+                    ->when($icon, fn ($statisticPeriod) => $statisticPeriod->icon($icon))
+                    ->when($forToday, fn ($statisticPeriod) => $statisticPeriod->forToday())
+                    ->when($perWeek, fn ($statisticPeriod) => $statisticPeriod->perWeek())
+                    ->when($perYear, fn ($statisticPeriod) => $statisticPeriod->perYear())
+                    ->when($total, fn ($statisticPeriod) => $statisticPeriod->total())
+            );
         }
-        return [];
+        return null;
     }
 }

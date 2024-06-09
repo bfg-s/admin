@@ -40,6 +40,25 @@ class HeaderComponent extends Component
     protected string|null $label = null;
 
     /**
+     * Hide header on mobile devices.
+     *
+     * @var bool
+     */
+    protected bool $hideOnMobile = false;
+
+    /**
+     * Set hide header on mobile devices.
+     *
+     * @return $this
+     */
+    public function hideOnMobile(): static
+    {
+        $this->hideOnMobile = true;
+
+        return $this;
+    }
+
+    /**
      * Set additional data to be sent to the column template.
      *
      * @param  array  $data
@@ -74,6 +93,7 @@ class HeaderComponent extends Component
         return array_merge([
             'label' => $this->label,
             'fit' => $this->fit,
+            'hideOnMobile' => $this->hideOnMobile,
         ], $this->viewData);
     }
 

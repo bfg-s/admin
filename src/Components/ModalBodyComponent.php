@@ -20,6 +20,25 @@ class ModalBodyComponent extends Component
     protected string $view = 'modal-body';
 
     /**
+     * The modal window body to be without padding.
+     *
+     * @var bool
+     */
+    protected bool $withOutPadding = false;
+
+    /**
+     * Set the modal window body to be without padding.
+     *
+     * @return $this
+     */
+    public function withOutPadding(): static
+    {
+        $this->withOutPadding = true;
+
+        return $this;
+    }
+
+    /**
      * Create and add a form in the body of the modal window.
      *
      * @param ...$delegates
@@ -41,6 +60,18 @@ class ModalBodyComponent extends Component
         $this->appEnd($form);
 
         return $form;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return bool[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'withOutPadding' => $this->withOutPadding,
+        ];
     }
 
     /**

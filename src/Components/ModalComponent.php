@@ -73,9 +73,9 @@ class ModalComponent extends Component
     /**
      * The body of the modal window.
      *
-     * @var mixed
+     * @var \Admin\Components\ModalBodyComponent|null
      */
-    protected mixed $body = null;
+    protected ModalBodyComponent|null $body = null;
 
     /**
      * Groups of buttons located on the right.
@@ -228,9 +228,9 @@ class ModalComponent extends Component
     {
         $this->createBody();
 
-        $this->body->addClass('p-0');
-
-        return $this->body->table(...$delegates);
+        return $this->body
+            ->withOutPadding()
+            ->table(...$delegates);
     }
 
     /**
@@ -364,6 +364,22 @@ class ModalComponent extends Component
     public function column(...$delegates): GridColumnComponent|static
     {
         $this->createBody()->column(...$delegates);
+
+        return $this;
+    }
+
+    /**
+     * Modal use for adding to the body of the modal window.
+     *
+     * @param  callable|string|array  $callable
+     * @return $this
+     */
+    public function use(callable|string|array $callable): static
+    {
+        if (request('_modal') === $this->modalName) {
+
+            $this->createBody()->use($callable);
+        }
 
         return $this;
     }

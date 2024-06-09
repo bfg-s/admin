@@ -23,6 +23,8 @@ use Admin\Middlewares\Authenticate;
 use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Middlewares\DomMiddleware;
 use Admin\Middlewares\LanguageMiddleware;
+use Admin\Models\AdminUser;
+use Admin\Observers\AdminUserObserver;
 use Admin\Repositories\AdminRepository;
 use Exception;
 use Illuminate\Routing\RouteRegistrar;
@@ -198,6 +200,11 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register local respond class
          */
         $this->app->instance(Respond::class, Respond::glob());
+
+        /**
+         * Register model observers
+         */
+        AdminUser::observe(AdminUserObserver::class);
     }
 
     /**

@@ -28,13 +28,6 @@ class TabContentComponent extends Component
     public string|null $icon = null;
 
     /**
-     * Conditions for active tab.
-     *
-     * @var mixed|null
-     */
-    public mixed $activeCondition = null;
-
-    /**
      * Left orientation for tab.
      *
      * @var bool
@@ -42,11 +35,68 @@ class TabContentComponent extends Component
     public bool $left = true;
 
     /**
+     * Tab id.
+     *
+     * @var string|null
+     */
+    protected string|null $id = null;
+
+    /**
+     * Vertical orientation for tab.
+     *
+     * @var bool
+     */
+    protected bool $vertical = true;
+
+    /**
      * The name of the component template.
      *
      * @var string
      */
     protected string $view = 'tab-content';
+
+    /**
+     * Is the tab active.
+     *
+     * @var bool|null
+     */
+    protected bool|null $active = null;
+
+    /**
+     * Set  tab id.
+     *
+     * @param  string  $id
+     * @return $this
+     */
+    public function id(string $id): static
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Active status of the tab.
+     *
+     * @param  bool  $active
+     * @return $this
+     */
+    public function active(bool $active = true): static
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Check if the tab is active.
+     *
+     * @return bool|null
+     */
+    public function isActive(): bool|null
+    {
+        return $this->active;
+    }
 
     /**
      * Set tab title.
@@ -74,19 +124,6 @@ class TabContentComponent extends Component
     }
 
     /**
-     * Set the condition for tab activity.
-     *
-     * @param $condition
-     * @return $this
-     */
-    public function active($condition): static
-    {
-        $this->activeCondition = $condition;
-
-        return $this;
-    }
-
-    /**
      * Set tab icon.
      *
      * @param  string  $name
@@ -97,6 +134,19 @@ class TabContentComponent extends Component
         $this->icon = $name;
 
         return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return string[]
+     */
+    protected function viewData(): array
+    {
+        return [
+            'id' => $this->id,
+            'active' => $this->active,
+        ];
     }
 
     /**

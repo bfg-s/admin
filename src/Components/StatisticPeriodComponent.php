@@ -21,13 +21,6 @@ class StatisticPeriodComponent extends Component
     protected string $view = 'statistic-period';
 
     /**
-     * The CSS class that needs to be applied to the parent element.
-     *
-     * @var string|null
-     */
-    protected string|null $class = 'row';
-
-    /**
      * The name of the entity (model) that is displayed as statistics.
      *
      * @var mixed
@@ -49,6 +42,34 @@ class StatisticPeriodComponent extends Component
     protected bool $realTime = true;
 
     /**
+     * Show the statistics for today.
+     *
+     * @var bool
+     */
+    protected bool $forToday = false;
+
+    /**
+     * Show the statistics per week.
+     *
+     * @var bool
+     */
+    protected bool $perWeek = false;
+
+    /**
+     * Show the statistics per year.
+     *
+     * @var bool
+     */
+    protected bool $perYear = false;
+
+    /**
+     * Show the total statistics.
+     *
+     * @var bool
+     */
+    protected bool $total = false;
+
+    /**
      * Set the entity (model) name as title.
      *
      * @param  string|null  $nameOfSubject
@@ -68,12 +89,7 @@ class StatisticPeriodComponent extends Component
      */
     public function forToday(): static
     {
-        $this->column()
-            ->info_box(
-                __('admin.statistic_for_today', ['entity' => $this->entity]),
-                $this->model->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count().' ',
-                $this->icon
-            )->withoutRealtime()->successType();
+        $this->forToday = true;
 
         return $this;
     }
@@ -85,15 +101,7 @@ class StatisticPeriodComponent extends Component
      */
     public function perWeek(): static
     {
-        $this->column()
-            ->info_box(
-                __('admin.statistic_per_week', ['entity' => $this->entity]),
-                $this->model->whereBetween(
-                    'created_at',
-                    [now()->subWeek()->startOfDay(), now()->endOfDay()]
-                )->count().' ',
-                $this->icon
-            )->withoutRealtime()->infoType();
+        $this->perWeek = true;
 
         return $this;
     }
@@ -105,15 +113,7 @@ class StatisticPeriodComponent extends Component
      */
     public function perYear(): static
     {
-        $this->column()
-            ->info_box(
-                __('admin.statistic_per_year', ['entity' => $this->entity]),
-                $this->model->whereBetween(
-                    'created_at',
-                    [now()->subYear()->startOfDay(), now()->endOfDay()]
-                )->count().' ',
-                $this->icon
-            )->withoutRealtime()->warningType();
+        $this->perYear = true;
 
         return $this;
     }
@@ -125,12 +125,7 @@ class StatisticPeriodComponent extends Component
      */
     public function total(): static
     {
-        $this->column()
-            ->info_box(
-                __('admin.statistic_total', ['entity' => mb_strtolower($this->entity ?: '')]),
-                $this->model->count().' ',
-                $this->icon
-            )->withoutRealtime()->primaryType();
+        $this->total = true;
 
         return $this;
     }
@@ -155,6 +150,62 @@ class StatisticPeriodComponent extends Component
      */
     protected function mount(): void
     {
-        // TODO: Implement mount() method.
+        $includedCount = 0;
+        if ($this->forToday) $includedCount++;
+        if ($this->perWeek) $includedCount++;
+        if ($this->perYear) $includedCount++;
+        if ($this->total) $includedCount++;
+
+        $columns = 3;
+        if ($includedCount === 1) $columns = 12;
+        if ($includedCount === 2) $columns = 6;
+        if ($includedCount === 3) $columns = 4;
+
+
+        if ($this->forToday) {
+
+            $this->column($columns)
+                ->info_box(
+                    __('admin.statistic_for_today', ['entity' => $this->entity]),
+                    $this->model->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count().' ',
+                    $this->icon
+                )->withoutRealtime()->successType();
+        }
+
+        if ($this->perWeek) {
+
+            $this->column($columns)
+                ->info_box(
+                    __('admin.statistic_per_week', ['entity' => $this->entity]),
+                    $this->model->whereBetween(
+                        'created_at',
+                        [now()->subWeek()->startOfDay(), now()->endOfDay()]
+                    )->count().' ',
+                    $this->icon
+                )->withoutRealtime()->infoType();
+        }
+
+        if ($this->perYear) {
+
+            $this->column($columns)
+                ->info_box(
+                    __('admin.statistic_per_year', ['entity' => $this->entity]),
+                    $this->model->whereBetween(
+                        'created_at',
+                        [now()->subYear()->startOfDay(), now()->endOfDay()]
+                    )->count().' ',
+                    $this->icon
+                )->withoutRealtime()->warningType();
+        }
+
+        if ($this->total) {
+
+            $this->column($columns)
+                ->info_box(
+                    __('admin.statistic_total', ['entity' => mb_strtolower($this->entity ?: '')]),
+                    $this->model->count().' ',
+                    $this->icon
+                )->withoutRealtime()->primaryType();
+        }
     }
 }

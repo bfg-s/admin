@@ -148,7 +148,7 @@ class ChartJsComponent extends Component
             });
 
             $chartJs->customChart(
-                $title ?: Str::plural(class_basename(get_class($chartJs->realModel()))),
+                $title ? __($title) : Str::plural(class_basename(get_class($chartJs->realModel()))),
                 $result
             );
         });

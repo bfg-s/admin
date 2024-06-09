@@ -38,6 +38,13 @@ class TabsComponent extends Component
     protected bool $left = true;
 
     /**
+     * Vertical orientation for tab.
+     *
+     * @var bool
+     */
+    protected bool $vertical = true;
+
+    /**
      * Left tab orientation is applied.
      *
      * @var bool
@@ -99,21 +106,20 @@ class TabsComponent extends Component
             $content = $title;
             $title = $content->title;
             $icon = $content->icon;
-            $active = $content->activeCondition;
+            $active = $content->isActive();
             if (!$this->leftApplied) {
                 $this->left = $content->left;
                 $this->leftApplied = true;
             }
+            $this->vertical = $content->isVertical();
         }
-
 
         $id = 'tab-'.md5($title).'-'.static::$counter;
         $active = $active === null ? !count($this->tabs) : $active;
 
-        $content = ($content ?? TabContentComponent::create())->attr([
-            'id' => $id,
-            'aria-labelledby' => $id.'-label',
-        ])->addClassIf($active, 'active show');
+        $content = ($content ?? TabContentComponent::create())
+            ->id($id)
+            ->active($active);
 
         if (is_callable($contentCb)) {
             call_user_func($contentCb, $content);
@@ -144,6 +150,7 @@ class TabsComponent extends Component
         return [
             'left' => $this->left,
             'tabs' => $this->tabs,
+            'vertical' => $this->vertical,
         ];
     }
 

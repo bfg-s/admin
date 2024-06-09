@@ -1,4 +1,4 @@
-<template @attributes($attributes) @class($classes)>
+<template @attributes($attributes)>
     @foreach($contents as $content)
         {!! $content !!}
     @endforeach

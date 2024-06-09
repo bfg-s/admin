@@ -1,5 +1,5 @@
 <table
-    @class(array_merge(['table', 'table-sm', 'table-hover', 'table-' . $type => ! $hasHeader && $type], $classes))
+    @class(['table', 'table-sm', 'table-hover', 'table-' . $type => ! $hasHeader && $type])
     @attributes($attributes)
 >
     @if($hasHeader)

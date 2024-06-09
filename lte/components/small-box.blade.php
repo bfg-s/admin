@@ -1,5 +1,5 @@
 <div
-    @class(array_merge(['info-box'], $classes))
+    @class(['info-box'])
     @attributes($attributes)
 >
     <span @class(['info-box-icon elevation-1', 'bg-' . $type])>

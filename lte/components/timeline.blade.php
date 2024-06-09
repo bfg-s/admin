@@ -1,5 +1,5 @@
 <div
-        @class(array_merge(['timeline'], $classes))
+        @class(['timeline'])
         @attributes($attributes)
 >
     {!! admin_show_text($prepend) !!}

@@ -1,4 +1,4 @@
-<form method="get" action="{{ $action }}" @class($classes) @attributes($attributes)>
+<form method="get" action="{{ $action }}" @attributes($attributes)>
     @foreach($chunks as $chunk)
         <div class="row">
             @foreach($chunk as $field)

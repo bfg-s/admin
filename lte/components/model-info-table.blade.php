@@ -1,4 +1,4 @@
-<div @class($classes) @attributes($attributes)>
+<div @attributes($attributes)>
     @foreach($contents as $content)
         {!! $content !!}
     @endforeach

@@ -1,4 +1,4 @@
-<div @class(array_merge(['small-box', 'bg-' . $type], $classes)) @attributes($attributes)>
+<div @class(['small-box', 'bg-' . $type]) @attributes($attributes)>
     <div class="inner">
         <h3>
             {!! $body[0] ?? '' !!}

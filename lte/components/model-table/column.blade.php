@@ -1,9 +1,6 @@
 <td
-    @class($classes)
-
-    @foreach ($attributes as $k => $v)
-        {{ $k }}='{{ $v }}'
-    @endforeach
+    @class(['d-none d-sm-table-cell' => $hideOnMobile])
+    @attributes($attributes)
 >
     {!! $value !!}
 </td>

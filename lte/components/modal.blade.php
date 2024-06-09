@@ -2,11 +2,10 @@
     <div
         class="modal-content"
         data-modal-name="{{ $modalName }}"
-        @class($classes)
         @attributes($attributes)
     >
         <div class="modal-header">
-            <h5 class="modal-title">{{ $title ?: '&nbsp;' }}</h5>
+            <h5 class="modal-title">{!! __($title) ?: '&nbsp;' !!}</h5>
             <a href="javascript:void(0)" class="refresh_modal" style="padding: 10px 15px 0 0;">
                 <span style="font-size: 21px;">⟳</span>
             </a>

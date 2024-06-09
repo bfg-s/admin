@@ -1,6 +1,7 @@
 <div
-    @class(array_merge(['row'], $classes))
+    @class(['row'])
     @attributes($attributes)
+    style="flex: 1;"
 >
     @foreach($contents as $content)
         {!! $content !!}

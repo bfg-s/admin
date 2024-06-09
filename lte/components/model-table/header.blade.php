@@ -1,9 +1,7 @@
 <th
-        scope="col"
-@class(array_merge(['fit' => $fit], $classes))
-@foreach ($attributes as $k => $v)
-    {{ $k }}='{{ $v }}'
-@endforeach
+    scope="col"
+    @class(['fit' => $fit, 'd-none d-sm-table-cell' => $hideOnMobile])
+    @attributes($attributes)
 >
 @if(is_string($column['sort']))
     <a href="{{ admin_url_with_get([
@@ -21,7 +19,7 @@
         <span class="fit">{!! $content !!}</span>
     @endforeach
 @endif
-@if($column['info'])
-    &nbsp; <i class="fas fa-info-circle" title="{{ __($column['info']) }}"></i>
+    @if($column['info'])
+        <i class="fas fa-info-circle" title="{{ __($column['info']) }}"></i>
     @endif
-    </th>
+</th>

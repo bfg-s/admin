@@ -5,22 +5,31 @@ declare(strict_types=1);
 namespace Admin\Core;
 
 use Admin\Components\AccessDeniedComponent;
+use Admin\Components\ButtonsComponent;
 use Admin\Components\Component;
+use Admin\Components\PageComponents;
+use Admin\Components\TabsComponent;
+use Admin\Explanation;
 use Admin\Interfaces\SegmentContainerInterface;
 use Admin\Middlewares\Authenticate;
+use Admin\Traits\Delegable;
 use Admin\Traits\FontAwesomeTrait;
-use Illuminate\Contracts\Support\Arrayable;
+use BadMethodCallException;
+use Closure;
+use Exception;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\View\View;
-use Throwable;
 
 /**
  * The part of the kernel that is responsible for the page container.
+ *
+ * @mixin PageComponents
  */
 abstract class PageContainer implements SegmentContainerInterface
 {
     use FontAwesomeTrait;
     use Conditionable;
+    use Delegable;
 
     /**
      * Page title.
@@ -42,6 +51,20 @@ abstract class PageContainer implements SegmentContainerInterface
      * @var array
      */
     protected array $contents = [];
+
+    /**
+     * Explanations of what should be done first after creating a component on a page.
+     *
+     * @var mixed|array|null
+     */
+    protected mixed $firstExplanation = null;
+
+    /**
+     * Page button groups.
+     *
+     * @var array
+     */
+    protected array $buttonGroups = [];
 
     /**
      * PageContainer constructor.
@@ -131,6 +154,134 @@ abstract class PageContainer implements SegmentContainerInterface
     }
 
     /**
+     * Create a tab and a tab component if it does not already exist in the latest content.
+     *
+     * @param ...$delegates
+     * @return $this|TabsComponent
+     */
+    public function tab(...$delegates): static|TabsComponent
+    {
+        $last = $this->last();
+
+        $tabs = $last instanceof TabsComponent ? $last : $this->tabs();
+
+        $tabs->tab(...$delegates);
+
+        return $this;
+    }
+
+    /**
+     * Get the latest content component.
+     *
+     * @return mixed|null
+     */
+    public function last(): mixed
+    {
+        if (count($this->contents)) {
+
+            return $this->contents[array_key_last($this->contents)] ?? null;
+        }
+        return null;
+    }
+
+    /**
+     * Apply a data collection to a component.
+     *
+     * @param $collection
+     * @param  callable  $callback
+     * @return $this
+     */
+    public function withCollection($collection, callable $callback): static
+    {
+        foreach ($collection as $key => $item) {
+            $result = call_user_func($callback, $item, $key);
+            if ($result && is_array($result)) {
+                $this->explainForce(
+                    Explanation::new(...$result)
+                );
+            } else if ($result instanceof Delegate) {
+                $this->explainForce(
+                    Explanation::new(...$result->methods)
+                );
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * A magic method that is responsible for filling this page with content when we magically write the name of our component.
+     *
+     * @param $name
+     * @param $arguments
+     * @return static
+     * @throws Exception|Throwable
+     */
+    public function __call($name, $arguments)
+    {
+        if (isset(Component::$components[$name])) {
+            $component = Component::$components[$name];
+
+            /*** @var Component $component * */
+            $component = new $component(...$arguments);
+
+            $component->model($this->model);
+
+            if (!$component instanceof Component) {
+                throw new Exception('Component is not admin part');
+            }
+
+            if ($this->firstExplanation && $name == 'card') {
+                $component->explain(call_user_func($this->firstExplanation));
+                $this->firstExplanation = null;
+            }
+
+            $this->contents[] = $component;
+        } elseif (str_ends_with($name, '_by_default')) {
+            $name = str_replace('_by_default', '', $name);
+            if (!request()->has('method') || request('method') == $name) {
+                $this->registerClass($this->{$name}());
+                $this->explainForClasses($arguments);
+            }
+        } elseif (str_ends_with($name, '_by_request')) {
+            $name = str_replace('_by_request', '', $name);
+            if (request()->has('method') && request('method') == $name) {
+                $this->registerClass($this->{$name}());
+                $this->explainForClasses($arguments);
+            }
+        } else {
+            if (!static::hasMacro($name)) {
+                throw new BadMethodCallException(sprintf(
+                    'Method %s::%s does not exist.',
+                    static::class,
+                    $name
+                ));
+            }
+            $macro = self::$macros[$name];
+            if ($macro instanceof Closure) {
+                return call_user_func_array($macro->bindTo($this, self::class), $arguments);
+            }
+
+            $macro(...$arguments);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add new buttons group to the page.
+     *
+     * @param ...$delegates
+     * @return $this
+     */
+    public function buttons(...$delegates): static
+    {
+        $this->buttonGroups[] = ButtonsComponent::create(...$delegates);
+
+        return $this;
+    }
+
+    /**
      * Render the current page container.
      *
      * @return View
@@ -147,6 +298,7 @@ abstract class PageContainer implements SegmentContainerInterface
             'contents' => $this->contents,
             'page_info' => $this->pageTitle,
             'breadcrumb' => $this->breadcrumb,
+            'buttonGroups' => $this->buttonGroups,
         ]);
     }
 }
