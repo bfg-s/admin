@@ -124,7 +124,6 @@ export default {
             } else {
                 this.$set(this.openStates[index][index2], id, true);
             }
-            console.log(this.isOpen(index, index2, id));
         },
         save () {
             NProgress.start();
