@@ -59,6 +59,8 @@ require('./Inits/Fancy');
 require('./Inits/Doc');
 require('./Inits/Chart');
 require('./Inits/Realtime');
+require('./Inits/AutoSaveForm');
+require('./Inits/LoadContent');
 
 _dispatch_event('admin:init');
 

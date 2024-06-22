@@ -315,4 +315,6 @@ return [
     'are_you_sure_you_want_to_delete_this_dashboard' => 'Вы уверены, что хотите удалить эту панель?',
     'add_line' => 'Добавить строку',
     'add_widget' => 'Добавить виджет',
+    'invalid_code' => 'Неверный код!',
+    'invalid_credentials' => 'Неверные учетные данные!',
 ];

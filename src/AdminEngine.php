@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin;
 
 use Admin\Components\Vue\ModalCollection;
+use Admin\Middlewares\ApiMiddleware;
 use Admin\Models\AdminUser;
 use Admin\Themes\AdminLteTheme;
 use Admin\Themes\Theme;
@@ -82,6 +83,50 @@ class AdminEngine
     public function __construct()
     {
         $this->theme = config('admin.theme', 'admin-lte');
+    }
+
+    /**
+     * Check if the admin panel is in API mode.
+     *
+     * @return bool
+     */
+    public function isApiMode(): bool
+    {
+        return ApiMiddleware::isApi();
+    }
+
+    /**
+     * Method for adding a important content to the response.
+     *
+     * @param  string  $name
+     * @param  mixed  $content
+     * @param  string|null  $resource
+     * @return void
+     */
+    public function important(string $name, mixed $content, string $resource = null): void
+    {
+        ApiMiddleware::addImportantContent($name, $content, $resource);
+    }
+
+    /**
+     * Method for adding expected query parameter.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    public function expectedQuery(string $name): void
+    {
+        ApiMiddleware::addExpectedQuery($name);
+    }
+
+    /**
+     * Get admin languages.
+     *
+     * @return array
+     */
+    public function getLangs(): array
+    {
+        return config('admin.languages', ['en', 'uk', 'ru']);
     }
 
     /**

@@ -23,7 +23,7 @@ trait SearchFormConditionRulesTrait
 
         if (is_array($requestQuery)) {
 
-            foreach ($this->fields as $field) {
+            foreach ($this->contents as $field) {
 
                 if (! isset($requestQuery[$field['field_name']])) {
                     $val = $field['class']->getValue() ?: $field['class']->getDefault();
@@ -40,7 +40,7 @@ trait SearchFormConditionRulesTrait
                 if ($this->global_search_fields) {
                     $i = 0;
                     foreach ($this->global_search_fields as $global_search_field) {
-                        $find = collect($this->fields)->where('field_name', $global_search_field)->first();
+                        $find = collect($this->contents)->where('field_name', $global_search_field)->first();
                         if ($find && (!isset($find['method']) || !is_embedded_call($find['method']))) {
                             if ($i) {
                                 $model = $model->orWhere($global_search_field, 'like', "%{$requestQuery}%");
@@ -52,7 +52,7 @@ trait SearchFormConditionRulesTrait
                     }
                 } else {
                     $model = $model->orWhere(function ($q) use ($requestQuery) {
-                        foreach ($this->fields as $field) {
+                        foreach ($this->contents as $field) {
                             if (!str_ends_with($field['field_name'], '_at')) {
                                 $q = $q->orWhere($field['field_name'], 'like', "%{$requestQuery}%");
                             }
@@ -64,7 +64,7 @@ trait SearchFormConditionRulesTrait
 
                 foreach ($requestQuery as $key => $val) {
                     if ($val != null) {
-                        foreach ($this->fields as $field) {
+                        foreach ($this->contents as $field) {
                             if ($field['field_name'] === $key) {
                                 $val = method_exists($field['class'], 'transformValue') ?
                                     $field['class']::transformValue($val) :

@@ -24,6 +24,7 @@ use Admin\Models\AdminBrowser;
 use Admin\Models\AdminLog;
 use Admin\Models\AdminUser;
 use Admin\Page;
+use Admin\Resources\AdminLogResource;
 use Admin\Respond;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -200,7 +201,6 @@ class UserController extends Controller
         Modal $modal,
         ModelTable $modelTable,
     ): Page {
-        $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
         return $page
             ->modal(
@@ -332,7 +332,9 @@ class UserController extends Controller
                                     $searchForm->date_range('created_at', 'admin.created_at')
                                         ->default(implode(' - ', $this->defaultDateRange()))
                                 )
-                                ->load(function (ChartJsComponent $component) use ($logTitles) {
+                                ->load(function (ChartJsComponent $component) {
+
+                                    $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
                                     $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
                                         ->groupDataByAt('created_at')
@@ -349,7 +351,10 @@ class UserController extends Controller
                         $tab->title('admin.day_activity')->icon_chart_line(),
                         $tab->chart_js(
                             $chartJs->model($this->model()->logs())->size(200)
-                                ->load(function (ChartJsComponent $component) use ($logTitles) {
+                                ->load(function (ChartJsComponent $component) {
+
+                                    $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
+
                                     $component->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
                                         ->groupDataByAt('created_at', 'H:i')
                                         ->withCollection($logTitles, function ($title) {
@@ -383,6 +388,7 @@ class UserController extends Controller
                 return $log->title.($log->detail ? " <small>({$log->detail})</small>" : '');
             }),
             $timeline->set_icon(fn(AdminLog $log) => $log->icon),
+            $timeline->resource(AdminLogResource::class),
             $timeline->set_body(function (TimelineComponent $timelineComponent, AdminLog $log) {
                 return ModelInfoTableComponent::create()->withoutRealtime()->model($log)->use(function (ModelInfoTableComponent $table) {
                     $table->row('IP', 'ip')->copied();

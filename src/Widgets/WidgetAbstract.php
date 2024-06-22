@@ -128,14 +128,18 @@ abstract class WidgetAbstract implements Renderable, Arrayable
      * @return string
      * @throws \Throwable
      */
-    public function render(): string
+    public function render(): mixed
     {
         if (! method_exists($this, 'handle')) {
 
             return '';
         }
 
-        $call = app()->call([$this, 'handle']);
+        $component = (new WidgetComponent)->setSettings($this->settings);
+
+        return embedded_call([$this, 'handle'], [
+            $component::class => $component
+        ]);
 
         if (! $call) {
 

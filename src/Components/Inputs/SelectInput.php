@@ -272,4 +272,11 @@ class SelectInput extends InputGroupComponent
 
         return parent::nullable($message);
     }
+
+    protected function apiData(): array
+    {
+        return array_merge(parent::apiData(), [
+            'options' => $this->options
+        ]);
+    }
 }

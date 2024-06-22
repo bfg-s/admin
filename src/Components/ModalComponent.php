@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Facades\Admin;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -484,6 +485,16 @@ class ModalComponent extends Component
         $this->backdrop = true;
 
         return $this;
+    }
+
+    /**
+     * Get the modal name.
+     *
+     * @return string
+     */
+    public function getModalName(): string
+    {
+        return $this->modalName;
     }
 
     /**

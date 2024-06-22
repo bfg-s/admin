@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\Components;
 
 use Admin\Components\Inputs\Parts\InputFormGroupComponent;
+use Admin\Facades\Admin;
 use Admin\Page;
 use Admin\Traits\FontAwesomeTrait;
 use Admin\Traits\RulesBackTrait;
@@ -24,6 +25,13 @@ abstract class InputGroupComponent extends Component
     use RulesFrontTrait;
     use RulesBackTrait;
     use FontAwesomeTrait;
+
+    /**
+     * HTML attribute of the input type.
+     *
+     * @var string
+     */
+    protected $type = 'text';
 
     /**
      * Component count for unique identifier.
@@ -194,6 +202,27 @@ abstract class InputGroupComponent extends Component
     protected string $view = 'content-only';
 
     /**
+     * The autocomplete attribute of component.
+     *
+     * @var string
+     */
+    protected string $autocomplete = '';
+
+    /**
+     * Added or not a form control class for input.
+     *
+     * @var bool
+     */
+    protected bool $form_control = true;
+
+    /**
+     * Is finally for API contents.
+     *
+     * @var bool
+     */
+    protected bool $finallyForApi = true;
+
+    /**
      * InputGroupComponent constructor.
      *
      * @param  string  $name
@@ -330,6 +359,8 @@ abstract class InputGroupComponent extends Component
             'errors' => $this->errors,
             'messages' => $this->errors->get($this->name),
             'hasError' => $this->errors->has($this->name),
+            'rules' => $this->backRules,
+            'rule_messages' => $this->backRules,
         ]);
 
         foreach ($this->formGroupCallbacks as $formGroupCallback) {
@@ -431,6 +462,9 @@ abstract class InputGroupComponent extends Component
     public function queryable(): static
     {
         $request = request();
+
+        Admin::expectedQuery($this->path);
+
         if ($request->has($this->path)) {
             $this->value($request->get($this->path));
         }
@@ -802,6 +836,34 @@ abstract class InputGroupComponent extends Component
         $this->title = $title;
 
         return $this;
+    }
+
+    /**
+     * Data for API requests.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        return [
+            'id' => $this->field_id,
+            'title' => $this->title,
+            'placeholder' => $this->placeholder,
+            'name' => $this->name,
+            'path' => $this->path,
+            'type' => $this->type,
+            'icon' => $this->icon,
+            'formControl' => $this->form_control,
+            'autocomplete' => $this->autocomplete,
+            'info' => $this->info,
+            'vertical' => $this->vertical,
+            'reversed' => $this->reversed,
+            'value' => $this->value,
+            'onlyInput' => $this->only_input,
+            'default' => $this->default,
+            'rules' => $this->backRules,
+            'rule_messages' => $this->backRuleMessages,
+        ];
     }
 
     /**

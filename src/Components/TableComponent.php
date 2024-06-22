@@ -148,6 +148,31 @@ class TableComponent extends Component
     }
 
     /**
+     * Data for api.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        $rows = $this->array_build['rows'] ?? $this->array_build;
+
+        if ($this->map) {
+            $rows = collect($rows)->map($this->map)->toArray();
+        }
+
+        if ($this->mapWithKeys) {
+            $rows = collect($rows)->mapWithKeys($this->mapWithKeys)->toArray();
+        }
+
+        return [
+            'rows' => $rows,
+            'type' => $this->type,
+            'hasHeader' => isset($this->array_build['headers']) && $this->array_build['rows'],
+            'firstTh' => $this->first_th,
+        ];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

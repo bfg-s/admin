@@ -98,6 +98,20 @@ class HeaderComponent extends Component
     }
 
     /**
+     * Data for api.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        $data = $this->viewData();
+
+        unset($data['column']);
+
+        return $data;
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

@@ -36,8 +36,6 @@ class AccessDeniedComponent extends Component
                 ->body('admin.access_denied')
                 ->dangerType()
                 ->icon_exclamation_triangle()
-                ->mt3()
-                ->w100()
         );
     }
 }

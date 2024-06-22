@@ -59,6 +59,21 @@ class Controller extends BaseController
     ];
 
     /**
+     * Reset all static fields.
+     *
+     * @return void
+     */
+    public static function reset(): void
+    {
+        static::$rules = [];
+        static::$ruleMessages = [];
+        static::$imageModifiers = [];
+        static::$cryptFields = [
+            'password',
+        ];
+    }
+
+    /**
      * Add a global rule for validating incoming data.
      *
      * @param  string  $key

@@ -283,6 +283,8 @@ class MenuItem implements ArrayAccess, Arrayable
                 } else {
                     $data[$key] = $value;
                 }
+            } else if ($value instanceof Collection) {
+                $data[$key] = $value->toArray();
             }
         }
         return $data;
@@ -640,7 +642,7 @@ class MenuItem implements ArrayAccess, Arrayable
      */
     public function getTitle(): string|null
     {
-        return $this->title;
+        return $this->title ? __($this->title) : $this->title;
     }
 
     /**

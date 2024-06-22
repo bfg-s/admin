@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Admin\Controllers;
 
+use Admin\Components\ChartJsComponent;
 use Admin\Delegates\Card;
 use Admin\Delegates\ChartJs;
 use Admin\Delegates\Form;
@@ -14,6 +15,7 @@ use Admin\Delegates\Tab;
 use Admin\Models\AdminRole;
 use Admin\Models\AdminUser;
 use Admin\Page;
+use Admin\Resources\AdminUserResource;
 use Illuminate\Http\Request;
 
 /**
@@ -27,6 +29,13 @@ class AdministratorsController extends Controller
      * @var string
      */
     public static $model = AdminUser::class;
+
+    /**
+     * The resource the admin panel controller works with.
+     *
+     * @var string
+     */
+    public static $resource = AdminUserResource::class;
 
     /**
      * A function that handles displaying administrator roles.
@@ -62,6 +71,8 @@ class AdministratorsController extends Controller
      * @param  SearchForm  $searchForm
      * @param  ModelCards  $modelCards
      * @return Page
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(
         Page $page,
@@ -80,6 +91,7 @@ class AdministratorsController extends Controller
                 $searchForm->at(),
             ),
             $card->model_cards(
+                //$modelCards->modelLoad(['logs' => fn ($q) => $q->take(1)]),
                 $modelCards->avatarField('avatar'),
                 $modelCards->titleField('name'),
                 $modelCards->subtitleField('email'),
@@ -176,7 +188,6 @@ class AdministratorsController extends Controller
         ChartJs $chartJs,
         SearchForm $searchForm
     ): Page {
-        $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
 
         return $page
             ->card(
@@ -222,26 +233,37 @@ class AdministratorsController extends Controller
                                 $searchForm->date_range('created_at', 'admin.created_at')
                                     ->default(implode(' - ', $this->defaultDateRange()))
                             )
-                            ->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
-                            ->groupDataByAt('created_at')
-                            ->withCollection($logTitles, function ($title) {
-                                return $this->chart_js->eachPoint($title, static function ($c) use ($title) {
-                                    return $c->where('title', $title)->count();
-                                });
-                            })->miniChart(),
+                            ->load(function (ChartJsComponent $component) {
+
+                                $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
+
+                                $component->setDefaultDataBetween('created_at', ...$this->defaultDateRange())
+                                    ->groupDataByAt('created_at')
+                                    ->withCollection($logTitles, function ($title) {
+                                        return $this->chart_js->eachPoint($title, static function ($c) use ($title) {
+                                            return $c->where('title', $title)->count();
+                                        });
+                                    })->miniChart();
+                            })
+                        ,
                     )
                 ),
                 $card->tab(
                     $tab->title('admin.day_activity')->icon_chart_line(),
                     $tab->chart_js(
-                        $chartJs->model($this->model()->logs())
-                            ->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
-                            ->groupDataByAt('created_at', 'H:i')
-                            ->withCollection($logTitles, function ($title) {
-                                return $this->chart_js->eachPoint($title, function ($c) use ($title) {
-                                    return $c->where('title', $title)->count();
-                                });
-                            })->miniChart(),
+                        $chartJs->model($this->model()->logs())->size(200)
+                            ->load(function (ChartJsComponent $component) {
+
+                                $logTitles = $this->model()->logs()->distinct('title')->pluck('title');
+
+                                $component->setDataBetween('created_at', now()->startOfDay(), now()->endOfDay())
+                                    ->groupDataByAt('created_at', 'H:i')
+                                    ->withCollection($logTitles, function ($title) {
+                                        return $this->chart_js->eachPoint($title, function ($c) use ($title) {
+                                            return $c->where('title', $title)->count();
+                                        });
+                                    })->miniChart();
+                            }),
                     )
                 ),
             );

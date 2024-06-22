@@ -24,7 +24,7 @@ window.libs['submit'] = function ($text = 'Saving...') {
 
     if (parent) {
 
-        if (!$(parent).valid()) {
+        if (parent.dataset.valid === 'true' && !$(parent).valid()) {
             return false;
         }
 

@@ -315,4 +315,6 @@ return [
     'are_you_sure_you_want_to_delete_this_dashboard' => 'Are you sure you want to delete this dashboard?',
     'add_line' => 'Add line',
     'add_widget' => 'Add widget',
+    'invalid_code' => 'Invalid code!',
+    'invalid_credentials' => 'Invalid credentials!',
 ];

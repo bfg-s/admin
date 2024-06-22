@@ -51,8 +51,8 @@ class ModalBodyComponent extends Component
         $form = $this->createComponent(FormComponent::class, ...$delegates);
 
         $form->vertical()->attr('target');
-        if (request()->has('_modal_id')) {
-            $form->setOnSubmit("event.preventDefault();exec('modal:submit', '".request()->get('_modal_id')."');return false;");
+        if ($this->parent->getModalName()) {
+            $form->setOnSubmit("event.preventDefault();exec('modal:submit', '".$this->parent->getModalName()."');return false;");
         } else {
             $form->setOnSubmit("event.preventDefault();return false;");
         }

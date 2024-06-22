@@ -59,6 +59,16 @@ class CardComponent extends Component
     }
 
     /**
+     * Additional data to be sent to the API.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        return [];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

@@ -40,6 +40,13 @@ abstract class BaseController extends Controller
     public static $model;
 
     /**
+     * The resource the admin panel controller works with.
+     *
+     * @var string
+     */
+    public static $resource;
+
+    /**
      * Determine whether the controller belongs to the admin panel extension provider.
      *
      * @return ExtendProvider|null

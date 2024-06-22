@@ -29,7 +29,6 @@ use Admin\Explanation;
 use Admin\Page;
 use Admin\Respond;
 use Admin\Traits\ComponentAlpineJsTrait;
-use Admin\Traits\ComponentBootstrapClassesTrait;
 use Admin\Traits\ComponentDataEventsTrait;
 use Admin\Traits\ComponentEventsTrait;
 use Admin\Traits\ComponentPublicEventsTrait;
@@ -38,6 +37,7 @@ use Admin\Traits\Delegable;
 use Admin\Traits\ComponentInputControlTrait;
 use Closure;
 use Exception;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\View\View;
 use Throwable;
 
 /**
@@ -54,9 +55,8 @@ use Throwable;
  * @methods static::$components
  * @mixin ComponentMethods
  */
-abstract class Component extends ComponentInputs implements Renderable
+abstract class Component extends ComponentInputs implements Renderable, Arrayable
 {
-    use ComponentBootstrapClassesTrait;
     use ComponentPublicEventsTrait;
     use ComponentInputControlTrait;
     use ComponentDataEventsTrait;
@@ -103,6 +103,8 @@ abstract class Component extends ComponentInputs implements Renderable
         'template_area' => TemplateAreaComponent::class,
         'accordion' => AccordionComponent::class,
         'model_cards' => ModelCardsComponent::class,
+        'load_content' => LoadContentComponent::class,
+        'overlay' => OverlayComponent::class,
 
         /**
          * Small components
@@ -301,6 +303,34 @@ abstract class Component extends ComponentInputs implements Renderable
     protected string|null $renderedView = null;
 
     /**
+     * Set the component like invisible for API. return only content.
+     *
+     * @var bool
+     */
+    protected bool $invisibleForApi = false;
+
+    /**
+     * Is finally for API contents. without contents.
+     *
+     * @var bool
+     */
+    protected bool $finallyForApi = false;
+
+    /**
+     * Check if the component is ignore for API contents. without component.
+     *
+     * @var bool
+     */
+    public bool $ignoreForApi = false;
+
+    /**
+     * A model relation that is used in the component.
+     *
+     * @var array
+     */
+    protected array $relations = [];
+
+    /**
      * Component constructor.
      *
      * @param ...$delegates
@@ -309,6 +339,8 @@ abstract class Component extends ComponentInputs implements Renderable
     {
         $this->page = app(Page::class);
 
+        $this->menu = $this->page->menu;
+
         $this->model($this->page->model());
 
         $this->iSelectModel = false;
@@ -316,6 +348,8 @@ abstract class Component extends ComponentInputs implements Renderable
         $this->delegates(...$delegates);
 
         $this->currentCount = ++static::$counterOfComponents;
+
+        $this->checkHasHeadersTrapForComponentApi();
     }
 
     /**
@@ -358,6 +392,43 @@ abstract class Component extends ComponentInputs implements Renderable
                 }
             }
             $this->iSelectModel = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Reset counter of components
+     *
+     * @return void
+     */
+    public static function reset(): void
+    {
+        static::$counterOfComponents = 0;
+    }
+
+    /**
+     * Load model relations.
+     *
+     * @param ...$relations
+     * @return $this
+     */
+    public function modelLoad(...$relations): static
+    {
+        foreach ($relations as $relation) {
+            if (is_array($relation) && ! is_assoc($relation)) {
+                $this->modelLoad(...$relation);
+            } else if (
+                $this->model instanceof Model
+            ) {
+                if ($this->model->exists) {
+                    if (! $this->model->relationLoaded(is_array($relation) ? $relation[0] : $relation)) {
+                        $this->model->load($relation);
+                    }
+                } else {
+                    $this->relations[] = $relation;
+                }
+            }
         }
 
         return $this;
@@ -672,31 +743,7 @@ abstract class Component extends ComponentInputs implements Renderable
      */
     public function render(): string
     {
-
-        if (!$this->isInit) {
-            $this->onRender();
-
-            $this->mount();
-
-            SystemJsBladeDirective::addComponentJs($this->js());
-            SystemCssBladeDirective::addComponentCss($this->css());
-
-            $this->isInit = true;
-
-            if ($this->realTime) {
-
-                $this->dataLoad('realtime', [
-                    'name' => 'component-' . $this->currentCount,
-                    'timeout' => $this->realTimeTimeout,
-                ]);
-
-                SystemController::$realtimeComponents['component-' . $this->currentCount] = $this;
-            }
-        }
-
-        if (is_embedded_call($this->whenRenderCallback)) {
-            call_user_func($this->whenRenderCallback, $this);
-        }
+        $this->initComponent();
 
         $renderedView = admin_view('components.'.$this->view, array_merge([
             'contents' => $this->contents,
@@ -772,6 +819,16 @@ CSS;
     protected function viewData(): array
     {
         return [];
+    }
+
+    /**
+     * Trap for the component view data.
+     *
+     * @return array
+     */
+    public function getViewDate(): array
+    {
+        return $this->viewData();
     }
 
     /**
@@ -1394,5 +1451,132 @@ CSS;
         );
 
         return $this;
+    }
+
+    /**
+     * A component method for initializing a component.
+     *
+     * @return void
+     */
+    protected function initComponent(): void
+    {
+        if (!$this->isInit) {
+            $this->onRender();
+
+            $this->mount();
+
+            SystemJsBladeDirective::addComponentJs($this->js());
+            SystemCssBladeDirective::addComponentCss($this->css());
+
+            $this->isInit = true;
+
+            if ($this->realTime) {
+
+                $this->dataLoad('realtime', [
+                    'name' => 'component-' . $this->currentCount,
+                    'timeout' => $this->realTimeTimeout,
+                ]);
+
+                SystemController::$realtimeComponents['component-' . $this->currentCount] = $this;
+            }
+        }
+
+        if (is_embedded_call($this->whenRenderCallback)) {
+
+            call_user_func($this->whenRenderCallback, $this);
+        }
+    }
+
+    /**
+     * Check if the component is invisible for the API.
+     * If the header is set, the component will be invisible.
+     * @return void
+     */
+    protected function checkHasHeadersTrapForComponentApi(): void
+    {
+        $name = str_replace("\\", "-", static::class);
+        $request = request();
+
+        if ($request->hasHeader($name)) {
+
+            $this->invisibleForApi
+                = ! ((int) $request->header($name));
+        }
+
+        if ($request->hasHeader($name . '-Ignore')) {
+
+            $this->ignoreForApi
+                = !! ((int) $request->header($name . '-Ignore'));
+        }
+    }
+
+    /**
+     * The original model class of the component.
+     *
+     * @return string|null
+     */
+    public function getOriginalModelClass(): string|null
+    {
+        if ($this->model instanceof Model) {
+            return get_class($this->model);
+        } else if ($this->model instanceof Builder) {
+            return get_class($this->model->getModel());
+        } else if ($this->model instanceof Relation) {
+            return get_class($this->model->getRelated());
+        } else if ($this->model instanceof Collection) {
+            $first = $this->model->first();
+            return is_object($first) ? get_class($first) : null;
+        }
+        return null;
+    }
+
+    /**
+     * Method for export component data to the API.
+     *
+     * @return array
+     */
+    public function exportToApi(): array
+    {
+        $this->initComponent();
+
+        if ($this->invisibleForApi) {
+
+            return $this->page->upgradeDataToApiResponse($this->contents);
+        }
+
+        $addApiData = method_exists($this, 'apiData') ? $this->apiData() : $this->viewData();
+
+        foreach ($addApiData as $key => $value) {
+
+            if (is_array($value) && ! is_assoc($value)) {
+
+                $addApiData[$key] = $this->page->upgradeDataToApiResponse($value);
+            } else if ($value instanceof Component) {
+                if (! $value->ignoreForApi) {
+                    $addApiData[$key] = collect($value->exportToApi())->first();
+                }
+            } else if ($value instanceof Model) {
+                $addApiData[$key] = $value->exists ? $value->toArray() : $value::class;
+            }
+        }
+
+        return [array_merge([
+            'component' => static::class,
+            //'model' => $this->getOriginalModelClass(),
+            'modelName' => $this->model_name,
+            'attributes' => $this->attributes,
+        ], $addApiData, ! $this->finallyForApi ? [
+            'contents' => $this->page->upgradeDataToApiResponse($this->contents)
+        ] : [])];
+    }
+
+    /**
+     * Get component like an array.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->exportToApi();
     }
 }

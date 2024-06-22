@@ -7,6 +7,7 @@ namespace Admin\Controllers;
 use Admin\Components\ChartJsComponent;
 use Admin\Components\Inputs\SelectInput;
 use Admin\Components\LiveComponent;
+use Admin\Components\LoadContentComponent;
 use Admin\Components\ModalComponent;
 use Admin\Core\PrepareExport;
 use Admin\Middlewares\Authenticate;
@@ -14,6 +15,7 @@ use Admin\Requests\CallCallbackRequest;
 use Admin\Requests\CustomSaveRequest;
 use Admin\Requests\ExportExcelRequest;
 use Admin\Requests\LoadChartJsRequest;
+use Admin\Requests\LoadContentRequest;
 use Admin\Requests\LoadSelect2Request;
 use Admin\Requests\NestableSaveRequest;
 use Admin\Requests\RealtimeRequest;
@@ -68,13 +70,23 @@ class SystemController extends Controller
     protected static int $iteration = 0;
 
     /**
+     * Flag for checking the is referer request.
+     *
+     * @var bool
+     */
+    public static bool $isReferer = false;
+
+    /**
      * Simulate the processing of the previous page in order to build the page anew and select the necessary data.
      *
+     * @param  bool  $isReferer
      * @return void
      */
-    protected function refererEmit(): void
+    protected function refererEmit(bool $isReferer = true): void
     {
         Authenticate::$noLog = true;
+
+        static::$isReferer = $isReferer;
 
         $refUrl = Request::server('HTTP_REFERER');
 
@@ -461,7 +473,7 @@ class SystemController extends Controller
      */
     public function realtime(RealtimeRequest $request): \Illuminate\Http\JsonResponse|string|null
     {
-        $this->refererEmit();
+        $this->refererEmit(false);
 
         $result = [];
 
@@ -478,6 +490,34 @@ class SystemController extends Controller
         if ($result) {
 
             return response()->json($result);
+        }
+//dd(array_keys(static::$realtimeComponents));
+        return response()->json([
+            'status' => 'fail',
+            'exists' => array_keys(static::$realtimeComponents),
+        ]);
+    }
+
+    /**
+     * Action for loading content in the admin panel.
+     *
+     * @param  \Admin\Requests\LoadContentRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function loadContent(LoadContentRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $this->refererEmit(false);
+
+        if (isset(LoadContentComponent::$componentsForLoad[$request->name])) {
+            /** @var LoadContentComponent $component */
+            $component = LoadContentComponent::$componentsForLoad[$request->name];
+            $component->resetContent();
+            $component->contentOnly();
+            $component->useCallBack();
+            return response()->json([
+                'content' => $component->render(),
+            ]);
         }
 
         return response()->json([

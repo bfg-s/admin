@@ -488,6 +488,16 @@ class ButtonsComponent extends Component
     }
 
     /**
+     * Data for api.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        return [];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

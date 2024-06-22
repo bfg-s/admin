@@ -9,6 +9,9 @@ window.libs['valid'] = function () {
         return console.error("Must be a form object!");
     }
 
+    // Add data attribute to target element with validation state.
+    this.target.setAttribute('data-valid', 'true');
+
     return $(this.target).validate({
         ignore: '*:not([name])',
         focusInvalid: false,
@@ -63,8 +66,8 @@ window.libs['valid'] = function () {
                 lw = area[0] && area[0].dataset.labelWidth !== undefined ? area[0].dataset.labelWidth : 2,
                 label = $('<div></div>').addClass(`col-sm-${lw}`),
                 errWrap = $('<div></div>').addClass(area[0] && !area[0].dataset.vertical ? `col-sm-${12 - lw}` : 'error-wrap')
-                    .append(error.addClass('invalid-feedback')).prepend('<small class="fas fa-exclamation-triangle err-valid-icon text-danger"></small> ');
-            if (area[0] && !area[0].dataset.vertical) {
+                    .append(error.addClass('invalid-feedback')).prepend('<small style="margin-left: 8px;" class="fas fa-exclamation-triangle err-valid-icon text-danger"></small> ');
+            if (area[0] && area[0].dataset.vertical !== 'true') {
                 area.append(label);
             }
             area.append(errWrap);

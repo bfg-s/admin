@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Facades\Admin;
 use Admin\Traits\ComponentTabsTrait;
+use Admin\Traits\Resouceable;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -15,6 +17,7 @@ class FormComponent extends Component
     use ComponentTabsTrait {
         ComponentTabsTrait::tab as helpTab;
     }
+    use Resouceable;
 
     /**
      * Last form ID.
@@ -52,13 +55,22 @@ class FormComponent extends Component
     protected string $onSubmit = '';
 
     /**
+     * Save form mode for the component.
+     *
+     * @var bool
+     */
+    protected bool $saveForm = true;
+
+    /**
      * FormComponent constructor.
      *
      * @param ...$delegates
      */
     public function __construct(...$delegates)
     {
-        parent::__construct($delegates);
+        parent::__construct();
+
+        $this->delegatesNow(...$delegates);
     }
 
     /**
@@ -69,7 +81,7 @@ class FormComponent extends Component
      */
     public function tab(...$delegates): TabsComponent
     {
-        array_unshift($delegates, TabContentComponent::new()->vertical()->p2());
+        array_unshift($delegates, TabContentComponent::new()->vertical()->padding(2));
 
         return $this->helpTab(...$delegates);
     }
@@ -122,10 +134,8 @@ class FormComponent extends Component
     public function hiddens(array $fields): static
     {
         foreach ($fields as $name => $value) {
-            $this->view('components.inputs.hidden', [
-                'name' => $name,
-                'value' => $value
-            ]);
+
+            $this->hidden($name)->value($value);
         }
 
         return $this;
@@ -139,10 +149,30 @@ class FormComponent extends Component
     protected function viewData(): array
     {
         return [
+            'id' => static::$last_id,
             'method' => $this->method,
             'action' => $this->action,
             'onSubmit' => $this->onSubmit,
+        ];
+    }
+
+    /**
+     * Additional data to be sent to the API.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        if ($this->model && $this->model->exists) {
+
+            Admin::important('model', $this->model, $this->getResource());
+        }
+
+        return [
             'id' => static::$last_id,
+            'method' => $this->method,
+            'action' => $this->action,
+            'onSubmit' => $this->onSubmit,
         ];
     }
 
@@ -174,12 +204,19 @@ class FormComponent extends Component
             $this->action = url()->current();
         }
 
-        static::$last_id = uniqid();
+        static::$last_id = $this->action ? md5($this->action) : uniqid();
 
-        if ($menu && $menu->getResourceRoute()) {
+        if ($menu && $menu?->getResourceRoute()) {
             $this->hiddens([
                 '_after' => session('_after', 'index')
             ]);
+        }
+
+        $this->dataLoad('valid');
+
+        if ($this->saveForm) {
+
+            $this->dataLoad('save::form');
         }
     }
 }

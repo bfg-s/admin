@@ -14,7 +14,9 @@
         @if(is_numeric($key))
             data-rule-{{ $rule }}
         @else
+            @php try { @endphp
             data-rule-{{ $key }}='{{ $rule }}'
+            @php } catch(Throwable) { dd($key, $rule); } @endphp
         @endif
     @endforeach
     @foreach($datas as $key => $data)

@@ -28,21 +28,21 @@ class AlertComponent extends Component
      *
      * @var string|null
      */
-    protected ?string $title;
+    protected string|null $title = null;
 
     /**
      * Component icon.
      *
      * @var string|null
      */
-    protected ?string $icon;
+    protected string|null $icon = null;
 
     /**
      * Component message body.
      *
      * @var string|mixed
      */
-    protected mixed $body;
+    protected mixed $body = null;
 
     /**
      * Set the component title.

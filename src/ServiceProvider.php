@@ -18,7 +18,9 @@ use Admin\Commands\AdminExtensionCommand;
 use Admin\Commands\AdminHelpersCommand;
 use Admin\Commands\AdminInstallCommand;
 use Admin\Commands\AdminUserCommand;
+use Admin\Controllers\AuthController;
 use Admin\Facades\Admin;
+use Admin\Middlewares\ApiMiddleware;
 use Admin\Middlewares\Authenticate;
 use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Middlewares\DomMiddleware;
@@ -93,6 +95,13 @@ class ServiceProvider extends ServiceProviderIlluminate
          * Register Admin basic routes.
          */
         $this->makeRouter()->group(__DIR__.'/routes.php');
+
+        /**
+         * Create info route.
+         */
+        $this->makeRouter(false)
+            ->get('bfg/info', [AuthController::class, 'info'])
+            ->name('info');
 
         $routerForExtensions = $this->makeRouter();
 
@@ -210,26 +219,32 @@ class ServiceProvider extends ServiceProviderIlluminate
     /**
      * Create a router admin panel.
      *
+     * @param  bool  $prefix
      * @return RouteRegistrar
      */
-    protected function makeRouter(): RouteRegistrar
+    protected function makeRouter(bool $prefix = true): RouteRegistrar
     {
         $route = Route::domain(config('admin.route.domain', ''))
             ->name(config('admin.route.name'));
 
         $middlewares = [
+            \Illuminate\Session\Middleware\StartSession::class,
+            ApiMiddleware::class,
             'web',
-            'admin-auth',
-            DomMiddleware::class
         ];
 
-        if (config('admin.lang_mode', true)) {
-            $route = $route->prefix('{adminLang}/'.config('admin.route.prefix'));
-            $middlewares[] = LanguageMiddleware::class;
-        } else {
-            $route = $route->prefix(config('admin.route.prefix'));
+        if ($prefix) {
+            if (config('admin.lang_mode', true)) {
+                $route = $route->prefix('{adminLang}/'.config('admin.route.prefix'))
+                    ->where(['adminLang' => implode('|', Admin::getLangs())]);
+                $middlewares[] = LanguageMiddleware::class;
+            } else {
+                $route = $route->prefix(config('admin.route.prefix'));
+            }
         }
 
+        $middlewares[] = 'admin-auth';
+        $middlewares[] = DomMiddleware::class;
         $middlewares[] = BrowserDetectMiddleware::class;
 
         return $route->middleware($middlewares);

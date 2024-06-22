@@ -143,7 +143,7 @@ class CardComponent extends Component
             $this->fullBody();
         }
 
-        array_unshift($delegates, TabContentComponent::new()->p3()->pr4());
+        array_unshift($delegates, TabContentComponent::new()->padding(3)->paddingRight(4));
         $this->body->tab($delegates);
 
         return $this;
@@ -213,6 +213,8 @@ class CardComponent extends Component
      *
      * @param ...$delegates
      * @return ModelTableComponent
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function model_table(...$delegates): ModelTableComponent
     {
@@ -220,6 +222,8 @@ class CardComponent extends Component
         $this->table = $body->model_table($delegates);
 
         $this->table->model($this->search_form);
+
+        $this->table->createModel();
 
         $ad = $this->table->getActionData();
 
@@ -244,6 +248,8 @@ class CardComponent extends Component
         $this->table = $body->model_cards($delegates);
 
         $this->table->model($this->search_form);
+
+        $this->table->createModel();
 
         $ad = $this->table->getActionData();
 
@@ -409,20 +415,21 @@ class CardComponent extends Component
      * Creates standard tool buttons.
      *
      * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     protected function makeDefaultTools(): void
     {
         if ($this->default_tools !== false) {
             /** @var Closure $test */
             $test = $this->default_tools;
-            $type = $this->nowMenu->getType();
+            $type = $this->nowMenu?->getType() ?: 'index';
             $isRoot = admin()->isRoot();
-            $factoryClassName = '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
-                .'Factory';
+            $factoryClassName = $this->model ? '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
+                .'Factory' : null;
 
-            if ($test('info') && $isRoot) {
+            if ($test('modelInfo') && $isRoot) {
 
                 $modal = new Modal();
                 $nowMenu = admin_repo()->now;
@@ -437,7 +444,7 @@ class CardComponent extends Component
                     __('admin.table') => $this->model->getTable(),
                     __('admin.fillable') => "<pre>" . json_encode($this->model->getFillable(), JSON_PRETTY_PRINT) . "</pre>",
                     __('admin.casts') => "<pre>" . json_encode($this->model->getCasts(), JSON_PRETTY_PRINT) . "</pre>",
-                    __('admin.factory') => method_exists($this->model, 'factory') && class_exists($factoryClassName)
+                    __('admin.factory') => method_exists($this->model, 'factory') && $factoryClassName && class_exists($factoryClassName)
                         ? ModelTableComponent::callExtension('badge', [__('admin.yes'), ["success"]])
                         : ModelTableComponent::callExtension('badge', [__('admin.no'), ["danger"]]),
                     __('admin.soft-delete') => property_exists($this->model, 'forceDeleting')
@@ -468,7 +475,8 @@ class CardComponent extends Component
             if ($test('factory') && $isRoot) {
 
                 if (
-                    method_exists($this->model, 'factory')
+                    $this->model
+                    && method_exists($this->model, 'factory')
                     && class_exists($factoryClassName)
                 ) {
                     $modal = new Modal();
@@ -652,6 +660,50 @@ class CardComponent extends Component
             'default_tools' => $this->default_tools,
             'search_form' => $this->search_form,
             'headerObj' => $this->headerObj
+        ];
+    }
+
+    /**
+     * Data for api.
+     *
+     * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function apiData()
+    {
+        /** @var Closure $test */
+        $test = $this->default_tools;
+        $type = $this->menu?->getType() ?: 'index';
+        $isRoot = admin()->isRoot();
+        $factoryClassName = $this->model ? '\\Database\\Factories\\'.Str::singular(class_basename($this->model::class))
+            .'Factory' : null;
+        $key = $this->realModel()?->getRouteKey();
+
+        array_unshift($this->contents, $this->search_form);
+
+        return [
+            'type' => $this->type,
+            'title' => $this->title,
+            'icon' => $this->icon,
+            'footer' => $this->table?->footerData(),
+            'windowControls' => $this->window_controls,
+            'groups' => $this->groups,
+            'defaultTools' => $this->model && $test ? [
+                'modelInfo' => $test('modelInfo') && $isRoot,
+                'factory' => $test('factory') && $isRoot && method_exists($this->model, 'factory')
+                    && class_exists($factoryClassName),
+                'search' => $test('search') && $type !== 'create' && $type !== 'edit',
+                'list' => $test('list') && AdminPermission::checkUrl($this->menu->getLinkIndex(), 'GET'),
+                'edit' => $test('edit') && $type === 'show'
+                    && AdminPermission::checkUrl($this->menu->getLinkEdit($key), 'PUT'),
+                'info' => $test('info') && $type === 'edit'
+                    && AdminPermission::checkUrl($this->menu->getLinkShow($key), 'GET'),
+                'delete' => $test('delete') && $type === 'edit' || $type === 'show'
+                    && AdminPermission::checkUrl($this->menu->getLinkDestroy($key), 'DELETE'),
+                'add' => $test('add') && $type !== 'create'
+                    && AdminPermission::checkUrl($this->menu->getLinkCreate(), 'POST'),
+            ] : [],
         ];
     }
 

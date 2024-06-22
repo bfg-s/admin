@@ -19,6 +19,13 @@ class PComponent extends Component
     protected string $element = 'p';
 
     /**
+     * Check if the component is ignore for API contents.
+     *
+     * @var bool
+     */
+    public bool $ignoreForApi = true;
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

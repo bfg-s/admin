@@ -10,13 +10,16 @@ use Admin\Components\Component;
 use Admin\Components\PageComponents;
 use Admin\Components\TabsComponent;
 use Admin\Explanation;
+use Admin\Facades\Admin;
 use Admin\Interfaces\SegmentContainerInterface;
 use Admin\Middlewares\Authenticate;
+use Admin\Repositories\AdminRepository;
 use Admin\Traits\Delegable;
 use Admin\Traits\FontAwesomeTrait;
 use BadMethodCallException;
 use Closure;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\View\View;
 
@@ -34,16 +37,23 @@ abstract class PageContainer implements SegmentContainerInterface
     /**
      * Page title.
      *
-     * @var array
+     * @var string|null
      */
-    protected array $pageTitle = [];
+    protected string|null $pageTitle = null;
+
+    /**
+     * Page icon.
+     *
+     * @var string|null
+     */
+    protected string|null $pageIcon = null;
 
     /**
      * Page breadcrumbs.
      *
      * @var array
      */
-    protected array $breadcrumb = [];
+    protected array $breadcrumbs = [];
 
     /**
      * Page contents.
@@ -79,61 +89,46 @@ abstract class PageContainer implements SegmentContainerInterface
                 static::class => $this,
             ]);
         }
+
+        $this->breadcrumb(config('app.name'));
     }
 
     /**
      * Place breadcrumbs on the page.
      *
-     * @param  mixed|string[]  ...$breadcrumbs
+     * @param  string  $title
+     * @param  string|null  $url
      * @return $this
      */
-    public function breadcrumb(...$breadcrumbs): static
+    public function breadcrumb(string $title, string|null $url = null): static
     {
-        $this->breadcrumb = array_merge($this->breadcrumb, $breadcrumbs);
+        $this->breadcrumbs[] = compact('title', 'url');
 
         return $this;
     }
 
     /**
-     * Set a title and icon on the page.
+     * Set a title on the page.
      *
      * @param  string  $title
-     * @param  string|null  $icon
      * @return $this
      */
-    public function title(string $title, string $icon = null): static
+    public function title(string $title): static
     {
-        if (!$this->pageTitle) {
-            $this->pageTitle = ['title' => $title];
-        } else {
-            $this->pageTitle['title'] = $title;
-        }
-
-        if ($icon) {
-            $this->pageTitle['icon'] = $icon;
-        }
+        $this->pageTitle = $title;
 
         return $this;
     }
 
     /**
-     * Set an icon and title to the pages.
+     * Set an icon to the pages.
      *
      * @param  string  $icon
-     * @param  string|null  $title
      * @return $this
      */
-    public function icon(string $icon, string $title = null): static
+    public function icon(string $icon): static
     {
-        if (!$this->pageTitle) {
-            $this->pageTitle = ['icon' => $icon];
-        } else {
-            $this->pageTitle['icon'] = $icon;
-        }
-
-        if ($title) {
-            $this->pageTitle['title'] = $title;
-        }
+        $this->pageIcon = $icon;
 
         return $this;
     }
@@ -284,21 +279,72 @@ abstract class PageContainer implements SegmentContainerInterface
     /**
      * Render the current page container.
      *
-     * @return View
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
-    public function render(): View
+    public function render(): View|\Illuminate\Http\JsonResponse
     {
+        $nowMenu = admin_repo()->now;
+
         if (!Authenticate::$access) {
             $this->contents = [
                 AccessDeniedComponent::create()
             ];
         }
 
+        if (! $this->pageTitle) {
+            $title = $nowMenu ? ($nowMenu->getHeadTitle() ?? ($nowMenu->getTitle() ?? 'Blank page')) : null;
+            $this->pageTitle = $nowMenu ? ($title && strtolower($title) !== 'admin' ? __($title) : $title) : null;
+        } else {
+            $this->pageTitle = strtolower($this->pageTitle) !== 'admin'
+                ? __($this->pageTitle)
+                : $this->pageTitle;
+        }
+
+        if (! $this->pageIcon) {
+            $this->pageIcon = $nowMenu ? $nowMenu->getIcon() : null;
+        }
+
+        if (count($this->breadcrumbs) === 1) {
+            $nowMenuParents = admin_repo()->nowParents;
+            foreach ($nowMenuParents->reverse() as $item) {
+                $this->breadcrumb($item->getTitle(), $item->getLink());
+            }
+        }
+
+        if (Admin::isApiMode()) {
+
+            return response()->json([
+                'meta' => [
+                    'pageTitle' => $this->pageTitle,
+                    'pageIcon' => $this->pageIcon,
+                    'breadcrumbs' => $this->breadcrumbs,
+                ],
+                'menu' => admin_repo()->menuList->where('parent_id', 0)->values(),
+                'buttonGroups' => $this->upgradeDataToApiResponse($this->buttonGroups),
+                'contents' => $this->upgradeDataToApiResponse($this->contents),
+            ]);
+        }
+
         return admin_view('container', [
             'contents' => $this->contents,
-            'page_info' => $this->pageTitle,
-            'breadcrumb' => $this->breadcrumb,
+            'pageTitle' => $this->pageTitle,
+            'pageIcon' => $this->pageIcon,
+            'breadcrumbs' => $this->breadcrumbs,
             'buttonGroups' => $this->buttonGroups,
         ]);
+    }
+
+    /**
+     * @param  mixed  $collection
+     * @return array
+     */
+    public function upgradeDataToApiResponse(mixed $collection): array
+    {
+        return collect($collection)->filter(
+            fn (mixed $content) => (!$content instanceof Component || !$content->ignoreForApi)
+                && ! $content instanceof View
+        )->map(
+            fn (mixed $content) => $content instanceof Component ? $content->exportToApi() : [$content]
+        )->collapse()->filter()->toArray();
     }
 }

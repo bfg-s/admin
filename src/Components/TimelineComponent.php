@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Facades\Admin;
+use Admin\Traits\Resouceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
@@ -18,6 +20,8 @@ use Throwable;
  */
 class TimelineComponent extends Component
 {
+    use Resouceable;
+
     /**
      * The name of the component template.
      *
@@ -123,7 +127,14 @@ class TimelineComponent extends Component
         $this->icon_field = config('admin.timeline-component.icon_field', $this->icon_field);
         $this->title_field = config('admin.timeline-component.title_field', $this->title_field);
 
-        parent::__construct($delegates);
+        parent::__construct();
+
+        $this->delegatesNow(...$delegates);
+
+        if ($this->model) {
+
+            $this->model_name = $this->page->getModelName($this->model);
+        }
     }
 
     /**
@@ -339,6 +350,7 @@ class TimelineComponent extends Component
      */
     protected function viewData(): array
     {
+
         return [
             'full_body' => $this->full_body,
             'per_page' => $this->per_page,
@@ -364,6 +376,27 @@ class TimelineComponent extends Component
     }
 
     /**
+     * Component data for API requests.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        Admin::important($this->model_name, $this->getPaginate(), $this->getResource());
+        Admin::expectedQuery($this->model_name.'_page');
+        Admin::expectedQuery($this->model_name.'_per_page');
+
+        return [
+            'full_body' => $this->full_body,
+            'per_page' => $this->per_page,
+            'order_type' => $this->order_type,
+            'prepend' => $this->prepend,
+            'order_field' => $this->order_field,
+            'append' => $this->append,
+        ];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void
@@ -378,10 +411,7 @@ class TimelineComponent extends Component
         $this->prepend = $this->callCallableCurrent('prepend', $this);
         $this->append = $this->callCallableCurrent('append', $this);
 
-        if (request()->has($this->model_name.'_per_page') && in_array(
-                request()->get($this->model_name.'_per_page'),
-                $this->per_pages
-            )) {
+        if (request()->has($this->model_name.'_per_page')) {
             $this->per_page = (int) request()->get($this->model_name.'_per_page');
         }
     }

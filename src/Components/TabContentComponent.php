@@ -63,7 +63,47 @@ class TabContentComponent extends Component
     protected bool|null $active = null;
 
     /**
-     * Set  tab id.
+     * The padding of the tab content.
+     *
+     * @var int|null
+     */
+    protected int|null $padding = null;
+
+    /**
+     * The right padding of the tab content.
+     *
+     * @var int|null
+     */
+    protected int|null $paddingRight = null;
+
+    /**
+     * Set tab content padding right.
+     *
+     * @param  int  $padding
+     * @return $this
+     */
+    public function paddingRight(int $padding): static
+    {
+        $this->paddingRight = $padding;
+
+        return $this;
+    }
+
+    /**
+     * Set tab content padding.
+     *
+     * @param  int  $padding
+     * @return $this
+     */
+    public function padding(int $padding): static
+    {
+        $this->padding = $padding;
+
+        return $this;
+    }
+
+    /**
+     * Set tab id.
      *
      * @param  string  $id
      * @return $this
@@ -73,6 +113,16 @@ class TabContentComponent extends Component
         $this->id = $id;
 
         return $this;
+    }
+
+    /**
+     * Get Tab content id.
+     *
+     * @return string|null
+     */
+    public function getId(): string|null
+    {
+        return $this->id;
     }
 
     /**
@@ -112,6 +162,16 @@ class TabContentComponent extends Component
     }
 
     /**
+     * Get tab content title.
+     *
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
      * Set tab orientation to rights.
      *
      * @return $this
@@ -126,14 +186,44 @@ class TabContentComponent extends Component
     /**
      * Set tab icon.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return $this
      */
-    public function icon(string $name): static
+    public function icon(string|null $name): static
     {
         $this->icon = $name;
 
         return $this;
+    }
+
+    /**
+     * Get tab content icon.
+     *
+     * @return string|null
+     */
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * Get component contents.
+     *
+     * @return array
+     */
+    public function getContents(): array
+    {
+        return $this->contents;
+    }
+
+    /**
+     * Get component attributes.
+     *
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 
     /**
@@ -145,7 +235,11 @@ class TabContentComponent extends Component
     {
         return [
             'id' => $this->id,
+            'icon' => $this->icon,
+            'title' => $this->title,
             'active' => $this->active,
+            'padding' => $this->padding,
+            'paddingRight' => $this->paddingRight,
         ];
     }
 

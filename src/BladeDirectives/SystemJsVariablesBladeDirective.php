@@ -77,6 +77,7 @@ JS;
             $realtime = route('admin.realtime');
             $delete_ordered_image = route('admin.delete_ordered_image');
             $save_dashboard = route('admin.save_dashboard');
+            $load_content = route('admin.load_content');
             $langs = json_encode(__('admin'), JSON_UNESCAPED_UNICODE);
             return <<<JS
 window.darkMode = $dark;
@@ -97,6 +98,7 @@ window.load_select2 = "$load_select2";
 window.delete_ordered_image = "$delete_ordered_image";
 window.realtime = "$realtime";
 window.save_dashboard = "$save_dashboard";
+window.load_content = "$load_content";
 JS;
         }
     }

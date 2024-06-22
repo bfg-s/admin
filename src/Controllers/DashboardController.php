@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace Admin\Controllers;
 
 use Admin;
-use Admin\Delegates\Card;
-use Admin\Delegates\CardBody;
-use Admin\Delegates\ChartJs;
 use Admin\Delegates\Column;
 use Admin\Delegates\Row;
-use Admin\Delegates\SearchForm;
-use Admin\Delegates\StatisticPeriod;
 use Admin\Page;
 use Bfg\Attributes\Attributes;
 use Illuminate\Http\Request;
@@ -167,6 +162,7 @@ class DashboardController extends Controller
                             $widgetClass = $widget['class'];
                             $widget = $widgetClass::create($widget);
                             if ($widget->isHasAccess()) {
+
                                 return $row->column($dashboardRow->cols)->displayFlex()->appEnd($widget->render());
                             }
                         });

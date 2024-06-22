@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Facades\Admin;
+use Admin\Traits\Resouceable;
 use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,8 @@ use Throwable;
  */
 class ModelInfoTableComponent extends Component
 {
+    use Resouceable;
+
     /**
      * The name of the component template.
      *
@@ -204,6 +208,20 @@ class ModelInfoTableComponent extends Component
     }
 
     /**
+     * Data for API requests.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        Admin::important($this->model_name, $this->model, $this->getResource());
+
+        return [
+            'name' => $this->model_name,
+        ];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @throws Throwable
@@ -218,8 +236,8 @@ class ModelInfoTableComponent extends Component
                 $label = $row['label'];
                 $macros = $row['macros'];
                 if (is_string($field)) {
-                    $ddd = multi_dot_call($this->model, $field);
-                    $field = is_array($ddd) || is_object($ddd) || is_null($ddd) || is_bool($ddd) ? $ddd : e($ddd);
+                    $modelValue = multi_dot_call($this->model, $field);
+                    $field = is_array($modelValue) || is_object($modelValue) || is_null($modelValue) || is_bool($modelValue) ? $modelValue : e($modelValue);
                 } elseif (is_array($field) || is_embedded_call($field)) {
                     $field = embedded_call($field, [
                         is_object($this->model) ? get_class($this->model) : 'model' => $this->model,

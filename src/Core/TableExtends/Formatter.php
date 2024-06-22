@@ -333,7 +333,7 @@ class Formatter
             $value = 0;
         }
 
-        return number_format($value, 2, '.', ',').' '.($props[0] ?? '$');
+        return number_format((float) $value, 2, '.', ',').' '.($props[0] ?? '$');
     }
 
     /**

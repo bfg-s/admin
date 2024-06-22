@@ -20,6 +20,20 @@ trait RulesBackTrait
     protected bool $print_front = true;
 
     /**
+     * Rules for the current component.
+     *
+     * @var array
+     */
+    protected array $backRules = [];
+
+    /**
+     * Rules messages for the current component.
+     *
+     * @var array
+     */
+    protected array $backRuleMessages = [];
+
+    /**
      * Add custom rule.
      *
      * @param  object|string  $rule
@@ -32,11 +46,23 @@ trait RulesBackTrait
             /** @var Controller $controller */
             $arr = str_ends_with($this->name, '[]') ? '.' : '';
             $deepPaths = $this->deepPaths();
-            $ruleKey = implode('.', $deepPaths).$arr;
+            $ruleKey = trim(implode('.', $deepPaths).$arr, '.');
             $controller = $this->controller;
 
             $controller::addGlobalRule($ruleKey, $rule);
             $controller::addGlobalRuleMessage($ruleKey, $rule, $message);
+
+            if (is_string($rule) && isset($this->backRules[$ruleKey])) {
+                if (!in_array($rule, $this->backRules[$ruleKey])) {
+                    $this->backRules[$ruleKey][] = $rule;
+                }
+            } else {
+                $this->backRules[$ruleKey][] = $rule;
+            }
+
+            if ($message && is_string($rule)) {
+                $this->backRuleMessages["{$ruleKey}.{$rule}"] = $message;
+            }
         }
 
         return $this;

@@ -14,6 +14,7 @@ use Admin\Delegates\SearchForm;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminRole;
 use Admin\Page;
+use Admin\Resources\AdminPermissionResource;
 use Illuminate\Support\Str;
 use Lang;
 
@@ -28,6 +29,13 @@ class PermissionController extends Controller
      * @var string
      */
     public static $model = AdminPermission::class;
+
+    /**
+     * The resource the admin panel controller works with.
+     *
+     * @var string
+     */
+    public static $resource = AdminPermissionResource::class;
 
     /**
      * Available methods and their colors.
@@ -105,11 +113,13 @@ class PermissionController extends Controller
                         ->options(collect($this->method_colors)->map(function ($i, $k) {
                             return __("admin.method_$k");
                         })->toArray())
-                        ->required(),
+                        ->required()->array(),
                     $form->radios('state', 'admin.state')
-                        ->options(['close' => __('admin.close'), 'open' => __('admin.open')], true),
+                        ->options(['close' => __('admin.close'), 'open' => __('admin.open')], true)
+                        ->required(),
                     $form->radios('admin_role_id', 'admin.role')
-                        ->options(AdminRole::all()->pluck('name', 'id'), true),
+                        ->options(AdminRole::all()->pluck('name', 'id'), true)
+                        ->required(),
                     $form->input('description', 'admin.description'),
                     $form->switcher('active', 'admin.active')->switchSize('mini')
                         ->default(1),
@@ -153,13 +163,6 @@ class PermissionController extends Controller
                     $modelInfoTable->row('admin.active', 'active')->yes_no(),
                     $modelInfoTable->at(),
                 )
-            )->alert(
-                $alert->title('admin.error')
-                    ->body('admin.access_denied')
-                    ->dangerType()
-                    ->icon_exclamation_triangle()
-                    ->mt3()
-                    ->w100(),
             );
     }
 

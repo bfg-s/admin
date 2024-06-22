@@ -56,7 +56,7 @@ class DomMiddleware
         /** @var Response $response */
         $response = $next($request);
 
-        if ($response->isRedirection()) {
+        if ($response->isRedirection() || ApiMiddleware::isApi()) {
             session()->flash('respond', Respond::glob()->toJson());
 
             return $response;

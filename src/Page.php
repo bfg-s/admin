@@ -132,6 +132,16 @@ class Page extends PageContainer
     }
 
     /**
+     * Reset page models.
+     *
+     * @return void
+     */
+    public static function reset(): void
+    {
+        static::$models = [];
+    }
+
+    /**
      * Install your model or get the current model.
      *
      * @return CurrentModel|Builder|Model|Relation|mixed
@@ -205,7 +215,7 @@ class Page extends PageContainer
         $return = $class ? strtolower(class_basename($class)) : 'object_'.spl_object_id($this);
         $prep = '';
         if (isset(static::$models[$return])) {
-            $prep .= admin_repo()->modelNow?->id ?? static::$models[$return];
+            $prep .= static::$models[$return];
             static::$models[$return]++;
         } else {
             static::$models[$return] = 1;

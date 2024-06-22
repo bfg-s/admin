@@ -42,4 +42,20 @@ class AuthTest extends TestCase
     {
         $this->moderatorAuth();
     }
+
+    public function test_fail_auth()
+    {
+        $this->browse(function (Browser $browser) {
+
+            if($browser->element('[data-original-title="Logout"]')) {
+                $browser->visitRoute('admin.profile.logout');
+            }
+
+            $browser->visitRoute('admin.login')
+                ->type('login', 'fail-test')
+                ->type('password', 'fail-test')
+                ->press(__('admin.sign_in'))
+                ->assertRouteIs('admin.login');
+        });
+    }
 }

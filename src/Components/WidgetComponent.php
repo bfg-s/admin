@@ -19,6 +19,13 @@ class WidgetComponent extends Component
     protected string $view = 'content-only';
 
     /**
+     * The widget settings.
+     *
+     * @var array
+     */
+    protected array $settings = [];
+
+    /**
      * Call trap for render first level components.
      *
      * @param $name
@@ -31,6 +38,29 @@ class WidgetComponent extends Component
         parent::__call($name, $arguments);
 
         return $this;
+    }
+
+    /**
+     * Set the widget settings.
+     *
+     * @param  array  $settings
+     * @return $this
+     */
+    public function setSettings(array $settings): static
+    {
+        $this->settings = $settings;
+
+        return $this;
+    }
+
+    /**
+     * Additional data to be sent to the template.
+     *
+     * @return array
+     */
+    protected function viewData(): array
+    {
+        return $this->settings;
     }
 
     /**

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Admin\Repositories;
 
+use Admin\Components\Component;
+use Admin\Controllers\Controller;
 use Admin\Core\MenuItem;
 use Admin\Exceptions\ModelShouldBeInControllerException;
+use Admin\Middlewares\ApiMiddleware;
 use Admin\Models\AdminPermission;
 use Admin\Models\AdminUser;
+use Admin\Page;
 use Bfg\Repository\Repository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +32,7 @@ use Route;
  * @property-read array|null $data
  * @property-read mixed $modelPrimary
  * @property-read mixed $currentController
- * @property-read Collection $nowParents
+ * @property-read Collection|MenuItem[] $nowParents
  * @property-read Model $modelNow
  * @property-read null $saveCurrentQuery
  * @property-read bool $isDarkMode
@@ -47,6 +51,20 @@ class AdminRepository extends Repository
         'menu_item_counter' => 1,
         'nested_counter' => 0,
     ];
+
+    /**
+     * Clear repository cache.
+     *
+     * @return void
+     */
+    public static function clearCache(): void
+    {
+        static::$_cache = [];
+        Component::reset();
+        Page::reset();
+        ApiMiddleware::reset();
+        Controller::reset();
+    }
 
     /**
      * Get the current menu item class.
@@ -120,7 +138,7 @@ class AdminRepository extends Repository
     {
         $menu = $this->now;
 
-        if (Route::current() && $menu->getResourceRoute()) {
+        if (Route::current() && $menu?->getResourceRoute()) {
             return Route::current()->parameter(
                 $menu->getResourceRoute()
             );

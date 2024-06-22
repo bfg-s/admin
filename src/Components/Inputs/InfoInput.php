@@ -20,6 +20,13 @@ class InfoInput extends InputGroupComponent
     protected ?string $icon = 'fas fa-quote-right';
 
     /**
+     * Check if the component is ignore for API contents.
+     *
+     * @var bool
+     */
+    public bool $ignoreForApi = true;
+
+    /**
      * Method for creating an input field.
      *
      * @return View

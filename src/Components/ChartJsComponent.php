@@ -569,6 +569,18 @@ class ChartJsComponent extends Component
     }
 
     /**
+     * Data for api requests.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        return [
+            'name' => $this->builder->getName()
+        ];
+    }
+
+    /**
      * Get additional data to be sent to the template.
      *
      * @return array

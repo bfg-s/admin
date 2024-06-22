@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Admin\Components;
 
+use Admin\Facades\Admin;
+
 /**
  * Tab component of the admin panel.
  */
@@ -22,13 +24,6 @@ class TabsComponent extends Component
      * @var string
      */
     protected string $view = 'tabs';
-
-    /**
-     * List of tabs.
-     *
-     * @var array
-     */
-    protected array $tabs = [];
 
     /**
      * Left orientation of tabs.
@@ -115,11 +110,13 @@ class TabsComponent extends Component
         }
 
         $id = 'tab-'.md5($title).'-'.static::$counter;
-        $active = $active === null ? !count($this->tabs) : $active;
+        $active = $active === null ? !count($this->contents) : $active;
 
         $content = ($content ?? TabContentComponent::create())
             ->id($id)
-            ->active($active);
+            ->active($active)
+            ->icon($icon)
+            ->title($title);
 
         if (is_callable($contentCb)) {
             call_user_func($contentCb, $content);
@@ -127,13 +124,15 @@ class TabsComponent extends Component
             $content->delegates(...$contentCb);
         }
 
-        $this->tabs[] = [
-            'id' => $id,
-            'active' => $active,
-            'icon' => $icon,
-            'title' => $title,
-            'content' => $content,
-        ];
+        $this->appEnd($content);
+
+//        $this->contents[] = [
+//            'id' => $id,
+//            'active' => $active,
+//            'icon' => $icon,
+//            'title' => $title,
+//            'content' => Admin::isApiMode() ? $content->exportToApi() : $content,
+//        ];
 
         static::$counter++;
 
@@ -149,7 +148,6 @@ class TabsComponent extends Component
     {
         return [
             'left' => $this->left,
-            'tabs' => $this->tabs,
             'vertical' => $this->vertical,
         ];
     }

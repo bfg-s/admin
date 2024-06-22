@@ -315,4 +315,6 @@ return [
     'are_you_sure_you_want_to_delete_this_dashboard' => 'Ви впевнені, що хочете видалити цю панель приладів?',
     'add_line' => 'Додати лінію',
     'add_widget' => 'Додати віджет',
+    'invalid_code' => 'Недійсний код!',
+    'invalid_credentials' => 'Недійсні облікові дані!',
 ];

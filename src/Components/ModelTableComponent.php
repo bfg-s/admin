@@ -11,8 +11,10 @@ use Admin\Components\ModelTable\HeaderComponent;
 use Admin\Components\ModelTable\RowComponent;
 use Admin\Core\ModelTableAction;
 use Admin\Core\PrepareExport;
+use Admin\Facades\Admin;
 use Admin\Middlewares\DomMiddleware;
 use Admin\Models\AdminPermission;
+use Admin\Traits\Resouceable;
 use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,6 +41,8 @@ use Throwable;
  */
 class ModelTableComponent extends Component
 {
+    use Resouceable;
+
     /**
      * Search form component.
      *
@@ -248,10 +252,7 @@ class ModelTableComponent extends Component
         $this->createControls();
 
         try {
-            if (request()->has($this->model_name.'_per_page') && in_array(
-                    request()->get($this->model_name.'_per_page'),
-                    $this->per_pages
-                )) {
+            if (request()->has($this->model_name.'_per_page')) {
                 $this->per_page = (int) request()->get($this->model_name.'_per_page');
             }
         } catch (Throwable) {
@@ -603,6 +604,11 @@ class ModelTableComponent extends Component
                 = !(request($this->columns[$this->last]['key']) == 1);
         }
 
+        if (isset($this->columns[$this->last]['key'])) {
+
+            Admin::expectedQuery($this->columns[$this->last]['key']);
+        }
+
         return $this;
     }
 
@@ -757,17 +763,33 @@ class ModelTableComponent extends Component
      */
     public function footer(): string|View
     {
-        return $this->paginate ? admin_view('components.model-table.footer', [
-            'model' => $this->model,
-            'paginator' => $this->paginate,
-            'from' => (($this->paginate->currentPage() * $this->paginate->perPage()) - $this->paginate->perPage()) + 1,
-            'to' => min(($this->paginate->currentPage() * $this->paginate->perPage()), $this->paginate->total()),
+        return $this->paginate ? admin_view('components.model-table.footer', $this->footerData()) : '';
+    }
+
+    /**
+     * Get footer data for the table.
+     *
+     * @return array
+     */
+    public function footerData(): array
+    {
+        $paginator = $this->paginate;
+
+        return [
+            'total' => $paginator->total(),
+            'hasPages' => $paginator->hasPages(),
+            'onFirstPage' => $paginator->onFirstPage(),
+            'currentPage' => $paginator->currentPage(),
+            'hasMorePages' => $paginator->hasMorePages(),
+
+            'from' => (($paginator->currentPage() * $paginator->perPage()) - $paginator->perPage()) + 1,
+            'to' => min(($paginator->currentPage() * $paginator->perPage()), $paginator->total()),
             'per_page' => $this->per_page,
             'per_pages' => $this->per_pages,
-            'elements' => $this->paginationElements($this->paginate),
+            'elements' => $this->paginationElements($paginator),
             'page_name' => $this->model_name.'_page',
             'per_name' => $this->model_name.'_per_page',
-        ]) : '';
+        ];
     }
 
     /**
@@ -1177,7 +1199,7 @@ class ModelTableComponent extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function createModel(): mixed
+    public function createModel(): mixed
     {
         if (is_array($this->model)) {
             $this->model = collect($this->model);
@@ -1204,11 +1226,11 @@ class ModelTableComponent extends Component
                 }
             }
 
-            return $this->paginate = $this->model->orderBy($this->order_field, $select_type)->paginate(
-                $this->per_page,
-                ['*'],
-                $this->model_name.'_page'
-            );
+            return $this->paginate = $this->model
+                ->when($this->relations, fn ($q) => $q->with(...$this->relations))
+                ->orderBy($this->order_field, $select_type)
+                ->paginate($this->per_page, ['*'], $this->model_name.'_page');
+
         } elseif ($this->model instanceof Collection) {
             if (request()->has($this->model_name)) {
                 $model = $this->model
@@ -1371,6 +1393,54 @@ class ModelTableComponent extends Component
     }
 
     /**
+     * Api data.
+     *
+     * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function apiData(): array
+    {
+        Admin::important($this->model_name, $this->paginate, $this->getResource());
+        Admin::expectedQuery($this->model_name);
+        Admin::expectedQuery($this->model_name.'_type');
+        Admin::expectedQuery($this->model_name.'_per_page');
+        Admin::expectedQuery($this->model_name.'_page');
+        Admin::expectedQuery('show_deleted');
+        Admin::expectedQuery('q');
+
+        $header = $this->getActionData();
+
+        return [
+            'id' => $this->model_name,
+            'header' => $header ? [
+                'show' => $header['show'],
+                'columns' => $header['columns'],
+                'selectType' => $header['select_type'],
+                'orderField' => $header['order_field'],
+                'actions' => $header['actions'],
+                'hasHidden' => $header['hasHidden'],
+                'hasDelete' => $header['hasDelete'],
+                'allColumns' => collect($header['all_columns'])->map(function ($obj) {
+                    if ($obj['header'] ?? null) {
+                        $obj['header'] = $obj['header']->exportToApi();
+                    }
+                    return $obj;
+                })->values(),
+            ] : [],
+            'columns' => collect($this->columns)->map(function (array $col) {
+                if (isset($col['header'])) {
+                    $col['header'] = collect($col['header']->exportToApi())->collapse();
+                }
+                return $col;
+            }),
+            'order_type' => request()->get($this->model_name.'_type', $this->order_type),
+            'model_name' => $this->model_name,
+            'order_field' => $this->order_field,
+        ];
+    }
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void
@@ -1379,8 +1449,6 @@ class ModelTableComponent extends Component
      */
     protected function mount(): void
     {
-        $this->createModel();
-
         $this->build();
     }
 }

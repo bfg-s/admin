@@ -260,7 +260,7 @@ class ButtonComponent extends Component
             'typeAttribute' => $this->typeAttribute,
             'type' => $this->type,
             'icon' => $this->icon,
-            'title' => $this->title,
+            'title' => __($this->title),
             'displayNone' => $this->displayNone,
         ];
     }

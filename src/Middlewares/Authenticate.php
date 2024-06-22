@@ -8,7 +8,6 @@ use Admin\Boot;
 use Admin\Facades\Admin;
 use Admin\Models\AdminPermission;
 use Admin\Respond;
-use Cache;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -166,6 +165,7 @@ class Authenticate
     protected function shouldPassThrough(Request $request): bool
     {
         $excepts = [
+            'bfg/info',
             admin_uri('login'),
             admin_uri('2fa'),
             admin_uri('2fa_post'),
@@ -173,12 +173,14 @@ class Authenticate
         ];
 
         foreach ($excepts as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
-            }
+            if ($except !== 'bfg/info') {
+                if ($except !== '/') {
+                    $except = trim($except, '/');
+                }
 
-            if (config('admin.lang_mode') && !str_starts_with($except, App::getLocale())) {
-                $except = App::getLocale().'/'.$except;
+                if (config('admin.lang_mode') && !str_starts_with($except, App::getLocale())) {
+                    $except = App::getLocale().'/'.$except;
+                }
             }
 
             if ($request->is($except)) {
@@ -202,7 +204,13 @@ class Authenticate
             unset($all['_pjax']);
         }
         $url = url()->current().(count($all) ? '?'.http_build_query($all) : '');
-        session(['return_authenticated_url' => $url]);
+        if (
+            $request->isMethod('GET')
+            && !\Illuminate\Support\Facades\Route::currentRouteNamed('profile.logout')
+        ) {
+
+            session(['return_authenticated_url' => $url]);
+        }
 
         throw new AuthenticationException(
             'Unauthenticated.',

@@ -8,13 +8,13 @@
     @endif
     @if (($title || $contents) && $icon)
         <span class='d-none d-sm-inline'>
-            {{ __($title) }}
+            {{ $title }}
             @foreach($contents as $content)
                 {!! $content !!}
             @endforeach
         </span>
     @elseif ($title)
-        {{ __($title) }}
+        {{ $title }}
         @foreach($contents as $content)
             {!! $content !!}
         @endforeach

@@ -24,6 +24,7 @@ use Admin\Components\SearchFields\SwitcherSearchField;
 use Admin\Components\SearchFields\TimeFieldSearchField;
 use Admin\Core\PrepareExport;
 use Admin\Explanation;
+use Admin\Facades\Admin;
 use Admin\Traits\SearchFormConditionRulesTrait;
 use Exception;
 use Illuminate\Support\Facades\Lang;
@@ -82,13 +83,6 @@ class SearchFormComponent extends Component
     protected string $view = 'search-form';
 
     /**
-     * Model fields in the form of inputs that will be used for searching.
-     *
-     * @var array
-     */
-    protected array $fields = [];
-
-    /**
      * Ready-made default search conditions.
      *
      * @var string[]
@@ -137,7 +131,7 @@ class SearchFormComponent extends Component
      */
     public function fieldsCount(): int
     {
-        return count($this->fields);
+        return count($this->contents);
     }
 
     /**
@@ -147,7 +141,7 @@ class SearchFormComponent extends Component
      */
     public function getFields(): array
     {
-        return $this->fields;
+        return $this->contents;
     }
 
     /**
@@ -238,7 +232,7 @@ class SearchFormComponent extends Component
                     }
                 }
 
-                $this->fields[] = PrepareExport::$fields[] = [
+                $this->contents[] = PrepareExport::$fields[] = [
                     'field' => $name,
                     'condition' => $condition,
                     'field_name' => $field_name,
@@ -338,7 +332,7 @@ class SearchFormComponent extends Component
     public function getSearchInfoComponent(): View
     {
         return admin_view('components.search-form.info', [
-            'fields' => $this->fields
+            'fields' => $this->contents
         ]);
     }
 
@@ -352,9 +346,33 @@ class SearchFormComponent extends Component
         $action = admin_url_with_get([], ['q', 'page']);
 
         return [
-            'chunks' => collect($this->fields)->chunk(3),
+            'chunks' => collect($this->contents)->chunk(3),
             'action' => $action,
             'group' => ButtonsComponent::create()->success(['fas fa-search', __('admin.to_find')])->setType('submit')
+        ];
+    }
+
+    /**
+     * Data for the API.
+     *
+     * @return array
+     */
+    protected function apiData(): array
+    {
+        $action = admin_url_with_get([], ['q', 'page']);
+
+        foreach ($this->contents as $key => $content) {
+
+            if ($content['class'] ?? null && $content['class'] instanceof Component) {
+
+                $this->contents[$key]['class'] = collect($content['class'])
+                    ->map(fn ($q) => $q instanceof Component ? $q->exportToApi() : [$q])
+                    ->collapse();
+            }
+        }
+
+        return [
+            'action' => $action,
         ];
     }
 

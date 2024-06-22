@@ -3,6 +3,7 @@
 use Admin\Controllers\AuthController;
 use Admin\Controllers\DashboardController;
 use Admin\Controllers\SystemController;
+use Admin\Controllers\UpdateController;
 use Admin\Controllers\UploadController;
 use Admin\Controllers\UserController;
 use Admin\Core\RoutesAdaptor;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([], function (Router $route) {
     $route->get('/', [AuthController::class, 'login'])->name('home');
     $route->get('login', [AuthController::class, 'login'])->name('login');
+    $route->post('login', [AuthController::class, 'loginPost'])->name('login.post');
     $route->get('2fa', [AuthController::class, 'twoFaGet'])->name('2fa.get');
     $route->post('2fa', [AuthController::class, 'twoFa'])->name('2fa');
     $route->post('2fa_post', [AuthController::class, 'twoFaPost'])->name('2fa.post');
@@ -37,6 +39,7 @@ Route::group([], function (Router $route) {
     $route->post('load_select2', [SystemController::class, 'load_select2'])->name('load_select2');
     $route->post('realtime', [SystemController::class, 'realtime'])->name('realtime');
     $route->post('save_dashboard', [SystemController::class, 'saveDashboard'])->name('save_dashboard');
+    $route->post('load_content', [SystemController::class, 'loadContent'])->name('load_content');
 });
 
 /**
@@ -46,7 +49,11 @@ Route::group([], function (Router $route) {
     $app_user_controller = admin_app_namespace('Controllers\\UserProfileController');
     $app_upload_controller = admin_app_namespace('Controllers\\UploadController');
     $app_dashboard_controller = admin_app_namespace('Controllers\\DashboardController');
+    $app_update_controller = admin_app_namespace('Controllers\\UpdateController');
 
+    /**
+     * User profile routes.
+     */
     $route->get('profile', [class_exists($app_user_controller) ? $app_user_controller : UserController::class, 'index'])
         ->name('profile');
     $route->post('profile',
@@ -55,6 +62,10 @@ Route::group([], function (Router $route) {
     $route->get('profile/logout',
         [class_exists($app_user_controller) ? $app_user_controller : UserController::class, 'logout'])
         ->name('profile.logout');
+
+    /**
+     * Uploader routes.
+     */
     $route->post('uploader',
         [class_exists($app_upload_controller) ? $app_upload_controller : UploadController::class, 'index'])
         ->name('uploader');
@@ -62,7 +73,14 @@ Route::group([], function (Router $route) {
         [class_exists($app_upload_controller) ? $app_upload_controller : UploadController::class, 'drop'])
         ->name('uploader_drop');
 
+    /**
+     * Updater routes.
+     */
+    $route->get('update', [class_exists($app_update_controller) ? $app_update_controller : UpdateController::class, 'index'])
+        ->name('update');
+
     if (config('admin.home-route', 'admin.dashboard') === 'admin.dashboard') {
+
         Navigate::item('admin.dashboard', 'dashboard')
             ->action([
                 class_exists($app_dashboard_controller) ? $app_dashboard_controller : DashboardController::class,

@@ -35,7 +35,7 @@ class LoginCodeRequest extends FormRequest
         return [
             'login' => 'required|string|min:3|max:191',
             'password' => 'required|string|min:4|max:191',
-            'code' => 'required|min:6|max:6',
+            'code' => 'nullable|min:6|max:6',
         ];
     }
 }

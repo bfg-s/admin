@@ -10,14 +10,14 @@
         </div>
         <div class="col-sm">
             <div
-                    style="text-align: center">{{__('admin.showing_to_of_entries', ['show' => $from, 'to' => $to, 'of' => $paginator->total()])}}</div>
+                    style="text-align: center">{{__('admin.showing_to_of_entries', ['show' => $from, 'to' => $to, 'of' => $total])}}</div>
         </div>
         <div class="col-sm d-none d-lg-block d-xl-block">
-            @if ($paginator->hasPages())
+            @if ($hasPages)
                 <nav>
                     <ul class="pagination justify-content-end pagination-sm mb-0">
                         {{-- Previous Page Link --}}
-                        @if ($paginator->onFirstPage())
+                        @if ($onFirstPage)
                             <li class="page-item disabled" aria-disabled="true"
                                 aria-label="@lang('pagination.previous')">
                                 <span class="page-link" aria-hidden="true">&lsaquo;</span>
@@ -25,7 +25,7 @@
                         @else
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="{{ admin_url_with_get([$page_name => $paginator->currentPage() - 1]) }}"
+                                   href="{{ admin_url_with_get([$page_name => $currentPage - 1]) }}"
                                    rel="prev" aria-label="@lang('pagination.previous')">&lsaquo;</a>
                             </li>
                         @endif
@@ -41,7 +41,7 @@
                             {{-- Array Of Links --}}
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
-                                    @if ($page == $paginator->currentPage())
+                                    @if ($page == $currentPage)
                                         <li class="page-item active" aria-current="page"><span
                                                     class="page-link">{{ $page }}</span></li>
                                     @else
@@ -54,10 +54,10 @@
                         @endforeach
 
                         {{-- Next Page Link --}}
-                        @if ($paginator->hasMorePages())
+                        @if ($hasMorePages)
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="{{ admin_url_with_get([$page_name => $paginator->currentPage() + 1]) }}"
+                                   href="{{ admin_url_with_get([$page_name => $currentPage + 1]) }}"
                                    rel="next" aria-label="@lang('pagination.next')">&rsaquo;</a>
                             </li>
                         @else
@@ -73,27 +73,27 @@
 </div>
 <div class="row d-lg-none d-xl-none">
     <div class="col-sm">
-        @if ($paginator->hasPages())
+        @if ($hasPages)
             <nav>
                 <ul class="pagination justify-content-center pagination-sm">
                     {{-- Previous Page Link --}}
-                    @if ($paginator->onFirstPage())
+                    @if ($onFirstPage)
                         <li class="page-item disabled" aria-disabled="true">
                             <span class="page-link">@lang('pagination.previous')</span>
                         </li>
                     @else
                         <li class="page-item">
                             <a class="page-link"
-                               href="{{ admin_url_with_get([$page_name => $paginator->currentPage() - 1]) }}"
+                               href="{{ admin_url_with_get([$page_name => $currentPage - 1]) }}"
                                rel="prev">@lang('pagination.previous')</a>
                         </li>
                     @endif
 
                     {{-- Next Page Link --}}
-                    @if ($paginator->hasMorePages())
+                    @if ($hasMorePages)
                         <li class="page-item">
                             <a class="page-link"
-                               href="{{ admin_url_with_get([$page_name => $paginator->currentPage() + 1]) }}"
+                               href="{{ admin_url_with_get([$page_name => $currentPage + 1]) }}"
                                rel="next">@lang('pagination.next')</a>
                         </li>
                     @else

@@ -11,6 +11,7 @@ use Admin\Delegates\ModelTable;
 use Admin\Delegates\SearchForm;
 use Admin\Models\AdminRole;
 use Admin\Page;
+use Admin\Resources\AdminRoleResource;
 
 /**
  * Admin panel controller for the roles control page.
@@ -25,6 +26,13 @@ class RolesController extends Controller
     public static $model = AdminRole::class;
 
     /**
+     * The resource the admin panel controller works with.
+     *
+     * @var string
+     */
+    public static $resource = AdminRoleResource::class;
+
+    /**
      * Index method for displaying a list of records and filtering them.
      *
      * @param  Page  $page
@@ -32,6 +40,8 @@ class RolesController extends Controller
      * @param  SearchForm  $searchForm
      * @param  ModelTable  $modelTable
      * @return Page
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(
         Page $page,
@@ -84,7 +94,8 @@ class RolesController extends Controller
                     ->duplication_how_slug('#input_slug'),
                 $form->input('slug', 'admin.slug')
                     ->required()
-                    ->slugable(),
+                    ->slugable()
+                    ->unique('admin_roles', 'slug', $this->model()->id),
                 $form->ifEdit()->info_updated_at(),
                 $form->ifEdit()->info_created_at(),
             ),

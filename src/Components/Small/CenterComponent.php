@@ -19,6 +19,13 @@ class CenterComponent extends Component
     protected string $element = 'center';
 
     /**
+     * Set the component like invisible for API.
+     *
+     * @var bool
+     */
+    protected bool $invisibleForApi = true;
+
+    /**
      * Method for mounting components on the admin panel page.
      *
      * @return void

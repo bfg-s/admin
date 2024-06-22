@@ -9,21 +9,21 @@
                 role="tablist"
                 @if($vertical) aria-orientation="vertical" @endif
             >
-                @foreach($tabs as $tab)
+                @foreach($contents as $tab)
                     <li class="nav-item">
                         <a
-                            href="#{{ $tab['id'] }}"
-                            @class(['nav-link', 'active' => $tab['active']])
-                            id="{{ $tab['id'] }}-label"
+                            href="#{{ $tab->getId() }}"
+                            @class(['nav-link', 'active' => $tab->isActive()])
+                            id="{{ $tab->getId() }}-label"
                             data-toggle="pill"
                             role="tab"
 
-                            aria-selected="{{ $tab['active'] ? 'true' : 'false' }}"
+                            aria-selected="{{ $tab->isActive() ? 'true' : 'false' }}"
                         >
-                            @if($tab['icon'])
-                                <i class="{{ $tab['icon'] }} mr-1"></i>
+                            @if($tab->getIcon())
+                                <i class="{{ $tab->getIcon() }} mr-1"></i>
                             @endif
-                            @lang($tab['title'])
+                            @lang($tab->getTitle())
                         </a>
                     </li>
                 @endforeach
@@ -31,16 +31,25 @@
         @if($vertical) </div> @endif
         @if($vertical) <div class="col-md-10"> @endif
             <div @class(['tab-content', 'w-100' => ! $vertical])>
-                @foreach($tabs as $tab)
-                    {!! $tab['content'] !!}
+                @foreach($contents as $tab)
+{{--                    @foreach($tab->getContents() as $content)--}}
+{{--                        {!! $content !!}--}}
+{{--                    @endforeach--}}
+                    @include(admin_template('components.tab-content'), array_merge([
+                        'contents' => $tab->getContents(),
+                        'attributes' => $tab->getAttributes(),
+                    ], $tab->getViewDate()))
                 @endforeach
             </div>
         @if($vertical) </div> @endif
     @else
         @if($vertical) <div class="col-md-10"> @endif
             <div @class(['tab-content', 'w-100' => ! $vertical])>
-                @foreach($tabs as $tab)
-                    {!! $tab['content'] !!}
+                @foreach($contents as $tab)
+                    @include(admin_template('components.tab-content'), array_merge([
+                        'contents' => $tab->getContents(),
+                        'attributes' => $tab->getAttributes(),
+                    ], $tab->getViewDate()))
                 @endforeach
             </div>
         @if($vertical) </div> @endif
@@ -50,21 +59,21 @@
                 role="tablist"
                 @if($vertical) aria-orientation="vertical" @endif
             >
-                @foreach($tabs as $tab)
+                @foreach($contents as $tab)
                     <li class="nav-item">
                         <a
-                            href="#{{ $tab['id'] }}"
-                            @class(['nav-link', 'active' => $tab['active']])
-                            id="{{ $tab['id'] }}-label"
+                            href="#{{ $tab->getId() }}"
+                            @class(['nav-link', 'active' => $tab->isActive()])
+                            id="{{ $tab->getId() }}-label"
                             data-toggle="pill"
                             role="tab"
 
-                            aria-selected="{{ $tab['active'] ? 'true' : 'false' }}"
+                            aria-selected="{{ $tab->isActive() ? 'true' : 'false' }}"
                         >
-                            @if($tab['icon'])
-                                <i class="{{ $tab['icon'] }} mr-1"></i>
+                            @if($tab->getIcon())
+                                <i class="{{ $tab->getIcon() }} mr-1"></i>
                             @endif
-                            @lang($tab['title'])
+                            @lang($tab->getTitle())
                         </a>
                     </li>
                 @endforeach
