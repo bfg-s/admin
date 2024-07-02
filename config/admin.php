@@ -79,6 +79,9 @@ return [
             ])->export(),
         ],
         [
+            \Admin\Widgets\PrivateNoteWidget::create()->export(),
+        ],
+        [
             \Admin\Widgets\AdministratorBrowserStatisticWidget::create()->export(),
             \Admin\Widgets\ActivityStatisticWidget::create()->export(),
         ],

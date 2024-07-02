@@ -31,6 +31,7 @@ class DashboardController extends Controller
         \Admin\Widgets\LaravelInfoWidget::class,
         \Admin\Widgets\ComposerInfoWidget::class,
         \Admin\Widgets\DatabaseInfoWidget::class,
+        \Admin\Widgets\PrivateNoteWidget::class,
     ];
 
     /**

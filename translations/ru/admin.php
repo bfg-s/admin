@@ -317,4 +317,8 @@ return [
     'add_widget' => 'Добавить виджет',
     'invalid_code' => 'Неверный код!',
     'invalid_credentials' => 'Неверные учетные данные!',
+    'private_notes' => 'Личные заметки',
+    'private_note_saved_successfully' => 'Личная заметка успешно сохранена!',
+    'dashboard_saved' => 'Панель сохранена!',
+    'dashboard_not_found' => 'Панель не найдена!',
 ];

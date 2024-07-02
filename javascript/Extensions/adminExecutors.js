@@ -124,8 +124,11 @@ window.libs['admin::call_callback'] = async function (key, parameters, confirm) 
     const callCallBack = () => {
         NProgress.start();
         const token = exec('token');
+        if (this.target.value !== undefined) {
+            parameters = {...parameters, value: this.target.value};
+        }
         axios.post(window.call_callback, {
-            _token: token, key, parameters
+            _token: token, key, parameters,
         }).then(data => {
             exec(data.data);
         }).finally(d => {

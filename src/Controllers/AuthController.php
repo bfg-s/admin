@@ -36,6 +36,7 @@ class AuthController
             'status' => 'success',
             'prefix' => config('admin.route.prefix'),
             'dark' => admin_repo()->isDarkMode,
+            'lang' => App::getLocale(),
             'langMode' => config('admin.lang_mode'),
             'languages' => config('admin.languages'),
         ]);

@@ -317,4 +317,8 @@ return [
     'add_widget' => 'Add widget',
     'invalid_code' => 'Invalid code!',
     'invalid_credentials' => 'Invalid credentials!',
+    'private_notes' => 'Private Notes',
+    'private_note_saved_successfully' => 'Private note saved successfully!',
+    'dashboard_saved' => 'Dashboard saved!',
+    'dashboard_not_found' => 'Dashboard not found!',
 ];

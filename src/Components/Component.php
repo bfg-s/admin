@@ -158,9 +158,9 @@ abstract class Component extends ComponentInputs implements Renderable, Arrayabl
     /**
      * Current component model.
      *
-     * @var Collection|Builder|Model|Relation|null
+     * @var \Illuminate\Support\Collection|Builder|Collection|Model|Relation|null
      */
-    protected Collection|Builder|Model|Relation|null $model = null;
+    protected \Illuminate\Support\Collection|Collection|Builder|Model|Relation|array|null $model = null;
 
     /**
      * The current unique name of the component model.
@@ -360,14 +360,10 @@ abstract class Component extends ComponentInputs implements Renderable, Arrayabl
      */
     public function model($model = null): static
     {
+        //dd($model);
         if ($model || !$this->model) {
             if (is_callable($model)) {
                 $model = call_user_func($model, $this->model ?: $this->page->model());
-            }
-
-            $m = $this->model ?: $this->page->model();
-            if (is_array($model) && !isset($model[0]) && $m) {
-                $model = eloquent_instruction($m, $model);
             }
 
             if (is_string($model) && class_exists($model)) {

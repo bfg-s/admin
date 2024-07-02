@@ -223,6 +223,13 @@ abstract class InputGroupComponent extends Component
     protected bool $finallyForApi = true;
 
     /**
+     * Make the input full height.
+     *
+     * @var bool
+     */
+    protected bool $fullHeight = false;
+
+    /**
      * InputGroupComponent constructor.
      *
      * @param  string  $name
@@ -361,6 +368,7 @@ abstract class InputGroupComponent extends Component
             'hasError' => $this->errors->has($this->name),
             'rules' => $this->backRules,
             'rule_messages' => $this->backRules,
+            'fullHeight' => $this->fullHeight,
         ]);
 
         foreach ($this->formGroupCallbacks as $formGroupCallback) {
@@ -382,6 +390,18 @@ abstract class InputGroupComponent extends Component
         );
 
         $this->appEnd($formGroup);
+    }
+
+    /**
+     * Set the input on full height.
+     *
+     * @return $this
+     */
+    public function fullHeight(): static
+    {
+        $this->fullHeight = true;
+
+        return $this;
     }
 
     /**
@@ -859,10 +879,11 @@ abstract class InputGroupComponent extends Component
             'vertical' => $this->vertical,
             'reversed' => $this->reversed,
             'value' => $this->value,
+            'fullHeight' => $this->fullHeight,
             'onlyInput' => $this->only_input,
             'default' => $this->default,
             'rules' => $this->backRules,
-            'rule_messages' => $this->backRuleMessages,
+            'ruleMessages' => $this->backRuleMessages,
         ];
     }
 

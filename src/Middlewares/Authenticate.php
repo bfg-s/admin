@@ -165,12 +165,16 @@ class Authenticate
     protected function shouldPassThrough(Request $request): bool
     {
         $excepts = [
-            'bfg/info',
+            //'bfg/info',
             admin_uri('login'),
             admin_uri('2fa'),
             admin_uri('2fa_post'),
             admin_uri('logout'),
         ];
+
+        if (Admin::guest()) {
+            $excepts[] = 'bfg/info';
+        }
 
         foreach ($excepts as $except) {
             if ($except !== 'bfg/info') {

@@ -311,13 +311,20 @@ abstract class PageContainer implements SegmentContainerInterface
             }
         }
 
+        $breadcrumbs = array_map(
+            fn ($breadcrumb) => array_merge($breadcrumb, [
+                'title' => __($breadcrumb['title']),
+            ]),
+            $this->breadcrumbs
+        );
+
         if (Admin::isApiMode()) {
 
             return response()->json([
                 'meta' => [
                     'pageTitle' => $this->pageTitle,
                     'pageIcon' => $this->pageIcon,
-                    'breadcrumbs' => $this->breadcrumbs,
+                    'breadcrumbs' => $breadcrumbs,
                 ],
                 'menu' => admin_repo()->menuList->where('parent_id', 0)->values(),
                 'buttonGroups' => $this->upgradeDataToApiResponse($this->buttonGroups),
@@ -329,7 +336,7 @@ abstract class PageContainer implements SegmentContainerInterface
             'contents' => $this->contents,
             'pageTitle' => $this->pageTitle,
             'pageIcon' => $this->pageIcon,
-            'breadcrumbs' => $this->breadcrumbs,
+            'breadcrumbs' => $breadcrumbs,
             'buttonGroups' => $this->buttonGroups,
         ]);
     }

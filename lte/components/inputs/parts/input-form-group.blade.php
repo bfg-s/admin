@@ -1,5 +1,5 @@
 <div
-    @class(['form-group row'])
+    @class(['form-group row', 'h-100' => $fullHeight])
     @attributes($attributes)
     data-label-width="{{ $label_width }}"
     data-vertical="@json($vertical)"

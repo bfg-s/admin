@@ -267,7 +267,8 @@ if (!function_exists('admin_url_with_get')) {
     {
         $modal = request()->input('_modal');
         $realtime = request()->input('_realtime');
-        $currentUrl = $modal || $realtime
+        $load_content = request()->input('_load_content');
+        $currentUrl = $modal || $realtime || $load_content
             ? \Illuminate\Support\Facades\Request::server('HTTP_REFERER')
             : url()->current();
 

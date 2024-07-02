@@ -61,6 +61,23 @@ trait ComponentPublicEventsTrait
     }
 
     /**
+     * Add a change event for the component.
+     *
+     * @param  callable  $callback
+     * @param  array  $parameters
+     * @param  string|null  $confirm
+     * @return $this
+     */
+    public function change(callable $callback, array $parameters = [], string $confirm = null): static
+    {
+        $this->on_change(
+            static::registerCallBack($callback, $parameters, $this->model, $confirm)
+        );
+
+        return $this;
+    }
+
+    /**
      * Register a backend callback for a frontend event.
      *
      * @param  callable  $callback
@@ -71,7 +88,7 @@ trait ComponentPublicEventsTrait
      */
     public static function registerCallBack(callable $callback, array $parameters = [], $model = null, string $confirm = null): array
     {
-        SystemController::$componentEventCallbacks[] = $callback;
+        SystemController::$componentEventCallbacks[] = [$model, $callback];
 
         if ($model) {
             foreach ($parameters as $key => $parameter) {

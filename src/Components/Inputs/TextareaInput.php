@@ -49,7 +49,7 @@ class TextareaInput extends InputGroupComponent
             'datas' => $this->data,
             'has_bug' => $this->has_bug,
             'form_control' => $this->form_control,
-            'attributes' => [],
+            'attributes' => $this->attributes,
             'rows' => $this->rows,
         ]);
     }

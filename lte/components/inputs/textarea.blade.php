@@ -2,7 +2,7 @@
     id="{{ $id }}"
     name="{{ $name }}"
     placeholder="{{ $placeholder }}"
-    @class(['is-invalid' => $has_bug, 'form-control' => $form_control])
+    @class(['is-invalid' => $has_bug, 'form-control' => $form_control, 'h-100'])
     @attributes($attributes)
     @if(isset($rows))
         rows="{{ $rows }}"

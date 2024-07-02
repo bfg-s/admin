@@ -303,7 +303,11 @@ class SystemController extends Controller
         if (isset(static::$componentEventCallbacks[$request->key])) {
             admin_log_warning('Call callback', (string) $request->key, 'fas fa-balance-scale-right');
 
-            app()->call(static::$componentEventCallbacks[$request->key], $request->parameters);
+            $parameters = $request->parameters;
+
+            $parameters['model'] = static::$componentEventCallbacks[$request->key][0];
+
+            app()->call(static::$componentEventCallbacks[$request->key][1], $parameters);
         } else {
             $respond->toast_error(__('admin.callback_not_found'));
         }
@@ -491,7 +495,7 @@ class SystemController extends Controller
 
             return response()->json($result);
         }
-//dd(array_keys(static::$realtimeComponents));
+
         return response()->json([
             'status' => 'fail',
             'exists' => array_keys(static::$realtimeComponents),
@@ -587,8 +591,8 @@ class SystemController extends Controller
                     'widgets' => $line,
                 ]);
             }
-            return $respond->toast_success('Dashboard saved')->reload();
+            return $respond->toast_success('admin.dashboard_saved')->reload();
         }
-        return $respond->toast_error('Dashboard not found');
+        return $respond->toast_error('admin.dashboard_not_found');
     }
 }
