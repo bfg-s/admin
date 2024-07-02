@@ -350,7 +350,12 @@ class Select2 extends Collection
                     $this->data = $this->data->with($relation[0]);
                 }
                 if ($this->orderBy) {
-                    $this->data = $this->data->orderBy($this->orderBy, $this->orderType);
+                    if (str_contains($this->orderBy, '.')) {
+                        list($relation, $column) = explode('.', $this->orderBy);
+                        $this->data = $this->data->with($relation, fn ($q) => $q->orderBy($column, $this->orderType));
+                    } else {
+                        $this->data = $this->data->orderBy($this->orderBy, $this->orderType);
+                    }
                 }
                 $this->data = $this->data->paginate($this->paginate_peg_page, ['*'], $this->getName().'_page');
             } else {

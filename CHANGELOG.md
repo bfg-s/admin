@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Added update manager.
 * Added change event for the component.
 * Added private note widget for the dashboard.
+* Added sort by relations in orderBy for select2. 
 
 ## [6.3.0](https://github.com/bfg-s/admin/compare/6.2.3...6.3.0) - 2024-06-03
 
