@@ -317,7 +317,7 @@ class Formatter
         $sep = $props[2] ?? ',';
         $end = $props[3] ?? '';
 
-        return number_format($value, $dec, $dec_point, $sep).$end;
+        return number_format((float) $value, $dec, $dec_point, $sep).$end;
     }
 
     /**
@@ -349,7 +349,7 @@ class Formatter
             $value = 0;
         }
 
-        return number_format($value, 2) . ($props[0] ?? '%');
+        return number_format((float) $value, 2) . ($props[0] ?? '%');
     }
 
     /**
