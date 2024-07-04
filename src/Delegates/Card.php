@@ -131,7 +131,7 @@ class Card extends Delegator
                     ...$delegates
                 ),
             ),
-            $this->ifQuery('chart')->statistic_period(
+            $this->ifQuery('chart')->card_body()->statistic_period(
                 $statisticPeriod
                     ->icon_gift()
                     ->forToday()
@@ -206,7 +206,7 @@ class Card extends Delegator
             $this->ifQuery('screen', 1)
                 ->nested(...$delegators),
             $this->ifQuery('screen', 2)
-                ->statistic_period(
+                ->card_body()->statistic_period(
                     $statisticPeriod
                         ->icon_gift()
                         ->forToday()
