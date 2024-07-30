@@ -383,17 +383,6 @@ class MenuItem implements ArrayAccess, Arrayable
     }
 
     /**
-     * Get a resource link for displaying the item menu.
-     *
-     * @param  mixed  $params
-     * @return string|null
-     */
-    public function getLinkShow(mixed $params): string|null
-    {
-        return $this->generateResourceLink('show', $params, true);
-    }
-
-    /**
      * Generate a resource link with the specified type.
      *
      * @param  string  $type
@@ -438,6 +427,17 @@ class MenuItem implements ArrayAccess, Arrayable
     public function setRoute(string|null $route): void
     {
         $this->route = $route;
+    }
+
+    /**
+     * Get a resource link for displaying the item menu.
+     *
+     * @param  mixed  $params
+     * @return string|null
+     */
+    public function getLinkShow(mixed $params): string|null
+    {
+        return $this->generateResourceLink('show', $params, true);
     }
 
     /**
