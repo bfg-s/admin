@@ -19,7 +19,7 @@ trait SearchFormConditionRulesTrait
      */
     public function makeModel(mixed $model): mixed
     {
-        $requestQuery = request()->has('q') ? request('q') : [];
+        $requestQuery = request('q');
 
         if (is_array($requestQuery)) {
 
