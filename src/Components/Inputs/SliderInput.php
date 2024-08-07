@@ -68,7 +68,7 @@ class SliderInput extends InputGroupComponent
                 'slider-orientation' => 'horizontal',
                 'slider-selection' => 'before',
                 'slider-tooltip' => 'show',
-                'slider-value' => $this->value,
+                'slider-value' => str_contains($this->value, ',') ? "[$this->value]" : $this->value,
             ],
             'has_bug' => $this->has_bug,
             'attributes' => $this->attributes,

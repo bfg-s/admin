@@ -20,6 +20,7 @@ use Admin\Components\SearchFields\NumericSearchField;
 use Admin\Components\SearchFields\RadiosSearchField;
 use Admin\Components\SearchFields\SelectSearchInput;
 use Admin\Components\SearchFields\SelectTagsSearchField;
+use Admin\Components\SearchFields\SliderSearchInput;
 use Admin\Components\SearchFields\SwitcherSearchField;
 use Admin\Components\SearchFields\TimeFieldSearchField;
 use Admin\Core\PrepareExport;
@@ -66,6 +67,7 @@ class SearchFormComponent extends Component
         'select_tags' => SelectTagsSearchField::class,
         'checks' => ChecksSearchInput::class,
         'radios' => RadiosSearchField::class,
+        'slider' => SliderSearchInput::class,
     ];
 
     /**
