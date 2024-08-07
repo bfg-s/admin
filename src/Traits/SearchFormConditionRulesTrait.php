@@ -65,7 +65,7 @@ trait SearchFormConditionRulesTrait
                 foreach ($requestQuery as $key => $val) {
                     if ($val != null) {
                         foreach ($this->contents as $field) {
-                            if ($field['field_name'] === $key) {
+                            if (trim($field['field_name'], '[]') === $key) {
                                 $val = method_exists($field['class'], 'transformValue') ?
                                     $field['class']::transformValue($val) :
                                     $val;

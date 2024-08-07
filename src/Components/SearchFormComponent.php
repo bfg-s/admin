@@ -197,8 +197,16 @@ class SearchFormComponent extends Component
                 $label = $arguments[1] ?? null;
                 $condition = $arguments[2] ?? null;
 
+                if ($field_name && str_ends_with($field_name, '[]')) {
+                    $name = "q[" . trim($field_name, '[]') . "][]";
+                } else if ($field_name) {
+                    $name = "q[{$field_name}]";
+                } else {
+                    $name = "q[]";
+                }
+
                 /** @var InputGroupComponent $class */
-                $class = new $class("q[{$field_name}]", $label);
+                $class = new $class($name, $label);
 
                 if ($class instanceof InputGroupComponent) {
                     $class->set_parent($this);
