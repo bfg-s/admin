@@ -174,6 +174,8 @@ class AdminRepository extends Repository
 
         $pm = $this->now?->getResourceRoute() ?? Str::singular(Str::snake(class_basename($return)));
 
+        $pm = Str::snake(Str::camel($pm));
+
         if (
             $pm &&
             $return instanceof Model &&

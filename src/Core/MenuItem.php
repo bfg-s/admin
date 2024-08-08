@@ -399,7 +399,7 @@ class MenuItem implements ArrayAccess, Arrayable
             return null;
         }
         if (!is_array($params) && $this->resource_route) {
-            $params = [$this->resource_route => $params];
+            $params = [Str::snake(Str::camel($this->resource_route)) => $params];
         }
         $name = $this->getRoute().'.'.$type;
         if ($rememberedQuery) {
