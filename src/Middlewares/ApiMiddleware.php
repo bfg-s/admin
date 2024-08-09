@@ -109,7 +109,7 @@ class ApiMiddleware
                 return response()->json([
                     'status' => 'error',
                     'message' => $response->exception->getMessage()
-                ], $response->exception->getCode() ?: 500);
+                ], 500);
             }
 
             if ($validationError = $request->session()->get('errors')?->getBag('default')) {
