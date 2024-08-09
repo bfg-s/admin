@@ -85,7 +85,6 @@ class ApiMiddleware
         /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
 
-        //dd($response->exception);
         if (static::isApi()) {
 
 

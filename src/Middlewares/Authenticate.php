@@ -7,6 +7,7 @@ namespace Admin\Middlewares;
 use Admin\Boot;
 use Admin\Facades\Admin;
 use Admin\Models\AdminPermission;
+use Admin\Models\AdminUser;
 use Admin\Respond;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use ReflectionException;
 use Route;
 
@@ -54,6 +56,20 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
+        if ($token = $request->bearerToken()) {
+
+            try {
+                $token = Crypt::decrypt($token);
+            } catch (\Throwable $e) {
+                $token = null;
+            }
+
+            if ($user = AdminUser::findOrFail($token)) {
+
+                Auth::guard('admin')->login($user);
+            }
+        }
+
         $currentRouteName = \Illuminate\Support\Facades\Route::currentRouteName();
 
         if (!$this->isNoGetOrHead) {
