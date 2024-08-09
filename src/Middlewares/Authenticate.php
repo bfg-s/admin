@@ -64,7 +64,7 @@ class Authenticate
                 $token = null;
             }
 
-            if ($user = AdminUser::findOrFail($token)) {
+            if ($token && $user = AdminUser::findOrFail($token)) {
 
                 Auth::guard('admin')->login($user);
             }
