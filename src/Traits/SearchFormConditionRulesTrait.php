@@ -211,6 +211,54 @@ trait SearchFormConditionRulesTrait
     }
 
     /**
+     * Condition for "%json" symbol.
+     *
+     * @param  mixed  $model
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    protected function like_right_json(mixed $model, $value, $key): mixed
+    {
+        return $model->whereRaw(
+            "CONVERT(JSON_UNQUOTE(JSON_EXTRACT($key, '$')) USING utf8mb4) COLLATE utf8mb4_general_ci LIKE ?",
+            ['%'.$value]
+        );
+    }
+
+    /**
+     * Condition for "json%" symbol.
+     *
+     * @param  mixed  $model
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    protected function like_left_json(mixed $model, $value, $key): mixed
+    {
+        return $model->whereRaw(
+            "CONVERT(JSON_UNQUOTE(JSON_EXTRACT($key, '$')) USING utf8mb4) COLLATE utf8mb4_general_ci LIKE ?",
+            [$value.'%']
+        );
+    }
+
+    /**
+     * Condition for "%json%" symbol.
+     *
+     * @param  mixed  $model
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    protected function like_any_json(mixed $model, $value, $key): mixed
+    {
+        return $model->whereRaw(
+            "CONVERT(JSON_UNQUOTE(JSON_EXTRACT($key, '$')) USING utf8mb4) COLLATE utf8mb4_general_ci LIKE ?",
+            ['%'.$value.'%']
+        );
+    }
+
+    /**
      * Condition for "null" symbol.
      *
      * @param  mixed  $model
