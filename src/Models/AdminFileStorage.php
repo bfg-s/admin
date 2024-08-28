@@ -218,7 +218,7 @@ class AdminFileStorage extends Model
      */
     public function dropFile(): void
     {
-        Storage::disk($this->driver)->delete($this->file_name);
+        Storage::disk($this->driver)->delete($this->getRawOriginal('file_name'));
     }
 
     /**
