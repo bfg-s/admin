@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.4.0](https://github.com/bfg-s/admin/compare/6.3.0...6.4.0) - 2024-07-02
+## [6.4.0](https://github.com/bfg-s/admin/compare/6.3.0...6.4.0) - 2024-08-30
 * Added creation of interactive dashboards with the ability to personalize for different users.
 * Added modal use method for deferred loading.
 * Fixed checkboxes in realtime model table.
@@ -21,6 +21,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Added private note widget for the dashboard.
 * Added sort by relations in orderBy for select2. 
 * Fixed model table modificators (number_format, money and percent).
+* Fixed install extensions in update page.
 
 ## [6.3.0](https://github.com/bfg-s/admin/compare/6.2.3...6.3.0) - 2024-06-03
 
