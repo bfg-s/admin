@@ -21,7 +21,9 @@ class AdminUserObserver
             $dashboard->rows()->create([
                 'order' => $order,
                 'admin_user_id' => $user->id,
-                'widgets' => $widgets
+                'widgets' => collect($widgets)
+                    ->map(fn ($widget) => $widget())
+                    ->toArray(),
             ]);
         }
     }

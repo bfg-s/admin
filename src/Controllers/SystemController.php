@@ -300,14 +300,15 @@ class SystemController extends Controller
 
         $this->refererEmit();
 
-        if (isset(static::$componentEventCallbacks[$request->key])) {
+        $parameters = $request->parameters;
+
+        if (isset(static::$componentEventCallbacks[$parameters['model_key']][$request->key])) {
+
             admin_log_warning('Call callback', (string) $request->key, 'fas fa-balance-scale-right');
 
-            $parameters = $request->parameters;
+            $parameters['model'] = static::$componentEventCallbacks[$parameters['model_key']][$request->key][0];
 
-            $parameters['model'] = static::$componentEventCallbacks[$request->key][0];
-
-            app()->call(static::$componentEventCallbacks[$request->key][1], $parameters);
+            app()->call(static::$componentEventCallbacks[$parameters['model_key']][$request->key][1], $parameters);
         } else {
             $respond->toast_error(__('admin.callback_not_found'));
         }

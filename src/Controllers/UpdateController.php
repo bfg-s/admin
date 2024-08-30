@@ -23,6 +23,7 @@ use Admin\Delegates\Row;
 use Admin\Delegates\SearchForm;
 use Admin\Delegates\Tab;
 use Admin\Facades\Admin;
+use Admin\Jobs\InstallBfgExtensionJob;
 use Admin\Jobs\UpdateBfgAdminJob;
 use Admin\Middlewares\BrowserDetectMiddleware;
 use Admin\Models\AdminBrowser;
@@ -166,6 +167,9 @@ class UpdateController extends Controller
 
                                     return $respond->toast_error('Extension already installed.');
                                 }
+
+                                InstallBfgExtensionJob::dispatch($name);
+
                                 return $respond->toast_success('Extension installed successfully.');
                             }),
                         ),

@@ -66,32 +66,32 @@ return [
      */
     'widgets' => [
         [
-            \Admin\Widgets\PeriodStatisticWidget::create()->settings([
+            fn () => \Admin\Widgets\PeriodStatisticWidget::create()->settings([
                 'model' => config('auth.providers.users.model'),
                 'title' => 'admin.users',
             ])->export(),
         ],
         [
-            \Admin\Widgets\ChartStatisticWidget::create()->settings([
+            fn () => \Admin\Widgets\ChartStatisticWidget::create()->settings([
                 'model' => config('auth.providers.users.model'),
                 'title' => 'admin.user_statistics',
                 'label' => 'admin.added_to_users',
             ])->export(),
         ],
         [
-            \Admin\Widgets\PrivateNoteWidget::create()->export(),
+            fn () => \Admin\Widgets\PrivateNoteWidget::create()->export(),
         ],
         [
-            \Admin\Widgets\AdministratorBrowserStatisticWidget::create()->export(),
-            \Admin\Widgets\ActivityStatisticWidget::create()->export(),
+            fn () => \Admin\Widgets\AdministratorBrowserStatisticWidget::create()->export(),
+            fn () => \Admin\Widgets\ActivityStatisticWidget::create()->export(),
         ],
         [
-            \Admin\Widgets\EnvironmentsWidget::create()->export(),
-            \Admin\Widgets\LaravelInfoWidget::create()->export(),
+            fn () => \Admin\Widgets\EnvironmentsWidget::create()->export(),
+            fn () => \Admin\Widgets\LaravelInfoWidget::create()->export(),
         ],
         [
-            \Admin\Widgets\ComposerInfoWidget::create()->export(),
-            \Admin\Widgets\DatabaseInfoWidget::create()->export(),
+            fn () => \Admin\Widgets\ComposerInfoWidget::create()->export(),
+            fn () => \Admin\Widgets\DatabaseInfoWidget::create()->export(),
         ]
     ],
 

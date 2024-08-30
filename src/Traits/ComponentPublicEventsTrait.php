@@ -88,7 +88,9 @@ trait ComponentPublicEventsTrait
      */
     public static function registerCallBack(callable $callback, array $parameters = [], $model = null, string $confirm = null): array
     {
-        SystemController::$componentEventCallbacks[] = [$model, $callback];
+        $modelKey = is_object($model) ? get_class($model) : ($model['id'] ?? 'admin');
+
+        SystemController::$componentEventCallbacks[$modelKey][] = [$model, $callback];
 
         if ($model) {
             foreach ($parameters as $key => $parameter) {
@@ -103,9 +105,11 @@ trait ComponentPublicEventsTrait
             }
         }
 
+        $parameters['model_key'] = $modelKey;
+
         return [
             'admin::call_callback' => [
-                array_key_last(SystemController::$componentEventCallbacks),
+                array_key_last(SystemController::$componentEventCallbacks[$modelKey]),
                 $parameters,
                 __($confirm)
             ]
