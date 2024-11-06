@@ -195,7 +195,7 @@ return [
      * Footer data
      */
     'footer' => [
-        'copy' => 'Developed by <a href="https://swipex.ua/" target="_blank">Swipex</a>.
+        'copy' => 'Developed by <a href="https://github.com/bfg-s" target="_blank">Bfg</a>.
                     All rights reserved. <strong>Copyright &copy; 2020 - '.date('Y').'.</strong>',
     ],
 ];
