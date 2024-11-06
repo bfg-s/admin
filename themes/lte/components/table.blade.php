@@ -35,7 +35,7 @@
                         <td>{{ $key }}</td>
                     @endif
                     @if(!is_array($row))
-                        @if(is_callable($row))
+                        @if(is_callable($row) && !is_string($row))
                             <td>{!! call_user_func($row, $key) !!}</td>
                         @else
                             <td>{!! $row !!}</td>

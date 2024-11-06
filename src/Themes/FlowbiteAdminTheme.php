@@ -7,49 +7,49 @@ namespace Admin\Themes;
 /**
  * Class of the main theme of the admin panel.
  */
-class AdminLteTheme extends Theme
+class FlowbiteAdminTheme extends Theme
 {
     /**
      * Name of the visual theme.
      *
      * @var string
      */
-    protected string $name = 'AdminLte 3';
+    protected string $name = 'Flowbite 1.3';
 
     /**
      * Description of the visual theme.
      *
      * @var string
      */
-    protected string $description = 'AdminLTE is an HTML template that can be used for any purpose.';
+    protected string $description = 'This project is a free and open-source UI admin dashboard template built with the components from Flowbite and based on the utility-first Tailwind CSS framework featuring charts, tables, widgets, CRUD layouts, modals, drawers, and more.';
 
     /**
      * Blade render variable to form the template path.
      *
      * @var string
      */
-    protected string $viewVariable = 'admin-lte::';
+    protected string $viewVariable = 'admin-flowbite::';
 
     /**
      * Template namespace to form a template group.
      *
      * @var string|null
      */
-    protected string|null $namespace = 'admin-lte';
+    protected string|null $namespace = 'admin-flowbite';
 
     /**
      * Path to the templates of theme directory.
      *
      * @var string|null
      */
-    protected string|null $directory = __DIR__.'/../../themes/lte';
+    protected string|null $directory = __DIR__.'/../../themes/flowbite';
 
     /**
      * Visual theme slug.
      *
      * @var string
      */
-    protected string $slug = 'admin-lte';
+    protected string $slug = 'admin-flowbite';
 
     /**
      * Visual theme styles.
@@ -57,10 +57,11 @@ class AdminLteTheme extends Theme
      * @var array|string[]
      */
     protected array $styles = [
-        'admin-asset/css/adminlte.min.css',
-        'admin/css/dark.css',
         'admin-asset/plugins/sweetalert2/sweetalert2.css',
-        'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
+        'https://fonts.googleapis.com',
+        'https://fonts.gstatic.com',
+        'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+        'admin/flowbite-assets/app.css',
     ];
 
     /**
@@ -81,6 +82,6 @@ class AdminLteTheme extends Theme
      * @var array|string[]
      */
     protected array $scripts = [
-        'admin-asset/js/adminlte.min.js',
+        'admin/flowbite-assets/app.bundle.js'
     ];
 }

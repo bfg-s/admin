@@ -92,6 +92,9 @@ class AdministratorsController extends Controller
             ),
             $card->model_cards(
                 //$modelCards->modelLoad(['logs' => fn ($q) => $q->take(1)]),
+                $modelCards->ribbon(function (AdminUser $user) {
+                    return $user->id == 1 ? ['primary', 'Super'] : null;
+                }),
                 $modelCards->avatarField('avatar'),
                 $modelCards->titleField('name'),
                 $modelCards->subtitleField('email'),

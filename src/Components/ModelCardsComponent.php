@@ -210,6 +210,13 @@ class ModelCardsComponent extends Component
     protected Closure|array|null $control_selectable = null;
 
     /**
+     * Property for checking whether the table has a ribbon.
+     *
+     * @var \Closure|array|null
+     */
+    protected Closure|array|null $ribbon = null;
+
+    /**
      * Property for enabling or disabling table row selection checkboxes.
      *
      * @var bool
@@ -1089,6 +1096,19 @@ class ModelCardsComponent extends Component
     }
 
     /**
+     * Set the table row ribbon.
+     *
+     * @param  callable|null  $test
+     * @return $this
+     */
+    public function ribbon(callable $test = null): static
+    {
+        $this->ribbon = $test;
+
+        return $this;
+    }
+
+    /**
      * Set the value of the variable to check.
      *
      * @param  string  $var_name
@@ -1208,9 +1228,9 @@ class ModelCardsComponent extends Component
     /**
      * Function for generating internal cards.
      *
-     * @param $item
+     * @param $model Model|array
      */
-    protected function makeBodyCard($item): void
+    protected function makeBodyCard(mixed $model): void
     {
         $cardComponent = $this->createComponent(CardComponent::class);
 
@@ -1224,11 +1244,11 @@ class ModelCardsComponent extends Component
             }
 
             if (is_string($value)) {
-                $ddd = multi_dot_call($item, $value);
+                $ddd = multi_dot_call($model, $value);
                 $value = is_array($ddd) || is_object($ddd) ? $ddd : e($ddd);
             } elseif (is_embedded_call($value)) {
                 $value = call_user_func_array($value, [
-                    $item, $row['label'], $cardComponent, null, $row,
+                    $model, $row['label'], $cardComponent, null, $row,
                 ]);
             }
 
@@ -1236,7 +1256,7 @@ class ModelCardsComponent extends Component
 
             foreach ($row['macros'] as $macro) {
                 $value = ModelTableComponent::callE($macro[0], [
-                    $value, $macro[1], $item, $row['field'], $row['label'], $cardComponent, null, $row,
+                    $value, $macro[1], $model, $row['field'], $row['label'], $cardComponent, null, $row,
                 ]);
             }
 
@@ -1245,12 +1265,13 @@ class ModelCardsComponent extends Component
 
         $cardComponent->setViewData([
             'rows' => $this->rows,
-            'model' => $item,
+            'model' => $model,
             'avatarField' => $this->avatarField,
             'titleField' => $this->titleField,
             'subtitleField' => $this->subtitleField,
             'buttons' => $this->buttons,
             'checkBox' => $this->checkBox,
+            'ribbon' => $this->ribbon ? call_user_func($this->ribbon, $model) : '',
         ]);
 
         $this->appEnd($cardComponent);

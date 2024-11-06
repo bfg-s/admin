@@ -8,6 +8,7 @@ use Admin\Components\Vue\ModalCollection;
 use Admin\Middlewares\ApiMiddleware;
 use Admin\Models\AdminUser;
 use Admin\Themes\AdminLteTheme;
+use Admin\Themes\FlowbiteAdminTheme;
 use Admin\Themes\Theme;
 use Auth;
 use Composer\InstalledVersions;
@@ -33,6 +34,7 @@ class AdminEngine
      */
     public static array $themes = [
         'admin-lte' => AdminLteTheme::class,
+        'admin-flowbite' => FlowbiteAdminTheme::class,
     ];
 
     /**

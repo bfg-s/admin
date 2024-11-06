@@ -56,6 +56,7 @@ class BrowserDetectMiddleware
 
                 if (!$exists->active) {
                     Auth::guard('admin')->logout();
+                    session()->flash('message', 'Your browser is not allowed to access the admin panel.');
                     return redirect()->route('admin.home');
                 }
 

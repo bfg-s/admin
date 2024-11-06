@@ -1,5 +1,32 @@
 <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
     <div class="card bg-light d-flex flex-fill">
+        @if (isset($ribbon) && $ribbon)
+            @if (is_string($ribbon))
+                <div class="ribbon-wrapper ribbon-xl">
+                    <div class="ribbon bg-warning text-lg">
+                        {{ $ribbon }}
+                    </div>
+                </div>
+            @elseif(is_array($ribbon) && isset($ribbon['color']) && isset($ribbon['text']))
+                <div class="ribbon-wrapper ribbon-xl">
+                    <div class="ribbon bg-{{ $ribbon['color'] }} text-lg">
+                        {{ $ribbon['text'] }}
+                    </div>
+                </div>
+            @elseif(is_array($ribbon) && isset($ribbon[0]) && isset($ribbon[1]))
+                <div class="ribbon-wrapper ribbon-xl">
+                    <div class="ribbon bg-{{ $ribbon[0] }} text-lg">
+                        {{ $ribbon[1] }}
+                    </div>
+                </div>
+            @elseif(is_array($ribbon) && isset($ribbon[0]))
+                <div class="ribbon-wrapper ribbon-xl">
+                    <div class="ribbon bg-warning text-lg">
+                        {{ $ribbon[0] }}
+                    </div>
+                </div>
+            @endif
+        @endif
         <div class="card-header text-muted border-bottom-0"></div>
         <div class="card-body pt-0">
             <div class="row">

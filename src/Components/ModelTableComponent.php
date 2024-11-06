@@ -1193,6 +1193,21 @@ class ModelTableComponent extends Component
     }
 
     /**
+     * @param  \Admin\Components\Component|null  $parent
+     * @return \Admin\Components\ModelTableComponent
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function setParent(?Component $parent): static
+    {
+        $this->parent = $parent;
+
+
+
+        return $this;
+    }
+
+    /**
      * A function that generates card model data and paginates it.
      *
      * @return mixed
@@ -1226,10 +1241,12 @@ class ModelTableComponent extends Component
                 }
             }
 
-            return $this->paginate = $this->model
+            $return = $this->paginate = $this->model
                 ->when($this->relations, fn ($q) => $q->with(...$this->relations))
                 ->orderBy($this->order_field, $select_type)
                 ->paginate($this->per_page, ['*'], $this->model_name.'_page');
+
+            return $return;
 
         } elseif ($this->model instanceof Collection) {
             if (request()->has($this->model_name)) {
@@ -1253,6 +1270,11 @@ class ModelTableComponent extends Component
      */
     protected function build(): void
     {
+        if (!($this->parent instanceof CardBodyComponent)) {
+
+            $this->createModel();
+        }
+
         $header = $this->createComponent(HeadComponent::class);
 
         $this->appEnd($header);
