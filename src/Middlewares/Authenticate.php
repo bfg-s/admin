@@ -70,6 +70,25 @@ class Authenticate
             }
         }
 
+        $sslAccessKey = Admin::sslAccessKey();
+
+        if ($request->has($sslAccessKey)) {
+
+            $key = $request->get($sslAccessKey);
+
+            $decryptedData = Admin::decryptWithCustomKey($key, config('admin.key'));
+
+            if ($decryptedData) {
+
+                $user = AdminUser::whereEmail($decryptedData)->first();
+
+                if ($user) {
+
+                    Auth::guard('admin')->login($user);
+                }
+            }
+        }
+
         $currentRouteName = \Illuminate\Support\Facades\Route::currentRouteName();
 
         if (!$this->isNoGetOrHead) {

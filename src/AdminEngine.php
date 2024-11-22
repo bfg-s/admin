@@ -358,4 +358,74 @@ class AdminEngine
 
         return self::$lang_select = $select;
     }
+
+    /**
+     * Method for getting the admin panel server list.
+     *
+     * @return array
+     */
+    public function getServers(): array
+    {
+        return collect(config('admin.servers', []))->filter(function (array $server) {
+            return $server['host'] !== config('app.url');
+        })->toArray();
+    }
+
+    /**
+     * Method for getting the admin panel server URL.
+     *
+     * @param  array  $server
+     * @return string
+     */
+    public function serverUrl(array $server): string
+    {
+        return $server['host'] . '/' . config('admin.route.prefix') . '?' . $this->sslAccessKey() . '=' . $this->encryptWithCustomKey(
+            $this->user()->email,
+            config('admin.key')
+        );
+    }
+
+    /**
+     * Method for getting the admin panel ssl access key.
+     *
+     * @return string
+     */
+    public function sslAccessKey(): string
+    {
+        return md5(config('admin.key'));
+    }
+
+    /**
+     * Method for encrypting data with a custom key.
+     *
+     * @param $data
+     * @param $key
+     * @return string
+     */
+    public function encryptWithCustomKey($data, $key): string
+    {
+        $cipher = 'AES-256-CBC';
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
+        $encrypted = openssl_encrypt($data, $cipher, $key, 0, $iv);
+
+        return base64_encode($iv . $encrypted);
+    }
+
+    /**
+     * Method for decrypting data with a custom key.
+     *
+     * @param $encryptedData
+     * @param $key
+     * @return bool|string
+     */
+    public function decryptWithCustomKey($encryptedData, $key): bool|string
+    {
+        $cipher = 'AES-256-CBC';
+        $data = base64_decode($encryptedData);
+        $ivLength = openssl_cipher_iv_length($cipher);
+        $iv = substr($data, 0, $ivLength);
+        $encryptedText = substr($data, $ivLength);
+
+        return openssl_decrypt($encryptedText, $cipher, $key, 0, $iv);
+    }
 }

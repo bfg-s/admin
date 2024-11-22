@@ -321,4 +321,5 @@ return [
     'private_note_saved_successfully' => 'Личная заметка успешно сохранена!',
     'dashboard_saved' => 'Панель сохранена!',
     'dashboard_not_found' => 'Панель не найдена!',
+    'servers' => 'Серверы',
 ];

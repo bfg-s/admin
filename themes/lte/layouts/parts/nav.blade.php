@@ -31,6 +31,23 @@
         @foreach(admin_repo()->menuList->where('left_nav_bar_vue') as $menu)
             {!! (new ($menu->getLeftNavBarVue()))->attr($menu->getParams()); !!}
         @endforeach
+
+        @if(\Admin\Facades\Admin::getServers())
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="fas fa-server"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+                    <span class="dropdown-item dropdown-header">{{__('admin.servers')}}</span>
+                    <div class="dropdown-divider"></div>
+                    @foreach(\Admin\Facades\Admin::getServers() as $server)
+                        <a href="{{\Admin\Facades\Admin::serverUrl($server)}}" class="dropdown-item">
+                            <i class="fas fa-server mr-2"></i> {{$server['name']}}
+                        </a>
+                    @endforeach
+                </div>
+            </li>
+        @endif
     </ul>
 
     <!-- SEARCH FORM -->

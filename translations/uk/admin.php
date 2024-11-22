@@ -321,4 +321,5 @@ return [
     'private_note_saved_successfully' => 'Приватна нотатка успішно збережена!',
     'dashboard_saved' => 'Панель приладів збережена!',
     'dashboard_not_found' => 'Панель приладів не знайдена!',
+    'servers' => 'Сервери',
 ];

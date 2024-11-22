@@ -7,6 +7,11 @@ use Admin\Models\AdminUser;
 return [
 
     /**
+     * Admin secret panel key
+     */
+    'key' => env('ADMIN_KEY'),
+
+    /**
      * The theme of admin panel
      */
     'theme' => 'admin-lte',
@@ -51,6 +56,16 @@ return [
         'domain' => '',
         'prefix' => 'bfg',
         'name' => 'admin.',
+    ],
+
+    /**
+     * Admin server list for monitoring.
+     */
+    'servers' => [
+        [
+            'name' => env('APP_NAME'),
+            'host' => env('APP_URL'),
+        ]
     ],
 
     /**

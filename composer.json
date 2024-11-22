@@ -21,6 +21,7 @@
     "require": {
         "php": "^8.0|^8.1",
         "ext-pdo": "*",
+        "ext-openssl": "*",
         "bfg/entity": "*",
         "bfg/repository": "^1.0",
         "bfg/attributes": "^1.2.5",

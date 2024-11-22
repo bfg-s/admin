@@ -321,4 +321,5 @@ return [
     'private_note_saved_successfully' => 'Private note saved successfully!',
     'dashboard_saved' => 'Dashboard saved!',
     'dashboard_not_found' => 'Dashboard not found!',
+    'servers' => 'Servers',
 ];

@@ -17,6 +17,7 @@ use Admin\Commands\AdminControllerCommand;
 use Admin\Commands\AdminExtensionCommand;
 use Admin\Commands\AdminHelpersCommand;
 use Admin\Commands\AdminInstallCommand;
+use Admin\Commands\AdminKeyCommand;
 use Admin\Commands\AdminUserCommand;
 use Admin\Controllers\AuthController;
 use Admin\Facades\Admin;
@@ -29,6 +30,7 @@ use Admin\Models\AdminUser;
 use Admin\Observers\AdminUserObserver;
 use Admin\Repositories\AdminRepository;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\RouteRegistrar;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
@@ -56,6 +58,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         AdminUserCommand::class,
         AdminExtensionCommand::class,
         AdminHelpersCommand::class,
+        AdminKeyCommand::class,
     ];
 
     /**
@@ -262,7 +265,7 @@ class ServiceProvider extends ServiceProviderIlluminate
                 ->name(config('admin.route.name').'index')
                 ->prefix(config('admin.route.prefix'))
                 ->middleware(['web', 'admin-auth', DomMiddleware::class, LanguageMiddleware::class])
-                ->get('/', function () {
+                ->get('/', function (Request $request) {
                     return redirect()->route(config('admin.home-route', 'admin.dashboard'));
                 });
         }
