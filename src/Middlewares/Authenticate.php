@@ -70,21 +70,24 @@ class Authenticate
             }
         }
 
-        $sslAccessKey = Admin::sslAccessKey();
+        if (config('admin.key')) {
 
-        if ($request->has($sslAccessKey)) {
+            $sslAccessKey = Admin::sslAccessKey();
 
-            $key = $request->get($sslAccessKey);
+            if ($request->has($sslAccessKey)) {
 
-            $decryptedData = Admin::decryptWithCustomKey($key, config('admin.key'));
+                $key = $request->get($sslAccessKey);
 
-            if ($decryptedData) {
+                $decryptedData = Admin::decryptWithCustomKey($key, config('admin.key'));
 
-                $user = AdminUser::whereEmail($decryptedData)->first();
+                if ($decryptedData) {
 
-                if ($user) {
+                    $user = AdminUser::whereEmail($decryptedData)->first();
 
-                    Auth::guard('admin')->login($user);
+                    if ($user) {
+
+                        Auth::guard('admin')->login($user);
+                    }
                 }
             }
         }
