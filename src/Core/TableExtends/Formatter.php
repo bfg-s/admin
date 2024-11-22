@@ -323,17 +323,25 @@ class Formatter
     /**
      * Format the amount that was in the column into monetary form.
      *
+     * @param  null  $value
      * @param  array  $props
-     * @param $value
+     * @param  \Illuminate\Database\Eloquent\Model|array|null  $model
      * @return string
      */
-    public function money($value = null, array $props = []): string
+    public function money($value = null, array $props = [], Model|array $model = null): string
     {
         if (!$value) {
             $value = 0;
         }
 
-        return number_format((float) $value, 2, '.', ',').' '.($props[0] ?? '$');
+        $symbol = $props[0] ?? '$';
+
+        if (is_callable($symbol)) {
+
+            $symbol = call_user_func($symbol, $model, $value);
+        }
+
+        return number_format((float) $value, 2, '.', ',').($symbol ? ' '.$symbol : '');
     }
 
     /**
