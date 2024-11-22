@@ -1,8 +1,4 @@
-<tbody
-    @foreach ($attributes as $k => $v)
-        {{ $k }}='{{ $v }}'
-    @endforeach
->
+<tbody @attributes($attributes)>
     @foreach($contents as $content)
         {!! $content !!}
     @endforeach

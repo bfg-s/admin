@@ -394,6 +394,18 @@ abstract class Component extends ComponentInputs implements Renderable, Arrayabl
     }
 
     /**
+     * Append this component to the parent component.
+     *
+     * @return $this
+     */
+    public function appendToParent(): static
+    {
+        $this->parent?->appEnd($this);
+
+        return $this;
+    }
+
+    /**
      * Reset counter of components
      *
      * @return void

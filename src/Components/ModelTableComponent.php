@@ -219,6 +219,13 @@ class ModelTableComponent extends Component
     protected bool $realTime = true;
 
     /**
+     * Marker for the total row of the table.
+     *
+     * @var bool
+     */
+    protected bool $toTotalAdded = false;
+
+    /**
      * ModelTableComponent constructor.
      *
      * @param ...$delegates
@@ -463,6 +470,8 @@ class ModelTableComponent extends Component
 
         $key = Str::slug($this->model_name.(is_string($field) ? '_'.$field : ''), '_');
 
+        $this->toTotalAdded = false;
+
         $col = [
             'field' => $field,
             'label' => is_string($label) ? __($label) : $label,
@@ -472,6 +481,8 @@ class ModelTableComponent extends Component
             'key' => is_string($field) ? $key : null,
             'hide' => request()->has($key) && request($key) == 0,
             'macros' => [],
+            'totalMacros' => [],
+            'total' => false,
         ];
 
         if ($this->prepend) {
@@ -479,6 +490,24 @@ class ModelTableComponent extends Component
             array_unshift($this->columns, $col);
         } else {
             $this->columns[$this->last] = $col;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add field to the total row of the table.
+     * The total row is displayed at the bottom of the table.
+     *
+     * @param  string|callable|null  $field
+     * @return $this
+     */
+    public function to_total(string|callable|null $field = null): static
+    {
+        if (isset($this->columns[$this->last])) {
+            $this->columns[$this->last]['total']
+                = $field ?: $this->columns[$this->last]['field'];
+            $this->toTotalAdded = true;
         }
 
         return $this;
@@ -835,7 +864,11 @@ class ModelTableComponent extends Component
                 return $this->sort($m[1]);
             } else {
                 if (static::hasExtension($name) && isset($this->columns[$this->last])) {
-                    $this->columns[$this->last]['macros'][] = [$name, $arguments];
+                    if ($this->toTotalAdded) {
+                        $this->columns[$this->last]['totalMacros'][] = [$name, $arguments];
+                    } else {
+                        $this->columns[$this->last]['macros'][] = [$name, $arguments];
+                    }
 
                     return $this;
                 }
@@ -1202,8 +1235,6 @@ class ModelTableComponent extends Component
     {
         $this->parent = $parent;
 
-
-
         return $this;
     }
 
@@ -1301,6 +1332,15 @@ class ModelTableComponent extends Component
             $body->appEnd($row);
         }
 
+        if (collect($this->columns)->where('total', '!=', false)->isNotEmpty()) {
+
+            $row = RowComponent::create();
+
+            $this->makeTotalBodyTR($row);
+
+            $body->appEnd($row);
+        }
+
         $count = 0;
 
         if (is_array($this->model)) {
@@ -1341,6 +1381,86 @@ class ModelTableComponent extends Component
         ]);
         $this->columns[$key]['header'] = $header;
         $head->appEnd($header);
+    }
+
+    /**
+     * Create model table total row.
+     *
+     * @param  \Admin\Components\ModelTable\RowComponent  $row
+     * @return void
+     */
+    protected function makeTotalBodyTR(RowComponent $row): void
+    {
+        foreach ($this->columns as $col) {
+            if ((request()->has('show_deleted') && !$col['trash']) || $col['hide']) {
+                continue;
+            }
+
+            if ($col['total']) {
+                $columnComponent = $row->createComponent(ColumnComponent::class);
+                $columnComponent->setViewData([
+                    'value' => $this->makeTotalValue($col['total'], $col, $columnComponent, $row)
+                ])->appendToParent();
+            } else {
+                $row->createComponent(ColumnComponent::class)->setViewData([
+                    'value' => ''
+                ])->appendToParent();
+            }
+        }
+    }
+
+    /**
+     * Create a total value for the table.
+     *
+     * @param  string|callable  $value
+     * @param  array  $col
+     * @param  \Admin\Components\ModelTable\ColumnComponent  $columnComponent
+     * @param  \Admin\Components\ModelTable\RowComponent  $row
+     * @return mixed
+     */
+    protected function makeTotalValue(
+        string|callable $value,
+        array $col,
+        ColumnComponent $columnComponent,
+        RowComponent $row,
+    ): mixed {
+
+        $result = '';
+
+        foreach ($this->paginate ?? $this->model as $item) {
+            if (is_string($value)) {
+                $resultValue = multi_dot_call($item, $value);
+                if (is_numeric($resultValue)) {
+                    if (!is_numeric($result)) {
+                        $result = (int) $result;
+                    }
+                    $result += $resultValue;
+                } else {
+                    $result .= (string) $resultValue;
+                }
+            } elseif (is_callable($value)) {
+                $resultValue = call_user_func($value, $item);
+                if (is_numeric($resultValue)) {
+                    if (!is_numeric($result)) {
+                        $result = (int) $result;
+                    }
+                    $result += $resultValue;
+                } else {
+                    $result .= (string) $resultValue;
+                }
+            }
+        }
+
+        $result = is_string($result) ? trim($result) : $result;
+
+        foreach ($col['totalMacros'] as $macro) {
+            $result = static::callE($macro[0], [
+                $result, $macro[1], $item ?? null, $col['field'], $col['label'], $columnComponent, $col['header'],
+                $row,
+            ]);
+        }
+
+        return $result;
     }
 
     /**
