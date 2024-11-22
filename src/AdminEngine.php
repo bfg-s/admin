@@ -392,7 +392,7 @@ class AdminEngine
      */
     public function sslAccessKey(): string
     {
-        return md5(config('admin.key'));
+        return md5(config('admin.key', ''));
     }
 
     /**
