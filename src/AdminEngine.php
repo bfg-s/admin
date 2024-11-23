@@ -80,6 +80,13 @@ class AdminEngine
     public string $theme = 'admin-lte';
 
     /**
+     * Property for the end-to-end encryption key.
+     *
+     * @var string|null
+     */
+    public string|null $propertyEndToEndKey = null;
+
+    /**
      * Admin constructor.
      */
     public function __construct()
@@ -379,10 +386,19 @@ class AdminEngine
      */
     public function serverUrl(array $server): string
     {
-        return $server['host'] . '/' . config('admin.route.prefix') . '?' . $this->sslAccessKey() . '=' . $this->encryptWithCustomKey(
-            $this->user()->email,
-            config('admin.key')
-        );
+        if ($this->propertyEndToEndKey) {
+            $this->propertyEndToEndKey = $this->encrypt(
+                $this->user()->email
+            );
+        }
+
+        return $server['host']
+            . '/'
+            . config('admin.route.prefix')
+            . '?'
+            . $this->sslAccessKey()
+            . '='
+            . $this->propertyEndToEndKey;
     }
 
     /**
@@ -399,14 +415,13 @@ class AdminEngine
      * Method for encrypting data with a custom key.
      *
      * @param $data
-     * @param $key
      * @return string
      */
-    public function encryptWithCustomKey($data, $key): string
+    public function encrypt($data): string
     {
         $cipher = 'AES-256-CBC';
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
-        $encrypted = openssl_encrypt($data, $cipher, $key, 0, $iv);
+        $encrypted = openssl_encrypt($data, $cipher, config('admin.key'), 0, $iv);
 
         return base64_encode($iv . $encrypted);
     }
@@ -415,10 +430,9 @@ class AdminEngine
      * Method for decrypting data with a custom key.
      *
      * @param $encryptedData
-     * @param $key
      * @return bool|string
      */
-    public function decryptWithCustomKey($encryptedData, $key): bool|string
+    public function decrypt($encryptedData): bool|string
     {
         $cipher = 'AES-256-CBC';
         $data = base64_decode($encryptedData);
@@ -426,6 +440,6 @@ class AdminEngine
         $iv = substr($data, 0, $ivLength);
         $encryptedText = substr($data, $ivLength);
 
-        return openssl_decrypt($encryptedText, $cipher, $key, 0, $iv);
+        return openssl_decrypt($encryptedText, $cipher, config('admin.key'), 0, $iv);
     }
 }

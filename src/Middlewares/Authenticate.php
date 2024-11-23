@@ -78,7 +78,7 @@ class Authenticate
 
                 $key = $request->get($sslAccessKey);
 
-                $decryptedData = Admin::decryptWithCustomKey($key, config('admin.key'));
+                $decryptedData = Admin::decrypt($key);
 
                 if ($decryptedData) {
 
