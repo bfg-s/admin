@@ -142,7 +142,11 @@ class ChartJsComponent extends Component
             $result = $query->select([
                 $isDate ? DB::raw("DATE({$by}) as date") : $by,
                 DB::raw('COUNT(*) as count')
-            ])->groupBy('date')->get()->mapWithKeys(function ($item) use ($by, $isDate) {
+            ])->when($isDate, function ($q) use ($by) {
+                $q->groupByRaw("DATE({$by})");
+            })->unless($isDate, function ($q) use ($by) {
+                $q->groupBy($by);
+            })->get()->mapWithKeys(function ($item) use ($by, $isDate) {
                 $item = (array) $item;
                 return [$item[$isDate ? 'date' : $by] => $item['count']];
             });
