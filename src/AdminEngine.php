@@ -386,7 +386,7 @@ class AdminEngine
      */
     public function serverUrl(array $server): string
     {
-        if ($this->propertyEndToEndKey) {
+        if (! $this->propertyEndToEndKey) {
             $this->propertyEndToEndKey = $this->encrypt(
                 $this->user()->email
             );
