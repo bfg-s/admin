@@ -1272,12 +1272,46 @@ class ModelTableComponent extends Component
                 }
             }
 
-            $return = $this->paginate = $this->model
-                ->when($this->relations, fn ($q) => $q->with(...$this->relations))
-                ->orderBy($this->order_field, $select_type)
-                ->paginate($this->per_page, ['*'], $this->model_name.'_page');
+            $model = $this->model
+                ->when($this->relations, fn ($q) => $q->with(...$this->relations));
 
-            return $return;
+            $orderBy = explode(';', $this->order_field);
+            $sortBy = $select_type ?: 'desc';
+
+            foreach ($orderBy as $item) {
+                if (str_contains($item, '.')) {
+                    list($relation, $field) = explode('.', $item);
+                    $fields = explode(',', $field);
+                    /** @var \Illuminate\Database\Eloquent\Relations\HasMany $relationHasMany */
+                    $currentModel = $model instanceof Model ? $model : $model->getModel();
+                    $relationHasMany = $currentModel->{$relation}();
+                    $relationTable = $relationHasMany->getModel()->getTable();
+
+                    $model = $model->with($relation);
+
+                    $relationInstance = $currentModel->$relation();
+
+                    $relatedTable = $relationInstance->getRelated()->getTable();
+                    $foreignKey = $relationInstance->getForeignKeyName();
+                    $localKey = $relationInstance->getParent()->getKeyName();
+
+                    if (in_array($foreignKey, $currentModel->getFillable())) {
+                        $model = $model->leftJoin($relatedTable, "{$relatedTable}.{$localKey}", '=', "{$currentModel->getTable()}.{$foreignKey}");
+                    } else {
+                        $model = $model->leftJoin($relatedTable, "{$currentModel->getTable()}.{$localKey}", '=', "{$relatedTable}.{$foreignKey}");
+                    }
+                    $model = $model->select($currentModel->getTable() . '.*');
+
+                    foreach ($fields as $field) {
+
+                        $model = $model->orderBy($relationTable . '.' . $field, $sortBy);
+                    }
+                } else {
+                    $model = $model->orderBy($item, $sortBy);
+                }
+            }
+
+            return $this->paginate = $model->paginate($this->per_page, ['*'], $this->model_name.'_page');
 
         } elseif ($this->model instanceof Collection) {
             if (request()->has($this->model_name)) {

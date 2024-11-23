@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [6.4.2](https://github.com/bfg-s/admin/compare/6.4.1...6.4.2) - 2024-11-22
-* Support callable for "money" model table modification.
+* Added support callable for "money" model table modification.
 * Added multi server support with end-to-end authorization.
 * Added command for generate admin key.
 * Added total row for model table.
+* Added sort in table by relation.
 
 ## [6.4.1](https://github.com/bfg-s/admin/compare/6.4.0...6.4.1) - 2024-11-06
 * New dev theme for the admin panel.
