@@ -1332,15 +1332,6 @@ class ModelTableComponent extends Component
             $body->appEnd($row);
         }
 
-        if (collect($this->columns)->where('total', '!=', false)->isNotEmpty()) {
-
-            $row = RowComponent::create();
-
-            $this->makeTotalBodyTR($row);
-
-            $body->appEnd($row);
-        }
-
         $count = 0;
 
         if (is_array($this->model)) {
@@ -1353,6 +1344,15 @@ class ModelTableComponent extends Component
             $body->view('components.model-table.empty', [
                 'header_count' => $header_count
             ]);
+        }
+
+        if ($count && collect($this->columns)->where('total', '!=', false)->isNotEmpty()) {
+
+            $row = RowComponent::create();
+
+            $this->makeTotalBodyTR($row);
+
+            $body->appEnd($row);
         }
     }
 
