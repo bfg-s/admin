@@ -18,9 +18,9 @@ if (!function_exists('admin_log')) {
      * @param  string  $title
      * @param  string|null  $detail
      * @param  string|null  $icon
-     * @return string
+     * @return bool|string
      */
-    function admin_log(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         $params = [];
         $params['icon'] = $icon ?: (admin_repo()->now ? admin_repo()->now->getIcon() : $icon);
@@ -37,37 +37,37 @@ if (!function_exists('admin_log')) {
         return admin() ? admin()->logs()->create($params) : false;
     }
 
-    function admin_log_warning(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_warning(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-warning');
     }
 
-    function admin_log_primary(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_primary(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-primary');
     }
 
-    function admin_log_secondary(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_secondary(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-secondary');
     }
 
-    function admin_log_success(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_success(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-success');
     }
 
-    function admin_log_info(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_info(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-info');
     }
 
-    function admin_log_danger(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_danger(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-danger');
     }
 
-    function admin_log_dark(string $title, ?string $detail = null, string $icon = null): bool|string
+    function admin_log_dark(string $title, string|null $detail = null, string|null $icon = null): bool|string
     {
         return admin_log($title, $detail, ($icon ?: 'fas fa-lightbulb').' bg-dark');
     }
@@ -175,7 +175,7 @@ if (!function_exists('admin_asset')) {
      * @param  string|null  $link
      * @return string
      */
-    function admin_asset(string $link = null): string
+    function admin_asset(string|null $link = null): string
     {
         if ($link) {
             return asset('admin/'.trim($link, '/'));
@@ -296,7 +296,7 @@ if (!function_exists('admin_model_type')) {
      * @param  string|null  $type
      * @return bool|string|null
      */
-    function admin_model_type(string $type = null): bool|string|null
+    function admin_model_type(string|null $type = null): bool|string|null
     {
         $menu_type = admin_repo()->type;
 
@@ -313,7 +313,7 @@ if (!function_exists('admin_model')) {
      * @param  string|null  $path
      * @return Model|mixed|string|null
      */
-    function admin_model(string $path = null): mixed
+    function admin_model(string|null $path = null): mixed
     {
         $model = admin_repo()->modelNow;
 
@@ -373,7 +373,7 @@ if (!function_exists('check_referer')) {
      * @param  string|null  $url
      * @return bool
      */
-    function check_referer(string $method = 'GET', string $url = null): bool
+    function check_referer(string $method = 'GET', string|null $url = null): bool
     {
         $referer = request()->headers->get('referer');
 
@@ -636,7 +636,7 @@ if (!function_exists('remake_lang_url')) {
      * @param  string|null  $url
      * @return string
      */
-    function remake_lang_url(string $lang, string $url = null): string
+    function remake_lang_url(string $lang, string|null $url = null): string
     {
         if (!$url) {
             $url = url()->current();
