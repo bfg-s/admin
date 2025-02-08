@@ -69,6 +69,13 @@ return [
     ],
 
     /**
+     * Default admin scripts
+     */
+    'default_scripts' => [
+        'admin/js/app.js'
+    ],
+
+    /**
      * Default actions.
      */
     'action' => [

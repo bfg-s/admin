@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\BladeDirectives;
 
 use Admin\Components\Component;
+use Admin\Components\ComponentInputs;
 use Admin\Facades\Admin;
 
 /**
@@ -40,6 +41,12 @@ class SystemStylesBladeDirective
         foreach (Component::$components as $component) {
             if (method_exists($component, 'getStyles')) {
                 $styles = array_merge($styles, $component::getStyles());
+            }
+        }
+
+        foreach (ComponentInputs::$inputs as $input) {
+            if (method_exists($input, 'getStyles')) {
+                $styles = array_merge($styles, $input::getStyles());
             }
         }
 

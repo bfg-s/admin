@@ -74,6 +74,7 @@ Alpine.data('adminModals', (load_modal) => ({
             document.querySelectorAll('[data-modal]')
             this.modals = this.modals.filter(i => i.key !== obj.modal.key);
             $(obj).off('hidden.bs.modal');
+            document.body.style.overflow = '';
         }
     },
     hide(key) {

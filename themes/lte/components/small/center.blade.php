@@ -1,8 +1,7 @@
-<div
-    @class(['flex flex-wrap w-full'])
+<center
     @attributes($attributes)
 >
     @foreach($contents as $content)
         {!! $content !!}
     @endforeach
-</div>
+</center>

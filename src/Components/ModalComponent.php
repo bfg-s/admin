@@ -508,6 +508,7 @@ class ModalComponent extends Component
 
         return [
             'write' => $request->_modal == $this->modalName || ($request->ajax() && !$request->pjax()),
+            'modalId' => $request->_modal_id,
             'body' => $this->body,
             'modalName' => $this->modalName,
             'title' => $this->title,

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.4.3](https://github.com/bfg-s/admin/compare/6.4.2...6.4.3) - 2025-01-01
+* Added support scripts and styles for input components.
+* Moved default script path to the config.
+
 ## [6.4.2](https://github.com/bfg-s/admin/compare/6.4.1...6.4.2) - 2024-11-22
 * Added support callable for "money" model table modification.
 * Added multi server support with end-to-end authorization.

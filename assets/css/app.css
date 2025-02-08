@@ -58,7 +58,6 @@ body.compensate-for-scrollbar{overflow:hidden}.fancybox-active{height:auto}.fanc
 /*Additional properties for button version
  iOS requires the button element instead of an anchor tag.
  If you want the anchor version, it requires `href="#"`.*/
-
 button.toast-close-button {
   padding: 0;
   cursor: pointer;
@@ -207,7 +206,6 @@ button.toast-close-button {
 }
 
 /*Responsive Design*/
-
 @media all and (max-width: 240px) {
   #toast-container > div {
     padding: 8px 8px 8px 50px;
@@ -219,7 +217,6 @@ button.toast-close-button {
     top: -0.2em;
   }
 }
-
 @media all and (min-width: 241px) and (max-width: 480px) {
   #toast-container > div {
     padding: 8px 8px 8px 50px;
@@ -231,14 +228,12 @@ button.toast-close-button {
     top: -0.2em;
   }
 }
-
 @media all and (min-width: 481px) and (max-width: 768px) {
   #toast-container > div {
     padding: 15px 15px 15px 50px;
     width: 25em;
   }
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -272,9 +267,7 @@ button.toast-close-button {
   position: fixed;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+input:focus, textarea:focus, select:focus {
   outline: none !important;
 }
 
@@ -313,7 +306,6 @@ select:focus {
     position: relative !important;
   }
 }
-
 .card-header > .card-tools .btn-group {
   margin-bottom: -0.3rem !important;
   margin-top: -0.3rem !important;
@@ -389,4 +381,3 @@ select:focus {
 .dark-mode .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
   border-color: white transparent transparent transparent !important;
 }
-

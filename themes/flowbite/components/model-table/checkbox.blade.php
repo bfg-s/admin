@@ -1,5 +1,5 @@
 @if (!$id)
-    <div class="icheck-primary d-inline" style="margin-left: -14px;">
+    <div class="icheck-primary d-inline" style="margin-left: -3px;">
         <input type="checkbox"
                class="global_select_{{$table_id}}"
                name="select_{{$table_id}}"
@@ -9,7 +9,7 @@
         </label>
     </div>
 @else
-    <div class="icheck-primary d-inline" style="margin-left: -14px;">
+    <div class="icheck-primary d-inline">
         <input type="checkbox"
                class="select_{{$table_id}} action-selector"
                name="select_{{$table_id}}[{{$id}}]"

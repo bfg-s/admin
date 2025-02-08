@@ -2727,6 +2727,12 @@ function initCollapses() {
         }
     });
 }
+
+$(document).on('pjax:complete', () => {
+
+    initCollapses();
+});
+
 exports.initCollapses = initCollapses;
 if (typeof window !== 'undefined') {
     window.Collapse = Collapse;
@@ -4819,7 +4825,7 @@ if (typeof window !== 'undefined') {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __nested_webpack_require_172682__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -4833,14 +4839,14 @@ if (typeof window !== 'undefined') {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_172682__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
@@ -4853,12 +4859,12 @@ if (typeof window !== 'undefined') {
 /******/ 			}
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__nested_webpack_require_172682__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -4869,7 +4875,7 @@ if (typeof window !== 'undefined') {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -4937,17 +4943,21 @@ const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
 // Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
+if (window.darkMode || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (themeToggleLightIcon) {
+        themeToggleLightIcon.classList.remove('hidden');
+    }
 } else {
-    themeToggleDarkIcon.classList.remove('hidden');
+    if (themeToggleDarkIcon) {
+        themeToggleDarkIcon.classList.remove('hidden');
+    }
 }
 
 const themeToggleBtn = document.getElementById('theme-toggle');
 
 let event = new Event('dark-mode');
 
-themeToggleBtn.addEventListener('click', function() {
+themeToggleBtn && themeToggleBtn.addEventListener('click', function() {
 
     // toggle icons
     themeToggleDarkIcon.classList.toggle('hidden');
@@ -4975,7 +4985,7 @@ themeToggleBtn.addEventListener('click', function() {
     }
 
     document.dispatchEvent(event);
-    
+
 });
 
 
@@ -4993,22 +5003,22 @@ if (sidebar) {
         toggleSidebarMobileHamburger.classList.toggle('hidden');
         toggleSidebarMobileClose.classList.toggle('hidden');
     }
-    
+
     const toggleSidebarMobileEl = document.getElementById('toggleSidebarMobile');
     const sidebarBackdrop = document.getElementById('sidebarBackdrop');
     const toggleSidebarMobileHamburger = document.getElementById('toggleSidebarMobileHamburger');
     const toggleSidebarMobileClose = document.getElementById('toggleSidebarMobileClose');
     const toggleSidebarMobileSearch = document.getElementById('toggleSidebarMobileSearch');
-    
+
     toggleSidebarMobileSearch.addEventListener('click', () => {
         toggleSidebarMobile(sidebar, sidebarBackdrop, toggleSidebarMobileHamburger, toggleSidebarMobileClose);
     });
-    
+
     toggleSidebarMobileEl.addEventListener('click', () => {
         toggleSidebarMobile(sidebar, sidebarBackdrop, toggleSidebarMobileHamburger, toggleSidebarMobileClose);
     });
-    
-    sidebarBackdrop.addEventListener('click', () => {
+
+    sidebarBackdrop && sidebarBackdrop.addEventListener('click', () => {
         toggleSidebarMobile(sidebar, sidebarBackdrop, toggleSidebarMobileHamburger, toggleSidebarMobileClose);
     });
 }
@@ -5020,7 +5030,7 @@ if (sidebar) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -5034,14 +5044,14 @@ if (sidebar) {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -5054,7 +5064,7 @@ if (sidebar) {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -5066,12 +5076,12 @@ if (sidebar) {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.

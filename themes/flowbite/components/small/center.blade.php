@@ -1,5 +1,5 @@
 <div
-    @class(['flex flex-wrap w-full'])
+    class="flex justify-center"
     @attributes($attributes)
 >
     @foreach($contents as $content)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin\BladeDirectives;
 
 use Admin\Components\Component;
+use Admin\Components\ComponentInputs;
 use Admin\Facades\Admin;
 
 /**
@@ -45,9 +46,17 @@ class SystemScriptsBladeDirective
             }
         }
 
-        $scripts = array_merge($scripts, $theme->getScripts());
+        foreach (ComponentInputs::$inputs as $input) {
+            if (method_exists($input, 'getScripts')) {
+                $scripts = array_merge($scripts, $input::getScripts());
+            }
+        }
 
-        $scripts[] = 'admin/js/app.js';
+        $scripts = array_merge(
+            $scripts,
+            $theme->getScripts(),
+            (array) config('admin.default_scripts', ['admin/js/app.js'])
+        );
 
         return implode("\n", array_map(
             fn(string $script) => "<script type=\"text/javascript\" src=\""

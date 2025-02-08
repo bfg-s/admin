@@ -56,7 +56,7 @@ abstract class ComponentInputs implements Renderable
     /**
      * Array of input types and their corresponding classes.
      *
-     * @var array
+     * @var InputGroupComponent[]|array
      */
     public static array $inputs = [
         'input' => Input::class,

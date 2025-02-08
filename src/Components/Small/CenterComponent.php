@@ -12,11 +12,11 @@ use Admin\Components\Component;
 class CenterComponent extends Component
 {
     /**
-     * The tag element from which the component begins.
+     * The name of the component template.
      *
      * @var string
      */
-    protected string $element = 'center';
+    protected string $view = 'small.center';
 
     /**
      * Set the component like invisible for API.

@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+require('laravel-mix-tailwind');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,5 +13,9 @@ const mix = require('laravel-mix');
  */
 
 mix.js('javascript/app.js', 'assets/js')
-    .sass('javascript/sass/app.scss', 'assets/css');
-
+    .sass('javascript/sass/app.scss', 'assets/css')
+    .sass('javascript/sass/tailwind.scss', 'assets/css', [
+        require('tailwindcss'),
+        require('autoprefixer'),
+    ])
+    .tailwind();

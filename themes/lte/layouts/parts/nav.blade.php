@@ -7,13 +7,13 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="back" title="@lang('admin.back')" href="javascript:void(0)"><i
-                    class="fas fa-arrow-left"></i></a>
+            <a class="nav-link" data-click="back" title="@lang('admin.back')" href="javascript:void(0)"><i class="fas fa-arrow-left"></i></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-click="reload" title="@lang('admin.refresh')" href="javascript:void(0)"><i
-                    class="fas fa-redo-alt"></i></a>
+            <a class="nav-link" data-click="reload" title="@lang('admin.refresh')" href="javascript:void(0)">
+                <i class="fas fa-redo-alt"></i>
+            </a>
         </li>
         @if(admin_repo()->getCurrentQuery && count(admin_repo()->getCurrentQuery))
             <li class="nav-item">

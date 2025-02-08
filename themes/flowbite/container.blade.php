@@ -2,8 +2,8 @@
 
 @section('content')
     @include(admin_template('layouts.parts.container-header'))
-    <div class="container-fluid">
-        <div @class(['pl-3 pr-3'])>
+    <div class="w-full">
+        <div @class(['flex flex-wrap w-full px-3'])>
             @foreach($contents as $content)
                 {!! $content !!}
             @endforeach
