@@ -197,9 +197,9 @@ if (!function_exists('admin_user')) {
 
 if (!function_exists('admin')) {
     /**
-     * @return AdminUser
+     * @return AdminUser|\App\Models\AdminUser
      */
-    function admin(): AdminUser
+    function admin(): AdminUser|Model
     {
         return Admin::user() ?? new AdminUser();
     }
