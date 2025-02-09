@@ -187,9 +187,9 @@ if (!function_exists('admin_asset')) {
 
 if (!function_exists('admin_user')) {
     /**
-     * @return AdminUser
+     * @return AdminUser|\App\Models\AdminUser
      */
-    function admin_user(): AdminUser
+    function admin_user(): AdminUser|Model
     {
         return Admin::user() ?? new AdminUser();
     }
