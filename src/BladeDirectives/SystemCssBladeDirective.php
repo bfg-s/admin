@@ -38,9 +38,11 @@ class SystemCssBladeDirective
         $extensions = Admin::extensions();
 
         $html = [];
+        $realHtml = [];
 
         foreach ($extensions as $extension) {
             $html[] = $extension->config()->css();
+            $realHtml = array_merge($realHtml, $extension->config()->getStyleLines());
         }
 
         foreach (static::$componentCss as $componentCs) {
@@ -51,7 +53,7 @@ class SystemCssBladeDirective
             $html[] = $themeCss;
         }
 
-        return "<style>".implode("</style>\n<style>", $html).'</style>';
+        return "<style>".implode("</style>\n<style>", $html).'</style>'.implode('', $realHtml);
     }
 
     /**

@@ -41,6 +41,20 @@ abstract class ConfigExtensionProvider
     protected array $styles = [];
 
     /**
+     * Global extension scripts codes.
+     *
+     * @var array
+     */
+    protected array $scriptsCodes = [];
+
+    /**
+     * Global extension styles codes.
+     *
+     * @var array
+     */
+    protected array $stylesCodes = [];
+
+    /**
      * ConfigExtensionProvider constructor.
      *
      * @param  ExtendProvider  $provider
@@ -181,6 +195,52 @@ abstract class ConfigExtensionProvider
         $this->styles = array_merge($this->styles, $styles);
 
         return $this;
+    }
+
+    /**
+     * Add a custom script to the admin panel.
+     *
+     * @param  string  $html
+     * @return $this
+     */
+    public function addScriptLine(string $html): static
+    {
+        $this->scriptsCodes[] = $html;
+
+        return $this;
+    }
+
+    /**
+     * Add a custom style to the admin panel.
+     *
+     * @param  string  $html
+     * @return $this
+     */
+    public function addStyleLine(string $html): static
+    {
+        $this->stylesCodes[] = $html;
+
+        return $this;
+    }
+
+    /**
+     * Get extension styles codes.
+     *
+     * @return array
+     */
+    public function getScriptLines(): array
+    {
+        return $this->scriptsCodes;
+    }
+
+    /**
+     * Get extension styles codes.
+     *
+     * @return array
+     */
+    public function getStyleLines(): array
+    {
+        return $this->stylesCodes;
     }
 
     /**

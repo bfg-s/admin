@@ -38,6 +38,7 @@ class SystemJsBladeDirective
     {
         $extensions = Admin::extensions();
 
+        $realHtml = [];
         $html = [];
 
         if ($respond = session('respond')) {
@@ -46,6 +47,7 @@ class SystemJsBladeDirective
 
         foreach ($extensions as $extension) {
             $html[] = $extension->config()->js();
+            $realHtml = array_merge($realHtml, $extension->config()->getScriptLines());
         }
 
         foreach (static::$componentJs as $componentJ) {
@@ -64,7 +66,7 @@ class SystemJsBladeDirective
 
         return ($tag ? "<script>" : "")
             .implode($separator, $html)
-            .($tag ? "</script>" : "");
+            .($tag ? "</script>" : "") . implode('', $realHtml);
     }
 
     /**
