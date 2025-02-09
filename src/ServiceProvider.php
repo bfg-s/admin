@@ -157,7 +157,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         $this->publishes([
             __DIR__.'/../migrations' => database_path('migrations'),
-        ], ['admin-migrations', 'laravel-assets']);
+        ], ['admin-migrations']);
 
         /**
          * Register publishers html examples.
