@@ -72,8 +72,8 @@ window.updateById = (id) => {
 
                 axios.post(window.realtime + location.search, {
                     _token: token,
-                    names: [key],
                     ...requestData,
+                    names: [key],
                     _realtime: 1,
                 }).then(thenRequest);
             }
