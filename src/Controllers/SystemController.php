@@ -36,6 +36,7 @@ use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -80,9 +81,9 @@ class SystemController extends Controller
      * Simulate the processing of the previous page in order to build the page anew and select the necessary data.
      *
      * @param  bool  $isReferer
-     * @return void
+     * @return false|string|void
      */
-    protected function refererEmit(bool $isReferer = true): void
+    protected function refererEmit(bool $isReferer = true)
     {
         Authenticate::$noLog = true;
 
@@ -102,6 +103,8 @@ class SystemController extends Controller
 
             echo $content; die;
         }
+
+        return $content;
     }
 
     /**
@@ -478,7 +481,8 @@ class SystemController extends Controller
      */
     public function realtime(RealtimeRequest $request): \Illuminate\Http\JsonResponse|string|null
     {
-        $this->refererEmit(false);
+        $content = $this->refererEmit(false);
+        $html = new Crawler($content ?: '');
 
         $result = [];
 
@@ -489,6 +493,12 @@ class SystemController extends Controller
             if ($component) {
 
                 $result[$name] = $component->getRenderedView();
+            } else {
+                $container_html = $html->filter("#" . $name)->eq(0);
+                $container_content = $container_html->count() > 0 ? $container_html->html() : '';
+                if ($container_content) {
+                    $result[$name] = $container_content;
+                }
             }
         }
 
