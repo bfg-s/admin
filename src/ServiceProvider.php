@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Admin;
 
 use Admin\BladeDirectives\AlpineStoreBladeDirective;
+use Admin\BladeDirectives\AttributeRealtimeBladeDirective;
 use Admin\BladeDirectives\AttributesBladeDirective;
 use Admin\BladeDirectives\SystemCssBladeDirective;
 use Admin\BladeDirectives\SystemJsBladeDirective;
@@ -200,6 +201,7 @@ class ServiceProvider extends ServiceProviderIlluminate
          */
         Blade::directive('alpineStore', [AlpineStoreBladeDirective::class, 'directive']);
         Blade::directive('attributes', [AttributesBladeDirective::class, 'directive']);
+        Blade::directive('realtime', [AttributeRealtimeBladeDirective::class, 'directive']);
         Blade::directive('adminSystemJs', [SystemJsBladeDirective::class, 'directive']);
         Blade::directive('adminSystemJsVariables', [SystemJsVariablesBladeDirective::class, 'directive']);
         Blade::directive('adminSystemCss', [SystemCssBladeDirective::class, 'directive']);

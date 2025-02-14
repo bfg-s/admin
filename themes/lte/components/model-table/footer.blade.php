@@ -1,4 +1,4 @@
-<div class="card-footer">
+<div class="card-footer" @reatime('card-footer-' . $model_name)>
     <div class="row">
         <div class="col-sm d-none d-lg-block d-xl-block">
             <div class="btn-group justify-content-start" role="group">

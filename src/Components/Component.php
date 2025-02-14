@@ -757,6 +757,7 @@ abstract class Component extends ComponentInputs implements Renderable, Arrayabl
             'contents' => $this->contents,
             'element' => $this->element,
             'attributes' => $this->attributes,
+            'model_name' => $this->model_name,
         ], $this->viewData()))->render();
 
         $this->renderedView = $this->afterRenderEvent($renderedView);
