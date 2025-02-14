@@ -32,7 +32,7 @@ class AttributeRealtimeBladeDirective
      */
     public static function attributeBuild(string $name, int $timeout = 10000): string
     {
-        return 'ata-load=\''.json_encode([
+        return 'data-load=\''.json_encode([
             'realtime' => ['name' => $name, 'timeout' => $timeout]
         ]).'\'';
     }
