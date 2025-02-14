@@ -449,7 +449,7 @@ class ModelTableComponent extends Component
                     }
                 }
 
-                ButtonsComponent::create()
+                return ButtonsComponent::create()
                     ->model($model)
                     ->delegatesNow($delegates);
             }
