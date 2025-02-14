@@ -8,7 +8,9 @@ window.libs['realtime'] = function (cfg) {
 
         return console.error("Target not fount for Validator!");
     }
-    interval = Number(cfg.timeout);
+    if (cfg.timeout && ! isNaN(cfg.timeout)) {
+        interval = Number(cfg.timeout);
+    }
     componentCollection[cfg.name] = this.target;
 }
 
