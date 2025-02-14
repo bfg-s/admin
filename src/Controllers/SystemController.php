@@ -25,7 +25,6 @@ use Admin\Requests\TableActionRequest;
 use Admin\Requests\TranslateRequest;
 use Admin\Respond;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -494,11 +493,19 @@ class SystemController extends Controller
 
                 $result[$name] = $component->getRenderedView();
             } else {
-                $container_html = $html->filter("#" . $name)->eq(0);
-                $container_content = $container_html->count() > 0 ? $container_html->html() : '';
-                if ($container_content) {
-                    $result[$name] = $container_content;
+                $container = $html->filter("#" . $name)->eq(0);
+
+                if ($container->count() > 0) {
+                    $node = $container->getNode(0); // Получаем DOM-элемент
+                    $outerHtml = $node ? $node->ownerDocument->saveHTML($node) : ''; // Весь элемент + контент
+
+                    $result[$name] = $outerHtml;
                 }
+
+//                $container_content = $container_html->count() > 0 ? $container_html->html() : '';
+//                if ($container_content) {
+//                    $result[$name] = $container_content;
+//                }
             }
         }
 
