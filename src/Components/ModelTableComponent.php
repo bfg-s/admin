@@ -429,6 +429,22 @@ class ModelTableComponent extends Component
             ? $delegates[0]
             : null;
 
+        $callback = isset($delegates[0]) && is_callable($delegates[0])
+            ? $delegates[0]
+            : null;
+
+        if ($callback || $title) {
+            unset($delegates[0]);
+            $delegates = array_values($delegates);
+        }
+
+        if ($callback) {
+            $result = call_user_func($callback, $this->model());
+            if ($result && is_array($result)) {
+                $delegates = array_merge($result, $delegates);
+            }
+        }
+
         $this->col(
             $title,
             fn($model) => ButtonsComponent::create()
