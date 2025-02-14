@@ -438,18 +438,21 @@ class ModelTableComponent extends Component
             $delegates = array_values($delegates);
         }
 
-        if ($callback) {
-            $result = call_user_func($callback, $this->model());
-            if ($result && is_array($result)) {
-                $delegates = array_merge($result, $delegates);
-            }
-        }
-
         $this->col(
             $title,
-            fn($model) => ButtonsComponent::create()
-                ->model($model)
-                ->delegatesNow($delegates)
+            function ($model) use ($delegates, $callback) {
+
+                if ($callback) {
+                    $result = call_user_func($callback, $model);
+                    if ($result && is_array($result)) {
+                        $delegates = array_merge($result, $delegates);
+                    }
+                }
+
+                ButtonsComponent::create()
+                    ->model($model)
+                    ->delegatesNow($delegates);
+            }
         );
 
         return $this;
