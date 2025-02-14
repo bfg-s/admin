@@ -2,7 +2,7 @@
     @class(['card', 'card-outline', 'w-100', "card-{$type}"])
     @attributes($attributes)
 >
-    <div class="card-header" @realtime('card-header-' . $model_name)>
+    <div class="card-header" id="card-header-{{ $model_name }}" @realtime('card-header-' . $model_name)>
         @if($headerObj) {!! $headerObj !!} @endif
 
         <h3 class="card-title">

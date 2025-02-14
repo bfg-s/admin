@@ -1,4 +1,4 @@
-<div class="card-footer" @realtime('card-footer-' . $model_name)>
+<div class="card-footer" id="card-footer-{{ $model_name }}" @realtime('card-footer-' . $model_name)>
     <div class="row">
         <div class="col-sm d-none d-lg-block d-xl-block">
             <div class="btn-group justify-content-start" role="group">
