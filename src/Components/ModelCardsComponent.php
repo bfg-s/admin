@@ -857,6 +857,8 @@ class ModelCardsComponent extends Component
             'elements' => $this->paginationElements($paginator),
             'page_name' => $this->model_name.'_page',
             'per_name' => $this->model_name.'_per_page',
+
+            'model_name' => $this->model_name,
         ] : [];
     }
 
