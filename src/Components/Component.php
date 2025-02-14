@@ -1485,6 +1485,8 @@ CSS;
                     'timeout' => $this->realTimeTimeout,
                 ]);
 
+                $this->attr('data-request', json_encode(request()->all()));
+
                 SystemController::$realtimeComponents['component-' . $this->currentCount] = $this;
             }
         }
