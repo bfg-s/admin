@@ -71,9 +71,9 @@ window.updateById = (id) => {
                 });
 
                 axios.post(window.realtime + location.search, {
-                    _token: token,
                     ...requestData,
                     names: [key],
+                    _token: token,
                     _realtime: 1,
                 }).then(thenRequest);
             }
@@ -102,9 +102,9 @@ function loopInterval() {
         });
 
         axios.post(window.realtime + location.search, {
-            _token: token,
-            names: keys,
             ...requestData,
+            names: keys,
+            _token: token,
             _realtime: 1,
         }).then(thenRequest);
     }
