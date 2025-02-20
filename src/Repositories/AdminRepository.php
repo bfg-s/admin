@@ -172,7 +172,11 @@ class AdminRepository extends Repository
             $return = new $return();
         }
 
-        $pm = $this->now?->getResourceRoute() ?? Str::singular(Str::snake(class_basename($return)));
+        $pm = $this->now?->getResourceRoute()
+            ?: (
+                $this->menuList->where('controller', '=', $controller::class)->first()->getResourceRoute()
+                    ?: Str::singular(Str::snake(class_basename($return)))
+            );
 
         $pm = Str::snake(Str::camel($pm));
 
