@@ -33,6 +33,13 @@ class GridColumnComponent extends Component
     protected bool $displayFlex = false;
 
     /**
+     * Delegates for the component.
+     *
+     * @var array
+     */
+    protected array $delegatesInner = [];
+
+    /**
      * GridColumnComponent constructor.
      *
      * @param  array  $delegates
@@ -41,7 +48,7 @@ class GridColumnComponent extends Component
     {
         parent::__construct();
 
-        $this->explainForce(Explanation::new($delegates));
+        $this->delegatesInner = $delegates;
 
         if ($num) {
             $this->num($num);
@@ -93,5 +100,6 @@ class GridColumnComponent extends Component
      */
     protected function mount(): void
     {
+        $this->explainForce(Explanation::new($this->delegatesInner));
     }
 }
