@@ -28,7 +28,7 @@ class LanguageMiddleware
 
         App::setLocale($lang);
 
-        Cookie::queue('lang', $lang, time() * time());
+        Cookie::queue('lang', $lang, time() * 5);
 
         return $next($request);
     }
