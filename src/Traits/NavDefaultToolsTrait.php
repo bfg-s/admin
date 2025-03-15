@@ -23,12 +23,15 @@ trait NavDefaultToolsTrait
      *
      * @return $this
      */
-    public function makeDefaults(): static
+    public function makeDefaults(callable|null $callback = null): static
     {
-        $this->adminAdministrationGroup(static function (NavGroup $group) {
+        $this->adminAdministrationGroup(static function (NavGroup $group) use ($callback) {
             $group->adminAdministrators();
             $group->adminRoles();
             $group->adminPermission();
+            if ($callback) {
+                call_user_func($callback, $group);
+            }
         });
 
         return $this;
