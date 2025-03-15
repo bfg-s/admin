@@ -44,14 +44,16 @@ class GridColumnComponent extends Component
      *
      * @param  array  $delegates
      */
-    public function __construct(int $num = null, ...$delegates)
+    public function __construct($cols = null, ...$delegates)
     {
         parent::__construct();
 
         $this->delegatesInner = $delegates;
 
-        if ($num) {
-            $this->num($num);
+        if ($cols && is_int($cols)) {
+            $this->num($cols);
+        } else if ($cols) {
+            array_unshift($this->delegatesInner, $cols);
         }
     }
 
