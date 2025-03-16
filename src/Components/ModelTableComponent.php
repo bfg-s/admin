@@ -444,8 +444,8 @@ class ModelTableComponent extends Component
 
                 if ($callback) {
                     $result = call_user_func($callback, $model);
-                    if ($result && is_array($result)) {
-                        $delegates = array_merge($result, $delegates);
+                    if ($result) {
+                        $delegates = array_merge((array) $result, $delegates);
                     }
                 }
 
