@@ -39,7 +39,7 @@ window.libs['select2::ajax'] = function () {
                             form[i.name] = i.value;
                         })
                     }
-                    formData.append(`${name}_form`, form);
+                    formData.append(`${name}_form`, JSON.stringify(form));
                 }
 
                 let data = $(":input").serializeArray();
