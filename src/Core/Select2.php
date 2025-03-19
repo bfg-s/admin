@@ -320,6 +320,25 @@ class Select2 extends Collection
         $this->makePaginator();
     }
 
+    private function transformArray(array $input): array {
+        $output = [];
+
+        foreach ($input as $key => $value) {
+            $keys = preg_split('/\[|\]/', $key, -1, PREG_SPLIT_NO_EMPTY);
+
+            $current = &$output;
+            foreach ($keys as $innerKey) {
+                if (!isset($current[$innerKey])) {
+                    $current[$innerKey] = [];
+                }
+                $current = &$current[$innerKey];
+            }
+            $current = $value;
+        }
+
+        return $output;
+    }
+
     /**
      * Create a data paginator for output.
      *
@@ -342,7 +361,7 @@ class Select2 extends Collection
                 $form = request($this->getName().'_form');
 
                 $this->data = call_user_func($this->where, $this->data,
-                    is_json($form) ? json_decode($form, true) : $form);
+                    $this->transformArray(is_json($form) ? json_decode($form, true) : $form));
             }
 
             if ($this->data) {
