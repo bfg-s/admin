@@ -7,9 +7,9 @@
         <div class="card-header">
             @if($model_id)
                 <span>
-                    <string>ID:</string> {{ $model_id }}
-                    @if($created_at) 🔹 <string>Created at:</string> {{ beautiful_date_time($created_at) }} @endif
-                    @if($updated_at) 🔹 <string>Updated at:</string> {{ beautiful_date_time($updated_at) }} @endif
+                    <strong>ID:</strong> {{ $model_id }}
+                    @if($created_at) 🔹 <strong>Created at:</strong> {{ beautiful_date_time($created_at) }} @endif
+                    @if($updated_at) 🔹 <strong>Updated at:</strong> {{ beautiful_date_time($updated_at) }} @endif
                 </span>
             @endif
             <h3 class="card-title return_relation" style="display: none; margin-right: 5px">
