@@ -221,6 +221,9 @@ class ModelRelationContainerComponent extends Component
         return [
             'buttons' => $this->buttons,
             'ordered' => $this->ordered,
+            'model_id' => $this->model->id,
+            'created_at' => $this->model->created_at,
+            'updated_at' => $this->model->updated_at,
         ];
     }
 
