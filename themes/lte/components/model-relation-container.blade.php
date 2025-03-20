@@ -5,11 +5,13 @@
 >
     @if($buttons)
         <div class="card-header">
-            <span class="control_relation">
-                ID: {{ $model_id }}
-                @if($created_at) 🔹 Created at: {{ beautiful_date_time($created_at) }} @endif
-                @if($updated_at) 🔹 Updated at: {{ beautiful_date_time($updated_at) }} @endif
-            </span>
+            @if($model_id)
+                <span>
+                    ID: {{ $model_id }}
+                    @if($created_at) 🔹 Created at: {{ beautiful_date_time($created_at) }} @endif
+                    @if($updated_at) 🔹 Updated at: {{ beautiful_date_time($updated_at) }} @endif
+                </span>
+            @endif
             <h3 class="card-title return_relation" style="display: none; margin-right: 5px">
                 Deleting
             </h3>
